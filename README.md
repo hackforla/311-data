@@ -26,7 +26,9 @@ Facilitator to Stakeholder: [EmpowerLA](http://empowerla.org/)
 ## Working Documents
 [Diff Dashboard](https://docs.google.com/document/d/1CNEJ1yAa41WbjMLYDB-UuTUjnd51X5tTJ9kWVQlH9NM/edit)
 
-## Surveys
+## Deliverables
+[Email to NC Members](https://docs.google.com/document/d/12JQ46SVsyywmdwEFPpE-Q1xFHdXNIP-AnbSaPKs0Kvk/edit#)
+
 [NC initial survey](https://drive.google.com/open?id=1N_cY23y4u04oHOlkyQId-K3k11J23lUGwMljmNHpmMk)
 
 ## Empty Documents
