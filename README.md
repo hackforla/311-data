@@ -2,40 +2,41 @@
 Empower Neighborhood Associations to Improve analysis of their initiatives using 311 data
 
 ## Resources
-
-<a href="https://docs.google.com/document/d/19jrYWjq_FfQbuqTfnwJFruWEo9pPF0R0qh4njDZsuzM">Empower LA - HfLA Initial Meeting</a>
-</br>
-<a href="https://docs.google.com/document/d/14WRgY_vjqG0FFLUPrB3Z4iARfm7cAsN3w0gjqdtoyjw/">Empower LA - HfLA Initial Questions</a>
+[Empower LA - HfLA Initial Meeting](https://docs.google.com/document/d/19jrYWjq_FfQbuqTfnwJFruWEo9pPF0R0qh4njDZsuzM)
+[Empower LA - HfLA Initial Questions](https://docs.google.com/document/d/14WRgY_vjqG0FFLUPrB3Z4iARfm7cAsN3w0gjqdtoyjw/)
 
 ## Existing 311 visualization tools:
 Empower LA’s Demographics BI tool: https://empowerla.org/demographics-BI/
-</br>
 Mayor’s Dashboard: http://dashboard.lamayor.org/
-</br>
 NYC 311 Data: http://people.ischool.berkeley.edu/~samuel.goodgame/311/
-</br>
 Neighborhood Council Funding System Dashboard: https://cityclerk.lacity.org/NCFundPortal/Dashboard.html
 
 ## People involved in the project
-Roster: 311-Data: Roster
-Facilitator to Stakeholders: EmpowerLA http://empowerla.org/
+[311-Data Roster](https://docs.google.com/spreadsheets/d/1CZHH_91zTb9avfsJG9MtakCqbhLWQzTyTtQVNDqKqyM/edit#gid=0)
+[Facilitator to Stakeholder: EmpowerLA](http://empowerla.org/)
 
 ## Agendas
-311-Data:  Agendas
+[311-Data Agendas](https://docs.google.com/document/d/1Dr-AiOEBOGKDrAm7O2fxoZul2z5uSXH032QRzcUCYd0/edit)
 
-## Docs:
-Diff Dashboard
+## Working Docs:
+[Diff Dashboard](https://docs.google.com/document/d/1CNEJ1yAa41WbjMLYDB-UuTUjnd51X5tTJ9kWVQlH9NM/edit)
 
 ## Surveys
-NC initial survey
+[NC initial survey](https://drive.google.com/open?id=1N_cY23y4u04oHOlkyQId-K3k11J23lUGwMljmNHpmMk)
 
 ## Empty Documents
 
-### Empty docs
-<a href="https://docs.google.com/document/d/1_x34EPUycr6qN9FvDxc82Kx32AEapYjO4IRQqMgH2Vs/">2</a> 3 4
+### Empty Docs
+[2](https://docs.google.com/document/d/1_x34EPUycr6qN9FvDxc82Kx32AEapYjO4IRQqMgH2Vs/)
+[3](https://docs.google.com/document/d/1PLWB7cygysmN099P3kNjYAvER6Acv-YNB7LQL-e5Wbc)
+[4](https://docs.google.com/document/d/1aSdzl-qGjzqwWDkvY8FjrISgdLTA7mc6FRe0xzm3hKo)
 
 ### Empty Spreadsheets
-2 3 4 5
+[2](https://docs.google.com/spreadsheets/d/1ke7WaJv18n1v3wW3GtnMTg0_X3mbe1i2YdNy74ghJi0) 
+[3](https://docs.google.com/spreadsheets/d/1gwikovvOWMhDjH-OHe3d5UUb0ZtMYUbnopjmZ5Ur1LM)
+[4](https://docs.google.com/spreadsheets/d/1bDrcJ2FeMuSeiLbfabEtNZ9tpweqgu3mrTWSppzqDb4/)
+[5](https://docs.google.com/spreadsheets/d/1AbghHVOxpZSGg10Byo3HMlYx-H6fYEixDks8rre8rns/)
 
 ### Empty Slideshows
-1 2 
+[1](https://docs.google.com/presentation/d/12cDzPXwf4zWKcFAivy-UICm0dfXWaAP0dz3tqVuHwpo)
+[2](https://docs.google.com/presentation/d/1-100TCpHeqcGJoZMKsKcvBcy6bfPjzrnYL8k2bE0qXk) 
