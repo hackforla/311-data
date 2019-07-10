@@ -16,14 +16,14 @@ NYC 311 Data: http://people.ischool.berkeley.edu/~samuel.goodgame/311/
 Neighborhood Council Funding System Dashboard: https://cityclerk.lacity.org/NCFundPortal/Dashboard.html
 
 ## People involved in the project
-[311-Data Roster](https://docs.google.com/spreadsheets/d/1CZHH_91zTb9avfsJG9MtakCqbhLWQzTyTtQVNDqKqyM/edit#gid=0)
+311-Data Roster: [Roster](https://docs.google.com/spreadsheets/d/1CZHH_91zTb9avfsJG9MtakCqbhLWQzTyTtQVNDqKqyM/edit#gid=0)
 
-[Facilitator to Stakeholder: EmpowerLA](http://empowerla.org/)
+Facilitator to Stakeholder: [EmpowerLA](http://empowerla.org/)
 
 ## Agendas
 [311-Data Agendas](https://docs.google.com/document/d/1Dr-AiOEBOGKDrAm7O2fxoZul2z5uSXH032QRzcUCYd0/edit)
 
-## Working Docs:
+## Working Documents
 [Diff Dashboard](https://docs.google.com/document/d/1CNEJ1yAa41WbjMLYDB-UuTUjnd51X5tTJ9kWVQlH9NM/edit)
 
 ## Surveys
