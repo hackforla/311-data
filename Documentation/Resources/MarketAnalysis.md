@@ -2,7 +2,6 @@
   * [Mayors directives via EmpowerLA](https://empowerla.org/mayorsdirectives/)
   * [Example initiative from EmpowerLA](https://empowerla.org/a-bridge-home-faq-for-las-temporary-homeless-housing-initiative/)
 
----
 ## Existing visualizations
   * [Open 311 request visualization](https://status.open311.org/)
 
