@@ -6,6 +6,8 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
 
 [Empower LA - HfLA Initial Questions](https://docs.google.com/document/d/14WRgY_vjqG0FFLUPrB3Z4iARfm7cAsN3w0gjqdtoyjw/)
 
+[Raw 311 data by year](https://data.lacity.org/browse?category=A+Well+Run+City&limitTo=filters&q=%22MyLA311+Service+Request+Data+201%22&sortBy=relevance)
+
 ## Existing 311 visualization tools:
 Empower LA’s Demographics BI tool: https://empowerla.org/demographics-BI/
 
@@ -39,11 +41,11 @@ Facilitator to Stakeholder: [EmpowerLA](http://empowerla.org/)
 [4](https://docs.google.com/document/d/1aSdzl-qGjzqwWDkvY8FjrISgdLTA7mc6FRe0xzm3hKo)
 
 ### Empty Spreadsheets
-[2](https://docs.google.com/spreadsheets/d/1ke7WaJv18n1v3wW3GtnMTg0_X3mbe1i2YdNy74ghJi0) 
+[2](https://docs.google.com/spreadsheets/d/1ke7WaJv18n1v3wW3GtnMTg0_X3mbe1i2YdNy74ghJi0)
 [3](https://docs.google.com/spreadsheets/d/1gwikovvOWMhDjH-OHe3d5UUb0ZtMYUbnopjmZ5Ur1LM)
 [4](https://docs.google.com/spreadsheets/d/1bDrcJ2FeMuSeiLbfabEtNZ9tpweqgu3mrTWSppzqDb4/)
 [5](https://docs.google.com/spreadsheets/d/1AbghHVOxpZSGg10Byo3HMlYx-H6fYEixDks8rre8rns/)
 
 ### Empty Slideshows
 [1](https://docs.google.com/presentation/d/12cDzPXwf4zWKcFAivy-UICm0dfXWaAP0dz3tqVuHwpo)
-[2](https://docs.google.com/presentation/d/1-100TCpHeqcGJoZMKsKcvBcy6bfPjzrnYL8k2bE0qXk) 
+[2](https://docs.google.com/presentation/d/1-100TCpHeqcGJoZMKsKcvBcy6bfPjzrnYL8k2bE0qXk)
