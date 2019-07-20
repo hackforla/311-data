@@ -9,13 +9,13 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
 [Raw 311 data by year](https://data.lacity.org/browse?category=A+Well+Run+City&limitTo=filters&q=%22MyLA311+Service+Request+Data+201%22&sortBy=relevance)
 
 ## Existing 311 visualization tools:
-Empower LA’s Demographics BI tool: https://empowerla.org/demographics-BI/
+[Empower LA’s Demographics BI tool](https://empowerla.org/demographics-BI/)
 
-Mayor’s Dashboard: http://dashboard.lamayor.org/
+[Mayor’s Dashboard](http://dashboard.lamayor.org/)
 
-NYC 311 Data: http://people.ischool.berkeley.edu/~samuel.goodgame/311/
+[NYC 311 Data](http://people.ischool.berkeley.edu/~samuel.goodgame/311/)
 
-Neighborhood Council Funding System Dashboard: https://cityclerk.lacity.org/NCFundPortal/Dashboard.html
+[Neighborhood Council Funding System Dashboard](https://cityclerk.lacity.org/NCFundPortal/Dashboard.html)
 
 ## People involved in the project
 311-Data Roster: [Roster](https://docs.google.com/spreadsheets/d/1CZHH_91zTb9avfsJG9MtakCqbhLWQzTyTtQVNDqKqyM/edit#gid=0)
