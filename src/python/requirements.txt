@@ -1,0 +1,16 @@
+certifi==2019.6.16
+chardet==3.0.4
+cycler==0.10.0
+future==0.17.1
+idna==2.8
+kiwisolver==1.1.0
+matplotlib==3.1.1
+numpy==1.16.4
+pandas==0.25.0
+pyparsing==2.4.1
+python-dateutil==2.8.0
+pytz==2019.1
+requests==2.22.0
+six==1.12.0
+sodapy==1.5.4
+urllib3==1.25.3
