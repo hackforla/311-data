@@ -1,28 +1,28 @@
 (function(){
   let chartData = [];
 
-  const selectors = document.querySelectorAll('.data-dropdown');
-  const chartType = document.querySelector('.chart-type');
-  const submitButton = document.querySelector('button');
   const chart = c3.generate({
     bindto: '#chart',
     data: {
-      type: chartType.value,
+      type: 'bar',
       columns: [],
     },
   });
 
-  function displayChart() {
-    getData(selectors[0].value)
-      .then(() => { getData(selectors[1].value)
+  function buildChart() {
+    const requestType = document.querySelector('.request-dropdown').value;
+    const chartType = document.querySelector('.chart-type').value;
+    const datasets = document.querySelectorAll('.data-dropdown');
+
+    getData(datasets[0].value, requestType)
+      .then(() => { getData(datasets[1].value, requestType)
         .then(() => {
-          console.log(chartData);
-          updateChart(chartData, chartType.value);
+          renderChart(chartData, chartType);
         })
       })
     };
 
-  function updateChart(data, type) {
+  function renderChart(data, type) {
     let columns = [];
     const newData = data.reduce((acc, cur) => {
       const date = cur.createddate.slice(0, 4);
@@ -39,18 +39,18 @@
     chart.load({ columns, type });
   };
 
-  function getData(action) {
-    return fetch(`/soda/${action}`)
+  function getData(year, requestType) {
+    return fetch(`/soda/${year}/${requestType}`)
       .then(res => res.json())
       .then(data => { chartData.push(...data); })
       .catch(err => { console.error('Fetch Error :-S', err); });
   };
 
-  submitButton.onclick = e => {
+  document.querySelector('button').onclick = e => {
     e.preventDefault();
-    // chartData = [];
-    updateChart(chartData, chartType.value);
+    chartData = [];
+    buildChart();
   };
 
-  displayChart();
+  buildChart();
 })();
