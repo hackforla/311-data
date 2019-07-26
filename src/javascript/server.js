@@ -18,7 +18,7 @@ const config = year => {
 const request = 'Bulky Items';
 
 const params = {
-  $select: ['zipcode', 'createddate', 'requesttype'],
+  $select: ['count(requesttype)'],
   $where: `requesttype="${request}"`,
   $limit: 1000,
 }
@@ -41,4 +41,3 @@ app.get('/soda/:year', (req, res) => {
 })
 
 app.listen(port, () => { console.log(`Listening on port: ${port}`)});
-
