@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');
 const Socrata = require('node-socrata');
 
+const app = express();
+const port = 3000;
+
 const resource = {
   2016: 'ndkd-k878',
   2017: 'd4vt-q4t5',
@@ -15,30 +18,37 @@ const config = year => {
   }
 };
 
-const request = 'Bulky Items';
-
-const params = {
-  $select: ['zipcode', 'createddate', 'requesttype'],
-  $where: `requesttype="${request}"`,
-  $limit: 1000,
+const params = (requestType = 'Bulky Items', total = false) => {
+  return {
+    $select: total ? ['count(requesttype)'] : ['createddate', 'zipcode', 'requesttype'],
+    $where: `requesttype="${requestType}"`,
+    $limit: 30,
+  };
 }
 
-const port = 3000;
-
-const app = express();
 const newSoda = year => new Socrata(config(year));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/soda/:year', (req, res) => {
-  const { year } = req.params;
+app.get('/soda/:year/:requestType', (req, res) => {
+  const { year, requestType } = req.params;
   const soda = newSoda(year);
 
-  soda.get(params, (err, response, data) => {
+  soda.get(params(requestType), (err, response, data) => {
     if (err) console.error(err);
     else res.send(data);
   });
 })
+
+app.get('/soda/:year/:requestType/total', (req, res) => {
+  const { year, requestType } = req.params;
+  const soda = newSoda(year);
+
+  soda.get(params(requestType, true), (err, response, data) => {
+    if (err) console.error(err);
+    else res.send(data);
+  })
+});
 
 app.listen(port, () => { console.log(`Listening on port: ${port}`)});
 

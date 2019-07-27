@@ -11,6 +11,21 @@
 
   <div id="app">
     <div id="chart"></div>
+    Service Request
+    <select class="request-dropdown">
+      <option value="Bulky Items">Bulky Items</option>
+      <option value="Dead Animal Removal">Dead Animal Removal</option>
+      <option value="Electronic Waste">Electronic Waste</option>
+      <option value="Graffiti Removal">Graffiti Removal</option>
+      <option value="Homeless Encampment">Homeless Encampment</option>
+      <option value="Illegal Dumping Pickup">Illegal Dumping Pickup</option>
+      <option value="Metal/Household Appliances">Metal/Household Appliances</option>
+      <option value="Single Streetlight Issue">Single Streetlight Issue</option>
+      <option value="Multiple Streetlight Issue">Multiple Streetlight Issue</option>
+      <option value="Report Water Waste">Report Water Waste</option>
+      <option value="Other">Other</option>
+    </select>
+    <br>
     Data Set 1
     <select class="data-dropdown">
       <option value="2016" selected="selected">2016</option>
@@ -25,13 +40,15 @@
     <br>
     Chart Type
     <select class="chart-type">
-      <option value="bar" selected="selected">Bar</option>
-      <option value="scatter">Scatter</option>
+      <option value="scatter" selected="selected">Scatter</option>
+      <option value="bar">Bar</option>
       <option value="pie">Pie</option>
       <option value="line">Line</option>
       <option value="area">Area</option>
     </select>
-    <br>
+    <p>
+    <input type="checkbox" name="total" value="false">Display Total Requests per year
+    <p>
     <button type="button">Submit</button>
   </div>
   <script src="app.js"></script>
