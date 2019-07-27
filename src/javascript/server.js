@@ -6,8 +6,11 @@ const app = express();
 const port = 3000;
 
 const resource = {
+  2015: 'ms7h-a45h',
   2016: 'ndkd-k878',
   2017: 'd4vt-q4t5',
+  2018: 'h65r-yf5i',
+  2019: 'pvft-t768',
 };
 
 const config = year => {
@@ -22,7 +25,7 @@ const params = (requestType = 'Bulky Items', total = false) => {
   return {
     $select: total ? ['count(requesttype)'] : ['createddate', 'zipcode', 'requesttype'],
     $where: `requesttype="${requestType}"`,
-    $limit: 30,
+    $limit: 100,
   };
 }
 
@@ -35,8 +38,12 @@ app.get('/soda/:year/:requestType', (req, res) => {
   const soda = newSoda(year);
 
   soda.get(params(requestType), (err, response, data) => {
-    if (err) console.error(err);
-    else res.send(data);
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    } else {
+      res.send(data);
+    }
   });
 })
 
@@ -45,8 +52,12 @@ app.get('/soda/:year/:requestType/total', (req, res) => {
   const soda = newSoda(year);
 
   soda.get(params(requestType, true), (err, response, data) => {
-    if (err) console.error(err);
-    else res.send(data);
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    } else {
+      res.send(data);
+    }
   })
 });
 
