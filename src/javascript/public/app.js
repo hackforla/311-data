@@ -20,19 +20,15 @@
     const chartType = document.querySelector('.chart-type').value;
     const datasets = document.querySelectorAll('.data-dropdown');
 
-    getData(datasets[0].value, requestType)
-      .then(() => {
-        getTotal(datasets[0].value, requestType)
-          .then(() => {
-            getData(datasets[1].value, requestType)
-              .then(() => {
-                getTotal(datasets[1].value, requestType)
-                  .then(() => {
-                    renderChart(chartData, countRequestType, chartType);
-                  })
-              })
-          })
-      })
+    Promise.all([
+      getData(datasets[0].value, requestType),
+      getTotal(datasets[0].value, requestType),
+      getData(datasets[1].value, requestType),
+      getTotal(datasets[1].value, requestType),
+    ])
+      .then(() => { renderChart(chartData, countRequestType, chartType); })
+      .catch(err => { console.error('Render Error :-S', err)});
+
    };
 
   function renderChart(chartData, countRequestType, type) {
@@ -74,6 +70,7 @@
 
   document.querySelector('button').onclick = e => {
     e.preventDefault();
+    chart.unload();
     chartData = [];
     countRequestType = [];
     buildChart();
