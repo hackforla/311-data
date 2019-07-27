@@ -18,9 +18,9 @@ const config = year => {
   }
 };
 
-const params = (requestType = 'Bulky Items') => {
+const params = (requestType = 'Bulky Items', total = false) => {
   return {
-    $select: ['zipcode', 'createddate', 'requesttype'],
+    $select: total ? ['count(requesttype)'] : ['createddate', 'zipcode', 'requesttype'],
     $where: `requesttype="${requestType}"`,
     $limit: 30,
   };
@@ -39,6 +39,16 @@ app.get('/soda/:year/:requestType', (req, res) => {
     else res.send(data);
   });
 })
+
+app.get('/soda/:year/:requestType/total', (req, res) => {
+  const { year, requestType } = req.params;
+  const soda = newSoda(year);
+
+  soda.get(params(requestType, true), (err, response, data) => {
+    if (err) console.error(err);
+    else res.send(data);
+  })
+});
 
 app.listen(port, () => { console.log(`Listening on port: ${port}`)});
 
