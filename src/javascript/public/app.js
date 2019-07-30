@@ -1,11 +1,10 @@
 (function(){
   let chartData = [];
-  let countRequestType = [];
 
   const chart = c3.generate({
     bindto: '#chart',
     data: {
-      type: document.querySelector('.chart-type').value,
+      type: getChartTypeDisplay(),
       columns: [],
     },
     axis: {
@@ -15,44 +14,21 @@
       }
   });
 
-  function buildChart() {
-    const requestType = document.querySelector('.request-dropdown').value;
-    const chartType = document.querySelector('.chart-type').value;
-    const datasets = document.querySelectorAll('.data-dropdown');
-
-    Promise.all([
-      getData(datasets[0].value, requestType),
-      getTotal(datasets[0].value, requestType),
-      getData(datasets[1].value, requestType),
-      getTotal(datasets[1].value, requestType),
-    ])
-      .then(() => { renderChart(chartData, countRequestType, chartType); })
-      .catch(err => { console.error('Render Error :-S', err)});
-
-   };
-
-  function renderChart(chartData, countRequestType, type) {
-    const isDisplayTotal = document.querySelector('input[name="total"]').checked;
-    let columns = [];
-
-    if (!isDisplayTotal) {
-      const newData = chartData.reduce((acc, cur) => {
-        const date = cur.createddate.slice(0, 4);
-        if (acc[date]) acc[date].push(parseInt(cur.zipcode));
-        else acc[date] = [];
-        return acc;
-      }, {})
-
-      for (let key in newData) {
-        newData[key].unshift(key);
-        columns.push(newData[key]);
-      }
-    } else {
-      columns = countRequestType;
-    }
-
-    chart.load({ columns, type });
+  function getChartTypeDisplay() {
+    return document.querySelector('.chart-type').value;
   };
+
+  function getDatasetsToDisplay() {
+    return document.querySelectorAll('.data-dropdown');
+  };
+
+  function getRequestType() {
+    return document.querySelector('.request-dropdown').value;
+  };
+
+  function getDisplayTotal() {
+    return document.querySelector('input[name="total"]').checked;
+  }
 
   function getData(year, requestType) {
     return fetch(`/soda/${year}/${requestType}`)
@@ -64,15 +40,34 @@
   function getTotal(year, requestType) {
     return fetch(`/soda/${year}/${requestType}/total`)
       .then(res => res.json())
-      .then(data => { countRequestType.push([year, parseInt(data[0].count_requesttype)]); })
+      .then(data => { chartData.push(data); })
       .catch(err => { console.error('Fetch Error :-S', err); })
-  }
+  };
+
+  function buildChart() {
+    const requestType = getRequestType();
+    const chartType = getChartTypeDisplay();
+    const displayTotal = getDisplayTotal();
+    const datasets = [...getDatasetsToDisplay()]
+                      .map(dataset => {
+                        const { value } = dataset;
+                        if (!displayTotal) return getData(value, requestType);
+                        else return getTotal(value, requestType);
+                      });
+
+    Promise.all(datasets)
+      .then(() => { renderChart(chartData, chartType); })
+      .catch(err => { console.error('Render Error :-S', err)});
+   };
+
+  function renderChart(columns, type) {
+    chart.load({ columns, type });
+  };
 
   document.querySelector('button').onclick = e => {
     e.preventDefault();
     chart.unload();
     chartData = [];
-    countRequestType = [];
     buildChart();
   };
 
