@@ -33,35 +33,16 @@
   function getData(year, requestType) {
     return fetch(`/soda/${year}/${requestType}`)
       .then(res => res.json())
-      .then(data => parseData(data, 'zipcode'))
-      .then(columns => { chartData.push(...columns); })
+      .then(data => { chartData.push(...data); })
       .catch(err => { console.error('Fetch Error :-S', err); });
   };
 
   function getTotal(year, requestType) {
     return fetch(`/soda/${year}/${requestType}/total`)
       .then(res => res.json())
-      .then(data => parseInt(data[0].count_requesttype))
-      .then(total => { chartData.push([year, total]); })
+      .then(data => { chartData.push(data); })
       .catch(err => { console.error('Fetch Error :-S', err); })
   };
-
-  function parseData(data, type) {
-    const columns = [];
-    const newData = data.reduce((acc, cur) => {
-        const date = cur.createddate.slice(0, 4);
-        if (acc[date]) acc[date].push(parseInt(cur[type]));
-        else acc[date] = [];
-        return acc;
-      }, {});
-
-    for (let key in newData) {
-      newData[key].unshift(key);
-      columns.push(newData[key]);
-    }
-
-    return columns;
-  }
 
   function buildChart() {
     const requestType = getRequestType();
@@ -77,7 +58,6 @@
     Promise.all(datasets)
       .then(() => { renderChart(chartData, chartType); })
       .catch(err => { console.error('Render Error :-S', err)});
-
    };
 
   function renderChart(columns, type) {
