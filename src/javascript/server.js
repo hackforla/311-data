@@ -31,6 +31,23 @@ const params = (requestType = 'Bulky Items', total = false) => {
 
 const newSoda = year => new Socrata(config(year));
 
+const parseDataByYear = (data, type) => {
+  const returnData = [];
+  const parsedData = data.reduce((acc, cur) => {
+    const year = cur.createddate.slice(0, 4);
+    if (acc[year]) acc[year].push(parseInt(cur[type]));
+    else acc[year] = [];
+    return acc;
+  }, {});
+
+  for (let key in parsedData) {
+    parsedData[key].unshift(key);
+    returnData.push(parsedData[key]);
+  }
+
+  return returnData;
+}
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/soda/:year/:requestType', (req, res) => {
@@ -42,7 +59,8 @@ app.get('/soda/:year/:requestType', (req, res) => {
       console.error(err);
       res.sendStatus(500);
     } else {
-      res.send(data);
+      const toSend = parseDataByYear(data, 'zipcode');
+      res.send(toSend);
     }
   });
 })
@@ -56,7 +74,8 @@ app.get('/soda/:year/:requestType/total', (req, res) => {
       console.error(err);
       res.sendStatus(500);
     } else {
-      res.send(data);
+      const toSend = [year, parseInt(data[0].count_requesttype)];
+      res.send(toSend);
     }
   })
 });
