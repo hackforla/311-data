@@ -17,7 +17,7 @@ const config = year => {
   return {
     hostDomain: 'https://data.lacity.org',
     resource: resource[year],
-    XAppToken: process.env.SODAPY_APPTOKEN || 'registered-app-token',
+    // XAppToken: process.env.SODAPY_APPTOKEN || 'registered-app-token',
   }
 };
 
