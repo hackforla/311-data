@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+  backend:
+    build:
+      context: ../python
+    image: 311-data-back:0.0.1
+    restart: always
+    environment:
+      SODAPY_APPTOKEN: <Your Token Here>
+    ports:
+      - 5000:5000
+
+  frontend:
+    build:
+      context: ../javascript/react/311-data
+    image: 311-data-front:0.0.1
+    volumes:
+      - '../javascript/react/311-data:/app'
+      - '/app/node_modules'
+    restart: always
+    ports:
+      - 3000:3000
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 311-data-is-r@d
+      POSTGRES_USER: 311-user
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

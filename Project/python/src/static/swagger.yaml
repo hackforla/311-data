@@ -1,0 +1,52 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a 311-data server.  You can find out more about it at the [wiki](https://github.com/hackforla/311-data/wiki)"
+  version: "0.0.1"
+  title: "311-Data"
+host: "localhost:5000"
+basePath: "/v1"
+schemes:
+- "http"
+paths:
+  /dataframe:
+    post:
+      summary: "Get a 1000-row dataframe from data_id"
+      description: ""
+      operationId: "addPet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data request object with the data_id"
+        required: true
+        schema:
+          $ref: "#/definitions/data_request"
+      responses:
+        405:
+          description: "Invalid input"
+        200:
+          description: "ApiResponse"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+definitions:
+  data_request:
+    type: "object"
+    properties:
+      data_id:
+        type: "string"
+        description: "data identifier from socrata"
+  ApiResponse:
+    type: "object"
+    properties:
+      StatusCode:
+        type: "integer"
+        format: "int32"
+      Payload:
+        type: "object"
+        description: "test"
+      Message:
+        type: "string"
