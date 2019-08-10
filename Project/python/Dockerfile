@@ -4,6 +4,8 @@ RUN mkdir /install
 
 WORKDIR /install
 
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y libpq-dev gcc
 RUN pip3 install --upgrade pip
 
 COPY requirements.txt /requirements.txt

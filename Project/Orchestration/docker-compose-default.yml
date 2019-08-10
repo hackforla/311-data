@@ -6,6 +6,7 @@ services:
       context: ../python
     image: 311-data-back:0.0.1
     restart: always
+    network_mode: host
     environment:
       SODAPY_APPTOKEN: <Your Token Here>
     ports:
@@ -25,9 +26,13 @@ services:
   db:
     image: postgres
     restart: always
+    volumes:
+      - '/var/run/postgresql:/var/run/postgresql'
     environment:
-      POSTGRES_PASSWORD: 311-data-is-r@d
-      POSTGRES_USER: 311-user
+      POSTGRES_PASSWORD: REDACTED
+      POSTGRES_USER: REDACTED
+    ports:
+      - 5432:5432
 
   adminer:
     image: adminer
