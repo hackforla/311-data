@@ -78,10 +78,15 @@ def seed_db():
     if request.method == "POST":
         params = request.get_json()
         db = params.get("db_provider", app.config["DEFAULT_DB_PROVIDER"])
+        if db == "postgres":
+            from utils.DBSeeder import DBSeeder
+            connection_string = app.config["DB_CONNECTION_STRING"]
 
-        response["Message"] = "You have seeded the database"
-        response["DatabaseProvider"] = db
-        response["StatusCode"] = 200
+            seeder = DBSeeder(connection_string=connection_string)
+            seeder.seed_with_file(path="static/MyLA311_Service_Request_Data_2017_Subset.csv", table_name="seed_data")
+            response["Message"] = "You have seeded the database"
+            response["DatabaseProvider"] = db
+            response["StatusCode"] = 200
     else:
         response["Message"] = "Possible database providers are: postgre"
         response["StatusCode"] = 200
