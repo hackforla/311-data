@@ -1,4 +1,4 @@
-# 311-data
+# 311-data [![Build Status](https://travis-ci.com/hackforla/311-data.svg?branch=master)](https://travis-ci.com/hackforla/311-data)
 Empower Neighborhood Associations to Improve analysis of their initiatives using 311 data
 
 ## Resources
