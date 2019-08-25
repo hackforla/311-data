@@ -2,6 +2,8 @@ import json
 from flask_cors import CORS
 from flask import Flask, jsonify, request
 from utils.BasicSodaClient import BasicSodaClient
+from utils.TreeMapper import TreeMapper
+from utils.DataRepository import DataRepository
 
 
 # Initialization
@@ -10,9 +12,10 @@ app = Flask(__name__)
 # Configuration
 app.config.from_pyfile('config.cfg')
 
-# CORS to allow all on localhost:3000
-cors = CORS(app, resources={r"/*": {"origins": app.config["FRONTEND_SERVER"]}})
+CORS(app)
 
+# Datastore connector
+repo = DataRepository(connection_string=app.config["DB_CONNECTION_STRING"])
 
 
 # Routing
@@ -67,6 +70,30 @@ def get_dataframe():
     response["DataId"] = data_id
     response["Payload"] = json.loads(frame_json)
     response["StatusCode"] = 200
+    return jsonify(response)
+
+
+@app.route("/treemap", methods=["GET", "POST"])
+def treemap():
+    response = {}
+    tree_map_gen = TreeMapper(repo)
+    nc_name = None
+    if request.method == "POST":
+        params = request.get_json()
+        nc_name = params.get("nc_name", None)
+
+    if not nc_name:
+        broad_data = tree_map_gen.BroadMap()
+        response["Message"] = "Retrieved broad NC Dataset"
+        response["StatusCode"] = 200
+        response["Payload"] = broad_data
+
+    else:
+        nc_data = tree_map_gen.NCMap(nc_name)
+        response["Message"] = "Retrieved zoomed NC Dataset for " + nc_name
+        response["StatusCode"] = 200
+        response["Payload"] = nc_data
+
     return jsonify(response)
 
 
