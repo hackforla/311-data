@@ -18,7 +18,7 @@ matrix:
         directories:
         - node_modules
       before_install:
-        - cd Project/javascript/react/311-data
+        - cd Project/react/311-data
       install:
         - npm install
       script:
