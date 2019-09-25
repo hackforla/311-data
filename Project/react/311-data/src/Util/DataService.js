@@ -1,0 +1,78 @@
+import DataFrame from 'dataframe-js';
+
+export function getColorMap(discrete){
+  if(discrete){
+    return [
+            {title: "Dead Animal Removal", color:"#3b69a6"},
+            {title: "Other",color:"#0dd311"},
+            {title: "Homeless Encampment",color:"#c1614e"},
+            {title: "Single Streetlight Issue",color:"#304bb5"},
+            {title: "Electronic Waste",color:"#41a84b"},
+            {title: "Feedback",color:"#c2f961"},
+            {title: "Graffiti Removal",color:"#4d6173"},
+            {title: "Multiple Streetlight Issue",color:"#9f2826"},
+            {title: "Metal/Household Appliances",color:"#306088"},
+            {title: "Illegal Dumping Pickup",color:"#b6d4df"},
+            {title: "Bulky Items",color:"#7f2a10"},
+            {title: "Report Water Waste",color:"#f7a6ce"}
+        ];
+  } else {
+    return {
+            "Dead Animal Removal":"#3b69a6",
+            "Other":"#0dd311",
+            "Homeless Encampment":"#c1614e",
+            "Single Streetlight Issue":"#304bb5",
+            "Electronic Waste":"#41a84b",
+            "Feedback":"#c2f961",
+            "Graffiti Removal":"#4d6173",
+            "Multiple Streetlight Issue":"#9f2826",
+            "Metal/Household Appliances":"#306088",
+            "Illegal Dumping Pickup":"#b6d4df",
+            "Bulky Items":"#7f2a10",
+            "Report Water Waste":"#f7a6ce"
+        };
+  }
+}
+
+export function getBroadCallVolume(onBroadDataReady){
+  let treemap_data = {"title": "Broad 311 Calls Map", "color": "#FFFFFF", "children": []};
+
+  DataFrame.fromJSON('https://data.lacity.org/resource/h65r-yf5i.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$group=NCName,RequestType&$order=CallVolume DESC').then(df => {
+    df.show();
+
+    const totalCounts = df.groupBy("ncname").aggregate(group => group.stat.sum("callvolume")).rename("aggregation", "callvolume");
+    let biggestProblems = {};
+    df.toCollection().forEach(row => {
+      const rhs = parseInt(row.callvolume);
+      const lhs = parseInt(biggestProblems[row.ncname]);
+      if(!lhs){
+        biggestProblems[row.ncname] = rhs;
+        biggestProblems[`${row.ncname}_biggestproblem`] = row.requesttype;
+      }
+      else if (lhs < rhs){
+        biggestProblems[row.ncname] = rhs;
+        biggestProblems[`${row.ncname}_biggestproblem`] = row.requesttype;
+      }
+    });
+    const colorMap = getColorMap(false);
+    totalCounts.toCollection().forEach(row => {
+      const biggestProblem = biggestProblems[`${row.ncname}_biggestproblem`];
+      const data_point = {"title": row.ncname, "color": colorMap[biggestProblem] , "size": row.callvolume};
+      treemap_data["children"].push(data_point);
+    })
+    onBroadDataReady(treemap_data);
+  });
+}
+
+export function getZoomedCallVolume(ncName, onZoomedDataReady){
+  let treemap_data = {"title": "Zoomed 311 Calls Map", "color": "#FFFFFF", "children": []};
+
+  DataFrame.fromJSON(`https://data.lacity.org/resource/h65r-yf5i.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=NCName+=+'${ncName}'&$group=NCName,RequestType&$order=CallVolume DESC`).then(df => {
+    const colorMap = getColorMap(false);
+    df.toCollection().forEach(row => {
+      const data_point = {"title": row.requesttype, "color": colorMap[row.requesttype] , "size": row.callvolume};
+      treemap_data["children"].push(data_point);
+    })
+    onZoomedDataReady(treemap_data);
+  });
+}

@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import ApiButtons from './components/ApiButtons.js';
+import TreeMapVis from './components/TreeMapVis/TreeMapVis.js';
 
 function App() {
   return (
     <div className="App">
-      <ApiButtons />
+      <TreeMapVis />
     </div>
   );
 }

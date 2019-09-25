@@ -1,15 +1,15 @@
 matrix:
   include:
-    - language: python
-      python:
-        - "3.6"
-      before_install:
-        - cd Project/python
-      install:
-        - pip install -r requirements.txt
-      # command to run tests
-      script:
-        - pytest
+    # - language: python
+    #   python:
+    #     - "3.6"
+    #   before_install:
+    #     - cd Project/python
+    #   install:
+    #     - pip install -r requirements.txt
+    #   # command to run tests
+    #   script:
+    #     - pytest
 
     - language: node_js
       node_js:
@@ -18,7 +18,7 @@ matrix:
         directories:
         - node_modules
       before_install:
-        - cd Project/javascript/react/311-data
+        - cd Project/react/311-data
       install:
         - npm install
       script:
