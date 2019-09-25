@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require('./node_modules/express');
 const path = require('path');
-const Socrata = require('node-socrata');
+const Socrata = require('./node_modules/node-socrata');
 
 const app = express();
 const port = 3000;
