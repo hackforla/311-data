@@ -1,3 +1,4 @@
 Project/Orchestration/docker-compose.yml
 Project/python/src/config.cfg
 __pycache__
+src/javascript/node_modules/
