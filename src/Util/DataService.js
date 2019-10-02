@@ -8,6 +8,10 @@ const dataResources = {
   2015:"ms7h-a45h"
 }
 
+export function getDataResources() {
+  return dataResources;
+}
+
 export function getColorMap(discrete){
   if(discrete){
     return [

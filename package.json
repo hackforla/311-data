@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "homepage": "https://hackforla.github.io/311-data",
   "dependencies": {
+    "axios": "^0.19.0",
     "dataframe-js": "^1.4.3",
     "gh-pages": "^2.1.1",
     "leaflet": "^1.5.1",

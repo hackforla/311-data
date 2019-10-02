@@ -5,6 +5,7 @@ import CandleStick from './components/CandleStick/CandleStick.js';
 import PinMap from './components/PinMap/PinMap.jsx';
 import HeatMap from './components/HeatMap/HeatMap.js';
 
+
  class App extends React.Component{
    constructor(props){
      super(props);
@@ -19,9 +20,9 @@ import HeatMap from './components/HeatMap/HeatMap.js';
 
   render(){
     const prototypeMap = {
-      TreeMapVis: <TreeMapVis/>,
+      TreeMapVis: <TreeMapVis />,
       CandleStick: <CandleStick/>,
-      PinMap: <PinMap/>,
+      PinMap: <PinMap />,
       HeatMap:<HeatMap/>
     }
 
