@@ -2,13 +2,15 @@ import React from 'react';
 import './App.css';
 import TreeMapVis from './components/TreeMapVis/TreeMapVis.js';
 import CandleStick from './components/CandleStick/CandleStick.js';
-import PinMap from './components/PinMap/PinMap.js';
+import PinMap from './components/PinMap/PinMap.jsx';
 import HeatMap from './components/HeatMap/HeatMap.js';
 
  class App extends React.Component{
    constructor(props){
      super(props);
-     this.state = {selectedId: ""}
+     this.state = {
+       selectedId: "TreeMapVis"
+      }
    }
 
    handleMockSelected = (e) => {
