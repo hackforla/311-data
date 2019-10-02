@@ -15,7 +15,7 @@ import TreeMapVis from './components/TreeMapVis/TreeMapVis.js';
   render(){
     const prototypeMap = {
       TreeMapVis: <TreeMapVis/>,
-      // PinMap: <PinMap/>
+      PinMap: <PinMap/>
     }
 
     return (
