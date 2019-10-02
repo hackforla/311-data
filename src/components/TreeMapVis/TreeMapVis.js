@@ -31,10 +31,12 @@ class TreeMapVis extends React.Component {
   }
 
   getBaseTree = () => {
+    this.props.loadingChanged(true);
     getBroadCallVolume(this.state.targetYear,
                        this.state.startMonth,
                        this.state.endMonth,
                        (dataset) => {
+                         this.props.loadingChanged(false);
                           this.setState({
                             dataset: dataset
                           });
@@ -42,11 +44,13 @@ class TreeMapVis extends React.Component {
   };
 
   handleNCZoom = x => {
+    this.props.loadingChanged(true);
     getZoomedCallVolume(x,
                        this.state.targetYear,
                        this.state.startMonth,
                        this.state.endMonth,
                        (dataset) =>{
+                         this.props.loadingChanged(false);
                           this.setState({
                             dataset: dataset,
                             zoomed: true
