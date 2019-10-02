@@ -2,16 +2,21 @@ import React from 'react';
 import {Treemap} from 'react-vis';
 import Legend from './Legend.js';
 import HoverInfo from './HoverInfo.js';
+import Filters from './Filters.js';
 import "./Styles/TreeMapVis.scss"
 import {getZoomedCallVolume, getBroadCallVolume} from '../../Util/DataService.js';
 
 class TreeMapVis extends React.Component {
   constructor(props){
     super(props);
-    this.state = {width:"0",
+    this.state = {targetYear: 2016,
+                  startMonth:1,
+                  endMonth:2,
+                  width:"0",
                   height:"0",
                   dataset: {},
                   zoomed: false,
+                  selectedNC:"",
                   hoveredItem: '',
                   callVolume:''}
   }
@@ -26,33 +31,41 @@ class TreeMapVis extends React.Component {
   }
 
   getBaseTree = () => {
-    getBroadCallVolume((dataset) => {
-      this.setState({
-        dataset: dataset
-      });
-    });
+    getBroadCallVolume(this.state.targetYear,
+                       this.state.startMonth,
+                       this.state.endMonth,
+                       (dataset) => {
+                          this.setState({
+                            dataset: dataset
+                          });
+                        });
   };
 
   handleNCZoom = x => {
-    getZoomedCallVolume(x, (dataset) =>{
-      console.log(dataset);
-      this.setState({
-        dataset: dataset,
-        zoomed: true
-      });
-    });
+    getZoomedCallVolume(x,
+                       this.state.targetYear,
+                       this.state.startMonth,
+                       this.state.endMonth,
+                       (dataset) =>{
+                          this.setState({
+                            dataset: dataset,
+                            zoomed: true
+                          });
+                        });
   };
 
   handleNodeClick = x => {
       if (this.state.zoomed){
         this.setState({
           zoomed: false,
+          selectedNC:'',
           hoveredItem: '',
           callVolume: '' });
         this.getBaseTree()
       } else {
         this.handleNCZoom(x.data.title);
         this.setState({
+          selectedNC: x.data.title,
           hoveredItem: '',
           callVolume: '' });
       }
@@ -60,6 +73,43 @@ class TreeMapVis extends React.Component {
 
   handleNodeHover = x => {
     this.setState({hoveredItem: x.data.title, callVolume: x.data.size});
+  };
+
+  handleYearChange = x => {
+    const year = x.target.value;
+    console.log(`Year changed to ${year}`);
+    this.setState({targetYear: year});
+    if (this.state.zoomed){
+      this.handleNCZoom(this.state.selectedNC)
+    } else{
+      this.getBaseTree()
+    }
+  };
+
+  handlerSliderChange = x => {
+    console.log(x);
+  }
+
+  handleStartMonthChange = x => {
+    const month = x.target.value
+    console.log(`Start month changed to ${month}`);
+    this.setState({startMonth: month});
+    if (this.state.zoomed){
+      this.handleNCZoom(this.state.selectedNC)
+    } else{
+      this.getBaseTree()
+    }
+  };
+
+  handleEndMonthChange = x => {
+    const month = x.target.value
+    console.log(`End month changed to ${month}`);
+    this.setState({endMonth: month});
+    if (this.state.zoomed){
+      this.handleNCZoom(this.state.selectedNC)
+    } else{
+      this.getBaseTree()
+    }
   };
 
   render() {
@@ -75,7 +125,7 @@ class TreeMapVis extends React.Component {
           animation={animationProps}
           colorType={'literal'}
           width={this.state.width}
-          height={800}
+          height={this.state.height / 2}
           onLeafClick={this.handleNodeClick}
           onLeafMouseOver={ this.handleNodeHover }
           data={this.state.dataset}/>
@@ -83,6 +133,12 @@ class TreeMapVis extends React.Component {
           dataTitle={this.state.hoveredItem}
           dataCount={this.state.callVolume}/>
         <Legend />
+        <Filters yearChange={this.handleYearChange}
+                 sMonthChange={this.handleStartMonthChange}
+                 eMonthChange={this.handleEndMonthChange}
+                 targetYear={this.state.targetYear}
+                 sMonth={this.state.startMonth}
+                 eMonth={this.state.endMonth}/>
       </div>
     );
   }
