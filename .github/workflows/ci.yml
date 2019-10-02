@@ -19,6 +19,6 @@ jobs:
     - name: Install Packages
       run: npm install
     - name: Run Tests
-      run: npm run test
+      run: export CI=true && npm run test
     # - name: Deploy to GH Pages
     #   run: npm run deploy
