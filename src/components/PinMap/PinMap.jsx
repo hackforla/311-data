@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
-import { mapAccessToken } from '../../config.js';
+import { mapToken } from '../../config.js';
 
 const serviceRequests = [
   'Bulky Items',
@@ -31,7 +31,7 @@ class PinMap extends Component {
     this.state = {
       position: [34.0173157, -118.2497254],
       zoom: 10,
-      mapUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${mapToken}`,
     }
   }
 
@@ -45,27 +45,34 @@ class PinMap extends Component {
     return (
       <div className="pinmap-container">
         <div className="map-container">
-          <Map center={position} zoom={zoom}>
+          <Map
+            center={position}
+            zoom={zoom}
+            style={{ height: '70vh' }}>
             <TileLayer
               url={mapUrl}
-              attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+              attribution="Hack4LA"
             />
             <Marker position={position}>
-              <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
+              <Popup>
+                A pretty CSS3 popup.
+                <br />
+                Easily customizable.
+              </Popup>
             </Marker>
           </Map>
         </div>
         <div className="dropdown-container">
           Year
           &nbsp;
-          <select class="year-dropdown">
-            {years.map(year => (<option value={year}>{year}</option>))}
+          <select className="year-dropdown">
+            {years.map(year => (<option key={year} value={year}>{year}</option>))}
           </select>
           <br/>
           Service Request
           &nbsp;
-          <select class="request-dropdown">
-            {serviceRequests.map(service => (<option value={service}>{service}</option>))}
+          <select className="request-dropdown">
+            {serviceRequests.map(service => (<option key={service} value={service}>{service}</option>))}
           </select>
         </div>
       </div>
