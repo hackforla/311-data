@@ -1,6 +1,9 @@
 import React from 'react';
 import './App.css';
 import TreeMapVis from './components/TreeMapVis/TreeMapVis.js';
+import CandleStick from './components/CandleStick/CandleStick.js';
+import PinMap from './components/PinMap/PinMap.js';
+import HeatMap from './components/HeatMap/HeatMap.js';
 
  class App extends React.Component{
    constructor(props){
@@ -15,7 +18,9 @@ import TreeMapVis from './components/TreeMapVis/TreeMapVis.js';
   render(){
     const prototypeMap = {
       TreeMapVis: <TreeMapVis/>,
-      PinMap: <PinMap/>
+      CandleStick: <CandleStick/>,
+      PinMap: <PinMap/>,
+      HeatMap:<HeatMap/>
     }
 
     return (
