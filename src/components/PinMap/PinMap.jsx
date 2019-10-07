@@ -22,9 +22,6 @@ const serviceRequests = [
   'Other',
 ];
 
-const outer = [[50.505, -29.09], [52.505, 29.09]]
-const inner = [[49.505, -2.09], [53.505, 2.09]]
-
 const years = [
   '2015',
   '2016',
@@ -97,8 +94,8 @@ class PinMap extends Component {
   }
 
   zoomToRegion = (e, layer) => {
-    console.log(e);
-    console.log(layer);
+    // console.log(e);
+    // console.log(layer);
     // Map.fitBounds(e.target.getBounds());
   }
 
@@ -185,7 +182,7 @@ class PinMap extends Component {
     return (
       <Rectangle bounds={tooltipPosition} color="black">
         <Tooltip direction="top" offset={[0, 20]} opacity={1} permanent>
-          No Data Found
+          No Data To Display
         </Tooltip>
       </Rectangle>
     )
@@ -207,14 +204,6 @@ class PinMap extends Component {
             />
             {this.renderOverlay()}
             {this.renderMarkers()}
-            <Rectangle
-              bounds={outer}
-              color="black">
-            </Rectangle>
-            <Rectangle
-              bounds={inner}
-              color="red">
-            </Rectangle>
           </Map>
         </div>
         <div className="dropdown-container">
