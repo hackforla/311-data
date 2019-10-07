@@ -60,6 +60,7 @@ class PinMap extends Component {
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${mapToken}`,
       dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
       geoJSON: councilDistrictsOverlay,
+      showMarkers: true,
     };
   }
 
@@ -73,6 +74,11 @@ class PinMap extends Component {
     }, () => {
       this.fetchData();
     });
+  }
+
+  toggleShowMarkers = () => {
+    const { showMarkers } = this.state;
+    this.setState({ showMarkers: !showMarkers })
   }
 
   highlightRegion = e => {
@@ -152,9 +158,9 @@ class PinMap extends Component {
   }
 
   renderMarkers = () => {
-    const { data } = this.state;
+    const { data, showMarkers } = this.state;
 
-    if (data && data.length > 0) {
+    if (showMarkers && data && data.length > 0) {
       return data.map((d, idx) => {
         const { location } = d;
         let position = [0, 0];
@@ -189,7 +195,7 @@ class PinMap extends Component {
   }
 
   renderMap = () => {
-    const { position, zoom, mapUrl } = this.state;
+    const { position, zoom, mapUrl, showMarkers } = this.state;
 
     return (
       <>
@@ -230,6 +236,9 @@ class PinMap extends Component {
           <select id="request" className="dropdown" onChange={this.onDropdownChange}>
             {serviceRequests.map(service => (<option key={service} value={service}>{service}</option>))}
           </select>
+          <input type="checkbox" value="Markers" checked={showMarkers} onClick={this.toggleShowMarkers}/>
+            Show Markers
+          <br/>
         </div>
       </>
     )
