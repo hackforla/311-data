@@ -28,7 +28,7 @@ import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner.js';
     const prototypeMap = {
       TreeMapVis: <TreeMapVis loadingChanged={this.handleLoadingChanged}/>,
       CandleStick: <CandleStick/>,
-      PinMap: <PinMap />,
+      PinMap: <PinMap loadingChanged={this.handleLoadingChanged} />,
       HeatMap:<HeatMap/>
     }
 

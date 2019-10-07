@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import { Map, Marker, Popup, TileLayer, Rectangle, Tooltip } from 'react-leaflet';
+import Choropleth from 'react-leaflet-choropleth';
 import { mapToken } from '../../config.js';
 import { getDataResources } from '../../Util/DataService.js';
+import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
+import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
+import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 import axios from 'axios';
 
 const serviceRequests = [
@@ -17,6 +21,9 @@ const serviceRequests = [
   'Report Water Waste',
   'Other',
 ];
+
+const outer = [[50.505, -29.09], [52.505, 29.09]]
+const inner = [[49.505, -2.09], [53.505, 2.09]]
 
 const years = [
   '2015',
@@ -47,12 +54,15 @@ class PinMap extends Component {
 
     this.state = {
       data: [],
-      year: '2017',
-      request: 'Bulky Items',
+      year: years[0],
+      startMonth: '1',
+      endMonth: '12',
+      request: serviceRequests[0],
       position: [34.0173157, -118.2497254],
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${mapToken}`,
-      dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3'
+      dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
+      geoJSON: councilDistrictsOverlay,
     };
   }
 
@@ -63,59 +73,129 @@ class PinMap extends Component {
   onDropdownChange = e => {
     this.setState({
       [e.target.id]: e.target.value,
-    })
+    }, () => {
+      this.fetchData();
+    });
+  }
 
-    this.fetchData();
+  highlightRegion = e => {
+    const layer = e.target;
+
+    layer.setStyle({
+      weight: 5,
+      color: '#666',
+      dashArray: '',
+      fillOpacity: 0.7
+    });
+
+    layer.bringToFront();
+  }
+
+  resetRegionHighlight = (e, layer) => {
+    // console.log(e)
+    // console.log(layer)
+  }
+
+  zoomToRegion = (e, layer) => {
+    console.log(e);
+    console.log(layer);
+    // Map.fitBounds(e.target.getBounds());
+  }
+
+  onEachFeature = (feature, layer) => {
+    // Popup text when clicking on a region
+    // layer.bindPopup(feature.properties.name)
+
+    // Sets mouseover/out/click event handlers for each region
+    layer.on({
+      mouseover: this.highlightRegion,
+      mouseout: (e) => { this.resetRegionHighlight(e, layer); },
+      click: (e) => { this.zoomToRegion(e, layer) }
+    });
   }
 
   buildDataUrl = () => {
-    const { year, request } = this.state;
+    const { startMonth, endMonth, year, request } = this.state;
     const dataResources = getDataResources();
-    return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3+and+requesttype='${request}'`
+    return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`
   }
 
   fetchData = () => {
     const dataUrl = this.buildDataUrl();
 
     axios.get(dataUrl)
-      .then(res => {
-        this.setState({ data: res.data })
+      .then(({ data }) => {
+        this.setState({ data })
       })
       .catch(error => {
         console.error(error);
       });
   }
 
+  renderOverlay = () => {
+    const { geoJSON } = this.state;
+
+    if (geoJSON) {
+      return (
+        <Choropleth
+          data={geoJSON}
+          style={{
+            fillColor: '#bcbddc',
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+          }}
+          onEachFeature={this.onEachFeature}
+          ref={(el) => el ? this.choropleth = el.leafletElement : null}
+        />
+      )
+    }
+  }
+
   renderMarkers = () => {
     const { data } = this.state;
 
-    return data.map((d, idx) => {
-      const { location } = d;
-      let position = [0, 0];
+    if (data && data.length > 0) {
+      return data.map((d, idx) => {
+        const { location } = d;
+        let position = [0, 0];
 
-      if (location) {
-        position = [location.latitude, location.longitude];
-      }
+        if (location) {
+          position = [location.latitude, location.longitude];
+        }
 
-      return (
-        <Marker key={idx} position={position}>
-          <Popup>
-            Type:
-            {d.requesttype}
-            <br />
-            Address:
-            {d.address}
-          </Popup>
-        </Marker>
-      )
-    })
+        return (
+          <Marker key={idx} position={position}>
+            <Popup>
+              Type:
+              {d.requesttype}
+              <br />
+              Address:
+              {d.address}
+            </Popup>
+          </Marker>
+        );
+      });
+    }
+
+    const tooltipPosition = [[34.0173157, -118.2497254], [34.1, -118.1497254],]
+
+    return (
+      <Rectangle bounds={tooltipPosition} color="black">
+        <Tooltip direction="top" offset={[0, 20]} opacity={1} permanent>
+          No Data Found
+        </Tooltip>
+      </Rectangle>
+    )
   }
 
   renderMap = () => {
     const { position, zoom, mapUrl } = this.state;
 
     return (
-      <div className="pinmap-container">
+      <>
         <div className="map-container">
           <Map
             center={position}
@@ -123,9 +203,18 @@ class PinMap extends Component {
             style={{ height: '70vh' }}>
             <TileLayer
               url={mapUrl}
-              attribution="Hack4LA"
+              attribution="MapBox"
             />
+            {this.renderOverlay()}
             {this.renderMarkers()}
+            <Rectangle
+              bounds={outer}
+              color="black">
+            </Rectangle>
+            <Rectangle
+              bounds={inner}
+              color="red">
+            </Rectangle>
           </Map>
         </div>
         <div className="dropdown-container">
@@ -135,19 +224,31 @@ class PinMap extends Component {
             {years.map(year => (<option key={year} value={year}>{year}</option>))}
           </select>
           <br/>
+          Start Month
+          &nbsp;
+          <select id="startMonth" className="dropdown" onChange={this.onDropdownChange}>
+            {months.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>))}
+          </select>
+          <br/>
+          End Month
+          &nbsp;
+          <select id="endMonth" className="dropdown" defaultValue="12" onChange={this.onDropdownChange}>
+            {months.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>))}
+          </select>
+          <br/>
           Service Request
           &nbsp;
           <select id="request" className="dropdown" onChange={this.onDropdownChange}>
             {serviceRequests.map(service => (<option key={service} value={service}>{service}</option>))}
           </select>
         </div>
-      </div>
+      </>
     )
   }
 
   render() {
     return (
-      <div>{this.renderMap()}</div>
+      <div className="pinmap">{this.renderMap()}</div>
     )
   }
 }

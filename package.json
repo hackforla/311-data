@@ -11,6 +11,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-leaflet": "^2.4.0",
+    "react-leaflet-choropleth": "^2.0.0",
     "react-scripts": "3.0.1",
     "react-vis": "^1.11.7"
   },
