@@ -60,7 +60,8 @@ class PinMap extends Component {
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${mapToken}`,
       dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
       geoJSON: councilDistrictsOverlay,
-      showMarkers: true,
+      showMarkers: false,
+      bounds: null,
     };
   }
 
@@ -94,15 +95,22 @@ class PinMap extends Component {
     layer.bringToFront();
   }
 
-  resetRegionHighlight = (e, layer) => {
-    // console.log(e)
-    // console.log(layer)
+  resetRegionHighlight = e => {
+    const layer = e.target;
+
+    layer.setStyle({
+      fillColor: '#bcbddc',
+      weight: 2,
+      opacity: 1,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.7
+    })
   }
 
-  zoomToRegion = (e, layer) => {
-    // console.log(e);
-    // console.log(layer);
-    // Map.fitBounds(e.target.getBounds());
+  zoomToRegion = e => {
+    const bounds = e.target.getBounds();
+    this.setState({ bounds })
   }
 
   onEachFeature = (feature, layer) => {
@@ -112,8 +120,8 @@ class PinMap extends Component {
     // Sets mouseover/out/click event handlers for each region
     layer.on({
       mouseover: this.highlightRegion,
-      mouseout: (e) => { this.resetRegionHighlight(e, layer); },
-      click: (e) => { this.zoomToRegion(e, layer) }
+      mouseout: this.resetRegionHighlight,
+      click: this.zoomToRegion,
     });
   }
 
@@ -195,7 +203,7 @@ class PinMap extends Component {
   }
 
   renderMap = () => {
-    const { position, zoom, mapUrl, showMarkers } = this.state;
+    const { position, zoom, mapUrl, showMarkers, bounds } = this.state;
 
     return (
       <>
@@ -203,6 +211,7 @@ class PinMap extends Component {
           <Map
             center={position}
             zoom={zoom}
+            bounds={bounds}
             style={{ height: '70vh' }}>
             <TileLayer
               url={mapUrl}
@@ -236,7 +245,7 @@ class PinMap extends Component {
           <select id="request" className="dropdown" onChange={this.onDropdownChange}>
             {serviceRequests.map(service => (<option key={service} value={service}>{service}</option>))}
           </select>
-          <input type="checkbox" value="Markers" checked={showMarkers} onClick={this.toggleShowMarkers}/>
+          <input type="checkbox" value="Markers" checked={showMarkers} onChange={this.toggleShowMarkers}/>
             Show Markers
           <br/>
         </div>
