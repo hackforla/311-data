@@ -24,10 +24,9 @@ jobs:
       run: export CI=true && npm run test -- --coverage
       env:
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
-    -name: Deploy to GH pages
-     uses: hackforla/311-data@master
-     env:
+    - name: Deploy
+      run: npm run deploy
+      env:
+        MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: dist
-        BUILD_SCRIPT: npm install && npm run-script build
+    
