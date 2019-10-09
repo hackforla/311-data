@@ -24,3 +24,10 @@ jobs:
       run: export CI=true && npm run test -- --coverage
       env:
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
+    -name: Deploy to GH pages
+     uses: JamesIves/github-pages-deploy-action@master
+     env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: dist
+        BUILD_SCRIPT: npm install && npm run-script build
