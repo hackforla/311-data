@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import { Map, Marker, Popup, TileLayer, Rectangle, Tooltip } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
-<<<<<<< HEAD
-=======
-// import { mapToken } from '../../config.js';
->>>>>>> 7204c2d5bbe8860a8d71d3ab83d2dd805e7f136e
 import { getDataResources } from '../../Util/DataService.js';
 import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -66,8 +62,6 @@ class PinMap extends Component {
       showMarkers: false,
       bounds: null,
     };
-
-    console.log(process.env)
   }
 
   componentDidMount() {
