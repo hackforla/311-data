@@ -1,13 +1,15 @@
 name: MasterDeployCI
 on:
   push:
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [10.x, 11.x]
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -16,7 +18,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install Packages
       run: npm install
+    - name: Build project
+      run: npm run-script build
     - name: Run Tests
-      run: export CI=true && npm run test
-    # - name: Deploy to GH Pages
-    #   run: npm run deploy
+      run: export CI=true && npm run test -- --coverage
