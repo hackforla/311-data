@@ -65,6 +65,8 @@ class PinMap extends Component {
       showMarkers: false,
       bounds: null,
     };
+
+    console.log(process.env)
   }
 
   componentDidMount() {
