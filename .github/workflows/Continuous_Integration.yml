@@ -1,0 +1,24 @@
+name: Dev_CI
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 11.x]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Packages
+      run: npm install  && echo $TEST_SECRET
+    - name: Build project
+      run: npm run-script build
+    - name: Run Tests
+      run: export CI=true && npm run test -- --coverage
