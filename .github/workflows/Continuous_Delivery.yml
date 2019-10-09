@@ -25,7 +25,7 @@ jobs:
       env:
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
     -name: Deploy to GH pages
-     uses: JamesIves/github-pages-deploy-action@master
+     uses: hackforla/311-data@master
      env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: gh-pages
