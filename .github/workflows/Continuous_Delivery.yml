@@ -24,7 +24,8 @@ jobs:
       run: export CI=true && npm run test -- --coverage
       env:
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
-    uses: JamesIves/github-pages-deploy-action@master
+    - name: Fancy Deploy
+      uses: JamesIves/github-pages-deploy-action@master
       env:
         # ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BASE_BRANCH: master # The branch the action should deploy from.
@@ -33,7 +34,7 @@ jobs:
         BUILD_SCRIPT: npm install && npm run-script build # The build script the action should run prior to deploying.
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
 
-    - name: Deploy
-      run: git config --global user.email "sell_nat@yahoo.com" && git config --global user.name "RussellCI" && npm run deploy
-      env:
-        MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
+    # - name: Deploy
+    #   run: git config --global user.email "sell_nat@yahoo.com" && git config --global user.name "RussellCI" && npm run deploy
+    #   env:
+    #     MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
