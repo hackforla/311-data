@@ -34,6 +34,6 @@ jobs:
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
 
     - name: Deploy
-      run: git config --glo bal user.email "sell_nat@yahoo.com" && git config --global user.name "RussellCI" && npm run deploy
+      run: git config --global user.email "sell_nat@yahoo.com" && git config --global user.name "RussellCI" && npm run deploy
       env:
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
