@@ -3,13 +3,14 @@ import {Treemap} from 'react-vis';
 import Legend from './Legend.js';
 import HoverInfo from './HoverInfo.js';
 import Filters from './Filters.js';
+import DateFilters from '../common/dataPicker.jsx';
 import "./Styles/TreeMapVis.scss"
 import {getZoomedCallVolume, getBroadCallVolume} from '../../Util/DataService.js';
 
 class TreeMapVis extends React.Component {
   constructor(props){
     super(props);
-    this.state = {targetYear: 2016,
+    this.state = {year: 2016,
                   startMonth:1,
                   endMonth:2,
                   width:"0",
@@ -32,7 +33,7 @@ class TreeMapVis extends React.Component {
 
   getBaseTree = () => {
     this.props.loadingChanged(true);
-    getBroadCallVolume(this.state.targetYear,
+    getBroadCallVolume(this.state.year,
                        this.state.startMonth,
                        this.state.endMonth,
                        (dataset) => {
@@ -46,7 +47,7 @@ class TreeMapVis extends React.Component {
   handleNCZoom = x => {
     this.props.loadingChanged(true);
     getZoomedCallVolume(x,
-                       this.state.targetYear,
+                       this.state.year,
                        this.state.startMonth,
                        this.state.endMonth,
                        (dataset) =>{
@@ -79,42 +80,29 @@ class TreeMapVis extends React.Component {
     this.setState({hoveredItem: x.data.title, callVolume: x.data.size});
   };
 
-  handleYearChange = x => {
-    const year = x.target.value;
-    console.log(`Year changed to ${year}`);
-    this.setState({targetYear: year});
+  onDatePickerChange = e => {
+    console.log(e.target.value);
+    console.log(e.target);
+    this.setState({[e.target.id]: e.target.value});
+    switch(e.target.id){
+      case "startMonth":
+
+        break
+      case "endMonth":
+        this.setState({endMonth: e.target.value});
+        break
+      case "year":
+        this.setState({year: e.target.value});
+        break
+      default:
+        break
+    }
     if (this.state.zoomed){
       this.handleNCZoom(this.state.selectedNC)
     } else{
       this.getBaseTree()
     }
-  };
-
-  handlerSliderChange = x => {
-    console.log(x);
   }
-
-  handleStartMonthChange = x => {
-    const month = x.target.value
-    console.log(`Start month changed to ${month}`);
-    this.setState({startMonth: month});
-    if (this.state.zoomed){
-      this.handleNCZoom(this.state.selectedNC)
-    } else{
-      this.getBaseTree()
-    }
-  };
-
-  handleEndMonthChange = x => {
-    const month = x.target.value
-    console.log(`End month changed to ${month}`);
-    this.setState({endMonth: month});
-    if (this.state.zoomed){
-      this.handleNCZoom(this.state.selectedNC)
-    } else{
-      this.getBaseTree()
-    }
-  };
 
   render() {
     const animationProps = {
@@ -137,12 +125,8 @@ class TreeMapVis extends React.Component {
           dataTitle={this.state.hoveredItem}
           dataCount={this.state.callVolume}/>
         <Legend />
-        <Filters yearChange={this.handleYearChange}
-                 sMonthChange={this.handleStartMonthChange}
-                 eMonthChange={this.handleEndMonthChange}
-                 targetYear={this.state.targetYear}
-                 sMonth={this.state.startMonth}
-                 eMonth={this.state.endMonth}/>
+        <DateFilters
+          onChange={this.onDatePickerChange}/>
       </div>
     );
   }
