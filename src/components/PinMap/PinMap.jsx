@@ -2,39 +2,27 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Map, Marker, Popup, TileLayer, Rectangle, Tooltip } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
+
+import constants from '../common/CONSTANTS.js';
 import { getDataResources } from '../../Util/DataService.js';
 import DatePicker from '../common/dataPicker.jsx';
-import config from '../../config.js';
 
 import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 
-const serviceRequests = [
-  'Bulky Items',
-  'Dead Animal Removal',
-  'Electronic Waste',
-  'Graffiti Removal',
-  'Homeless Encampment',
-  'Illegal Dumping Pickup',
-  'Metal/Household Appliances',
-  'Single Streetlight Issue',
-  'Multiple Streetlight Issue',
-  'Report Water Waste',
-  'Other',
-];
 
 class PinMap extends Component {
   constructor(props) {
     super(props);
 
-    this.token = process.env.MAPBOX_TOKEN || config.mapToken;
+    this.token = process.env.REACT_APP_MAPBOX_TOKEN;
     this.state = {
       data: [],
       year: '2015',
       startMonth: '1',
       endMonth: '12',
-      request: serviceRequests[0],
+      request: constants.REQUESTS[0],
       position: [34.0173157, -118.2497254],
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${this.token}`,
@@ -210,7 +198,7 @@ class PinMap extends Component {
         <DatePicker
           showMarkerDropdown
           showRequestsDropdown
-          serviceRequests={serviceRequests}
+          serviceRequests={constants.REQUESTS}
           showMarkers={showMarkers}
           toggleShowMarkers={this.toggleShowMarkers}
           onChange={this.onDatePickerChange}
