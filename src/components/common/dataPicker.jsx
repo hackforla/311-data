@@ -1,34 +1,5 @@
 import React from 'react';
-
-const years = [
-  '2015',
-  '2016',
-  '2017',
-  '2018',
-  '2019',
-];
-
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
-
-const options = [
-  'Year',
-  'Start Month',
-  'End Month',
-  'Service Requests',
-];
+import constants from '../common/CONSTANTS.js';
 
 export default ({
   showMarkerDropdown,
@@ -38,18 +9,29 @@ export default ({
   onChange,
   toggleShowMarkers,
 }) => {
+  const { YEARS, MONTHS } = constants;
+  const options = [
+    'Year',
+    'Start Month',
+    'End Month',
+  ];
+
+  if (showRequestsDropdown) {
+    options.push('Service Requests');
+  }
+
   const renderDatePicker = options.map(option => {
     let component;
 
     switch (option) {
       case 'Year':
-        component = years.map(year => (<option key={year} value={year}>{year}</option>));
+        component = YEARS.map(year => (<option key={year} value={year}>{year}</option>));
         break;
       case 'Start Month':
-        component = months.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>));
+        component = MONTHS.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>));
         break;
       case 'End Month':
-        component = months.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>));
+        component = MONTHS.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>));
         break;
       case 'Service Requests':
         component = serviceRequests.map(service => (<option key={service} value={service}>{service}</option>));

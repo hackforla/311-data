@@ -207,6 +207,7 @@ class PinMap extends Component {
         </div>
         <DatePicker
           showMarkerDropdown
+          showRequestsDropdown
           serviceRequests={serviceRequests}
           showMarkers={showMarkers}
           toggleShowMarkers={this.toggleShowMarkers}
