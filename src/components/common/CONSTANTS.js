@@ -20,4 +20,17 @@ export default {
     'November',
     'December',
   ],
+  REQUESTS: [
+    'Bulky Items',
+    'Dead Animal Removal',
+    'Electronic Waste',
+    'Graffiti Removal',
+    'Homeless Encampment',
+    'Illegal Dumping Pickup',
+    'Metal/Household Appliances',
+    'Single Streetlight Issue',
+    'Multiple Streetlight Issue',
+    'Report Water Waste',
+    'Other',
+  ],
 };
