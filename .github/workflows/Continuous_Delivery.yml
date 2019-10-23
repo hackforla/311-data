@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 11.x]
+        node-version: [11.x]
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -22,3 +22,13 @@ jobs:
       run: npm run-script build
     - name: Run Tests
       run: export CI=true && npm run test -- --coverage
+      env:
+        MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
+    - name: Deploy to GH pages
+      uses: JamesIves/github-pages-deploy-action@master
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BASE_BRANCH: master # The branch the action should deploy from.
+        BRANCH: gh-pages # The branch the action should deploy to.
+        FOLDER: build # The folder the action should deploy.
+        BUILD_SCRIPT: echo REACT_APP_MAPBOX_TOKEN=${{secrets.MAPBOX_TOKEN}} > .env && npm rebuild node-sass && npm install && npm run-script build  # The build script the action should run prior to deploying.
