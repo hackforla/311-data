@@ -10,20 +10,21 @@ export default ({
   toggleShowMarkers,
 }) => {
   const { YEARS, MONTHS } = constants;
-  const options = [
-    'Year',
-    'Start Month',
-    'End Month',
-  ];
+  const options = {
+    year: 'Year',
+    startMonth: 'Start Month',
+    endMonth: 'End Month',
+  };
 
   if (showRequestsDropdown) {
-    options.push('Service Requests');
+    options.request = 'Service Requests';
   }
 
-  const renderDatePicker = options.map(option => {
+  const renderDatePicker = Object.keys(options).map(option => {
     let component;
+    const name = options[option];
 
-    switch (option) {
+    switch (name) {
       case 'Year':
         component = YEARS.map(year => (<option key={year} value={year}>{year}</option>));
         break;
@@ -42,9 +43,9 @@ export default ({
 
     return (
       <React.Fragment key={option}>
-        {option}
+        {name}
         &nbsp;
-        <select id={option} className="dropdown" defaultValue={option === 'End Month' ? '12' : null} onChange={onChange}>
+        <select id={option} className="dropdown" defaultValue={option === 'endMonth' ? '12' : null} onChange={onChange}>
           {component}
         </select>
         <br/>
