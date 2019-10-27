@@ -10,6 +10,7 @@ import DatePicker from '../common/dataPicker.jsx';
 import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
+import ncOverlay from '../../data/nc-boundary-2019.json'
 
 
 class PinMap extends Component {
@@ -26,7 +27,7 @@ class PinMap extends Component {
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
       dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
-      geoJSON: councilDistrictsOverlay,
+      geoJSON: ncOverlay,
       showMarkers: false,
       bounds: null,
     };
@@ -82,7 +83,14 @@ class PinMap extends Component {
 
   onEachFeature = (feature, layer) => {
     // Popup text when clicking on a region
-    // layer.bindPopup(feature.properties.name)
+    const popupText = `
+      <div class="overlay_feature_popup">
+        ${feature.properties.name}
+        <br />
+        ${feature.properties.service_re}
+      </div>
+    `;
+    layer.bindPopup(popupText)
 
     // Sets mouseover/out/click event handlers for each region
     layer.on({
