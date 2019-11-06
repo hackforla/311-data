@@ -1,4 +1,4 @@
-name: Dev_CI
+name: Dev_CI_Backend
 on:
   push:
     branches-ignore:
