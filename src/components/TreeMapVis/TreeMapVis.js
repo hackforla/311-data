@@ -3,7 +3,7 @@ import {Treemap} from 'react-vis';
 import Legend from './Legend.js';
 import HoverInfo from './HoverInfo.js';
 import Filters from './Filters.js';
-import "./Styles/TreeMapVis.scss"
+// import "./Styles/TreeMapVis.scss"
 import {getZoomedCallVolume, getBroadCallVolume} from '../../Util/DataService.js';
 
 class TreeMapVis extends React.Component {
