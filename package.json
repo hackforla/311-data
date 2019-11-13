@@ -17,7 +17,7 @@
   "scripts": {
     "start": "npm start",
     "dev": "webpack-dev-server",
-    "build": "TBD Setup",
+    "build": "webpack",
     "test": "npm test",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
