@@ -124,8 +124,8 @@ class TreeMapVis extends React.Component {
           dataTitle={this.state.hoveredItem}
           dataCount={this.state.callVolume}/>
         <Legend />
-        <DateFilters
-          onChange={this.onDatePickerChange}/>
+        {/* <DateFilters
+          onChange={this.onDatePickerChange}/> */}
       </div>
     );
   }

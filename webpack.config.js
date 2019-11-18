@@ -35,7 +35,6 @@ module.exports = {
     open: true,
     contentBase: './public',
     compress: true,
-    host: '0.0.0.0',
     port: 8080,
     hot: true,
     historyApiFallback: true,
