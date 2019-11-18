@@ -1,48 +1,17 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { Map, Marker, Popup, TileLayer, Rectangle, Tooltip } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
+
+import constants from '../common/CONSTANTS.js';
 import { getDataResources } from '../../Util/DataService.js';
+import DatePicker from '../common/dataPicker.jsx';
+
 import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
-import axios from 'axios';
+import ncOverlay from '../../data/nc-boundary-2019.json'
 
-const serviceRequests = [
-  'Bulky Items',
-  'Dead Animal Removal',
-  'Electronic Waste',
-  'Graffiti Removal',
-  'Homeless Encampment',
-  'Illegal Dumping Pickup',
-  'Metal/Household Appliances',
-  'Single Streetlight Issue',
-  'Multiple Streetlight Issue',
-  'Report Water Waste',
-  'Other',
-];
-
-const years = [
-  '2015',
-  '2016',
-  '2017',
-  '2018',
-  '2019',
-];
-
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
 
 class PinMap extends Component {
   constructor(props) {
@@ -50,15 +19,15 @@ class PinMap extends Component {
 
     this.state = {
       data: [],
-      year: years[0],
+      year: '2015',
       startMonth: '1',
       endMonth: '12',
-      request: serviceRequests[0],
+      request: constants.REQUESTS[0],
       position: [34.0173157, -118.2497254],
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
       dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
-      geoJSON: councilDistrictsOverlay,
+      geoJSON: ncOverlay,
       showMarkers: false,
       bounds: null,
     };
@@ -68,7 +37,7 @@ class PinMap extends Component {
     this.fetchData();
   }
 
-  onDropdownChange = e => {
+  onDatePickerChange = e => {
     this.setState({
       [e.target.id]: e.target.value,
     }, () => {
@@ -114,7 +83,14 @@ class PinMap extends Component {
 
   onEachFeature = (feature, layer) => {
     // Popup text when clicking on a region
-    // layer.bindPopup(feature.properties.name)
+    const popupText = `
+      <div class="overlay_feature_popup">
+        ${feature.properties.name}
+        <br />
+        ${feature.properties.service_re}
+      </div>
+    `;
+    layer.bindPopup(popupText)
 
     // Sets mouseover/out/click event handlers for each region
     layer.on({
@@ -202,7 +178,13 @@ class PinMap extends Component {
   }
 
   renderMap = () => {
-    const { position, zoom, mapUrl, showMarkers, bounds } = this.state;
+    const {
+      position,
+      zoom,
+      mapUrl,
+      showMarkers,
+      bounds,
+    } = this.state;
 
     return (
       <>
@@ -220,34 +202,14 @@ class PinMap extends Component {
             {this.renderMarkers()}
           </Map>
         </div>
-        <div className="dropdown-container">
-          Year
-          &nbsp;
-          <select id="year" className="dropdown" onChange={this.onDropdownChange}>
-            {years.map(year => (<option key={year} value={year}>{year}</option>))}
-          </select>
-          <br/>
-          Start Month
-          &nbsp;
-          <select id="startMonth" className="dropdown" onChange={this.onDropdownChange}>
-            {months.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>))}
-          </select>
-          <br/>
-          End Month
-          &nbsp;
-          <select id="endMonth" className="dropdown" defaultValue="12" onChange={this.onDropdownChange}>
-            {months.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>))}
-          </select>
-          <br/>
-          Service Request
-          &nbsp;
-          <select id="request" className="dropdown" onChange={this.onDropdownChange}>
-            {serviceRequests.map(service => (<option key={service} value={service}>{service}</option>))}
-          </select>
-          <input type="checkbox" value="Markers" checked={showMarkers} onChange={this.toggleShowMarkers}/>
-            Show Markers
-          <br/>
-        </div>
+        <DatePicker
+          showMarkerDropdown
+          showRequestsDropdown
+          serviceRequests={constants.REQUESTS}
+          showMarkers={showMarkers}
+          toggleShowMarkers={this.toggleShowMarkers}
+          onChange={this.onDatePickerChange}
+        />
       </>
     )
   }
