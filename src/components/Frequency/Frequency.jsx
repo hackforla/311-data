@@ -4,7 +4,7 @@ import './Styles/Frequency.scss'
 export default ({}) => {
   return (
     <div className='Frequency'>
-      <img className='FrequencyImg' src={process.env.PUBLIC_URL + '/frequency.svg'} alt='frequency'/>
+      <img className='FrequencyImg' src={'./frequency.svg'} alt='frequency'/>
     </div>
   )
 }
