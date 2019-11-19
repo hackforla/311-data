@@ -193,7 +193,7 @@ class PinMap extends Component {
             center={position}
             zoom={zoom}
             bounds={bounds}
-            style={{ height: '70vh' }}>
+            style={{ height: '60vh' }}>
             <TileLayer
               url={mapUrl}
               attribution="MapBox"
@@ -202,14 +202,7 @@ class PinMap extends Component {
             {this.renderMarkers()}
           </Map>
         </div>
-        <DatePicker
-          showMarkerDropdown
-          showRequestsDropdown
-          serviceRequests={constants.REQUESTS}
-          showMarkers={showMarkers}
-          toggleShowMarkers={this.toggleShowMarkers}
-          onChange={this.onDatePickerChange}
-        />
+
       </>
     )
   }
