@@ -10,15 +10,10 @@ module.exports = {
       {
         test: /\.(css|scss)$/,
         use: [
-          'css-loader',
           'style-loader',
-          {
-            loader: 'sass-loader',
-              options: {
-                minimize: true,
-                sourceMap: true
-            }
-          }
+          'css-loader',
+          'sass-loader'
+
         ],
       },
     ]

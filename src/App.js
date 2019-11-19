@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import Header from './containers/Header/Header.jsx'
 import MapContainer from './containers/Map/MapContainer.jsx'
 import FrequencyContainer from './containers/Graphs/FrequencyContainer.jsx'
