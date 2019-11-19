@@ -30,3 +30,4 @@ package-lock.json
 # config
 config.js
 .env
+settings.cfg
