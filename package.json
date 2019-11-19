@@ -4,20 +4,23 @@
   "homepage": "https://hackforla.github.io/311-data",
   "dependencies": {
     "axios": "^0.19.0",
+    "babel-jest": "^24.9.0",
     "dataframe-js": "^1.4.3",
     "gh-pages": "^2.1.1",
+    "jest": "^24.9.0",
     "leaflet": "^1.5.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-leaflet": "^2.4.0",
     "react-leaflet-choropleth": "^2.0.0",
+    "react-test-renderer": "^16.12.0",
     "react-vis": "^1.11.7"
   },
   "scripts": {
     "start": "npm start",
     "dev": "webpack-dev-server",
     "build": "webpack",
-    "test": "npm test",
+    "test": "jest",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -28,6 +31,8 @@
     "@babel/preset-react": "^7.7.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
