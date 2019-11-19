@@ -21,6 +21,6 @@ jobs:
     - name: Build project
       run: npm run-script build
     - name: Run Tests
-      run: export CI=true && npm run test -- --coverage
+      run: npm run-script test -- --coverage
       env:
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
