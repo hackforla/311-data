@@ -1,8 +1,10 @@
 import React from 'react';
-import Header from './containers/Header/Header.jsx'
-import MapContainer from './containers/Map/MapContainer.jsx'
-import FrequencyContainer from './containers/Graphs/FrequencyContainer.jsx'
-import TimeToCloseContainer from './containers/Graphs/TimeToCloseContainer.jsx'
+import Header from './components/main/header/Header';
+import Body from './components/main/body/Body';
+import Footer from './components/main/footer/Footer';
+// import MapContainer from './containers/Map/MapContainer.jsx'
+// import FrequencyContainer from './containers/Graphs/FrequencyContainer.jsx'
+// import TimeToCloseContainer from './containers/Graphs/TimeToCloseContainer.jsx'
 // import TreeMapVis from './components/TreeMapVis/TreeMapVis.js';
 // import CandleStick from './components/CandleStick/CandleStick.js';
 // import PinMap from './components/PinMap/PinMap.jsx';
@@ -22,13 +24,12 @@ import TimeToCloseContainer from './containers/Graphs/TimeToCloseContainer.jsx'
      this.setState({loading:loadingState});
    }
 
-  render(){
+  render() {
     return (
-      <div className="App" >
-        <Header/>
-        <MapContainer/>
-        <TimeToCloseContainer/>
-        <FrequencyContainer/>
+      <div className="main">
+        <Header />
+        <Body />
+        <Footer />
       </div>
     );
   }
