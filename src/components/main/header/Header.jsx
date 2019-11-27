@@ -16,7 +16,7 @@ const Header = () => (
         </h2>
         <div className="columns">
           <div className="column">
-            <Dropdown />
+            {/* <Dropdown /> */}
           </div>
           <div className="column">
             <NCFilter />
