@@ -3,8 +3,7 @@ import {Treemap} from 'react-vis';
 import Legend from './Legend.js';
 import HoverInfo from './HoverInfo.js';
 import Filters from './Filters.js';
-import DateFilters from '../common/dataPicker.jsx';
-import "./Styles/TreeMapVis.scss"
+// import "./Styles/TreeMapVis.scss"
 import {getZoomedCallVolume, getBroadCallVolume} from '../../Util/DataService.js';
 
 class TreeMapVis extends React.Component {
@@ -125,8 +124,8 @@ class TreeMapVis extends React.Component {
           dataTitle={this.state.hoveredItem}
           dataCount={this.state.callVolume}/>
         <Legend />
-        <DateFilters
-          onChange={this.onDatePickerChange}/>
+        {/* <DateFilters
+          onChange={this.onDatePickerChange}/> */}
       </div>
     );
   }

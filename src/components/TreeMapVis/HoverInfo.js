@@ -1,5 +1,5 @@
 import React from 'react';
-import './Styles/HoverInfo.scss';
+// import './Styles/HoverInfo.scss';
 
 const HoverInfo = ({dataTitle, dataCount}) => {
   return (
