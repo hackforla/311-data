@@ -31,3 +31,5 @@ package-lock.json
 config.js
 .env
 settings.cfg
+
+__pycache__/
