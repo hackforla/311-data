@@ -3,6 +3,7 @@ from sanic import Sanic
 from sanic.response import json
 from services.time_to_close import time_to_close
 from services.frequency import frequency
+from services.ingress_service import ingress_service
 
 app = Sanic(__name__)
 app.config.from_pyfile(os.path.join(os.getcwd(),'settings.cfg'))
@@ -31,6 +32,24 @@ async def requestfrequency(request):
 async def sample_route(request):
     sample_dataset = {'cool_key':['value1', 'value2'], app.config['REDACTED']:app.config['REDACTED']}
     return json(sample_dataset)
+
+@app.route('/injest')
+async def injest(request):
+    ingress_worker = ingress_service()
+    return_data = ingress_worker.injest()
+    return json(return_data)
+
+@app.route('/update')
+async def update(request):
+    ingress_worker = ingress_service()
+    return_data = ingress_worker.update()
+    return json(return_data)
+
+@app.route('/delete')
+async def delete(request):
+    ingress_worker = ingress_service()
+    return_data = ingress_worker.delete()
+    return json(return_data)
 
 if __name__ == '__main__':
     app.run(host=app.config['HOST'], port=app.config['PORT'], debug=app.config['DEBUG'])
