@@ -5,7 +5,6 @@ import Choropleth from 'react-leaflet-choropleth';
 
 import constants from '../common/CONSTANTS.js';
 import { getDataResources } from '../../Util/DataService.js';
-import DatePicker from '../common/dataPicker.jsx';
 
 import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -209,7 +208,11 @@ class PinMap extends Component {
 
   render() {
     return (
-      <div className="pinmap">{this.renderMap()}</div>
+      <div className="column">
+        <div className="pinmap">
+          {this.renderMap()}
+        </div>
+      </div>
     )
   }
 }

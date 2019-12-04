@@ -1,5 +1,5 @@
 import React from 'react';
-import constants from '../common/CONSTANTS.js';
+import constants from '../../common/CONSTANTS';
 
 export default ({
   showMarkerDropdown,

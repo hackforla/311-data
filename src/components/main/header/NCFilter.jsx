@@ -1,6 +1,5 @@
 import React from 'react'
-import './Styles/NCFilter.scss'
-import constants from '../common/CONSTANTS.js';
+import constants from '../../common/CONSTANTS.js';
 
 export default ({
   isPrimary,
