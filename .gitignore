@@ -32,4 +32,6 @@ config.js
 .env
 settings.cfg
 
+Orchestration/docker-compose.yml
+
 __pycache__/
