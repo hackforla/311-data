@@ -33,5 +33,4 @@ config.js
 
 # csv files
 /dataAnalysis/rawdata
-/dataAnalysis/ryanAnalysis.ipynb
 /dataAnalysis/.ipynb_checkpoints
