@@ -12,6 +12,7 @@ class DataHandler:
         self.dbString = None
         self.csvPath  = None
         self.configFilePath = None
+
     def loadConfig(self, configFilePath):
         '''Load and parse config data'''
         print('Loading config file %s' % self.configFilePath)
@@ -21,6 +22,7 @@ class DataHandler:
         self.config   = config
         self.dbString = config['Main']['DB_CONNECTION_STRING']
         self.csvPath  = "%s311data.tsv" % (config['Main']['CSV_DIRECTORY'])
+
     def loadData(self):
         '''Load dataset into pandas object'''
         print('Loading dataset %s' % self.csvPath)
@@ -62,6 +64,7 @@ class DataHandler:
                                     'NCName':str,
                                     'PolicePrecinct':str
                                     })
+
     def cleanData(self):
         '''Perform general data filtering'''
         print('Cleaning 311 dataset...')
@@ -80,12 +83,13 @@ class DataHandler:
         data['service_created'] = data.ServiceDate-data.CreatedDate
         # drop NA values and reformat closed_created in units of hours
         data = data[~data.closed_created.isna()]
-        # New column: closed_created in units of days 
+        # New column: closed_created in units of days
         data['closed_createdD'] = data.closed_created / pd.Timedelta(days=1)
         # xFUTURE: Geolocation/time clustering to weed out repeat requests
         # xFUTURE: Decide whether ServiceDate or ClosedDate are primary metric
         # xFUTURE: Removal of feedback and other categories
         self.data = data
+
     def ingestData(self):
         '''Set up connection to database'''
         print('Inserting data into Postgres instance...')
@@ -144,6 +148,3 @@ if __name__ == "__main__":
     loader.loadData()
     loader.cleanData()
     loader.ingestData()
-
-
-
