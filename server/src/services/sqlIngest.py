@@ -1,3 +1,4 @@
+import os
 from sqlalchemy.types import Integer, Text, String, DateTime, Float
 from sqlalchemy import create_engine
 import pandas as pd
@@ -6,28 +7,40 @@ import numpy as np
 import logging
 
 class DataHandler:
-    def __init__(self):
+    def __init__(self, config=None, configFilePath=None, separator=','):
         self.data     = None
-        self.config   = None
-        self.dbString = None
-        self.csvPath  = None
-        self.configFilePath = None
+        self.config   = config
+        self.dbString = None if not self.config else self.config['Database']['DB_CONNECTION_STRING']
+        self.filePath  = None
+        self.configFilePath = configFilePath
+        self.separator = separator
+
 
     def loadConfig(self, configFilePath):
         '''Load and parse config data'''
+        if self.config:
+            print('Config already exists at %s. Nothing to load.' % self.configFilePath)
+            return
+
         print('Loading config file %s' % self.configFilePath)
         self.configFilePath = configFilePath
         config = ConfigParser()
         config.read(configFilePath)
         self.config   = config
-        self.dbString = config['Main']['DB_CONNECTION_STRING']
-        self.csvPath  = "%s311data.tsv" % (config['Main']['CSV_DIRECTORY'])
+        self.dbString = config['Database']['DB_CONNECTION_STRING']
 
-    def loadData(self):
+
+    def loadData(self, fileName="311data"):
         '''Load dataset into pandas object'''
-        print('Loading dataset %s' % self.csvPath)
-        self.data = pd.read_table(self.csvPath,
-                                    sep='\t',
+        if self.separator == ',':
+            dataFile = fileName + ".csv"
+        else:
+            dataFile = fileName + ".tsv"
+
+        self.filePath  = os.path.join(self.config['Database']['DATA_DIRECTORY'], dataFile )
+        print('Loading dataset %s' % self.filePath)
+        self.data = pd.read_table(self.filePath,
+                                    sep=',',
                                     na_values=['nan'],
                                     dtype={
                                     'SRNumber':str,
@@ -143,8 +156,10 @@ class DataHandler:
                        'closedcreatedd':DateTime})
 
 if __name__ == "__main__":
-    loader = DataHandler()
-    loader.loadConfig('settings.cfg')
-    loader.loadData()
-    loader.cleanData()
-    loader.ingestData()
+    def do_stuff():
+        loader = DataHandler()
+        loader.loadConfig('../settings.cfg')
+        loader.loadData()
+        loader.cleanData()
+        loader.ingestData()
+    do_stuff()
