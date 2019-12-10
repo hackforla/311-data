@@ -1,13 +1,13 @@
-from sqlIngest import DataHandler
+from .sqlIngest import DataHandler
 
 class ingress_service(object):
     def __init__(self, config=None):
         self.config = config
 
 
-    def ingest(self):
+    async def ingest(self, from_dataset=None):
         loader = DataHandler(config=self.config)
-        loader.loadData()
+        loader.loadData(fileName=from_dataset)
         loader.cleanData()
         loader.ingestData()
         return {'response':'ingest ok'}
@@ -24,6 +24,6 @@ class ingress_service(object):
 if __name__ == "__main__":
     from configparser import ConfigParser
     config = ConfigParser()
-    config.read(configFilePath)
+    config.read('../settings.cfg')
     worker = ingress_service(config = config)
     worker.ingest()

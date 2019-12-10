@@ -46,10 +46,19 @@ async def sample_route(request):
     return json(sample_dataset)
 
 
-@app.route('/ingest')
+@app.route('/ingest', methods=["POST"])
 async def ingest(request):
+    '''Accept POST requests with a list of datasets to import\
+       based on the YearMapping. Body parameter format is \
+       {"sets": ["YearMappingKey","YearMappingKey","YearMappingKey"]}'''
+
     ingress_worker = ingress_service(config=app.config['Settings'])
-    return_data = ingress_worker.ingest()
+    return_data = {'response':'ingest ok'}
+
+    for dataSet in request.json.get("sets", None):
+        target_data = app.config["Settings"]["YearMapping"][dataSet]
+        return_data = await ingress_worker.ingest(from_dataset=target_data)
+
     return json(return_data)
 
 

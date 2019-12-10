@@ -40,7 +40,7 @@ class DataHandler:
         self.filePath  = os.path.join(self.config['Database']['DATA_DIRECTORY'], dataFile )
         print('Loading dataset %s' % self.filePath)
         self.data = pd.read_table(self.filePath,
-                                    sep=',',
+                                    sep=self.separator,
                                     na_values=['nan'],
                                     dtype={
                                     'SRNumber':str,
@@ -156,10 +156,8 @@ class DataHandler:
                        'closedcreatedd':DateTime})
 
 if __name__ == "__main__":
-    def do_stuff():
-        loader = DataHandler()
-        loader.loadConfig('../settings.cfg')
-        loader.loadData()
-        loader.cleanData()
-        loader.ingestData()
-    do_stuff()
+    loader = DataHandler()
+    loader.loadConfig('../settings.cfg')
+    loader.loadData()
+    loader.cleanData()
+    loader.ingestData()
