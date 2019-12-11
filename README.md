@@ -1,6 +1,26 @@
 # 311-data [![Build Status](https://travis-ci.com/hackforla/311-data.svg?branch=master)](https://travis-ci.com/hackforla/311-data)
 Empower Neighborhood Associations to Improve analysis of their initiatives using 311 data
 
+## Frontend Technologies
+  * Javascript (React)
+  * BokehJS
+  * HTML/CSS
+  * Docker + Docker Compose
+
+## Backend Technologies
+  * Python 
+  * Sanic(Asynchronous Flask)
+  * Pandas
+  * PostgreSql
+  * Docker + Docker Compose
+
+## Data Analysis Technologies
+  * Python
+  * Pandas
+  * Numpy
+  * PostgreSql
+  * Socrata API
+
 ## Resources
 [Empower LA - HfLA Initial Meeting](https://docs.google.com/document/d/19jrYWjq_FfQbuqTfnwJFruWEo9pPF0R0qh4njDZsuzM)
 
@@ -32,20 +52,3 @@ Facilitator to Stakeholder: [EmpowerLA](http://empowerla.org/)
 [Email to NC Members](https://docs.google.com/document/d/12JQ46SVsyywmdwEFPpE-Q1xFHdXNIP-AnbSaPKs0Kvk/edit#)
 
 [NC initial survey](https://drive.google.com/open?id=1N_cY23y4u04oHOlkyQId-K3k11J23lUGwMljmNHpmMk)
-
-## Empty Documents
-
-### Empty Docs
-[2](https://docs.google.com/document/d/1_x34EPUycr6qN9FvDxc82Kx32AEapYjO4IRQqMgH2Vs/)
-[3](https://docs.google.com/document/d/1PLWB7cygysmN099P3kNjYAvER6Acv-YNB7LQL-e5Wbc)
-[4](https://docs.google.com/document/d/1aSdzl-qGjzqwWDkvY8FjrISgdLTA7mc6FRe0xzm3hKo)
-
-### Empty Spreadsheets
-[2](https://docs.google.com/spreadsheets/d/1ke7WaJv18n1v3wW3GtnMTg0_X3mbe1i2YdNy74ghJi0)
-[3](https://docs.google.com/spreadsheets/d/1gwikovvOWMhDjH-OHe3d5UUb0ZtMYUbnopjmZ5Ur1LM)
-[4](https://docs.google.com/spreadsheets/d/1bDrcJ2FeMuSeiLbfabEtNZ9tpweqgu3mrTWSppzqDb4/)
-[5](https://docs.google.com/spreadsheets/d/1AbghHVOxpZSGg10Byo3HMlYx-H6fYEixDks8rre8rns/)
-
-### Empty Slideshows
-[1](https://docs.google.com/presentation/d/12cDzPXwf4zWKcFAivy-UICm0dfXWaAP0dz3tqVuHwpo)
-[2](https://docs.google.com/presentation/d/1-100TCpHeqcGJoZMKsKcvBcy6bfPjzrnYL8k2bE0qXk)
