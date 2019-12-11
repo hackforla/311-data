@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from datetime import datetime
 
 from shapely import wkt
 
@@ -16,10 +17,10 @@ def fill_placeholder_1900_col(df):
     for col in dt_cols:
         df[col] = df[col].replace(to_replace=pd.to_datetime('1900'),value=pd.NaT)
 
-def fill_placeholder_1900_col(df):
-    dt_cols = ['CreatedDate','UpdatedDate','ServiceDate','ClosedDate']
-    for col in dt_cols:
-        df[col] = df[col].replace(to_replace=pd.to_datetime('1900'),value=pd.NaT)
+def fill_placeholder_ongoing(df, cols):
+    for col in cols:
+        df[col] = df[col].replace(to_replace=pd.NaT, value=datetime.now())
+        # df.loc[df[col] == 'NaT', col] = datetime.now()
 
 def ddiff2days(ddiff):
     if not pd.isnull(ddiff):
@@ -32,7 +33,6 @@ def to_points(p):
         return p
     else:
         return wkt.loads('Point{}'.format(p.replace(',',' ')))
-    
     
 def to_geom(df):
     df['Location'] = df.Location.apply(to_points)

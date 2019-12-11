@@ -16,7 +16,7 @@ def combine_coor(dataset):
 def k_init(dataset, k):
     """
     Initial step of the k-means algorithm: returns random coordinates as representatives (centroid candidates)
-    dataset: must be lacity's raw 311-call dataset 
+    dataset: path to dataset; must be lacity's raw 311-call dataset 
     k: number of desired clusters
     """
     data_arr = combine_coor(dataset)
@@ -74,11 +74,11 @@ def k_means(data_arr, k, reps):
 
     return [means, clusters]
 
-def run_kmeans(t, dataset, k, manual=False, reps=[]):
+def run_kmeans(dataset, k, manual=False, reps=[], t=1000):
     """
     Runs the k-means algorithm, returns a dictionary of mean-cluster pairs
     t: number of times to iterate through the algorithm
-    dataset: must be lacity's raw 311-call dataset
+    dataset: path to dataset; must be lacity's raw 311-call dataset
     k: number of desired clusters
     manual: random initialization of initial representatives if False; custom initialization if True
     reps: representatives; should be used only if manual=True
@@ -110,12 +110,12 @@ def run_kmeans(t, dataset, k, manual=False, reps=[]):
     print(k_clusters.keys())
     return k_clusters
     
-### Example: runs the algorithm 10 times and using 3 clusters
+### Example: runs the algorithm using 3 clusters
 
-run_kmeans(3, '../rawdata/MyLA311_Service_Request_Data_2015.csv', 3)
+run_kmeans('../rawdata/MyLA311_Service_Request_Data_2015.csv', 3)
 
 ### Incomplete k-medoids algorithm
-### The K-medoids algorithm forces an existing data point as the centroidw
+### The K-medoids algorithm forces an existing data point as the centroid
 
 # def medoid_L1 (data, representatives):
 #     clusters = []
