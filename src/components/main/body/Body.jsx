@@ -1,5 +1,5 @@
 import React from 'react';
-import PinMap from '../../PinMap/PinMap.jsx';
+import PinMap from '../../PinMap/PinMap';
 
 const Body = () => (
   <div className="container is-fluid">

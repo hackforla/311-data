@@ -1,8 +1,8 @@
-import React from 'react'
-import NCFilter from './NCFilter.jsx'
-import DataPicker from './dataPicker.jsx'
-import Legend from './Legend.jsx'
-import Dropdown from '../../common/Dropdown';
+import React from 'react';
+import NCFilter from './NCFilter';
+import DataPicker from './dataPicker';
+import Legend from './Legend';
+// import Dropdown from '../../common/Dropdown';
 
 const Header = () => (
   <section className="hero">
