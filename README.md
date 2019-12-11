@@ -1,6 +1,26 @@
 # 311-data [![Build Status](https://travis-ci.com/hackforla/311-data.svg?branch=master)](https://travis-ci.com/hackforla/311-data)
 Empower Neighborhood Associations to Improve analysis of their initiatives using 311 data
 
+## Frontend Technologies
+  * Javascript (React)
+  * BokehJS
+  * HTML/CSS
+  * Docker + Docker Compose
+
+## Backend Technologies
+  * Python 
+  * Sanic(Asynchronous Flask)
+  * Pandas
+  * PostgreSql
+  * Docker + Docker Compose
+
+## Data Analysis Technologies
+  * Python
+  * Pandas
+  * Numpy
+  * PostgreSql
+  * Socrata API
+
 ## Resources
 [Empower LA - HfLA Initial Meeting](https://docs.google.com/document/d/19jrYWjq_FfQbuqTfnwJFruWEo9pPF0R0qh4njDZsuzM)
 
@@ -32,4 +52,3 @@ Facilitator to Stakeholder: [EmpowerLA](http://empowerla.org/)
 [Email to NC Members](https://docs.google.com/document/d/12JQ46SVsyywmdwEFPpE-Q1xFHdXNIP-AnbSaPKs0Kvk/edit#)
 
 [NC initial survey](https://drive.google.com/open?id=1N_cY23y4u04oHOlkyQId-K3k11J23lUGwMljmNHpmMk)
-
