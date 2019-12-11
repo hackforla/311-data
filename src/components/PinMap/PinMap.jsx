@@ -106,29 +106,28 @@ class PinMap extends Component {
   }
 
   renderMarkers = () => {
-    const { data } = this.state;
-    const { showMarkers } = this.props;
+    const { data, showMarkers } = this.props;
 
-    if (showMarkers && data && data.length > 0) {
+    if (showMarkers && data) {
       return data.map((d) => {
-        const { location } = d;
-        let position = [0, 0];
+        if (d.location) {
+          const { location } = d;
+          const position = [location.latitude, location.longitude];
 
-        if (location) {
-          position = [location.latitude, location.longitude];
+          return (
+            <Marker key={d.location.toString()} position={position}>
+              <Popup>
+                Type:
+                {d.requesttype}
+                <br />
+                Address:
+                {d.address}
+              </Popup>
+            </Marker>
+          );
         }
 
-        return (
-          <Marker key={d.location.toString()} position={position}>
-            <Popup>
-              Type:
-              {d.requesttype}
-              <br />
-              Address:
-              {d.address}
-            </Popup>
-          </Marker>
-        );
+        return null;
       });
     }
 
