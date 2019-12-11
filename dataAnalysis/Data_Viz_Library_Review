@@ -1,0 +1,23 @@
+BokehJS works great with large data sets and can be used to make many charts and visuals. Some of these include maps, bar graphs, pie charts,
+line graphs, and many others. It can directly work with javascript or take in code written in python, R, or a few other languages. BokehJS
+has a great reputation for making interactive visualizations and allows callbacks and visuals to move in sync. Examples of projects built with
+BokehJS can be found here: https://docs.bokeh.org/en/0.11.0/docs/gallery.html 
+
+Altair is a library that is best known for exploratory data analysis. As such it is not clear if it can handle working with all the data need for
+our project. Also it isn't evident that Altair works directly with javascript; it can work with python and then render its output in javascript
+on the frontend but visuals can't be written in javascript. In fact, it isn't clear if there is an Altair javascript library. Lastly, callbacks
+are not supported by Altair. That means each application made using Altair can only query one dataset. It may take a clever database schema
+to make sure that more sophisticated visuals like a chloropleth map can display all the needed data drilldowns.
+
+D3 is a very low level library for data visuals. It is made to work with javascript and allows a ton of creative freedom. However, making a visual
+with D3 may require someone with a graphic design background. Also there isn't an SVG file of the LA neighborhood councils. That means that
+making a map of the neighborhood councils will require converting a GeoJSON file into an SVG before a useful map can be built. The data will
+have to be processed and analyzed in some other language like python before it can be used by D3 as data analysis is very cumbersome with the library.
+All in all, D3 has the highest potential but steepest learning curve out of all the options.
+
+Dash is another library that can be used to make visuals. It is similar to working with BokehJS except that it doesn't allow direct support
+for javascript. Javascript is created by a renderer that takes in python or R code and the renderer's javascript is what the user sees. It
+can be used for more than just exploratory data analysis but it isn't clear how well it can work with geojson files that deal with multi-polygons.
+If it cannot work with multi-polygons than rendering neighborhood councils or anything with an unusual shape will be difficult. However, it
+can easily output traditional visuals like bar graphs, line graphs, pie charts and the like. It also allows callbacks to be easily implemented.
+In short, Dash is great for making traditional interactive visualizations but not so much for less traditional ones like chloropleth maps.

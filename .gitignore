@@ -36,3 +36,8 @@ settings.cfg
 Orchestration/docker-compose.yml
 
 __pycache__/
+
+# csv files
+/dataAnalysis/rawdata
+/dataAnalysis/ryanAnalysis.ipynb
+/dataAnalysis/.ipynb_checkpoints
