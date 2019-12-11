@@ -1,5 +1,5 @@
 import React from 'react';
-import constants from '../../common/CONSTANTS';
+import { COUNCILS } from '../../common/CONSTANTS';
 
 const NCFilter = ({
   isPrimary,
@@ -11,7 +11,7 @@ const NCFilter = ({
   return (
     <div className={style}>
       <select className="NCFilterDropdown" onChange={onChange}>
-        {constants.COUNCILS.map((nc) => (
+        {COUNCILS.map((nc) => (
           <option key={nc} value={nc}>
             {nc}
           </option>

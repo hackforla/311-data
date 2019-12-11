@@ -1,6 +1,6 @@
 import React from 'react';
 import NCFilter from './NCFilter';
-import DataPicker from './dataPicker';
+import DataPicker from './DataPicker';
 import Legend from './Legend';
 // import Dropdown from '../../common/Dropdown';
 
@@ -15,9 +15,9 @@ const Header = () => (
           Dashboard for NC
         </h2>
         <div className="columns">
-          <div className="column">
-            {/* <Dropdown /> */}
-          </div>
+          {/* <div className="column">
+            <Dropdown />
+          </div> */}
           <div className="column">
             <NCFilter />
           </div>

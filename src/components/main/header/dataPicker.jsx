@@ -1,15 +1,13 @@
 import React from 'react';
-import constants from '../../common/CONSTANTS';
+import { YEARS, MONTHS, REQUESTS } from '../../common/CONSTANTS';
 
-export default ({
+const DataPicker = ({
   showMarkerDropdown,
   showRequestsDropdown,
-  serviceRequests,
   showMarkers,
   onChange,
   toggleShowMarkers,
 }) => {
-  const { YEARS, MONTHS } = constants;
   const options = {
     year: 'Year',
     startMonth: 'Start Month',
@@ -20,22 +18,38 @@ export default ({
     options.request = 'Service Requests';
   }
 
-  const renderDatePicker = Object.keys(options).map(option => {
+  const renderDatePicker = Object.keys(options).map((option) => {
     let component;
     const name = options[option];
 
     switch (name) {
       case 'Year':
-        component = YEARS.map(year => (<option key={year} value={year}>{year}</option>));
+        component = YEARS.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ));
         break;
       case 'Start Month':
-        component = MONTHS.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>));
+        component = MONTHS.map((month, idx) => (
+          <option key={month} value={idx + 1}>
+            {month}
+          </option>
+        ));
         break;
       case 'End Month':
-        component = MONTHS.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>));
+        component = MONTHS.map((month, idx) => (
+          <option key={month} value={idx + 1}>
+            {month}
+          </option>
+        ));
         break;
       case 'Service Requests':
-        component = serviceRequests.map(service => (<option key={service} value={service}>{service}</option>));
+        component = REQUESTS.map((service) => (
+          <option key={service} value={service}>
+            {service}
+          </option>
+        ));
         break;
       default:
         break;
@@ -48,7 +62,7 @@ export default ({
         <select id={option} className="dropdown" defaultValue={option === 'endMonth' ? '12' : null} onChange={onChange}>
           {component}
         </select>
-        <br/>
+        <br />
       </React.Fragment>
     );
   });
@@ -65,4 +79,6 @@ export default ({
     </div>
 
   );
-}
+};
+
+export default DataPicker;

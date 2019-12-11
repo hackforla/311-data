@@ -5,7 +5,7 @@ import {
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
 
-import constants from '../common/CONSTANTS';
+import { REQUESTS } from '../common/CONSTANTS';
 import { getDataResources } from '../../Util/DataService';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
@@ -23,7 +23,7 @@ class PinMap extends Component {
       year: '2015',
       startMonth: '1',
       endMonth: '12',
-      request: constants.REQUESTS[0],
+      request: REQUESTS[0],
       position: [34.0173157, -118.2497254],
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
