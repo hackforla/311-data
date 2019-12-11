@@ -5,6 +5,7 @@ import pandas as pd
 from configparser import ConfigParser # For configparser compatible formatting see: https://docs.python.org/3/library/configparser.html
 import numpy as np
 import logging
+import io
 
 class DataHandler:
     def __init__(self, config=None, configFilePath=None, separator=','):
@@ -22,7 +23,7 @@ class DataHandler:
             print('Config already exists at %s. Nothing to load.' % self.configFilePath)
             return
 
-        print('Loading config file %s' % self.configFilePath)
+        print('Loading config file %s' % configFilePath)
         self.configFilePath = configFilePath
         config = ConfigParser()
         config.read(configFilePath)
@@ -91,12 +92,12 @@ class DataHandler:
         # New columns: closed_created, service_created
         # xNOTE: SQLAlchemy/Postgres will convert these time deltas to integer values
         #        May wish to change these to a different format or compute after fact
-        data['closed_created'] = data.ClosedDate-data.CreatedDate
-        data['service_created'] = data.ServiceDate-data.CreatedDate
+        # data['closed_created'] = data.ClosedDate-data.CreatedDate
+        # data['service_created'] = data.ServiceDate-data.CreatedDate
         # drop NA values and reformat closed_created in units of hours
-        data = data[~data.closed_created.isna()]
+        # data = data[~data.closed_created.isna()]
         # New column: closed_created in units of days
-        data['closed_createdD'] = data.closed_created / pd.Timedelta(days=1)
+        # data['closed_createdD'] = data.closed_created / pd.Timedelta(days=1)
         # xFUTURE: Geolocation/time clustering to weed out repeat requests
         # xFUTURE: Decide whether ServiceDate or ClosedDate are primary metric
         # xFUTURE: Removal of feedback and other categories
@@ -105,7 +106,7 @@ class DataHandler:
     def ingestData(self):
         '''Set up connection to database'''
         print('Inserting data into Postgres instance...')
-        data = self.data
+        data = self.data.copy() # shard deepcopy to allow other endpoint operations
         engine = create_engine(self.dbString)
         newColumns = [column.replace(' ', '_').lower() for column in data]
         data.columns = newColumns
@@ -149,15 +150,27 @@ class DataHandler:
                        'cdmember':String,
                        'nc':Float,
                        'ncname':String,
-                       'policeprecinct':String,
-                       'closedcreated':DateTime,
-                       'servicecreated':DateTime,
-                       'closedcreatedd':DateTime})
+                       'policeprecinct':String})
+
+    def dumpCsvFile(self, startDate, requestType, councilName):
+        '''Output data as CSV by council name, requset type, and 
+        start date (pulls to current date). Arguments should be passed
+        as strings. Date values must be formatted %Y-%m-%d.'''
+        df = self.data.copy() # Shard deepcopy to allow multiple endpoints
+        # Data filtering
+        dateFilter = df['CreatedDate'] > startDate
+        requestFilter = df['RequestType'] == requestType
+        councilFilter = df['NCName'] == councilName
+        df = df[dateFilter & requestFilter & councilFilter]
+        # Return string object for routing to download
+        return df.to_csv() 
+
 
 if __name__ == "__main__":
     '''Class DataHandler workflow from initial load to SQL population'''
     loader = DataHandler()
-    loader.loadConfig('../settings.cfg')
+    loader.loadConfig(configFilePath='../settings.cfg')
     loader.loadData()
     loader.cleanData()
     loader.ingestData()
+    loader.dumpCsvFile(startDate='2018-05-01', requestType='Bulky Items', councilName='VOICES OF 90037')
