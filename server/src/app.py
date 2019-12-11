@@ -4,13 +4,23 @@ from sanic.response import json
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.ingress_service import ingress_service
+from configparser import ConfigParser
+
 
 app = Sanic(__name__)
-app.config.from_pyfile(os.path.join(os.getcwd(),'settings.cfg'))
+
+def configure_app():
+    # Settings initialization
+    config = ConfigParser()
+    settings_file = os.path.join(os.getcwd(),'settings.cfg')
+    config.read(settings_file)
+    app.config['Settings'] = config
+
 
 @app.route('/')
 async def index(request):
     return json('You hit the index')
+
 
 @app.route('/timetoclose')
 async def timetoclose(request):
@@ -20,6 +30,7 @@ async def timetoclose(request):
 
     return json(return_data)
 
+
 @app.route('/requestfrequency')
 async def requestfrequency(request):
     freq_worker = frequency()
@@ -28,16 +39,28 @@ async def requestfrequency(request):
 
     return json(return_data)
 
+
 @app.route('/sample-data')
 async def sample_route(request):
     sample_dataset = {'cool_key':['value1', 'value2'], app.config['REDACTED']:app.config['REDACTED']}
     return json(sample_dataset)
 
-@app.route('/injest')
-async def injest(request):
-    ingress_worker = ingress_service()
-    return_data = ingress_worker.injest()
+
+@app.route('/ingest', methods=["POST"])
+async def ingest(request):
+    '''Accept POST requests with a list of datasets to import\
+       based on the YearMapping. Body parameter format is \
+       {"sets": ["YearMappingKey","YearMappingKey","YearMappingKey"]}'''
+
+    ingress_worker = ingress_service(config=app.config['Settings'])
+    return_data = {'response':'ingest ok'}
+
+    for dataSet in request.json.get("sets", None):
+        target_data = app.config["Settings"]["YearMapping"][dataSet]
+        return_data = await ingress_worker.ingest(from_dataset=target_data)
+
     return json(return_data)
+
 
 @app.route('/update')
 async def update(request):
@@ -45,11 +68,15 @@ async def update(request):
     return_data = ingress_worker.update()
     return json(return_data)
 
+
 @app.route('/delete')
 async def delete(request):
     ingress_worker = ingress_service()
     return_data = ingress_worker.delete()
     return json(return_data)
 
+
+
 if __name__ == '__main__':
-    app.run(host=app.config['HOST'], port=app.config['PORT'], debug=app.config['DEBUG'])
+    configure_app()
+    app.run(host=app.config['Settings']['Server']['HOST'], port=app.config['Settings']['Server']['PORT'], debug=app.config['Settings']['Server']['DEBUG'])
