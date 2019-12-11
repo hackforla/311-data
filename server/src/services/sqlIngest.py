@@ -1,3 +1,4 @@
+import os
 from sqlalchemy.types import Integer, Text, String, DateTime, Float
 from sqlalchemy import create_engine
 import pandas as pd
@@ -6,26 +7,40 @@ import numpy as np
 import logging
 
 class DataHandler:
-    def __init__(self):
+    def __init__(self, config=None, configFilePath=None, separator=','):
         self.data     = None
-        self.config   = None
-        self.dbString = None
-        self.csvPath  = None
-        self.configFilePath = None
+        self.config   = config
+        self.dbString = None if not self.config else self.config['Database']['DB_CONNECTION_STRING']
+        self.filePath  = None
+        self.configFilePath = configFilePath
+        self.separator = separator
+
+
     def loadConfig(self, configFilePath):
         '''Load and parse config data'''
+        if self.config:
+            print('Config already exists at %s. Nothing to load.' % self.configFilePath)
+            return
+
         print('Loading config file %s' % self.configFilePath)
         self.configFilePath = configFilePath
         config = ConfigParser()
         config.read(configFilePath)
         self.config   = config
-        self.dbString = config['Main']['DB_CONNECTION_STRING']
-        self.csvPath  = "%s311data.tsv" % (config['Main']['CSV_DIRECTORY'])
-    def loadData(self):
+        self.dbString = config['Database']['DB_CONNECTION_STRING']
+
+
+    def loadData(self, fileName="311data"):
         '''Load dataset into pandas object'''
-        print('Loading dataset %s' % self.csvPath)
-        self.data = pd.read_table(self.csvPath,
-                                    sep='\t',
+        if self.separator == ',':
+            dataFile = fileName + ".csv"
+        else:
+            dataFile = fileName + ".tsv"
+
+        self.filePath  = os.path.join(self.config['Database']['DATA_DIRECTORY'], dataFile )
+        print('Loading dataset %s' % self.filePath)
+        self.data = pd.read_table(self.filePath,
+                                    sep=self.separator,
                                     na_values=['nan'],
                                     dtype={
                                     'SRNumber':str,
@@ -62,6 +77,7 @@ class DataHandler:
                                     'NCName':str,
                                     'PolicePrecinct':str
                                     })
+
     def cleanData(self):
         '''Perform general data filtering'''
         print('Cleaning 311 dataset...')
@@ -80,12 +96,13 @@ class DataHandler:
         data['service_created'] = data.ServiceDate-data.CreatedDate
         # drop NA values and reformat closed_created in units of hours
         data = data[~data.closed_created.isna()]
-        # New column: closed_created in units of days 
+        # New column: closed_created in units of days
         data['closed_createdD'] = data.closed_created / pd.Timedelta(days=1)
         # xFUTURE: Geolocation/time clustering to weed out repeat requests
         # xFUTURE: Decide whether ServiceDate or ClosedDate are primary metric
         # xFUTURE: Removal of feedback and other categories
         self.data = data
+
     def ingestData(self):
         '''Set up connection to database'''
         print('Inserting data into Postgres instance...')
@@ -140,10 +157,7 @@ class DataHandler:
 
 if __name__ == "__main__":
     loader = DataHandler()
-    loader.loadConfig('settings.cfg')
+    loader.loadConfig('../settings.cfg')
     loader.loadData()
     loader.cleanData()
     loader.ingestData()
-
-
-
