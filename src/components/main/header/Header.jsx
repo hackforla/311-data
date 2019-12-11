@@ -4,7 +4,12 @@ import DataPicker from './DataPicker';
 import Legend from './Legend';
 // import Dropdown from '../../common/Dropdown';
 
-const Header = () => (
+const Header = ({
+  updateState,
+  toggleShowMarkers,
+  showMarkers,
+  showMarkersDropdown,
+}) => (
   <section className="hero">
     <div className="hero-body">
       <div className="container">
@@ -22,7 +27,12 @@ const Header = () => (
             <NCFilter />
           </div>
           <div className="column">
-            <DataPicker />
+            <DataPicker
+              showMarkerDropdown={showMarkersDropdown}
+              showMarkers={showMarkers}
+              onDropdownSelect={updateState}
+              toggleShowMarkers={toggleShowMarkers}
+            />
           </div>
         </div>
         <Legend />

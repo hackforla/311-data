@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import {
   Map, Marker, Popup, TileLayer, Rectangle, Tooltip,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
-
-import { REQUESTS } from '../common/CONSTANTS';
-import { getDataResources } from '../../Util/DataService';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -19,36 +15,13 @@ class PinMap extends Component {
     super(props);
 
     this.state = {
-      data: [],
-      year: '2015',
-      startMonth: '1',
-      endMonth: '12',
-      request: REQUESTS[0],
       position: [34.0173157, -118.2497254],
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
       // dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
       geoJSON: ncOverlay,
-      showMarkers: false,
       bounds: null,
     };
-  }
-
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  onDatePickerChange = (e) => {
-    this.setState({
-      [e.target.id]: e.target.value,
-    }, () => {
-      this.fetchData();
-    });
-  }
-
-  toggleShowMarkers = () => {
-    const { showMarkers } = this.state;
-    this.setState({ showMarkers: !showMarkers });
   }
 
   highlightRegion = (e) => {
@@ -101,26 +74,6 @@ class PinMap extends Component {
     });
   }
 
-  buildDataUrl = () => {
-    const {
-      startMonth, endMonth, year, request,
-    } = this.state;
-    const dataResources = getDataResources();
-    return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`;
-  }
-
-  fetchData = () => {
-    const dataUrl = this.buildDataUrl();
-
-    axios.get(dataUrl)
-      .then(({ data }) => {
-        this.setState({ data });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
   renderOverlay = () => {
     const { geoJSON } = this.state;
 
@@ -153,7 +106,8 @@ class PinMap extends Component {
   }
 
   renderMarkers = () => {
-    const { data, showMarkers } = this.state;
+    const { data } = this.state;
+    const { showMarkers } = this.props;
 
     if (showMarkers && data && data.length > 0) {
       return data.map((d) => {
