@@ -88,10 +88,9 @@ class DataHandler:
         data['CreatedDate'] = pd.to_datetime(data['CreatedDate'])
         data['ClosedDate'] = pd.to_datetime(data['ClosedDate'])
         data['ServiceDate'] = pd.to_datetime(data['ServiceDate'])
-        # Compute service time
         # New columns: closed_created, service_created
         # xNOTE: SQLAlchemy/Postgres will convert these time deltas to integer values
-        #        May wish to change these to a different format
+        #        May wish to change these to a different format or compute after fact
         data['closed_created'] = data.ClosedDate-data.CreatedDate
         data['service_created'] = data.ServiceDate-data.CreatedDate
         # drop NA values and reformat closed_created in units of hours
@@ -156,6 +155,7 @@ class DataHandler:
                        'closedcreatedd':DateTime})
 
 if __name__ == "__main__":
+    '''Class DataHandler workflow from initial load to SQL population'''
     loader = DataHandler()
     loader.loadConfig('../settings.cfg')
     loader.loadData()
