@@ -33,11 +33,14 @@ config.js
 .env
 settings.cfg
 
+docker-compose.yml
 Orchestration/docker-compose.yml
 
 __pycache__/
 
-# csv files
-/dataAnalysis/rawdata
-/dataAnalysis/ryanAnalysis.ipynb
+# csv files 
+/dataAnalysis/datasets
+/server/src/static
+
+# checkpoints
 /dataAnalysis/.ipynb_checkpoints
