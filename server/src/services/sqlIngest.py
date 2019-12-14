@@ -152,18 +152,18 @@ class DataHandler:
                        'ncname':String,
                        'policeprecinct':String})
 
-    def dumpCsvFile(self, startDate, requestType, councilName):
-        '''Output data as CSV by council name, requset type, and 
+    def dumpCsvFile(self, dataset, startDate, requestType, councilName):
+        '''Output data as CSV by council name, requset type, and
         start date (pulls to current date). Arguments should be passed
         as strings. Date values must be formatted %Y-%m-%d.'''
-        df = self.data.copy() # Shard deepcopy to allow multiple endpoints
+        df = dataset.copy() # Shard deepcopy to allow multiple endpoints
         # Data filtering
         dateFilter = df['CreatedDate'] > startDate
         requestFilter = df['RequestType'] == requestType
         councilFilter = df['NCName'] == councilName
         df = df[dateFilter & requestFilter & councilFilter]
         # Return string object for routing to download
-        return df.to_csv() 
+        return df.to_csv()
 
 
 if __name__ == "__main__":
