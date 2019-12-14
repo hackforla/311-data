@@ -41,3 +41,4 @@ __pycache__/
 /dataAnalysis/rawdata
 /dataAnalysis/ryanAnalysis.ipynb
 /dataAnalysis/.ipynb_checkpoints
+server/src/static/temp
