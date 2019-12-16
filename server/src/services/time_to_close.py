@@ -8,11 +8,11 @@ class time_to_close(object):
         self.dbString = None if not self.config else self.config['Database']['DB_CONNECTION_STRING']
         pass
 
-    def hello_world(self):
+    def ttc_query(self):
         engine = create_engine(self.dbString)
 
         connection = engine.connect()
-        query = "SELECT row_to_json(CreatedDate) \
+        query = "SELECT row_to_json(row(status)) \
             FROM ingest_staging_table"
         result = connection.execute(query)
         connection.close()
@@ -20,5 +20,9 @@ class time_to_close(object):
         return result
 
 if __name__ == "__main__":
-    time2close = time_to_close(ConfigParser().read('../settings.cfg'))
-    time2close.hello_world()
+    ttc = time_to_close()
+    config = ConfigParser()
+    config.read("../setting.cfg")
+    ttc.config   = config
+    ttc.dbString = config['Database']['DB_CONNECTION_STRING']
+    ttc.ttc_query()

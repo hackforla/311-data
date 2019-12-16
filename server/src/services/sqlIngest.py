@@ -38,7 +38,7 @@ class DataHandler:
         else:
             dataFile = fileName + ".tsv"
 
-        self.filePath  = os.path.join(self.config['Database']['DATA_DIRECTORY'], dataFile )
+        self.filePath  = os.path.join("../", self.config['Database']['DATA_DIRECTORY'], dataFile )
         print('Loading dataset %s' % self.filePath)
         self.data = pd.read_table(self.filePath,
                                     sep=self.separator,

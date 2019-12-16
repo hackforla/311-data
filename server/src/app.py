@@ -28,20 +28,20 @@ async def index(request):
 
 @app.route('/timetoclose')
 async def timetoclose(request):
-    ttc_worker = time_to_close()
+    ttc_worker = time_to_close(app.config['Settings'])
     # Insert time to close calculation here
-    return_data = ttc_worker.hello_world()
+    return_data = ttc_worker.ttc_query()
 
-    return json(return_data)
+    return return_data
 
 
 @app.route('/requestfrequency')
 async def requestfrequency(request):
     freq_worker = frequency()
     # Insert frequency calculation here
-    return_data = freq_worker.hello_world()
+    return_data = freq_worker.freq_query()
 
-    return json(return_data)
+    return return_data
 
 
 @app.route('/sample-data')
