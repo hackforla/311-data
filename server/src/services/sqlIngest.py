@@ -31,7 +31,7 @@ class DataHandler:
         self.dbString = config['Database']['DB_CONNECTION_STRING']
 
 
-    def loadData(self, fileName="311data"):
+    def loadData(self, fileName="2018_mini"):
         '''Load dataset into pandas object'''
         if self.separator == ',':
             dataFile = fileName + ".csv"
@@ -173,4 +173,4 @@ if __name__ == "__main__":
     loader.loadData()
     loader.cleanData()
     loader.ingestData()
-    loader.dumpCsvFile(startDate='2018-05-01', requestType='Bulky Items', councilName='VOICES OF 90037')
+    loader.dumpCsvFile(dataset="", startDate='2018-05-01', requestType='Bulky Items', councilName='VOICES OF 90037')
