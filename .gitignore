@@ -44,3 +44,4 @@ __pycache__/
 
 # checkpoints
 /dataAnalysis/.ipynb_checkpoints
+server/src/static/temp
