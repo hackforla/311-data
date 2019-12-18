@@ -1,7 +1,6 @@
 import React from 'react';
 import NCFilter from './NCFilter';
 import DataPicker from './DataPicker';
-import Legend from './Legend';
 // import Dropdown from '../../common/Dropdown';
 
 const Header = ({
@@ -35,7 +34,6 @@ const Header = ({
             />
           </div>
         </div>
-        <Legend />
       </div>
     </div>
   </section>

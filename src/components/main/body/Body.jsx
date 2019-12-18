@@ -1,5 +1,6 @@
 import React from 'react';
 import PinMap from '../../PinMap/PinMap';
+import Legend from '../header/Legend';
 
 const Body = ({
   showMarkers,
@@ -9,12 +10,17 @@ const Body = ({
 }) => (
   <div className="container is-fluid">
     <div className="columns">
-      <PinMap
-        showMarkers={showMarkers}
-        data={data}
-        onDropdownSelect={updateState}
-        toggleShowMarker={toggleShowMarkers}
-      />
+      <div className="column is-2">
+        <Legend />
+      </div>
+      <div className="column">
+        <PinMap
+          showMarkers={showMarkers}
+          data={data}
+          onDropdownSelect={updateState}
+          toggleShowMarker={toggleShowMarkers}
+        />
+      </div>
     </div>
   </div>
 );

@@ -1,5 +1,4 @@
-import React from 'react'
-import './Styles/TimeToClose.scss'
+import React from 'react';
 
 export default ({}) => {
   return (

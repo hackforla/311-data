@@ -9,7 +9,7 @@ const Legend = () => {
     <div className="Legend">
       <DiscreteColorLegend
         items={colorData}
-        orientation="horizontal"
+        orientation="vertical"
       />
     </div>
   );
