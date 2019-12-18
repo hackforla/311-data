@@ -5,24 +5,39 @@ from datetime import datetime
 from shapely import wkt
 
 def fill_placeholder_1900(df):
+    """
+    Replace all NaT entries with the year 1900
+    """
     return df.replace(to_replace=pd.to_datetime('1900'),value=pd.NaT)
 
 def to_datetime(df):
+    """
+    Convert columns to pandas datetime format
+    """
     dt_cols = ['CreatedDate','UpdatedDate','ServiceDate','ClosedDate']
     for col in dt_cols:
         df[col] = pd.to_datetime(df[col])
 
 def fill_placeholder_1900_col(df):
+    """
+    Replace specific NaT entries with the year 1900
+    """
     dt_cols = ['CreatedDate','UpdatedDate','ServiceDate','ClosedDate']
     for col in dt_cols:
         df[col] = df[col].replace(to_replace=pd.to_datetime('1900'),value=pd.NaT)
 
 def fill_placeholder_ongoing(df, cols):
+    """
+    Replace ongoing request NaT entries with the year 1900
+    """
     for col in cols:
         df[col] = df[col].replace(to_replace=pd.NaT, value=datetime.now())
         # df.loc[df[col] == 'NaT', col] = datetime.now()
 
 def ddiff2days(ddiff):
+    """
+    Convert datetime data to float in number of days
+    """
     if not pd.isnull(ddiff):
         return pd.Timedelta.total_seconds(ddiff)/(24.*3600)
     else:
@@ -37,7 +52,54 @@ def to_points(p):
 def to_geom(df):
     df['Location'] = df.Location.apply(to_points)
 
+### --- Initial efforts on data cleanup ---
+
+### 1. ACQUIRE ###
+# Code for automated data download goes here
+
+
+### 2. CLEAN ###
+
+# Load data file from TSV/CSV
+### xNOTE: Can encapsulate this workflow and reapply for each data set
+dfb = pd.read_table('311data2019.tsv',sep='\t') # For now assume data in this folder
+
+# Format dates as datetime (Time intensive)
+dfb['CreatedDate'] = pd.to_datetime(dfb['CreatedDate'])
+dfb['ClosedDate'] = pd.to_datetime(dfb['ClosedDate'])
+dfb['ServiceDate'] = pd.to_datetime(dfb['ServiceDate'])
+
+# Compute service time
+# New columns: closed_created, service_created
+dfb['closed_created'] = dfb.ClosedDate-dfb.CreatedDate
+dfb['service_created'] = dfb.ServiceDate-dfb.CreatedDate
+
+# drop NA values and reformat closed_created in units of hours
+dfb = dfb[~dfb.closed_created.isna()]
+
+# New column: closed_created in units of days 
+dfb['closed_createdD'] = dfb.closed_created / pd.Timedelta(days=1)
+
+# xFUTURE: Geolocation/time clustering to weed out repeat requests
+# xFUTURE: Decide whether ServiceDate or ClosedDate are primary metric
+# xFUTURE: Removal of feedback and other categories
+
+# Save output file 
+# xFUTURE: May not be necessary after SQL database established
+dfb.to_pickle('311data-cleaned.gzip')
+
+# xNote: To open: pd.read_pickle('311data-cleaned.gzip')
+
+### 3. INGEST ###
+# Code for addition to SQL database goes here
+
+# ------
+
 def add_datediff_cols(df):
+    """
+    Create new columns in database
+    Not recommended for final product, but useful for experimentation
+    """
     df['ClosedDiff'] = df.ClosedDate - df.CreatedDate
     df['ServiceDiff'] = df.ServiceDate - df.CreatedDate
     df['ClosedServiceDiff'] = df.ClosedDate - df.ServiceDate
