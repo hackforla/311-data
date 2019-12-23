@@ -1,10 +1,14 @@
-import React from 'react'
-import NCFilter from './NCFilter.jsx'
-import DataPicker from './dataPicker.jsx'
-import Legend from './Legend.jsx'
-import Dropdown from '../../common/Dropdown';
+import React from 'react';
+import NCFilter from './NCFilter';
+import DataPicker from './DataPicker';
+// import Dropdown from '../../common/Dropdown';
 
-const Header = () => (
+const Header = ({
+  updateState,
+  toggleShowMarkers,
+  showMarkers,
+  showMarkersDropdown,
+}) => (
   <section className="hero">
     <div className="hero-body">
       <div className="container">
@@ -15,17 +19,21 @@ const Header = () => (
           Dashboard for NC
         </h2>
         <div className="columns">
-          <div className="column">
-            {/* <Dropdown /> */}
-          </div>
+          {/* <div className="column">
+            <Dropdown />
+          </div> */}
           <div className="column">
             <NCFilter />
           </div>
           <div className="column">
-            <DataPicker />
+            <DataPicker
+              showMarkerDropdown={showMarkersDropdown}
+              showMarkers={showMarkers}
+              onDropdownSelect={updateState}
+              toggleShowMarkers={toggleShowMarkers}
+            />
           </div>
         </div>
-        <Legend />
       </div>
     </div>
   </section>

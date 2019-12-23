@@ -1,10 +1,26 @@
 import React from 'react';
-import PinMap from '../../PinMap/PinMap.jsx';
+import PinMap from '../../PinMap/PinMap';
+import Legend from '../header/Legend';
 
-const Body = () => (
+const Body = ({
+  showMarkers,
+  data,
+  updateState,
+  toggleShowMarkers,
+}) => (
   <div className="container is-fluid">
     <div className="columns">
-      <PinMap />
+      <div className="column is-2">
+        <Legend />
+      </div>
+      <div className="column">
+        <PinMap
+          showMarkers={showMarkers}
+          data={data}
+          onDropdownSelect={updateState}
+          toggleShowMarker={toggleShowMarkers}
+        />
+      </div>
     </div>
   </div>
 );
