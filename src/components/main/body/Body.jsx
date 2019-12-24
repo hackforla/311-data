@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import NCFilter from '../header/NCFilter';
-import DataPicker from '../header/DataPicker';
+import NCFilter from '../common/NCFilter';
+import DataPicker from '../common/dataPicker';
 import PinMap from '../../PinMap/PinMap';
-import Legend from '../header/Legend';
+import Legend from '../common/Legend';
 
 const Body = ({
   data,
@@ -11,6 +11,7 @@ const Body = ({
   updateState,
   startMonth,
   endMonth,
+  year,
 }) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -57,6 +58,7 @@ const Body = ({
               onDropdownSelect={updateState}
               startMonth={startMonth}
               endMonth={endMonth}
+              year={year}
             />
           </div>
         </div>
@@ -68,7 +70,7 @@ const Body = ({
             type="button"
             onClick={handleOnGenerateClick}
           >
-              Generate Link
+              Generate Report
           </button>
         </div>
       </div>

@@ -7,6 +7,8 @@ const Footer = () => (
       // position: 'fixed',
       bottom: '0',
       width: '100%',
+      padding: '1em',
+      zIndex: '9999'
     }}
   >
     <div className="content has-text-centered">
@@ -15,12 +17,11 @@ const Footer = () => (
           311 Data
         </strong>
         &nbsp;
-        by
+        |
         &nbsp;
         <a href="https://www.hackforla.org/">
           Hack4LA
         </a>
-        .
       </p>
     </div>
   </footer>

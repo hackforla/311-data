@@ -6,6 +6,7 @@ import { YEARS, MONTHS, REQUESTS, TIME_PERIOD } from '../../common/CONSTANTS';
 const DataPicker = ({
   startMonth,
   endMonth,
+  year,
   onDropdownSelect,
 }) => {
   const handleOnChange = (e) => {
@@ -25,6 +26,9 @@ const DataPicker = ({
     return Object.keys(options).map((option) => {
       let component;
       const name = options[option];
+      const date = new Date();
+      const curYear = date.getFullYear().toString();
+      const curMonth = date.getMonth() + 1;
 
       switch (name) {
         case 'Year':
@@ -43,7 +47,11 @@ const DataPicker = ({
           break;
         case 'Start Month':
           component = MONTHS.map((month, idx) => {
-            const disable = endMonth < idx + 1;
+            let disable = endMonth < idx + 1;
+
+            if (year === curYear) {
+              disable = idx + 1 > curMonth;
+            }
 
             return (
               <option 
@@ -61,7 +69,11 @@ const DataPicker = ({
           break;
         case 'End Month':
           component = MONTHS.map((month, idx) => {
-            const disable = startMonth > idx + 1;
+            let disable = startMonth > idx + 1;
+
+            if (year === curYear) {
+              disable = idx + 1 > curMonth;
+            }
 
             return (
               <option 

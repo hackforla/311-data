@@ -71,6 +71,7 @@ class App extends Component {
       startMonth, 
       endMonth, 
       link, 
+      year,
     } = this.state;
 
     return (
@@ -80,6 +81,7 @@ class App extends Component {
           data={data}
           startMonth={startMonth}
           endMonth={endMonth}
+          year={year}
           link={link}
           buildUrl={this.buildDataUrl}
           updateState={this.updateState}
