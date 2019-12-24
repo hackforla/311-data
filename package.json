@@ -16,12 +16,13 @@
     "react-leaflet": "^2.4.0",
     "react-leaflet-choropleth": "^2.0.0",
     "react-test-renderer": "^16.12.0",
-    "react-vis": "^1.11.7"
+    "react-vis": "^1.11.7",
+    "webpack-merge": "^4.2.2"
   },
   "scripts": {
-    "start": "npm start",
-    "dev": "webpack-dev-server",
-    "build": "webpack",
+    "start": "npm run dev",
+    "dev": "webpack-dev-server --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "test": "jest",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
