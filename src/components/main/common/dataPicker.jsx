@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 
-import { YEARS, MONTHS, REQUESTS, TIME_PERIOD } from '../../common/CONSTANTS';
+import {
+  YEARS, MONTHS, REQUESTS, TIME_PERIOD,
+} from '../../common/CONSTANTS';
 
 const DataPicker = ({
   startMonth,
@@ -32,13 +34,13 @@ const DataPicker = ({
 
       switch (name) {
         case 'Year':
-          component = YEARS.map((year) => (
-            <option key={year} value={year}>
-              {year}
+          component = YEARS.map((y) => (
+            <option key={y} value={y}>
+              {y}
             </option>
           ));
           break;
-        case 'Time Period': 
+        case 'Time Period':
           component = TIME_PERIOD.map((time) => (
             <option key={time} value={time}>
               {time}
@@ -54,12 +56,12 @@ const DataPicker = ({
             }
 
             return (
-              <option 
-                key={month} 
+              <option
+                key={month}
                 value={idx + 1}
-                style={{ 
-                  color: disable ? 'lightgrey' : null, 
-                }} 
+                style={{
+                  color: disable ? 'lightgrey' : null,
+                }}
                 disabled={disable}
               >
                 {month}
@@ -76,12 +78,12 @@ const DataPicker = ({
             }
 
             return (
-              <option 
-                key={month} 
+              <option
+                key={month}
                 value={idx + 1}
-                style={{ 
-                  color: disable ? 'lightgrey' : null, 
-                }}  
+                style={{
+                  color: disable ? 'lightgrey' : null,
+                }}
                 disabled={disable}
               >
                 {month}
@@ -102,9 +104,9 @@ const DataPicker = ({
 
       return (
         <div className="field" key={option}>
-          <label className="label">
+          <p className="label">
             {name}
-          </label>
+          </p>
 
           <div className="control">
             <div className="select">
@@ -129,7 +131,12 @@ const DataPicker = ({
       {/* {showMarkerDropdown && (
         <>
           Show Markers
-          <input type="checkbox" value="markers" checked={showMarkers} onChange={toggleShowMarkers} />
+          <input
+            type="checkbox"
+            value="markers"
+            checked={showMarkers}
+            onChange={toggleShowMarkers}
+          />
         </>
       )} */}
     </div>
@@ -137,11 +144,17 @@ const DataPicker = ({
 };
 
 DataPicker.propTypes = {
-  showMarkerDropdown: PropTypes.bool,
+  startMonth: PropTypes.number,
+  endMonth: PropTypes.number,
+  year: PropTypes.string,
+  onDropdownSelect: PropTypes.func,
 };
 
 DataPicker.defaultProps = {
-  showMarkerDropdown: true,
+  startMonth: undefined,
+  endMonth: undefined,
+  year: undefined,
+  onDropdownSelect: () => null,
 };
 
 export default DataPicker;
