@@ -13,7 +13,6 @@ export const YEARS = [
   '2017',
   '2018',
   '2019',
-  '2020',
 ];
 
 export const MONTHS = [
