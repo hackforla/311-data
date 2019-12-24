@@ -1,6 +1,6 @@
 import React from 'react';
 import NCFilter from './NCFilter';
-import DataPicker from './DataPicker';
+import DataPicker from './dataPicker';
 // import Dropdown from '../../common/Dropdown';
 
 const Header = ({
