@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import NCFilter from '../common/NCFilter';
 import DataPicker from '../common/dataPicker';
-import PinMap from '../../PinMap/PinMap';
-import Legend from '../common/Legend';
+// import PinMap from '../../PinMap/PinMap';
+// import Legend from '../common/Legend';
 
 const Body = ({
-  data,
+  // data,
   link,
   buildUrl,
   updateState,
@@ -21,20 +21,21 @@ const Body = ({
       setIsGenerating(false);
     }, 1000);
     buildUrl();
-  }
+  };
 
-  
+
   return (
     <>
       <div className="level">
         <div className="level-item">
           Welcome to the beta version of our Los Angeles neighborhood 311 report generator.
           <br />
-          This 1st report will give you a list of the addresses with the highest incidence of the 311 issue that you select.
-          <br /> 
-          Hack for LA is a group of volunteers helping our community one software project at a time. 
+          This 1st report will give you a list of the addresses with the highest incidence of
+          the 311 issue that you select.
           <br />
-          Please feel free to contact us with any feedback you have in order to improve this tool. 
+          Hack for LA is a group of volunteers helping our community one software project at a time.
+          <br />
+          Please feel free to contact us with any feedback you have in order to improve this tool.
           <br />
           Thank you!
         </div>
@@ -65,7 +66,7 @@ const Body = ({
       </div>
       <div className="level">
         <div className="level-item">
-          <button 
+          <button
             className={`button is-link${isGenerating ? ' is-loading' : ''}`}
             type="button"
             onClick={handleOnGenerateClick}
