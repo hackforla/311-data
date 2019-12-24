@@ -1,13 +1,15 @@
 const Dotenv = require('dotenv-webpack');
+const path = require('path');
+
 module.exports = {
   entry: './src/index.js',
   output: {
-    path: __dirname + '/dist',
+    path: path.join(__dirname, '/dist'),
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
@@ -23,7 +25,7 @@ module.exports = {
         use: [
           'style-loader',
           'css-loader',
-          'sass-loader'
+          'sass-loader',
         ],
       },
       {
@@ -32,10 +34,10 @@ module.exports = {
           'file-loader',
         ],
       },
-    ]
+    ],
   },
   plugins: [
-    new Dotenv()
+    new Dotenv(),
   ],
   devServer: {
     open: true,
@@ -44,5 +46,5 @@ module.exports = {
     port: 3000,
     hot: true,
     historyApiFallback: true,
-  }
+  },
 };

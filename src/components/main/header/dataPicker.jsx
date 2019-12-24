@@ -1,68 +1,101 @@
 import React from 'react';
-import constants from '../../common/CONSTANTS';
+import PropTypes from 'proptypes';
 
-export default ({
-  showMarkerDropdown,
-  showRequestsDropdown,
-  serviceRequests,
+import { YEARS, MONTHS, REQUESTS } from '../../common/CONSTANTS';
+
+const DataPicker = ({
   showMarkers,
-  onChange,
+  showMarkerDropdown,
+  onDropdownSelect,
   toggleShowMarkers,
 }) => {
-  const { YEARS, MONTHS } = constants;
-  const options = {
-    year: 'Year',
-    startMonth: 'Start Month',
-    endMonth: 'End Month',
+  const handleOnChange = (e) => {
+    const { id, value } = e.target;
+    onDropdownSelect(id, value);
   };
 
-  if (showRequestsDropdown) {
-    options.request = 'Service Requests';
-  }
+  const renderDatePicker = () => {
+    const options = {
+      year: 'Year',
+      startMonth: 'Start Month',
+      endMonth: 'End Month',
+      request: 'Service Requests',
+    };
 
-  const renderDatePicker = Object.keys(options).map(option => {
-    let component;
-    const name = options[option];
+    return Object.keys(options).map((option) => {
+      let component;
+      const name = options[option];
 
-    switch (name) {
-      case 'Year':
-        component = YEARS.map(year => (<option key={year} value={year}>{year}</option>));
-        break;
-      case 'Start Month':
-        component = MONTHS.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>));
-        break;
-      case 'End Month':
-        component = MONTHS.map((month, idx) => (<option key={month} value={idx + 1}>{month}</option>));
-        break;
-      case 'Service Requests':
-        component = serviceRequests.map(service => (<option key={service} value={service}>{service}</option>));
-        break;
-      default:
-        break;
-    }
+      switch (name) {
+        case 'Year':
+          component = YEARS.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ));
+          break;
+        case 'Start Month':
+          component = MONTHS.map((month, idx) => (
+            <option key={month} value={idx + 1}>
+              {month}
+            </option>
+          ));
+          break;
+        case 'End Month':
+          component = MONTHS.map((month, idx) => (
+            <option key={month} value={idx + 1}>
+              {month}
+            </option>
+          ));
+          break;
+        case 'Service Requests':
+          component = REQUESTS.map((service) => (
+            <option key={service} value={service}>
+              {service}
+            </option>
+          ));
+          break;
+        default:
+          break;
+      }
 
-    return (
-      <React.Fragment key={option}>
-        {name}
-        &nbsp;
-        <select id={option} className="dropdown" defaultValue={option === 'endMonth' ? '12' : null} onChange={onChange}>
-          {component}
-        </select>
-        <br/>
-      </React.Fragment>
-    );
-  });
+      return (
+        <React.Fragment key={option}>
+          {name}
+          &nbsp;
+          <select
+            id={option}
+            className="dropdown"
+            defaultValue={option === 'endMonth' ? '12' : null}
+            onChange={handleOnChange}
+          >
+            {component}
+          </select>
+          <br />
+        </React.Fragment>
+      );
+    });
+  };
 
   return (
     <div className="dropdown-container">
-      {renderDatePicker}
+      {renderDatePicker()}
       {showMarkerDropdown && (
         <>
           Show Markers
-          <input type="checkbox" value="Markers" checked={showMarkers} onChange={toggleShowMarkers}/>
+          <input type="checkbox" value="markers" checked={showMarkers} onChange={toggleShowMarkers} />
         </>
       )}
     </div>
-
   );
-}
+};
+
+DataPicker.propTypes = {
+  showMarkerDropdown: PropTypes.bool,
+};
+
+DataPicker.defaultProps = {
+  showMarkerDropdown: true,
+};
+
+export default DataPicker;
