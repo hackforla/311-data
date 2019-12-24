@@ -66,7 +66,7 @@ const Body = ({
       <div className="level">
         <div className="level-item">
           <button 
-            className={`button is-link ${isGenerating ? 'is-loading' : null}`}
+            className={`button is-link${isGenerating ? ' is-loading' : ''}`}
             type="button"
             onClick={handleOnGenerateClick}
           >
