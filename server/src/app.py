@@ -7,6 +7,7 @@ from services.frequency import frequency
 from services.ingress_service import ingress_service
 from services.reporting import reports
 from configparser import ConfigParser
+from json import loads
 
 
 app = Sanic(__name__)
@@ -29,10 +30,13 @@ async def index(request):
 @app.route('/timetoclose')
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
+    data = []
     # Insert time to close calculation here
-    return_data = ttc_worker.ttc_query()
-
-    return return_data
+    column_names = ttc_worker.ttc_view_columns()
+    all_rows = loads(ttc_worker.ttc_view_all())
+    data.append(column_names)
+    data.append(all_rows)
+    return json(data)
 
 
 @app.route('/requestfrequency')
@@ -41,7 +45,7 @@ async def requestfrequency(request):
     # Insert frequency calculation here
     return_data = freq_worker.freq_query()
 
-    return return_data
+    return json(return_data)
 
 
 @app.route('/sample-data')
