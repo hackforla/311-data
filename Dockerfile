@@ -11,5 +11,5 @@ RUN webpack
 ENV NODE_ENV=production
 ENV PORT=3000
 RUN ls
-CMD [ "npm", "run", "start" ]
+CMD [ "node", "server.js" ]
 EXPOSE 3000
