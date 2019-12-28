@@ -2,7 +2,13 @@ const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    javascript: './src/index.js',
+    // html: './public/index.html'
+  },
+  watchOptions: {
+    poll: true
+  },
   output: {
     path: path.join(__dirname, '/dist'),
     publicPath: '/',
