@@ -149,7 +149,7 @@ if [ -f ./server/src/static/2018_mini.csv ]; then
 else
   echo "🕺 Downloading the first 10000 rows of the 2018 dataset for seeding"
 
-  curl 'https://data.lacity.org/resource/h65r-yf5i.csv?$select=*&$limit=10000' -o server/src/static/2018_mini.csv
+  curl 'https://data.lacity.org/resource/h65r-yf5i.csv?$select=SRNumber,CreatedDate,UpdatedDate,ActionTaken,Owner,RequestType,Status,RequestSource,MobileOS,Anonymous,AssignTo,ServiceDate,ClosedDate,AddressVerified,ApproximateAddress,Address,HouseNumber,Direction,StreetName,Suffix,ZipCode,Latitude,Longitude,Location,TBMPage,TBMColumn,TBMRow,APC,CD,CDMember,NC,NCName,PolicePrecinct&$limit=10000' -o server/src/static/2018_mini.csv
 
   echo "Once the docker compose environment is setup you can send a POST request"
   echo 'To /ingest with body argument of {"sets":["2018_MINI"]} to seed the db'
@@ -160,7 +160,7 @@ fi
 while true; do
     read -p "Do you wish to run the docker environment? (postgres, frontend, backend, adminer)?" yn
     case $yn in
-        [Yy]* ) docker-compose -f ./Orchestration/docker-compose.yml up -d && exit;;
+        [Yy]* ) docker-compose -f ./Orchestration/docker-compose.yml up --build -d && exit;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
     esac

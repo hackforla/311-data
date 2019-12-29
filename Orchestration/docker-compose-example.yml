@@ -1,28 +1,25 @@
 version: '3.1'
 
 services:
-#  backend:
-#    build:
-#      context: ../python
-#    image: 311-data-back:0.0.1
-#    restart: always
-#    container_name: "311-backend"
-#    environment:
-#      SODAPY_APPTOKEN: <Your Token Here>
-#    ports:
-#      - 5000:5000
-#
-#  frontend:
-#    build:
-#      context: ../javascript/react/311-data
-#    image: 311-data-front:0.0.1
-#    volumes:
-#      - '../javascript/react/311-data:/app'
-#      - '/app/node_modules'
-#    restart: always
-#    container_name: "311-frontend"
-#    ports:
-#      - 3000:3000
+  backend:
+   build:
+     context: ../server
+   image: 311-data-back:0.0.1
+   restart: always
+   container_name: "311-backend"
+   environment:
+     DB_CONNECTION_STRING: postgres://REDACTED:REDACTED@db:5432/postgres
+   ports:
+     - 5000:5000
+
+  frontend:
+   build:
+     context: ..
+   image: 311-data-front:0.0.1
+   restart: always
+   container_name: "311-frontend"
+   ports:
+     - 3000:3000
 
   db:
     image: postgres
