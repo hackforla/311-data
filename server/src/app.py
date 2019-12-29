@@ -18,6 +18,8 @@ def configure_app():
     settings_file = os.path.join(os.getcwd(),'settings.cfg')
     config.read(settings_file)
     app.config['Settings'] = config
+    if os.environ.get('DB_CONNECTION_STRING', None):
+        app.config['Settings']['Database']['DB_CONNECTION_STRING'] = os.environ.get('DB_CONNECTION_STRING')
     app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
     os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
 
