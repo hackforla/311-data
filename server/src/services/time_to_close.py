@@ -4,8 +4,9 @@ import pandas as pd
 from datetime import datetime as dt
 import numpy as np
 
+
 class time_to_close(object):
-    def __init__(self, config=None, tableName="ingest_staging_table"):
+    def __init__(self, config=None, requestTypes=None, tableName="ingest_staging_table"):
         """
         Choose table from database by setting the value of tableName. Default table is the staging table.
         """
@@ -23,8 +24,10 @@ class time_to_close(object):
 
         df = pd.read_sql_query("SELECT * FROM %s" % self.table, con=engine)
 
+        self.data = df
+
         return df
-        
+
     def ttc_view_table(self, onlyClosed=False):
         """
         Returns all entries
@@ -40,49 +43,74 @@ class time_to_close(object):
         # connection.close()
 
         if onlyClosed:
-            df = pd.read_sql_query("SELECT * FROM %s WHERE Status = 'Closed'" % self.table, con=engine)
+            df = pd.read_sql_query(
+                "SELECT * FROM %s WHERE Status = 'Closed'" % self.table, con=engine)
         else:
             df = pd.read_sql_query("SELECT * FROM %s" % self.table, con=engine)
 
         return df.to_json(orient='index')
 
-    def ttc_created_closed_time(self, serviced=False):
+    def ttc_view_dates(self, serviced=False):
         """
-        Returns all rows under the CreatedDate and ClosedDate columns in ISO8601 format
+        Returns all rows under the CreatedDate and ClosedDate columns in human-readable format
         Returns all rows with a service date under CreatedDate, ClosedDate, and ServicedDate columns if serviced is True
         """
         engine = db.create_engine(self.dbString)
 
         if serviced:
-            df = pd.read_sql_query("SELECT createddate, closeddate, servicedate FROM %s" % self.table, con=engine)
+            df = pd.read_sql_query(
+                "SELECT createddate, closeddate, servicedate FROM %s" % self.table, con=engine)
             df = df[df['servicedate'].notnull()]
-            print(len(df))
         else:
-            df = pd.read_sql_query("SELECT createddate, closeddate FROM %s" % self.table, con=engine)
-            print(len(df))
+            df = pd.read_sql_query(
+                "SELECT createddate, closeddate FROM %s" % self.table, con=engine)
 
-        self.data = df
-
-        df['createddate'] = df['createddate'].apply(lambda x: x.strftime('%m/%d/%Y %I:%M:%S %p'))
+        df['createddate'] = df['createddate'].apply(
+            lambda x: x.strftime('%m/%d/%Y %I:%M:%S %p'))
 
         return df.to_json(orient='index')
 
-    def ttc_average_time(self):
+    def ttc_time_diff(self, serviced=False, all=False):
         """
         Returns the average time in days or hours for a specific request type to be completed
         """
-        df = self.data
-        
-       
-        # pd.Timedelta.total_seconds(df['createddate'])
-        print(df.dtypes)
+        engine = db.create_engine(self.dbString)
 
-        return df.to_json(orient='index', date_format='iso', date_unit='s')
+        if serviced:
+            df = pd.read_sql_query(
+                "SELECT createddate, closeddate, servicedate FROM %s" % self.table, con=engine)
+            df = df[df['servicedate'].notnull()]
+            df['servicedate'] = pd.to_datetime(df['servicedate'])
+            diff_df = pd.DataFrame(
+                df['servicedate'] - df['createddate'], columns=['time_to_service'])
+        else:
+            df = pd.read_sql_query(
+                "SELECT createddate, closeddate FROM %s" % self.table, con=engine)
+            diff_df = pd.DataFrame({'time_to_close': []})
+
+        df['createddate'] = pd.to_datetime(df['createddate'])
+        df['closeddate'] = pd.to_datetime(df['closeddate'])
+        diff_df['time_to_close'] = df['closeddate'] - df['createddate']
+
+        def dt_to_days(dt):
+            num_days = pd.Timedelta.total_seconds(dt)/(24.*3600)
+            if num_days <= .000001:
+                return 0
+            return pd.Timedelta.total_seconds(dt)/(24.*3600)
+
+        diff_df['time_to_close'] = diff_df.time_to_close.apply(dt_to_days) 
+        diff_df['time_to_service'] = diff_df.time_to_service.apply(dt_to_days) 
+        
+        ### Todo: Convert unix time to strings displaying days
+        ### Todo: Return averages and min/max
+        ### Todo: Implement function for considering request type
+
+        return diff_df.to_json(orient='index')
 
 if __name__ == "__main__":
     ttc = time_to_close()
     config = ConfigParser()
     config.read("../setting.cfg")
-    ttc.config   = config
+    ttc.config = config
     ttc.dbString = config['Database']['DB_CONNECTION_STRING']
     ttc.ttc_view_table()

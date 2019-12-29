@@ -34,14 +34,13 @@ async def timetoclose(request):
 
     # column_names = ttc_worker.ttc_view_columns()
     # all_rows = loads(ttc_worker.ttc_view_table(onlyClosed=True))
-
-    converted_time = loads(ttc_worker.ttc_created_closed_time(serviced=False))
-    # average_time = loads(ttc_worker.ttc_average_time())
+    # all_dates = loads(ttc_worker.ttc_view_dates(serviced=False))
+    time_diff = loads(ttc_worker.ttc_average_time(serviced=True))
 
     # data.append(column_names)
     # data.append(all_rows)
-    data.append(converted_time)
-    # data.append(average_time)
+    # data.append(all_dates)
+    data.append(time_diff)
     return json(data)
 
 
