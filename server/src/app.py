@@ -31,11 +31,17 @@ async def index(request):
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
     data = []
-    # Insert time to close calculation here
-    column_names = ttc_worker.ttc_view_columns()
-    all_rows = loads(ttc_worker.ttc_view_all())
-    data.append(column_names)
-    data.append(all_rows)
+
+    # column_names = ttc_worker.ttc_view_columns()
+    # all_rows = loads(ttc_worker.ttc_view_table(onlyClosed=True))
+
+    converted_time = loads(ttc_worker.ttc_created_closed_time(serviced=False))
+    # average_time = loads(ttc_worker.ttc_average_time())
+
+    # data.append(column_names)
+    # data.append(all_rows)
+    data.append(converted_time)
+    # data.append(average_time)
     return json(data)
 
 
