@@ -1,5 +1,5 @@
 FROM node:12.2.0-alpine
-RUN npm install webpack -g
+RUN npm install webpack webpack-cli -g
 WORKDIR /tmp
 COPY package.json /tmp/
 RUN npm config set registry http://registry.npmjs.org/ && npm install
