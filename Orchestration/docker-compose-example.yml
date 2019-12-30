@@ -1,0 +1,43 @@
+version: '3.1'
+
+services:
+  backend:
+   build:
+     context: ../server
+   image: 311-data-back:0.0.1
+   restart: always
+   container_name: "311-backend"
+   environment:
+     DB_CONNECTION_STRING: postgres://REDACTED:REDACTED@db:5432/postgres
+   ports:
+     - 5000:5000
+
+  frontend:
+   build:
+     context: ..
+   image: 311-data-front:0.0.1
+   restart: always
+   container_name: "311-frontend"
+   ports:
+     - 3000:3000
+
+  db:
+    image: postgres
+    restart: always
+    container_name: "311-postgres"
+    environment:
+      POSTGRES_PASSWORD: REDACTED
+      POSTGRES_USER: REDACTED
+    ports:
+      - 5432:5432
+    volumes:
+      - backend_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    container_name: "postgres-dashboard"
+    ports:
+      - 8080:8080
+volumes:
+  backend_data:

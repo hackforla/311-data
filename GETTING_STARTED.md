@@ -51,7 +51,67 @@ Running this command does not mean you are _in_ the virtual environment yet. in 
 
 
 ## Flask
+For back end work we are using a variant of python-flask. It is called Sanic, you can read more about the specific differences [here](https://www.fullstackpython.com/sanic.html) Yes the naming is a bit immature but it does give us asynchronous capabilities. The other reason we chose python for the back end is that we will be doing a lot of data analysis and python is the ideal language for these operations.
+
 ## React
+The front end will be written in React/Redux since the application is pitched as a reporting dashboard with several visualizations driven by a single set of filters. If you are unfamiliar, it is reccomended to start [here](https://hackernoon.com/getting-started-with-react-redux-1baae4dcb99b)
+
 ## API Secrets
+Throughout the dev process we will inevitably run into secret keys or username/passwords. These are protected from being pushed to github by the ignore file. You'll notice the entries for the following files
+```
+docker-compose.yml
+.env
+settings.cfg
+```
+When cloning the repo, you will find `.example.env`, `server/src/settings.example.cfg`, and `docker-compose-example.yml` These have dummy or default values. In order to run either the front or back end, you will need to copy the files into `.env` and `settings.cfg` respectively. Then swap out the REDACTED entries with the correct values.
+
+Now, when you commit code, the real values will never get checked in.
+### Just make sure to never populate the `example` configs with secrets!!!!!!
+
 ## Docker Compose
+For ease of use when getting started developing on the front/back there is a docker compose file that will startup all of the required services. After running `docker compose up` in the `Orchestration` folder the following will be running:
+```
+postgresql: port -> 5432
+adminer dashboard: port -> 8080
+front end react app: port -> 3000
+backend flask server: port -> 5000
+```
+The adminer dashboard serves as a web ui for the postgres db, if you are unfamiliar please see [here](https://documentation.online.net/en/web/web-hosting/sql-management/configure-postgresql-adminer)
+
 ## Onboarding Script
+In an attempt to alleviate as much onboarding woes as possible, we have written an onboarding script that should take care of most of the setup.
+You can find the script in the root of the repo under `onboard.sh`
+If you are on windows, please use git bash or equivalent to run the script.
+Once in your terminal you can execute the script with `sh onboard.sh`
+
+
+# Advanced operations
+This section will detail engineering tasks beyond onboarding that we do often.
+
+## Seeding the database
+At the moment, database seeding is handled through the `(POST)/ingest` endpoint with an array of strings for the body parameters. The body looks like this:
+```json
+{
+  "sets":[
+    "2018_MINI"
+  ]
+}
+```
+The assumption prior to calling that endpoint is:
+```
+Running postgres db listening on 5432
+csv file with data from data.lacity.org
+[YearMapping] entry in settings.cfg that maps a year to the filename in server/src/static
+  * See 2018_MINI for reference
+```
+
+## Socrata API
+The raw data will often be referenced as "socrata" (Maybe im the only one [Russell]) but socrata is the mechanism to pull data from data.lacity.org via an api. The cool thing about this api is that you can send sql requests, including aggregates. The even cooler thing is that we can ask for a substatial amount of information by using the `$limit` parameter.
+An example of this request would look like this:
+```
+https://data.lacity.org/resource/pvft-t768.csv
+?$select=Address,count(*)+AS+CallVolume
+&$where=date_extract_m(CreatedDate)+between+1+and+12+and+RequestType=%27Bulky%20Items%27+and+NCName=%27ARLETA%20NC%27
+&$group=Address&$order=CallVolume%20DESC
+&$limit=50000000
+```

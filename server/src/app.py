@@ -7,6 +7,7 @@ from services.frequency import frequency
 from services.ingress_service import ingress_service
 from services.reporting import reports
 from configparser import ConfigParser
+from json import loads
 
 
 app = Sanic(__name__)
@@ -17,6 +18,8 @@ def configure_app():
     settings_file = os.path.join(os.getcwd(),'settings.cfg')
     config.read(settings_file)
     app.config['Settings'] = config
+    if os.environ.get('DB_CONNECTION_STRING', None):
+        app.config['Settings']['Database']['DB_CONNECTION_STRING'] = os.environ.get('DB_CONNECTION_STRING')
     app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
     os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
 
@@ -29,10 +32,18 @@ async def index(request):
 @app.route('/timetoclose')
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
-    # Insert time to close calculation here
-    return_data = ttc_worker.ttc_query()
+    data = []
 
-    return return_data
+    # column_names = ttc_worker.ttc_view_columns()
+    # all_rows = loads(ttc_worker.ttc_view_table(onlyClosed=True))
+    # all_dates = loads(ttc_worker.ttc_view_dates(serviced=False))
+    time_diff = loads(ttc_worker.ttc_average_time(serviced=True))
+
+    # data.append(column_names)
+    # data.append(all_rows)
+    # data.append(all_dates)
+    data.append(time_diff)
+    return json(data)
 
 
 @app.route('/requestfrequency')
@@ -41,7 +52,7 @@ async def requestfrequency(request):
     # Insert frequency calculation here
     return_data = freq_worker.freq_query()
 
-    return return_data
+    return json(return_data)
 
 
 @app.route('/sample-data')

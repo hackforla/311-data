@@ -1,18 +1,24 @@
-import React from 'react'
-import constants from '../../common/CONSTANTS.js';
+import React from 'react';
+import { COUNCILS } from '../../common/CONSTANTS';
 
-export default ({
+const NCFilter = ({
   isPrimary,
   selectedNC,
   onChange
- }) => {
+}) => {
+  const style = isPrimary === true ? 'NCFilterPrimary' : 'NCFilterSecondary';
 
-  const style = isPrimary === true ? 'NCFilterPrimary' : 'NCFilterSecondary'
   return (
     <div className={style}>
       <select className="NCFilterDropdown" onChange={onChange}>
-        {constants.COUNCILS.map((nc, idx) => (<option key={nc} value={nc}>{nc}</option>))}
+        {COUNCILS.map((nc) => (
+          <option key={nc} value={nc}>
+            {nc}
+          </option>
+        ))}
       </select>
     </div>
-  )
-}
+  );
+};
+
+export default NCFilter;

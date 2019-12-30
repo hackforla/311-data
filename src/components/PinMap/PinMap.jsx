@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { Map, Marker, Popup, TileLayer, Rectangle, Tooltip } from 'react-leaflet';
+import {
+  Map, Marker, Popup, TileLayer, Rectangle, Tooltip,
+} from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
 
-import constants from '../common/CONSTANTS.js';
-import { getDataResources } from '../../Util/DataService.js';
-
-import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
-import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
-import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
-import ncOverlay from '../../data/nc-boundary-2019.json'
+// import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
+// import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
+// import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
+import ncOverlay from '../../data/nc-boundary-2019.json';
 
 
 class PinMap extends Component {
@@ -17,52 +15,29 @@ class PinMap extends Component {
     super(props);
 
     this.state = {
-      data: [],
-      year: '2015',
-      startMonth: '1',
-      endMonth: '12',
-      request: constants.REQUESTS[0],
       position: [34.0173157, -118.2497254],
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
-      dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
+      // dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
       geoJSON: ncOverlay,
-      showMarkers: false,
       bounds: null,
     };
   }
 
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  onDatePickerChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value,
-    }, () => {
-      this.fetchData();
-    });
-  }
-
-  toggleShowMarkers = () => {
-    const { showMarkers } = this.state;
-    this.setState({ showMarkers: !showMarkers })
-  }
-
-  highlightRegion = e => {
+  highlightRegion = (e) => {
     const layer = e.target;
 
     layer.setStyle({
       weight: 5,
       color: '#666',
       dashArray: '',
-      fillOpacity: 0.7
+      fillOpacity: 0.7,
     });
 
     layer.bringToFront();
   }
 
-  resetRegionHighlight = e => {
+  resetRegionHighlight = (e) => {
     const layer = e.target;
 
     layer.setStyle({
@@ -71,13 +46,13 @@ class PinMap extends Component {
       opacity: 1,
       color: 'white',
       dashArray: '3',
-      fillOpacity: 0.7
-    })
+      fillOpacity: 0.7,
+    });
   }
 
-  zoomToRegion = e => {
+  zoomToRegion = (e) => {
     const bounds = e.target.getBounds();
-    this.setState({ bounds })
+    this.setState({ bounds });
   }
 
   onEachFeature = (feature, layer) => {
@@ -89,7 +64,7 @@ class PinMap extends Component {
         ${feature.properties.service_re}
       </div>
     `;
-    layer.bindPopup(popupText)
+    layer.bindPopup(popupText);
 
     // Sets mouseover/out/click event handlers for each region
     layer.on({
@@ -97,24 +72,6 @@ class PinMap extends Component {
       mouseout: this.resetRegionHighlight,
       click: this.zoomToRegion,
     });
-  }
-
-  buildDataUrl = () => {
-    const { startMonth, endMonth, year, request } = this.state;
-    const dataResources = getDataResources();
-    return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`
-  }
-
-  fetchData = () => {
-    const dataUrl = this.buildDataUrl();
-
-    axios.get(dataUrl)
-      .then(({ data }) => {
-        this.setState({ data })
-      })
-      .catch(error => {
-        console.error(error);
-      });
   }
 
   renderOverlay = () => {
@@ -130,42 +87,51 @@ class PinMap extends Component {
             opacity: 1,
             color: 'white',
             dashArray: '3',
-            fillOpacity: 0.7
+            fillOpacity: 0.7,
           }}
           onEachFeature={this.onEachFeature}
-          ref={(el) => el ? this.choropleth = el.leafletElement : null}
+          ref={(el) => {
+            if (el) {
+              this.choropleth = el.leafletElement;
+              return this.choropleth;
+            }
+
+            return null;
+          }}
         />
-      )
+      );
     }
+
+    return 'Loading';
   }
 
   renderMarkers = () => {
-    const { data, showMarkers } = this.state;
+    const { data, showMarkers } = this.props;
 
-    if (showMarkers && data && data.length > 0) {
-      return data.map((d, idx) => {
-        const { location } = d;
-        let position = [0, 0];
+    if (showMarkers && data) {
+      return data.map((d) => {
+        if (d.location) {
+          const { location } = d;
+          const position = [location.latitude, location.longitude];
 
-        if (location) {
-          position = [location.latitude, location.longitude];
+          return (
+            <Marker key={position.toString()} position={position}>
+              <Popup>
+                Type:
+                {d.requesttype}
+                <br />
+                Address:
+                {d.address}
+              </Popup>
+            </Marker>
+          );
         }
 
-        return (
-          <Marker key={idx} position={position}>
-            <Popup>
-              Type:
-              {d.requesttype}
-              <br />
-              Address:
-              {d.address}
-            </Popup>
-          </Marker>
-        );
+        return null;
       });
     }
 
-    const tooltipPosition = [[34.0173157, -118.2497254], [34.1, -118.1497254],]
+    const tooltipPosition = [[34.0173157, -118.2497254], [34.1, -118.1497254]];
 
     return (
       <Rectangle bounds={tooltipPosition} color="black">
@@ -173,7 +139,7 @@ class PinMap extends Component {
           No Data To Display
         </Tooltip>
       </Rectangle>
-    )
+    );
   }
 
   renderMap = () => {
@@ -181,7 +147,6 @@ class PinMap extends Component {
       position,
       zoom,
       mapUrl,
-      showMarkers,
       bounds,
     } = this.state;
 
@@ -192,7 +157,8 @@ class PinMap extends Component {
             center={position}
             zoom={zoom}
             bounds={bounds}
-            style={{ height: '60vh' }}>
+            style={{ height: '60vh' }}
+          >
             <TileLayer
               url={mapUrl}
               attribution="MapBox"
@@ -203,7 +169,7 @@ class PinMap extends Component {
         </div>
 
       </>
-    )
+    );
   }
 
   render() {
@@ -213,7 +179,7 @@ class PinMap extends Component {
           {this.renderMap()}
         </div>
       </div>
-    )
+    );
   }
 }
 

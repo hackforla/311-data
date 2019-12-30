@@ -1,17 +1,18 @@
 import React from 'react';
-import {DiscreteColorLegend} from 'react-vis';
-import {getColorMap} from '../../../Util/DataService.js';
+import { DiscreteColorLegend } from 'react-vis';
+import { getColorMap } from '../../../Util/DataService';
 
-
-export default () => {
+const Legend = () => {
   const colorData = getColorMap(true);
 
   return (
     <div className="Legend">
       <DiscreteColorLegend
         items={colorData}
-
-        orientation="horizontal" />
+        orientation="vertical"
+      />
     </div>
-  )
-}
+  );
+};
+
+export default Legend;
