@@ -34,15 +34,11 @@ async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
     data = []
 
-    # column_names = ttc_worker.ttc_view_columns()
-    # all_rows = loads(ttc_worker.ttc_view_table(onlyClosed=True))
-    # all_dates = loads(ttc_worker.ttc_view_dates(serviced=False))
-    time_diff = loads(ttc_worker.ttc_average_time(serviced=True))
+    time_diff = loads(ttc_worker.ttc_time_diff(serviced=True, allRequests=False, requestType="'Bulky Items'"))
+    summary = loads(ttc_worker.ttc_summary())
 
-    # data.append(column_names)
-    # data.append(all_rows)
-    # data.append(all_dates)
     data.append(time_diff)
+    data.append(summary)
     return json(data)
 
 
