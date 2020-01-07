@@ -1,10 +1,13 @@
 import os
 from sanic import Sanic
+from sanic import response
 from sanic.response import json
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.ingress_service import ingress_service
+from services.reporting import reports
 from configparser import ConfigParser
+from json import loads
 
 
 app = Sanic(__name__)
@@ -15,6 +18,10 @@ def configure_app():
     settings_file = os.path.join(os.getcwd(),'settings.cfg')
     config.read(settings_file)
     app.config['Settings'] = config
+    if os.environ.get('DB_CONNECTION_STRING', None):
+        app.config['Settings']['Database']['DB_CONNECTION_STRING'] = os.environ.get('DB_CONNECTION_STRING')
+    app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
+    os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
 
 
 @app.route('/')
@@ -24,18 +31,22 @@ async def index(request):
 
 @app.route('/timetoclose')
 async def timetoclose(request):
-    ttc_worker = time_to_close()
-    # Insert time to close calculation here
-    return_data = ttc_worker.hello_world()
+    ttc_worker = time_to_close(app.config['Settings'])
+    data = []
 
-    return json(return_data)
+    time_diff = loads(ttc_worker.ttc_time_diff(serviced=True, allRequests=False, requestType="'Bulky Items'"))
+    summary = loads(ttc_worker.ttc_summary())
+
+    data.append(time_diff)
+    data.append(summary)
+    return json(data)
 
 
 @app.route('/requestfrequency')
 async def requestfrequency(request):
     freq_worker = frequency()
     # Insert frequency calculation here
-    return_data = freq_worker.hello_world()
+    return_data = freq_worker.freq_query()
 
     return json(return_data)
 
@@ -74,6 +85,24 @@ async def delete(request):
     ingress_worker = ingress_service()
     return_data = ingress_worker.delete()
     return json(return_data)
+
+@app.route('/biggestoffender')
+async def biggestOffender(request):
+    startDate = request.json.get("startDate", None)
+    requestType = request.json.get("requestType", None)
+    councilName = request.json.get("councilName", None)
+
+    if not (startDate and requestType and councilName):
+        return json({"Error": "Missing arguments"})
+
+    offenderWorker = reports(app.config["Settings"])
+    csvFile = offenderWorker.biggestOffenderCSV(startDate, requestType, councilName)
+    # TODO: Put response csv into temp area
+    fileOutput = os.path.join(app.config["STATIC_DIR"], "temp/csvfile.csv")
+    f = open(fileOutput,'w')
+    f.write(csvFile)
+    f.close()
+    return await response.file(fileOutput)
 
 
 
