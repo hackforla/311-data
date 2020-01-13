@@ -33,9 +33,11 @@ async def index(request):
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
 
+    # data = loads(ttc_worker.ttc_view_data())
     # dates = loads(ttc_worker.ttc_view_dates())
     summary = ttc_worker.ttc_summary(allData=True, serviced=False, allRequests=False, requestType="'Bulky Items'")
 
+    # return json(data_arr)
     # return json(dates)
     return json(summary)
 
@@ -44,9 +46,9 @@ async def timetoclose(request):
 async def requestfrequency(request):
     freq_worker = frequency(app.config['Settings'])
     
-    return_data = loads(freq_worker.freq_summary())
+    summary = loads(freq_worker.freq_view_all())
 
-    return json(return_data)
+    return json(summary)
 
 
 @app.route('/sample-data')
