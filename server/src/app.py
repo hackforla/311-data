@@ -8,6 +8,8 @@ from services.ingress_service import ingress_service
 from services.reporting import reports
 from configparser import ConfigParser
 from json import loads
+from threading import Timer
+from multiprocessing import cpu_count
 
 
 app = Sanic(__name__)
@@ -32,23 +34,23 @@ async def index(request):
 @app.route('/timetoclose')
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
-    data = []
 
-    time_diff = loads(ttc_worker.ttc_time_diff(serviced=True, allRequests=False, requestType="'Bulky Items'"))
-    summary = loads(ttc_worker.ttc_summary())
+    # data = loads(ttc_worker.ttc_view_data())
+    # dates = loads(ttc_worker.ttc_view_dates())
+    summary = ttc_worker.ttc_summary(allData=True, serviced=False, allRequests=False, requestType="'Bulky Items'")
 
-    data.append(time_diff)
-    data.append(summary)
-    return json(data)
+    # return json(data_arr)
+    # return json(dates)
+    return json(summary)
 
 
 @app.route('/requestfrequency')
 async def requestfrequency(request):
-    freq_worker = frequency()
-    # Insert frequency calculation here
-    return_data = freq_worker.freq_query()
+    freq_worker = frequency(app.config['Settings'])
+    
+    summary = loads(freq_worker.freq_view_all())
 
-    return json(return_data)
+    return json(summary)
 
 
 @app.route('/sample-data')
@@ -105,7 +107,13 @@ async def biggestOffender(request):
     return await response.file(fileOutput)
 
 
+@app.route('/test_multiple_workers')
+async def test_multiple_workers(request):
+    Timer(10.0, print, ["Timer Test."]).start()
+    return json("Done")
+
 
 if __name__ == '__main__':
     configure_app()
-    app.run(host=app.config['Settings']['Server']['HOST'], port=app.config['Settings']['Server']['PORT'], debug=app.config['Settings']['Server']['DEBUG'])
+    app.run(host=app.config['Settings']['Server']['HOST'], port=int(app.config['Settings']['Server']['PORT']),
+            workers=cpu_count()//2, debug=app.config['Settings']['Server']['DEBUG'])
