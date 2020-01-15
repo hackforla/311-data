@@ -107,12 +107,9 @@ async def biggestOffender(request):
     return await response.file(fileOutput)
 
 
-def hello_world():
-    print("Hello world.")
-
 @app.route('/test_timer')
 async def test_timer(request):
-    Timer(20.0, hello_world)
+    Timer(10.0, print, ["Timer Test."]).start()
     return json("Done")
 
 
