@@ -8,6 +8,8 @@ from services.ingress_service import ingress_service
 from services.reporting import reports
 from configparser import ConfigParser
 from json import loads
+from threading import Timer
+from multiprocessing import cpu_count
 
 
 app = Sanic(__name__)
@@ -105,7 +107,16 @@ async def biggestOffender(request):
     return await response.file(fileOutput)
 
 
+def hello_world():
+    print("Hello world.")
+
+@app.route('/test_timer')
+async def test_timer(request):
+    Timer(20.0, hello_world)
+    return json("Done")
+
 
 if __name__ == '__main__':
     configure_app()
-    app.run(host=app.config['Settings']['Server']['HOST'], port=app.config['Settings']['Server']['PORT'], debug=app.config['Settings']['Server']['DEBUG'])
+    app.run(host=app.config['Settings']['Server']['HOST'], port=int(app.config['Settings']['Server']['PORT']),
+            workers=cpu_count()//2, debug=app.config['Settings']['Server']['DEBUG'])
