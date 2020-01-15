@@ -172,15 +172,15 @@ class DataHandler:
         print('\tIngest Complete: %.1f minutes' % self.elapsedTimer(ingestTimer))
 
 
-    def dumpFilteredCsvFile(self, dataset, startDate, requestType, councilName):
+    def dumpFilteredCsvFile(self, startDate, requestType, councilName):
         '''Output data as CSV by council name, request type, and
         start date (pulls to current date). Arguments should be passed
         as strings. Date values must be formatted %Y-%m-%d.'''
-        df = dataset.copy() # Shard deepcopy to allow multiple endpoints
+        df = self.data.copy() # Shard deepcopy to allow multiple endpoints
         # Data filtering
-        dateFilter = df['CreatedDate'] > startDate
-        requestFilter = df['RequestType'] == requestType
-        councilFilter = df['NCName'] == councilName
+        dateFilter = df['createddate'] > startDate
+        requestFilter = df['requesttype'] == requestType
+        councilFilter = df['ncname'] == councilName
         df = df[dateFilter & requestFilter & councilFilter]
         # Return string object for routing to download
         return df.to_csv()
@@ -191,7 +191,7 @@ class DataHandler:
         self.data.to_csv(filename, index=False)
 
 
-    def fetchSocrata(self, year=2019, querySize=10000):
+    def fetchSocrata(self, year=2019, querySize=20000, pageSize=20000):
         '''Fetch data from Socrata connection and return pandas dataframe'''
         # Load config files
         socrata_domain = self.config['Socrata']['DOMAIN']
@@ -203,7 +203,7 @@ class DataHandler:
         metadata = client.get_metadata(socrata_dataset_identifier)
         # Loop for querying dataset
         queryDf = None
-        for i in range(0,querySize,1000):
+        for i in range(0,querySize + 1,pageSize):
             print(i)
             results = client.get(socrata_dataset_identifier, 
                 offset=i,
