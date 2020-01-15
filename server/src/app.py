@@ -107,8 +107,8 @@ async def biggestOffender(request):
     return await response.file(fileOutput)
 
 
-@app.route('/test_timer')
-async def test_timer(request):
+@app.route('/test_multiple_workers')
+async def test_multiple_workers(request):
     Timer(10.0, print, ["Timer Test."]).start()
     return json("Done")
 
