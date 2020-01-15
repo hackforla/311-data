@@ -37,8 +37,6 @@ class time_to_close(object):
         else:
             df = pd.read_sql_query("SELECT * FROM %s" % self.table, con=engine)
 
-        # df = pd.read_sql_query("SELECT * FROM %s" % self.table, con=engine)
-
         return df.to_json(orient='index')
 
     def ttc_view_dates(self, serviced=False):
@@ -62,6 +60,9 @@ class time_to_close(object):
         return df.to_json(orient='index')
 
     def ttc_to_days(self, dt):
+        """
+        Converts Unix time to days
+        """
         num_days = pd.Timedelta.total_seconds(dt)/(24.*3600)
         if num_days <= .000001:
             return 0
@@ -72,10 +73,10 @@ class time_to_close(object):
     def ttc_days_to_string(self, day):
         return str(day) + " Days"
 
-    def ttc_time_diff(self, serviced=False, allRequests=True, requestType=""):
+    def ttc_time_diff(self, alldata, serviced, allRequests, requestType):
         """
-        Returns the amount of time for a request to close in days
-        If serviced is set to True, only requests that have been serviced are included
+        Sets self.data to a dataframe catalogging the time it takes a request to close
+        Parameters are inherited from ttc_summary()
         """
 
         engine = db.create_engine(self.dbString)
@@ -112,28 +113,44 @@ class time_to_close(object):
         for column in diff_df:
             diff_df[column] = diff_df[column].apply(self.ttc_to_days)
 
-        diff_df_str = diff_df.copy()
-
-        for column in diff_df_str:
-            diff_df_str[column] = diff_df_str[column].apply(
-                self.ttc_days_to_string)
-
         self.data = diff_df
-        return diff_df_str.to_json(orient='index')
 
-    def ttc_summary(self):
+    def ttc_summary(self, allData=False, serviced=False, allRequests=True, requestType=""):
+        """
+        Returns summary data of the amount of time it takes for a request to close as a dataframe
+        If serviced is set to True, returns summary data of time_to_service as well
+        If allData is set to True, returns the data of every entry as well
+        If allRequests are set to False, queries data of the value of requestType only
+        """
+        self.ttc_time_diff(allData, serviced, allRequests, requestType)
         data = self.data
 
-        summary_obj = {}
+        summary_arr = []
 
         for column in data:
             summary = data[column].describe()
-            summary_obj.update({column: summary.to_json()})
+            df_desc = pd.DataFrame({column: summary})
+            df_json = json.loads(df_desc.to_json())
+            summary_arr.append(df_json)
 
-        return json.dumps(summary_obj)
+        if allData:
+            days_df = data.copy()
 
-    # Todo: Implement functionality for only open status data
+            for column in days_df:
+                days_df[column] = days_df[column].apply(
+                    self.ttc_days_to_string)
 
+            days_df_json = json.loads(days_df.to_json())
+            summary_arr.append(days_df_json)
+
+        return summary_arr
+
+    # Todo: Change service/closed summary dfs into columns
+    # Todo: Stringify summary
+    # Todo: Change the meaning of service
+    # Todo: Add view_dates to summary option
+    # Todo: RequestType to self?
+    # Todo: Implement functionality for only open status data?
 
 if __name__ == "__main__":
     ttc = time_to_close()
@@ -142,3 +159,4 @@ if __name__ == "__main__":
     ttc.config = config
     ttc.dbString = config['Database']['DB_CONNECTION_STRING']
     ttc.ttc_view_data()
+    ttc.ttc_summary()
