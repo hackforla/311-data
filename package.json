@@ -9,6 +9,7 @@
     "dataframe-js": "^1.4.3",
     "dotenv-webpack": "^1.7.0",
     "gh-pages": "^2.1.1",
+    "html-webpack-plugin": "^3.2.0",
     "jest": "^24.9.0",
     "leaflet": "^1.5.1",
     "proptypes": "^1.1.0",
@@ -30,7 +31,7 @@
     "build": "webpack --config webpack.prod.js",
     "test": "jest",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
