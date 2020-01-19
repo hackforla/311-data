@@ -18,7 +18,6 @@ class App extends Component {
       startMonth: '1',
       endMonth: '12',
       request: REQUESTS[0],
-      council: COUNCILS[0],
       showMarkers: false,
       showMarkersDropdown: true,
     };
