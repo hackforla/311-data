@@ -9,6 +9,9 @@ jobs:
         python-version: [3.6, 3.7, 3.8]
     steps:
     - uses: actions/checkout@v1
+    - uses: harmon758/postgresql-action@v1
+      with:
+        postgresql version: '11'
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
