@@ -1,11 +1,9 @@
 import os
 from sanic import Sanic
-from sanic import response
 from sanic.response import json
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.ingress_service import ingress_service
-from services.reporting import reports
 from configparser import ConfigParser
 from threading import Timer
 from multiprocessing import cpu_count
@@ -94,27 +92,6 @@ async def delete(request):
     ingress_worker = ingress_service()
     return_data = ingress_worker.delete()
     return json(return_data)
-
-
-@app.route('/biggestoffender')
-async def biggestOffender(request):
-    startDate = request.json.get("startDate", None)
-    requestType = request.json.get("requestType", None)
-    councilName = request.json.get("councilName", None)
-
-    if not (startDate and requestType and councilName):
-        return json({"Error": "Missing arguments"})
-
-    offenderWorker = reports(app.config["Settings"])
-    csvFile = offenderWorker.biggestOffenderCSV(startDate,
-                                                requestType,
-                                                councilName)
-    # TODO: Put response csv into temp area
-    fileOutput = os.path.join(app.config["STATIC_DIR"], "temp/csvfile.csv")
-    f = open(fileOutput, 'w')
-    f.write(csvFile)
-    f.close()
-    return await response.file(fileOutput)
 
 
 @app.route('/test_multiple_workers')

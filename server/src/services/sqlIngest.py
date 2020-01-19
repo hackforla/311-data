@@ -262,7 +262,7 @@ if __name__ == "__main__":
     '''Class DataHandler workflow from initial load to SQL population'''
     loader = DataHandler()
     loader.loadConfig(configFilePath='../settings.cfg')
-    loader.fetchSocrataFull()
+    loader.fetchSocrataFull(limit=10000)
     loader.cleanData()
     loader.ingestData()
     loader.saveCsvFile('testfile.csv')
