@@ -1,17 +1,52 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 
-import { YEARS, MONTHS, REQUESTS } from '../../common/CONSTANTS';
+import {
+  updateYear,
+  updateEndMonth,
+  updateStartMonth,
+  updateRequestType,
+  updateNeighborhoodCounsil,
+} from '../../../redux/reducers/data';
+
+import {
+  YEARS, MONTHS, REQUESTS, COUNCILS,
+} from '../../common/CONSTANTS';
 
 const DataPicker = ({
   showMarkers,
   showMarkerDropdown,
   onDropdownSelect,
   toggleShowMarkers,
+  handleUpdateYear,
+  handleUpdateEndMonth,
+  handleUpdateStartMonth,
+  handleUpdateRequestType,
+  handleUpdateNeighborhoodCounsil,
 }) => {
   const handleOnChange = (e) => {
     const { id, value } = e.target;
-    onDropdownSelect(id, value);
+
+    switch (id) {
+      case 'year':
+        handleUpdateYear(value);
+        break;
+      case 'startMonth':
+        handleUpdateStartMonth(value);
+        break;
+      case 'endMonth':
+        handleUpdateEndMonth(value);
+        break;
+      case 'requestType':
+        handleUpdateRequestType(value);
+        break;
+      case 'counsil':
+        handleUpdateNeighborhoodCounsil(value);
+        break;
+      default:
+        break;
+    }
   };
 
   const renderDatePicker = () => {
@@ -19,7 +54,8 @@ const DataPicker = ({
       year: 'Year',
       startMonth: 'Start Month',
       endMonth: 'End Month',
-      request: 'Service Requests',
+      requestType: 'Service Requests',
+      counsil: 'Neighborhood Counsils',
     };
 
     return Object.keys(options).map((option) => {
@@ -27,6 +63,13 @@ const DataPicker = ({
       const name = options[option];
 
       switch (name) {
+        case 'Counsil':
+          component = COUNCILS.map((counsil) => (
+            <option key={counsil} value={counsil}>
+              {counsil}
+            </option>
+          ));
+          break;
         case 'Year':
           component = YEARS.map((year) => (
             <option key={year} value={year}>
@@ -90,6 +133,21 @@ const DataPicker = ({
   );
 };
 
+const mapStateToProps = (state) => ({
+  year: state.year,
+  startMonth: state.startMonth,
+  endMonth: state.endMonth,
+  requestType: state.requestType,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  handleUpdateYear: (year) => dispatch(updateYear(year)),
+  handleUpdateEndMonth: (endMonth) => dispatch(updateEndMonth(endMonth)),
+  handleUpdateStartMonth: (startMonth) => dispatch(updateStartMonth(startMonth)),
+  handleUpdateRequestType: (requestType) => dispatch(updateRequestType(requestType)),
+  handleUpdateNeighborhoodCounsil: (counsil) => dispatch(updateNeighborhoodCounsil(counsil)),
+});
+
 DataPicker.propTypes = {
   showMarkerDropdown: PropTypes.bool,
 };
@@ -98,4 +156,4 @@ DataPicker.defaultProps = {
   showMarkerDropdown: true,
 };
 
-export default DataPicker;
+export default connect(mapStateToProps, mapDispatchToProps)(DataPicker);

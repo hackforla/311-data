@@ -8,6 +8,8 @@ from services.ingress_service import ingress_service
 from services.reporting import reports
 from configparser import ConfigParser
 from json import loads
+from threading import Timer
+from multiprocessing import cpu_count
 
 
 app = Sanic(__name__)
@@ -32,27 +34,23 @@ async def index(request):
 @app.route('/timetoclose')
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
-    data = []
 
-    # column_names = ttc_worker.ttc_view_columns()
-    # all_rows = loads(ttc_worker.ttc_view_table(onlyClosed=True))
-    # all_dates = loads(ttc_worker.ttc_view_dates(serviced=False))
-    time_diff = loads(ttc_worker.ttc_average_time(serviced=True))
+    # data = loads(ttc_worker.ttc_view_data())
+    # dates = loads(ttc_worker.ttc_view_dates())
+    summary = ttc_worker.ttc_summary(allData=True, serviced=False, allRequests=False, requestType="'Bulky Items'")
 
-    # data.append(column_names)
-    # data.append(all_rows)
-    # data.append(all_dates)
-    data.append(time_diff)
-    return json(data)
+    # return json(data_arr)
+    # return json(dates)
+    return json(summary)
 
 
 @app.route('/requestfrequency')
 async def requestfrequency(request):
-    freq_worker = frequency()
-    # Insert frequency calculation here
-    return_data = freq_worker.freq_query()
+    freq_worker = frequency(app.config['Settings'])
+    
+    data = freq_worker.freq_view_data(service=True, councils=[], aggregate=True)
 
-    return json(return_data)
+    return json(data)
 
 
 @app.route('/sample-data')
@@ -109,7 +107,13 @@ async def biggestOffender(request):
     return await response.file(fileOutput)
 
 
+@app.route('/test_multiple_workers')
+async def test_multiple_workers(request):
+    Timer(10.0, print, ["Timer Test."]).start()
+    return json("Done")
+
 
 if __name__ == '__main__':
     configure_app()
-    app.run(host=app.config['Settings']['Server']['HOST'], port=app.config['Settings']['Server']['PORT'], debug=app.config['Settings']['Server']['DEBUG'])
+    app.run(host=app.config['Settings']['Server']['HOST'], port=int(app.config['Settings']['Server']['PORT']),
+            workers=cpu_count()//2, debug=app.config['Settings']['Server']['DEBUG'])

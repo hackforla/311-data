@@ -3,6 +3,7 @@ import sqlalchemy as db
 import pandas as pd
 from datetime import datetime as dt
 import numpy as np
+import json
 
 
 class time_to_close(object):
@@ -16,19 +17,7 @@ class time_to_close(object):
         self.data = None
         pass
 
-    def ttc_view_columns(self):
-        """
-        Returns all the columns' names
-        """
-        engine = db.create_engine(self.dbString)
-
-        df = pd.read_sql_query("SELECT * FROM %s" % self.table, con=engine)
-
-        self.data = df
-
-        return df
-
-    def ttc_view_table(self, onlyClosed=False):
+    def ttc_view_data(self, onlyClosed=False):
         """
         Returns all entries
         Returns only those with Status as 'Closed' if onlyClosed is set to True
@@ -70,42 +59,98 @@ class time_to_close(object):
 
         return df.to_json(orient='index')
 
-    def ttc_time_diff(self, serviced=False, all=False):
+    def ttc_to_days(self, dt):
         """
-        Returns the average time in days or hours for a specific request type to be completed
+        Converts Unix time to days
         """
+        num_days = pd.Timedelta.total_seconds(dt)/(24.*3600)
+        if num_days <= .000001:
+            return 0
+
+        in_days = pd.Timedelta.total_seconds(dt)/(24.*3600)
+        return in_days
+
+    def ttc_days_to_string(self, day):
+        return str(day) + " Days"
+
+    def ttc_time_diff(self, alldata, serviced, allRequests, requestType):
+        """
+        Sets self.data to a dataframe catalogging the time it takes a request to close
+        Parameters are inherited from ttc_summary()
+        """
+
         engine = db.create_engine(self.dbString)
 
         if serviced:
-            df = pd.read_sql_query(
-                "SELECT createddate, closeddate, servicedate FROM %s" % self.table, con=engine)
+            if not allRequests:
+                query = "SELECT createddate, closeddate, servicedate FROM %s WHERE requesttype=%s" % (
+                    self.table, requestType)
+                print(query)
+                df = pd.read_sql_query(
+                    query, con=engine)
+            else:
+                df = pd.read_sql_query(
+                    "SELECT createddate, closeddate, servicedate FROM %s" % self.table, con=engine)
             df = df[df['servicedate'].notnull()]
             df['servicedate'] = pd.to_datetime(df['servicedate'])
             diff_df = pd.DataFrame(
                 df['servicedate'] - df['createddate'], columns=['time_to_service'])
+
         else:
-            df = pd.read_sql_query(
-                "SELECT createddate, closeddate FROM %s" % self.table, con=engine)
+            if not allRequests:
+                df = pd.read_sql_query(
+                    "SELECT createddate, closeddate FROM %s WHERE requesttype=%s" % (self.table, requestType), con=engine)
+            else:
+                df = pd.read_sql_query(
+                    "SELECT createddate, closeddate FROM %s" % self.table, con=engine)
             diff_df = pd.DataFrame({'time_to_close': []})
 
         df['createddate'] = pd.to_datetime(df['createddate'])
         df['closeddate'] = pd.to_datetime(df['closeddate'])
         diff_df['time_to_close'] = df['closeddate'] - df['createddate']
+        diff_df = diff_df[diff_df['time_to_close'].notnull()]
 
-        def dt_to_days(dt):
-            num_days = pd.Timedelta.total_seconds(dt)/(24.*3600)
-            if num_days <= .000001:
-                return 0
-            return pd.Timedelta.total_seconds(dt)/(24.*3600)
+        for column in diff_df:
+            diff_df[column] = diff_df[column].apply(self.ttc_to_days)
 
-        diff_df['time_to_close'] = diff_df.time_to_close.apply(dt_to_days) 
-        diff_df['time_to_service'] = diff_df.time_to_service.apply(dt_to_days) 
-        
-        ### Todo: Convert unix time to strings displaying days
-        ### Todo: Return averages and min/max
-        ### Todo: Implement function for considering request type
+        self.data = diff_df
 
-        return diff_df.to_json(orient='index')
+    def ttc_summary(self, allData=False, serviced=False, allRequests=True, requestType=""):
+        """
+        Returns summary data of the amount of time it takes for a request to close as a dataframe
+        If serviced is set to True, returns summary data of time_to_service as well
+        If allData is set to True, returns the data of every entry as well
+        If allRequests are set to False, queries data of the value of requestType only
+        """
+        self.ttc_time_diff(allData, serviced, allRequests, requestType)
+        data = self.data
+
+        summary_arr = []
+
+        for column in data:
+            summary = data[column].describe()
+            df_desc = pd.DataFrame({column: summary})
+            df_json = json.loads(df_desc.to_json())
+            summary_arr.append(df_json)
+
+        if allData:
+            days_df = data.copy()
+
+            for column in days_df:
+                days_df[column] = days_df[column].apply(
+                    self.ttc_days_to_string)
+
+            days_df_json = json.loads(days_df.to_json())
+            summary_arr.append(days_df_json)
+
+        return summary_arr
+
+    # Todo: Change service/closed summary dfs into columns
+    # Todo: Stringify summary
+    # Todo: Change the meaning of service
+    # Todo: Add view_dates to summary option
+    # Todo: RequestType to self?
+    # Todo: Implement functionality for only open status data?
 
 if __name__ == "__main__":
     ttc = time_to_close()
@@ -113,4 +158,5 @@ if __name__ == "__main__":
     config.read("../setting.cfg")
     ttc.config = config
     ttc.dbString = config['Database']['DB_CONNECTION_STRING']
-    ttc.ttc_view_table()
+    ttc.ttc_view_data()
+    ttc.ttc_summary()
