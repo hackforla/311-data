@@ -37,20 +37,15 @@ class frequency(object):
 
         return df.to_json(orient="records")
 
-    def freq_aggregate(self):
-        engine = db.create_engine(self.dbString)
-        
-        query = "SELECT requesttype FROM %s" % (self.table)
-        df = pd.read_sql_query(query, con=engine)
-
+    def freq_aggregate(self, df):
         request_counts = df['requesttype'].value_counts()
         
         return request_counts.to_json()
 
-    def freq_view_data(self, service=False, aggregate=True, startdate="", enddate=""):
+    def freq_view_data(self, service=False, aggregate=True, councils=[], startdate="", enddate=""):
         """
-        Returns the request type and the created and closed dates for all data
-        Sorted by request type, followed by created date, and then closed date
+        Returns the request type, neighborhood council, created and closed dates for all data
+        Sorted by request type, followed by neighborhood council #, then created date, and then closed date
         Returns serviced date as well if service is set to True
         Returns summary data as well if aggregate is set to True
         Returns only entries created between startdate and enddate if values are set for those parameters
@@ -59,13 +54,16 @@ class frequency(object):
         engine = db.create_engine(self.dbString)
 
         if service:
-            df = pd.read_sql_query("SELECT requesttype, createddate, closeddate, servicedate FROM %s" % self.table, con=engine)
+            df = pd.read_sql_query("SELECT requesttype, createddate, closeddate, servicedate, nc, ncname FROM %s" % self.table, con=engine)
             df['servicedate'] = pd.to_datetime(df['servicedate'])
 
         else:
-            df = pd.read_sql_query("SELECT requesttype, createddate, closeddate FROM %s" % self.table, con=engine)
+            df = pd.read_sql_query("SELECT requesttype, createddate, closeddate, nc, ncname FROM %s" % self.table, con=engine)
 
         df['closeddate'] = pd.to_datetime(df['closeddate'])
+
+        if councils != []:
+            df = df[df.nc.isin(councils)]
         
         if startdate != "":
             start = pd.to_datetime(startdate)
@@ -75,11 +73,11 @@ class frequency(object):
             end = pd.to_datetime(enddate)
             df = df[df['createddate'] <= end]
 
-        df = df.sort_values(by=['requesttype', 'createddate', 'closeddate'])
+        df = df.sort_values(by=['requesttype', 'nc', 'createddate', 'closeddate'])
         df_json = json.loads(df.to_json(orient="records"))
 
         if aggregate:
-            summary = self.freq_aggregate()
+            summary = self.freq_aggregate(df)
             json_data = []
             json_data.append(json.loads(summary))
             json_data.append(df_json)
@@ -87,7 +85,7 @@ class frequency(object):
 
         return df_json
 
-    # Todo: filter by date
+#Todo: filter by NC at the sql request stage instead of afterwards
 
 if __name__ == "__main__":
     freq = frequency()
@@ -95,4 +93,4 @@ if __name__ == "__main__":
     config.read("../setting.cfg")
     freq.config = config
     freq.dbString = config['Database']['DB_CONNECTION_STRING']
-    freq.freq_view_data()
+    freq.freq_view_data(service=True, aggregate=True)

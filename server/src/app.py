@@ -46,7 +46,7 @@ async def timetoclose(request):
 async def requestfrequency(request):
     freq_worker = frequency(app.config['Settings'])
     
-    data = freq_worker.freq_view_data(aggregate=True)
+    data = freq_worker.freq_view_data(service=True, councils=[], aggregate=True)
 
     return json(data)
 
