@@ -21,12 +21,13 @@
     "react-vis": "^1.11.7",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "webpack-merge": "^4.2.2"
   },
   "scripts": {
-    "start": "npm start",
-    "dev": "webpack-dev-server",
-    "build": "webpack",
+    "start": "npm run dev",
+    "dev": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0",
+    "build": "webpack --config webpack.prod.js",
     "test": "jest",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"

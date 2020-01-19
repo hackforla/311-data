@@ -39,12 +39,4 @@ module.exports = {
   plugins: [
     new Dotenv(),
   ],
-  devServer: {
-    open: true,
-    contentBase: './public',
-    compress: true,
-    port: 3000,
-    hot: true,
-    historyApiFallback: true,
-  },
 };

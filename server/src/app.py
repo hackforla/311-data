@@ -1,10 +1,15 @@
 import os
 from sanic import Sanic
+from sanic import response
 from sanic.response import json
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.ingress_service import ingress_service
+from services.reporting import reports
 from configparser import ConfigParser
+from json import loads
+from threading import Timer
+from multiprocessing import cpu_count
 
 
 app = Sanic(__name__)
@@ -15,6 +20,10 @@ def configure_app():
     settings_file = os.path.join(os.getcwd(),'settings.cfg')
     config.read(settings_file)
     app.config['Settings'] = config
+    if os.environ.get('DB_CONNECTION_STRING', None):
+        app.config['Settings']['Database']['DB_CONNECTION_STRING'] = os.environ.get('DB_CONNECTION_STRING')
+    app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
+    os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
 
 
 @app.route('/')
@@ -24,20 +33,24 @@ async def index(request):
 
 @app.route('/timetoclose')
 async def timetoclose(request):
-    ttc_worker = time_to_close()
-    # Insert time to close calculation here
-    return_data = ttc_worker.hello_world()
+    ttc_worker = time_to_close(app.config['Settings'])
 
-    return json(return_data)
+    # data = loads(ttc_worker.ttc_view_data())
+    # dates = loads(ttc_worker.ttc_view_dates())
+    summary = ttc_worker.ttc_summary(allData=True, serviced=False, allRequests=False, requestType="'Bulky Items'")
+
+    # return json(data_arr)
+    # return json(dates)
+    return json(summary)
 
 
 @app.route('/requestfrequency')
 async def requestfrequency(request):
-    freq_worker = frequency()
-    # Insert frequency calculation here
-    return_data = freq_worker.hello_world()
+    freq_worker = frequency(app.config['Settings'])
+    
+    summary = loads(freq_worker.freq_view_all())
 
-    return json(return_data)
+    return json(summary)
 
 
 @app.route('/sample-data')
@@ -75,8 +88,32 @@ async def delete(request):
     return_data = ingress_worker.delete()
     return json(return_data)
 
+@app.route('/biggestoffender')
+async def biggestOffender(request):
+    startDate = request.json.get("startDate", None)
+    requestType = request.json.get("requestType", None)
+    councilName = request.json.get("councilName", None)
+
+    if not (startDate and requestType and councilName):
+        return json({"Error": "Missing arguments"})
+
+    offenderWorker = reports(app.config["Settings"])
+    csvFile = offenderWorker.biggestOffenderCSV(startDate, requestType, councilName)
+    # TODO: Put response csv into temp area
+    fileOutput = os.path.join(app.config["STATIC_DIR"], "temp/csvfile.csv")
+    f = open(fileOutput,'w')
+    f.write(csvFile)
+    f.close()
+    return await response.file(fileOutput)
+
+
+@app.route('/test_multiple_workers')
+async def test_multiple_workers(request):
+    Timer(10.0, print, ["Timer Test."]).start()
+    return json("Done")
 
 
 if __name__ == '__main__':
     configure_app()
-    app.run(host=app.config['Settings']['Server']['HOST'], port=app.config['Settings']['Server']['PORT'], debug=app.config['Settings']['Server']['DEBUG'])
+    app.run(host=app.config['Settings']['Server']['HOST'], port=int(app.config['Settings']['Server']['PORT']),
+            workers=cpu_count()//2, debug=app.config['Settings']['Server']['DEBUG'])
