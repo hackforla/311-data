@@ -1,8 +1,5 @@
 name: Dev_CI_Backend
-on:
-  pull_request:
-    branches-ignore:
-      - master
+on: [pull_request]
 
 jobs:
   build:
