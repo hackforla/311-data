@@ -1,8 +1,5 @@
 name: Dev_CI_Frontend
-on:
-  push:
-    branches-ignore:
-      - master
+on: [pull_request]
 
 jobs:
   build:
