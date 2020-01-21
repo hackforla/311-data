@@ -1,3 +1,34 @@
+
+def validate_environment():
+    import os
+    from configparser import ConfigParser
+    default_settings_file = os.path.join(os.getcwd(), 'settings.example.cfg')
+    settings_file = os.path.join(os.getcwd(), 'settings.cfg')
+
+    # Does settings exist?
+
+    default_config = ConfigParser()
+    config = ConfigParser()
+
+    # Do the same keys exist in both settings
+    default_config.read(default_settings_file)
+    config.read(settings_file)
+    test = [list(section.keys()) for _, section in default_config.items()]
+    test2 = [list(section.keys()) for _, section in config.items()]
+    print(test == test2)
+    # defaultKeys = [k.keys() for _, k in default_config.items()]
+    #
+    # for key in defaultKeys:
+    #         print(list(key))
+
+    # for section, keys in default_config.items():
+    #     for key in keys:
+    #         print(key)
+
+
+
+validate_environment()
+exit()
 import os
 from sanic import Sanic
 from sanic.response import json
@@ -7,7 +38,6 @@ from services.ingress_service import ingress_service
 from configparser import ConfigParser
 from threading import Timer
 from multiprocessing import cpu_count
-
 
 app = Sanic(__name__)
 
