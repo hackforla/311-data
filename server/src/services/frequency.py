@@ -59,8 +59,7 @@ class frequency(object):
                        startdate="",
                        enddate=""):
         """
-        Returns the request type, neighborhood council, created and
-        closed dates for all data sorted by request type, followed by
+        Returns the request type, neighborhood council, created and        closed dates for all data sorted by request type, followed by
         neighborhood council #, then created date, and then closed date
         Returns serviced date as well if service is set to True
         Returns data for all councils if councils=[], otherwise returns data
