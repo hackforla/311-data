@@ -1,42 +1,60 @@
 import React from 'react';
-import NCFilter from './NCFilter';
-import DataPicker from './dataPicker';
-// import Dropdown from '../../common/Dropdown';
 
-const Header = ({
-  updateState,
-  toggleShowMarkers,
-  showMarkers,
-  showMarkersDropdown,
-}) => (
-  <section className="hero">
-    <div className="hero-body">
-      <div className="container">
-        <h1 className="title">
-          311 Data
-        </h1>
-        <h2 className="subtitle">
-          Dashboard for NC
-        </h2>
-        <div className="columns">
-          {/* <div className="column">
-            <Dropdown />
-          </div> */}
-          <div className="column">
-            <NCFilter />
+const Header = () => {
+  const blueItemStyle = {
+    color: '#55D4D2',
+    fontWeight: 'bold',
+  };
+
+  const whiteItemStyle = {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  };
+
+  const yellowItemStyle = {
+    color: '#FFB24A',
+    fontWeight: 'bold',
+  };
+
+  return (
+    <nav
+      className="navbar"
+      role="navigation"
+      aria-label="main navigation"
+      style={{
+        background: '#002449',
+        height: '60px',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+      }}
+    >
+      <div className="navbar-brand">
+        <div className="navbar-item">
+          <p style={yellowItemStyle}>311</p>
+          <p style={blueItemStyle}>Data</p>
+        </div>
+      </div>
+
+      <div id="navbar" className="navbar-menu">
+        <div className="navbar-end">
+          <div className="navbar-item">
+            <a href="/" style={blueItemStyle}>
+              CSV Reporter
+            </a>
           </div>
-          <div className="column">
-            <DataPicker
-              showMarkerDropdown={showMarkersDropdown}
-              showMarkers={showMarkers}
-              onDropdownSelect={updateState}
-              toggleShowMarkers={toggleShowMarkers}
-            />
+          <div className="navbar-item">
+            <a href="/" style={whiteItemStyle}>
+              About 311 Data
+            </a>
+          </div>
+          <div className="navbar-item">
+            <a href="/" style={whiteItemStyle}>
+              Contact Us
+            </a>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </nav>
+  );
+};
 
 export default Header;

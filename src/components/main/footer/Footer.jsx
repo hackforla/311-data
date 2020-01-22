@@ -2,11 +2,12 @@ import React from 'react';
 
 const Footer = () => (
   <footer
-    className="footer"
     style={{
-      // position: 'fixed',
+      position: 'fixed',
       bottom: '0',
       width: '100%',
+      height: '45px',
+      background: '#002449',
     }}
   >
     <div className="content has-text-centered">
