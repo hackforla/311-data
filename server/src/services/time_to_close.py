@@ -25,7 +25,7 @@ class time_to_close(object):
         Returns all rows under the CreatedDate and
             ClosedDate columns in human-readable format
         Returns all rows with a service date under
-            CreatedDate, ClosedDate, and ServicedDate columns 
+            CreatedDate, ClosedDate, and ServicedDate columns
             if serviced is True
         """
         engine = db.create_engine(self.dbString)
@@ -130,7 +130,7 @@ class time_to_close(object):
                     viewDates=False):
         """
         Returns summary data of the amount of time it takes for a
-            request to close as a dataframe. 
+            request to close as a dataframe.
         If service is set to True, returns summary data of time_to_service as well
         If allData is set to True, returns the data of every entry as well
         If allRequests are set to False, queries data of
@@ -167,6 +167,7 @@ class time_to_close(object):
 
     # Todo: Implement functionality for only open status data?
     # Todo: Implement option to filter by NC?
+
 
 if __name__ == "__main__":
     ttc = time_to_close()
