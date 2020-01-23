@@ -34,15 +34,13 @@ async def index(request):
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
 
-    # data = loads(ttc_worker.ttc_view_data())
     # dates = loads(ttc_worker.ttc_view_dates())
     summary = ttc_worker.ttc_summary(allData=True,
-                                     serviced=False,
+                                     service=True,
                                      allRequests=False,
-                                     requestType="'Bulky Items'")
+                                     requestType="'Bulky Items'",
+                                     viewDates=True)
 
-    # return json(data_arr)
-    # return json(dates)
     return json(summary)
 
 
