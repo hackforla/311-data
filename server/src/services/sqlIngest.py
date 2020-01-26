@@ -5,8 +5,8 @@ from configparser import ConfigParser
 import numpy as np
 from sodapy import Socrata
 import time
+import databaseOrm  # Contains database specs and field definitions
 
-import databaseOrm # Contains database specs and field definitions
 
 class DataHandler:
     def __init__(self, config=None, configFilePath=None, separator=','):
@@ -20,7 +20,6 @@ class DataHandler:
         self.fields = databaseOrm.tableFields
         self.insertParams = databaseOrm.insertFields
         self.readParams = databaseOrm.readFields
-
 
     def loadConfig(self, configFilePath):
         '''Load and parse config data'''
@@ -49,15 +48,13 @@ class DataHandler:
 
         print('Loading dataset %s' % self.filePath)
         self.data = pd.read_table(self.filePath,
-                                    sep=self.separator,
-                                    na_values=['nan'],
-                                    dtype=self.readParams)
-
+                                  sep=self.separator,
+                                  na_values=['nan'],
+                                  dtype=self.readParams)
 
     def elapsedTimer(self, timeVal):
         '''Simple timer method to report on elapsed time for each method'''
         return (time.time() - timeVal) / 60
-
 
     def cleanData(self):
         '''Perform general data filtering'''
@@ -95,12 +92,12 @@ class DataHandler:
         data.columns = newColumns
         # Ingest data
         data.to_sql("ingest_staging_table",
-                       engine,
-                       if_exists=ingestMethod,
-                       schema='public',
-                       index=False,
-                       chunksize=10000,
-                       dtype=self.insertParams)
+                    engine,
+                    if_exists=ingestMethod,
+                    schema='public',
+                    index=False,
+                    chunksize=10000,
+                    dtype=self.insertParams)
         print('\tIngest Complete: %.1f minutes' %
               self.elapsedTimer(ingestTimer))
 
@@ -125,7 +122,6 @@ class DataHandler:
         '''Save contents of self.data to CSV output'''
         self.data.to_csv(filename, index=False)
 
-
     def fetchSocrata(self, year=2019, querySize=20000, pageSize=20000):
         '''Fetch data from Socrata connection and return pandas dataframe'''
         # Load config files
@@ -139,22 +135,21 @@ class DataHandler:
         # Fetch data
         # Loop for querying dataset
         queryDf = None
-        for i in range(0,querySize,pageSize):
+        for i in range(0, querySize, pageSize):
             # print(i + pageSize)
-            results = client.get(socrata_dataset_identifier, 
-                offset=i,
-                select="*",
-                order="updateddate DESC",
-                limit=querySize)
+            results = client.get(socrata_dataset_identifier,
+                                 offset=i,
+                                 select="*",
+                                 order="updateddate DESC",
+                                 limit=querySize)
             tempDf = pd.DataFrame.from_dict(results)
             if queryDf is None:
                 queryDf = tempDf.copy()
             else:
                 queryDf = queryDf.append(tempDf)
         self.data = queryDf
-        print('%d records retrieved in %.2f minutes' % 
+        print('%d records retrieved in %.2f minutes' %
               (self.data.shape[0], self.elapsedTimer(fetchTimer)))
-
 
     def fetchSocrataFull(self, year=2019, limit=10**7):
         '''Fetch entirety of dataset via Socrata'''
@@ -170,7 +165,6 @@ class DataHandler:
         self.data = pd.DataFrame.from_dict(results)
         print('\tDownload Complete: %.1f minutes' %
               self.elapsedTimer(downloadTimer))
-
 
     def populateFullDatabase(self, yearRange=range(2015, 2021)):
         '''Fetches all data from Socrata to populate database
@@ -191,13 +185,12 @@ class DataHandler:
         print('All Operations Complete: %.1f minutes' %
               self.elapsedTimer(globalTimer))
 
-
     def updateDatabase(self):
         '''Incrementally updates database with contents of data attribute
            overwriting pre-existing records with the same srnumber'''
         def fix_nan_vals(resultDict):
-            '''sqlAlchemy will not take NaT or NaN values for 
-               insert in some fields. They must be replaced 
+            '''sqlAlchemy will not take NaT or NaN values for
+               insert in some fields. They must be replaced
                with None values'''
             for key in resultDict:
                 if resultDict[key] is pd.NaT or resultDict[key] is np.nan:
@@ -210,10 +203,10 @@ class DataHandler:
         print('Updating database with new records...')
         engine = db.create_engine(self.dbString)
         metadata = db.MetaData()
-        staging = db.Table('ingest_staging_table', 
-                            metadata, 
-                            autoload=True, 
-                            autoload_with=engine)
+        staging = db.Table('ingest_staging_table',
+                           metadata,
+                           autoload=True,
+                           autoload_with=engine)
         connection = engine.connect()
         row = None
         updateTimer = time.time()
@@ -231,14 +224,14 @@ class DataHandler:
                 connection.execute(delete_stmt)
                 updated += 1
             else:
-                inserted +=1
-            # Write record 
+                inserted += 1
+            # Write record
             insert_stmt = db.insert(staging)
             row = self.data[self.data.srnumber == srnumber].to_dict('results')
             row = [fix_nan_vals(r) for r in row]
             connection.execute(insert_stmt, row)
-        print('Operation Complete: %d inserts, %d updates in %.2f minutes' % 
-             (inserted, updated, self.elapsedTimer(updateTimer)))
+        print('Operation Complete: %d inserts, %d updates in %.2f minutes' %
+              (inserted, updated, self.elapsedTimer(updateTimer)))
 
 
 if __name__ == "__main__":
