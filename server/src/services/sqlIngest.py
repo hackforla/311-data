@@ -4,10 +4,8 @@ from sqlalchemy import create_engine, MetaData, Table, orm
 from sqlalchemy import select, delete, insert
 import sqlalchemy as db
 import pandas as pd
-from configparser import ConfigParser # For configparser compatible formatting see: https://docs.python.org/3/library/configparser.html
+from configparser import ConfigParser
 import numpy as np
-import logging
-import io
 from sodapy import Socrata
 import time
 
@@ -15,10 +13,11 @@ import databaseOrm # Contains database specs and field definitions
 
 class DataHandler:
     def __init__(self, config=None, configFilePath=None, separator=','):
-        self.data     = None
-        self.config   = config
-        self.dbString = None if not self.config else self.config['Database']['DB_CONNECTION_STRING']
-        self.filePath  = None
+        self.data = None
+        self.config = config
+        self.dbString = None if not self.config \
+            else self.config['Database']['DB_CONNECTION_STRING']
+        self.filePath = None
         self.configFilePath = configFilePath
         self.separator = separator
         self.fields = databaseOrm.tableFields
@@ -29,16 +28,17 @@ class DataHandler:
     def loadConfig(self, configFilePath):
         '''Load and parse config data'''
         if self.config:
-            print('Config already exists at %s. Nothing to load.' % self.configFilePath)
+            print('Config already exists at %s. Nothing to load.' %
+                  self.configFilePath)
             return
         print('Loading config file %s' % configFilePath)
         self.configFilePath = configFilePath
         config = ConfigParser()
         config.read(configFilePath)
-        self.config   = config
+        self.config = config
         self.dbString = config['Database']['DB_CONNECTION_STRING']
-        self.token = None if config['Socrata']['TOKEN'] == 'None' else config['Socrata']['TOKEN']
-
+        self.token = None if config['Socrata']['TOKEN'] == 'None' \
+            else config['Socrata']['TOKEN']
 
     def loadData(self, fileName="2018_mini"):
         '''Load dataset into pandas object'''
@@ -47,7 +47,9 @@ class DataHandler:
         else:
             dataFile = fileName + ".tsv"
 
-        self.filePath  = os.path.join(self.config['Database']['DATA_DIRECTORY'], dataFile )
+        self.filePath = os.path.join(self.config['Database']['DATA_DIRECTORY'],
+                                     dataFile)
+
         print('Loading dataset %s' % self.filePath)
         self.data = pd.read_table(self.filePath,
                                     sep=self.separator,
@@ -83,15 +85,15 @@ class DataHandler:
         data = data[self.fields]
         #         self.data = self.data.drop(f)
         self.data = data
-        print('\tCleaning Complete: %.1f minutes' % self.elapsedTimer(cleanTimer))
-
+        print('\tCleaning Complete: %.1f minutes' %
+              self.elapsedTimer(cleanTimer))
 
     def ingestData(self, ingestMethod='replace'):
         '''Set up connection to database'''
         print('Inserting data into Postgres instance...')
         ingestTimer = time.time()
-        data = self.data.copy() # shard deepcopy to allow other endpoint operations
-        engine = create_engine(self.dbString)
+        data = self.data.copy()  # shard deepcopy for other endpoint operations
+        engine = db.create_engine(self.dbString)
         newColumns = [column.replace(' ', '_').lower() for column in data]
         data.columns = newColumns
         # Ingest data
@@ -102,14 +104,18 @@ class DataHandler:
                        index=False,
                        chunksize=10000,
                        dtype=self.insertParams)
-        print('\tIngest Complete: %.1f minutes' % self.elapsedTimer(ingestTimer))
+        print('\tIngest Complete: %.1f minutes' %
+              self.elapsedTimer(ingestTimer))
 
-
-    def dumpFilteredCsvFile(self, startDate, requestType, councilName):
+    def dumpFilteredCsvFile(self,
+                            dataset,
+                            startDate,
+                            requestType,
+                            councilName):
         '''Output data as CSV by council name, request type, and
         start date (pulls to current date). Arguments should be passed
         as strings. Date values must be formatted %Y-%m-%d.'''
-        df = self.data.copy() # Shard deepcopy to allow multiple endpoints
+        df = dataset.copy()  # Shard deepcopy to allow multiple endpoints
         # Data filtering
         dateFilter = df['createddate'] > startDate
         requestFilter = df['requesttype'] == requestType
@@ -117,7 +123,6 @@ class DataHandler:
         df = df[dateFilter & requestFilter & councilFilter]
         # Return string object for routing to download
         return df.to_csv()
-
 
     def saveCsvFile(self, filename):
         '''Save contents of self.data to CSV output'''
@@ -135,7 +140,6 @@ class DataHandler:
         # Establish connection to Socrata resource
         client = Socrata(socrata_domain, socrata_token)
         # Fetch data
-        metadata = client.get_metadata(socrata_dataset_identifier)
         # Loop for querying dataset
         queryDf = None
         for i in range(0,querySize,pageSize):
@@ -151,8 +155,6 @@ class DataHandler:
             else:
                 queryDf = queryDf.append(tempDf)
         self.data = queryDf
-        # Fetch data
-        metadata = client.get_metadata(socrata_dataset_identifier)
         print('%d records retrieved in %.2f seconds' % (self.data.shape[0], time.time() - t))
 
 
@@ -168,25 +170,16 @@ class DataHandler:
         client = Socrata(socrata_domain, socrata_token)
         results = client.get(socrata_dataset_identifier, limit=limit)
         self.data = pd.DataFrame.from_dict(results)
-        print('\tDownload Complete: %.1f minutes' % self.elapsedTimer(downloadTimer))
+        print('\tDownload Complete: %.1f minutes' %
+              self.elapsedTimer(downloadTimer))
 
 
-    def updateDatabase(self):
-        '''Check database for duplicate entries and update with current data'''
-        df = self.data.copy() # Shard deepcopy to allow multiple endpoints
-        engine = create_engine(self.dbString)
-        Session = orm.sessionmaker(bind=engine)
-        session = Session()
-        for srn in self.data.srnumber:
-            print(srn)
-
-
-    def populateFullDatabase(self, yearRange=range(2015,2021)):
+    def populateFullDatabase(self, yearRange=range(2015, 2021)):
         '''Fetches all data from Socrata to populate database
            Default operation is to fetch data from 2015-2020
-           !!! Be aware that each fresh import will wipe the 
+           !!! Be aware that each fresh import will wipe the
            existing staging table'''
-        print('Performing fresh Postgres repopulation from Socrata data sources')
+        print('Performing fresh Postgres population from Socrata data sources')
         tableInit = False
         globalTimer = time.time()
         for y in yearRange:
@@ -197,7 +190,8 @@ class DataHandler:
                 tableInit = True
             else:
                 self.ingestData(ingestMethod='append')
-        print('All Operations Complete: %.1f minutes' % self.elapsedTimer(globalTimer))
+        print('All Operations Complete: %.1f minutes' %
+              self.elapsedTimer(globalTimer))
 
 
     def updateDatabase(self):
@@ -248,9 +242,11 @@ if __name__ == "__main__":
     '''Class DataHandler workflow from initial load to SQL population'''
     loader = DataHandler()
     loader.loadConfig(configFilePath='../settings.cfg')
-    loader.fetchSocrataFull()
+    loader.fetchSocrataFull(limit=10000)
     loader.cleanData()
     loader.ingestData()
     loader.saveCsvFile('testfile.csv')
-    loader.dumpFilteredCsvFile(startDate='2018-05-01', requestType='Bulky Items', councilName='VOICES OF 90037')
-
+    loader.dumpFilteredCsvFile(dataset="",
+                               startDate='2018-05-01',
+                               requestType='Bulky Items',
+                               councilName='VOICES OF 90037')
