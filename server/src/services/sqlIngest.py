@@ -1,11 +1,11 @@
 import os
-from sqlalchemy.types import Integer, String, DateTime, Float
 import sqlalchemy as db
 import pandas as pd
 from configparser import ConfigParser
 import numpy as np
 from sodapy import Socrata
 import time
+import databaseOrm  # Contains database specs and field definitions
 
 
 class DataHandler:
@@ -17,15 +17,9 @@ class DataHandler:
         self.filePath = None
         self.configFilePath = configFilePath
         self.separator = separator
-        self.fields = ['srnumber', 'createddate', 'updateddate', 'actiontaken',
-                       'owner', 'requesttype', 'status', 'requestsource',
-                       'createdbyuserorganization', 'mobileos', 'anonymous',
-                       'assignto', 'servicedate', 'closeddate',
-                       'addressverified', 'approximateaddress', 'address',
-                       'housenumber', 'direction', 'streetname', 'suffix',
-                       'zipcode', 'latitude', 'longitude', 'location',
-                       'tbmpage', 'tbmcolumn', 'tbmrow', 'apc', 'cd',
-                       'cdmember', 'nc', 'ncname', 'policeprecinct']
+        self.fields = databaseOrm.tableFields
+        self.insertParams = databaseOrm.insertFields
+        self.readParams = databaseOrm.readFields
 
     def loadConfig(self, configFilePath):
         '''Load and parse config data'''
@@ -33,7 +27,6 @@ class DataHandler:
             print('Config already exists at %s. Nothing to load.' %
                   self.configFilePath)
             return
-
         print('Loading config file %s' % configFilePath)
         self.configFilePath = configFilePath
         config = ConfigParser()
@@ -57,41 +50,7 @@ class DataHandler:
         self.data = pd.read_table(self.filePath,
                                   sep=self.separator,
                                   na_values=['nan'],
-                                  dtype={
-                                    'SRNumber': str,
-                                    'CreatedDate': str,
-                                    'UpdatedDate': str,
-                                    'ActionTaken': str,
-                                    'Owner': str,
-                                    'RequestType': str,
-                                    'Status': str,
-                                    'RequestSource': str,
-                                    'MobileOS': str,
-                                    'Anonymous': str,
-                                    'AssignTo': str,
-                                    'ServiceDate': str,
-                                    'ClosedDate': str,
-                                    'AddressVerified': str,
-                                    'ApproximateAddress': str,
-                                    'Address': str,
-                                    'HouseNumber': str,
-                                    'Direction': str,
-                                    'StreetName': str,
-                                    'Suffix': str,
-                                    'ZipCode': str,
-                                    'Latitude': str,
-                                    'Longitude': str,
-                                    'Location': str,
-                                    'TBMPage': str,
-                                    'TBMColumn': str,
-                                    'TBMRow': str,
-                                    'APC': str,
-                                    'CD': str,
-                                    'CDMember': str,
-                                    'NC': str,
-                                    'NCName': str,
-                                    'PolicePrecinct': str
-                                  })
+                                  dtype=self.readParams)
 
     def elapsedTimer(self, timeVal):
         '''Simple timer method to report on elapsed time for each method'''
@@ -138,40 +97,7 @@ class DataHandler:
                     schema='public',
                     index=False,
                     chunksize=10000,
-                    dtype={'srnumber': String,
-                           'createddate': DateTime,
-                           'updateddate': DateTime,
-                           'actiontaken': String,
-                           'owner': String,
-                           'requesttype': String,
-                           'status': String,
-                           'requestsource': String,
-                           'createdbyuserorganization': String,
-                           'mobileos': String,
-                           'anonymous': String,
-                           'assignto': String,
-                           'servicedate': String,
-                           'closeddate': String,
-                           'addressverified': String,
-                           'approximateaddress': String,
-                           'address': String,
-                           'housenumber': String,
-                           'direction': String,
-                           'streetname': String,
-                           'suffix': String,
-                           'zipcode': Integer,
-                           'latitude': Float,
-                           'longitude': Float,
-                           'location': String,
-                           'tbmpage': Integer,
-                           'tbmcolumn': String,
-                           'tbmrow': Float,
-                           'apc': String,
-                           'cd': Float,
-                           'cdmember': String,
-                           'nc': Float,
-                           'ncname': String,
-                           'policeprecinct': String})
+                    dtype=self.insertParams)
         print('\tIngest Complete: %.1f minutes' %
               self.elapsedTimer(ingestTimer))
 
@@ -185,9 +111,9 @@ class DataHandler:
         as strings. Date values must be formatted %Y-%m-%d.'''
         df = dataset.copy()  # Shard deepcopy to allow multiple endpoints
         # Data filtering
-        dateFilter = df['CreatedDate'] > startDate
-        requestFilter = df['RequestType'] == requestType
-        councilFilter = df['NCName'] == councilName
+        dateFilter = df['createddate'] > startDate
+        requestFilter = df['requesttype'] == requestType
+        councilFilter = df['ncname'] == councilName
         df = df[dateFilter & requestFilter & councilFilter]
         # Return string object for routing to download
         return df.to_csv()
@@ -196,32 +122,34 @@ class DataHandler:
         '''Save contents of self.data to CSV output'''
         self.data.to_csv(filename, index=False)
 
-    def fetchSocrata(self, year=2019, querySize=10000):
+    def fetchSocrata(self, year=2019, querySize=20000, pageSize=20000):
         '''Fetch data from Socrata connection and return pandas dataframe'''
         # Load config files
+        print('Retrieving partial Socrata query...')
+        fetchTimer = time.time()
         socrata_domain = self.config['Socrata']['DOMAIN']
         socrata_dataset_identifier = self.config['Socrata']['AP' + str(year)]
         socrata_token = self.token
         # Establish connection to Socrata resource
         client = Socrata(socrata_domain, socrata_token)
         # Fetch data
-        # metadata = client.get_metadata(socrata_dataset_identifier)
         # Loop for querying dataset
         queryDf = None
-        for i in range(0, querySize, 1000):
-            print(i)
+        for i in range(0, querySize, pageSize):
+            # print(i + pageSize)
             results = client.get(socrata_dataset_identifier,
                                  offset=i,
                                  select="*",
-                                 order="updateddate DESC")
+                                 order="updateddate DESC",
+                                 limit=querySize)
             tempDf = pd.DataFrame.from_dict(results)
             if queryDf is None:
                 queryDf = tempDf.copy()
             else:
                 queryDf = queryDf.append(tempDf)
         self.data = queryDf
-        # Fetch data
-        # metadata = client.get_metadata(socrata_dataset_identifier)
+        print('%d records retrieved in %.2f minutes' %
+              (self.data.shape[0], self.elapsedTimer(fetchTimer)))
 
     def fetchSocrataFull(self, year=2019, limit=10**7):
         '''Fetch entirety of dataset via Socrata'''
@@ -256,6 +184,54 @@ class DataHandler:
                 self.ingestData(ingestMethod='append')
         print('All Operations Complete: %.1f minutes' %
               self.elapsedTimer(globalTimer))
+
+    def updateDatabase(self):
+        '''Incrementally updates database with contents of data attribute
+           overwriting pre-existing records with the same srnumber'''
+        def fix_nan_vals(resultDict):
+            '''sqlAlchemy will not take NaT or NaN values for
+               insert in some fields. They must be replaced
+               with None values'''
+            for key in resultDict:
+                if resultDict[key] is pd.NaT or resultDict[key] is np.nan:
+                    resultDict[key] = None
+                # Also doesn't like nested dictionaries
+                if type(resultDict[key]) is dict:
+                    resultDict[key] = str(resultDict[key])
+            return resultDict
+
+        print('Updating database with new records...')
+        engine = db.create_engine(self.dbString)
+        metadata = db.MetaData()
+        staging = db.Table('ingest_staging_table',
+                           metadata,
+                           autoload=True,
+                           autoload_with=engine)
+        connection = engine.connect()
+        row = None
+        updateTimer = time.time()
+        updated = 0
+        inserted = 0
+        for srnumber in self.data.srnumber:
+            stmt = (db.select([staging])
+                      .where(staging.columns.srnumber == srnumber))
+            results = connection.execute(stmt).fetchall()
+            # print(srnumber, results)
+            # Delete the record if it is already there
+            if len(results) > 0:
+                delete_stmt = (db.delete(staging)
+                                 .where(staging.columns.srnumber == srnumber))
+                connection.execute(delete_stmt)
+                updated += 1
+            else:
+                inserted += 1
+            # Write record
+            insert_stmt = db.insert(staging)
+            row = self.data[self.data.srnumber == srnumber].to_dict('results')
+            row = [fix_nan_vals(r) for r in row]
+            connection.execute(insert_stmt, row)
+        print('Operation Complete: %d inserts, %d updates in %.2f minutes' %
+              (inserted, updated, self.elapsedTimer(updateTimer)))
 
 
 if __name__ == "__main__":
