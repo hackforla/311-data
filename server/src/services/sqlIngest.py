@@ -1,7 +1,4 @@
 import os
-from sqlalchemy.types import Integer, Text, String, DateTime, Float
-from sqlalchemy import create_engine, MetaData, Table, orm
-from sqlalchemy import select, delete, insert
 import sqlalchemy as db
 import pandas as pd
 from configparser import ConfigParser
@@ -133,7 +130,7 @@ class DataHandler:
         '''Fetch data from Socrata connection and return pandas dataframe'''
         # Load config files
         print('Retrieving partial Socrata query...')
-        t = time.time()
+        fetchTimer = time.time()
         socrata_domain = self.config['Socrata']['DOMAIN']
         socrata_dataset_identifier = self.config['Socrata']['AP' + str(year)]
         socrata_token = self.token
@@ -155,7 +152,8 @@ class DataHandler:
             else:
                 queryDf = queryDf.append(tempDf)
         self.data = queryDf
-        print('%d records retrieved in %.2f seconds' % (self.data.shape[0], time.time() - t))
+        print('%d records retrieved in %.2f minutes' % 
+              (self.data.shape[0], self.elapsedTimer(fetchTimer)))
 
 
     def fetchSocrataFull(self, year=2019, limit=10**7):
@@ -210,32 +208,37 @@ class DataHandler:
             return resultDict
 
         print('Updating database with new records...')
-        engine = create_engine(self.dbString)
-        metadata = MetaData()
-        staging = Table('ingest_staging_table', metadata, autoload=True, autoload_with=engine)
+        engine = db.create_engine(self.dbString)
+        metadata = db.MetaData()
+        staging = db.Table('ingest_staging_table', 
+                            metadata, 
+                            autoload=True, 
+                            autoload_with=engine)
         connection = engine.connect()
-
         row = None
-        t1 = time.time()
+        updateTimer = time.time()
         updated = 0
         inserted = 0
         for srnumber in self.data.srnumber:
-            stmt = select([staging]).where(staging.columns.srnumber == srnumber)
+            stmt = (db.select([staging])
+                      .where(staging.columns.srnumber == srnumber))
             results = connection.execute(stmt).fetchall()
             # print(srnumber, results)
             # Delete the record if it is already there
             if len(results) > 0:
-                delete_stmt = delete(staging).where(staging.columns.srnumber == srnumber)
+                delete_stmt = (db.delete(staging)
+                                 .where(staging.columns.srnumber == srnumber))
                 connection.execute(delete_stmt)
                 updated += 1
             else:
                 inserted +=1
             # Write record 
-            insert_stmt = insert(staging)
+            insert_stmt = db.insert(staging)
             row = self.data[self.data.srnumber == srnumber].to_dict('results')
             row = [fix_nan_vals(r) for r in row]
             connection.execute(insert_stmt, row)
-        print('Operation Complete: %d inserts, %d updates in %.2f seconds' % (inserted, updated, time.time() - t1))
+        print('Operation Complete: %d inserts, %d updates in %.2f minutes' % 
+             (inserted, updated, self.elapsedTimer(updateTimer)))
 
 
 if __name__ == "__main__":
