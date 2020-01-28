@@ -19,7 +19,7 @@ const Button = ({
   isStatic,
   disabled,
 }) => {
-  // Dynamically generates className for Bulma styling from props.
+  // Dynamically generates button className from props to comply with Bulma styling modifiers.
   const buttonClassName = classNames('button', {
     [`is-${color}`]: color,
     'is-light': light,
