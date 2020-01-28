@@ -12,7 +12,8 @@ const ToggleSwitch = ({
   outlined,
   disabled,
   handleToggleClick,
-  label,
+  leftLabel,
+  rightLabel,
   name,
 }) => {
   const toggleswitchClassName = classNames('switch', {
@@ -29,6 +30,9 @@ const ToggleSwitch = ({
 
   return (
     <div className="field">
+      <label htmlFor={htmlId}>
+        {leftLabel}
+      </label>
       <input
         type="checkbox"
         id={htmlId}
@@ -38,7 +42,7 @@ const ToggleSwitch = ({
         disabled={disabled}
       />
       <label htmlFor={htmlId}>
-        {label}
+        {rightLabel}
       </label>
     </div>
   );
@@ -55,7 +59,8 @@ ToggleSwitch.propTypes = {
   outlined: PropTypes.bool,
   disabled: PropTypes.bool,
   handleToggleClick: PropTypes.func,
-  label: PropTypes.string,
+  leftLabel: PropTypes.string,
+  rightLabel: PropTypes.string,
   name: PropTypes.string,
 };
 
@@ -68,6 +73,7 @@ ToggleSwitch.defaultProps = {
   outlined: false,
   disabled: false,
   handleToggleClick: () => null,
-  label: null,
+  leftLabel: null,
+  rightLabel: null,
   name: null,
 };
