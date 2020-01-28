@@ -6,6 +6,7 @@
     "axios": "^0.19.0",
     "babel-jest": "^24.9.0",
     "bulma": "^0.8.0",
+    "classnames": "^2.2.6",
     "dataframe-js": "^1.4.3",
     "dotenv-webpack": "^1.7.0",
     "gh-pages": "^2.1.1",
