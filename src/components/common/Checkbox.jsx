@@ -68,8 +68,8 @@ Checkbox.propTypes = {
 Checkbox.defaultProps = {
   type: 'checkbox',
   rtl: false,
-  color: null,
-  size: PropTypes.oneOf(['small', 'normal', 'medium', 'large']),
+  color: 'primary',
+  size: 'normal',
   circle: false,
   block: false,
   hasNoBorder: false,
