@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { useId } from 'react-id-generator';
 
 const Checkbox = ({
+  type,
   rtl,
   color,
   size,
@@ -33,7 +34,7 @@ const Checkbox = ({
   return (
     <div className="field">
       <input
-        type="checkbox"
+        type={type}
         id={htmlId}
         className={checkboxClassName}
         onChange={handleCheckboxClick}
@@ -50,6 +51,7 @@ const Checkbox = ({
 export default Checkbox;
 
 Checkbox.propTypes = {
+  type: PropTypes.oneOf(['checkbox', 'radio']),
   rtl: PropTypes.bool,
   color: PropTypes.string,
   size: PropTypes.oneOf(['small', 'normal', 'medium', 'large']),
@@ -64,6 +66,7 @@ Checkbox.propTypes = {
 };
 
 Checkbox.defaultProps = {
+  type: 'checkbox',
   rtl: false,
   color: null,
   size: PropTypes.oneOf(['small', 'normal', 'medium', 'large']),
