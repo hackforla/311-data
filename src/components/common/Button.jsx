@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
+import { useId } from 'react-id-generator';
 
 const Button = ({
   label,
@@ -35,9 +36,12 @@ const Button = ({
     'is-static': isStatic,
     'is-disabled': disabled,
   });
+  const [uniqueId] = useId();
+  const htmlId = `btn-${uniqueId}`;
 
   return (
     <button
+      id={htmlId}
       type="button"
       onClick={handleClick}
       disabled={disabled}
