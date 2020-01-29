@@ -67,7 +67,7 @@ async def sample_route(request):
 @app.route('/ingest', methods=["POST"])
 async def ingest(request):
     """Accept POST requests with a list of years to import.
-        Query parameter name is 'years', and parameter value is 
+        Query parameter name is 'years', and parameter value is
         a comma-separated list of years to import.
         Ex. '/ingest?years=2015,2016,2017'
     """
