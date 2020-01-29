@@ -74,7 +74,7 @@ async def ingest(request):
     current_year = datetime.now().year
     ALLOWED_YEARS = [year for year in range(2015, current_year+1)]
     if not request.args.get("years"):
-        return json({"error": "'years' parameter is reqired."})
+        return json({"error": "'years' parameter is required."})
     years = set([int(year) for year in request.args.get("years").split(",")])
     if not all(year in ALLOWED_YEARS for year in years):
         return json({"error": f"'years' parameter values must be one of {ALLOWED_YEARS}"})
