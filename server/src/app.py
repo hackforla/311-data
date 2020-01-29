@@ -83,7 +83,6 @@ async def ingest(request):
     return json(return_data)
 
 
-
 @app.route('/update')
 async def update(request):
     ingress_worker = ingress_service()
