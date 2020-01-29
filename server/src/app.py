@@ -7,6 +7,8 @@ from services.ingress_service import ingress_service
 from configparser import ConfigParser
 from threading import Timer
 from multiprocessing import cpu_count
+from services.sqlIngest import *
+from datetime import datetime
 
 
 app = Sanic(__name__)
@@ -64,18 +66,22 @@ async def sample_route(request):
 
 @app.route('/ingest', methods=["POST"])
 async def ingest(request):
-    '''Accept POST requests with a list of datasets to import\
-       based on the YearMapping. Body parameter format is \
-       {"sets": ["YearMappingKey","YearMappingKey","YearMappingKey"]}'''
-
-    ingress_worker = ingress_service(config=app.config['Settings'])
+    """Accept POST requests with a list of years to import.
+        Query parameter name is 'years', and parameter value is 
+        a comma-separated list of years to import.
+        Ex. '/ingest?years=2015,2016,2017'
+    """
+    current_year = datetime.now().year
+    ALLOWED_YEARS = [year for year in range(2015, current_year+1)]
+    years = set([int(year) for year in request.args.get("years").split(",")])
+    if not all(year in ALLOWED_YEARS for year in years):
+        raise Exception(f"'years' parameter values must be one of {ALLOWED_YEARS}")
+    loader = DataHandler()
+    loader.loadConfig(configFilePath='./settings.cfg')
+    loader.populateFullDatabase(yearRange=years)
     return_data = {'response': 'ingest ok'}
-
-    for dataSet in request.json.get("sets", None):
-        target_data = app.config["Settings"]["YearMapping"][dataSet]
-        return_data = await ingress_worker.ingest(from_dataset=target_data)
-
     return json(return_data)
+
 
 
 @app.route('/update')
