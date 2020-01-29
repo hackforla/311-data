@@ -5,8 +5,7 @@ from configparser import ConfigParser
 import numpy as np
 from sodapy import Socrata
 import time
-import databaseOrm  # Contains database specs and field definitions
-import MySQLdb
+from . import databaseOrm  # Contains database specs and field definitions
 
 
 class DataHandler:
