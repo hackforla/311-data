@@ -6,6 +6,7 @@ import numpy as np
 from sodapy import Socrata
 import time
 import databaseOrm  # Contains database specs and field definitions
+import MySQLdb
 
 
 class DataHandler:
@@ -87,7 +88,7 @@ class DataHandler:
         print('Inserting data into Postgres instance...')
         ingestTimer = time.time()
         data = self.data.copy()  # shard deepcopy for other endpoint operations
-        engine = db.create_engine(self.dbString)
+        engine = db.create_engine(self.dbString, pool_pre_ping=True, pool_recycle=1800, pool_size=20, max_overflow=0)
         newColumns = [column.replace(' ', '_').lower() for column in data]
         data.columns = newColumns
         # Ingest data
@@ -96,7 +97,7 @@ class DataHandler:
                     if_exists=ingestMethod,
                     schema='public',
                     index=False,
-                    chunksize=10000,
+                    chunksize=10,
                     dtype=self.insertParams)
         print('\tIngest Complete: %.1f minutes' %
               self.elapsedTimer(ingestTimer))
@@ -238,11 +239,11 @@ if __name__ == "__main__":
     '''Class DataHandler workflow from initial load to SQL population'''
     loader = DataHandler()
     loader.loadConfig(configFilePath='../settings.cfg')
-    loader.fetchSocrataFull(limit=10000)
+    loader.fetchSocrataFull(limit=10)
     loader.cleanData()
     loader.ingestData()
-    loader.saveCsvFile('testfile.csv')
-    loader.dumpFilteredCsvFile(dataset="",
-                               startDate='2018-05-01',
-                               requestType='Bulky Items',
-                               councilName='VOICES OF 90037')
+    # loader.saveCsvFile('testfile.csv')
+    # loader.dumpFilteredCsvFile(dataset="",
+    #                            startDate='2018-05-01',
+    #                            requestType='Bulky Items',
+    #                            councilName='VOICES OF 90037')
