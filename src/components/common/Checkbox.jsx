@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
-import { useId } from 'react-id-generator';
 
 const Checkbox = ({
+  id,
   type,
   rtl,
   color,
@@ -28,20 +28,19 @@ const Checkbox = ({
     'has-background-color': hasBackgroundColor,
   });
 
-  const [uniqueId] = useId();
-  const htmlId = `checkbox-${uniqueId}`;
+  const checkboxId = `checkbox-${id}`;
 
   return (
     <div className="field">
       <input
+        id={checkboxId}
         type={type}
-        id={htmlId}
         className={checkboxClassName}
         onChange={handleCheckboxClick}
         disabled={disabled}
         name={name}
       />
-      <label htmlFor={htmlId}>
+      <label htmlFor={checkboxId}>
         {label}
       </label>
     </div>
@@ -51,6 +50,7 @@ const Checkbox = ({
 export default Checkbox;
 
 Checkbox.propTypes = {
+  id: PropTypes.string,
   type: PropTypes.oneOf(['checkbox', 'radio']),
   rtl: PropTypes.bool,
   color: PropTypes.string,
@@ -66,6 +66,7 @@ Checkbox.propTypes = {
 };
 
 Checkbox.defaultProps = {
+  id: null,
   type: 'checkbox',
   rtl: false,
   color: 'primary',

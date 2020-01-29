@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
-import { useId } from 'react-id-generator';
 
 const Button = ({
+  id,
   label,
   handleClick,
   color,
@@ -36,12 +36,12 @@ const Button = ({
     'is-static': isStatic,
     'is-disabled': disabled,
   });
-  const [uniqueId] = useId();
-  const htmlId = `btn-${uniqueId}`;
+
+  const buttonId = `btn-${id}`;
 
   return (
     <button
-      id={htmlId}
+      id={buttonId}
       type="button"
       onClick={handleClick}
       disabled={disabled}
@@ -55,6 +55,7 @@ const Button = ({
 export default Button;
 
 Button.propTypes = {
+  id: PropTypes.string,
   label: PropTypes.string,
   handleClick: PropTypes.func,
   color: PropTypes.string,
@@ -73,6 +74,7 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
+  id: null,
   label: null,
   handleClick: () => {},
   color: null,

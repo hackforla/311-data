@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
-import { useId } from 'react-id-generator';
 
 const ToggleSwitch = ({
+  id,
   rtl,
   color,
   size,
@@ -25,23 +25,22 @@ const ToggleSwitch = ({
     'is-outlined': outlined,
   });
 
-  const [uniqueId] = useId();
-  const htmlId = `toggleswitch-${uniqueId}`;
+  const toggleswitchId = `toggleswitch-${id}`;
 
   return (
     <div className="field">
-      <label htmlFor={htmlId}>
+      <label htmlFor={toggleswitchId}>
         {leftLabel}
       </label>
       <input
         type="checkbox"
-        id={htmlId}
+        id={toggleswitchId}
         name={name}
         className={toggleswitchClassName}
         onChange={handleToggleClick}
         disabled={disabled}
       />
-      <label htmlFor={htmlId}>
+      <label htmlFor={toggleswitchId}>
         {rightLabel}
       </label>
     </div>
@@ -51,6 +50,7 @@ const ToggleSwitch = ({
 export default ToggleSwitch;
 
 ToggleSwitch.propTypes = {
+  id: PropTypes.string,
   rtl: PropTypes.bool,
   color: PropTypes.string,
   size: PropTypes.oneOf(['small', 'normal', 'medium', 'large']),
@@ -65,6 +65,7 @@ ToggleSwitch.propTypes = {
 };
 
 ToggleSwitch.defaultProps = {
+  id: null,
   rtl: false,
   color: 'primary',
   size: 'normal',
