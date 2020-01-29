@@ -7,7 +7,7 @@ from services.ingress_service import ingress_service
 from configparser import ConfigParser
 from threading import Timer
 from multiprocessing import cpu_count
-from services.sqlIngest import *
+from services.sqlIngest import DataHandler
 from datetime import datetime
 
 
