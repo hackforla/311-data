@@ -5,7 +5,7 @@ from configparser import ConfigParser
 import numpy as np
 from sodapy import Socrata
 import time
-from . import databaseOrm  # Contains database specs and field definitions
+import databaseOrm  # Contains database specs and field definitions
 
 
 class DataHandler:
@@ -84,7 +84,7 @@ class DataHandler:
 
     def ingestData(self, ingestMethod='replace'):
         '''Set up connection to database'''
-        print('Inserting data into Postgres instance...')
+        print('Inserting data into MySQL instance...')
         ingestTimer = time.time()
         data = self.data.copy()  # shard deepcopy for other endpoint operations
         engine = db.create_engine(self.dbString, pool_pre_ping=True, pool_recycle=1800, pool_size=20, max_overflow=0)
@@ -171,7 +171,7 @@ class DataHandler:
            Default operation is to fetch data from 2015-2020
            !!! Be aware that each fresh import will wipe the
            existing staging table'''
-        print('Performing fresh Postgres population from Socrata data sources')
+        print('Performing fresh MySQL population from Socrata data sources')
         tableInit = False
         globalTimer = time.time()
         for y in yearRange:
