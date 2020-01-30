@@ -84,14 +84,15 @@ class DataHandler:
 
     def ingestData(self, ingestMethod='replace'):
         '''Set up connection to database'''
-        print('Inserting data into MySQL instance...')
+        asdf = 'Inserting data into ' + self.dbString.split(':')[0] + ' instance...'
+        print(asdf)
         ingestTimer = time.time()
         data = self.data.copy()  # shard deepcopy for other endpoint operations
         engine = db.create_engine(self.dbString)
         newColumns = [column.replace(' ', '_').lower() for column in data]
         data.columns = newColumns
         # Ingest data
-        # Schema is same as database in MySQL; 
+        # Schema is same as database in MySQL;
         # schema here is set to db name in connection string
         data.to_sql("ingest_staging_table",
                     engine,
@@ -173,7 +174,7 @@ class DataHandler:
            Default operation is to fetch data from 2015-2020
            !!! Be aware that each fresh import will wipe the
            existing staging table'''
-        print('Performing fresh MySQL population from Socrata data sources')
+        print('Performing fresh ' + self.dbString.split(':')[0] + ' population from Socrata data sources')
         tableInit = False
         globalTimer = time.time()
         for y in yearRange:
