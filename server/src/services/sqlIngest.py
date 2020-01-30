@@ -20,6 +20,7 @@ class DataHandler:
         self.fields = databaseOrm.tableFields
         self.insertParams = databaseOrm.insertFields
         self.readParams = databaseOrm.readFields
+        self.dialect = None
 
     def loadConfig(self, configFilePath):
         '''Load and parse config data'''
@@ -33,6 +34,7 @@ class DataHandler:
         config.read(configFilePath)
         self.config = config
         self.dbString = config['Database']['DB_CONNECTION_STRING']
+        self.dialect = self.dbString.split(':')[0]
         self.token = None if config['Socrata']['TOKEN'] == 'None' \
             else config['Socrata']['TOKEN']
 
@@ -84,7 +86,7 @@ class DataHandler:
 
     def ingestData(self, ingestMethod='replace'):
         '''Set up connection to database'''
-        asdf = 'Inserting data into ' + self.dbString.split(':')[0] + ' instance...'
+        asdf = 'Inserting data into ' + self.dialect + ' instance...'
         print(asdf)
         ingestTimer = time.time()
         data = self.data.copy()  # shard deepcopy for other endpoint operations
@@ -174,7 +176,7 @@ class DataHandler:
            Default operation is to fetch data from 2015-2020
            !!! Be aware that each fresh import will wipe the
            existing staging table'''
-        print('Performing fresh ' + self.dbString.split(':')[0] + ' population from Socrata data sources')
+        print('Performing fresh ' + self.dialect + ' population from Socrata data sources')
         tableInit = False
         globalTimer = time.time()
         for y in yearRange:
