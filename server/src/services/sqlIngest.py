@@ -87,10 +87,12 @@ class DataHandler:
         print('Inserting data into MySQL instance...')
         ingestTimer = time.time()
         data = self.data.copy()  # shard deepcopy for other endpoint operations
-        engine = db.create_engine(self.dbString, pool_pre_ping=True, pool_recycle=1800, pool_size=20, max_overflow=0)
+        engine = db.create_engine(self.dbString)
         newColumns = [column.replace(' ', '_').lower() for column in data]
         data.columns = newColumns
         # Ingest data
+        # Schema is same as database in MySQL; 
+        # schema here is set to db name in connection string
         data.to_sql("ingest_staging_table",
                     engine,
                     if_exists=ingestMethod,
