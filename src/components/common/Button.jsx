@@ -6,6 +6,10 @@ const Button = ({
   id,
   label,
   handleClick,
+  /*
+   *  Props below correspond with Bulma modifiers.
+   *  bulma.io/documentation/elements/button/
+  */
   color,
   light,
   size,
@@ -55,7 +59,7 @@ const Button = ({
 export default Button;
 
 Button.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
   label: PropTypes.string,
   handleClick: PropTypes.func,
   color: PropTypes.string,
@@ -74,10 +78,9 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  id: null,
   label: null,
-  handleClick: () => {},
-  color: null,
+  handleClick: () => null,
+  color: 'primary',
   light: false,
   size: 'normal',
   fullWidth: false,

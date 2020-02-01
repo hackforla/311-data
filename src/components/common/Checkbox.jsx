@@ -5,7 +5,15 @@ import classNames from 'classnames';
 const Checkbox = ({
   id,
   type,
-  rtl,
+  handleClick,
+  label,
+  name,
+  value,
+  /*
+   *  Props below correspond with Bulma modifiers.
+   *  wikiki.github.io/form/checkradio/
+  */
+  rightToLeft,
   color,
   size,
   circle,
@@ -13,13 +21,10 @@ const Checkbox = ({
   hasNoBorder,
   hasBackgroundColor,
   disabled,
-  handleCheckboxClick,
-  label,
-  name,
 }) => {
   // Dynamically generates checkbox className from props to comply with Bulma styling modifiers.
   const checkboxClassName = classNames('is-checkradio', {
-    'is-rtl': rtl,
+    'is-rtl': rightToLeft,
     [`is-${color}`]: color,
     [`is-${size}`]: size,
     'is-circle': circle,
@@ -31,52 +36,54 @@ const Checkbox = ({
   const checkboxId = `checkbox-${id}`;
 
   return (
-    <div className="field">
+    <>
       <input
         id={checkboxId}
         type={type}
-        className={checkboxClassName}
-        onChange={handleCheckboxClick}
-        disabled={disabled}
+        onChange={handleClick}
         name={name}
+        value={value}
+        className={checkboxClassName}
+        disabled={disabled}
       />
       <label htmlFor={checkboxId}>
         {label}
       </label>
-    </div>
+    </>
   );
 };
 
 export default Checkbox;
 
 Checkbox.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['checkbox', 'radio']),
-  rtl: PropTypes.bool,
+  handleClick: PropTypes.func,
+  label: PropTypes.string,
+  name: PropTypes.string,
+  value: PropTypes.string,
+  rightToLeft: PropTypes.bool,
   color: PropTypes.string,
-  size: PropTypes.oneOf(['small', 'normal', 'medium', 'large']),
+  size: PropTypes.oneOf(['small', '', 'medium', 'large']),
   circle: PropTypes.bool,
   block: PropTypes.bool,
   hasNoBorder: PropTypes.bool,
   hasBackgroundColor: PropTypes.bool,
   disabled: PropTypes.bool,
-  handleCheckboxClick: PropTypes.func,
-  label: PropTypes.string,
-  name: PropTypes.string,
 };
 
 Checkbox.defaultProps = {
-  id: null,
   type: 'checkbox',
-  rtl: false,
+  handleClick: () => null,
+  label: null,
+  name: null,
+  value: undefined,
+  rightToLeft: false,
   color: 'primary',
-  size: 'normal',
+  size: '',
   circle: false,
   block: false,
   hasNoBorder: false,
   hasBackgroundColor: false,
   disabled: false,
-  handleCheckboxClick: () => null,
-  label: null,
-  name: null,
 };
