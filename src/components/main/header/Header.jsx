@@ -1,6 +1,4 @@
 import React from 'react';
-
-
 import COLORS from '../../../styles/COLORS';
 
 const Header = () => {
@@ -40,14 +38,6 @@ const Header = () => {
       </div>
 
       <div id="navbar" className="navbar-menu">
-        <button
-          type="button"
-          className="button is-primary"
-          data-show="quickview"
-          data-target="quickviewDefault"
-        >
-            Show quickview
-        </button>
         <div className="navbar-end">
           <div className="navbar-item">
             <a href="/" style={cta2Style}>

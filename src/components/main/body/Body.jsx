@@ -5,7 +5,7 @@ import PinMap from '../../PinMap/PinMap';
 
 const Body = () => (
   <div className="body">
-    {/* <Menu /> */}
+    <Menu />
     <PinMap />
   </div>
 );

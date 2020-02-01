@@ -14,6 +14,10 @@ import {
   YEARS, MONTHS, REQUESTS, COUNCILS,
 } from '../../common/CONSTANTS';
 
+  // const buildDataUrl = () => {
+  //   return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`;
+  // };
+
 const DataPicker = ({
   showMarkers,
   showMarkerDropdown,
