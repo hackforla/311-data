@@ -11,6 +11,8 @@ const Footer = () => (
   <nav
     className="navbar has-navbar-fixed-bottom"
     style={{
+      position: 'fixed',
+      bottom: '0',
       height: '45px',
       background: '#002449',
     }}
