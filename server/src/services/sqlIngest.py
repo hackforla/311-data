@@ -84,7 +84,8 @@ class DataHandler:
         print('\tCleaning Complete: %.1f minutes' %
               self.elapsedTimer(cleanTimer))
 
-    def ingestData(self, ingestMethod='replace'):
+    def ingestData(self, ingestMethod='replace',
+                   tableName='ingest_staging_table'):
         '''Set up connection to database'''
         asdf = 'Inserting data into ' + self.dialect + ' instance...'
         print(asdf)
@@ -96,7 +97,7 @@ class DataHandler:
         # Ingest data
         # Schema is same as database in MySQL;
         # schema here is set to db name in connection string
-        data.to_sql("ingest_staging_table",
+        data.to_sql(tableName,
                     engine,
                     if_exists=ingestMethod,
                     schema='public',
@@ -245,9 +246,4 @@ if __name__ == "__main__":
     loader.loadConfig(configFilePath='../settings.cfg')
     loader.fetchSocrataFull()
     loader.cleanData()
-    loader.ingestData()
-    # loader.saveCsvFile('testfile.csv')
-    # loader.dumpFilteredCsvFile(dataset="",
-    #                            startDate='2018-05-01',
-    #                            requestType='Bulky Items',
-    #                            councilName='VOICES OF 90037')
+    loader.ingestData('ingest_staging_table')
