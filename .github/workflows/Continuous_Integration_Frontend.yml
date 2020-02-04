@@ -1,8 +1,5 @@
 name: Dev_CI_Frontend
-on:
-  push:
-    branches-ignore:
-      - master
+on: [pull_request]
 
 jobs:
   build:
@@ -19,8 +16,8 @@ jobs:
     - name: Install Packages
       run: npm install
     - name: Build project
-      run: npm run-script build
+      run: npm run build
     - name: Run Tests
-      run: npm run-script test -- --coverage
+      run: npm run test -- --coverage
       env:
         MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}

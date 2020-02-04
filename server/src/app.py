@@ -5,16 +5,24 @@ from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.ingress_service import ingress_service
 from configparser import ConfigParser
+from threading import Timer
+from multiprocessing import cpu_count
 
 
 app = Sanic(__name__)
 
+
 def configure_app():
     # Settings initialization
     config = ConfigParser()
-    settings_file = os.path.join(os.getcwd(),'settings.cfg')
+    settings_file = os.path.join(os.getcwd(), 'settings.cfg')
     config.read(settings_file)
     app.config['Settings'] = config
+    if os.environ.get('DB_CONNECTION_STRING', None):
+        app.config['Settings']['Database']['DB_CONNECTION_STRING'] =\
+            os.environ.get('DB_CONNECTION_STRING')
+    app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
+    os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
 
 
 @app.route('/')
@@ -24,25 +32,33 @@ async def index(request):
 
 @app.route('/timetoclose')
 async def timetoclose(request):
-    ttc_worker = time_to_close()
-    # Insert time to close calculation here
-    return_data = ttc_worker.hello_world()
+    ttc_worker = time_to_close(app.config['Settings'])
 
-    return json(return_data)
+    # dates = loads(ttc_worker.ttc_view_dates())
+    summary = ttc_worker.ttc_summary(allData=True,
+                                     service=True,
+                                     allRequests=False,
+                                     requestType="'Bulky Items'",
+                                     viewDates=True)
+
+    return json(summary)
 
 
 @app.route('/requestfrequency')
 async def requestfrequency(request):
-    freq_worker = frequency()
-    # Insert frequency calculation here
-    return_data = freq_worker.hello_world()
+    freq_worker = frequency(app.config['Settings'])
 
-    return json(return_data)
+    data = freq_worker.freq_view_data(service=True,
+                                      councils=[],
+                                      aggregate=True)
+
+    return json(data)
 
 
 @app.route('/sample-data')
 async def sample_route(request):
-    sample_dataset = {'cool_key':['value1', 'value2'], app.config['REDACTED']:app.config['REDACTED']}
+    sample_dataset = {'cool_key': ['value1', 'value2'],
+                      app.config['REDACTED']: app.config['REDACTED']}
     return json(sample_dataset)
 
 
@@ -53,7 +69,7 @@ async def ingest(request):
        {"sets": ["YearMappingKey","YearMappingKey","YearMappingKey"]}'''
 
     ingress_worker = ingress_service(config=app.config['Settings'])
-    return_data = {'response':'ingest ok'}
+    return_data = {'response': 'ingest ok'}
 
     for dataSet in request.json.get("sets", None):
         target_data = app.config["Settings"]["YearMapping"][dataSet]
@@ -76,7 +92,15 @@ async def delete(request):
     return json(return_data)
 
 
+@app.route('/test_multiple_workers')
+async def test_multiple_workers(request):
+    Timer(10.0, print, ["Timer Test."]).start()
+    return json("Done")
+
 
 if __name__ == '__main__':
     configure_app()
-    app.run(host=app.config['Settings']['Server']['HOST'], port=app.config['Settings']['Server']['PORT'], debug=app.config['Settings']['Server']['DEBUG'])
+    app.run(host=app.config['Settings']['Server']['HOST'],
+            port=int(app.config['Settings']['Server']['PORT']),
+            workers=cpu_count()//2,
+            debug=app.config['Settings']['Server']['DEBUG'])
