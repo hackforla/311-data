@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Menu from './Menu';
+import Menu from '../menu/Menu';
 import PinMap from '../../PinMap/PinMap';
 
 const Body = () => (

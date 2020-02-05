@@ -8,7 +8,18 @@ import Button from '../../common/Button';
 
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const sidebarWidth = '500px';
+  const [activeTab, setActiveTab] = useState('Map');
+  const sidebarWidth = '509px';
+
+  const tabs = [
+    'Map',
+    'Data Visualization',
+  ];
+
+  const handleActiveTab = (tab) => (tab === activeTab ? 'is-active' : '');
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
 
   return (
     <div>
@@ -50,12 +61,17 @@ const Menu = () => {
             }}
           >
             <ul>
-              <li className="is-active" style={{ background: 'yellow', width: '254px' }}>
-                <a>Map</a>
-              </li>
-              <li style={{ width: '254px' }}>
-                <a>Data Visualization</a>
-              </li>
+              {tabs.map((tab) => (
+                <li
+                  key={tab}
+                  className={handleActiveTab(tab)}
+                  style={{ width: '254px' }}
+                >
+                  <a onClick={() => { handleTabClick(tab); }}>
+                    {tab}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
