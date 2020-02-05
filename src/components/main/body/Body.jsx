@@ -4,7 +4,7 @@ import Menu from './Menu';
 import PinMap from '../../PinMap/PinMap';
 
 const Body = () => (
-  <div className="body">
+  <div id="body-container" className="body">
     <Menu />
     <PinMap />
   </div>
