@@ -17,10 +17,8 @@ const Header = () => {
     fontWeight: 'bold',
   };
 
-  // const quickviews = bulmaQuickview.attach();
-
   return (
-    <nav
+    <header
       className="navbar"
       role="navigation"
       aria-label="main navigation"
@@ -56,7 +54,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 
