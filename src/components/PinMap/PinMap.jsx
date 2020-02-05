@@ -151,34 +151,27 @@ class PinMap extends Component {
     } = this.state;
 
     return (
-      <>
-        <div className="map-container">
-          <Map
-            center={position}
-            zoom={zoom}
-            bounds={bounds}
-            style={{ height: '60vh' }}
-          >
-            <TileLayer
-              url={mapUrl}
-              attribution="MapBox"
-            />
-            {this.renderOverlay()}
-            {this.renderMarkers()}
-          </Map>
-        </div>
-
-      </>
+      <div className="map-container">
+        <Map
+          center={position}
+          zoom={zoom}
+          bounds={bounds}
+          style={{ height: '85vh' }}
+        >
+          <TileLayer
+            url={mapUrl}
+            attribution="MapBox"
+          />
+          {this.renderOverlay()}
+          {this.renderMarkers()}
+        </Map>
+      </div>
     );
   }
 
   render() {
     return (
-      <div className="column">
-        <div className="pinmap">
-          {this.renderMap()}
-        </div>
-      </div>
+      this.renderMap()
     );
   }
 }
