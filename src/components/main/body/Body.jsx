@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Menu from './Menu';
+import Menu from '../menu/Menu';
 import PinMap from '../../PinMap/PinMap';
 
 const Body = () => (
-  <div className="body">
+  <div id="body-container" className="body">
     <Menu />
     <PinMap />
   </div>
