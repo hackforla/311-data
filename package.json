@@ -33,7 +33,8 @@
     "start": "npm run dev",
     "dev": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0",
     "build": "webpack --config webpack.prod.js",
-    "test": "jest",
+    "lint": "eslint src/**/*.js*",
+    "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

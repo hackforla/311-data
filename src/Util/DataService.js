@@ -46,7 +46,7 @@ export function getColorMap(discrete) {
 }
 
 export function getBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadDataReady) {
-  const treemap_data = { title: 'Broad 311 Calls Map', color: '#FFFFFF', children: [] };
+  const treemapData = { title: 'Broad 311 Calls Map', color: '#FFFFFF', children: [] };
   const start = Math.min(startMonth, endMonth);
   const end = Math.max(startMonth, endMonth);
 
@@ -70,28 +70,38 @@ export function getBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadD
       const colorMap = getColorMap(false);
       totalCounts.toCollection().forEach((row) => {
         const biggestProblem = biggestProblems[`${row.ncname}_biggestproblem`];
-        const data_point = {
+        const dataPoint = {
           title: row.ncname,
           color: colorMap[biggestProblem],
           size: row.callvolume,
         };
-        treemap_data.children.push(data_point);
+        treemapData.children.push(dataPoint);
       });
-      onBroadDataReady(treemap_data);
+      onBroadDataReady(treemapData);
     });
 }
 
-export function getZoomedCallVolume(ncName, year, startMonth = 0, endMonth = 13, onZoomedDataReady) {
-  const treemap_data = { title: 'Zoomed 311 Calls Map', color: '#FFFFFF', children: [] };
+export function getZoomedCallVolume(
+  ncName,
+  year,
+  startMonth = 0,
+  endMonth = 13,
+  onZoomedDataReady,
+) {
+  const treemapData = { title: 'Zoomed 311 Calls Map', color: '#FFFFFF', children: [] };
   const start = Math.min(startMonth, endMonth);
   const end = Math.max(startMonth, endMonth);
 
   DataFrame.fromJSON(`https://data.lacity.org/resource/${dataResources[year]}.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=NCName+=+'${ncName}'+and+date_extract_m(CreatedDate)+between+${start}+and+${end}&$group=NCName,RequestType&$order=CallVolume DESC`).then((df) => {
     const colorMap = getColorMap(false);
     df.toCollection().forEach((row) => {
-      const data_point = { title: row.requesttype, color: colorMap[row.requesttype], size: row.callvolume };
-      treemap_data.children.push(data_point);
+      const dataPoint = {
+        title: row.requesttype,
+        color: colorMap[row.requesttype],
+        size: row.callvolume,
+      };
+      treemapData.children.push(dataPoint);
     });
-    onZoomedDataReady(treemap_data);
+    onZoomedDataReady(treemapData);
   });
 }
