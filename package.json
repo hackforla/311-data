@@ -30,6 +30,7 @@
     "webpack-merge": "^4.2.2"
   },
   "scripts": {
+    "prerun": "node src/Util/environVerification.js",
     "start": "npm run dev",
     "dev": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0",
     "build": "webpack --config webpack.prod.js",
