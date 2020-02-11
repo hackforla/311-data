@@ -25,17 +25,17 @@ const Dropdown = ({
   });
 
   useEffect(() => {
-    const handleOutsideClick = (e) => {
-      // clicked inside dropdown
+    const handleClickOutside = (e) => {
+      // Clicked inside dropdown
       if (dropdownNode.current.contains(e.target) || !isOpen) {
         return;
       }
-      // clicked outside dropdown
+      // Clicked outside dropdown
       updateIsOpen(false);
     };
 
     const handleEscapeKeydown = (e) => {
-      // key pressed but not escape key
+      // Non-esc key pressed
       if (e.keyCode !== 27 || !isOpen) {
         return;
       }
@@ -43,15 +43,15 @@ const Dropdown = ({
     };
 
     if (isOpen) {
-      document.addEventListener('click', handleOutsideClick);
+      document.addEventListener('click', handleClickOutside);
       document.addEventListener('keydown', handleEscapeKeydown);
     } else {
-      document.removeEventListener('click', handleOutsideClick);
+      document.removeEventListener('click', handleClickOutside);
       document.removeEventListener('keydown', handleEscapeKeydown);
     }
 
     return () => {
-      document.removeEventListener('click', handleOutsideClick);
+      document.removeEventListener('click', handleClickOutside);
       document.removeEventListener('keydown', handleEscapeKeydown);
     };
   }, [isOpen, currentSelection]);
@@ -59,6 +59,7 @@ const Dropdown = ({
   const toggleOpen = () => updateIsOpen((prevIsOpen) => !prevIsOpen);
 
   const handleItemClick = (e) => {
+    e.preventDefault();
     updateIsOpen(false);
     updateSelection(e.currentTarget.title);
     handleClick(e);
@@ -127,10 +128,6 @@ const DropdownItem = ({
     'is-active': active,
   });
 
-  useEffect(() => {
-
-  }, [active]);
-
   return (
     <a
       key={label}
@@ -150,7 +147,6 @@ const DropdownItem = ({
           checked={active}
           circle
           color="grey"
-          disabled
         />
       </span>
     </a>
@@ -160,20 +156,16 @@ const DropdownItem = ({
 
 export default Dropdown;
 
-// export {
-//   DropdownItem,
-// };
+DropdownItem.propTypes = {
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired,
+  selected: PropTypes.bool,
+};
 
-// DropdownItem.propTypes = {
-//   label: PropTypes.string.isRequired,
-//   name: PropTypes.string.isRequired,
-//   handleClick: PropTypes.func.isRequired,
-//   selected: PropTypes.bool,
-// };
-
-// DropdownItem.defaultProps = {
-//   selected: false,
-// };
+DropdownItem.defaultProps = {
+  selected: false,
+};
 
 Dropdown.propTypes = {
   id: PropTypes.string.isRequired,
