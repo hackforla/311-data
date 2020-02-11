@@ -3,38 +3,11 @@ import PropTypes from 'proptypes';
 import classNames from 'classnames';
 import Checkbox from './Checkbox';
 
-const DropdownItem = ({
-  label,
-  name,
-  selected,
-  handleClick,
-}) => (
-  <a
-    key={label}
-    href="# "
-    className="dropdown-item"
-    name={name}
-    onClick={handleClick}
-    style={{ paddingRight: '0rem', width: '300px' }}
-  >
-    {label}
-    <span style={{ float: 'right' }}>
-      <Checkbox
-        id={`dd-chkbx-${label}`}
-        checked={selected}
-        circle
-        color="grey"
-      />
-    </span>
-  </a>
-);
-
 const Dropdown = ({
   id,
   list,
   title,
   handleClick,
-  children,
   style,
   open,
   hoverable,
@@ -43,7 +16,7 @@ const Dropdown = ({
 }) => {
   const dropdownNode = useRef();
   const [isOpen, updateIsOpen] = useState(!!open);
-  const [currentSelection, updateSelection] = useState(null);
+  const [currentSelection, updateSelection] = useState(title);
   const dropdownClassName = classNames('dropdown', {
     'is-active': isOpen,
     'is-hoverable': hoverable,
@@ -51,43 +24,54 @@ const Dropdown = ({
     'is-up': dropUp,
   });
 
-  const handleOutsideClick = (e) => {
-    // clicked inside dropdown
-    if (dropdownNode.current.contains(e.target)) {
-      return;
-    }
-    // clicked outside dropdown
-    updateIsOpen(false);
-  };
-
   useEffect(() => {
+    const handleOutsideClick = (e) => {
+      // clicked inside dropdown
+      if (dropdownNode.current.contains(e.target) || !isOpen) {
+        return;
+      }
+      // clicked outside dropdown
+      updateIsOpen(false);
+    };
+
+    const handleEscapeKeydown = (e) => {
+      // key pressed but not escape key
+      if (e.keyCode !== 27 || !isOpen) {
+        return;
+      }
+      updateIsOpen(false);
+    };
+
     if (isOpen) {
       document.addEventListener('click', handleOutsideClick);
+      document.addEventListener('keydown', handleEscapeKeydown);
     } else {
       document.removeEventListener('click', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscapeKeydown);
     }
 
     return () => {
       document.removeEventListener('click', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscapeKeydown);
     };
-  }, [isOpen]);
+  }, [isOpen, currentSelection]);
 
   const toggleOpen = () => updateIsOpen((prevIsOpen) => !prevIsOpen);
 
   const handleItemClick = (e) => {
-    e.preventDefault();
-    toggleOpen();
-    updateSelection(e.target.name);
+    updateIsOpen(false);
+    updateSelection(e.currentTarget.title);
     handleClick(e);
   };
 
   const renderDropdownItems = (items) => items.map((item) => (
     <DropdownItem
-      key={item}
-      label={item}
-      name={item}
-      checked={item === currentSelection}
-      handleClick={(e) => handleItemClick(e)}
+      key={item.label}
+      label={item.label}
+      value={item.value}
+      active={item.label === currentSelection}
+      checked={item.label === currentSelection}
+      handleClick={handleItemClick}
     />
   ));
 
@@ -100,12 +84,13 @@ const Dropdown = ({
     >
       <div
         className="dropdown-trigger"
+        onClick={toggleOpen}
         style={{ width: '100%' }}
+        role="presentation"
       >
         <button
           type="button"
           className="button"
-          onClick={() => toggleOpen()}
           style={{ display: 'block', width: '100%' }}
         >
           <span
@@ -126,40 +111,79 @@ const Dropdown = ({
       <div className="dropdown-menu" id="dropdown-menu" role="menu">
         <div className="dropdown-content">
           { renderDropdownItems(list) }
-          { children }
         </div>
       </div>
     </div>
   );
 };
 
+const DropdownItem = ({
+  label,
+  value,
+  active,
+  handleClick,
+}) => {
+  const itemClassName = classNames('dropdown-item', {
+    'is-active': active,
+  });
+
+  useEffect(() => {
+
+  }, [active]);
+
+  return (
+    <a
+      key={label}
+      // Extra space after # to circumvent eslint rule
+      href="# "
+      className={itemClassName}
+      title={label}
+      onClickCapture={handleClick}
+      style={{ paddingRight: '0rem', width: '300px' }}
+    >
+      <span style={{ width: '100%', zIndex: '1' }}>
+        {label}
+      </span>
+      <span style={{ float: 'right', position: 'absolute', right: '0', display: 'inline-block', zIndex: '0' }}>
+        <Checkbox
+          id={`dd-chkbx-${label}`}
+          checked={active}
+          circle
+          color="grey"
+          disabled
+        />
+      </span>
+    </a>
+  );
+};
+
+
 export default Dropdown;
 
-export {
-  DropdownItem,
-};
+// export {
+//   DropdownItem,
+// };
 
-DropdownItem.propTypes = {
-  label: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired,
-  selected: PropTypes.bool,
-};
+// DropdownItem.propTypes = {
+//   label: PropTypes.string.isRequired,
+//   name: PropTypes.string.isRequired,
+//   handleClick: PropTypes.func.isRequired,
+//   selected: PropTypes.bool,
+// };
 
-DropdownItem.defaultProps = {
-  selected: false,
-};
+// DropdownItem.defaultProps = {
+//   selected: false,
+// };
 
 Dropdown.propTypes = {
   id: PropTypes.string.isRequired,
   // update list proptypes
-  list: PropTypes.arrayOf(PropTypes.string).isRequired,
+  list: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string,
+    value: PropTypes.string,
+  })).isRequired,
   title: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
   style: PropTypes.shape({}),
   open: PropTypes.bool,
   hoverable: PropTypes.bool,
@@ -168,7 +192,6 @@ Dropdown.propTypes = {
 };
 
 Dropdown.defaultProps = {
-  children: null,
   style: undefined,
   open: false,
   hoverable: false,
