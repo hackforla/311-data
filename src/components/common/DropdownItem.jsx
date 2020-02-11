@@ -8,12 +8,11 @@ const DropdownItem = ({
   value,
   active,
   handleClick,
+  width,
 }) => {
   const itemClassName = classNames('dropdown-item', {
     'is-active': active,
   });
-
-  const itemWidth = '350px';
 
   return (
     <a
@@ -23,7 +22,7 @@ const DropdownItem = ({
       className={itemClassName}
       value={value}
       onClickCapture={handleClick}
-      style={{ paddingRight: '0rem', width: itemWidth }}
+      style={{ width, paddingRight: '0rem' }}
     >
       <span id="dropdown-item-label">
         {label}
@@ -47,6 +46,7 @@ DropdownItem.propTypes = {
   value: PropTypes.string.isRequired,
   active: PropTypes.bool,
   handleClick: PropTypes.func.isRequired,
+  width: PropTypes.string.isRequired,
 };
 
 DropdownItem.defaultProps = {

@@ -8,6 +8,7 @@ const Dropdown = ({
   list,
   title,
   handleClick,
+  width,
   style,
   open,
   hoverable,
@@ -15,7 +16,7 @@ const Dropdown = ({
   dropUp,
 }) => {
   const dropdownNode = useRef();
-  const [isOpen, updateIsOpen] = useState(!!open);
+  const [isOpen, updateIsOpen] = useState(open);
   const [currentSelection, updateSelection] = useState(title);
   const dropdownClassName = classNames('dropdown', {
     'is-active': isOpen,
@@ -23,8 +24,6 @@ const Dropdown = ({
     'is-right': rightAligned,
     'is-up': dropUp,
   });
-
-  const dropdownWidth = '350px';
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -73,6 +72,7 @@ const Dropdown = ({
       label={item.label}
       value={item.value}
       active={item.label === currentSelection}
+      width={width}
       handleClick={handleItemClick}
     />
   ));
@@ -82,7 +82,7 @@ const Dropdown = ({
       id={id}
       ref={dropdownNode}
       className={dropdownClassName}
-      style={{ width: dropdownWidth, ...style }}
+      style={{ width, ...style }}
     >
       <div
         className="dropdown-trigger"
@@ -123,13 +123,13 @@ export default Dropdown;
 
 Dropdown.propTypes = {
   id: PropTypes.string.isRequired,
-  // update list proptypes
   list: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string,
     value: PropTypes.string,
   })).isRequired,
   title: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,
+  width: PropTypes.string,
   style: PropTypes.shape({}),
   open: PropTypes.bool,
   hoverable: PropTypes.bool,
@@ -138,6 +138,7 @@ Dropdown.propTypes = {
 };
 
 Dropdown.defaultProps = {
+  width: '350px',
   style: undefined,
   open: false,
   hoverable: false,
