@@ -13,6 +13,8 @@ const DropdownItem = ({
     'is-active': active,
   });
 
+  const itemWidth = '350px';
+
   return (
     <a
       key={label}
@@ -21,12 +23,12 @@ const DropdownItem = ({
       className={itemClassName}
       value={value}
       onClickCapture={handleClick}
-      style={{ paddingRight: '0rem', width: '300px' }}
+      style={{ paddingRight: '0rem', width: itemWidth }}
     >
-      <span style={{ width: '100%', zIndex: '1' }}>
+      <span id="dropdown-item-label">
         {label}
       </span>
-      <span style={{ float: 'right', position: 'absolute', right: '0', display: 'inline-block', zIndex: '0' }}>
+      <span style={{ position: 'absolute', right: '0' }}>
         <Checkbox
           id={`dd-chkbx-${label}`}
           checked={active}

@@ -24,7 +24,7 @@ const Dropdown = ({
     'is-up': dropUp,
   });
 
-  const dropdownWidth = '300px';
+  const dropdownWidth = '350px';
 
   useEffect(() => {
     const handleClickOutside = (e) => {
