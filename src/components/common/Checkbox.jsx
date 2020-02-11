@@ -9,6 +9,7 @@ const Checkbox = ({
   label,
   name,
   value,
+  checked,
   /*
    *  Props below correspond with Bulma modifiers.
    *  wikiki.github.io/form/checkradio/
@@ -44,6 +45,7 @@ const Checkbox = ({
         name={name}
         value={value}
         className={checkboxClassName}
+        checked={checked}
         disabled={disabled}
       />
       <label htmlFor={checkboxId}>
