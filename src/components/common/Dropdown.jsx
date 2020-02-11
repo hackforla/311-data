@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
-import Checkbox from './Checkbox';
+import DropdownItem from './DropdownItem';
 
 const Dropdown = ({
   id,
@@ -23,6 +23,8 @@ const Dropdown = ({
     'is-right': rightAligned,
     'is-up': dropUp,
   });
+
+  const dropdownWidth = '300px';
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -60,8 +62,8 @@ const Dropdown = ({
 
   const handleItemClick = (e) => {
     e.preventDefault();
+    updateSelection(e.currentTarget.textContent);
     updateIsOpen(false);
-    updateSelection(e.currentTarget.title);
     handleClick(e);
   };
 
@@ -71,7 +73,6 @@ const Dropdown = ({
       label={item.label}
       value={item.value}
       active={item.label === currentSelection}
-      checked={item.label === currentSelection}
       handleClick={handleItemClick}
     />
   ));
@@ -81,7 +82,7 @@ const Dropdown = ({
       id={id}
       ref={dropdownNode}
       className={dropdownClassName}
-      style={style}
+      style={{ width: dropdownWidth, ...style }}
     >
       <div
         className="dropdown-trigger"
@@ -95,17 +96,17 @@ const Dropdown = ({
           style={{ display: 'block', width: '100%' }}
         >
           <span
-            id="dd-title"
+            id="dropdown-title"
             style={{ float: 'left' }}
           >
-            {currentSelection || title}
+            {currentSelection}
           </span>
           <span
-            id="dd-icon"
+            id="dropdown-icon"
             style={{ float: 'right' }}
           >
-            { /* replace isOpen icons with fas icons once Icon component is merged in */ }
-            { isOpen ? '˄' : '⌄' }
+            { /* replace with fas icons once Icon component is merged in */ }
+            { isOpen ? '⌃' : '⌄' }
           </span>
         </button>
       </div>
@@ -118,54 +119,7 @@ const Dropdown = ({
   );
 };
 
-const DropdownItem = ({
-  label,
-  value,
-  active,
-  handleClick,
-}) => {
-  const itemClassName = classNames('dropdown-item', {
-    'is-active': active,
-  });
-
-  return (
-    <a
-      key={label}
-      // Extra space after # to circumvent eslint rule
-      href="# "
-      className={itemClassName}
-      title={label}
-      onClickCapture={handleClick}
-      style={{ paddingRight: '0rem', width: '300px' }}
-    >
-      <span style={{ width: '100%', zIndex: '1' }}>
-        {label}
-      </span>
-      <span style={{ float: 'right', position: 'absolute', right: '0', display: 'inline-block', zIndex: '0' }}>
-        <Checkbox
-          id={`dd-chkbx-${label}`}
-          checked={active}
-          circle
-          color="grey"
-        />
-      </span>
-    </a>
-  );
-};
-
-
 export default Dropdown;
-
-DropdownItem.propTypes = {
-  label: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired,
-  selected: PropTypes.bool,
-};
-
-DropdownItem.defaultProps = {
-  selected: false,
-};
 
 Dropdown.propTypes = {
   id: PropTypes.string.isRequired,
