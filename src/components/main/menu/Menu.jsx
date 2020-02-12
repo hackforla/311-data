@@ -61,12 +61,9 @@ const Menu = () => {
                   className={handleActiveTab(tab)}
                   style={{ width: '254px' }}
                 >
-                  <button
-                    type="button"
-                    onClick={() => { handleTabClick(tab); }}
-                  >
+                  <a onClick={() => { handleTabClick(tab); }}>
                     {tab}
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
