@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { COUNCILS } from '../../common/CONSTANTS';
+import { connect } from 'react-redux';
 
-const NCSelector = () => {
+import { toggleNeighborhoodCouncil } from '../../../redux/reducers/data';
+
+import { COUNCILS } from '../../common/CONSTANTS';
+import Checkbox from '../../common/Checkbox';
+
+const NCSelector = ({
+  councils,
+  toggleCouncil,
+}) => {
   const [searchValue, setSearchValue] = useState('');
   const [filteredCouncilList, setFilteredCouncilList] = useState(COUNCILS);
 
@@ -61,16 +69,18 @@ const NCSelector = () => {
           <div className="level" style={{ margin: '0 0 7px 0' }}>
             <div className="level-left">
               <div className="level-item">
-                <p className="is-size-7">
+                <p className="is-size-7" style={{ width: '300px' }}>
                   SELECT ALL
                 </p>
               </div>
             </div>
             <div className="level-right">
               <div className="level-item">
-                <label className="checkbox">
-                  <input type="checkbox" />
-                </label>
+                <Checkbox
+                  id="nc-select-all"
+                  handleClick={() => toggleCouncil('all')}
+                  checked={councils?.all ?? false}
+                />
               </div>
             </div>
           </div>
@@ -86,9 +96,11 @@ const NCSelector = () => {
               </div>
               <div className="level-right">
                 <div className="level-item">
-                  <label className="checkbox">
-                    <input type="checkbox" />
-                  </label>
+                  <Checkbox
+                    id={`nc-select-${council}`}
+                    handleClick={() => toggleCouncil(council)}
+                    checked={councils?.[council] ?? false}
+                  />
                 </div>
               </div>
             </div>
@@ -99,4 +111,12 @@ const NCSelector = () => {
   );
 };
 
-export default NCSelector;
+const mapStateToProps = (state) => ({
+  councils: state.data.councils,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  toggleCouncil: (council) => dispatch(toggleNeighborhoodCouncil(council)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NCSelector);
