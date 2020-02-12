@@ -11,8 +11,8 @@ import PropTypes from 'proptypes';
 import ncOverlay from '../../data/nc-boundary-2019.json';
 
 const pinMapProps = {
-  data: PropTypes.string.isRequired,
-  showMarkers: PropTypes.boolean.isRequired,
+  data: PropTypes.string,
+  showMarkers: PropTypes.boolean,
 };
 
 
@@ -181,6 +181,11 @@ class PinMap extends Component {
     );
   }
 }
+
+PinMap.defaultProps = {
+  data: '',
+  showMarkers: true,
+};
 
 PinMap.propTypes = pinMapProps;
 
