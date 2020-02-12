@@ -3,11 +3,17 @@ import {
   Map, Marker, Popup, TileLayer, Rectangle, Tooltip,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
+import PropTypes from 'proptypes';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 import ncOverlay from '../../data/nc-boundary-2019.json';
+
+const pinMapProps = {
+  data: PropTypes.string.isRequired,
+  showMarkers: PropTypes.boolean.isRequired,
+};
 
 
 class PinMap extends Component {
@@ -175,5 +181,7 @@ class PinMap extends Component {
     );
   }
 }
+
+PinMap.propTypes = pinMapProps;
 
 export default PinMap;
