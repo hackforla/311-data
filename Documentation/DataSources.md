@@ -11,6 +11,8 @@ The following is a list of Los Angeles datasets that could be used in combinatio
 
 * [LAPD Arrest Data from 2010 Forward](https://data.lacity.org/A-Safe-City/Arrest-Data-from-2010-to-Present/yru6-6re4)
 * [LAPD Crime Reports from 2010 Forward](https://data.lacity.org/A-Safe-City/Crime-Data-from-2010-to-Present/63jg-8b9z)
+* [LAPD Vehicle and Pedestrian Stops from 2010 Forward](https://data.lacity.org/A-Safe-City/Vehicle-and-Pedestrian-Stop-Data-2010-to-Present/ci25-wgt7)
+* [LAPD Traffic Collision Data from 2010 to Present](https://data.lacity.org/A-Safe-City/Traffic-Collision-Data-from-2010-to-Present/d5tf-ez2w)
 
 ## Transportation
 
