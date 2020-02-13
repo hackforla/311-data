@@ -1,46 +1,43 @@
 import React from 'react';
 import PropTypes from 'proptypes';
+import moment from 'moment';
 import Dropdown from '../../../common/Dropdown';
 
 import COLORS from '../../../../styles/COLORS';
 
 const getDates = (dateOptionValue) => {
   let startDate;
-  let endDate = new Date();
+  const endDate = moment().format('MM/DD/YYYY');
+  const formatPriorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format('MM/DD/YYYY');
 
   switch (dateOptionValue) {
     case 'LAST_WEEK':
-      console.log(dateOptionValue);
-      // DO STUFF
+      startDate = formatPriorDate(1, 'week');
       break;
     case 'LAST_MONTH':
-      console.log(dateOptionValue);
-      // do stuff
+      startDate = formatPriorDate(1, 'month');
       break;
     case 'LAST_6_MONTHS':
-      console.log(dateOptionValue);
-      // DO STUFF
+      startDate = formatPriorDate(6, 'months');
       break;
     case 'LAST_12_MONTHS':
-      console.log(dateOptionValue);
-      // DO STUFF
+      startDate = formatPriorDate(12, 'months');
       break;
     case 'YEAR_TO_DATE':
-      console.log(dateOptionValue);
-      // DO STUFF
+      startDate = moment().startOf('year').format('MM/DD/YYYY');
       break;
     case 'CUSTOM_DATE_RANGE':
-      console.log(dateOptionValue);
-      // DO STUFF
+      // DISPATCH MODALOPEN: TRUE
       break;
 
+    // comment below circumvents eslint(default-case)
     // no default
   }
+  return { startDate, endDate };
 };
 
 const DateSelector = ({
   style,
-
   // Map these to state
   startDate,
   endDate,
@@ -74,7 +71,6 @@ const DateSelector = ({
           {`Start ${startDate || placeHolder} To ${endDate || placeHolder}`}
         </span>
       </div>
-
       <div className="date-selector-dropdown">
         <Dropdown
           id="date-selector-dropdown"
@@ -84,18 +80,16 @@ const DateSelector = ({
           width="349px"
         />
       </div>
-
     </div>
   );
 };
-
 
 export default DateSelector;
 
 DateSelector.propTypes = {
   style: PropTypes.shape({}),
-  startDate: PropTypes.instanceOf(Date),
-  endDate: PropTypes.instanceOf(Date),
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
 };
 
 DateSelector.defaultProps = {
