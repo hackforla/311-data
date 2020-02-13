@@ -3,11 +3,17 @@ import {
   Map, Marker, Popup, TileLayer, Rectangle, Tooltip,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
+import PropTypes from 'proptypes';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 import ncOverlay from '../../data/nc-boundary-2019.json';
+
+const pinMapProps = {
+  data: PropTypes.string,
+  showMarkers: PropTypes.boolean,
+};
 
 
 class PinMap extends Component {
@@ -151,36 +157,36 @@ class PinMap extends Component {
     } = this.state;
 
     return (
-      <>
-        <div className="map-container">
-          <Map
-            center={position}
-            zoom={zoom}
-            bounds={bounds}
-            style={{ height: '60vh' }}
-          >
-            <TileLayer
-              url={mapUrl}
-              attribution="MapBox"
-            />
-            {this.renderOverlay()}
-            {this.renderMarkers()}
-          </Map>
-        </div>
-
-      </>
+      <div className="map-container">
+        <Map
+          center={position}
+          zoom={zoom}
+          bounds={bounds}
+          style={{ height: '85vh' }}
+        >
+          <TileLayer
+            url={mapUrl}
+            attribution="MapBox"
+          />
+          {this.renderOverlay()}
+          {this.renderMarkers()}
+        </Map>
+      </div>
     );
   }
 
   render() {
     return (
-      <div className="column">
-        <div className="pinmap">
-          {this.renderMap()}
-        </div>
-      </div>
+      this.renderMap()
     );
   }
 }
+
+PinMap.defaultProps = {
+  data: '',
+  showMarkers: true,
+};
+
+PinMap.propTypes = pinMapProps;
 
 export default PinMap;

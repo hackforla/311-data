@@ -23,6 +23,7 @@ const Button = ({
   loading,
   isStatic,
   disabled,
+  style,
 }) => {
   // Dynamically generates button className from props to comply with Bulma styling modifiers.
   const buttonClassName = classNames('button', {
@@ -50,6 +51,7 @@ const Button = ({
       onClick={handleClick}
       disabled={disabled}
       className={buttonClassName}
+      style={style}
     >
       {label}
     </button>
@@ -75,6 +77,7 @@ Button.propTypes = {
   loading: PropTypes.bool,
   isStatic: PropTypes.bool,
   disabled: PropTypes.bool,
+  style: PropTypes.shape({}),
 };
 
 Button.defaultProps = {
@@ -93,4 +96,5 @@ Button.defaultProps = {
   loading: false,
   isStatic: false,
   disabled: false,
+  style: undefined,
 };
