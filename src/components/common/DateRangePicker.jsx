@@ -1,10 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import DatePicker from 'react-datepicker';
 import Button from './Button';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import COLORS from '../../styles/COLORS';
+
+const cardStyle = {
+  height: '225px',
+  width: '350px',
+  overflow: 'visible',
+};
 
 const headerStyle = {
   height: '50px',
@@ -42,12 +48,7 @@ const DateRangePicker = ({
     <div
       id={id}
       className="modal-card"
-      style={{
-        height: '275px',
-        width: '350px',
-        overflow: 'visible',
-        ...style,
-      }}
+      style={{ ...cardStyle, ...style }}
     >
       {/* ---------- Modal Card Header ---------- */}
       <header
@@ -64,12 +65,15 @@ const DateRangePicker = ({
           type="button"
           className="delete"
           aria-label="close"
-          onClick={() => {}}
+          onClick={() => {
+            /*
+             * Dispatch action to close modal
+             */
+          }}
         />
       </header>
 
       {/* ---------- Modal Card Body - main content ---------- */}
-
       <section
         className="modal-card-body"
         style={{
@@ -140,15 +144,31 @@ const DateRangePicker = ({
       </section>
 
       {/* ---------- Modal Card Footer - button(s) ---------- */}
-
-      <footer 
+      <footer
         className="modal-card-foot"
-        style={{ background: headerStyle.background }}
+        style={{
+          background: headerStyle.background,
+          border: 'none',
+          textAlign: 'center',
+        }}
       >
-        <button className="button is-success">Save changes</button>
-        <button className="button">Cancel</button>
+        <div className="container">
+          <Button
+            id="date-range-button"
+            label="Save Changes"
+            style={{
+              background: COLORS.BRAND.CTA1,
+              color: COLORS.FONTS,
+              fontWeight: 'bold',
+            }}
+            handleClick={() => {
+              /*
+               * Dispatch start and end dates
+               */
+            }}
+          />
+        </div>
       </footer>
-
     </div>
   );
 };
