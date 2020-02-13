@@ -2,6 +2,9 @@ import React, { forwardRef } from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
 
+// NOTE: This component is not currently 100% working and is not in use.
+//       To be completed after MVP.
+
 const CustomDateInput = ({
   value,
   onClick,
