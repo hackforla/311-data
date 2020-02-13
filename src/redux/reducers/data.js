@@ -67,6 +67,21 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    // case types.UPDATE_YEAR:
+    //   return {
+    //     ...state,
+    //     year: action.payload,
+    //   };
+    // case types.UPDATE_START_MONTH:
+    //   return {
+    //     ...state,
+    //     startMonth: action.payload,
+    //   };
+    // case types.UPDATE_END_MONTH:
+    //   return {
+    //     ...state,
+    //     endMonth: action.payload,
+    //   };
     case types.OPEN_DATE_RANGE_MODAL: {
       return {
         ...state,
@@ -96,12 +111,12 @@ export default (state = initialState, action) => {
         ...state,
         requestType: action.payload,
       };
-    case types.UPDATE_NEIGHBORHOOD_COUNCIL:
-      return {
-        ...state,
-        council: action.payload,
-      };
-    default:
-      return state;
-  }
+      case types.UPDATE_NEIGHBORHOOD_COUNCIL:
+        return {
+          ...state,
+          council: action.payload,
+        };
+        default:
+          return state;
+        }
 };
