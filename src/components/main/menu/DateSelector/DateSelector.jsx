@@ -1,30 +1,33 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import moment from 'moment';
+import { updateStartDate, updateEndDate } from '../../../../redux/reducers/data';
+
 import Dropdown from '../../../common/Dropdown';
 
 import COLORS from '../../../../styles/COLORS';
 
 const getDates = (dateOptionValue) => {
-  let startDate;
-  const endDate = moment().format('MM/DD/YYYY');
+  let newStartDate;
+  const newEndDate = moment().format('MM/DD/YYYY');
   const formatPriorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format('MM/DD/YYYY');
 
   switch (dateOptionValue) {
     case 'LAST_WEEK':
-      startDate = formatPriorDate(1, 'week');
+      newStartDate = formatPriorDate(1, 'week');
       break;
     case 'LAST_MONTH':
-      startDate = formatPriorDate(1, 'month');
+      newStartDate = formatPriorDate(1, 'month');
       break;
     case 'LAST_6_MONTHS':
-      startDate = formatPriorDate(6, 'months');
+      newStartDate = formatPriorDate(6, 'months');
       break;
     case 'LAST_12_MONTHS':
-      startDate = formatPriorDate(12, 'months');
+      newStartDate = formatPriorDate(12, 'months');
       break;
     case 'YEAR_TO_DATE':
-      startDate = moment().startOf('year').format('MM/DD/YYYY');
+      newStartDate = moment().startOf('year').format('MM/DD/YYYY');
       break;
     case 'CUSTOM_DATE_RANGE':
       // DISPATCH MODALOPEN: TRUE
@@ -33,7 +36,8 @@ const getDates = (dateOptionValue) => {
     // comment below circumvents eslint(default-case)
     // no default
   }
-  return { startDate, endDate };
+
+  return { newStartDate, newEndDate };
 };
 
 const DateSelector = ({
@@ -41,6 +45,8 @@ const DateSelector = ({
   // Map these to state
   startDate,
   endDate,
+  updateStart,
+  updateEnd,
 }) => {
   const placeHolder = 'MM/DD/YYYY';
   const dateRangeOptions = [
@@ -76,7 +82,11 @@ const DateSelector = ({
           id="date-selector-dropdown"
           list={dateRangeOptions}
           title="Select Date Range"
-          onClick={getDates}
+          onClick={(dateOption) => {
+            const { newStartDate, newEndDate } = getDates(dateOption);
+            updateStart(newStartDate);
+            updateEnd(newEndDate);
+          }}
           width="349px"
         />
       </div>
@@ -84,7 +94,20 @@ const DateSelector = ({
   );
 };
 
-export default DateSelector;
+const mapStateToProps = (state) => ({
+  startDate: state.data.startDate,
+  endDate: state.data.endDate,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  updateStart: (newStartDate) => dispatch(updateStartDate(newStartDate)),
+  updateEnd: (newEndDate) => dispatch(updateEndDate(newEndDate)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DateSelector);
 
 DateSelector.propTypes = {
   style: PropTypes.shape({}),
