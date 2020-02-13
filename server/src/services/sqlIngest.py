@@ -5,7 +5,11 @@ from configparser import ConfigParser
 import numpy as np
 from sodapy import Socrata
 import time
-import databaseOrm  # Contains database specs and field definitions
+from . import databaseOrm  # Contains database specs and field definitions
+
+# NOTE: running app from app.py manifests pathing error 
+#   Change the databaseOrm import to 'from . import databaseOrm'
+#   if running app from app.py
 
 
 class DataHandler:
@@ -243,7 +247,7 @@ if __name__ == "__main__":
     '''Class DataHandler workflow from initial load to SQL population'''
     loader = DataHandler()
     loader.loadConfig(configFilePath='../settings.cfg')
-    loader.fetchSocrataFull()
+    loader.fetchSocrataFull(limit=10000)
     loader.cleanData()
     loader.ingestData()
     # loader.saveCsvFile('testfile.csv')

@@ -1,6 +1,7 @@
 import os
 from sanic import Sanic
 from sanic.response import json
+from services.precache import precache
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.ingress_service import ingress_service
@@ -30,6 +31,15 @@ def configure_app():
 @app.route('/')
 async def index(request):
     return json('You hit the index')
+
+
+@app.route('/precache')
+async def precaching(request):
+    precache_worker = precache(app.config['Settings'])
+
+    test = precache_worker.recent_requests()
+
+    return json("hi")
 
 
 @app.route('/timetoclose')
