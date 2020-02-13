@@ -2,10 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import moment from 'moment';
-import { updateStartDate, updateEndDate } from '../../../../redux/reducers/data';
+import {
+  updateStartDate,
+  updateEndDate,
+  openDateRangeModal,
+} from '../../../../redux/reducers/data';
 
 import Dropdown from '../../../common/Dropdown';
-
 import COLORS from '../../../../styles/COLORS';
 
 const getDates = (dateOptionValue) => {
@@ -29,24 +32,20 @@ const getDates = (dateOptionValue) => {
     case 'YEAR_TO_DATE':
       newStartDate = moment().startOf('year').format('MM/DD/YYYY');
       break;
-    case 'CUSTOM_DATE_RANGE':
-      // DISPATCH MODALOPEN: TRUE
-      break;
 
     // comment below circumvents eslint(default-case)
     // no default
   }
-
   return { newStartDate, newEndDate };
 };
 
 const DateSelector = ({
   style,
-  // Map these to state
   startDate,
   endDate,
   updateStart,
   updateEnd,
+  openDateModal,
 }) => {
   const placeHolder = 'MM/DD/YYYY';
   const dateRangeOptions = [
@@ -82,12 +81,16 @@ const DateSelector = ({
           id="date-selector-dropdown"
           list={dateRangeOptions}
           title="Select Date Range"
-          onClick={(dateOption) => {
-            const { newStartDate, newEndDate } = getDates(dateOption);
-            updateStart(newStartDate);
-            updateEnd(newEndDate);
-          }}
           width="349px"
+          onClick={(dateOption) => {
+            if (dateOption !== 'CUSTOM_DATE_RANGE') {
+              const { newStartDate, newEndDate } = getDates(dateOption);
+              updateStart(newStartDate);
+              updateEnd(newEndDate);
+            } else {
+              openDateModal();
+            }
+          }}
         />
       </div>
     </div>
@@ -102,6 +105,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   updateStart: (newStartDate) => dispatch(updateStartDate(newStartDate)),
   updateEnd: (newEndDate) => dispatch(updateEndDate(newEndDate)),
+  openDateModal: () => dispatch(openDateRangeModal()),
 });
 
 export default connect(
@@ -110,6 +114,9 @@ export default connect(
 )(DateSelector);
 
 DateSelector.propTypes = {
+  updateStart: PropTypes.func.isRequired,
+  updateEnd: PropTypes.func.isRequired,
+  openDateModal: PropTypes.func.isRequired,
   style: PropTypes.shape({}),
   startDate: PropTypes.string,
   endDate: PropTypes.string,
