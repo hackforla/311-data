@@ -37,9 +37,9 @@ async def index(request):
 async def precaching(request):
     precache_worker = precache(app.config['Settings'])
 
-    test = precache_worker.recent_requests()
+    recent_results = precache_worker.recent_requests(100)
 
-    return json("hi")
+    return json(recent_results)
 
 
 @app.route('/timetoclose')

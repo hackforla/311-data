@@ -15,15 +15,16 @@ class precache(object):
         self.data = None
         pass
 
-    def recent_requests(self, requestType=None, council=None):
+    def recent_requests(self, window, requestType=None, council=None):
         engine = db.create_engine(self.dbString)
 
         now = datetime.now()
-        startdate = pd.Timestamp(now) - pd.Timedelta(days=1400)
+        startdate = pd.Timestamp(now) - pd.Timedelta(days=window)
 
-        query = "SELECT * FROM %s WHERE createddate > %s" % (self.table, startdate)
+        query = "SELECT * FROM %s WHERE createddate > '%s'" % (self.table, startdate)
 
         df = pd.read_sql_query(query, con=engine)
+        print(len(df))
 
         return json.loads(df.to_json())
 
@@ -33,5 +34,5 @@ if __name__ == "__main__":
     config.read("../setting.cfg")
     precache.config = config
     precache.dbString = config['Database']['DB_CONNECTION_STRING']
-    precache.recent_requests()
+    precache.recent_requests(window=14)
 
