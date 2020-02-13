@@ -7,7 +7,7 @@ const Dropdown = ({
   id,
   list,
   title,
-  handleClick,
+  onClick,
   width,
   style,
   open,
@@ -63,7 +63,7 @@ const Dropdown = ({
     e.preventDefault();
     updateSelection(e.currentTarget.textContent);
     updateIsOpen(false);
-    handleClick(e);
+    onClick(e.currentTarget.getAttribute('value'));
   };
 
   const renderDropdownItems = (items) => items.map((item) => (
@@ -93,7 +93,11 @@ const Dropdown = ({
         <button
           type="button"
           className="button"
-          style={{ display: 'block', width: '100%' }}
+          style={{
+            display: 'block',
+            width: '100%',
+            paddingLeft: '12px',
+          }}
         >
           <span
             id="dropdown-title"
@@ -128,7 +132,7 @@ Dropdown.propTypes = {
     value: PropTypes.string,
   })).isRequired,
   title: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   width: PropTypes.string,
   style: PropTypes.shape({}),
   open: PropTypes.bool,
