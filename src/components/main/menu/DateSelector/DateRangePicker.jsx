@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import Button from '../../../common/Button';
+
+import {
+  updateStartDate,
+  updateEndDate,
+  closeDateRangeModal,
+} from '../../../../redux/reducers/data';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import COLORS from '../../../../styles/COLORS';
@@ -45,9 +53,12 @@ const DateRangePicker = ({
   id,
   title,
   style,
+  closeModal,
+  updateStart,
+  updateEnd,
 }) => {
-  const [startDate, updateStartDate] = useState();
-  const [endDate, updateEndDate] = useState();
+  const [startDate, updateLocalStart] = useState();
+  const [endDate, updateLocalEnd] = useState();
 
   const handleDateChange = (updateStartOrEndDate, date) => {
     updateStartOrEndDate(date);
@@ -78,11 +89,7 @@ const DateRangePicker = ({
           type="button"
           className="delete"
           aria-label="close"
-          onClick={() => {
-            /*
-             * Dispatch action to close modal
-             */
-          }}
+          onClick={closeModal}
         />
       </header>
 
@@ -106,14 +113,14 @@ const DateRangePicker = ({
               selected={startDate}
               startDate={startDate}
               endDate={endDate}
-              minDate={new Date('2015/1/1')}
-              maxDate={new Date()}
+              minDate={moment('2015/1/1')}
+              maxDate={moment()}
               selectsStart
               showYearDropdown
               showMonthDropdown
               showPopperArrow={false}
               popperPlacement="right"
-              onChange={(date) => handleDateChange(updateStartDate, date)}
+              onChange={(date) => handleDateChange(updateLocalStart, date)}
               placeholderText="MM/DD/YYYY"
             />
           </div>
@@ -140,7 +147,7 @@ const DateRangePicker = ({
               selectsStart
               showPopperArrow={false}
               popperPlacement="right"
-              onChange={(date) => handleDateChange(updateEndDate, date)}
+              onChange={(date) => handleDateChange(updateLocalEnd, date)}
               placeholderText="MM/DD/YYYY"
             />
           </div>
@@ -169,9 +176,14 @@ const DateRangePicker = ({
               height: '42px',
             }}
             handleClick={() => {
-              /*
-               * Dispatch start and end dates
-               */
+              if (startDate && endDate) {
+                const formatDate = (date) => moment(date).format('MM/DD/YYYY');
+                updateStart(formatDate(startDate));
+                updateEnd(formatDate(endDate));
+                closeModal();
+              } else {
+                alert('Provide valid start and end dates.');
+              }
             }}
           />
         </div>
@@ -180,12 +192,24 @@ const DateRangePicker = ({
   );
 };
 
-export default DateRangePicker;
+const mapDispatchToProps = (dispatch) => ({
+  updateStart: (newStartDate) => dispatch(updateStartDate(newStartDate)),
+  updateEnd: (newEndDate) => dispatch(updateEndDate(newEndDate)),
+  closeModal: () => dispatch(closeDateRangeModal()),
+});
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(DateRangePicker);
 
 DateRangePicker.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string,
   style: PropTypes.shape({}),
+  closeModal: PropTypes.func.isRequired,
+  updateStart: PropTypes.func.isRequired,
+  updateEnd: PropTypes.func.isRequired,
 };
 
 DateRangePicker.defaultProps = {
