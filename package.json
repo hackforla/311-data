@@ -15,6 +15,7 @@
     "html-webpack-plugin": "^3.2.0",
     "jest": "^24.9.0",
     "leaflet": "^1.5.1",
+    "moment": "^2.24.0",
     "proptypes": "^1.1.0",
     "react": "^16.8.6",
     "react-burger-menu": "^2.6.13",
