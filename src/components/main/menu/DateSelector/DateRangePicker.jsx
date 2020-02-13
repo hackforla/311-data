@@ -7,9 +7,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import COLORS from '../../../../styles/COLORS';
 
 const cardStyle = {
-  height: '225px',
-  width: '350px',
+  height: '299px',
+  width: '400px',
   overflow: 'visible',
+  boxShadow: '0px 6px 5px rgba(0, 0, 0, 0.5)',
 };
 
 const headerStyle = {
@@ -19,6 +20,7 @@ const headerStyle = {
   fontWeight: 'bold',
   fontSize: '20px',
   border: 'none',
+  borderRadius: '0',
 };
 
 const textStyle = {
@@ -30,6 +32,13 @@ const inputSpanStyle = {
   width: '100px',
   color: headerStyle.color,
   ...textStyle,
+};
+
+const containerDivStyle = {
+  height: '42px',
+  width: '317px',
+  display: 'flex',
+  alignItems: 'center',
 };
 
 const DateRangePicker = ({
@@ -57,7 +66,11 @@ const DateRangePicker = ({
       >
         <p
           className="modal-card-title has-text-weight-bold is-size-5"
-          style={{ color: headerStyle.color }}
+          style={{
+            color: headerStyle.color,
+            paddingLeft: '18px',
+            paddingTop: '18px',
+          }}
         >
           {title}
         </p>
@@ -85,11 +98,7 @@ const DateRangePicker = ({
         <div className="container">
           <div
             className="container"
-            style={{
-              height: '35px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
+            style={containerDivStyle}
           >
             &nbsp;
             <span style={inputSpanStyle}>
@@ -115,9 +124,7 @@ const DateRangePicker = ({
             className="container"
             style={{
               background: COLORS.FORMS.STROKE,
-              height: '35px',
-              display: 'flex',
-              alignItems: 'center',
+              ...containerDivStyle,
             }}
           >
             &nbsp;
@@ -150,9 +157,10 @@ const DateRangePicker = ({
           background: headerStyle.background,
           border: 'none',
           textAlign: 'center',
+          borderRadius: '0',
         }}
       >
-        <div className="container">
+        <div className="container" style={{ paddingBottom: '30px' }}>
           <Button
             id="date-range-button"
             label="Save Changes"
