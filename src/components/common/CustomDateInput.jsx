@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
 
 const CustomDateInput = ({
   value,
-  handleClick,
-  placeHolder,
+  onClick,
+  onChange,
   color,
   size,
   rounded,
@@ -15,8 +15,7 @@ const CustomDateInput = ({
   disabled,
   readOnly,
   isStatic,
-
-}) => {
+}, ref) => {
   const inputClassName = classNames('input', {
     [`is-${color}`]: color,
     [`is-${size}`]: size,
@@ -28,25 +27,29 @@ const CustomDateInput = ({
   });
 
   return (
-    <input
-      className={inputClassName}
-      placeHolder={placeHolder}
-      value={value}
-      onClick={handleClick}
-      disabled={disabled}
-      readOnly={readOnly}
-    />
+    <>
+      <input
+        ref={ref}
+        className={inputClassName}
+        value={value}
+        onClick={onClick}
+        onChange={onChange}
+        disabled={disabled}
+        readOnly={readOnly}
+        type="text"
+      />
+    </>
   );
 };
 
-export default CustomDateInput;
+export default forwardRef(CustomDateInput);
 
 CustomDateInput.propTypes = {
   value: PropTypes.string,
-  handleClick: PropTypes.func.isRequired,
-  placeHolder: PropTypes.string,
+  onClick: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
   color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  size: PropTypes.oneOf([undefined, 'small', 'medium', 'large']),
   rounded: PropTypes.bool,
   hovered: PropTypes.bool,
   focused: PropTypes.bool,
@@ -57,10 +60,9 @@ CustomDateInput.propTypes = {
 };
 
 CustomDateInput.defaultProps = {
-  value: PropTypes.string,
-  placeHolder: '',
+  value: '',
   color: 'primary',
-  size: '',
+  size: undefined,
   rounded: false,
   hovered: false,
   focused: false,
