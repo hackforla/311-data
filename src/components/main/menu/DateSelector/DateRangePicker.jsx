@@ -96,10 +96,7 @@ const DateRangePicker = ({
         }}
       >
         <div className="container">
-          <div
-            className="container"
-            style={containerDivStyle}
-          >
+          <div className="container" style={containerDivStyle}>
             &nbsp;
             <span style={inputSpanStyle}>
               Start Date
@@ -163,11 +160,13 @@ const DateRangePicker = ({
         <div className="container" style={{ paddingBottom: '30px' }}>
           <Button
             id="date-range-button"
-            label="Save Changes"
+            label="Save"
             style={{
               background: COLORS.BRAND.CTA1,
               color: COLORS.FONTS,
               fontWeight: 'bold',
+              width: '125px',
+              height: '42px',
             }}
             handleClick={() => {
               /*
