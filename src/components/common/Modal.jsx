@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
+import { closeDateRangeModal } from '../../redux/reducers/data';
 
 const Modal = ({
   open,
   content,
   style,
+  closeModal,
 }) => {
   const modalClassName = classNames('modal', {
     'is-active': open,
@@ -15,9 +17,7 @@ const Modal = ({
   useEffect(() => {
     const handleEscapeClick = (e) => {
       if (e.keyCode === 27) {
-        /*
-        *  Dispatch modal closing action
-        */
+        closeModal();
       }
     };
 
@@ -30,7 +30,7 @@ const Modal = ({
     return () => {
       document.removeEventListener('keydown', handleEscapeClick);
     };
-  }, [open]);
+  }, [open, closeModal]);
 
   return (
     <div
@@ -44,34 +44,28 @@ const Modal = ({
       <div className="modal-content" style={{ overflow: 'visible' }}>
         {content}
       </div>
-      <button
-        type="button"
-        className="modal-close is-large"
-        aria-label="close"
-        onClick={() => {
-          /*
-          *  Dispatch modal closing action
-          */
-        }}
-      />
     </div>
   );
 };
 
-// const mapStateToProps = (state) => {
-//   const { modalOpen } = state;
-//   return {
-//     modalOpen,
-//   };
-// };
+const mapStateToProps = (state) => ({
+  open: state.data.dateRangeModalOpen,
+});
 
-export default Modal;
-// export default connect(mapStateToProps)(Modal);
+const mapDispatchToProps = (dispatch) => ({
+  closeModal: () => dispatch(closeDateRangeModal()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Modal);
 
 Modal.propTypes = {
   open: PropTypes.bool,
   content: PropTypes.element.isRequired,
   style: PropTypes.shape({}),
+  closeModal: PropTypes.func.isRequired,
 };
 
 Modal.defaultProps = {
