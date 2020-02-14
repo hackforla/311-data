@@ -33,7 +33,6 @@ const Icon = ({
     'fa-border': bordered,
     'fa-spin': spin,
     'fa-pulse': pulse,
-
   }, className);
 
   const iconId = `icon-${id}`;
