@@ -8,7 +8,7 @@ const footerTextStyle = {
 };
 
 const Footer = () => (
-  <nav
+  <footer
     className="navbar has-navbar-fixed-bottom"
     style={{
       position: 'fixed',
@@ -24,7 +24,7 @@ const Footer = () => (
         </p>
       </div>
     </div>
-  </nav>
+  </footer>
 );
 
 export default Footer;

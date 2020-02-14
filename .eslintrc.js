@@ -23,8 +23,11 @@ module.exports = {
   },
   plugins: [
     'react',
+    'react-hooks'
   ],
   rules: {
     'linebreak-style': 'off',
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
 };
