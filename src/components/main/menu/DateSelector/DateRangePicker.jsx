@@ -113,8 +113,8 @@ const DateRangePicker = ({
               selected={startDate}
               startDate={startDate}
               endDate={endDate}
-              minDate={moment('2015/1/1')}
-              maxDate={moment()}
+              minDate={moment('01/01/2015', 'MM/DD/YYYY').toDate()}
+              maxDate={moment().toDate()}
               selectsStart
               showYearDropdown
               showMonthDropdown
