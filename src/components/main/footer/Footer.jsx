@@ -1,27 +1,28 @@
 import React from 'react';
+import COLORS from '../../../styles/COLORS';
+
+const footerTextStyle = {
+  color: COLORS.BACKGROUND,
+  fontWeight: 'bold',
+  width: '100vw',
+};
 
 const Footer = () => (
   <footer
-    className="footer"
+    className="navbar has-navbar-fixed-bottom"
     style={{
-      // position: 'fixed',
+      position: 'fixed',
       bottom: '0',
-      width: '100%',
+      height: '45px',
+      background: '#002449',
     }}
   >
-    <div className="content has-text-centered">
-      <p>
-        <strong>
-          311 Data
-        </strong>
-        &nbsp;
-        by
-        &nbsp;
-        <a href="https://www.hackforla.org/">
-          Hack4LA
-        </a>
-        .
-      </p>
+    <div className="level has-text-centered">
+      <div className="level-item">
+        <p style={footerTextStyle}>
+          Data Updated Through:
+        </p>
+      </div>
     </div>
   </footer>
 );
