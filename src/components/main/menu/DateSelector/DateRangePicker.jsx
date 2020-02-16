@@ -3,15 +3,18 @@ import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
-import Button from '../../../common/Button';
 
 import {
   updateStartDate,
   updateEndDate,
 } from '../../../../redux/reducers/data';
 
+import Button from '../../../common/Button';
+import Icon from '../../../common/Icon';
+
 import 'react-datepicker/dist/react-datepicker.css';
 import COLORS from '../../../../styles/COLORS';
+
 
 const cardStyle = {
   height: '299px',
@@ -84,12 +87,13 @@ const DateRangePicker = ({
         >
           {title}
         </p>
-        <button
-          type="button"
-          className="delete"
-          aria-label="close"
-          onClick={handleClick}
-        />
+        <a href="# " onClick={handleClick}>
+          <Icon
+            id="date-picker-close-button"
+            icon="times"
+            color="grey"
+          />
+        </a>
       </header>
 
       {/* ---------- Modal Card Body - main content ---------- */}

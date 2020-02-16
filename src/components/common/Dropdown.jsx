@@ -111,7 +111,10 @@ const Dropdown = ({
             id="dropdown-icon"
             style={{ float: 'right' }}
           >
-            <Icon icon={isOpen ? 'angle-up' : 'angle-down'} />
+            <Icon
+              id="dropdown-icon"
+              icon={isOpen ? 'angle-up' : 'angle-down'}
+            />
           </span>
         </button>
       </div>
