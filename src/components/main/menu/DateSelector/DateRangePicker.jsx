@@ -15,7 +15,6 @@ import Icon from '../../../common/Icon';
 import 'react-datepicker/dist/react-datepicker.css';
 import COLORS from '../../../../styles/COLORS';
 
-
 const cardStyle = {
   height: '299px',
   width: '400px',
