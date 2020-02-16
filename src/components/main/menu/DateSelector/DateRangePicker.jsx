@@ -8,7 +8,6 @@ import Button from '../../../common/Button';
 import {
   updateStartDate,
   updateEndDate,
-  closeDateRangeModal,
 } from '../../../../redux/reducers/data';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -53,7 +52,7 @@ const DateRangePicker = ({
   id,
   title,
   style,
-  closeModal,
+  handleClick,
   updateStart,
   updateEnd,
 }) => {
@@ -89,7 +88,7 @@ const DateRangePicker = ({
           type="button"
           className="delete"
           aria-label="close"
-          onClick={closeModal}
+          onClick={handleClick}
         />
       </header>
 
@@ -141,10 +140,10 @@ const DateRangePicker = ({
               startDate={startDate}
               endDate={endDate}
               minDate={startDate}
-              maxDate={new Date()}
+              maxDate={moment().toDate()}
               showYearDropdown
               showMonthDropdown
-              selectsStart
+              selectsEnd
               showPopperArrow={false}
               popperPlacement="right"
               onChange={(date) => handleDateChange(updateLocalEnd, date)}
@@ -180,7 +179,7 @@ const DateRangePicker = ({
                 const formatDate = (date) => moment(date).format('MM/DD/YYYY');
                 updateStart(formatDate(startDate));
                 updateEnd(formatDate(endDate));
-                closeModal();
+                handleClick();
               } else {
                 alert('Provide valid start and end dates.');
               }
@@ -195,7 +194,6 @@ const DateRangePicker = ({
 const mapDispatchToProps = (dispatch) => ({
   updateStart: (newStartDate) => dispatch(updateStartDate(newStartDate)),
   updateEnd: (newEndDate) => dispatch(updateEndDate(newEndDate)),
-  closeModal: () => dispatch(closeDateRangeModal()),
 });
 
 export default connect(
@@ -207,7 +205,7 @@ DateRangePicker.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string,
   style: PropTypes.shape({}),
-  closeModal: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
   updateStart: PropTypes.func.isRequired,
   updateEnd: PropTypes.func.isRequired,
 };
