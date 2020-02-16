@@ -92,7 +92,7 @@ const NCSelector = ({
                 onChange={handleSearch}
               />
               <span className="icon is-small is-right">
-                <i className="fas fa-check" />
+                <i className="fas fa-search" />
               </span>
             </div>
           </div>
