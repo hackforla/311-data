@@ -14,6 +14,7 @@ const Dropdown = ({
   hoverable,
   rightAligned,
   dropUp,
+  className,
 }) => {
   const dropdownNode = useRef();
   const [isOpen, updateIsOpen] = useState(open);
@@ -23,7 +24,7 @@ const Dropdown = ({
     'is-hoverable': hoverable,
     'is-right': rightAligned,
     'is-up': dropUp,
-  });
+  }, className);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -139,6 +140,7 @@ Dropdown.propTypes = {
   hoverable: PropTypes.bool,
   rightAligned: PropTypes.bool,
   dropUp: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 Dropdown.defaultProps = {
@@ -148,4 +150,5 @@ Dropdown.defaultProps = {
   hoverable: false,
   rightAligned: false,
   dropUp: false,
+  className: undefined,
 };
