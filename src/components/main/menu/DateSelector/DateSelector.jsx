@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import moment from 'moment';
 import {
   updateStartDate,
   updateEndDate,
-  openDateRangeModal,
 } from '../../../../redux/reducers/data';
 
 import Dropdown from '../../../common/Dropdown';
+import Modal from '../../../common/Modal';
+import DateRangePicker from './DateRangePicker';
+
 import COLORS from '../../../../styles/COLORS';
 
 const getDates = (dateOptionValue) => {
@@ -45,7 +47,6 @@ const DateSelector = ({
   endDate,
   updateStart,
   updateEnd,
-  openDateModal,
 }) => {
   const placeHolder = 'MM/DD/YYYY';
   const dateRangeOptions = [
@@ -56,6 +57,26 @@ const DateSelector = ({
     { label: 'Year to Date', value: 'YEAR_TO_DATE' },
     { label: 'Custom Date Range', value: 'CUSTOM_DATE_RANGE' },
   ];
+  const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleEscapeClick = (e) => {
+      if (e.keyCode !== 27) {
+        return;
+      }
+      setModalOpen(false);
+    };
+
+    if (modalOpen) {
+      document.addEventListener('keydown', handleEscapeClick);
+    } else {
+      document.removeEventListener('keydown', handleEscapeClick);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeClick);
+    };
+  }, [modalOpen]);
 
   return (
     <div
@@ -88,11 +109,21 @@ const DateSelector = ({
               updateStart(newStartDate);
               updateEnd(newEndDate);
             } else {
-              openDateModal();
+              setModalOpen(true);
             }
           }}
         />
       </div>
+      <Modal
+        open={modalOpen}
+        content={(
+          <DateRangePicker
+            id="date-range-picker"
+            title="Custom Range Filter"
+            handleClick={() => setModalOpen(false)}
+          />
+        )}
+      />
     </div>
   );
 };
@@ -105,7 +136,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   updateStart: (newStartDate) => dispatch(updateStartDate(newStartDate)),
   updateEnd: (newEndDate) => dispatch(updateEndDate(newEndDate)),
-  openDateModal: () => dispatch(openDateRangeModal()),
 });
 
 export default connect(
@@ -116,7 +146,6 @@ export default connect(
 DateSelector.propTypes = {
   updateStart: PropTypes.func.isRequired,
   updateEnd: PropTypes.func.isRequired,
-  openDateModal: PropTypes.func.isRequired,
   style: PropTypes.shape({}),
   startDate: PropTypes.string,
   endDate: PropTypes.string,

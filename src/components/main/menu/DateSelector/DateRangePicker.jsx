@@ -137,7 +137,7 @@ const DateRangePicker = ({
             <DatePicker
               todayButton="Today"
               selected={endDate}
-              startDate={startDate}
+              startDate={endDate}
               endDate={endDate}
               minDate={startDate}
               maxDate={moment().toDate()}
