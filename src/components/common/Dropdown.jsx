@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
 import DropdownItem from './DropdownItem';
+import Icon from './Icon';
 
 const Dropdown = ({
   id,
@@ -110,8 +111,7 @@ const Dropdown = ({
             id="dropdown-icon"
             style={{ float: 'right' }}
           >
-            { /* replace with fas icons once Icon component is merged in */ }
-            { isOpen ? '⌃' : '⌄' }
+            <Icon icon={isOpen ? 'angle-up' : 'angle-down'} />
           </span>
         </button>
       </div>
