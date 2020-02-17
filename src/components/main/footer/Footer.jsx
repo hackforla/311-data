@@ -1,4 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import propTypes from 'proptypes';
+import moment from 'moment';
+
 import COLORS from '../../../styles/COLORS';
 
 const footerTextStyle = {
@@ -7,7 +11,9 @@ const footerTextStyle = {
   width: '100vw',
 };
 
-const Footer = () => (
+const Footer = ({
+  lastUpdated,
+}) => (
   <footer
     className="navbar has-navbar-fixed-bottom"
     style={{
@@ -23,10 +29,24 @@ const Footer = () => (
       <div className="level-item">
         <p style={footerTextStyle}>
           Data Updated Through:
+          &nbsp;
+          {lastUpdated && moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
         </p>
       </div>
     </div>
   </footer>
 );
 
-export default Footer;
+const mapStateToProps = (state) => ({
+  lastUpdated: state.data.lastUpdated,
+});
+
+Footer.propTypes = {
+  lastUpdated: propTypes.shape({}),
+};
+
+Footer.defaultProps = {
+  lastUpdated: undefined,
+};
+
+export default connect(mapStateToProps, null)(Footer);
