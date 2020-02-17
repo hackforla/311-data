@@ -3,15 +3,19 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
 import { slide as Sidebar } from 'react-burger-menu';
+import { connect } from 'react-redux';
+import propTypes from 'proptypes';
 
 import Button from '../../common/Button';
 import NCSelector from './NCSelector';
+import DateSelector from './DateSelector/DateSelector';
 
-// const buildDataUrl = () => {
-//   return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`;
-// };
+import { getDataRequest } from '../../../redux/reducers/data';
 
-const Menu = () => {
+const Menu = ({
+  data,
+  getData,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('Map');
   const sidebarWidth = '509px';
@@ -24,6 +28,10 @@ const Menu = () => {
   const handleActiveTab = (tab) => (tab === activeTab ? 'is-active' : '');
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+  };
+
+  const handleSubmitButton = () => {
+    getData();
   };
 
   return (
@@ -98,7 +106,16 @@ const Menu = () => {
                 </strong>
               </p>
             </div>
+            <DateSelector />
             <NCSelector />
+            <div className="container" style={{ padding: '10px', textAlign: 'center' }}>
+              <Button
+                id="submit"
+                label="Submit"
+                handleClick={handleSubmitButton}
+                loading={data.isLoading}
+              />
+            </div>
           </div>
         </div>
       </Sidebar>
@@ -106,6 +123,24 @@ const Menu = () => {
   );
 };
 
-// const mapStateToProps = state => ({});
+const mapStateToProps = (state) => ({
+  data: state.data,
+});
 
-export default Menu;
+const mapDispatchToProps = (dispatch) => ({
+  getData: () => dispatch(getDataRequest()),
+});
+
+Menu.propTypes = {
+  getData: propTypes.func,
+  data: propTypes.shape({
+    isLoading: propTypes.bool,
+  }),
+};
+
+Menu.defaultProps = {
+  getData: () => null,
+  data: undefined,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
