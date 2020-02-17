@@ -22,7 +22,7 @@ export const updateRequestType = (requestType) => ({
   payload: requestType,
 });
 
-export const updateNeighborhoodCouncil = (council) => ({
+export const updateNC = (council) => ({
   type: types.UPDATE_NEIGHBORHOOD_COUNCIL,
   payload: council,
 });
@@ -31,7 +31,7 @@ const initialState = {
   startDate: null,
   endDate: null,
   requestType: 'Bulky Items',
-  council: null,
+  councils: [],
 };
 
 export default (state = initialState, action) => {
@@ -56,7 +56,7 @@ export default (state = initialState, action) => {
     case types.UPDATE_NEIGHBORHOOD_COUNCIL:
       return {
         ...state,
-        council: action.payload,
+        councils: action.payload,
       };
     default:
       return state;

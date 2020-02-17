@@ -73,6 +73,7 @@ Checkbox.propTypes = {
   hasNoBorder: PropTypes.bool,
   hasBackgroundColor: PropTypes.bool,
   disabled: PropTypes.bool,
+  checked: PropTypes.bool,
 };
 
 Checkbox.defaultProps = {
@@ -90,4 +91,5 @@ Checkbox.defaultProps = {
   hasNoBorder: false,
   hasBackgroundColor: false,
   disabled: false,
+  checked: false,
 };
