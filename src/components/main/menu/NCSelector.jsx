@@ -6,6 +6,7 @@ import { updateNC } from '../../../redux/reducers/data';
 
 import { COUNCILS } from '../../common/CONSTANTS';
 import Checkbox from '../../common/Checkbox';
+import Icon from '../../common/Icon';
 
 const NCSelector = ({
   updateNCList,
@@ -66,12 +67,24 @@ const NCSelector = ({
 
   return (
     <div className="nc-selector" style={{ width: '349px' }}>
-      <div className="nc-title">
-        <p className="is-size-6" style={{ padding: '15px 0' }}>
-          <strong>
-            Neighborhood Council (NC) Selection
-          </strong>
-        </p>
+      <div className="nc-title level" style={{ margin: '0' }}>
+        <div className="level-left">
+          <div className="level-item">
+            <p className="is-size-6" style={{ padding: '15px 0' }}>
+              <strong>
+                Neighborhood Council (NC) Selection
+              </strong>
+            </p>
+          </div>
+        </div>
+        <div className="level-right">
+          <div className="level-item">
+            <Icon
+              id="nc-selector-helper"
+              icon="info-circle"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="nc-seach-list-wrapper">
