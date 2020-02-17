@@ -83,7 +83,7 @@ const Menu = ({
           {/* Open/Close Button */}
           <Button
             id="menu-toggle-button"
-            icon={!isOpen ? 'chevron-right' : 'chevron-left'}
+            icon={!isOpen ? 'caret-right' : 'caret-left'}
             iconStyle={{ margin: '0px' }}
             style={{
               position: 'fixed',
