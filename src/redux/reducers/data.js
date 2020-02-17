@@ -1,26 +1,20 @@
 // import axios from 'axios';
 
 const types = {
-  UPDATE_YEAR: 'UPDATE_YEAR',
-  UPDATE_START_MONTH: 'UPDATE_START_MONTH',
-  UPDATE_END_MONTH: 'UPDATE_END_MONTH',
+  UPDATE_START_DATE: 'UPDATE_START_DATE',
+  UPDATE_END_DATE: 'UPDATE_END_DATE',
   UPDATE_REQUEST_TYPE: 'UPDATE_REQUEST_TYPE',
   UPDATE_NEIGHBORHOOD_COUNCIL: 'UPDATE_NEIGHBORHOOD_COUNCIL',
 };
 
-export const updateYear = (year) => ({
-  type: types.UPDATE_YEAR,
-  payload: year,
+export const updateStartDate = (newStartDate) => ({
+  type: types.UPDATE_START_DATE,
+  payload: newStartDate,
 });
 
-export const updateStartMonth = (startMonth) => ({
-  type: types.UPDATE_START_MONTH,
-  payload: startMonth,
-});
-
-export const updateEndMonth = (endMonth) => ({
-  type: types.UPDATE_END_MONTH,
-  payload: endMonth,
+export const updateEndDate = (newEndDate) => ({
+  type: types.UPDATE_END_DATE,
+  payload: newEndDate,
 });
 
 export const updateRequestType = (requestType) => ({
@@ -34,30 +28,26 @@ export const updateNeighborhoodCouncil = (council) => ({
 });
 
 const initialState = {
-  year: '2015',
-  startMonth: '1',
-  endMonth: '12',
+  startDate: null,
+  endDate: null,
   requestType: 'Bulky Items',
   council: null,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.UPDATE_YEAR:
+    case types.UPDATE_START_DATE: {
       return {
         ...state,
-        year: action.payload,
+        startDate: action.payload,
       };
-    case types.UPDATE_START_MONTH:
+    }
+    case types.UPDATE_END_DATE: {
       return {
         ...state,
-        startMonth: action.payload,
+        endDate: action.payload,
       };
-    case types.UPDATE_END_MONTH:
-      return {
-        ...state,
-        endMonth: action.payload,
-      };
+    }
     case types.UPDATE_REQUEST_TYPE:
       return {
         ...state,

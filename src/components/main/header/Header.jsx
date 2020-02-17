@@ -26,6 +26,8 @@ const Header = () => {
         background: COLORS.BRAND.MAIN,
         height: '60px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+        // Really high z-index here to ensure Header is on top of modal
+        zIndex: '20000',
       }}
     >
       <div className="navbar-brand">
