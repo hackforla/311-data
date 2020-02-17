@@ -37,7 +37,7 @@ async def index(request):
 async def precaching(request):
     precache_worker = precache(app.config['Settings'])
 
-    recent_results = precache_worker.recent_requests(100)
+    recent_results = precache_worker.compile_datasets(window=100, requestType='all', council='all')
 
     return json(recent_results)
 
