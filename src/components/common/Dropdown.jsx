@@ -2,18 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
 import DropdownItem from './DropdownItem';
+import Icon from './Icon';
 
 const Dropdown = ({
   id,
   list,
   title,
-  handleClick,
+  onClick,
   width,
   style,
   open,
   hoverable,
   rightAligned,
   dropUp,
+  className,
 }) => {
   const dropdownNode = useRef();
   const [isOpen, updateIsOpen] = useState(open);
@@ -23,7 +25,7 @@ const Dropdown = ({
     'is-hoverable': hoverable,
     'is-right': rightAligned,
     'is-up': dropUp,
-  });
+  }, className);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -63,7 +65,7 @@ const Dropdown = ({
     e.preventDefault();
     updateSelection(e.currentTarget.textContent);
     updateIsOpen(false);
-    handleClick(e);
+    onClick(e.currentTarget.getAttribute('value'));
   };
 
   const renderDropdownItems = (items) => items.map((item) => (
@@ -93,7 +95,11 @@ const Dropdown = ({
         <button
           type="button"
           className="button"
-          style={{ display: 'block', width: '100%' }}
+          style={{
+            display: 'block',
+            width: '100%',
+            paddingLeft: '12px',
+          }}
         >
           <span
             id="dropdown-title"
@@ -105,8 +111,10 @@ const Dropdown = ({
             id="dropdown-icon"
             style={{ float: 'right' }}
           >
-            { /* replace with fas icons once Icon component is merged in */ }
-            { isOpen ? '⌃' : '⌄' }
+            <Icon
+              id="dropdown-icon"
+              icon={isOpen ? 'angle-up' : 'angle-down'}
+            />
           </span>
         </button>
       </div>
@@ -128,13 +136,14 @@ Dropdown.propTypes = {
     value: PropTypes.string,
   })).isRequired,
   title: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   width: PropTypes.string,
   style: PropTypes.shape({}),
   open: PropTypes.bool,
   hoverable: PropTypes.bool,
   rightAligned: PropTypes.bool,
   dropUp: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 Dropdown.defaultProps = {
@@ -144,4 +153,5 @@ Dropdown.defaultProps = {
   hoverable: false,
   rightAligned: false,
   dropUp: false,
+  className: undefined,
 };

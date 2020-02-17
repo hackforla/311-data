@@ -32,7 +32,6 @@ const DropdownItem = ({
           id={`dd-chkbx-${label}`}
           checked={active}
           circle
-          color="grey"
         />
       </span>
     </a>
