@@ -162,7 +162,7 @@ class PinMap extends Component {
           center={position}
           zoom={zoom}
           bounds={bounds}
-          style={{ height: '85vh' }}
+          style={{ height: '88.4vh' }}
         >
           <TileLayer
             url={mapUrl}
