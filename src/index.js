@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import 'bulma';
 import 'bulma-checkradio';
 import 'bulma-switch';
+import './styles/styles.css';
 
 import store from './redux/store';
 import App from './App';
