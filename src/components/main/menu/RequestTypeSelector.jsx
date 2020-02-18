@@ -24,6 +24,16 @@ const checkboxStyle = {
   paddingLeft: '3px',
 };
 
+const midIndex = ((list) => {
+  if (list.length / 2 === 0) {
+    return (list.length / 2);
+  }
+  return Math.floor(list.length / 2);
+})(REQUEST_TYPES);
+
+const leftColumnItems = REQUEST_TYPES.slice(0, midIndex);
+const rightColumnItems = REQUEST_TYPES.slice(midIndex);
+
 const RequestItem = ({
   type,
   abbrev,
@@ -66,16 +76,6 @@ const RequestTypeSelector = ({
   selectAll,
   deselectAll,
 }) => {
-  const midIndex = ((list) => {
-    if (list.length / 2 === 0) {
-      return (list.length / 2);
-    }
-    return Math.floor(list.length / 2);
-  })(REQUEST_TYPES);
-
-  const leftColumnItems = REQUEST_TYPES.slice(0, midIndex);
-  const rightColumnItems = REQUEST_TYPES.slice(midIndex);
-
   const handleItemClick = (e) => {
     const type = e.target.value;
     selectType(type);
