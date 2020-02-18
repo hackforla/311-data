@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
-import { slide as Sidebar } from 'react-burger-menu';
+import { push as Sidebar } from 'react-burger-menu';
 import { connect } from 'react-redux';
 import propTypes from 'proptypes';
 
@@ -39,7 +39,9 @@ const Menu = ({
       <Sidebar
         noOverlay
         disableAutoFocus
-        pageWrapId="sidebar-wrapper"
+        htmlClassName="sidebar-html-class"
+        bodyClassName="sidebar-body-class"
+        pageWrapId="body-wrap"
         outerContainerId="body-container"
         isOpen={isOpen}
         width={sidebarWidth}
@@ -52,11 +54,7 @@ const Menu = ({
           },
         }}
       >
-        <div
-          id="sidebar-wrapper"
-          className="sidebar-content"
-        >
-
+        <div className="sidebar-content">
           {/* Tabs */}
           <div
             className="tabs is-fullwidth is-toggle"
