@@ -1,5 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import {
+  updateRequestType,
+  selectAllRequestTypes,
+  deselectAllRequestTypes,
+} from '../../../redux/reducers/data';
+
 import Checkbox from '../../common/Checkbox';
 import Icon from '../../common/Icon';
 
@@ -20,19 +27,25 @@ const checkboxStyle = {
 const RequestItem = ({
   type,
   abbrev,
+  selected,
   color,
+  handleClick,
 }) => (
   <div
     id={`request-type-${type}`}
-    value={abbrev}
+    value={type}
     style={typeContainerStyle}
   >
-    <span style={checkboxStyle}>
+    <span
+      style={checkboxStyle}
+    >
       <Checkbox
         id={`request-checkbox-${type}`}
-        value={abbrev}
+        value={type}
         size="small"
         style={{ paddingLeft: '10px' }}
+        checked={selected}
+        handleClick={handleClick}
       />
       <Icon
         id={`request-icon-${type}`}
@@ -44,12 +57,15 @@ const RequestItem = ({
     <span>
       {`${type} [${abbrev}]`}
     </span>
-
   </div>
 );
 
-
-const RequestTypeSelector = () => {
+const RequestTypeSelector = ({
+  requestTypes,
+  selectType,
+  selectAll,
+  deselectAll,
+}) => {
   const midIndex = ((list) => {
     if (list.length / 2 === 0) {
       return (list.length / 2);
@@ -60,11 +76,18 @@ const RequestTypeSelector = () => {
   const leftColumnItems = REQUEST_TYPES.slice(0, midIndex);
   const rightColumnItems = REQUEST_TYPES.slice(midIndex);
 
+  const handleItemClick = (e) => {
+    const type = e.target.value;
+    selectType(type);
+  };
+
   const renderRequestItems = (items) => items.map((item) => (
     <RequestItem
       key={item.type}
       type={item.type}
       abbrev={item.abbrev}
+      handleClick={handleItemClick}
+      selected={requestTypes[item.type]}
       color={item.color}
     />
   ));
@@ -96,14 +119,14 @@ const RequestTypeSelector = () => {
             value="all"
             style={typeContainerStyle}
           >
-            <span
-              style={checkboxStyle}
-            >
+            <span style={checkboxStyle}>
               <Checkbox
                 id="request-checkbox-all"
                 value="all"
                 size="small"
                 style={{ paddingLeft: '10px' }}
+                handleClick={requestTypes.All ? deselectAll : selectAll}
+                checked={requestTypes.All}
               />
             </span>
             <span className="has-text-weight-medium">
@@ -120,24 +143,49 @@ const RequestTypeSelector = () => {
   );
 };
 
-export default RequestTypeSelector;
+const mapStateToProps = (state) => ({
+  requestTypes: state.data.requestTypes,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  selectType: (type) => dispatch(updateRequestType(type)),
+  selectAll: () => dispatch(selectAllRequestTypes()),
+  deselectAll: () => dispatch(deselectAllRequestTypes()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RequestTypeSelector);
 
 RequestItem.propTypes = {
   type: PropTypes.string,
   abbrev: PropTypes.string,
   color: PropTypes.string,
+  selected: PropTypes.bool,
+  handleClick: PropTypes.func,
 };
 
 RequestItem.defaultProps = {
   type: null,
   abbrev: null,
   color: null,
+  selected: false,
+  handleClick: () => null,
 };
 
 RequestTypeSelector.propTypes = {
-
+  requestTypes: PropTypes.shape({
+    All: PropTypes.bool,
+  }),
+  selectType: PropTypes.func,
+  selectAll: PropTypes.func,
+  deselectAll: PropTypes.func,
 };
 
 RequestTypeSelector.defaultProps = {
-
+  requestTypes: null,
+  selectType: () => null,
+  selectAll: () => null,
+  deselectAll: () => null,
 };
