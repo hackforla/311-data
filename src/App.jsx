@@ -11,11 +11,11 @@ const App = () => {
   }, []);
 
   return (
-    <div className="main">
+    <>
       <Header />
       <Body />
       <Footer />
-    </div>
+    </>
   );
 };
 
