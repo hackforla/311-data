@@ -40,7 +40,6 @@ export const updateNC = (council) => ({
 const initialState = {
   startDate: null,
   endDate: null,
-  requestType: 'Bulky Items',
   councils: [],
   requestTypes: {
     All: false,
