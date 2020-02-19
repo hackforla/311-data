@@ -88,12 +88,12 @@ const DateSelector = ({
       }}
     >
       <div className="date-selector-title">
-        <span className="has-text-weight-bold is-size-5">
+        <span className="has-text-weight-bold is-size-6">
           Date Range Selection
         </span>
       </div>
       <div className="date-selector-dates" style={{ padding: '15px 0 10px' }}>
-        <span className="has-text-weight-normal is-size-6">
+        <span className="has-text-weight-normal">
           {`Start ${startDate || placeHolder} To ${endDate || placeHolder}`}
         </span>
       </div>
@@ -103,6 +103,7 @@ const DateSelector = ({
           list={dateRangeOptions}
           title="Select Date Range"
           width="349px"
+          style={{ color: COLORS.FONTS }}
           onClick={(dateOption) => {
             if (dateOption !== 'CUSTOM_DATE_RANGE') {
               const { newStartDate, newEndDate } = getDates(dateOption);
