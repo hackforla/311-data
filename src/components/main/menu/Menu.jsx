@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
-import { push as Sidebar } from 'react-burger-menu';
+import { slide as Sidebar } from 'react-burger-menu';
 import { connect } from 'react-redux';
 import propTypes from 'proptypes';
 
