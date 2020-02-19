@@ -135,6 +135,7 @@ const NCSelector = ({
               <div className="level-item">
                 <Checkbox
                   id="nc-select-all"
+                  size="small"
                   handleClick={() => handleSelectCouncil('all')}
                   checked={selectedCouncilList?.all ?? false}
                 />
@@ -155,6 +156,7 @@ const NCSelector = ({
                 <div className="level-item">
                   <Checkbox
                     id={`nc-select-${council}`}
+                    size="small"
                     handleClick={() => handleSelectCouncil(council)}
                     checked={selectedCouncilList?.[council] ?? false}
                   />
