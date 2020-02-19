@@ -23,6 +23,69 @@ export const MONTHS = [
   'December',
 ];
 
+export const REQUEST_TYPES = [
+  {
+    type: 'Dead Animal',
+    abbrev: 'DAN',
+    color: '#4FEFEF',
+  },
+  {
+    type: 'Homeless Encampment',
+    abbrev: 'HLE',
+    color: '#ECB800',
+  },
+  {
+    type: 'Single Streetlight',
+    abbrev: 'SSL',
+    color: '#AD7B56',
+  },
+  {
+    type: 'Multiple Streetlight',
+    abbrev: 'MSL',
+    color: '#F7ADAD',
+  },
+  {
+    type: 'Feedback',
+    abbrev: 'FBK',
+    color: '#FFE6B7',
+  },
+  {
+    type: 'Bulky Items',
+    abbrev: 'BLK',
+    color: '#FF0000',
+  },
+  {
+    type: 'E-Waste',
+    abbrev: 'EWT',
+    color: '#DDEC9F',
+  },
+  {
+    type: 'Metal/Household Appliances',
+    abbrev: 'MHA',
+    color: '#B8D0FF',
+  },
+  {
+    type: 'Graffiti',
+    abbrev: 'GFT',
+    color: '#2368D0',
+  },
+  {
+    type: 'Illegal Dumping',
+    abbrev: 'ILD',
+    color: '#6A8011',
+  },
+  {
+    type: 'Other',
+    abbrev: 'OTH',
+    color: '#6D7C93',
+  },
+
+  /*
+   * Is 'Report Water Waste' still a valid request type?
+   * If so, we're missing it on the front end mockups.
+   */
+];
+
 export const REQUESTS = [
   'Bulky Items',
   'Dead Animal Removal',
