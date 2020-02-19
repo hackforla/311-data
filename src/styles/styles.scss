@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+/*
+*  Define new sass variables or overwrite Bulma's default variables before the imports.
+*  See https://bulma.io/documentation/customize/variables/ and component-specific 
+*  Bulma docs for more variables.
+*
+*  Example:
+*    $primary: #002449;
+*    $dropdown-item-color: $primary;
+*/
+
+
+
+@import "~bulma/bulma.sass";
+@import "~bulma-checkradio/dist/css/bulma-checkradio.sass";
+@import "~bulma-switch/dist/css/bulma-switch.sass";
