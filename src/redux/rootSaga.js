@@ -30,15 +30,16 @@ function* getData() {
     requestTypes,
   } = yield select(getState, 'data');
 
-  console.log(startDate, endDate, councils, requestTypes);
-
-  const dataReq = `https://data.lacity.org/resource/${dataResources['2018']}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${1}+and+${12}+and+requesttype='${'Bulky Items'}'`;
-  const endPoint = 'http://10.50.6.196:5000/timetoclose';
+  const endPoint = 'http://10.50.6.196:5000';
 
   try {
-    const response = yield call(axios, endPoint, {
-
+    const response = yield call(axios.get, endPoint, {
+      startDate,
+      endDate,
+      councils,
+      requestTypes: Object.keys(requestTypes).filter((req) => requestTypes[req]),
     });
+    console.log(response);
     yield put(getDataSuccess(response));
   } catch (e) {
     yield put(getDataFailure(e));
