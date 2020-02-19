@@ -7,8 +7,9 @@ import { connect } from 'react-redux';
 import propTypes from 'proptypes';
 
 import Button from '../../common/Button';
-import NCSelector from './NCSelector';
 import DateSelector from './DateSelector/DateSelector';
+import NCSelector from './NCSelector';
+import RequestTypeSelector from './RequestTypeSelector';
 
 import { getDataRequest } from '../../../redux/reducers/data';
 
@@ -106,6 +107,7 @@ const Menu = ({
             </div>
             <DateSelector />
             <NCSelector />
+            <RequestTypeSelector />
             <div className="container" style={{ padding: '10px', textAlign: 'center' }}>
               <Button
                 id="submit"

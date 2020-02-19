@@ -95,7 +95,7 @@ Icon.propTypes = {
 Icon.defaultProps = {
   label: null,
   handleClick: () => null,
-  color: 'black',
+  color: undefined,
   size: undefined,
   icon: 'home',
   iconSize: undefined,
