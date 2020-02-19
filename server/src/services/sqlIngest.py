@@ -1,14 +1,11 @@
 import os
-import sqlalchemy as db
-import pandas as pd
-from configparser import ConfigParser
-import numpy as np
-from sodapy import Socrata
 import time
-if __name__ == '__main__':
-    import databaseOrm  # Contains database specs and field definitions
-else:
-    from . import databaseOrm  # Contains database specs and field definitions
+import numpy as np
+import pandas as pd
+import sqlalchemy as db
+from sodapy import Socrata
+from .databaseOrm import tableFields, insertFields, readFields  # Contains db specs and field definitions
+from configparser import ConfigParser
 
 
 class DataHandler:
@@ -20,9 +17,9 @@ class DataHandler:
         self.filePath = None
         self.configFilePath = configFilePath
         self.separator = separator
-        self.fields = databaseOrm.tableFields
-        self.insertParams = databaseOrm.insertFields
-        self.readParams = databaseOrm.readFields
+        self.fields = tableFields
+        self.insertParams = insertFields
+        self.readParams = readFields
         self.dialect = None
 
     def loadConfig(self, configFilePath):
@@ -180,7 +177,7 @@ class DataHandler:
            Default operation is to fetch data from 2015-2020
            !!! Be aware that each fresh import will wipe the
            existing staging table'''
-        print('Performing fresh ' + self.dialect + ' population from Socrata data sources')
+        print('Performing {} population from data source'.format(self.dialect))
         tableInit = False
         globalTimer = time.time()
         for y in yearRange:
