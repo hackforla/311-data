@@ -5,7 +5,10 @@ from configparser import ConfigParser
 import numpy as np
 from sodapy import Socrata
 import time
-import databaseOrm  # Contains database specs and field definitions
+if __name__ == '__main__':
+    import databaseOrm  # Contains database specs and field definitions
+else:
+    from . import databaseOrm  # Contains database specs and field definitions
 
 
 class DataHandler:
