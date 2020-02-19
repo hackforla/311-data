@@ -35,8 +35,13 @@ function* getData() {
   const dataReq = `https://data.lacity.org/resource/${dataResources['2018']}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${1}+and+${12}+and+requesttype='${'Bulky Items'}'`;
 
   try {
-    const response = yield call(axios, dataReq);
-    yield put(getDataSuccess(response));
+    const req = yield call(axios, {
+      startDate,
+      endDate,
+      councils,
+      requestTypes,
+    });
+    yield put(getDataSuccess(req));
   } catch (e) {
     yield put(getDataFailure(e));
   }
