@@ -2,15 +2,18 @@
 
 The following is a list of Los Angeles datasets that could be used in combination with or in addition to 311 Data for analysis that would be relevant to Neighborhood Councils.
 
-## Municipal Boundaries
+## Municipal Data
 
 * [Los Angeles City Boundary](http://geohub.lacity.org/datasets/city-boundary)
 * [Los Angeles Neighborhood Council Districts](http://geohub.lacity.org/datasets/neighborhood-councils-certified)
+* [Population Estimates by Neighborhood Council DIstrict](https://data.lacity.org/A-Livable-and-Sustainable-City/Census-Data-by-Neighborhood-Council/nwj3-ufba)
 
 ## Public Safety
 
 * [LAPD Arrest Data from 2010 Forward](https://data.lacity.org/A-Safe-City/Arrest-Data-from-2010-to-Present/yru6-6re4)
 * [LAPD Crime Reports from 2010 Forward](https://data.lacity.org/A-Safe-City/Crime-Data-from-2010-to-Present/63jg-8b9z)
+* [LAPD Vehicle and Pedestrian Stops from 2010 Forward](https://data.lacity.org/A-Safe-City/Vehicle-and-Pedestrian-Stop-Data-2010-to-Present/ci25-wgt7)
+* [LAPD Traffic Collision Data from 2010 to Present](https://data.lacity.org/A-Safe-City/Traffic-Collision-Data-from-2010-to-Present/d5tf-ez2w)
 
 ## Transportation
 
