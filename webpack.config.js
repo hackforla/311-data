@@ -1,5 +1,6 @@
 const Dotenv = require('dotenv-webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 module.exports = {
@@ -24,9 +25,17 @@ module.exports = {
       {
         test: /\.(css|scss|sass)$/,
         use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader',
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              // options
+            },
+          },
         ],
       },
       {
@@ -40,8 +49,11 @@ module.exports = {
   plugins: [
     new Dotenv(),
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
-      title: "311-Data"
-    })
+      template: './public/index.html',
+      title: '311-Data',
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css/styles.css',
+    }),
   ],
 };
