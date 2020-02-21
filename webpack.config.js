@@ -7,7 +7,6 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.join(__dirname, '/dist'),
-    publicPath: '/',
     filename: 'bundle.js',
   },
   resolve: {
@@ -53,7 +52,7 @@ module.exports = {
       title: '311-Data',
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/styles.css',
+      filename: '[name].css',
     }),
   ],
 };
