@@ -9,6 +9,7 @@ import {
 
 import Checkbox from '../../common/Checkbox';
 import Icon from '../../common/Icon';
+import IconWithInfo from '../../common/IconWithInfo';
 
 import { REQUEST_TYPES } from '../../common/CONSTANTS';
 import COLORS from '../../../styles/COLORS';
@@ -105,10 +106,10 @@ const RequestTypeSelector = ({
         >
           Request Type Selection
         </span>
-        <Icon
+        <IconWithInfo
           id="type-selector-info-icon"
-          icon="info-circle"
-          size="small"
+          infoTitle="Request Type Selection"
+          infoText="This filter allows the user to choose specific 311 data types."
         />
       </div>
       <div className="columns is-0" style={{ width: '475px' }}>
