@@ -15,6 +15,8 @@ const Footer = () => (
       bottom: '0',
       height: '45px',
       background: '#002449',
+      // Really high z-index here to ensure Footer is on top of modal
+      zIndex: '20000',
     }}
   >
     <div className="level has-text-centered">
