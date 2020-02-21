@@ -3,7 +3,8 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
 
 ## Frontend Technologies
   * Javascript (React)
-  * BokehJS
+  * Redux
+  * Bulma
   * HTML/CSS
   * Docker + Docker Compose
 

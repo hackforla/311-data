@@ -3,20 +3,17 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
 import { slide as Sidebar } from 'react-burger-menu';
-import { connect } from 'react-redux';
-import propTypes from 'proptypes';
 
 import Button from '../../common/Button';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
 
-import { getDataRequest } from '../../../redux/reducers/data';
+// const buildDataUrl = () => {
+//   return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`;
+// };
 
-const Menu = ({
-  data,
-  getData,
-}) => {
+const Menu = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('Map');
   const sidebarWidth = '509px';
@@ -31,18 +28,12 @@ const Menu = ({
     setActiveTab(tab);
   };
 
-  const handleSubmitButton = () => {
-    getData();
-  };
-
   return (
     <div>
       <Sidebar
         noOverlay
         disableAutoFocus
-        htmlClassName="sidebar-html-class"
-        bodyClassName="sidebar-body-class"
-        pageWrapId="body-wrap"
+        pageWrapId="sidebar-wrapper"
         outerContainerId="body-container"
         isOpen={isOpen}
         width={sidebarWidth}
@@ -55,7 +46,16 @@ const Menu = ({
           },
         }}
       >
-        <div className="sidebar-content">
+        <div
+          id="sidebar-wrapper"
+          className="sidebar-content"
+          // TODO: Fix this for better handling of height
+          style={{
+            height: '85vh',
+            overflowY: 'scroll',
+          }}
+        >
+
           {/* Tabs */}
           <div
             className="tabs is-fullwidth is-toggle"
@@ -82,7 +82,7 @@ const Menu = ({
           {/* Open/Close Button */}
           <Button
             id="menu-toggle-button"
-            icon={!isOpen ? 'caret-right' : 'caret-left'}
+            icon={!isOpen ? 'chevron-right' : 'chevron-left'}
             iconStyle={{ margin: '0px' }}
             style={{
               position: 'fixed',
@@ -108,14 +108,6 @@ const Menu = ({
             <DateSelector />
             <NCSelector />
             <RequestTypeSelector />
-            <div className="container" style={{ padding: '10px', textAlign: 'center' }}>
-              <Button
-                id="submit"
-                label="Submit"
-                handleClick={handleSubmitButton}
-                loading={data.isLoading}
-              />
-            </div>
           </div>
         </div>
       </Sidebar>
@@ -123,24 +115,6 @@ const Menu = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  data: state.data,
-});
+// const mapStateToProps = state => ({});
 
-const mapDispatchToProps = (dispatch) => ({
-  getData: () => dispatch(getDataRequest()),
-});
-
-Menu.propTypes = {
-  getData: propTypes.func,
-  data: propTypes.shape({
-    isLoading: propTypes.bool,
-  }),
-};
-
-Menu.defaultProps = {
-  getData: () => null,
-  data: undefined,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Menu);
+export default Menu;

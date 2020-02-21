@@ -4,10 +4,7 @@ import 'regenerator-runtime/runtime';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import 'bulma';
-import 'bulma-checkradio';
-import 'bulma-switch';
-import './styles/styles.css';
+import './styles/styles.scss';
 
 import store from './redux/store';
 import App from './App';
