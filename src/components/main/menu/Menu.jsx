@@ -49,6 +49,11 @@ const Menu = () => {
         <div
           id="sidebar-wrapper"
           className="sidebar-content"
+          // TODO: Fix this for better handling of height
+          style={{
+            height: '85vh',
+            overflowY: 'scroll',
+          }}
         >
 
           {/* Tabs */}
