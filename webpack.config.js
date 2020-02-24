@@ -24,7 +24,12 @@ module.exports = {
       {
         test: /\.(css|scss|sass)$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: true
+            }
+          },
           {
             loader: 'css-loader',
           },
