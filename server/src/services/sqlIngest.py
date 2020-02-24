@@ -4,8 +4,12 @@ import numpy as np
 import pandas as pd
 import sqlalchemy as db
 from sodapy import Socrata
-from .databaseOrm import tableFields, insertFields, readFields  # Contains db specs and field definitions
 from configparser import ConfigParser
+if __name__ == '__main__':
+    # Contains db specs and field definitions
+    from databaseOrm import tableFields, insertFields, readFields
+else:
+    from .databaseOrm import tableFields, insertFields, readFields
 
 
 class DataHandler:
@@ -14,29 +18,15 @@ class DataHandler:
         self.config = config
         self.dbString = None if not self.config \
             else self.config['Database']['DB_CONNECTION_STRING']
+        self.token = None if config['Socrata']['TOKEN'] == 'None' \
+            else config['Socrata']['TOKEN']
         self.filePath = None
         self.configFilePath = configFilePath
         self.separator = separator
         self.fields = tableFields
         self.insertParams = insertFields
         self.readParams = readFields
-        self.dialect = None
-
-    def loadConfig(self, configFilePath):
-        '''Load and parse config data'''
-        if self.config:
-            print('Config already exists at %s. Nothing to load.' %
-                  self.configFilePath)
-            return
-        print('Loading config file %s' % configFilePath)
-        self.configFilePath = configFilePath
-        config = ConfigParser()
-        config.read(configFilePath)
-        self.config = config
-        self.dbString = config['Database']['DB_CONNECTION_STRING']
         self.dialect = self.dbString.split(':')[0]
-        self.token = None if config['Socrata']['TOKEN'] == 'None' \
-            else config['Socrata']['TOKEN']
 
     def loadData(self, fileName="2018_mini"):
         '''Load dataset into pandas object'''
@@ -242,8 +232,9 @@ class DataHandler:
 
 if __name__ == "__main__":
     '''Class DataHandler workflow from initial load to SQL population'''
-    loader = DataHandler()
-    loader.loadConfig(configFilePath='../settings.cfg')
+    config = ConfigParser()
+    config.read('../settings.cfg')
+    loader = DataHandler(config)
     loader.fetchSocrataFull()
     loader.cleanData()
     loader.ingestData('ingest_staging_table')
