@@ -9,6 +9,7 @@ import {
 
 import Checkbox from '../../common/Checkbox';
 import Icon from '../../common/Icon';
+import HoverOverInfo from '../../common/HoverOverInfo';
 
 import { REQUEST_TYPES } from '../../common/CONSTANTS';
 import COLORS from '../../../styles/COLORS';
@@ -105,11 +106,15 @@ const RequestTypeSelector = ({
         >
           Request Type Selection
         </span>
-        <Icon
-          id="type-selector-info-icon"
-          icon="info-circle"
-          size="small"
-        />
+        <HoverOverInfo
+          title="Request Type Selection"
+          text="This filter allows the user to choose specific 311 data types.">
+          <Icon
+            id="type-selector-info-icon"
+            icon="info-circle"
+            size="small"
+          />
+        </HoverOverInfo>
       </div>
       <div className="columns is-0" style={{ width: '475px' }}>
         <div className="column" style={{ paddingRight: '8px' }}>

@@ -4,18 +4,18 @@ services:
   backend:
    build:
      context: ../server
-   image: 311-data-back:0.0.1
+   image: docker.pkg.github.com/hackforla/311-data/backend:0.0.1
    restart: always
    container_name: "311-backend"
    environment:
-     DB_CONNECTION_STRING: postgres://REDACTED:REDACTED@db:5432/postgres
+     DB_CONNECTION_STRING: postgresql://REDACTED:REDACTED@db:5432/postgres
    ports:
      - 5000:5000
 
   frontend:
    build:
      context: ..
-   image: 311-data-front:0.0.1
+   image: docker.pkg.github.com/hackforla/311-data/frontend:0.0.1
    restart: always
    container_name: "311-frontend"
    ports:
