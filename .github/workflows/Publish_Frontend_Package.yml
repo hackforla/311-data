@@ -1,0 +1,26 @@
+name: PublishFrontendImage
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Build and Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: hackforla/311-data/frontend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        registry: docker.pkg.github.com
+        dockerfile: ./Dockerfile
