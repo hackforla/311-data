@@ -6,9 +6,10 @@ class DataService(object):
     def includeMeta(func):
         def inner1(*args, **kwargs):
             dataResponse = func(*args, **kwargs)
+            if 'Error' in dataResponse:
+                return dataResponse
 
             withMeta = {'lastPulled': 'NOW', 'data': dataResponse}
-            print(withMeta)
             return withMeta
 
         return inner1
@@ -23,7 +24,10 @@ class DataService(object):
         self.engine = db.create_engine(self.dbString)
 
     @includeMeta
-    def query(self, queryItems=[], queryfilters=[], limit=None):
+    def query(self, queryItems=None, queryfilters=[], limit=None):
+        if not queryItems or not isinstance(queryItems, list):
+            return {'Error': 'Missing query items'}
+
         items = ', '.join(queryItems)
         query = 'SELECT {} FROM {}'.format(items, self.table)
         if queryfilters:
