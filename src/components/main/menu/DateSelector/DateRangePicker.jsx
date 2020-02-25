@@ -12,7 +12,6 @@ import {
 import Button from '../../../common/Button';
 import Icon from '../../../common/Icon';
 
-import 'react-datepicker/dist/react-datepicker.css';
 import COLORS from '../../../../styles/COLORS';
 
 const cardStyle = {
