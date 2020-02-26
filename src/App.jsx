@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Header from './components/main/header/Header';
 import Body from './components/main/body/Body';
 import Footer from './components/main/footer/Footer';
+import Tooltip from './components/main/tooltip/Tooltip';
 
 const App = () => {
   useEffect(() => {
@@ -15,6 +16,7 @@ const App = () => {
       <Header />
       <Body />
       <Footer />
+      <Tooltip />
     </>
   );
 };
