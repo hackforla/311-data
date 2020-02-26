@@ -18,4 +18,48 @@
   &.full-width {
     left: 0;
   }
+
+  & > :not(.criteria) {
+    margin-top: 30px;
+  }
+
+  h1 {
+    margin-bottom: 4px;
+  }
+
+  .outline {
+    border: 1px solid $brand-stroke-color;
+    padding: 20px;
+  }
+
+  .criteria {
+    &-type {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .council-districts {
+      margin-top: 8px;
+    }
+  }
+
+  .legend {
+    .outline {
+      padding-bottom: 10px;
+      column-width: 200px;
+    }
+    &-item {
+      display: inline-block;
+      margin: 0 15px 10px 0;
+    }
+  }
+
+  .number-of-requests {
+    .requests-box {
+      display: inline-block;
+      margin: 0 auto;
+      border: 4px grey solid;
+      border-color: $brand-stroke-color;
+      padding: 8px 16px;
+    }
+  }
 }

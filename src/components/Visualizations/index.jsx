@@ -3,6 +3,9 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import clx from 'classnames';
 import { MENU_TABS } from '@components/common/CONSTANTS';
+import Criteria from './Criteria';
+import Legend from './Legend';
+import NumberOfRequests from './NumberOfRequests';
 
 const Visualizations = ({
   menuIsOpen,
@@ -15,6 +18,9 @@ const Visualizations = ({
     <div className={clx('visualizations', {
       'full-width': !menuIsOpen
     })}>
+      <Criteria />
+      <Legend />
+      <NumberOfRequests />
     </div>
   );
 };
