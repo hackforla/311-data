@@ -56,7 +56,7 @@ const initialState = {
   startDate: null,
   endDate: null,
   councils: [],
-  data: {},
+  data: [],
   isLoading: false,
   error: null,
   lastUpdated: null,
