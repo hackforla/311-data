@@ -15,6 +15,7 @@ const Submit = ({
     <div className="level" style={{ padding: '50px 192px' }}>
       <div className="level-item">
         <Button
+          id="sidebar-submit-button"
           label="Submit"
           handleClick={handleSubmit}
         />
