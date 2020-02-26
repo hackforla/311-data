@@ -1,0 +1,31 @@
+
+/*
+*  Define new sass variables or overwrite Bulma's default variables before the imports.
+*  See https://bulma.io/documentation/customize/variables/ and component-specific
+*  Bulma docs for more variables.
+*
+*  Example:
+*    $primary: #002449;
+*    $dropdown-item-color: $primary;
+*/
+
+// bulma/sass/utilities/derived-variables.scss
+$primary: $brand-main-color;
+$background: $brand-bg-color;
+$border: $brand-stroke-color;
+$text: $brand-text-color;
+$text-strong: $brand-text-color;
+$family-primary: $brand-text-family;
+$family-secondary: $brand-heading-family;
+
+// bulma/sass/base/generic.scss
+$body-background-color: $brand-bg-color;
+$body-size: $brand-text-size;
+
+// bulma-checkradio/src/sass/index.scss
+$checkbox-border: .1rem solid $brand-stroke-color;
+
+// Additional sass sheets or Bulma extension libraries used should be added to the imports below.
+@import "~bulma/bulma.sass";
+@import "~bulma-checkradio/dist/css/bulma-checkradio.sass";
+@import "~bulma-switch/dist/css/bulma-switch.sass";

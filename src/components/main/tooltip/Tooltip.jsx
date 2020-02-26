@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import Icon from '../../common/Icon';
-import COLORS from '../../../styles/COLORS';
-import './styles.scss';
 
 const Tooltip = () => (
   <div className="tooltip">
@@ -15,7 +13,7 @@ const Tooltip = () => (
         if (!text && !title) return null;
 
         return (
-          <div style={{ color: COLORS.BRAND.MAIN }}>
+          <div className="tooltip-content">
             { title &&
               <div className="has-text-weight-bold is-size-6">
                 <Icon
