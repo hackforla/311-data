@@ -1,6 +1,7 @@
 import os
 from sanic import Sanic
 from sanic.response import json
+from sanic_cors import CORS
 from configparser import ConfigParser
 from threading import Timer
 from datetime import datetime
@@ -13,6 +14,7 @@ from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
 
 app = Sanic(__name__)
+CORS(app)
 
 
 def configure_app():
