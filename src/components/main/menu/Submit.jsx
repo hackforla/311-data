@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import propTypes from 'proptypes';
 import { getDataRequest } from '../../../redux/reducers/data';
 import Button from '../../common/Button';
 
@@ -25,5 +26,13 @@ const Submit = ({
 const mapDispatchToProps = (dispatch) => ({
   getData: () => dispatch(getDataRequest()),
 });
+
+Submit.propTypes = {
+  getData: propTypes.func,
+};
+
+Submit.defaultProps = {
+  getData: () => null,
+};
 
 export default connect(null, mapDispatchToProps)(Submit);
