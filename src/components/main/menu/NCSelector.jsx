@@ -29,6 +29,11 @@ const NCSelector = ({
     width: '280px',
   };
 
+  const checkboxStyleFix = {
+    padding: '10px',
+    margin: '0',
+  };
+
   const handleSearch = (e) => {
     const term = e.target.value;
     const searchFilter = new RegExp(term, 'i');
@@ -137,6 +142,7 @@ const NCSelector = ({
                   size="small"
                   handleClick={() => handleSelectCouncil('all')}
                   checked={selectedCouncilList?.all ?? false}
+                  style={checkboxStyleFix}
                 />
               </div>
             </div>
@@ -158,6 +164,7 @@ const NCSelector = ({
                     size="small"
                     handleClick={() => handleSelectCouncil(council)}
                     checked={selectedCouncilList?.[council] ?? false}
+                    style={checkboxStyleFix}
                   />
                 </div>
               </div>
