@@ -5,13 +5,10 @@ import React, { useState } from 'react';
 import { slide as Sidebar } from 'react-burger-menu';
 
 import Button from '../../common/Button';
+import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
-
-// const buildDataUrl = () => {
-//   return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`;
-// };
 
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -108,6 +105,7 @@ const Menu = () => {
             <DateSelector />
             <NCSelector />
             <RequestTypeSelector />
+            <Submit />
           </div>
         </div>
       </Sidebar>
