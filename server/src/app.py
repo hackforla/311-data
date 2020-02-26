@@ -1,16 +1,23 @@
 import os
 from sanic import Sanic
 from sanic.response import json
+<<<<<<< HEAD
 from services.precache import precache
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.ingress_service import ingress_service
+=======
+>>>>>>> upstream/dev
 from configparser import ConfigParser
 from threading import Timer
-from multiprocessing import cpu_count
-from services.sqlIngest import DataHandler
 from datetime import datetime
+from multiprocessing import cpu_count
 
+from services.time_to_close import time_to_close
+from services.frequency import frequency
+from services.pinService import PinService
+from services.ingress_service import ingress_service
+from services.sqlIngest import DataHandler
 
 app = Sanic(__name__)
 
@@ -87,9 +94,9 @@ async def ingest(request):
         return json({"error": "'years' parameter is required."})
     years = set([int(year) for year in request.args.get("years").split(",")])
     if not all(year in ALLOWED_YEARS for year in years):
-        return json({"error": f"'years' parameter values must be one of {ALLOWED_YEARS}"})
-    loader = DataHandler()
-    loader.loadConfig(configFilePath='./settings.cfg')
+        return json({"error":
+                    f"'years' param values must be one of {ALLOWED_YEARS}"})
+    loader = DataHandler(app.config['Settings'])
     loader.populateFullDatabase(yearRange=years)
     return_data = {'response': 'ingest ok'}
     return json(return_data)
@@ -109,6 +116,22 @@ async def delete(request):
     return json(return_data)
 
 
+@app.route('/pins', methods=["POST"])
+async def pinMap(request):
+    pin_worker = PinService(app.config['Settings'])
+    postArgs = request.json
+    start = postArgs.get('startDate', '2015-01-01')
+    end = postArgs.get('endDate', '2015-12-31 01:01:01')
+    ncs = postArgs.get('ncList', ['SHERMAN OAKS NC'])
+    requests = postArgs.get('requestTypes', ['Bulky Items'])
+
+    return_data = await pin_worker.get_base_pins(startDate=start,
+                                                 endDate=end,
+                                                 ncList=ncs,
+                                                 requestTypes=requests)
+    return json(return_data)
+
+
 @app.route('/test_multiple_workers')
 async def test_multiple_workers(request):
     Timer(10.0, print, ["Timer Test."]).start()
@@ -117,7 +140,8 @@ async def test_multiple_workers(request):
 
 if __name__ == '__main__':
     configure_app()
+    worker_count = max(cpu_count()//2, 1)
     app.run(host=app.config['Settings']['Server']['HOST'],
             port=int(app.config['Settings']['Server']['PORT']),
-            workers=cpu_count()//2,
+            workers=worker_count,
             debug=app.config['Settings']['Server']['DEBUG'])

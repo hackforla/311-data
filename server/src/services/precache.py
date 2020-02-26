@@ -23,7 +23,7 @@ class precache(object):
         now = datetime.now()
         startdate = pd.Timestamp(now) - pd.Timedelta(days=window)
 
-        query = "SELECT createddate, requesttype, ncname FROM %s WHERE createddate > '%s'" % (
+        query = "SELECT createddate, requesttype, ncname, latitude, longitude FROM %s WHERE createddate > '%s'" % (
             self.table, startdate)
 
         if requestType != "all":

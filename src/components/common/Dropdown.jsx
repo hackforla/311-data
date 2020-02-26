@@ -3,6 +3,7 @@ import PropTypes from 'proptypes';
 import classNames from 'classnames';
 import DropdownItem from './DropdownItem';
 import Icon from './Icon';
+import COLORS from '../../styles/COLORS';
 
 const Dropdown = ({
   id,
@@ -114,6 +115,7 @@ const Dropdown = ({
             <Icon
               id="dropdown-icon"
               icon={isOpen ? 'angle-up' : 'angle-down'}
+              style={{ color: COLORS.FORMS.STROKE }}
             />
           </span>
         </button>

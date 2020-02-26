@@ -1,15 +1,15 @@
 import os
-import sqlalchemy as db
-import pandas as pd
-from configparser import ConfigParser
-import numpy as np
-from sodapy import Socrata
 import time
-from . import databaseOrm  # Contains database specs and field definitions
-
-# NOTE: running app from app.py manifests pathing error 
-#   Change the databaseOrm import to 'from . import databaseOrm'
-#   if running app from app.py
+import numpy as np
+import pandas as pd
+import sqlalchemy as db
+from sodapy import Socrata
+from configparser import ConfigParser
+if __name__ == '__main__':
+    # Contains db specs and field definitions
+    from databaseOrm import tableFields, insertFields, readFields
+else:
+    from .databaseOrm import tableFields, insertFields, readFields
 
 
 class DataHandler:
@@ -18,29 +18,15 @@ class DataHandler:
         self.config = config
         self.dbString = None if not self.config \
             else self.config['Database']['DB_CONNECTION_STRING']
+        self.token = None if config['Socrata']['TOKEN'] == 'None' \
+            else config['Socrata']['TOKEN']
         self.filePath = None
         self.configFilePath = configFilePath
         self.separator = separator
-        self.fields = databaseOrm.tableFields
-        self.insertParams = databaseOrm.insertFields
-        self.readParams = databaseOrm.readFields
-        self.dialect = None
-
-    def loadConfig(self, configFilePath):
-        '''Load and parse config data'''
-        if self.config:
-            print('Config already exists at %s. Nothing to load.' %
-                  self.configFilePath)
-            return
-        print('Loading config file %s' % configFilePath)
-        self.configFilePath = configFilePath
-        config = ConfigParser()
-        config.read(configFilePath)
-        self.config = config
-        self.dbString = config['Database']['DB_CONNECTION_STRING']
+        self.fields = tableFields
+        self.insertParams = insertFields
+        self.readParams = readFields
         self.dialect = self.dbString.split(':')[0]
-        self.token = None if config['Socrata']['TOKEN'] == 'None' \
-            else config['Socrata']['TOKEN']
 
     def loadData(self, fileName="2018_mini"):
         '''Load dataset into pandas object'''
@@ -181,7 +167,7 @@ class DataHandler:
            Default operation is to fetch data from 2015-2020
            !!! Be aware that each fresh import will wipe the
            existing staging table'''
-        print('Performing fresh ' + self.dialect + ' population from Socrata data sources')
+        print('Performing {} population from data source'.format(self.dialect))
         tableInit = False
         globalTimer = time.time()
         for y in yearRange:
@@ -246,8 +232,9 @@ class DataHandler:
 
 if __name__ == "__main__":
     '''Class DataHandler workflow from initial load to SQL population'''
-    loader = DataHandler()
-    loader.loadConfig(configFilePath='../settings.cfg')
-    loader.fetchSocrataFull(limit=10000)
+    config = ConfigParser()
+    config.read('../settings.cfg')
+    loader = DataHandler(config)
+    loader.fetchSocrataFull()
     loader.cleanData()
     loader.ingestData('ingest_staging_table')
