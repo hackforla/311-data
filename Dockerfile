@@ -1,4 +1,5 @@
 FROM node:12.16.1-alpine
+RUN npm config set unsafe-perm true
 RUN npm install --silent webpack webpack-cli -g
 WORKDIR /tmp
 COPY package.json /tmp/
