@@ -1,6 +1,7 @@
 import os
 from sanic import Sanic
 from sanic.response import json
+from sanic_cors import CORS
 from configparser import ConfigParser
 from threading import Timer
 from datetime import datetime
@@ -13,6 +14,7 @@ from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
 
 app = Sanic(__name__)
+CORS(app)
 
 
 def configure_app():
@@ -80,8 +82,7 @@ async def ingest(request):
     if not all(year in ALLOWED_YEARS for year in years):
         return json({"error":
                     f"'years' param values must be one of {ALLOWED_YEARS}"})
-    loader = DataHandler()
-    loader.loadConfig(configFilePath='./settings.cfg')
+    loader = DataHandler(app.config['Settings'])
     loader.populateFullDatabase(yearRange=years)
     return_data = {'response': 'ingest ok'}
     return json(return_data)
@@ -125,7 +126,8 @@ async def test_multiple_workers(request):
 
 if __name__ == '__main__':
     configure_app()
+    worker_count = max(cpu_count()//2, 1)
     app.run(host=app.config['Settings']['Server']['HOST'],
             port=int(app.config['Settings']['Server']['PORT']),
-            workers=cpu_count()//2,
+            workers=worker_count,
             debug=app.config['Settings']['Server']['DEBUG'])

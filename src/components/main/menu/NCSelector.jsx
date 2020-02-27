@@ -6,6 +6,8 @@ import { updateNC } from '../../../redux/reducers/data';
 
 import { COUNCILS } from '../../common/CONSTANTS';
 import Checkbox from '../../common/Checkbox';
+import Icon from '../../common/Icon';
+import HoverOverInfo from '../../common/HoverOverInfo';
 
 const NCSelector = ({
   updateNCList,
@@ -68,9 +70,18 @@ const NCSelector = ({
     <div className="nc-selector" style={{ width: '349px' }}>
       <div className="nc-title">
         <p className="is-size-6" style={{ padding: '15px 0' }}>
-          <strong>
+          <strong style={{ paddingRight: '10px' }}>
             Neighborhood Council (NC) Selection
           </strong>
+          <HoverOverInfo
+            title="Neighborhood Council (NC) Selection"
+            text="This filter allows the user to select specific neighborhood councils.">
+            <Icon
+              id="type-selector-info-icon"
+              icon="info-circle"
+              size="small"
+            />
+          </HoverOverInfo>
         </p>
       </div>
 
