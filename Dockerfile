@@ -1,8 +1,8 @@
-FROM node:12.2.0-alpine
-RUN npm install webpack webpack-cli -g
+FROM node:12.16.1-alpine
+RUN npm install --silent webpack webpack-cli -g
 WORKDIR /tmp
 COPY package.json /tmp/
-RUN npm config set registry http://registry.npmjs.org/ && npm install
+RUN npm config set registry http://registry.npmjs.org/ && npm install --silent
 WORKDIR /usr/src/app
 COPY . /usr/src/app/
 RUN cp -a /tmp/node_modules /usr/src/app/
