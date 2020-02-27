@@ -7,6 +7,7 @@ import Criteria from './Criteria';
 import Legend from './Legend';
 import NumberOfRequests from './NumberOfRequests';
 import TimeToClose from './TimeToClose';
+import Frequency from './Frequency';
 
 const Visualizations = ({
   menuIsOpen,
@@ -23,6 +24,7 @@ const Visualizations = ({
       <Legend />
       <NumberOfRequests />
       <TimeToClose />
+      <Frequency />
     </div>
   );
 };
