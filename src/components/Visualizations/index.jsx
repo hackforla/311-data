@@ -6,6 +6,7 @@ import { MENU_TABS } from '@components/common/CONSTANTS';
 import Criteria from './Criteria';
 import Legend from './Legend';
 import NumberOfRequests from './NumberOfRequests';
+import TimeToClose from './TimeToClose';
 
 const Visualizations = ({
   menuIsOpen,
@@ -21,6 +22,7 @@ const Visualizations = ({
       <Criteria />
       <Legend />
       <NumberOfRequests />
+      <TimeToClose />
     </div>
   );
 };

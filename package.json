@@ -8,6 +8,8 @@
     "bulma": "^0.8.0",
     "bulma-checkradio": "^1.1.1",
     "bulma-switch": "^2.0.0",
+    "chart.js": "^2.9.3",
+    "chartjs-chart-box-and-violin-plot": "^2.2.0",
     "classnames": "^2.2.6",
     "dataframe-js": "^1.4.3",
     "dotenv-webpack": "^1.7.0",
