@@ -36,7 +36,7 @@ function* getData() {
   const options = {
     startDate,
     endDate,
-    councils,
+    ncList: councils,
     requestTypes: Object.keys(requestTypes).filter((req) => req !== 'All' && requestTypes[req]),
   };
 
