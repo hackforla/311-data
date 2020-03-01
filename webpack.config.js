@@ -1,7 +1,7 @@
 const Dotenv = require('dotenv-webpack');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const path = require('path');
 
 module.exports = {
   entry: './src/index.js',
@@ -15,7 +15,7 @@ module.exports = {
       '@components': path.resolve(__dirname, 'src/components'),
       '@reducers': path.resolve(__dirname, 'src/redux/reducers'),
       '@styles': path.resolve(__dirname, 'src/styles'),
-    }
+    },
   },
   module: {
     rules: [
@@ -32,8 +32,8 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              hmr: true
-            }
+              hmr: true,
+            },
           },
           {
             loader: 'css-loader',

@@ -15,7 +15,7 @@ import HoverOverInfo from '../../../common/HoverOverInfo';
 
 import COLORS from '../../../../styles/COLORS';
 
-const getDates = (dateOptionValue) => {
+const getDates = dateOptionValue => {
   let newStartDate;
   const newEndDate = moment().format('MM/DD/YYYY');
   const formatPriorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format('MM/DD/YYYY');
@@ -62,7 +62,7 @@ const DateSelector = ({
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    const handleEscapeClick = (e) => {
+    const handleEscapeClick = e => {
       if (e.keyCode !== 27) {
         return;
       }
@@ -92,12 +92,14 @@ const DateSelector = ({
       <div className="date-selector-title">
         <span
           className="has-text-weight-bold is-size-6"
-          style={{ paddingRight: '10px' }}>
+          style={{ paddingRight: '10px' }}
+        >
           Date Range Selection
         </span>
         <HoverOverInfo
           title="Date Range Selection"
-          text="This filter allows the user to choose a date range for 311 data.">
+          text="This filter allows the user to choose a date range for 311 data."
+        >
           <Icon
             id="type-selector-info-icon"
             icon="info-circle"
@@ -117,7 +119,7 @@ const DateSelector = ({
           title="Select Date Range"
           width="349px"
           style={{ color: COLORS.FONTS }}
-          onClick={(dateOption) => {
+          onClick={dateOption => {
             if (dateOption !== 'CUSTOM_DATE_RANGE') {
               const { newStartDate, newEndDate } = getDates(dateOption);
               updateStart(newStartDate);
@@ -142,14 +144,14 @@ const DateSelector = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   startDate: state.data.startDate,
   endDate: state.data.endDate,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  updateStart: (newStartDate) => dispatch(updateStartDate(newStartDate)),
-  updateEnd: (newEndDate) => dispatch(updateEndDate(newEndDate)),
+const mapDispatchToProps = dispatch => ({
+  updateStart: newStartDate => dispatch(updateStartDate(newStartDate)),
+  updateEnd: newEndDate => dispatch(updateEndDate(newEndDate)),
 });
 
 export default connect(

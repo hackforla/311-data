@@ -2,6 +2,7 @@ import os
 from sanic import Sanic
 from sanic.response import json
 from sanic_cors import CORS
+from sanic_gzip import Compress
 from configparser import ConfigParser
 from threading import Timer
 from datetime import datetime
@@ -10,11 +11,13 @@ from multiprocessing import cpu_count
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.pinService import PinService
+from services.requestDetailService import RequestDetailService
 from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
 
 app = Sanic(__name__)
 CORS(app)
+compress = Compress()
 
 
 def configure_app():
@@ -31,11 +34,13 @@ def configure_app():
 
 
 @app.route('/')
+@compress.compress()
 async def index(request):
     return json('You hit the index')
 
 
 @app.route('/timetoclose')
+@compress.compress()
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
 
@@ -50,6 +55,7 @@ async def timetoclose(request):
 
 
 @app.route('/requestfrequency')
+@compress.compress()
 async def requestfrequency(request):
     freq_worker = frequency(app.config['Settings'])
 
@@ -61,6 +67,7 @@ async def requestfrequency(request):
 
 
 @app.route('/sample-data')
+@compress.compress()
 async def sample_route(request):
     sample_dataset = {'cool_key': ['value1', 'value2'],
                       app.config['REDACTED']: app.config['REDACTED']}
@@ -68,6 +75,7 @@ async def sample_route(request):
 
 
 @app.route('/ingest', methods=["POST"])
+@compress.compress()
 async def ingest(request):
     """Accept POST requests with a list of years to import.
         Query parameter name is 'years', and parameter value is
@@ -89,6 +97,7 @@ async def ingest(request):
 
 
 @app.route('/update')
+@compress.compress()
 async def update(request):
     ingress_worker = ingress_service()
     return_data = ingress_worker.update()
@@ -96,6 +105,7 @@ async def update(request):
 
 
 @app.route('/delete')
+@compress.compress()
 async def delete(request):
     ingress_worker = ingress_service()
     return_data = ingress_worker.delete()
@@ -103,6 +113,7 @@ async def delete(request):
 
 
 @app.route('/pins', methods=["POST"])
+@compress.compress()
 async def pinMap(request):
     pin_worker = PinService(app.config['Settings'])
     postArgs = request.json
@@ -118,7 +129,16 @@ async def pinMap(request):
     return json(return_data)
 
 
+@app.route('/servicerequest/<srnumber>', methods=["GET"])
+async def requestDetails(request, srnumber):
+    detail_worker = RequestDetailService(app.config['Settings'])
+
+    return_data = await detail_worker.get_request_detail(srnumber)
+    return json(return_data)
+
+
 @app.route('/test_multiple_workers')
+@compress.compress()
 async def test_multiple_workers(request):
     Timer(10.0, print, ["Timer Test."]).start()
     return json("Done")

@@ -51,12 +51,12 @@ export function getBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadD
   const end = Math.max(startMonth, endMonth);
 
   DataFrame.fromJSON(`https://data.lacity.org/resource/${dataResources[year]}.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=date_extract_m(CreatedDate)+between+${start}+and+${end}&$group=NCName,RequestType&$order=CallVolume DESC`)
-    .then((df) => {
+    .then(df => {
       df.show();
 
-      const totalCounts = df.groupBy('ncname').aggregate((group) => group.stat.sum('callvolume')).rename('aggregation', 'callvolume');
+      const totalCounts = df.groupBy('ncname').aggregate(group => group.stat.sum('callvolume')).rename('aggregation', 'callvolume');
       const biggestProblems = {};
-      df.toCollection().forEach((row) => {
+      df.toCollection().forEach(row => {
         const rhs = parseInt(row.callvolume, 10);
         const lhs = parseInt(biggestProblems[row.ncname], 10);
         if (!lhs) {
@@ -68,7 +68,7 @@ export function getBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadD
         }
       });
       const colorMap = getColorMap(false);
-      totalCounts.toCollection().forEach((row) => {
+      totalCounts.toCollection().forEach(row => {
         const biggestProblem = biggestProblems[`${row.ncname}_biggestproblem`];
         const dataPoint = {
           title: row.ncname,
@@ -92,9 +92,9 @@ export function getZoomedCallVolume(
   const start = Math.min(startMonth, endMonth);
   const end = Math.max(startMonth, endMonth);
 
-  DataFrame.fromJSON(`https://data.lacity.org/resource/${dataResources[year]}.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=NCName+=+'${ncName}'+and+date_extract_m(CreatedDate)+between+${start}+and+${end}&$group=NCName,RequestType&$order=CallVolume DESC`).then((df) => {
+  DataFrame.fromJSON(`https://data.lacity.org/resource/${dataResources[year]}.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=NCName+=+'${ncName}'+and+date_extract_m(CreatedDate)+between+${start}+and+${end}&$group=NCName,RequestType&$order=CallVolume DESC`).then(df => {
     const colorMap = getColorMap(false);
-    df.toCollection().forEach((row) => {
+    df.toCollection().forEach(row => {
       const dataPoint = {
         title: row.requesttype,
         color: colorMap[row.requesttype],

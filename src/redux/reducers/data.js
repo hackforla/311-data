@@ -1,27 +1,28 @@
-// import axios from 'axios';
-
-const types = {
+export const types = {
   UPDATE_START_DATE: 'UPDATE_START_DATE',
   UPDATE_END_DATE: 'UPDATE_END_DATE',
   UPDATE_REQUEST_TYPE: 'UPDATE_REQUEST_TYPE',
   UPDATE_NEIGHBORHOOD_COUNCIL: 'UPDATE_NEIGHBORHOOD_COUNCIL',
+  GET_DATA_REQUEST: 'GET_DATA_REQUEST',
+  GET_DATA_SUCCESS: 'GET_DATA_SUCCESS',
+  GET_DATA_FAILURE: 'GET_DATA_FAILURE',
   SELECT_ALL_REQUEST_TYPES: 'SELECT_ALL_REQUEST_TYPES',
   DESELECT_ALL_REQUEST_TYPES: 'DESELECT_ALL_REQUEST_TYPES',
 };
 
-export const updateStartDate = (newStartDate) => ({
+export const updateStartDate = newStartDate => ({
   type: types.UPDATE_START_DATE,
   payload: newStartDate,
 });
 
-export const updateEndDate = (newEndDate) => ({
+export const updateEndDate = newEndDate => ({
   type: types.UPDATE_END_DATE,
   payload: newEndDate,
 });
 
-export const updateRequestType = (requestType) => ({
+export const updateRequestType = requestTypes => ({
   type: types.UPDATE_REQUEST_TYPE,
-  payload: requestType,
+  payload: requestTypes,
 });
 
 export const selectAllRequestTypes = () => ({
@@ -32,15 +33,33 @@ export const deselectAllRequestTypes = () => ({
   type: types.DESELECT_ALL_REQUEST_TYPES,
 });
 
-export const updateNC = (council) => ({
+export const updateNC = council => ({
   type: types.UPDATE_NEIGHBORHOOD_COUNCIL,
   payload: council,
+});
+
+export const getDataRequest = () => ({
+  type: types.GET_DATA_REQUEST,
+});
+
+export const getDataSuccess = response => ({
+  type: types.GET_DATA_SUCCESS,
+  payload: response,
+});
+
+export const getDataFailure = error => ({
+  type: types.GET_DATA_FAILURE,
+  payload: error,
 });
 
 const initialState = {
   startDate: null,
   endDate: null,
   councils: [],
+  data: [],
+  isLoading: false,
+  error: null,
+  lastUpdated: null,
   requestTypes: {
     All: false,
     'Dead Animal': false,
@@ -103,13 +122,37 @@ export default (state = initialState, action) => {
     case types.DESELECT_ALL_REQUEST_TYPES:
       return {
         ...state,
-        requestTypes: initialState.requestTypes
+        requestTypes: initialState.requestTypes,
       };
     case types.UPDATE_NEIGHBORHOOD_COUNCIL:
       return {
         ...state,
         councils: action.payload,
       };
+    case types.GET_DATA_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case types.GET_DATA_SUCCESS: {
+      const { data, lastPulled: lastUpdated } = action.payload;
+
+      return {
+        ...state,
+        data,
+        error: null,
+        isLoading: false,
+        lastUpdated,
+      };
+    }
+    case types.GET_DATA_FAILURE: {
+      const { error } = action.payload;
+      return {
+        ...state,
+        error,
+        isLoading: false,
+      };
+    }
     default:
       return state;
   }
