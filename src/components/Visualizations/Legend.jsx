@@ -25,14 +25,14 @@ const Legend = ({
                 />
                 { type }
                 {' '}
-[
+                [
                 <span style={{ color }}>{abbrev}</span>
-]
+                ]
               </span>
             ))
             : (
               <span className="legend-item">
-            No request types selected.
+                No request types selected.
               </span>
             )
         }
