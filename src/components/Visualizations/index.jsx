@@ -13,13 +13,13 @@ const Visualizations = ({
   menuIsOpen,
   menuActiveTab,
 }) => {
-  if (menuActiveTab !== MENU_TABS.VISUALIZATIONS)
-    return null;
+  if (menuActiveTab !== MENU_TABS.VISUALIZATIONS) return null;
 
   return (
     <div className={clx('visualizations', {
-      'full-width': !menuIsOpen
-    })}>
+      'full-width': !menuIsOpen,
+    })}
+    >
       <Criteria />
       <Legend />
       <NumberOfRequests />
