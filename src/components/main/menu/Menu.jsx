@@ -136,4 +136,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(Menu);
 Menu.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   activeTab: PropTypes.string.isRequired,
+  toggleMenu: PropTypes.func,
+  setMenuTab: PropTypes.func,
+};
+
+Menu.defaultProps = {
+  toggleMenu: () => null,
+  setMenuTab: () => null,
 };
