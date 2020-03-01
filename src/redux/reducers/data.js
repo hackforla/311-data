@@ -134,20 +134,25 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: true,
       };
-    case types.GET_DATA_SUCCESS:
+    case types.GET_DATA_SUCCESS: {
+      const { data, lastPulled: lastUpdated } = action.payload;
+
       return {
         ...state,
-        data: action.payload,
+        data,
         error: null,
         isLoading: false,
-        lastUpdated: new Date(),
+        lastUpdated,
       };
-    case types.GET_DATA_FAILURE:
+    }
+    case types.GET_DATA_FAILURE: {
+      const { error } = action.payload;
       return {
         ...state,
-        error: action.payload,
+        error,
         isLoading: false,
       };
+    }
     default:
       return state;
   }
