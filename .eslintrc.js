@@ -1,5 +1,3 @@
-import webpack from './webpack.config';
-
 module.exports = {
   env: {
     browser: true,
@@ -29,9 +27,7 @@ module.exports = {
       ".jsx"
     ],
     'import/resolver': {
-      alias: {
-        map: Object.entries(webpack.resolve.alias),
-      },
+      webpack: "webpack.config.js",
     },
   },
   plugins: [
