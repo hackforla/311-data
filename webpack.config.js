@@ -11,6 +11,20 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    alias: {
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@reducers': path.resolve(__dirname, 'src/redux/reducers'),
+      '@styles': path.resolve(__dirname, 'src/styles'),
+    },
+  },
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          '@components'
+        ],
+      },
+    },
   },
   module: {
     rules: [
@@ -27,8 +41,8 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              hmr: true
-            }
+              hmr: true,
+            },
           },
           {
             loader: 'css-loader',

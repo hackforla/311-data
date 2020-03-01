@@ -205,3 +205,8 @@ export const COUNCILS = [
   'WOODLAND HILLS-WARNER CENTER NC',
   'ZAPATA KING NC',
 ];
+
+export const MENU_TABS = {
+  MAP: 'Map',
+  VISUALIZATIONS: 'Data Visualization',
+};

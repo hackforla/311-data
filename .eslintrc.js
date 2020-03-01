@@ -1,3 +1,5 @@
+import webpack from './webpack.config';
+
 module.exports = {
   env: {
     browser: true,
@@ -20,6 +22,17 @@ module.exports = {
     },
     ecmaVersion: 2018,
     sourceType: 'module',
+  },
+  settings: {
+    "import/extensions": [
+      ".js",
+      ".jsx"
+    ],
+    'import/resolver': {
+      alias: {
+        map: Object.entries(webpack.resolve.alias),
+      },
+    },
   },
   plugins: [
     'react',
