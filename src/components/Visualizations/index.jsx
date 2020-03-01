@@ -19,18 +19,25 @@ const Visualizations = ({
   if (menuActiveTab !== MENU_TABS.VISUALIZATIONS) return null;
 
   return (
-    <div className={clx('visualizations', {
-      'full-width': !menuIsOpen,
-    })}
-    >
-      <Criteria />
-      <Legend />
-      <NumberOfRequests />
-      <TimeToClose />
-      <Frequency />
-      <TotalRequests />
-      <Contact311 />
-      <TypeOfRequest />
+    <div className={clx('visualizations', { 'full-width': !menuIsOpen })}>
+      <div className="info-section">
+        <Criteria />
+        <Legend />
+        <NumberOfRequests />
+      </div>
+      <div className="chart-row">
+        <TimeToClose />
+      </div>
+      <div className="chart-row">
+        <Frequency />
+      </div>
+      <div className="chart-row">
+        <TotalRequests />
+      </div>
+      <div className="chart-row pies">
+        <Contact311 />
+        <TypeOfRequest />
+      </div>
     </div>
   );
 };

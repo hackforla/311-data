@@ -3,9 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import Chart from './Chart';
 
-const Contact311 = ({
-  requestTypes,
-}) => {
+const Contact311 = () => {
   // // DATA ////
 
   const randomInt = () => {
@@ -57,7 +55,7 @@ const Contact311 = ({
               const percentage = (100 * (value / total)).toFixed(1);
               return `${label}\n${percentage}%`;
             },
-            offset: 12,
+            offset: 4,
           },
         },
       },
@@ -67,32 +65,22 @@ const Contact311 = ({
   // // OPTIONS ////
 
   const chartOptions = {
-    aspectRatio: 0.8,
+    aspectRatio: 1.0,
     animation: false,
     layout: {
-      padding: {
-        top: 5,
-        bottom: 50,
-        left: 0,
-        right: 0,
-      },
+      padding: 65,
     },
   };
 
-  if (Object.values(requestTypes).every(el => !el)) return null;
-
   return (
-    <div className="type-of-request">
-      <h1 className="has-text-centered">
-        How People Contact 311
-      </h1>
-      <Chart
-        type="pie"
-        data={chartData}
-        options={chartOptions}
-        datalabels
-      />
-    </div>
+    <Chart
+      title="How People Contact 311"
+      type="pie"
+      data={chartData}
+      options={chartOptions}
+      datalabels
+      className="contact-311"
+    />
   );
 };
 

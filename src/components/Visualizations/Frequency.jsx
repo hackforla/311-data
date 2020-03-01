@@ -38,11 +38,7 @@ const Frequency = ({
   // // OPTIONS ////
 
   const chartOptions = {
-    aspectRatio: 0.7,
-    title: {
-      text: 'Frequency',
-      fontSize: 20,
-    },
+    aspectRatio: 611 / 400,
     scales: {
       xAxes: [{
         type: 'time',
@@ -74,16 +70,14 @@ const Frequency = ({
     },
   };
 
-  if (chartData.datasets.length === 0) return null;
-
   return (
-    <div className="frequency">
-      <Chart
-        type="line"
-        data={chartData}
-        options={chartOptions}
-      />
-    </div>
+    <Chart
+      title="Frequency"
+      type="line"
+      data={chartData}
+      options={chartOptions}
+      className="frequency"
+    />
   );
 };
 

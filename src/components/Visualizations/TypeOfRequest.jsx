@@ -42,32 +42,22 @@ const TypeOfRequest = ({
   // // OPTIONS ////
 
   const chartOptions = {
-    aspectRatio: 0.8,
+    aspectRatio: 1.0,
     animation: false,
     layout: {
-      padding: {
-        top: 5,
-        bottom: 50,
-        left: 0,
-        right: 0,
-      },
+      padding: 65,
     },
   };
 
-  if (chartData.labels.length === 0) return null;
-
   return (
-    <div className="type-of-request">
-      <h1 className="has-text-centered">
-        Type of Request
-      </h1>
-      <Chart
-        type="pie"
-        data={chartData}
-        options={chartOptions}
-        datalabels
-      />
-    </div>
+    <Chart
+      title="Type of Request"
+      type="pie"
+      data={chartData}
+      options={chartOptions}
+      datalabels
+      className="type-of-request"
+    />
   );
 };
 

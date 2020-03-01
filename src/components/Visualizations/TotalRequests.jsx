@@ -37,7 +37,7 @@ const TotalRequests = ({
   // // OPTIONS ////
 
   const chartOptions = {
-    aspectRatio: 0.6,
+    aspectRatio: 611 / 400,
     title: {
       text: 'Total Requests',
     },
@@ -75,16 +75,14 @@ const TotalRequests = ({
     },
   };
 
-  if (chartData.datasets.length === 0) return null;
-
   return (
-    <div className="total-requests">
-      <Chart
-        type="bar"
-        data={chartData}
-        options={chartOptions}
-      />
-    </div>
+    <Chart
+      title="Total Requests"
+      type="bar"
+      data={chartData}
+      options={chartOptions}
+      className="total-requests"
+    />
   );
 };
 
