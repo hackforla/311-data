@@ -16,25 +16,17 @@ class PinService(object):
           'LastPulled': 'Timestamp',
           'data': [
             {
-              'ncname':'String',
-              'requesttype':'String',
               'srnumber':'String',
               'latitude': 'String',
               'longitude': 'String',
-              'address': 'String',
-              'createddate': 'Timestamp'
             }
           ]
         }
         """
 
-        items = ['ncname',
-                 'requesttype',
-                 'srnumber',
+        items = ['srnumber',
                  'latitude',
-                 'longitude',
-                 'address',
-                 'createddate']
+                 'longitude']
 
         ncs = '\'' + '\', \''.join(ncList) + '\''
         requests = '\'' + '\', \''.join(requestTypes) + '\''
