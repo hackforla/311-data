@@ -11,6 +11,7 @@ import {
   getDataFailure,
 } from './reducers/data';
 
+const pinUrl = `http://${process.env.DB_URL}/pins`;
 const getState = (state, slice) => state[slice];
 
 function* getData() {
@@ -29,7 +30,7 @@ function* getData() {
   };
 
   try {
-    const response = yield call(axios.post, process.env.DB_URL, options);
+    const response = yield call(axios.post, pinUrl, options);
     const { data } = response;
     yield put(getDataSuccess(data));
   } catch (e) {
