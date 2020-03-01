@@ -4,7 +4,7 @@ import Chart from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot';
 import COLORS from '@styles/COLORS';
 
-/////////// CHARTJS DEFAULTS ///////////
+// ///////// CHARTJS DEFAULTS ///////////
 
 Object.assign(Chart.defaults.global, {
   defaultFontColor: COLORS.FONTS,
@@ -12,7 +12,7 @@ Object.assign(Chart.defaults.global, {
   animation: false,
   responsive: true,
   maintainAspectRatio: false,
-  legend: false,
+  legend: false
 });
 
 Object.assign(Chart.defaults.global.title, {
@@ -38,10 +38,9 @@ Object.assign(Chart.defaults.global.tooltips, {
   cornerRadius: 4,
 });
 
-////////////// COMPONENT //////////////
+// //////////// COMPONENT //////////////
 
 class ReactChart extends React.Component {
-
   canvasRef = React.createRef();
 
   componentDidMount() {
@@ -56,18 +55,22 @@ class ReactChart extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.data !== this.props.data) {
-      this.chart.data = this.props.data;
+    const { data } = this.props;
+
+    if (prevProps.data !== data) {
+      this.chart.data = data;
       this.chart.update();
       this.setHeight();
     }
   }
 
   setHeight = () => {
-    if (this.props.height) {
+    const { height } = this.props;
+
+    if (height) {
       const numLabels = this.chart.data.labels.length;
-      const height = this.props.height(numLabels);
-      this.canvasRef.current.parentNode.style.height = height + 'px';
+      const heightPx = height(numLabels);
+      this.canvasRef.current.parentNode.style.height = `${heightPx}px`;
     }
   }
 
@@ -84,8 +87,8 @@ export default ReactChart;
 
 ReactChart.propTypes = {
   type: PropTypes.string.isRequired,
-  data: PropTypes.object.isRequired,
-  options: PropTypes.object.isRequired,
+  data: PropTypes.shape.isRequired,
+  options: PropTypes.shape.isRequired,
   height: PropTypes.func,
 };
 

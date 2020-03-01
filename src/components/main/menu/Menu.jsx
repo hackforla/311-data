@@ -42,12 +42,12 @@ const Menu = ({
         outerContainerId="body-container"
         isOpen={isOpen}
         width={sidebarWidth}
-        customBurgerIcon={false}
+        customBurgerIcon={true}
         customCrossIcon={false}
         styles={{
           bmMenu: {
             background: 'white',
-            boxShadow: '0px 4px 5px rgba(108, 108, 108, 0.3)',
+            boxShadow: '0px 4px 5px rgba(108, 108, 108, 0.3)'
           },
         }}
       >

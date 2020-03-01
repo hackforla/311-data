@@ -25,7 +25,7 @@ function* getData() {
     startDate,
     endDate,
     ncList: councils,
-    requestTypes: Object.keys(requestTypes).filter((req) => req !== 'All' && requestTypes[req]),
+    requestTypes: Object.keys(requestTypes).filter(req => req !== 'All' && requestTypes[req]),
   };
 
   try {

@@ -10,17 +10,17 @@ export const types = {
   DESELECT_ALL_REQUEST_TYPES: 'DESELECT_ALL_REQUEST_TYPES',
 };
 
-export const updateStartDate = (newStartDate) => ({
+export const updateStartDate = newStartDate => ({
   type: types.UPDATE_START_DATE,
   payload: newStartDate,
 });
 
-export const updateEndDate = (newEndDate) => ({
+export const updateEndDate = newEndDate => ({
   type: types.UPDATE_END_DATE,
   payload: newEndDate,
 });
 
-export const updateRequestType = (requestTypes) => ({
+export const updateRequestType = requestTypes => ({
   type: types.UPDATE_REQUEST_TYPE,
   payload: requestTypes,
 });
@@ -33,7 +33,7 @@ export const deselectAllRequestTypes = () => ({
   type: types.DESELECT_ALL_REQUEST_TYPES,
 });
 
-export const updateNC = (council) => ({
+export const updateNC = council => ({
   type: types.UPDATE_NEIGHBORHOOD_COUNCIL,
   payload: council,
 });
@@ -42,12 +42,12 @@ export const getDataRequest = () => ({
   type: types.GET_DATA_REQUEST,
 });
 
-export const getDataSuccess = (response) => ({
+export const getDataSuccess = response => ({
   type: types.GET_DATA_SUCCESS,
   payload: response,
 });
 
-export const getDataFailure = (error) => ({
+export const getDataFailure = error => ({
   type: types.GET_DATA_FAILURE,
   payload: error,
 });
