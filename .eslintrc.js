@@ -37,6 +37,7 @@ module.exports = {
   rules: {
     'linebreak-style': 'off',
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "arrow-parens": ["error", "as-needed"]
   },
 };
