@@ -21,6 +21,15 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
+  settings: {
+    "import/extensions": [
+      ".js",
+      ".jsx"
+    ],
+    'import/resolver': {
+      webpack: "webpack.config.js",
+    },
+  },
   plugins: [
     'react',
     'react-hooks'
@@ -28,6 +37,7 @@ module.exports = {
   rules: {
     'linebreak-style': 'off',
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "arrow-parens": ["error", "as-needed"]
   },
 };

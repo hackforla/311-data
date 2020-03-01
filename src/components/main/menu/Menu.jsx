@@ -1,32 +1,37 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
 import { slide as Sidebar } from 'react-burger-menu';
 
+import {
+  toggleMenu as reduxToggleMenu,
+  setMenuTab as reduxSetMenuTab,
+} from '@reducers/ui';
+import { MENU_TABS } from '@components/common/CONSTANTS';
+
 import Button from '../../common/Button';
+import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
 
-// const buildDataUrl = () => {
-//   return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`;
-// };
-
-const Menu = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('Map');
+const Menu = ({
+  isOpen,
+  activeTab,
+  toggleMenu,
+  setMenuTab,
+}) => {
   const sidebarWidth = '509px';
 
   const tabs = [
-    'Map',
-    'Data Visualization',
+    MENU_TABS.MAP,
+    MENU_TABS.VISUALIZATIONS,
   ];
 
-  const handleActiveTab = (tab) => (tab === activeTab ? 'is-active' : '');
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  const handleActiveTab = tab => (tab === activeTab ? 'is-active' : '');
 
   return (
     <div>
@@ -65,13 +70,13 @@ const Menu = () => {
             }}
           >
             <ul>
-              {tabs.map((tab) => (
+              {tabs.map(tab => (
                 <li
                   key={tab}
                   className={handleActiveTab(tab)}
                   style={{ width: '254px' }}
                 >
-                  <a onClick={() => { handleTabClick(tab); }}>
+                  <a onClick={() => { setMenuTab(tab); }}>
                     {tab}
                   </a>
                 </li>
@@ -92,7 +97,7 @@ const Menu = () => {
               boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
               borderRadius: '0',
             }}
-            handleClick={() => setIsOpen(!isOpen)}
+            handleClick={() => toggleMenu()}
             color="light"
           />
 
@@ -108,6 +113,7 @@ const Menu = () => {
             <DateSelector />
             <NCSelector />
             <RequestTypeSelector />
+            <Submit />
           </div>
         </div>
       </Sidebar>
@@ -115,6 +121,26 @@ const Menu = () => {
   );
 };
 
-// const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  isOpen: state.ui.menu.isOpen,
+  activeTab: state.ui.menu.activeTab,
+});
 
-export default Menu;
+const mapDispatchToProps = dispatch => ({
+  toggleMenu: () => dispatch(reduxToggleMenu()),
+  setMenuTab: tab => dispatch(reduxSetMenuTab(tab)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
+
+Menu.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  activeTab: PropTypes.string.isRequired,
+  toggleMenu: PropTypes.func,
+  setMenuTab: PropTypes.func,
+};
+
+Menu.defaultProps = {
+  toggleMenu: () => null,
+  setMenuTab: () => null,
+};
