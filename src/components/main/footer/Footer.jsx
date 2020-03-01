@@ -42,7 +42,7 @@ const mapStateToProps = (state) => ({
 });
 
 Footer.propTypes = {
-  lastUpdated: propTypes.shape({}),
+  lastUpdated: propTypes.string,
 };
 
 Footer.defaultProps = {
