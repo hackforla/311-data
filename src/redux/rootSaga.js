@@ -31,7 +31,7 @@ function* getData() {
   try {
     const response = yield call(axios.post, process.env.DB_URL, options);
     const { data } = response;
-    yield put(getDataSuccess(data.data));
+    yield put(getDataSuccess(data));
   } catch (e) {
     yield put(getDataFailure(e));
   }
