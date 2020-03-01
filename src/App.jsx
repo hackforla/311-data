@@ -12,12 +12,12 @@ const App = () => {
   }, []);
 
   return (
-    <div className="main">
+    <>
       <Header />
       <Body />
       <Footer />
       <Tooltip />
-    </div>
+    </>
   );
 };
 

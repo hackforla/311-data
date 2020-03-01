@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
@@ -12,6 +14,7 @@ const Icon = ({
   */
   size,
   iconSize,
+  iconStyle,
   className,
   fixedWidth,
   spin,
@@ -44,7 +47,7 @@ const Icon = ({
       className={containerClassName}
       style={style}
     >
-      <i className={iconClassName} />
+      <i className={iconClassName} style={iconStyle} />
       {label}
     </span>
   );
@@ -86,6 +89,7 @@ Icon.propTypes = {
   pulse: PropTypes.bool,
   bordered: PropTypes.bool,
   style: PropTypes.shape({}),
+  iconStyle: PropTypes.shape({}),
 };
 
 Icon.defaultProps = {
@@ -101,4 +105,5 @@ Icon.defaultProps = {
   pulse: false,
   bordered: false,
   style: undefined,
+  iconStyle: undefined,
 };

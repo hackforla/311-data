@@ -1,23 +1,22 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import Chart from './Chart';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import Chart from './Chart';
+
 
 const TimeToClose = ({
   requestTypes,
 }) => {
+  // // DATA ////
 
-  //// DATA ////
-
-  const randomSeries = (count, min, max) => {
-    return Array.from({ length: count })
-      .map(() => Math.random() * (max - min) + min);
-  };
+  const randomSeries = (count, min, max) => Array.from({ length: count })
+    .map(() => Math.random() * (max - min) + min);
 
   const dummyData = REQUEST_TYPES.reduce((p, c) => {
-    p[c.type] = randomSeries(8, 0, 11);
-    return p;
+    const acc = p;
+    acc[c.type] = randomSeries(8, 0, 11);
+    return acc;
   }, {});
 
   const selectedTypes = REQUEST_TYPES.filter(el => requestTypes[el.type]);
@@ -32,7 +31,7 @@ const TimeToClose = ({
     }],
   };
 
-  //// OPTIONS ////
+  // // OPTIONS ////
 
   const chartOptions = {
     title: {
@@ -64,7 +63,7 @@ const TimeToClose = ({
     tooltipDecimals: 1,
   };
 
-  //// HEIGHT ////
+  // // HEIGHT ////
 
   const chartHeight = numLabels => (
     numLabels > 0
@@ -82,7 +81,7 @@ const TimeToClose = ({
       />
     </div>
   );
-}
+};
 
 const mapStateToProps = state => ({
   requestTypes: state.data.requestTypes,
@@ -91,5 +90,5 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps)(TimeToClose);
 
 TimeToClose.propTypes = {
-  requestTypes: PropTypes.object.isRequired,
+  requestTypes: PropTypes.shape({}).isRequired,
 };

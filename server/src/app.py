@@ -11,6 +11,7 @@ from multiprocessing import cpu_count
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.pinService import PinService
+from services.requestDetailService import RequestDetailService
 from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
 
@@ -125,6 +126,14 @@ async def pinMap(request):
                                                  endDate=end,
                                                  ncList=ncs,
                                                  requestTypes=requests)
+    return json(return_data)
+
+
+@app.route('/servicerequest/<srnumber>', methods=["GET"])
+async def requestDetails(request, srnumber):
+    detail_worker = RequestDetailService(app.config['Settings'])
+
+    return_data = await detail_worker.get_request_detail(srnumber)
     return json(return_data)
 
 

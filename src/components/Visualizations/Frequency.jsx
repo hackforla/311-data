@@ -1,43 +1,41 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import Chart from './Chart';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import moment from 'moment';
+import Chart from './Chart';
 
 const Frequency = ({
   requestTypes,
 }) => {
+  // // DATA ////
 
-  //// DATA ////
-
-  const randomPoints = (count, min, max) => {
-    return Array.from({ length: count })
-      .map((el, idx) => ({
-        x: moment().add(idx, 'd').toDate(),
-        y: Math.round(Math.random() * (max - min) + min)
-      }));
-  };
+  const randomPoints = (count, min, max) => Array.from({ length: count })
+    .map((el, idx) => ({
+      x: moment().add(idx, 'd').toDate(),
+      y: Math.round(Math.random() * (max - min) + min),
+    }));
 
   const dummyData = REQUEST_TYPES.reduce((p, c) => {
-    p[c.type] = randomPoints(10, 20, 200);
-    return p;
+    const acc = p;
+    acc[c.type] = randomPoints(10, 20, 200);
+    return acc;
   }, {});
 
   const selectedTypes = REQUEST_TYPES.filter(el => requestTypes[el.type]);
 
   const chartData = {
     datasets: selectedTypes.map(t => ({
-      label: t.abbrev + ' requests',
+      label: `${t.abbrev} requests`,
       backgroundColor: t.color,
       borderColor: t.color,
       fill: false,
       lineTension: 0,
       data: dummyData[t.type],
-    }))
+    })),
   };
 
-  //// OPTIONS ////
+  // // OPTIONS ////
 
   const chartOptions = {
     aspectRatio: 0.7,
@@ -67,7 +65,7 @@ const Frequency = ({
         ticks: {
           beginAtZero: true,
         },
-      }]
+      }],
     },
     tooltips: {
       callbacks: {
@@ -76,8 +74,7 @@ const Frequency = ({
     },
   };
 
-  if (chartData.datasets.length === 0)
-    return null;
+  if (chartData.datasets.length === 0) return null;
 
   return (
     <div className="frequency">
@@ -88,7 +85,7 @@ const Frequency = ({
       />
     </div>
   );
-}
+};
 
 const mapStateToProps = state => ({
   requestTypes: state.data.requestTypes,
@@ -97,5 +94,5 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps)(Frequency);
 
 Frequency.propTypes = {
-  requestTypes: PropTypes.object.isRequired,
+  requestTypes: PropTypes.shape({}).isRequired,
 };

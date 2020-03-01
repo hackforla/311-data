@@ -25,7 +25,7 @@ const checkboxStyle = {
   paddingLeft: '3px',
 };
 
-const midIndex = ((list) => {
+const midIndex = (list => {
   if (list.length / 2 === 0) {
     return (list.length / 2);
   }
@@ -77,12 +77,12 @@ const RequestTypeSelector = ({
   selectAll,
   deselectAll,
 }) => {
-  const handleItemClick = (e) => {
+  const handleItemClick = e => {
     const type = e.target.value;
     selectType(type);
   };
 
-  const renderRequestItems = (items) => items.map((item) => (
+  const renderRequestItems = items => items.map(item => (
     <RequestItem
       key={item.type}
       type={item.type}
@@ -108,7 +108,8 @@ const RequestTypeSelector = ({
         </span>
         <HoverOverInfo
           title="Request Type Selection"
-          text="This filter allows the user to choose specific 311 data types.">
+          text="This filter allows the user to choose specific 311 data types."
+        >
           <Icon
             id="type-selector-info-icon"
             icon="info-circle"
@@ -148,12 +149,12 @@ const RequestTypeSelector = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   requestTypes: state.data.requestTypes,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  selectType: (type) => dispatch(updateRequestType(type)),
+const mapDispatchToProps = dispatch => ({
+  selectType: type => dispatch(updateRequestType(type)),
   selectAll: () => dispatch(selectAllRequestTypes()),
   deselectAll: () => dispatch(deselectAllRequestTypes()),
 });
