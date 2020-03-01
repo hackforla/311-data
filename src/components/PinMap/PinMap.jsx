@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
-  Map, Marker, Popup, TileLayer, Rectangle, Tooltip,
+  Map,
+  Marker,
+  Popup,
+  TileLayer,
+  Rectangle,
+  Tooltip,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
 import PropTypes from 'proptypes';
@@ -10,27 +16,20 @@ import PropTypes from 'proptypes';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 import ncOverlay from '../../data/nc-boundary-2019.json';
 
-const pinMapProps = {
-  data: PropTypes.string,
-  showMarkers: PropTypes.boolean,
-};
-
-
 class PinMap extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      position: [34.0173157, -118.2497254],
+      position: [34.0094213, -118.6008506],
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
-      // dataUrl: 'https://data.lacity.org/resource/h65r-yf5i.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+2+and+3',
       geoJSON: ncOverlay,
       bounds: null,
     };
   }
 
-  highlightRegion = (e) => {
+  highlightRegion = e => {
     const layer = e.target;
 
     layer.setStyle({
@@ -43,7 +42,7 @@ class PinMap extends Component {
     layer.bringToFront();
   }
 
-  resetRegionHighlight = (e) => {
+  resetRegionHighlight = e => {
     const layer = e.target;
 
     layer.setStyle({
@@ -56,7 +55,7 @@ class PinMap extends Component {
     });
   }
 
-  zoomToRegion = (e) => {
+  zoomToRegion = e => {
     const bounds = e.target.getBounds();
     this.setState({ bounds });
   }
@@ -96,7 +95,7 @@ class PinMap extends Component {
             fillOpacity: 0.7,
           }}
           onEachFeature={this.onEachFeature}
-          ref={(el) => {
+          ref={el => {
             if (el) {
               this.choropleth = el.leafletElement;
               return this.choropleth;
@@ -115,13 +114,12 @@ class PinMap extends Component {
     const { data, showMarkers } = this.props;
 
     if (showMarkers && data) {
-      return data.map((d) => {
-        if (d.location) {
-          const { location } = d;
-          const position = [location.latitude, location.longitude];
+      return data.map(d => {
+        if (d.latitude && d.longitude) {
+          const position = [d.latitude, d.longitude];
 
           return (
-            <Marker key={position.toString()} position={position}>
+            <Marker key={d.srnumber} position={position}>
               <Popup>
                 Type:
                 {d.requesttype}
@@ -141,7 +139,12 @@ class PinMap extends Component {
 
     return (
       <Rectangle bounds={tooltipPosition} color="black">
-        <Tooltip direction="top" offset={[0, 20]} opacity={1} permanent>
+        <Tooltip
+          permanent
+          direction="top"
+          offset={[0, 20]}
+          opacity={1}
+        >
           No Data To Display
         </Tooltip>
       </Rectangle>
@@ -162,7 +165,7 @@ class PinMap extends Component {
           center={position}
           zoom={zoom}
           bounds={bounds}
-          style={{ height: '85vh' }}
+          style={{ height: '88.4vh' }}
         >
           <TileLayer
             url={mapUrl}
@@ -182,11 +185,18 @@ class PinMap extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  data: state.data.data,
+});
+
+PinMap.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({})),
+  showMarkers: PropTypes.bool,
+};
+
 PinMap.defaultProps = {
-  data: '',
+  data: undefined,
   showMarkers: true,
 };
 
-PinMap.propTypes = pinMapProps;
-
-export default PinMap;
+export default connect(mapStateToProps, null)(PinMap);

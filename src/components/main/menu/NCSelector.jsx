@@ -29,15 +29,20 @@ const NCSelector = ({
     width: '280px',
   };
 
-  const handleSearch = (e) => {
+  const checkboxStyleFix = {
+    padding: '10px',
+    margin: '0',
+  };
+
+  const handleSearch = e => {
     const term = e.target.value;
     const searchFilter = new RegExp(term, 'i');
-    const searchList = COUNCILS.filter((council) => searchFilter.test(council));
+    const searchList = COUNCILS.filter(council => searchFilter.test(council));
     setFilteredCouncilList(searchList);
     setSearchValue(e.target.value);
   };
 
-  const handleSelectCouncil = (council) => {
+  const handleSelectCouncil = council => {
     const newSelectedCouncilList = { ...selectedCouncilList };
 
     switch (council) {
@@ -49,7 +54,7 @@ const NCSelector = ({
           value = false;
         }
 
-        Object.keys(newSelectedCouncilList).forEach((c) => {
+        Object.keys(newSelectedCouncilList).forEach(c => {
           newSelectedCouncilList[c] = value;
         });
         break;
@@ -60,7 +65,7 @@ const NCSelector = ({
         break;
     }
 
-    const newNCList = Object.keys(newSelectedCouncilList).filter((c) => newSelectedCouncilList[c] && c !== 'all');
+    const newNCList = Object.keys(newSelectedCouncilList).filter(c => newSelectedCouncilList[c] && c !== 'all');
 
     setSelectedCouncilList(newSelectedCouncilList);
     updateNCList(newNCList);
@@ -75,7 +80,8 @@ const NCSelector = ({
           </strong>
           <HoverOverInfo
             title="Neighborhood Council (NC) Selection"
-            text="This filter allows the user to select specific neighborhood councils.">
+            text="This filter allows the user to select specific neighborhood councils."
+          >
             <Icon
               id="type-selector-info-icon"
               icon="info-circle"
@@ -133,14 +139,16 @@ const NCSelector = ({
               <div className="level-item">
                 <Checkbox
                   id="nc-select-all"
+                  size="small"
                   handleClick={() => handleSelectCouncil('all')}
                   checked={selectedCouncilList?.all ?? false}
+                  style={checkboxStyleFix}
                 />
               </div>
             </div>
           </div>
 
-          {filteredCouncilList.map((council) => (
+          {filteredCouncilList.map(council => (
             <div key={council} className="level" style={selectRowStyle}>
               <div className="level-left">
                 <div className="level-item">
@@ -153,8 +161,10 @@ const NCSelector = ({
                 <div className="level-item">
                   <Checkbox
                     id={`nc-select-${council}`}
+                    size="small"
                     handleClick={() => handleSelectCouncil(council)}
                     checked={selectedCouncilList?.[council] ?? false}
+                    style={checkboxStyleFix}
                   />
                 </div>
               </div>
@@ -166,8 +176,8 @@ const NCSelector = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  updateNCList: (council) => dispatch(updateNC(council)),
+const mapDispatchToProps = dispatch => ({
+  updateNCList: council => dispatch(updateNC(council)),
 });
 
 NCSelector.propTypes = {

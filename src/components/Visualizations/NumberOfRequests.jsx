@@ -21,9 +21,9 @@ const NumberOfRequests = ({
 export default NumberOfRequests;
 
 NumberOfRequests.propTypes = {
-  numRequests: PropTypes.number.isRequired,
+  numRequests: PropTypes.number,
 };
 
 NumberOfRequests.defaultProps = {
-  numRequests: 1285203,  // until we get data
+  numRequests: 1285203, // until we get data
 };
