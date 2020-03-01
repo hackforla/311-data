@@ -12,7 +12,7 @@ Object.assign(Chart.defaults.global, {
   animation: false,
   responsive: true,
   maintainAspectRatio: false,
-  legend: false
+  legend: false,
 });
 
 Object.assign(Chart.defaults.global.title, {

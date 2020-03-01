@@ -9,12 +9,13 @@ const Tooltip = () => (
       effect="solid"
       getContent={data => {
         if (!data) return null;
-        let { text, title } = JSON.parse(data);
+        const { text, title } = JSON.parse(data);
         if (!text && !title) return null;
 
         return (
           <div className="tooltip-content">
-            { title &&
+            { title
+              && (
               <div className="has-text-weight-bold is-size-6">
                 <Icon
                   id="react-tooltip-icon"
@@ -24,12 +25,13 @@ const Tooltip = () => (
                 />
                 { title }
               </div>
-            }
-            { text &&
+              )}
+            { text
+              && (
               <div className="tooltip-text is-size-6">
                 { text }
               </div>
-            }
+              )}
           </div>
         );
       }}

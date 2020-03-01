@@ -14,21 +14,27 @@ const Legend = ({
       <h1 className="has-text-centered">Legend</h1>
       <div className="outline">
         {
-          selectedTypes.length > 0 ?
-          selectedTypes.map(({ type, color, abbrev }, idx) => (
-            <span key={idx} className="legend-item">
-              <Icon
-                id={`legend-icon-${type}`}
-                icon="circle"
-                size="small"
-                style={{ color, marginRight: '8px' }}
-              />
-              { type } [<span style={{ color }}>{abbrev}</span>]
-            </span>
-          )) :
-          <span className="legend-item">
+          selectedTypes.length > 0
+            ? selectedTypes.map(({ type, color, abbrev }) => (
+              <span key={abbrev} className="legend-item">
+                <Icon
+                  id={`legend-icon-${type}`}
+                  icon="circle"
+                  size="small"
+                  style={{ color, marginRight: '8px' }}
+                />
+                { type }
+                {' '}
+[
+                <span style={{ color }}>{abbrev}</span>
+]
+              </span>
+            ))
+            : (
+              <span className="legend-item">
             No request types selected.
-          </span>
+              </span>
+            )
         }
       </div>
     </div>
@@ -42,5 +48,5 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps)(Legend);
 
 Legend.propTypes = {
-  requestTypes: PropTypes.object.isRequired,
+  requestTypes: PropTypes.shape({}).isRequired,
 };

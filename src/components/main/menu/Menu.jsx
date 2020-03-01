@@ -31,7 +31,7 @@ const Menu = ({
     MENU_TABS.VISUALIZATIONS,
   ];
 
-  const handleActiveTab = (tab) => (tab === activeTab ? 'is-active' : '');
+  const handleActiveTab = tab => (tab === activeTab ? 'is-active' : '');
 
   return (
     <div>
@@ -42,12 +42,12 @@ const Menu = ({
         outerContainerId="body-container"
         isOpen={isOpen}
         width={sidebarWidth}
-        customBurgerIcon={true}
+        customBurgerIcon={false}
         customCrossIcon={false}
         styles={{
           bmMenu: {
             background: 'white',
-            boxShadow: '0px 4px 5px rgba(108, 108, 108, 0.3)'
+            boxShadow: '0px 4px 5px rgba(108, 108, 108, 0.3)',
           },
         }}
       >
@@ -70,7 +70,7 @@ const Menu = ({
             }}
           >
             <ul>
-              {tabs.map((tab) => (
+              {tabs.map(tab => (
                 <li
                   key={tab}
                   className={handleActiveTab(tab)}
@@ -121,14 +121,14 @@ const Menu = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   isOpen: state.ui.menu.isOpen,
   activeTab: state.ui.menu.activeTab,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   toggleMenu: () => dispatch(reduxToggleMenu()),
-  setMenuTab: (tab) => dispatch(reduxSetMenuTab(tab)),
+  setMenuTab: tab => dispatch(reduxSetMenuTab(tab)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

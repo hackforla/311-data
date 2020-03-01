@@ -29,7 +29,7 @@ class PinMap extends Component {
     };
   }
 
-  highlightRegion = (e) => {
+  highlightRegion = e => {
     const layer = e.target;
 
     layer.setStyle({
@@ -42,7 +42,7 @@ class PinMap extends Component {
     layer.bringToFront();
   }
 
-  resetRegionHighlight = (e) => {
+  resetRegionHighlight = e => {
     const layer = e.target;
 
     layer.setStyle({
@@ -55,7 +55,7 @@ class PinMap extends Component {
     });
   }
 
-  zoomToRegion = (e) => {
+  zoomToRegion = e => {
     const bounds = e.target.getBounds();
     this.setState({ bounds });
   }
@@ -95,7 +95,7 @@ class PinMap extends Component {
             fillOpacity: 0.7,
           }}
           onEachFeature={this.onEachFeature}
-          ref={(el) => {
+          ref={el => {
             if (el) {
               this.choropleth = el.leafletElement;
               return this.choropleth;
@@ -114,7 +114,7 @@ class PinMap extends Component {
     const { data, showMarkers } = this.props;
 
     if (showMarkers && data) {
-      return data.map((d) => {
+      return data.map(d => {
         if (d.latitude && d.longitude) {
           const position = [d.latitude, d.longitude];
 
@@ -185,7 +185,7 @@ class PinMap extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   data: state.data.data,
 });
 

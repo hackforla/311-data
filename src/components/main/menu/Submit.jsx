@@ -24,7 +24,7 @@ const Submit = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   getData: () => dispatch(getDataRequest()),
 });
 

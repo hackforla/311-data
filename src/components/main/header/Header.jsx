@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'proptypes';
 import { connect } from 'react-redux';
 import COLORS from '../../../styles/COLORS';
 
@@ -87,8 +88,20 @@ const Header = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   data: state.data,
 });
+
+Header.propTypes = {
+  data: propTypes.shape({
+    error: propTypes.shape({
+      message: propTypes.string,
+    }),
+  }),
+};
+
+Header.defaultProps = {
+  data: undefined,
+};
 
 export default connect(mapStateToProps, null)(Header);

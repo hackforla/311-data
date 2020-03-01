@@ -37,7 +37,7 @@ const Footer = ({
   </footer>
 );
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   lastUpdated: state.data.lastUpdated,
 });
 

@@ -34,15 +34,15 @@ const NCSelector = ({
     margin: '0',
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = e => {
     const term = e.target.value;
     const searchFilter = new RegExp(term, 'i');
-    const searchList = COUNCILS.filter((council) => searchFilter.test(council));
+    const searchList = COUNCILS.filter(council => searchFilter.test(council));
     setFilteredCouncilList(searchList);
     setSearchValue(e.target.value);
   };
 
-  const handleSelectCouncil = (council) => {
+  const handleSelectCouncil = council => {
     const newSelectedCouncilList = { ...selectedCouncilList };
 
     switch (council) {
@@ -54,7 +54,7 @@ const NCSelector = ({
           value = false;
         }
 
-        Object.keys(newSelectedCouncilList).forEach((c) => {
+        Object.keys(newSelectedCouncilList).forEach(c => {
           newSelectedCouncilList[c] = value;
         });
         break;
@@ -65,7 +65,7 @@ const NCSelector = ({
         break;
     }
 
-    const newNCList = Object.keys(newSelectedCouncilList).filter((c) => newSelectedCouncilList[c] && c !== 'all');
+    const newNCList = Object.keys(newSelectedCouncilList).filter(c => newSelectedCouncilList[c] && c !== 'all');
 
     setSelectedCouncilList(newSelectedCouncilList);
     updateNCList(newNCList);
@@ -148,7 +148,7 @@ const NCSelector = ({
             </div>
           </div>
 
-          {filteredCouncilList.map((council) => (
+          {filteredCouncilList.map(council => (
             <div key={council} className="level" style={selectRowStyle}>
               <div className="level-left">
                 <div className="level-item">
@@ -176,8 +176,8 @@ const NCSelector = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  updateNCList: (council) => dispatch(updateNC(council)),
+const mapDispatchToProps = dispatch => ({
+  updateNCList: council => dispatch(updateNC(council)),
 });
 
 NCSelector.propTypes = {
