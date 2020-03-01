@@ -1,18 +1,22 @@
-import sqlalchemy as db
+import datetime
 import pandas as pd
+import sqlalchemy as db
 
 
 class DataService(object):
     def includeMeta(func):
-        def inner1(*args, **kwargs):
+        def innerFunc(*args, **kwargs):
             dataResponse = func(*args, **kwargs)
             if 'Error' in dataResponse:
                 return dataResponse
 
-            withMeta = {'lastPulled': 'NOW', 'data': dataResponse}
+            # Will represent last time the ingest pipeline ran
+            lastPulledTimestamp = datetime.datetime.utcnow()
+            withMeta = {'lastPulled': lastPulledTimestamp,
+                        'data': dataResponse}
             return withMeta
 
-        return inner1
+        return innerFunc
 
     def __init__(self, config=None, tableName="ingest_staging_table"):
         self.config = config
