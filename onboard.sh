@@ -75,16 +75,6 @@ else
   echo "WARN If errors persist, follow this to remove lfs \n\n\thttps://github.com/git-lfs/git-lfs/issues/3026#issuecomment-451598434"
 fi
 
-# Check for postgres tools
-if ! [ -x "$(command -v pg_config)" ]; then
-  echo "👺Error: pg_config is not installed." >&2
-  echo "👺👺👺 The backend required psycopg2 which requires a manual install of pg_config and libpq headers."
-  echo "👺👺👺 To install those, please refer to \n\n\thttp://initd.org/psycopg/docs/install.html"
-  exit 1
-fi
-echo "👍 Found pg_config installation"
-
-
 # Check for python3
 if ! [ -x "$(command -v python3)" ]; then
   echo "👺Error: python3 is not installed." >&2
