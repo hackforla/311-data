@@ -8,6 +8,9 @@ import Legend from './Legend';
 import NumberOfRequests from './NumberOfRequests';
 import TimeToClose from './TimeToClose';
 import Frequency from './Frequency';
+import TotalRequests from './TotalRequests';
+import Contact311 from './Contact311';
+import TypeOfRequest from './TypeOfRequest';
 
 const Visualizations = ({
   menuIsOpen,
@@ -25,6 +28,9 @@ const Visualizations = ({
       <NumberOfRequests />
       <TimeToClose />
       <Frequency />
+      <TotalRequests />
+      <Contact311 />
+      <TypeOfRequest />
     </div>
   );
 };

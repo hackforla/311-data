@@ -2,41 +2,63 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import Chart from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import COLORS from '@styles/COLORS';
 
 // ///////// CHARTJS DEFAULTS ///////////
 
-Object.assign(Chart.defaults.global, {
-  defaultFontColor: COLORS.FONTS,
-  defaultFontFamily: 'Roboto',
-  animation: false,
-  responsive: true,
-  maintainAspectRatio: false,
-  legend: false,
+Chart.helpers.merge(Chart.defaults, {
+  global: {
+    defaultFontColor: COLORS.FONTS,
+    defaultFontFamily: 'Roboto',
+    animation: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    title: {
+      display: true,
+      fontFamily: 'Open Sans',
+      fontSize: 20,
+    },
+    legend: {
+      display: false,
+    },
+    tooltips: {
+      xPadding: 10,
+      yPadding: 10,
+      titleFontFamily: 'Open Sans',
+      titleFontColor: COLORS.FONTS,
+      titleFontSize: 14,
+      titleFontWeight: 'bold',
+      bodyFontFamily: 'Roboto',
+      bodyFontSize: 14,
+      bodyFontColor: COLORS.FONTS,
+      footerFontFamily: 'Roboto',
+      footerFontSize: 14,
+      footerFontColor: COLORS.FONTS,
+      footerFontWeight: 'bold',
+      backgroundColor: 'rgb(200, 200, 200)',
+      cornerRadius: 4,
+    },
+    plugins: {
+      datalabels: {
+        color: COLORS.FONTS,
+        font: {
+          size: 14,
+        },
+      },
+    },
+  },
+  scale: {
+    scaleLabel: {
+      display: true,
+      fontFamily: 'Open Sans',
+      fontSize: 15,
+    },
+  },
 });
 
-Object.assign(Chart.defaults.global.title, {
-  display: true,
-  fontFamily: 'Open Sans',
-  fontSize: 20,
-});
-
-Object.assign(Chart.defaults.scale.scaleLabel, {
-  display: true,
-  fontFamily: 'Open Sans',
-  fontWeight: 'bold',
-  fontSize: 15,
-});
-
-Object.assign(Chart.defaults.global.tooltips, {
-  xPadding: 10,
-  yPadding: 10,
-  bodyFontFamily: 'Roboto',
-  bodyFontSize: 14,
-  bodyFontColor: COLORS.FONTS,
-  backgroundColor: 'rgb(200, 200, 200)',
-  cornerRadius: 4,
-});
+// opt-in only
+Chart.plugins.unregister(ChartDataLabels);
 
 // //////////// COMPONENT //////////////
 
@@ -44,12 +66,19 @@ class ReactChart extends React.Component {
   canvasRef = React.createRef();
 
   componentDidMount() {
-    const { type, data, options } = this.props;
+    const {
+      type,
+      data,
+      options,
+      datalabels,
+    } = this.props;
+
     const ctx = this.canvasRef.current.getContext('2d');
     this.chart = new Chart(ctx, {
       type,
       data,
       options,
+      plugins: datalabels ? [ChartDataLabels] : [],
     });
     this.setHeight();
   }
@@ -87,11 +116,13 @@ export default ReactChart;
 
 ReactChart.propTypes = {
   type: PropTypes.string.isRequired,
-  data: PropTypes.shape.isRequired,
-  options: PropTypes.shape.isRequired,
+  data: PropTypes.shape({}).isRequired,
+  options: PropTypes.shape({}).isRequired,
   height: PropTypes.func,
+  datalabels: PropTypes.bool,
 };
 
 ReactChart.defaultProps = {
   height: undefined,
+  datalabels: false,
 };
