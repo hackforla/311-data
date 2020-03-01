@@ -30,19 +30,17 @@ function* getData() {
     requestTypes,
   } = yield select(getState, 'data');
 
-  const endPoint = 'http://ec2-3-84-149-45.compute-1.amazonaws.com/pins';
   // const socrata = `https://data.lacity.org/resource/${dataResources[2018]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${1}+and+${12}+and+requesttype='${'Bulky Items'}'`;
 
   const options = {
     startDate,
     endDate,
-    councils,
+    ncList: councils,
     requestTypes: Object.keys(requestTypes).filter((req) => req !== 'All' && requestTypes[req]),
   };
 
   try {
-    const response = yield call(axios.post, endPoint, options);
-    // const { data } = yield call(axios.get, socrata);
+    const response = yield call(axios.post, process.env.DB_URL, options);
     const { data } = response;
     yield put(getDataSuccess(data.data));
   } catch (e) {
