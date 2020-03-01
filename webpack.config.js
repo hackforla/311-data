@@ -17,15 +17,6 @@ module.exports = {
       '@styles': path.resolve(__dirname, 'src/styles'),
     },
   },
-  settings: {
-    'import/resolver': {
-      alias: {
-        map: [
-          '@components'
-        ],
-      },
-    },
-  },
   module: {
     rules: [
       {
