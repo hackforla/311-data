@@ -119,7 +119,7 @@ class PinMap extends Component {
           const position = [d.latitude, d.longitude];
 
           return (
-            <Marker key={d.createddate} position={position}>
+            <Marker key={d.srnumber} position={position}>
               <Popup>
                 Type:
                 {d.requesttype}
