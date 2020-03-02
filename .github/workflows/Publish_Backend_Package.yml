@@ -25,4 +25,4 @@ jobs:
         registry: docker.pkg.github.com
         dockerfile: server/Dockerfile
         context: server
-        tags: "latest, ${GITHUB_SHA::8}"
+        tags: "latest, ${{github.sha}}"
