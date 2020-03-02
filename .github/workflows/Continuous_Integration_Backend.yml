@@ -6,9 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.7]
     steps:
     - uses: actions/checkout@v1
+    - name: Determine backend changes
+      run: |
+      git diff --name-only --diff-filter=AMDR --cached @~..@ | grep -q server
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
