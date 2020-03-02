@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from './Chart';
 
-
 const TimeToClose = ({
   requestTypes,
 }) => {
@@ -31,9 +30,12 @@ const TimeToClose = ({
     }],
   };
 
+  if (chartData.labels.length === 0) chartData.labels = [''];
+
   // // OPTIONS ////
 
   const chartOptions = {
+    maintainAspectRatio: false,
     title: {
       text: 'Time to Close',
     },
@@ -63,23 +65,15 @@ const TimeToClose = ({
     tooltipDecimals: 1,
   };
 
-  // // HEIGHT ////
-
-  const chartHeight = numLabels => (
-    numLabels > 0
-      ? 100 + (numLabels * 40)
-      : 0
-  );
-
   return (
-    <div className="time-to-close">
-      <Chart
-        type="horizontalBoxplot"
-        data={chartData}
-        options={chartOptions}
-        height={chartHeight}
-      />
-    </div>
+    <Chart
+      title="Time to Close"
+      type="horizontalBoxplot"
+      data={chartData}
+      options={chartOptions}
+      height={Math.max(160, 60 + (chartData.labels.length * 40))}
+      className="time-to-close"
+    />
   );
 };
 

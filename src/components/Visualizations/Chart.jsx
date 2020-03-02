@@ -1,57 +1,117 @@
 import React from 'react';
 import PropTypes from 'proptypes';
-import Chart from 'chart.js';
+import ChartJS from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot';
+import ChartJSDataLabels from 'chartjs-plugin-datalabels';
+import clx from 'classnames';
 import COLORS from '@styles/COLORS';
+import ExportButton from './ExportButton';
 
 // ///////// CHARTJS DEFAULTS ///////////
 
-Object.assign(Chart.defaults.global, {
-  defaultFontColor: COLORS.FONTS,
-  defaultFontFamily: 'Roboto',
-  animation: false,
-  responsive: true,
-  maintainAspectRatio: false,
-  legend: false,
+ChartJS.helpers.merge(ChartJS.defaults, {
+  global: {
+    defaultFontColor: COLORS.FONTS,
+    defaultFontFamily: 'Roboto',
+    animation: false,
+    title: {
+      display: false,
+    },
+    legend: {
+      display: false,
+    },
+    tooltips: {
+      xPadding: 10,
+      yPadding: 10,
+      titleFontFamily: 'Open Sans',
+      titleFontColor: COLORS.FONTS,
+      titleFontSize: 14,
+      titleFontWeight: 'bold',
+      bodyFontFamily: 'Roboto',
+      bodyFontSize: 14,
+      bodyFontColor: COLORS.FONTS,
+      footerFontFamily: 'Roboto',
+      footerFontSize: 14,
+      footerFontColor: COLORS.FONTS,
+      footerFontWeight: 'bold',
+      backgroundColor: '#C4C4C4',
+      cornerRadius: 4,
+    },
+    plugins: {
+      datalabels: {
+        color: COLORS.FONTS,
+        font: {
+          size: 14,
+        },
+      },
+      chartArea: {
+        backgroundColor: COLORS.BACKGROUND,
+      },
+    },
+  },
+  scale: {
+    scaleLabel: {
+      display: true,
+      fontFamily: 'Open Sans',
+      fontSize: 14,
+    },
+  },
 });
 
-Object.assign(Chart.defaults.global.title, {
-  display: true,
-  fontFamily: 'Open Sans',
-  fontSize: 20,
+// ///////// CHARTJS PLUGINS ///////////
+
+// add background color to charts
+// https://stackoverflow.com/questions/37144031/background-colour-of-line-charts-in-chart-js?rq=1
+ChartJS.pluginService.register({
+  beforeDraw: chart => {
+    const bgColor = chart.config.options.plugins.chartArea?.backgroundColor;
+    if (!bgColor) return;
+
+    const { ctx } = chart.chart;
+    const { chartArea } = chart;
+    const { padding } = chart.config.options.layout;
+    const pad = typeof padding === 'number' ? {
+      top: padding,
+      bottom: padding,
+      left: padding,
+      right: padding,
+    } : padding;
+
+    ctx.save();
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(
+      chartArea.left - pad.left,
+      chartArea.top - pad.top,
+      chartArea.right - chartArea.left + pad.left + pad.right,
+      chartArea.bottom - chartArea.top + pad.top + pad.bottom,
+    );
+    ctx.restore();
+  },
 });
 
-Object.assign(Chart.defaults.scale.scaleLabel, {
-  display: true,
-  fontFamily: 'Open Sans',
-  fontWeight: 'bold',
-  fontSize: 15,
-});
-
-Object.assign(Chart.defaults.global.tooltips, {
-  xPadding: 10,
-  yPadding: 10,
-  bodyFontFamily: 'Roboto',
-  bodyFontSize: 14,
-  bodyFontColor: COLORS.FONTS,
-  backgroundColor: 'rgb(200, 200, 200)',
-  cornerRadius: 4,
-});
+// opt-in only
+ChartJS.plugins.unregister(ChartJSDataLabels);
 
 // //////////// COMPONENT //////////////
 
-class ReactChart extends React.Component {
+class Chart extends React.Component {
   canvasRef = React.createRef();
 
   componentDidMount() {
-    const { type, data, options } = this.props;
-    const ctx = this.canvasRef.current.getContext('2d');
-    this.chart = new Chart(ctx, {
+    const {
       type,
       data,
       options,
+      datalabels,
+    } = this.props;
+
+    const ctx = this.canvasRef.current.getContext('2d');
+    this.chart = new ChartJS(ctx, {
+      type,
+      data,
+      options,
+      plugins: datalabels ? [ChartJSDataLabels] : [],
     });
-    this.setHeight();
   }
 
   componentDidUpdate(prevProps) {
@@ -60,38 +120,53 @@ class ReactChart extends React.Component {
     if (prevProps.data !== data) {
       this.chart.data = data;
       this.chart.update();
-      this.setHeight();
-    }
-  }
-
-  setHeight = () => {
-    const { height } = this.props;
-
-    if (height) {
-      const numLabels = this.chart.data.labels.length;
-      const heightPx = height(numLabels);
-      this.canvasRef.current.parentNode.style.height = `${heightPx}px`;
     }
   }
 
   render() {
+    const {
+      title,
+      exportable,
+      height,
+      className,
+    } = this.props;
+
+    const canvasWrapStyle = {
+      position: 'relative',
+      height: typeof height === 'undefined'
+        ? undefined
+        : `${height}px`,
+    };
+
     return (
-      <div className="is-relative">
-        <canvas ref={this.canvasRef} />
+      <div className={clx('chart', className)}>
+        { title && <h1>{ title }</h1> }
+        { exportable && <ExportButton /> }
+        <div style={canvasWrapStyle}>
+          <canvas ref={this.canvasRef} />
+        </div>
       </div>
     );
   }
 }
 
-export default ReactChart;
+export default Chart;
 
-ReactChart.propTypes = {
+Chart.propTypes = {
   type: PropTypes.string.isRequired,
-  data: PropTypes.shape.isRequired,
-  options: PropTypes.shape.isRequired,
-  height: PropTypes.func,
+  data: PropTypes.shape({}).isRequired,
+  options: PropTypes.shape({}).isRequired,
+  title: PropTypes.string,
+  height: PropTypes.number,
+  datalabels: PropTypes.bool,
+  exportable: PropTypes.bool,
+  className: PropTypes.string,
 };
 
-ReactChart.defaultProps = {
+Chart.defaultProps = {
+  title: null,
   height: undefined,
+  datalabels: false,
+  exportable: true,
+  className: undefined,
 };
