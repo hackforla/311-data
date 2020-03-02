@@ -17,10 +17,11 @@ jobs:
       run: npm install
     - name: Lint
       run: npm run lint
+    - name: Setup environment
+      run: |
+        echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
+        echo DB_URL=${{ secrets.DB_URL }} >> .env
     - name: Build project
       run: npm run build
     - name: Run Tests
       run: npm run test -- --coverage
-      env:
-        MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
-        DB_URL: ${{ secrets.DB_URL }}
