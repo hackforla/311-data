@@ -2,35 +2,34 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import moment from 'moment';
 import Chart from './Chart';
 
-const Frequency = ({
+const TotalRequests = ({
   requestTypes,
 }) => {
   // // DATA ////
 
-  const randomPoints = (count, min, max) => Array.from({ length: count })
-    .map((el, idx) => ({
-      x: moment().add(idx, 'd').toDate(),
-      y: Math.round(Math.random() * (max - min) + min),
-    }));
+  const randomSeries = (count, min, max) => Array.from({ length: count })
+    .map(() => Math.round(Math.random() * (max - min) + min));
 
   const dummyData = REQUEST_TYPES.reduce((p, c) => {
     const acc = p;
-    acc[c.type] = randomPoints(10, 20, 200);
+    acc[c.type] = randomSeries(12, 20, 200);
     return acc;
   }, {});
 
   const selectedTypes = REQUEST_TYPES.filter(el => requestTypes[el.type]);
 
   const chartData = {
+    labels: [
+      'January', 'February', 'March',
+      'April', 'May', 'June',
+      'July', 'August', 'September',
+      'October', 'November', 'December',
+    ],
     datasets: selectedTypes.map(t => ({
-      label: `${t.abbrev} requests`,
+      label: t.abbrev,
       backgroundColor: t.color,
-      borderColor: t.color,
-      fill: false,
-      lineTension: 0,
       data: dummyData[t.type],
     })),
   };
@@ -39,14 +38,14 @@ const Frequency = ({
 
   const chartOptions = {
     aspectRatio: 611 / 400,
+    title: {
+      text: 'Total Requests',
+    },
     scales: {
       xAxes: [{
-        type: 'time',
-        time: {
-          unit: 'day',
-          round: 'day',
-        },
+        stacked: true,
         scaleLabel: {
+          display: true,
           labelString: 'Timeline',
         },
         ticks: {
@@ -55,6 +54,7 @@ const Frequency = ({
         },
       }],
       yAxes: [{
+        stacked: true,
         scaleLabel: {
           labelString: '# of Requests',
         },
@@ -64,19 +64,24 @@ const Frequency = ({
       }],
     },
     tooltips: {
+      mode: 'index',
       callbacks: {
-        title: () => null,
+        footer: (tooltipItem, data) => {
+          const { index } = tooltipItem[0];
+          const total = data.datasets.reduce((p, c) => p + c.data[index], 0);
+          return `Total ${total}`;
+        },
       },
     },
   };
 
   return (
     <Chart
-      title="Frequency"
-      type="line"
+      title="Total Requests"
+      type="bar"
       data={chartData}
       options={chartOptions}
-      className="frequency"
+      className="total-requests"
     />
   );
 };
@@ -85,8 +90,8 @@ const mapStateToProps = state => ({
   requestTypes: state.data.requestTypes,
 });
 
-export default connect(mapStateToProps)(Frequency);
+export default connect(mapStateToProps)(TotalRequests);
 
-Frequency.propTypes = {
+TotalRequests.propTypes = {
   requestTypes: PropTypes.shape({}).isRequired,
 };
