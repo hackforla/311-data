@@ -11,7 +11,7 @@ import {
   getDataFailure,
 } from './reducers/data';
 
-const pinUrl = `http://${process.env.DB_URL}/pins`;
+const pinUrl = `http://${process.env.DB_URL}/pins/`;
 const getState = (state, slice) => state[slice];
 
 function* getData() {
