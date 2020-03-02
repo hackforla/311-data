@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 11.x]
+        node-version: [11.x]
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -17,10 +17,11 @@ jobs:
       run: npm install
     - name: Lint
       run: npm run lint
+    - name: Setup environment
+      run: |
+        echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
+        echo DB_URL=${{ secrets.DB_URL }} >> .env
     - name: Build project
       run: npm run build
     - name: Run Tests
       run: npm run test -- --coverage
-      env:
-        MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
-        DB_URL: ${{ secrets.DB_URL }}

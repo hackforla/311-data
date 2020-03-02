@@ -8,6 +8,9 @@ import Legend from './Legend';
 import NumberOfRequests from './NumberOfRequests';
 import TimeToClose from './TimeToClose';
 import Frequency from './Frequency';
+import TotalRequests from './TotalRequests';
+import Contact311 from './Contact311';
+import TypeOfRequest from './TypeOfRequest';
 
 const Visualizations = ({
   menuIsOpen,
@@ -16,15 +19,25 @@ const Visualizations = ({
   if (menuActiveTab !== MENU_TABS.VISUALIZATIONS) return null;
 
   return (
-    <div className={clx('visualizations', {
-      'full-width': !menuIsOpen,
-    })}
-    >
-      <Criteria />
-      <Legend />
-      <NumberOfRequests />
-      <TimeToClose />
-      <Frequency />
+    <div className={clx('visualizations', { 'full-width': !menuIsOpen })}>
+      <div className="info-section">
+        <Criteria />
+        <Legend />
+        <NumberOfRequests />
+      </div>
+      <div className="chart-row">
+        <TimeToClose />
+      </div>
+      <div className="chart-row">
+        <Frequency />
+      </div>
+      <div className="chart-row">
+        <TotalRequests />
+      </div>
+      <div className="chart-row pies">
+        <Contact311 />
+        <TypeOfRequest />
+      </div>
     </div>
   );
 };
