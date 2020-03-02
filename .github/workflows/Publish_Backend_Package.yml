@@ -16,6 +16,9 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Setup settings
+      run: |
+        cp server/settings.example.cfg server/settings.cfg
     - name: Build and Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
