@@ -24,4 +24,4 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         registry: docker.pkg.github.com
         dockerfile: ./Dockerfile
-        tags: "latest, ${GITHUB_SHA::8}"
+        tags: "latest, ${{github.sha}}"
