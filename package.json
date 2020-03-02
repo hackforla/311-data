@@ -10,6 +10,7 @@
     "bulma-switch": "^2.0.0",
     "chart.js": "^2.9.3",
     "chartjs-chart-box-and-violin-plot": "^2.2.0",
+    "chartjs-plugin-datalabels": "^0.7.0",
     "classnames": "^2.2.6",
     "dataframe-js": "^1.4.3",
     "dotenv": "^8.2.0",
