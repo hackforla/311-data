@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -yq \
     python3 python3-dev gcc \
     gfortran musl-dev
 
-ENV DB_CONNECTION_STRING
+ENV DB_CONNECTION_STRING=REDACTED
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
