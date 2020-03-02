@@ -20,17 +20,14 @@ jobs:
       run: npm rebuild node-sass
     - name: Install Packages
       run: npm install
+    - name: Setup environment
+      run: |
+        echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
+        echo DB_URL=${{ secrets.DB_URL }} >> .env
     - name: Build project
       run: npm run build
-      env:
-        REACT_APP_MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
-        DB_URL: ${{ secrets.DB_URL }}
     - name: Run Tests
       run: export CI=true && npm run test -- --coverage
-      env:
-        REACT_APP_MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
-        DB_URL: ${{ secrets.DB_URL }}
-    # DISABLING DEPLOYMENT TO PRESERVE "PRODUCTION"
     - name: Deploy to GH pages
       uses: JamesIves/github-pages-deploy-action@master
       env:
