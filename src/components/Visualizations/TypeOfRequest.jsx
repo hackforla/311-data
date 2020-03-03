@@ -3,6 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from './Chart';
+import Tooltip, { adapter } from './ChartTooltip';
 
 const TypeOfRequest = ({
   requestTypes,
@@ -46,6 +47,19 @@ const TypeOfRequest = ({
     animation: false,
     layout: {
       padding: 65,
+    },
+    tooltips: {
+      custom: adapter(ttData => {
+        const [abbrev, value] = ttData.body[0].lines[0].split(': ');
+        const lines = [{
+          text: abbrev,
+          color: ttData.labelColors[0].backgroundColor,
+          bold: true,
+        }, {
+          text: `${value} requests`,
+        }];
+        return <Tooltip lines={lines} />;
+      }),
     },
   };
 

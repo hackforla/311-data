@@ -5,6 +5,7 @@ import 'chartjs-chart-box-and-violin-plot';
 import ChartJSDataLabels from 'chartjs-plugin-datalabels';
 import clx from 'classnames';
 import COLORS from '@styles/COLORS';
+import { DynamicTooltip } from '@components/common/Tooltip';
 import ExportButton from './ExportButton';
 
 // ///////// CHARTJS DEFAULTS ///////////
@@ -21,6 +22,7 @@ ChartJS.helpers.merge(ChartJS.defaults, {
       display: false,
     },
     tooltips: {
+      enabled: false,
       xPadding: 10,
       yPadding: 10,
       titleFontFamily: 'Open Sans',
@@ -95,7 +97,11 @@ ChartJS.plugins.unregister(ChartJSDataLabels);
 // //////////// COMPONENT //////////////
 
 class Chart extends React.Component {
-  canvasRef = React.createRef();
+  constructor(props) {
+    super(props);
+    this.canvasRef = React.createRef();
+    this.tooltipRef = React.createRef();
+  }
 
   componentDidMount() {
     const {
@@ -112,6 +118,8 @@ class Chart extends React.Component {
       options,
       plugins: datalabels ? [ChartJSDataLabels] : [],
     });
+
+    this.chart.tooltipRef = this.tooltipRef.current;
   }
 
   componentDidUpdate(prevProps) {
@@ -144,6 +152,7 @@ class Chart extends React.Component {
         { exportable && <ExportButton /> }
         <div style={canvasWrapStyle}>
           <canvas ref={this.canvasRef} />
+          <DynamicTooltip ref={this.tooltipRef} />
         </div>
       </div>
     );

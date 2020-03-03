@@ -74,7 +74,7 @@ const NCSelector = ({
   return (
     <div className="nc-selector" style={{ width: '349px' }}>
       <div className="nc-title">
-        <p className="is-size-6" style={{ padding: '15px 0' }}>
+        <div className="is-size-6" style={{ padding: '15px 0' }}>
           <strong style={{ paddingRight: '10px' }}>
             Neighborhood Council (NC) Selection
           </strong>
@@ -88,7 +88,7 @@ const NCSelector = ({
               size="small"
             />
           </HoverOverInfo>
-        </p>
+        </div>
       </div>
 
       <div className="nc-seach-list-wrapper">

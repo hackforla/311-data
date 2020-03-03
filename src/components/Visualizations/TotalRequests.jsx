@@ -3,6 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from './Chart';
+import Tooltip, { adapter } from './ChartTooltip';
 
 const TotalRequests = ({
   requestTypes,
@@ -65,13 +66,33 @@ const TotalRequests = ({
     },
     tooltips: {
       mode: 'index',
-      callbacks: {
-        footer: (tooltipItem, data) => {
-          const { index } = tooltipItem[0];
-          const total = data.datasets.reduce((p, c) => p + c.data[index], 0);
-          return `Total ${total}`;
-        },
-      },
+      custom: adapter(ttData => {
+        const lines = [];
+        let total = 0;
+
+        ttData.body.forEach((line, idx) => {
+          const [abbrev, requests] = line.lines[0].split(': ');
+          total += +requests;
+          lines.push({
+            color: ttData.labelColors[idx].backgroundColor,
+            text: `${abbrev}: ${requests}`,
+          });
+        });
+
+        lines.reverse();
+
+        lines.unshift({
+          text: ttData.title[0],
+          bold: true,
+        });
+
+        lines.push({
+          text: `Total: ${total}`,
+          bold: true,
+        });
+
+        return <Tooltip lines={lines} />;
+      }),
     },
   };
 

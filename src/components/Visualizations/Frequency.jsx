@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import moment from 'moment';
 import Chart from './Chart';
+import Tooltip, { adapter } from './ChartTooltip';
 
 const Frequency = ({
   requestTypes,
@@ -26,7 +27,7 @@ const Frequency = ({
 
   const chartData = {
     datasets: selectedTypes.map(t => ({
-      label: `${t.abbrev} requests`,
+      label: t.abbrev,
       backgroundColor: t.color,
       borderColor: t.color,
       fill: false,
@@ -64,9 +65,17 @@ const Frequency = ({
       }],
     },
     tooltips: {
-      callbacks: {
-        title: () => null,
-      },
+      custom: adapter(ttData => {
+        const [abbrev, requests] = ttData.body[0].lines[0].split(': ');
+        const lines = [{
+          text: abbrev,
+          color: ttData.labelColors[0].backgroundColor,
+          bold: true,
+        }, {
+          text: `${requests} requests`,
+        }];
+        return <Tooltip lines={lines} />;
+      }),
     },
   };
 

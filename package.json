@@ -30,7 +30,6 @@
     "react-leaflet-choropleth": "^2.0.0",
     "react-redux": "^7.1.3",
     "react-test-renderer": "^16.12.0",
-    "react-tooltip": "^4.0.3",
     "react-vis": "^1.11.7",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",

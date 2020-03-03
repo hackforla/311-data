@@ -3,6 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from './Chart';
+import Tooltip, { adapter } from './ChartTooltip';
 
 const TimeToClose = ({
   requestTypes,
@@ -58,9 +59,27 @@ const TimeToClose = ({
       }],
     },
     tooltips: {
-      callbacks: {
-        title: () => null,
-      },
+      custom: adapter(ttData => {
+        const lines = [{
+          text: ttData.title[0],
+          bold: true,
+          color: ttData.labelColors[0].backgroundColor,
+        }];
+
+        const stats = ttData.body[0].lines[0]
+          .replace(/^.*\(/, '')
+          .replace(')', '')
+          .replace('q1', '25%')
+          .replace('median', '50%')
+          .replace('q3', '75%')
+          .split(', ');
+
+        stats.forEach(stat => lines.push({
+          text: `${stat} days`,
+        }));
+
+        return <Tooltip lines={lines} />;
+      }),
     },
     tooltipDecimals: 1,
   };
