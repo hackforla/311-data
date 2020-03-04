@@ -22,6 +22,12 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
   * PostgreSql
   * Socrata API
 
+## UI/UX Technologies
+  * Figma
+  * Google Drive
+  * Adobe CC
+  * Miro
+  
 ## 🎉🎉 Engineers start [here](https://github.com/hackforla/311-data/blob/master/GETTING_STARTED.md)!!!! 🎉🎉🎉
 
 ## Resources
