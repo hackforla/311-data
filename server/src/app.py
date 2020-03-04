@@ -83,6 +83,7 @@ async def ingest(request):
         Ex. '/ingest?years=2015,2016,2017'
     """
     current_year = datetime.now().year
+    limit = request.args.get("limit", None)
     ALLOWED_YEARS = [year for year in range(2015, current_year+1)]
     if not request.args.get("years"):
         return json({"error": "'years' parameter is required."})
@@ -91,7 +92,7 @@ async def ingest(request):
         return json({"error":
                     f"'years' param values must be one of {ALLOWED_YEARS}"})
     loader = DataHandler(app.config['Settings'])
-    loader.populateFullDatabase(yearRange=years)
+    loader.populateFullDatabase(yearRange=years, limit=limit)
     return_data = {'response': 'ingest ok'}
     return json(return_data)
 
