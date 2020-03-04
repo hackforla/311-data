@@ -21,6 +21,10 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
   * Numpy
   * PostgreSql
   * Socrata API
+  
+## Management Philosophies:
+  * Open Source
+  * Kanban
 
 ## UI/UX Technologies
   * Figma
