@@ -21,6 +21,10 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
   * Numpy
   * PostgreSql
   * Socrata API
+  
+## Management Philosophies:
+  * Open Source
+  * Kanban
 
 ## 🎉🎉 Engineers start [here](https://github.com/hackforla/311-data/blob/master/GETTING_STARTED.md)!!!! 🎉🎉🎉
 
