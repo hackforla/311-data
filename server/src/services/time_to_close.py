@@ -7,7 +7,6 @@ import json
 class time_to_close(object):
     def __init__(self,
                  config=None,
-                 requestTypes=None,
                  tableName="ingest_staging_table"):
         """
         Choose table from database by setting the value of tableName.
@@ -18,7 +17,6 @@ class time_to_close(object):
             else self.config['Database']['DB_CONNECTION_STRING']
         self.table = tableName
         self.data = None
-        pass
 
     def ttc_view_dates(self, service=False):
         """
