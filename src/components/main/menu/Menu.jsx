@@ -4,15 +4,15 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { slide as Sidebar } from 'react-burger-menu';
+import clx from 'classnames';
 
 import {
   toggleMenu as reduxToggleMenu,
   setMenuTab as reduxSetMenuTab,
 } from '@reducers/ui';
-import { MENU_TABS } from '@components/common/CONSTANTS';
 
-import Button from '../../common/Button';
+import { MENU_TABS } from '@components/common/CONSTANTS';
+import Button from '@components/common/Button';
 import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
@@ -24,99 +24,40 @@ const Menu = ({
   toggleMenu,
   setMenuTab,
 }) => {
-  const sidebarWidth = '509px';
-
   const tabs = [
     MENU_TABS.MAP,
     MENU_TABS.VISUALIZATIONS,
   ];
 
-  const handleActiveTab = tab => (tab === activeTab ? 'is-active' : '');
-
   return (
-    <div>
-      <Sidebar
-        noOverlay
-        disableAutoFocus
-        pageWrapId="sidebar-wrapper"
-        outerContainerId="body-container"
-        isOpen={isOpen}
-        width={sidebarWidth}
-        customBurgerIcon={false}
-        customCrossIcon={false}
-        styles={{
-          bmMenu: {
-            background: 'white',
-            boxShadow: '0px 4px 5px rgba(108, 108, 108, 0.3)',
-          },
-        }}
-      >
-        <div
-          id="sidebar-wrapper"
-          className="sidebar-content"
-          // TODO: Fix this for better handling of height
-          style={{
-            height: '85vh',
-            overflowY: 'scroll',
-          }}
-        >
-
-          {/* Tabs */}
-          <div
-            className="tabs is-fullwidth is-toggle"
-            style={{
-              height: '40px',
-              margin: '0',
-            }}
+    <div className={clx('menu-container', { open: isOpen })}>
+      <div className="menu-tabs">
+        {tabs.map(tab => (
+          <a
+            key={tab}
+            className={clx('menu-tab', { active: tab === activeTab })}
+            onClick={() => setMenuTab(tab)}
           >
-            <ul>
-              {tabs.map(tab => (
-                <li
-                  key={tab}
-                  className={handleActiveTab(tab)}
-                  style={{ width: '254px' }}
-                >
-                  <a onClick={() => { setMenuTab(tab); }}>
-                    {tab}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+            { tab }
+          </a>
+        ))}
+      </div>
 
-          {/* Open/Close Button */}
-          <Button
-            id="menu-toggle-button"
-            icon={!isOpen ? 'chevron-right' : 'chevron-left'}
-            iconStyle={{ margin: '0px' }}
-            style={{
-              position: 'fixed',
-              left: sidebarWidth,
-              height: '60px',
-              width: '26px',
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
-              borderRadius: '0',
-            }}
-            handleClick={() => toggleMenu()}
-            color="light"
-          />
+      <Button
+        id="menu-toggle-button"
+        icon={!isOpen ? 'chevron-right' : 'chevron-left'}
+        iconStyle={{ margin: '0px' }}
+        handleClick={() => toggleMenu()}
+        color="light"
+      />
 
-          {/* Content */}
-          <div className="sidebar-content" style={{ padding: '16px' }}>
-            <div className="sidebar-title">
-              <p className="subtitle">
-                <strong>
-                  Filters
-                </strong>
-              </p>
-            </div>
-            <DateSelector />
-            <NCSelector />
-            <RequestTypeSelector />
-            <Submit />
-          </div>
-        </div>
-      </Sidebar>
+      <div className="menu-content">
+        <h1>Filters</h1>
+        <DateSelector />
+        <NCSelector />
+        <RequestTypeSelector />
+        <Submit />
+      </div>
     </div>
   );
 };
