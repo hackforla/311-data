@@ -56,9 +56,12 @@ class DataHandler:
         zipIndex = (data['zipcode'].str.isdigit()) | (data['zipcode'].isna())
         data['zipcode'].loc[~zipIndex] = np.nan
         # Format dates as datetime (Time intensive)
-        data['createddate'] = pd.to_datetime(data['createddate'])
-        data['closeddate'] = pd.to_datetime(data['closeddate'])
-        data['servicedate'] = pd.to_datetime(data['servicedate'])
+        if 'createddate' in data.columns:
+            data['createddate'] = pd.to_datetime(data['createddate'])
+        if 'closeddate' in data.columns:
+            data['closeddate'] = pd.to_datetime(data['closeddate'])
+        if 'servicedate' in data.columns:
+            data['servicedate'] = pd.to_datetime(data['servicedate'])
         data['location'] = data.location.astype(str)
         # Check for column consistency
         for f in self.fields:

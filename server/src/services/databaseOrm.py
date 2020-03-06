@@ -75,7 +75,7 @@ insertFields = {'srnumber': String(50),
                 'cd': Float,
                 'cdmember': String(30),
                 'nc': Float,
-                'ncname': String(30),
+                'ncname': String(100),
                 'policeprecinct': String(30)}
 
 
