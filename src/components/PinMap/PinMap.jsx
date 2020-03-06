@@ -7,14 +7,20 @@ import {
   TileLayer,
   Rectangle,
   Tooltip,
+  LayersControl,
+  ZoomControl,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
+import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 import ncOverlay from '../../data/nc-boundary-2019.json';
+
+const { BaseLayer, Overlay } = LayersControl;
 
 class PinMap extends Component {
   constructor(props) {
@@ -24,6 +30,7 @@ class PinMap extends Component {
       position: [34.0094213, -118.6008506],
       zoom: 10,
       mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
+      satelliteUrl: `https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
       geoJSON: ncOverlay,
       bounds: null,
     };
@@ -34,9 +41,7 @@ class PinMap extends Component {
 
     layer.setStyle({
       weight: 5,
-      color: '#666',
-      dashArray: '',
-      fillOpacity: 0.7,
+      color: 'grey',
     });
 
     layer.bringToFront();
@@ -46,12 +51,9 @@ class PinMap extends Component {
     const layer = e.target;
 
     layer.setStyle({
-      fillColor: '#bcbddc',
       weight: 2,
       opacity: 1,
-      color: 'white',
-      dashArray: '3',
-      fillOpacity: 0.7,
+      color: '#959595',
     });
   }
 
@@ -60,7 +62,7 @@ class PinMap extends Component {
     this.setState({ bounds });
   }
 
-  onEachFeature = (feature, layer) => {
+  onEachRegionFeature = (feature, layer) => {
     // Popup text when clicking on a region
     const popupText = `
       <div class="overlay_feature_popup">
@@ -79,37 +81,6 @@ class PinMap extends Component {
     });
   }
 
-  renderOverlay = () => {
-    const { geoJSON } = this.state;
-
-    if (geoJSON) {
-      return (
-        <Choropleth
-          data={geoJSON}
-          style={{
-            fillColor: '#bcbddc',
-            weight: 2,
-            opacity: 1,
-            color: 'white',
-            dashArray: '3',
-            fillOpacity: 0.7,
-          }}
-          onEachFeature={this.onEachFeature}
-          ref={el => {
-            if (el) {
-              this.choropleth = el.leafletElement;
-              return this.choropleth;
-            }
-
-            return null;
-          }}
-        />
-      );
-    }
-
-    return 'Loading';
-  }
-
   renderMarkers = () => {
     const { data, showMarkers } = this.props;
 
@@ -120,6 +91,7 @@ class PinMap extends Component {
 
           return (
             <Marker key={d.srnumber} position={position}>
+              {/* Fetching request details on marker click will be implemented in another PR */}
               <Popup>
                 Type:
                 {d.requesttype}
@@ -156,23 +128,90 @@ class PinMap extends Component {
       position,
       zoom,
       mapUrl,
+      satelliteUrl,
       bounds,
+      geoJSON,
     } = this.state;
+
+    const { data } = this.props;
 
     return (
       <div className="map-container">
         <Map
           center={position}
           zoom={zoom}
+          maxZoom={18}
           bounds={bounds}
           style={{ height: '88.4vh' }}
+          zoomControl={false}
         >
-          <TileLayer
-            url={mapUrl}
-            attribution="MapBox"
-          />
-          {this.renderOverlay()}
-          {this.renderMarkers()}
+          <ZoomControl position="topright" />
+          <LayersControl
+            position="bottomright"
+            collapsed={false}
+          >
+            <BaseLayer checked name="Streets">
+              <TileLayer
+                url={mapUrl}
+                attribution="MapBox"
+              />
+            </BaseLayer>
+            <BaseLayer name="Satellite">
+              <TileLayer
+                url={satelliteUrl}
+                attribution="MapBox"
+              />
+            </BaseLayer>
+            {
+              geoJSON
+              && (
+                <Overlay checked name="Neighborhood Council Boundaries">
+                  <Choropleth
+                    data={geoJSON}
+                    style={{
+                      fillColor: 'white',
+                      weight: 2,
+                      opacity: 1,
+                      color: '#959595',
+                      dashArray: '3',
+                    }}
+                    onEachFeature={this.onEachRegionFeature}
+                    ref={el => {
+                      if (el) {
+                        this.choropleth = el.leafletElement;
+                        return this.choropleth;
+                      }
+                      return null;
+                    }}
+                  />
+                </Overlay>
+              )
+            }
+            <Overlay checked name="Markers">
+              <MarkerClusterGroup
+                showCoverageOnHover
+                zoomToBoundsOnClick
+                removeOutsideVisibleBounds
+                maxClusterRadius={65}
+              >
+                {this.renderMarkers()}
+              </MarkerClusterGroup>
+            </Overlay>
+            <Overlay name="Heatmap">
+              {/* intensityExtractor is required and requires a callback as the value.
+                * The heatmap is working with an empty callback but we'll probably
+                * improve functionality post-MVP by generating a heatmap list
+                * on the backend. */}
+              <HeatmapLayer
+                points={data}
+                radius={20}
+                blur={25}
+                longitudeExtractor={m => m.longitude}
+                latitudeExtractor={m => m.latitude}
+                intensityExtractor={() => {}}
+              />
+            </Overlay>
+          </LayersControl>
         </Map>
       </div>
     );
