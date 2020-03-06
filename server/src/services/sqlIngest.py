@@ -93,6 +93,7 @@ class DataHandler:
                     schema='public',
                     index=False,
                     chunksize=10,
+                    method='multi',
                     dtype=self.insertParams)
         print('\tIngest Complete: %.1f minutes' %
               self.elapsedTimer(ingestTimer))
@@ -162,7 +163,7 @@ class DataHandler:
         print('\tDownload Complete: %.1f minutes' %
               self.elapsedTimer(downloadTimer))
 
-    def populateFullDatabase(self, yearRange=range(2015, 2021)):
+    def populateFullDatabase(self, yearRange=range(2015, 2021), limit=None):
         '''Fetches all data from Socrata to populate database
            Default operation is to fetch data from 2015-2020
            !!! Be aware that each fresh import will wipe the
@@ -171,7 +172,7 @@ class DataHandler:
         tableInit = False
         globalTimer = time.time()
         for y in yearRange:
-            self.fetchSocrataFull(year=y)
+            self.fetchSocrataFull(year=y, limit=limit)
             self.cleanData()
             if not tableInit:
                 self.ingestData(ingestMethod='replace')
