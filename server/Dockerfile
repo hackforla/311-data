@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -yq \
     gfortran musl-dev
 
 ENV DB_CONNECTION_STRING=REDACTED
+ENV PORT=5000
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
@@ -13,6 +14,6 @@ COPY src/ /app
 
 WORKDIR /app
 
-EXPOSE 5000
+EXPOSE $PORT
 
 CMD ["python", "app.py"]
