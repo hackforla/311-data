@@ -20,15 +20,22 @@ CORS(app)
 compress = Compress()
 
 
+def environment_overrides():
+    if os.environ.get('DB_CONNECTION_STRING', None):
+        app.config['Settings']['Database']['DB_CONNECTION_STRING'] =\
+            os.environ.get('DB_CONNECTION_STRING')
+    if os.environ.get('PORT', None):
+        app.config['Settings']['Server']['PORT'] =\
+            os.environ.get('PORT')
+
+
 def configure_app():
     # Settings initialization
     config = ConfigParser()
     settings_file = os.path.join(os.getcwd(), 'settings.cfg')
     config.read(settings_file)
     app.config['Settings'] = config
-    if os.environ.get('DB_CONNECTION_STRING', None):
-        app.config['Settings']['Database']['DB_CONNECTION_STRING'] =\
-            os.environ.get('DB_CONNECTION_STRING')
+    environment_overrides()
     app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
     os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
 
