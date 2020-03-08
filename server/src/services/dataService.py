@@ -4,17 +4,19 @@ import sqlalchemy as db
 
 
 class DataService(object):
+    def withMeta(dataResponse):
+        # Will represent last time the ingest pipeline ran
+        lastPulledTimestamp = datetime.datetime.utcnow()
+        return {'lastPulled': lastPulledTimestamp,
+                'data': dataResponse}
+
     def includeMeta(func):
         def innerFunc(*args, **kwargs):
             dataResponse = func(*args, **kwargs)
             if 'Error' in dataResponse:
                 return dataResponse
 
-            # Will represent last time the ingest pipeline ran
-            lastPulledTimestamp = datetime.datetime.utcnow()
-            withMeta = {'lastPulled': lastPulledTimestamp,
-                        'data': dataResponse}
-            return withMeta
+            return DataService.withMeta(dataResponse)
 
         return innerFunc
 
@@ -26,6 +28,7 @@ class DataService(object):
         self.table = tableName
         self.data = None
         self.engine = db.create_engine(self.dbString)
+        self.session = db.orm.sessionmaker(bind=self.engine)()
 
     @includeMeta
     def query(self, queryItems=None, queryfilters=[], limit=None):
