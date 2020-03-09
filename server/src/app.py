@@ -28,6 +28,9 @@ def environment_overrides():
     if os.environ.get('PORT', None):
         app.config['Settings']['Server']['PORT'] =\
             os.environ.get('PORT')
+    if os.environ.get('TOKEN', None):
+        app.config['Settings']['Socrata']['TOKEN'] =\
+            os.environ.get('TOKEN')
 
 
 def configure_app():
