@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 
-class time_to_close(object):
+class Time_to_close(object):
     def __init__(self,
                  config=None,
                  requestTypes=None,

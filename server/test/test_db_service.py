@@ -1,4 +1,4 @@
-from src.services.dataService import DataService
+from src.services.DataService import DataService
 
 TESTCONFIG = {
     "Database": {

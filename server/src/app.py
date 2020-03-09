@@ -8,12 +8,12 @@ from threading import Timer
 from datetime import datetime
 from multiprocessing import cpu_count
 
-from services.time_to_close import time_to_close
-from services.frequency import frequency
-from services.pinService import PinService
-from services.requestDetailService import RequestDetailService
-from services.ingress_service import ingress_service
-from services.sqlIngest import DataHandler
+from .services import Time_to_close
+from .services import Frequency
+from .services import PinService
+from .services import RequestDetailService
+from .services import Ingress_service
+from .services.sqlIngest import DataHandler
 
 app = Sanic(__name__)
 CORS(app)
@@ -49,7 +49,7 @@ async def index(request):
 @app.route('/timetoclose')
 @compress.compress()
 async def timetoclose(request):
-    ttc_worker = time_to_close(app.config['Settings'])
+    ttc_worker = Time_to_close(app.config['Settings'])
 
     # dates = loads(ttc_worker.ttc_view_dates())
     summary = ttc_worker.ttc_summary(allData=True,
@@ -64,7 +64,7 @@ async def timetoclose(request):
 @app.route('/requestfrequency')
 @compress.compress()
 async def requestfrequency(request):
-    freq_worker = frequency(app.config['Settings'])
+    freq_worker = Frequency(app.config['Settings'])
 
     data = freq_worker.freq_view_data(service=True,
                                       councils=[],
@@ -76,8 +76,7 @@ async def requestfrequency(request):
 @app.route('/sample-data')
 @compress.compress()
 async def sample_route(request):
-    sample_dataset = {'cool_key': ['value1', 'value2'],
-                      app.config['REDACTED']: app.config['REDACTED']}
+    sample_dataset = {'cool_key': ['value1', 'value2']}
     return json(sample_dataset)
 
 
@@ -110,7 +109,7 @@ async def ingest(request):
 @app.route('/update')
 @compress.compress()
 async def update(request):
-    ingress_worker = ingress_service()
+    ingress_worker = Ingress_service()
     return_data = ingress_worker.update()
     return json(return_data)
 
@@ -118,7 +117,7 @@ async def update(request):
 @app.route('/delete')
 @compress.compress()
 async def delete(request):
-    ingress_worker = ingress_service()
+    ingress_worker = Ingress_service()
     return_data = ingress_worker.delete()
     return json(return_data)
 

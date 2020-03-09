@@ -2,6 +2,7 @@
 dist/
 # Test results
 coverage/
+.coverage
 
 # dependencies
 /node_modules
@@ -38,7 +39,7 @@ Orchestration/docker-compose.yml
 
 __pycache__/
 
-# csv files 
+# csv files
 /dataAnalysis/datasets
 /server/src/static
 

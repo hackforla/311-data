@@ -1,4 +1,4 @@
-from .dataService import DataService
+from . import DataService
 
 
 class RequestDetailService(object):

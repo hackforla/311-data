@@ -1,7 +1,7 @@
 from .sqlIngest import DataHandler
 
 
-class ingress_service(object):
+class Ingress_service(object):
     def __init__(self, config=None):
         self.config = config
 
@@ -26,5 +26,5 @@ if __name__ == "__main__":
     from configparser import ConfigParser
     config = ConfigParser()
     config.read('../settings.cfg')
-    worker = ingress_service(config=config)
+    worker = Ingress_service(config=config)
     worker.ingest()

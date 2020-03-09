@@ -1,0 +1,6 @@
+[run]
+omit = server/test/*
+
+[report]
+fail_under = 7
+sort = Cover

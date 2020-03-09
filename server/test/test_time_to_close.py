@@ -1,4 +1,4 @@
-from src.services.time_to_close import time_to_close
+from src.services.Time_to_close import Time_to_close
 
 
 def test_serviceExists():
@@ -7,7 +7,7 @@ def test_serviceExists():
     print(testString)
 
     # Act
-    ttc_worker = time_to_close()
+    ttc_worker = Time_to_close()
     print(ttc_worker)
 
     # Assert

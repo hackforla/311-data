@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 
-class frequency(object):
+class Frequency(object):
     def __init__(self, config=None, tableName="ingest_staging_table"):
         self.config = config
         self.dbString = None if not self.config  \
