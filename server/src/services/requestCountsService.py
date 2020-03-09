@@ -1,6 +1,4 @@
-from sqlalchemy import func
 from .dataService import DataService
-from .databaseOrm import Ingest as Request
 
 
 class RequestCountsService(object):
@@ -40,31 +38,7 @@ class RequestCountsService(object):
         }
         """
 
-        # filter by date, nc, and requestType (if provided)
-        filters = [
-            Request.createddate > startDate if startDate else True,
-            Request.createddate < endDate if endDate else True,
-            Request.ncname.in_(ncList) if ncList else True,
-            Request.requesttype.in_(requestTypes) if requestTypes else True
-        ]
+        filters = self.dataAccess.standardFilters(
+            startDate, endDate, ncList, requestTypes)
 
-        data = []
-        for field in countFields:
-            # make sure the field exists in the Request model
-            if not getattr(Request, field, None):
-                continue
-
-            # run count/groupby query
-            results = self.dataAccess.session \
-                .query(field, func.count()) \
-                .filter(*filters) \
-                .group_by(field) \
-                .all()
-
-            # add results to data set
-            data.append({
-                'field': field,
-                'counts': dict(results)
-            })
-
-        return DataService.withMeta(data)
+        return self.dataAccess.aggregateQuery(countFields, filters)
