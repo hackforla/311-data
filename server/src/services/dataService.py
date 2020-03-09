@@ -1,6 +1,7 @@
 import datetime
 import pandas as pd
 import sqlalchemy as db
+from sqlalchemy.orm import sessionmaker
 
 
 class DataService(object):
@@ -28,7 +29,7 @@ class DataService(object):
         self.table = tableName
         self.data = None
         self.engine = db.create_engine(self.dbString)
-        self.session = db.orm.sessionmaker(bind=self.engine)()
+        self.session = sessionmaker(bind=self.engine)()
 
     @includeMeta
     def query(self, queryItems=None, queryfilters=[], limit=None):
