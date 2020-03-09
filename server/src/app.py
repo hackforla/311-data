@@ -11,6 +11,7 @@ from multiprocessing import cpu_count
 from services.time_to_close import time_to_close
 from services.frequency import frequency
 from services.pinService import PinService
+from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
 from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
@@ -140,6 +141,25 @@ async def pinMap(request):
                                                  endDate=end,
                                                  ncList=ncs,
                                                  requestTypes=requests)
+    return json(return_data)
+
+
+@app.route('/requestcounts', methods=["POST"])
+@compress.compress()
+async def requestCounts(request):
+    counts_worker = RequestCountsService(app.config['Settings'])
+    postArgs = request.json
+    start = postArgs.get('startDate', None)
+    end = postArgs.get('endDate', None)
+    ncs = postArgs.get('ncList', [])
+    requests = postArgs.get('requestTypes', [])
+    countFields = postArgs.get('countFields', [])
+
+    return_data = await counts_worker.get_req_counts(startDate=start,
+                                                     endDate=end,
+                                                     ncList=ncs,
+                                                     requestTypes=requests,
+                                                     countFields=countFields)
     return json(return_data)
 
 
