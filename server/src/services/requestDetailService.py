@@ -25,8 +25,4 @@ class RequestDetailService(object):
         }
         """
 
-        items = ['*']
-        filters = ['srnumber = \'{}\''.format(requestNumber)]
-        result = self.dataAccess.query(items, filters)
-
-        return result
+        return self.dataAccess.itemQuery(requestNumber)
