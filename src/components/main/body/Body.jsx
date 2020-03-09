@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Visualizations from '@components/Visualizations';
+import Loader from '@components/common/Loader';
 import Menu from '../menu/Menu';
 import PinMap from '../../PinMap/PinMap';
 
@@ -10,6 +11,7 @@ const Body = () => (
     <main id="body-wrap">
       <PinMap />
       <Visualizations />
+      <Loader />
     </main>
   </div>
 );

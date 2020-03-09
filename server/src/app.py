@@ -20,15 +20,22 @@ CORS(app)
 compress = Compress()
 
 
+def environment_overrides():
+    if os.environ.get('DB_CONNECTION_STRING', None):
+        app.config['Settings']['Database']['DB_CONNECTION_STRING'] =\
+            os.environ.get('DB_CONNECTION_STRING')
+    if os.environ.get('PORT', None):
+        app.config['Settings']['Server']['PORT'] =\
+            os.environ.get('PORT')
+
+
 def configure_app():
     # Settings initialization
     config = ConfigParser()
     settings_file = os.path.join(os.getcwd(), 'settings.cfg')
     config.read(settings_file)
     app.config['Settings'] = config
-    if os.environ.get('DB_CONNECTION_STRING', None):
-        app.config['Settings']['Database']['DB_CONNECTION_STRING'] =\
-            os.environ.get('DB_CONNECTION_STRING')
+    environment_overrides()
     app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
     os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
 
@@ -83,6 +90,8 @@ async def ingest(request):
         Ex. '/ingest?years=2015,2016,2017'
     """
     current_year = datetime.now().year
+    querySize = request.args.get("querySize", None)
+    limit = request.args.get("limit", None)
     ALLOWED_YEARS = [year for year in range(2015, current_year+1)]
     if not request.args.get("years"):
         return json({"error": "'years' parameter is required."})
@@ -91,7 +100,9 @@ async def ingest(request):
         return json({"error":
                     f"'years' param values must be one of {ALLOWED_YEARS}"})
     loader = DataHandler(app.config['Settings'])
-    loader.populateFullDatabase(yearRange=years)
+    loader.populateFullDatabase(yearRange=years,
+                                querySize=querySize,
+                                limit=limit)
     return_data = {'response': 'ingest ok'}
     return json(return_data)
 

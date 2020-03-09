@@ -15,7 +15,7 @@ import Icon from '../../../common/Icon';
 import COLORS from '../../../../styles/COLORS';
 
 const cardStyle = {
-  height: '299px',
+  height: '200px',
   width: '400px',
   overflow: 'visible',
   boxShadow: '0px 6px 5px rgba(0, 0, 0, 0.5)',
@@ -163,6 +163,7 @@ const DateRangePicker = ({
           border: 'none',
           textAlign: 'center',
           borderRadius: '0',
+          height: '75px',
         }}
       >
         <div className="container" style={{ paddingBottom: '30px' }}>

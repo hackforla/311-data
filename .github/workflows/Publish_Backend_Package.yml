@@ -29,3 +29,17 @@ jobs:
         dockerfile: server/Dockerfile
         context: server
         tags: "latest, ${{github.sha}}"
+    - name: Login to heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:login
+    - name: Build and push heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: |
+        docker tag docker.pkg.github.com/hackforla/311-data/backend:${{github.sha}} registry.heroku.com/hackforla-311-data/web
+        docker push registry.heroku.com/hackforla-311-data/web
+    - name: Release
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:release -a hackforla-311-data web
