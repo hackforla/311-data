@@ -36,7 +36,7 @@ const Menu = ({
           <a
             key={tab}
             className={clx('menu-tab', { active: tab === activeTab })}
-            onClick={() => setMenuTab(tab)}
+            onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
           >
             { tab }
           </a>

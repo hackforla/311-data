@@ -47,7 +47,7 @@ export default connect(mapStateToProps)(Criteria);
 Criteria.propTypes = {
   startDate: PropTypes.string,
   endDate: PropTypes.string,
-  councils: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  councils: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 Criteria.defaultProps = {
