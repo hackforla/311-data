@@ -5,7 +5,16 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class Ingest(Base):
+class Mixin:
+    """
+    Adds `_asdict()` to easily serialize objects to dictionaries.
+    """
+    def _asdict(self):
+        cols = self.__table__.columns
+        return {col.name: getattr(self, col.name) for col in cols}
+
+
+class Ingest(Base, Mixin):
     __tablename__ = 'ingest_staging_table'
     srnumber = Column(String(50), primary_key=True, unique=True)
     createddate = Column(DateTime)
