@@ -20,6 +20,7 @@ class DataHandler:
             else self.config['Database']['DB_CONNECTION_STRING']
         self.token = None if config['Socrata']['TOKEN'] == 'None' \
             else config['Socrata']['TOKEN']
+        self.timeout = int(self.config['Socrata']['TIMEOUT'])
         self.filePath = None
         self.configFilePath = configFilePath
         self.separator = separator
@@ -56,9 +57,12 @@ class DataHandler:
         zipIndex = (data['zipcode'].str.isdigit()) | (data['zipcode'].isna())
         data['zipcode'].loc[~zipIndex] = np.nan
         # Format dates as datetime (Time intensive)
-        data['createddate'] = pd.to_datetime(data['createddate'])
-        data['closeddate'] = pd.to_datetime(data['closeddate'])
-        data['servicedate'] = pd.to_datetime(data['servicedate'])
+        if 'createddate' in data.columns:
+            data['createddate'] = pd.to_datetime(data['createddate'])
+        if 'closeddate' in data.columns:
+            data['closeddate'] = pd.to_datetime(data['closeddate'])
+        if 'servicedate' in data.columns:
+            data['servicedate'] = pd.to_datetime(data['servicedate'])
         data['location'] = data.location.astype(str)
         # Check for column consistency
         for f in self.fields:
@@ -93,6 +97,7 @@ class DataHandler:
                     schema='public',
                     index=False,
                     chunksize=10,
+                    method='multi',
                     dtype=self.insertParams)
         print('\tIngest Complete: %.1f minutes' %
               self.elapsedTimer(ingestTimer))
@@ -118,34 +123,45 @@ class DataHandler:
         '''Save contents of self.data to CSV output'''
         self.data.to_csv(filename, index=False)
 
-    def fetchSocrata(self, year=2019, querySize=20000, pageSize=20000):
+    def fetchSocrata(self,
+                     year=2019,
+                     querySize=10000,
+                     totalRequestRecords=10**7):
         '''Fetch data from Socrata connection and return pandas dataframe'''
         # Load config files
         print('Retrieving partial Socrata query...')
-        fetchTimer = time.time()
         socrata_domain = self.config['Socrata']['DOMAIN']
         socrata_dataset_identifier = self.config['Socrata']['AP' + str(year)]
         socrata_token = self.token
         # Establish connection to Socrata resource
         client = Socrata(socrata_domain, socrata_token)
+        client.timeout = self.timeout
         # Fetch data
         # Loop for querying dataset
-        queryDf = None
-        for i in range(0, querySize, pageSize):
-            # print(i + pageSize)
+        tableInit = False
+        query = int(querySize)
+        maxRecords = int(totalRequestRecords)
+        for i in range(0, maxRecords, query):
+            fetchTimer = time.time()
+            print('Fetching %d records with offset %d up to a max of %d'
+                  % (query, i, maxRecords))
             results = client.get(socrata_dataset_identifier,
                                  offset=i,
                                  select="*",
                                  order="updateddate DESC",
-                                 limit=querySize)
+                                 limit=query)
+            if not results:
+                break
             tempDf = pd.DataFrame.from_dict(results)
-            if queryDf is None:
-                queryDf = tempDf.copy()
+            self.data = tempDf
+            self.cleanData()
+            if not tableInit:
+                self.ingestData(ingestMethod='replace')
+                tableInit = True
             else:
-                queryDf = queryDf.append(tempDf)
-        self.data = queryDf
-        print('%d records retrieved in %.2f minutes' %
-              (self.data.shape[0], self.elapsedTimer(fetchTimer)))
+                self.ingestData(ingestMethod='append')
+            print('%d records retrieved in %.2f minutes' %
+                  (self.data.shape[0], self.elapsedTimer(fetchTimer)))
 
     def fetchSocrataFull(self, year=2019, limit=10**7):
         '''Fetch entirety of dataset via Socrata'''
@@ -162,22 +178,21 @@ class DataHandler:
         print('\tDownload Complete: %.1f minutes' %
               self.elapsedTimer(downloadTimer))
 
-    def populateFullDatabase(self, yearRange=range(2015, 2021)):
+    def populateFullDatabase(self,
+                             yearRange=range(2015, 2021),
+                             querySize=None,
+                             limit=None):
         '''Fetches all data from Socrata to populate database
            Default operation is to fetch data from 2015-2020
            !!! Be aware that each fresh import will wipe the
            existing staging table'''
         print('Performing {} population from data source'.format(self.dialect))
-        tableInit = False
         globalTimer = time.time()
         for y in yearRange:
-            self.fetchSocrataFull(year=y)
-            self.cleanData()
-            if not tableInit:
-                self.ingestData(ingestMethod='replace')
-                tableInit = True
-            else:
-                self.ingestData(ingestMethod='append')
+            self.fetchSocrata(year=y,
+                              querySize=querySize,
+                              totalRequestRecords=limit)
+
         print('All Operations Complete: %.1f minutes' %
               self.elapsedTimer(globalTimer))
 

@@ -5,7 +5,16 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class Ingest(Base):
+class Mixin:
+    """
+    Adds `_asdict()` to easily serialize objects to dictionaries.
+    """
+    def _asdict(self):
+        cols = self.__table__.columns
+        return {col.name: getattr(self, col.name) for col in cols}
+
+
+class Ingest(Base, Mixin):
     __tablename__ = 'ingest_staging_table'
     srnumber = Column(String(50), primary_key=True, unique=True)
     createddate = Column(DateTime)
@@ -59,7 +68,7 @@ insertFields = {'srnumber': String(50),
                 'closeddate': String(30),
                 'addressverified': String(16),
                 'approximateaddress': String(20),
-                'address': String(100),
+                'address': String(250),
                 'housenumber': String(10),
                 'direction': String(10),
                 'streetname': String(50),
@@ -67,7 +76,7 @@ insertFields = {'srnumber': String(50),
                 'zipcode': Integer,
                 'latitude': Float,
                 'longitude': Float,
-                'location': String(100),
+                'location': String(250),
                 'tbmpage': Integer,
                 'tbmcolumn': String(10),
                 'tbmrow': Float,

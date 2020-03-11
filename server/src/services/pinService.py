@@ -6,8 +6,8 @@ class PinService(object):
         self.dataAccess = DataService(config, tableName)
 
     async def get_base_pins(self,
-                            startDate='',
-                            endDate='',
+                            startDate=None,
+                            endDate=None,
                             ncList=[],
                             requestTypes=[]):
         """
@@ -16,33 +16,19 @@ class PinService(object):
           'LastPulled': 'Timestamp',
           'data': [
             {
-              'ncname':'String',
-              'requesttype':'String',
               'srnumber':'String',
               'latitude': 'String',
               'longitude': 'String',
-              'address': 'String',
-              'createddate': 'Timestamp'
             }
           ]
         }
         """
 
-        items = ['ncname',
-                 'requesttype',
-                 'srnumber',
+        items = ['srnumber',
                  'latitude',
-                 'longitude',
-                 'address',
-                 'createddate']
+                 'longitude']
 
-        ncs = '\'' + '\', \''.join(ncList) + '\''
-        requests = '\'' + '\', \''.join(requestTypes) + '\''
+        filters = self.dataAccess.standardFilters(
+            startDate, endDate, ncList, requestTypes)
 
-        filters = ['createddate > \'{}\''.format(startDate),
-                   'createddate < \'{}\''.format(endDate),
-                   'ncname IN ({})'.format(ncs),
-                   'requesttype IN ({})'.format(requests)]
-        result = self.dataAccess.query(items, filters)
-
-        return result
+        return self.dataAccess.query(items, filters)

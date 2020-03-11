@@ -1,120 +1,87 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
-import { slide as Sidebar } from 'react-burger-menu';
+import React from 'react';
+import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
+import clx from 'classnames';
 
-import Button from '../../common/Button';
+import {
+  toggleMenu as reduxToggleMenu,
+  setMenuTab as reduxSetMenuTab,
+} from '@reducers/ui';
+
+import { MENU_TABS } from '@components/common/CONSTANTS';
+import Button from '@components/common/Button';
+import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
 
-// const buildDataUrl = () => {
-//   return `https://data.lacity.org/resource/${dataResources[year]}.json?$select=location,zipcode,address,requesttype,status,ncname,streetname,housenumber&$where=date_extract_m(CreatedDate)+between+${startMonth}+and+${endMonth}+and+requesttype='${request}'`;
-// };
-
-const Menu = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('Map');
-  const sidebarWidth = '509px';
-
+const Menu = ({
+  isOpen,
+  activeTab,
+  toggleMenu,
+  setMenuTab,
+}) => {
   const tabs = [
-    'Map',
-    'Data Visualization',
+    MENU_TABS.MAP,
+    MENU_TABS.VISUALIZATIONS,
   ];
 
-  const handleActiveTab = (tab) => (tab === activeTab ? 'is-active' : '');
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
   return (
-    <div>
-      <Sidebar
-        noOverlay
-        disableAutoFocus
-        pageWrapId="sidebar-wrapper"
-        outerContainerId="body-container"
-        isOpen={isOpen}
-        width={sidebarWidth}
-        customBurgerIcon={false}
-        customCrossIcon={false}
-        styles={{
-          bmMenu: {
-            background: 'white',
-            boxShadow: '0px 4px 5px rgba(108, 108, 108, 0.3)',
-          },
-        }}
-      >
-        <div
-          id="sidebar-wrapper"
-          className="sidebar-content"
-          // TODO: Fix this for better handling of height
-          style={{
-            height: '85vh',
-            overflowY: 'scroll',
-          }}
-        >
-
-          {/* Tabs */}
-          <div
-            className="tabs is-fullwidth is-toggle"
-            style={{
-              height: '40px',
-              margin: '0',
-            }}
+    <div className={clx('menu-container', { open: isOpen })}>
+      <div className="menu-tabs">
+        {tabs.map(tab => (
+          <a
+            key={tab}
+            className={clx('menu-tab', { active: tab === activeTab })}
+            onClick={() => setMenuTab(tab)}
           >
-            <ul>
-              {tabs.map((tab) => (
-                <li
-                  key={tab}
-                  className={handleActiveTab(tab)}
-                  style={{ width: '254px' }}
-                >
-                  <a onClick={() => { handleTabClick(tab); }}>
-                    {tab}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+            { tab }
+          </a>
+        ))}
+      </div>
 
-          {/* Open/Close Button */}
-          <Button
-            id="menu-toggle-button"
-            icon={!isOpen ? 'chevron-right' : 'chevron-left'}
-            iconStyle={{ margin: '0px' }}
-            style={{
-              position: 'fixed',
-              left: sidebarWidth,
-              height: '60px',
-              width: '26px',
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
-              borderRadius: '0',
-            }}
-            handleClick={() => setIsOpen(!isOpen)}
-            color="light"
-          />
+      <Button
+        id="menu-toggle-button"
+        icon={!isOpen ? 'chevron-right' : 'chevron-left'}
+        iconStyle={{ margin: '0px' }}
+        handleClick={() => toggleMenu()}
+        color="light"
+      />
 
-          {/* Content */}
-          <div className="sidebar-content" style={{ padding: '16px' }}>
-            <div className="sidebar-title">
-              <p className="subtitle">
-                <strong>
-                  Filters
-                </strong>
-              </p>
-            </div>
-            <DateSelector />
-            <NCSelector />
-            <RequestTypeSelector />
-          </div>
-        </div>
-      </Sidebar>
+      <div className="menu-content">
+        <h1>Filters</h1>
+        <DateSelector />
+        <NCSelector />
+        <RequestTypeSelector />
+        <Submit />
+      </div>
     </div>
   );
 };
 
-// const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  isOpen: state.ui.menu.isOpen,
+  activeTab: state.ui.menu.activeTab,
+});
 
-export default Menu;
+const mapDispatchToProps = dispatch => ({
+  toggleMenu: () => dispatch(reduxToggleMenu()),
+  setMenuTab: tab => dispatch(reduxSetMenuTab(tab)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
+
+Menu.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  activeTab: PropTypes.string.isRequired,
+  toggleMenu: PropTypes.func,
+  setMenuTab: PropTypes.func,
+};
+
+Menu.defaultProps = {
+  toggleMenu: () => null,
+  setMenuTab: () => null,
+};

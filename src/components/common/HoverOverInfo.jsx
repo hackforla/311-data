@@ -5,12 +5,13 @@ const HoverOverInfo = ({
   title,
   text,
   position,
-  children
+  children,
 }) => (
   <span
     data-for="react-tooltip"
     data-tip={JSON.stringify({ title, text })}
-    data-place={position}>
+    data-place={position}
+  >
     { children }
   </span>
 );
@@ -21,8 +22,12 @@ HoverOverInfo.propTypes = {
   title: PropTypes.string,
   text: PropTypes.string,
   position: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
+  children: PropTypes.element,
 };
 
 HoverOverInfo.defaultProps = {
-  position: 'right'
+  title: undefined,
+  text: undefined,
+  position: 'right',
+  children: (<div />),
 };

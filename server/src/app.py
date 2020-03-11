@@ -1,13 +1,6 @@
 import os
 from sanic import Sanic
 from sanic.response import json
-<<<<<<< HEAD
-from services.precache import precache
-from services.time_to_close import time_to_close
-from services.frequency import frequency
-from services.ingress_service import ingress_service
-=======
->>>>>>> upstream/dev
 from configparser import ConfigParser
 from threading import Timer
 from datetime import datetime

@@ -12,11 +12,10 @@ import {
 import Button from '../../../common/Button';
 import Icon from '../../../common/Icon';
 
-import 'react-datepicker/dist/react-datepicker.css';
 import COLORS from '../../../../styles/COLORS';
 
 const cardStyle = {
-  height: '299px',
+  height: '200px',
   width: '400px',
   overflow: 'visible',
   boxShadow: '0px 6px 5px rgba(0, 0, 0, 0.5)',
@@ -122,7 +121,7 @@ const DateRangePicker = ({
               showMonthDropdown
               showPopperArrow={false}
               popperPlacement="right"
-              onChange={(date) => handleDateChange(updateLocalStart, date)}
+              onChange={date => handleDateChange(updateLocalStart, date)}
               placeholderText="MM/DD/YYYY"
             />
           </div>
@@ -149,7 +148,7 @@ const DateRangePicker = ({
               selectsEnd
               showPopperArrow={false}
               popperPlacement="right"
-              onChange={(date) => handleDateChange(updateLocalEnd, date)}
+              onChange={date => handleDateChange(updateLocalEnd, date)}
               placeholderText="MM/DD/YYYY"
             />
           </div>
@@ -164,6 +163,7 @@ const DateRangePicker = ({
           border: 'none',
           textAlign: 'center',
           borderRadius: '0',
+          height: '75px',
         }}
       >
         <div className="container" style={{ paddingBottom: '30px' }}>
@@ -179,7 +179,7 @@ const DateRangePicker = ({
             }}
             handleClick={() => {
               if (startDate && endDate) {
-                const formatDate = (date) => moment(date).format('MM/DD/YYYY');
+                const formatDate = date => moment(date).format('MM/DD/YYYY');
                 updateStart(formatDate(startDate));
                 updateEnd(formatDate(endDate));
                 handleClick();
@@ -194,9 +194,9 @@ const DateRangePicker = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  updateStart: (newStartDate) => dispatch(updateStartDate(newStartDate)),
-  updateEnd: (newEndDate) => dispatch(updateEndDate(newEndDate)),
+const mapDispatchToProps = dispatch => ({
+  updateStart: newStartDate => dispatch(updateStartDate(newStartDate)),
+  updateEnd: newEndDate => dispatch(updateEndDate(newEndDate)),
 });
 
 export default connect(

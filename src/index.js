@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-filename-extension */
 
+import 'regenerator-runtime/runtime';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -14,3 +15,6 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 );
+
+// hot module replacement during development
+if (module.hot) module.hot.accept();

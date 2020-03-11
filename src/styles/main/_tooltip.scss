@@ -17,8 +17,11 @@
     &.place-left:after   { border-left-color:   $bg-color; }
     &.place-bottom:after { border-bottom-color: $bg-color; }
 
-    .tooltip-text {
-      margin-top: 6px;
+    .tooltip-content {
+      color: $brand-text-color;
+      .tooltip-text {
+        margin-top: 6px;
+      }
     }
   }
 }

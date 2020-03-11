@@ -1,0 +1,20 @@
+
+// layout vars
+$header-height: 60px;
+$footer-height: 52px;
+$menu-width: 509px;
+$menu-transition: all 0.5s ease 0s;
+
+h1 {
+  font-family: $brand-heading-family;
+  color: $brand-heading-color;
+  font-size: $brand-heading-size;
+  font-weight: bold;
+}
+
+h2 {
+  font-family: $brand-heading-family;
+  color: $brand-heading-color;
+  font-size: $brand-subheading-size;
+  font-weight: bold;
+}

@@ -1,0 +1,149 @@
+.visualizations {
+
+  $content-max-width: 840px;
+
+  z-index: 1000;
+  background-color: $brand-bg-color;
+  overflow: scroll;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: $menu-width;
+  transition: $menu-transition;
+
+  &.full-width {
+    left: 0;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  .info-section {
+    max-width: $content-max-width;
+    margin: 0 auto;
+    padding: 30px 50px;
+  }
+
+  .outline {
+    border: 1px solid $brand-stroke-color;
+    padding: 20px;
+  }
+
+  .criteria {
+    &-type {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .council-districts {
+      margin-top: 8px;
+    }
+  }
+
+  .legend {
+    margin-top: 30px;
+    .outline {
+      padding-bottom: 10px;
+      column-width: 200px;
+    }
+    &-item {
+      display: inline-block;
+      margin: 0 15px 10px 0;
+    }
+  }
+
+  .number-of-requests {
+    margin-top: 30px;
+    .requests-box {
+      display: inline-block;
+      margin: 0 auto;
+      border: 4px grey solid;
+      border-color: $brand-stroke-color;
+      padding: 8px 16px;
+    }
+  }
+
+  .chart {
+    text-align: right;
+
+    &.time-to-close .export-button {
+      margin-right: 9px;
+    }
+    &.frequency .export-button {
+      margin-right: 9px;
+    }
+    &.total-requests .export-button {
+      margin-right: 4px;
+    }
+    &.contact-311,
+    &.type-of-request {
+      canvas {
+        margin-top: 7px;
+        border: 1px $brand-stroke-color solid;
+      }
+    }
+  }
+
+  .chart-row {
+    background-color: #F1F1F1;
+
+    &:not(.pies) {
+      padding: 30px 50px;
+      border-bottom: 4px white solid;
+      .chart {
+        margin: 0 auto;
+        max-width: $content-max-width;
+      }
+    }
+
+    &.pies {
+      padding-bottom: 50px;
+      text-align: center;
+      .chart {
+        width: 400px;
+        display: inline-block;
+        margin: 30px 20px 0 20px;
+      }
+    }
+  }
+
+  .export-button {
+    padding: 3px 10px;
+    border: 1px solid $brand-stroke-color;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: default;
+    position: relative;
+
+    .export-dropdown {
+      position: absolute;
+      top: -1px;
+      right: calc(100% + 1px);
+      border: 1px solid $brand-stroke-color;
+      padding: 6px 0;
+      white-space: nowrap;
+      text-align: left;
+      background-color: $brand-bg-color;
+      z-index: 10000;
+      font-size: 14px;
+      line-height: 18px;
+
+      h3 {
+        font-weight: bold;
+        margin: 0 6px;
+        &:last-of-type {
+          margin-top: 6px;
+        }
+      }
+
+      div {
+        cursor: pointer;
+        padding: 0 6px;
+        &:hover {
+          background-color: #F1F1F1;
+        }
+      }
+    }
+  }
+}

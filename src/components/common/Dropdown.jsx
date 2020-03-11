@@ -29,7 +29,7 @@ const Dropdown = ({
   }, className);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = e => {
       // Clicked inside dropdown
       if (dropdownNode.current.contains(e.target) || !isOpen) {
         return;
@@ -38,7 +38,7 @@ const Dropdown = ({
       updateIsOpen(false);
     };
 
-    const handleEscapeKeydown = (e) => {
+    const handleEscapeKeydown = e => {
       // Non-esc key pressed
       if (e.keyCode !== 27 || !isOpen) {
         return;
@@ -60,16 +60,16 @@ const Dropdown = ({
     };
   }, [isOpen, currentSelection]);
 
-  const toggleOpen = () => updateIsOpen((prevIsOpen) => !prevIsOpen);
+  const toggleOpen = () => updateIsOpen(prevIsOpen => !prevIsOpen);
 
-  const handleItemClick = (e) => {
+  const handleItemClick = e => {
     e.preventDefault();
     updateSelection(e.currentTarget.textContent);
     updateIsOpen(false);
     onClick(e.currentTarget.getAttribute('value'));
   };
 
-  const renderDropdownItems = (items) => items.map((item) => (
+  const renderDropdownItems = items => items.map(item => (
     <DropdownItem
       key={item.label}
       label={item.label}
