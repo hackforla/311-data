@@ -19,10 +19,13 @@ export const getDataFailure = error => ({
 });
 
 const initialState = {
-  data: [],
   isLoading: false,
   error: null,
   lastUpdated: null,
+  pins: [],
+  counts: {},
+  frequency: {},
+  timeToClose: {},
 };
 
 export default (state = initialState, action) => {
@@ -33,14 +36,23 @@ export default (state = initialState, action) => {
         isLoading: true,
       };
     case types.GET_DATA_SUCCESS: {
-      const { data, lastPulled: lastUpdated } = action.payload;
+      const {
+        lastUpdated,
+        pins,
+        counts,
+        frequency,
+        timeToClose,
+      } = action.payload;
 
       return {
         ...state,
-        data,
         error: null,
         isLoading: false,
         lastUpdated,
+        pins,
+        counts,
+        frequency,
+        timeToClose,
       };
     }
     case types.GET_DATA_FAILURE: {
