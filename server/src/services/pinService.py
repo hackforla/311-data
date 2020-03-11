@@ -25,6 +25,7 @@ class PinService(object):
         """
 
         items = ['srnumber',
+                 'requesttype',
                  'latitude',
                  'longitude']
 
