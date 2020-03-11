@@ -1,95 +1,38 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import Chart from './Chart';
+import { REQUEST_SOURCES } from '@components/common/CONSTANTS';
+import PieChart from './PieChart';
 
-const Contact311 = () => {
-  // // DATA ////
-
-  const randomInt = () => {
-    const min = 10;
-    const max = 100;
-    return Math.round(Math.random() * (max - min) + min);
-  };
-
-  const dummyData = [{
-    label: 'Mobile App',
-    color: '#1D66F2',
-    value: randomInt(),
-  }, {
-    label: 'Call',
-    color: '#D8E5FF',
-    value: randomInt(),
-  }, {
-    label: 'Email',
-    color: '#708ABD',
-    value: randomInt(),
-  }, {
-    label: 'Driver Self Report',
-    color: '#C4C6C9',
-    value: randomInt(),
-  }, {
-    label: 'Self Service',
-    color: '#0C2A64',
-    value: randomInt(),
-  }, {
-    label: 'Other',
-    color: '#6A98F1',
-    value: randomInt(),
-  }];
-
-  const total = dummyData.reduce((p, c) => p + c.value, 0);
-
-  const chartData = {
-    labels: dummyData.map(el => el.label),
-    datasets: [{
-      data: dummyData.map(el => el.value),
-      backgroundColor: dummyData.map(el => el.color),
-      datalabels: {
-        labels: {
-          index: {
-            align: 'end',
-            anchor: 'end',
-            formatter: (value, ctx) => {
-              const { label } = dummyData[ctx.dataIndex];
-              const percentage = (100 * (value / total)).toFixed(1);
-              return `${label}\n${percentage}%`;
-            },
-            offset: 4,
-          },
-        },
-      },
-    }],
-  };
-
-  // // OPTIONS ////
-
-  const chartOptions = {
-    aspectRatio: 1.0,
-    animation: false,
-    layout: {
-      padding: 65,
-    },
-  };
+const Contact311 = ({
+  sourceCounts,
+}) => {
+  const sectors = Object.keys(sourceCounts).map(key => ({
+    label: key,
+    value: sourceCounts[key],
+    color: REQUEST_SOURCES.find(s => s.type === key)?.color,
+  }));
 
   return (
-    <Chart
+    <PieChart
       title="How People Contact 311"
-      type="pie"
-      data={chartData}
-      options={chartOptions}
-      datalabels
+      sectors={sectors}
       className="contact-311"
+      addLabels
     />
   );
 };
 
 const mapStateToProps = state => ({
-  requestTypes: state.filters.requestTypes,
+  sourceCounts: state.data.counts.source,
 });
 
 export default connect(mapStateToProps)(Contact311);
 
 Contact311.propTypes = {
-  requestTypes: PropTypes.shape({}).isRequired,
+  sourceCounts: PropTypes.shape({}),
+};
+
+Contact311.defaultProps = {
+  sourceCounts: {},
 };
