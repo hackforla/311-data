@@ -13,7 +13,7 @@ import {
 
 /* /////////// INDIVIDUAL API CALLS /////////// */
 
-const BASE_URL = `https://${process.env.DB_URL}`;
+const BASE_URL = process.env.DB_URL;
 
 async function getPins(filters) {
   const pinUrl = `${BASE_URL}/pins`;
