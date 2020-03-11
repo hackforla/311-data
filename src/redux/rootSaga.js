@@ -20,7 +20,7 @@ function* getData() {
     endDate,
     councils,
     requestTypes,
-  } = yield select(getState, 'data');
+  } = yield select(getState, 'filters');
 
   const options = {
     startDate,

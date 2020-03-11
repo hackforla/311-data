@@ -37,9 +37,9 @@ const Criteria = ({
 };
 
 const mapStateToProps = state => ({
-  startDate: state.data.startDate,
-  endDate: state.data.endDate,
-  councils: state.data.councils,
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
+  councils: state.filters.councils,
 });
 
 export default connect(mapStateToProps)(Criteria);
