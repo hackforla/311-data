@@ -139,15 +139,17 @@ class DataHandler:
         # Fetch data
         # Loop for querying dataset
         tableInit = False
-        for i in range(0, totalRequestRecords, querySize):
+        query = int(querySize)
+        maxRecords = int(totalRequestRecords)
+        for i in range(0, maxRecords, query):
             fetchTimer = time.time()
             print('Fetching %d records with offset %d up to a max of %d'
-                  % (querySize, i, totalRequestRecords))
+                  % (query, i, maxRecords))
             results = client.get(socrata_dataset_identifier,
                                  offset=i,
                                  select="*",
                                  order="updateddate DESC",
-                                 limit=querySize)
+                                 limit=query)
             if not results:
                 break
             tempDf = pd.DataFrame.from_dict(results)
