@@ -4,6 +4,7 @@ import {
   call,
   put,
   select,
+  all,
 } from 'redux-saga/effects';
 import {
   types,
@@ -15,10 +16,10 @@ import {
 
 const BASE_URL = process.env.DB_URL;
 
-async function getPins(filters) {
+function* getPins(filters) {
   const pinUrl = `${BASE_URL}/pins`;
 
-  const { data: { lastPulled, data } } = await axios.post(pinUrl, filters);
+  const { data: { lastPulled, data } } = yield call(axios.post, pinUrl, filters);
 
   return {
     lastUpdated: lastPulled,
@@ -26,10 +27,10 @@ async function getPins(filters) {
   };
 }
 
-async function getCounts(filters) {
+function* getCounts(filters) {
   const countsUrl = `${BASE_URL}/requestcounts`;
 
-  const { data: { data } } = await axios.post(countsUrl, {
+  const { data: { data } } = yield call(axios.post, countsUrl, {
     ...filters,
     countFields: ['requesttype', 'requestsource'],
   });
@@ -40,35 +41,36 @@ async function getCounts(filters) {
   };
 }
 
-async function getFrequency() {
-  return {};
+function* getFrequency() {
+  return yield {};
 }
 
-async function getTimeToClose() {
-  return {};
+function* getTimeToClose() {
+  return yield {};
 }
 
 /* //////////// COMBINED API CALL //////////// */
 
-function getAll(filters) {
-  return Promise.all([
-    getPins(filters),
-    getCounts(filters),
-    getFrequency(filters),
-    getTimeToClose(filters),
-  ])
-    .then(([
-      { lastUpdated, pins },
-      counts,
-      frequency,
-      timeToClose,
-    ]) => ({
-      lastUpdated,
-      pins,
-      counts,
-      frequency,
-      timeToClose,
-    }));
+function* getAll(filters) {
+  const [
+    { lastUpdated, pins },
+    counts,
+    frequency,
+    timeToClose,
+  ] = yield all([
+    call(getPins, filters),
+    call(getCounts, filters),
+    call(getFrequency, filters),
+    call(getTimeToClose, filters),
+  ]);
+
+  return {
+    lastUpdated,
+    pins,
+    counts,
+    frequency,
+    timeToClose,
+  };
 }
 
 /* ////////////////// FILTERS //////////////// */
