@@ -50,19 +50,22 @@ async def index(request):
     return json('You hit the index')
 
 
-@app.route('/timetoclose')
+@app.route('/timetoclose', methods=["POST"])
 @compress.compress()
 async def timetoclose(request):
     ttc_worker = time_to_close(app.config['Settings'])
 
-    # dates = loads(ttc_worker.ttc_view_dates())
-    summary = ttc_worker.ttc_summary(allData=True,
-                                     service=True,
-                                     allRequests=False,
-                                     requestType="'Bulky Items'",
-                                     viewDates=True)
+    postArgs = request.json
+    start = postArgs.get('startDate', None)
+    end = postArgs.get('endDate', None)
+    ncs = postArgs.get('ncList', [])
+    requests = postArgs.get('requestTypes', [])
 
-    return json(summary)
+    data = ttc_worker.ttc(startDate=start,
+                          endDate=end,
+                          ncList=ncs,
+                          requestTypes=requests)
+    return json(data)
 
 
 @app.route('/requestfrequency')
