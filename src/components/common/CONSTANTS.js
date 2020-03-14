@@ -86,6 +86,33 @@ export const REQUEST_TYPES = [
    */
 ];
 
+export const REQUEST_SOURCES = [
+  {
+    type: 'Mobile App',
+    color: '#1D66F2',
+  },
+  {
+    type: 'Call',
+    color: '#D8E5FF',
+  },
+  {
+    type: 'Email',
+    color: '#708ABD',
+  },
+  {
+    type: 'Driver Self Report',
+    color: '#C4C6C9',
+  },
+  {
+    type: 'Self Service',
+    color: '#0C2A64',
+  },
+  {
+    type: 'Other',
+    color: '#6A98F1',
+  },
+];
+
 export const REQUESTS = [
   'Bulky Items',
   'Dead Animal Removal',

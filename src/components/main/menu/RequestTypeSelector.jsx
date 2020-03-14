@@ -5,7 +5,7 @@ import {
   updateRequestType,
   selectAllRequestTypes,
   deselectAllRequestTypes,
-} from '../../../redux/reducers/data';
+} from '../../../redux/reducers/filters';
 
 import Checkbox from '../../common/Checkbox';
 import Icon from '../../common/Icon';
@@ -150,7 +150,7 @@ const RequestTypeSelector = ({
 };
 
 const mapStateToProps = state => ({
-  requestTypes: state.data.requestTypes,
+  requestTypes: state.filters.requestTypes,
 });
 
 const mapDispatchToProps = dispatch => ({

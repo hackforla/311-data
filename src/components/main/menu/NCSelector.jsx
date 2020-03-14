@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'proptypes';
 
-import { updateNC } from '../../../redux/reducers/data';
+import { updateNC } from '../../../redux/reducers/filters';
 
 import { COUNCILS } from '../../common/CONSTANTS';
 import Checkbox from '../../common/Checkbox';

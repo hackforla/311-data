@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import {
   updateStartDate,
   updateEndDate,
-} from '../../../../redux/reducers/data';
+} from '../../../../redux/reducers/filters';
 
 import Button from '../../../common/Button';
 import Icon from '../../../common/Icon';
