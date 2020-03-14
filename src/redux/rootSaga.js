@@ -6,11 +6,16 @@ import {
   select,
   all,
 } from 'redux-saga/effects';
+
 import {
   types,
   getDataSuccess,
   getDataFailure,
 } from './reducers/data';
+
+import {
+  setErrorModal,
+} from './reducers/ui';
 
 /* /////////// INDIVIDUAL API CALLS /////////// */
 
@@ -102,6 +107,7 @@ function* getData() {
     yield put(getDataSuccess(data));
   } catch (e) {
     yield put(getDataFailure(e));
+    yield put(setErrorModal(true));
   }
 }
 
