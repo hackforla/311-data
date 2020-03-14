@@ -78,7 +78,7 @@ const TimeToClose = ({
 };
 
 const mapStateToProps = state => ({
-  requestTypes: state.data.requestTypes,
+  requestTypes: state.filters.requestTypes,
 });
 
 export default connect(mapStateToProps)(TimeToClose);

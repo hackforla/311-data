@@ -5,7 +5,7 @@ import moment from 'moment';
 import {
   updateStartDate,
   updateEndDate,
-} from '../../../../redux/reducers/data';
+} from '../../../../redux/reducers/filters';
 
 import Dropdown from '../../../common/Dropdown';
 import Modal from '../../../common/Modal';
@@ -145,8 +145,8 @@ const DateSelector = ({
 };
 
 const mapStateToProps = state => ({
-  startDate: state.data.startDate,
-  endDate: state.data.endDate,
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
 });
 
 const mapDispatchToProps = dispatch => ({
