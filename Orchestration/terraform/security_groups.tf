@@ -34,6 +34,11 @@ resource "aws_security_group" "three_one_one_security_group" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name        = "${var.team_prefix}_security_group"
+    Environment = var.environment_tag
+  }
 }
 
 output "three_one_one_security_group_id" {

@@ -15,6 +15,7 @@ coverage/
 /build
 .terraform/
 terraform.tfstate
+terraform.tfstate.*
 
 # misc
 .DS_Store
