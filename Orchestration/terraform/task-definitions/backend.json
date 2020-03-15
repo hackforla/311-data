@@ -1,0 +1,15 @@
+[
+  {
+    "name": "three_one_one_backend",
+    "image": "service-first",
+    "cpu": 10,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 5000,
+        "hostPort": 80
+      }
+    ]
+  }
+]
