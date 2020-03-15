@@ -203,12 +203,13 @@ class PinMap extends Component {
                 * improve functionality post-MVP by generating a heatmap list
                 * on the backend. */}
               <HeatmapLayer
+                max={1}
                 points={data}
                 radius={20}
                 blur={25}
                 longitudeExtractor={m => m.longitude}
                 latitudeExtractor={m => m.latitude}
-                intensityExtractor={() => {}}
+                intensityExtractor={() => 1}
               />
             </Overlay>
           </LayersControl>
