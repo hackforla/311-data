@@ -1,254 +1,147 @@
-import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import text
 import time
-import numpy as np
-import pandas as pd
-import sqlalchemy as db
-from sodapy import Socrata
-from configparser import ConfigParser
-if __name__ == '__main__':
-    # Contains db specs and field definitions
-    from databaseOrm import tableFields, insertFields, readFields
-else:
-    from .databaseOrm import tableFields, insertFields, readFields
+from .databaseOrm import Ingest, Base
+from .socrataClient import SocrataClient
+
+
+def log(message):
+    print(message, flush=True)
+
+
+class Timer():
+    def __init__(self):
+        self.start = time.perf_counter()
+
+    def end(self):
+        return round((time.perf_counter() - self.start) / 60, 2)
 
 
 class DataHandler:
-    def __init__(self, config=None, configFilePath=None, separator=','):
-        self.data = None
-        self.config = config
-        self.dbString = None if not self.config \
-            else self.config['Database']['DB_CONNECTION_STRING']
-        self.token = None if config['Socrata']['TOKEN'] == 'None' \
-            else config['Socrata']['TOKEN']
-        self.timeout = int(self.config['Socrata']['TIMEOUT'])
-        self.filePath = None
-        self.configFilePath = configFilePath
-        self.separator = separator
-        self.fields = tableFields
-        self.insertParams = insertFields
-        self.readParams = readFields
-        self.dialect = self.dbString.split(':')[0]
+    def __init__(self, config=None):
+        self.engine = create_engine(config['DB_CONNECTION_STRING'])
+        self.session = sessionmaker(bind=self.engine)()
+        self.socrata = SocrataClient()
 
-    def loadData(self, fileName="2018_mini"):
-        '''Load dataset into pandas object'''
-        if self.separator == ',':
-            dataFile = fileName + ".csv"
-        else:
-            dataFile = fileName + ".tsv"
+    def __del__(self):
+        self.session.close()
 
-        self.filePath = os.path.join(self.config['Database']['DATA_DIRECTORY'],
-                                     dataFile)
+    def resetDatabase(self):
+        log('\nResetting database.')
+        Base.metadata.drop_all(self.engine)
+        Base.metadata.create_all(self.engine)
 
-        print('Loading dataset %s' % self.filePath)
-        self.data = pd.read_table(self.filePath,
-                                  sep=self.separator,
-                                  na_values=['nan'],
-                                  dtype=self.readParams)
+    def fetchData(self, year, offset, limit):
+        log('\tFetching {} rows, offset {}'.format(limit, offset))
+        return self.socrata.get(year,
+                                select="*",
+                                offset=offset,
+                                limit=limit)
 
-    def elapsedTimer(self, timeVal):
-        '''Simple timer method to report on elapsed time for each method'''
-        return (time.time() - timeVal) / 60
+    def insertData(self, rows):
+        self.session.bulk_insert_mappings(Ingest, rows)
+        self.session.commit()
 
-    def cleanData(self):
-        '''Perform general data filtering'''
-        print('Cleaning data...')
-        cleanTimer = time.time()
-        data = self.data
-        zipIndex = (data['zipcode'].str.isdigit()) | (data['zipcode'].isna())
-        data['zipcode'].loc[~zipIndex] = np.nan
-        # Format dates as datetime (Time intensive)
-        if 'createddate' in data.columns:
-            data['createddate'] = pd.to_datetime(data['createddate'])
-        if 'closeddate' in data.columns:
-            data['closeddate'] = pd.to_datetime(data['closeddate'])
-        if 'servicedate' in data.columns:
-            data['servicedate'] = pd.to_datetime(data['servicedate'])
-        data['location'] = data.location.astype(str)
-        # Check for column consistency
-        for f in self.fields:
-            if f not in self.data.columns:
-                print('\tcolumn %s missing - substituting NaN values' % f)
-                data[f] = np.NaN
-        for f in data.columns:
-            if f not in self.fields:
-                print('\tcolumn %s not in defined set - dropping column' % f)
-        data = data[self.fields]
-        #         self.data = self.data.drop(f)
-        self.data = data
-        print('\tCleaning Complete: %.1f minutes' %
-              self.elapsedTimer(cleanTimer))
+    def ingestYear(self, year, limit, querySize):
+        log('\nIngesting up to {} rows for year {}'.format(limit, year))
+        timer = Timer()
 
-    def ingestData(self, ingestMethod='replace',
-                   tableName='ingest_staging_table'):
-        '''Set up connection to database'''
-        print('Inserting data into ' + self.dialect + ' instance...')
-        ingestTimer = time.time()
-        data = self.data.copy()  # shard deepcopy for other endpoint operations
-        engine = db.create_engine(self.dbString)
-        newColumns = [column.replace(' ', '_').lower() for column in data]
-        data.columns = newColumns
-        # Ingest data
-        # Schema is same as database in MySQL;
-        # schema here is set to db name in connection string
-        data.to_sql(tableName,
-                    engine,
-                    if_exists=ingestMethod,
-                    schema='public',
-                    index=False,
-                    chunksize=10,
-                    method='multi',
-                    dtype=self.insertParams)
-        print('\tIngest Complete: %.1f minutes' %
-              self.elapsedTimer(ingestTimer))
+        rowsInserted = 0
+        endReached = False
+        
+        for offset in range(0, limit, querySize):
+            rows = self.fetchData(year, offset, querySize)
+            self.insertData(rows)
+            rowsInserted += len(rows)
 
-    def dumpFilteredCsvFile(self,
-                            dataset,
-                            startDate,
-                            requestType,
-                            councilName):
-        '''Output data as CSV by council name, request type, and
-        start date (pulls to current date). Arguments should be passed
-        as strings. Date values must be formatted %Y-%m-%d.'''
-        df = dataset.copy()  # Shard deepcopy to allow multiple endpoints
-        # Data filtering
-        dateFilter = df['createddate'] > startDate
-        requestFilter = df['requesttype'] == requestType
-        councilFilter = df['ncname'] == councilName
-        df = df[dateFilter & requestFilter & councilFilter]
-        # Return string object for routing to download
-        return df.to_csv()
-
-    def saveCsvFile(self, filename):
-        '''Save contents of self.data to CSV output'''
-        self.data.to_csv(filename, index=False)
-
-    def fetchSocrata(self,
-                     year=2019,
-                     querySize=10000,
-                     totalRequestRecords=10**7):
-        '''Fetch data from Socrata connection and return pandas dataframe'''
-        # Load config files
-        print('Retrieving partial Socrata query...')
-        socrata_domain = self.config['Socrata']['DOMAIN']
-        socrata_dataset_identifier = self.config['Socrata']['AP' + str(year)]
-        socrata_token = self.token
-        # Establish connection to Socrata resource
-        client = Socrata(socrata_domain, socrata_token)
-        client.timeout = self.timeout
-        # Fetch data
-        # Loop for querying dataset
-        tableInit = False
-        query = int(querySize)
-        maxRecords = int(totalRequestRecords)
-        for i in range(0, maxRecords, query):
-            fetchTimer = time.time()
-            print('Fetching %d records with offset %d up to a max of %d'
-                  % (query, i, maxRecords))
-            results = client.get(socrata_dataset_identifier,
-                                 offset=i,
-                                 select="*",
-                                 order="updateddate DESC",
-                                 limit=query)
-            if not results:
+            if len(rows) < querySize:
+                endReached = True
                 break
-            tempDf = pd.DataFrame.from_dict(results)
-            self.data = tempDf
-            self.cleanData()
-            if not tableInit:
-                self.ingestData(ingestMethod='replace')
-                tableInit = True
-            else:
-                self.ingestData(ingestMethod='append')
-            print('%d records retrieved in %.2f minutes' %
-                  (self.data.shape[0], self.elapsedTimer(fetchTimer)))
 
-    def fetchSocrataFull(self, year=2019, limit=10**7):
-        '''Fetch entirety of dataset via Socrata'''
-        # Load config files
-        print('Downloading %d data from Socrata data source...' % year)
-        downloadTimer = time.time()
-        socrata_domain = self.config['Socrata']['DOMAIN']
-        socrata_dataset_identifier = self.config['Socrata']['AP' + str(year)]
-        socrata_token = self.token
-        # Establish connection to Socrata resource
-        client = Socrata(socrata_domain, socrata_token)
-        results = client.get(socrata_dataset_identifier, limit=limit)
-        self.data = pd.DataFrame.from_dict(results)
-        print('\tDownload Complete: %.1f minutes' %
-              self.elapsedTimer(downloadTimer))
+        minutes = timer.end()
+        log('\tDone with {} after {} minutes.'.format(year, minutes))
+        log('\tRows inserted: {}'.format(rowsInserted))
 
-    def populateFullDatabase(self,
-                             yearRange=range(2015, 2021),
-                             querySize=None,
-                             limit=None):
-        '''Fetches all data from Socrata to populate database
-           Default operation is to fetch data from 2015-2020
-           !!! Be aware that each fresh import will wipe the
-           existing staging table'''
-        print('Performing {} population from data source'.format(self.dialect))
-        globalTimer = time.time()
-        for y in yearRange:
-            self.fetchSocrata(year=y,
-                              querySize=querySize,
-                              totalRequestRecords=limit)
+        return {
+            'year': year,
+            'rowsInserted': rowsInserted,
+            'endReached': endReached,
+            'minutesElapsed': minutes,
+        }
 
-        print('All Operations Complete: %.1f minutes' %
-              self.elapsedTimer(globalTimer))
+    def cleanTable(self):
+        def exec_sql(sql):
+            with self.engine.connect() as conn:
+                return conn.execute(text(sql))
 
-    def updateDatabase(self):
-        '''Incrementally updates database with contents of data attribute
-           overwriting pre-existing records with the same srnumber'''
-        def fix_nan_vals(resultDict):
-            '''sqlAlchemy will not take NaT or NaN values for
-               insert in some fields. They must be replaced
-               with None values'''
-            for key in resultDict:
-                if resultDict[key] is pd.NaT or resultDict[key] is np.nan:
-                    resultDict[key] = None
-                # Also doesn't like nested dictionaries
-                if type(resultDict[key]) is dict:
-                    resultDict[key] = str(resultDict[key])
-            return resultDict
+        def dropDuplicates(table, report):
+            rows = exec_sql(f"""
+                DELETE FROM {table} a USING {table} b
+                WHERE a.id < b.id AND a.srnumber = b.srnumber;
+            """)
 
-        print('Updating database with new records...')
-        engine = db.create_engine(self.dbString)
-        metadata = db.MetaData()
-        staging = db.Table('ingest_staging_table',
-                           metadata,
-                           autoload=True,
-                           autoload_with=engine)
-        connection = engine.connect()
-        row = None
-        updateTimer = time.time()
-        updated = 0
-        inserted = 0
-        for srnumber in self.data.srnumber:
-            stmt = (db.select([staging])
-                      .where(staging.columns.srnumber == srnumber))
-            results = connection.execute(stmt).fetchall()
-            # print(srnumber, results)
-            # Delete the record if it is already there
-            if len(results) > 0:
-                delete_stmt = (db.delete(staging)
-                                 .where(staging.columns.srnumber == srnumber))
-                connection.execute(delete_stmt)
-                updated += 1
-            else:
-                inserted += 1
-            # Write record
-            insert_stmt = db.insert(staging)
-            row = self.data[self.data.srnumber == srnumber].to_dict('results')
-            row = [fix_nan_vals(r) for r in row]
-            connection.execute(insert_stmt, row)
-        print('Operation Complete: %d inserts, %d updates in %.2f minutes' %
-              (inserted, updated, self.elapsedTimer(updateTimer)))
+            report.append({
+                'description': 'dropped duplicate rows by srnumber',
+                'rows': rows.rowcount
+            })
 
+        def switchPrimaryKey(table, report):
+            exec_sql(f"""
+                ALTER TABLE {table} DROP COLUMN id;
+                ALTER TABLE {table} ADD PRIMARY KEY (srnumber);
+            """)
 
-if __name__ == "__main__":
-    '''Class DataHandler workflow from initial load to SQL population'''
-    config = ConfigParser()
-    config.read('../settings.cfg')
-    loader = DataHandler(config)
-    loader.fetchSocrataFull()
-    loader.cleanData()
-    loader.ingestData(tableName='ingest_staging_table')
+            report.append({
+                'description': 'switched primary key column to srnumber',
+                'rows': 'N/A'
+            })
+
+        def removeInvalidClosedDates(table, report):
+            result = exec_sql(f"""
+                UPDATE {table}
+                SET closeddate = NULL
+                WHERE closeddate::timestamp < createddate::timestamp;
+            """)
+
+            report.append({
+                'description': 'removed invalid closed dates',
+                'rowsAffected': result.rowcount
+            })
+
+        log('\nCleaning ingest table.')
+        table = Ingest.__tablename__
+        report = []
+
+        dropDuplicates(table, report)
+        switchPrimaryKey(table, report)
+        removeInvalidClosedDates(table, report)
+
+        return report
+
+    async def populateDatabase(self,
+                               years=range(2015, 2021),
+                               limit=2000000,
+                               querySize=50000):
+        log('\nPopulating database for years: {}'.format(list(years)))
+        timer = Timer()
+
+        self.resetDatabase()
+
+        insertReport = []
+        for year in years:
+            inserts = self.ingestYear(year, limit, querySize)
+            insertReport.append(inserts)
+
+        cleanReport = self.cleanTable()
+
+        minutes = timer.end()
+        log('\nDone with ingestion after {} minutes.\n'.format(minutes))
+
+        report = {
+            'insertion': insertReport,
+            'cleaning': cleanReport,
+            'totalMinutesElapsed': minutes
+        }
+        log(report)
+        return report
