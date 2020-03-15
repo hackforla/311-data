@@ -32,16 +32,50 @@ def environment_overrides():
         app.config['Settings']['Socrata']['TOKEN'] =\
             os.environ.get('TOKEN')
 
-
+#settings_check() verifies if 'settings.cfg' contains all the keys in 'settings.example.cfg'.
+#args: takes a ConfigParser object
+#returns: boolean
+def settings_check(settings_config):
+    #read example config's file
+    example_config = ConfigParser()
+    example_config.read(os.path.join(os.getcwd(), 'settings.example.cfg'))
+    #compare example's and setting's keys
+    missing_keys_msg = []
+    for example_section in example_config.sections():
+        example_keys = set([i[0] for i in example_config.items(example_section)])
+        #if section doesn't exist in 'settings.cfg', create an empty set.
+        try:
+            settings_keys = set([i[0] for i in settings_config.items(example_section)])
+        except:
+            settings_keys = set()
+        diff_keys = example_keys - settings_keys
+        #if elements exist in diff_keys, add the missing keys to output as "[section] key"
+        if(diff_keys):
+            #Note, extra keys in settings will logically end up here. however, they wont add to the output.
+            missing_keys = diff_keys & example_keys
+            for m_key in missing_keys:
+                missing_keys_msg.append("[" + str(example_section).title() + "] " + str(m_key).upper())
+    #if elements exist in missing keys output, print output and return false.
+    if(missing_keys_msg):
+        print("'Settings.cfg is missing keys from 'settings.example.cfg'. Please check for these keys below:")
+        for keys_msg in missing_keys_msg:
+            print(keys_msg)
+        return False
+    return True
+        
 def configure_app():
     # Settings initialization
     config = ConfigParser()
     settings_file = os.path.join(os.getcwd(), 'settings.cfg')
     config.read(settings_file)
-    app.config['Settings'] = config
-    environment_overrides()
-    app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
-    os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
+    #if 'settings.cfg' has the expected keys, set app's config with those values.
+    if(settings_check(config)):
+        app.config['Settings'] = config
+        environment_overrides()
+        app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
+        os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
+        return True
+    return False
 
 
 @app.route('/')
@@ -182,9 +216,9 @@ async def test_multiple_workers(request):
 
 
 if __name__ == '__main__':
-    configure_app()
-    worker_count = max(cpu_count()//2, 1)
-    app.run(host=app.config['Settings']['Server']['HOST'],
-            port=int(app.config['Settings']['Server']['PORT']),
-            workers=worker_count,
-            debug=app.config['Settings']['Server']['DEBUG'])
+    if(configure_app()):
+        worker_count = max(cpu_count()//2, 1)
+        app.run(host=app.config['Settings']['Server']['HOST'],
+                port=int(app.config['Settings']['Server']['PORT']),
+                workers=worker_count,
+                debug=app.config['Settings']['Server']['DEBUG'])
