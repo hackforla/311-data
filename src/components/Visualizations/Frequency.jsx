@@ -1,43 +1,35 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import moment from 'moment';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from './Chart';
 
 const Frequency = ({
-  requestTypes,
+  frequency: { bins, counts },
 }) => {
+  if (!bins || !counts) return null;
+
   // // DATA ////
 
-  const randomPoints = (count, min, max) => Array.from({ length: count })
-    .map((el, idx) => ({
-      x: moment().add(idx, 'd'),
-      y: Math.round(Math.random() * (max - min) + min),
-    }));
-
-  const dummyData = REQUEST_TYPES.reduce((p, c) => {
-    const acc = p;
-    acc[c.type] = randomPoints(10, 20, 200);
-    return acc;
-  }, {});
-
-  const selectedTypes = REQUEST_TYPES.filter(el => requestTypes[el.type]);
-
   const chartData = {
-    datasets: selectedTypes.map(t => ({
-      label: t.abbrev,
-      backgroundColor: t.color,
-      borderColor: t.color,
-      fill: false,
-      lineTension: 0,
-      data: dummyData[t.type],
-    })),
+    labels: bins.slice(0, -1).map(bin => moment(bin).format('MMM D')),
+    datasets: Object.keys(counts).map(key => {
+      const requestType = REQUEST_TYPES.find(t => t.type === key);
+      return {
+        data: counts[key],
+        label: requestType?.abbrev,
+        backgroundColor: requestType?.color,
+        borderColor: requestType?.color,
+        fill: false,
+        lineTension: 0.3,
+      };
+    }),
   };
 
   const exportData = () => ({
-    header: chartData.datasets[0].data.map(d => d.x.format('MM/DD/YYYY')),
-    rows: chartData.datasets.map(dataset => dataset.data.map(d => d.y)),
+    header: bins.slice(0, -1).map(bin => moment(bin).format('MM/DD/YYYY')),
+    rows: chartData.datasets.map(dataset => dataset.data),
     index: chartData.datasets.map(dataset => dataset.label),
   });
 
@@ -50,11 +42,6 @@ const Frequency = ({
     aspectRatio: 11 / 8,
     scales: {
       xAxes: [{
-        type: 'time',
-        time: {
-          unit: 'day',
-          round: 'day',
-        },
         scaleLabel: {
           labelString: 'Timeline',
         },
@@ -74,7 +61,12 @@ const Frequency = ({
     },
     tooltips: {
       callbacks: {
-        title: () => null,
+        title: tt => {
+          const { index } = tt[0];
+          const start = moment(bins[index]).format('MMM D');
+          const end = moment(bins[index + 1]).subtract(1, 'days').format('MMM D');
+          return start === end ? start : `${start} - ${end}`;
+        },
       },
     },
   };
@@ -91,11 +83,14 @@ const Frequency = ({
 };
 
 const mapStateToProps = state => ({
-  requestTypes: state.filters.requestTypes,
+  frequency: state.data.frequency,
 });
 
 export default connect(mapStateToProps)(Frequency);
 
 Frequency.propTypes = {
-  requestTypes: PropTypes.shape({}).isRequired,
+  frequency: PropTypes.shape({
+    bins: PropTypes.arrayOf(PropTypes.string),
+    counts: PropTypes.shape({}),
+  }).isRequired,
 };
