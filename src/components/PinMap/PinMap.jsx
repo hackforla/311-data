@@ -225,7 +225,7 @@ class PinMap extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.data.data,
+  data: state.data.pins,
 });
 
 PinMap.propTypes = {
