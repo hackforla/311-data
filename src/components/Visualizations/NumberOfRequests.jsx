@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 
 function addCommas(num) {
@@ -18,12 +19,16 @@ const NumberOfRequests = ({
   </div>
 );
 
-export default NumberOfRequests;
+const mapStateToProps = state => ({
+  numRequests: state.data.pins.length,
+});
+
+export default connect(mapStateToProps)(NumberOfRequests);
 
 NumberOfRequests.propTypes = {
   numRequests: PropTypes.number,
 };
 
 NumberOfRequests.defaultProps = {
-  numRequests: 1285203, // until we get data
+  numRequests: 0,
 };

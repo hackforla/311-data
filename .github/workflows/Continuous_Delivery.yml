@@ -3,6 +3,13 @@ on:
   push:
     branches:
       - master
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  tf_version: 'latest'
+  tf_working_dir: './Orchestration/terraform'
+  AWS_DEFAULT_REGION: 'us-east-1'
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   build:
@@ -37,3 +44,23 @@ jobs:
         BASE_BRANCH: master # The branch the action should deploy from.
         BRANCH: gh-pages # The branch the action should deploy to.
         FOLDER: dist # The folder the action should deploy.
+    - name: Terraform Init
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: ${{ env.tf_version }}
+        tf_actions_working_dir: ${{ env.tf_working_dir }}
+        tf_actions_subcommand: 'init'
+    - name: Terraform Validate
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: ${{ env.tf_version }}
+        tf_actions_working_dir: ${{ env.tf_working_dir }}
+        tf_actions_subcommand: 'validate'
+        tf_actions_comment: true
+    # - name: Terraform Apply
+    #   uses: hashicorp/terraform-github-actions@master
+    #   with:
+    #     tf_actions_version: ${{ env.tf_version }}
+    #     tf_actions_working_dir: ${{ env.tf_working_dir }}
+    #     tf_actions_subcommand: 'apply'
+    #     tf_actions_comment: true

@@ -30,7 +30,7 @@ const Footer = ({
         <p style={footerTextStyle}>
           Data Updated Through:
           &nbsp;
-          {lastUpdated && moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
+          {lastUpdated && moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
         </p>
       </div>
     </div>
@@ -42,7 +42,7 @@ const mapStateToProps = state => ({
 });
 
 Footer.propTypes = {
-  lastUpdated: propTypes.string,
+  lastUpdated: propTypes.number,
 };
 
 Footer.defaultProps = {

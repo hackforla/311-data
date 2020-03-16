@@ -13,6 +13,9 @@ coverage/
 
 # production
 /build
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
 
 # misc
 .DS_Store
@@ -38,7 +41,7 @@ Orchestration/docker-compose.yml
 
 __pycache__/
 
-# csv files 
+# csv files
 /dataAnalysis/datasets
 /server/src/static
 
