@@ -7,7 +7,7 @@ from datetime import datetime
 from multiprocessing import cpu_count
 
 from services.time_to_close import time_to_close
-from services.frequency import frequency
+from services.frequency import FrequencyService
 from services.pinService import PinService
 from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
@@ -57,14 +57,20 @@ async def timetoclose(request):
 
 
 @app.route('/requestfrequency')
-async def requestfrequency(request):
-    freq_worker = frequency(app.config['Settings'])
+async def frequency(request):
+    freq_worker = FrequencyService(app.config['Settings'])
 
-    data = freq_worker.freq_view_data(service=True,
-                                      councils=[],
-                                      aggregate=True)
+    start = ('2015-01-01')
+    end = ('2020-12-31 01:01:01')
+    ncs = (['SHERMAN OAKS NC'])
+    requests = (['Bulky Items', 'Other'])
 
-    return json(data)
+    return_data = await freq_worker.get_frequency(startDate=start,
+                                                 endDate=end,
+                                                 ncList=ncs,
+                                                 requestTypes=requests)
+
+    return json(return_data)
 
 
 @app.route('/sample-data')

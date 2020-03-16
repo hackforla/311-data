@@ -20,7 +20,7 @@ class DataHandler:
             else self.config['Database']['DB_CONNECTION_STRING']
         self.token = None if config['Socrata']['TOKEN'] == 'None' \
             else config['Socrata']['TOKEN']
-        self.timeout = int(self.config['Socrata']['TIMEOUT'])
+        # self.timeout = int(self.config['Socrata']['TIMEOUT'])
         self.filePath = None
         self.configFilePath = configFilePath
         self.separator = separator
@@ -81,8 +81,7 @@ class DataHandler:
     def ingestData(self, ingestMethod='replace',
                    tableName='ingest_staging_table'):
         '''Set up connection to database'''
-        asdf = 'Inserting data into ' + self.dialect + ' instance...'
-        print(asdf)
+        print('Inserting data into ' + self.dialect + ' instance...')
         ingestTimer = time.time()
         data = self.data.copy()  # shard deepcopy for other endpoint operations
         engine = db.create_engine(self.dbString)
@@ -163,7 +162,7 @@ class DataHandler:
             print('%d records retrieved in %.2f minutes' %
                   (self.data.shape[0], self.elapsedTimer(fetchTimer)))
 
-    def fetchSocrataFull(self, year=2019, limit=10**7):
+    def fetchSocrataFull(self, year=2019, limit=10**5):
         '''Fetch entirety of dataset via Socrata'''
         # Load config files
         print('Downloading %d data from Socrata data source...' % year)
@@ -252,4 +251,4 @@ if __name__ == "__main__":
     loader = DataHandler(config)
     loader.fetchSocrataFull()
     loader.cleanData()
-    loader.ingestData('ingest_staging_table')
+    loader.ingestData(tableName='ingest_staging_table')
