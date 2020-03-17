@@ -3,6 +3,7 @@ from configparser import ConfigParser
 import sqlalchemy as db
 import pandas as pd
 import json
+import numpy as np
 
 
 class FrequencyService(object):
@@ -47,15 +48,24 @@ class FrequencyService(object):
 
         df['buckets'] = pd.qcut(df['createddate'], q=numBins, precision=0)
         bucketStartDates = [str(df['buckets'].unique()[i].left) for i in range(numBins)]
-        print(df['buckets'].unique())
-
+        
         return [{
             'bucketStartDates': bucketStartDates,
             'requestTypes': [{
                 'type': request,
-                'numRequests': df['buckets'][df['requesttype'] == request].value_counts(sort=False)
+                'numRequests': df['buckets'][df['requesttype'] == request].value_counts(sort=False).values.tolist()
             } for request in requestTypes]
         }]
+
+        # return [{
+        #     'bucketStartDates': bucketStartDates,
+        #     'requestTypes': [{
+        #         'type': request,
+        #         'numRequests': df[df['requesttype'] == request].groupby(by='buckets').size().to_dict()
+        #     } for request in requestTypes]
+        # }]
+
+### Following is deprecated, saving for reference
 
 # class frequency(object):
 #     def __init__(self, config=None, tableName="ingest_staging_table"):
