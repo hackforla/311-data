@@ -1,7 +1,7 @@
 import os
 from sanic import Sanic
 from sanic.response import json
-# from sanic_cors import CORS
+from sanic_cors import CORS
 from sanic_gzip import Compress
 from configparser import ConfigParser
 from threading import Timer
@@ -17,7 +17,7 @@ from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
 
 app = Sanic(__name__)
-# CORS(app)
+CORS(app)
 compress = Compress()
 
 
@@ -68,15 +68,15 @@ async def timetoclose(request):
     return json(data)
 
 
-@app.route('/requestfrequency')
+@app.route('/requestfrequency', methods=["POST"])
 @compress.compress()
 async def requestfrequency(request):
     freq_worker = FrequencyService(app.config['Settings'])
 
     return_data = await freq_worker.get_frequency(startDate='2019-01-01',
-                                                 endDate='2020-12-31 01:01:01',
-                                                 ncList=['SHERMAN OAKS NC'],
-                                                 requestTypes=['Bulky Items', 'Other'])
+                                                  endDate='2020-12-31',
+                                                  ncList=['SHERMAN OAKS NC'],
+                                                  requestTypes=['Other'])
 
     return json(return_data)
 

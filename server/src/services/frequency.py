@@ -1,9 +1,5 @@
 from .dataService import DataService
-from configparser import ConfigParser
-import sqlalchemy as db
 import pandas as pd
-import json
-import numpy as np
 
 
 class FrequencyService(object):
@@ -21,13 +17,15 @@ class FrequencyService(object):
         {
             "lastPulled": "NOW",
             "data": [{
-                    "bucketStartDates": ["2015-01-01", "2015-01-04", "2015-01-07", "2015-01-10", "2015-01-13", "2015-01-16", "2015-01-19", "2015-01-22", "2015-01-25", "2015-01-28"],
+                    "bucketStartDates": ["2015-01-01", "2015-01-04",
+                                        "2015-01-07", "2015-01-10",
+                                        "2015-01-13", "2015-01-16"],
                     "requestTypes": [{
                             "type": "Homeless Encampment",
-                            "numRequests": [200, 250, 12, 143, 200, 250, 12, 143, 200, 250]
+                            "numRequests": [200, 250, 12, 143, 200, 250]
                     }, {
                             "type": "Bulky Items",
-                            "numRequests": [2, 25, 682, 333, 444, 666, 11, 1002, 2, 15]
+                            "numRequests": [2, 25, 682, 333, 444, 666]
                     }]
             }]
         }
@@ -43,29 +41,23 @@ class FrequencyService(object):
 
         if window == 'month':
             numBins = 10
-        else: 
+        else:
             numBins = 12
 
         df['buckets'] = pd.qcut(df['createddate'], q=numBins, precision=0)
-        bucketStartDates = [str(df['buckets'].unique()[i].left) for i in range(numBins)]
-        
+        bucketStartDates = [str(df['buckets'].unique()[i].left)
+                            for i in range(numBins)]
+
         return [{
             'bucketStartDates': bucketStartDates,
             'requestTypes': [{
                 'type': request,
-                'numRequests': df['buckets'][df['requesttype'] == request].value_counts(sort=False).values.tolist()
+                'numRequests': df['buckets'][df['requesttype'] == request]
+                .value_counts(sort=False).values.tolist()
             } for request in requestTypes]
         }]
 
-        # return [{
-        #     'bucketStartDates': bucketStartDates,
-        #     'requestTypes': [{
-        #         'type': request,
-        #         'numRequests': df[df['requesttype'] == request].groupby(by='buckets').size().to_dict()
-        #     } for request in requestTypes]
-        # }]
-
-### Following is deprecated, saving for reference
+# Following is deprecated, saving for reference
 
 # class frequency(object):
 #     def __init__(self, config=None, tableName="ingest_staging_table"):

@@ -1,10 +1,8 @@
 from configparser import ConfigParser
 import sqlalchemy as db
-import numpy as np
 import pandas as pd
 import json
 from datetime import datetime
-import matplotlib.pyplot as plt
 
 
 class precache(object):
@@ -23,8 +21,8 @@ class precache(object):
         now = datetime.now()
         startdate = pd.Timestamp(now) - pd.Timedelta(days=window)
 
-        query = "SELECT createddate, requesttype, ncname, latitude, longitude FROM %s WHERE createddate > '%s'" % (
-            self.table, startdate)
+        query = "SELECT createddate, requesttype, ncname, latitude, longitude FROM %s \
+            WHERE createddate > '%s'" % (self.table, startdate)
 
         if requestType != "all":
             query += " AND requesttype = '%s'" % (requestType)
@@ -33,7 +31,7 @@ class precache(object):
 
         df = pd.read_sql_query(query, con=engine)
         self.data = df
-        
+
         # return json.loads(df.to_json())
 
     def compile_datasets(self, window=14, requestType='all', council='all'):
@@ -47,11 +45,11 @@ class precache(object):
         df_arr = []
         for request in request_arr:
             dates = df['createddate'][df['requesttype'] == request]
-            df_dates = pd.DataFrame({ request: dates })
+            df_dates = pd.DataFrame({request: dates})
             df_arr.append(json.loads(df_dates.to_json()))
         for nc in nc_arr:
             dates = df['createddate'][df['ncname'] == nc]
-            df_dates = pd.DataFrame({ nc: dates })
+            df_dates = pd.DataFrame({nc: dates})
             df_arr.append(json.loads(df_dates.to_json()))
 
         return df_arr
