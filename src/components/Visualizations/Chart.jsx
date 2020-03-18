@@ -115,10 +115,11 @@ class Chart extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { data } = this.props;
+    const { data, options } = this.props;
 
-    if (prevProps.data !== data) {
+    if (prevProps.data !== data || prevProps.options !== options) {
       this.chart.data = data;
+      this.chart.options = options;
       this.chart.update();
     }
   }
