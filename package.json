@@ -43,7 +43,7 @@
   },
   "scripts": {
     "start": "npm run check-env && npm run dev",
-    "dev": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0",
+    "dev": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "lint": "eslint 'src/**/*.js*'",
     "test": "jest --passWithNoTests",
