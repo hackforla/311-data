@@ -5,28 +5,30 @@ import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from './Chart';
 
 const TimeToClose = ({
-  requestTypes,
+  timeToClose,
 }) => {
   // // DATA ////
 
-  const randomSeries = (count, min, max) => Array.from({ length: count })
-    .map(() => Math.random() * (max - min) + min);
-
-  const dummyData = REQUEST_TYPES.reduce((p, c) => {
-    const acc = p;
-    acc[c.type] = randomSeries(8, 0, 11);
-    return acc;
-  }, {});
-
-  const selectedTypes = REQUEST_TYPES.filter(el => requestTypes[el.type]);
+  const boxes = Object.keys(timeToClose).map(key => {
+    const requestType = REQUEST_TYPES.find(t => t.type === key);
+    return {
+      abbrev: requestType?.abbrev,
+      color: requestType?.color,
+      stats: {
+        ...timeToClose[key],
+        outliers: [],
+      },
+    };
+  });
 
   const chartData = {
-    labels: selectedTypes.map(t => t.abbrev),
+    labels: boxes.map(b => b.abbrev),
     datasets: [{
-      data: selectedTypes.map(t => dummyData[t.type]),
-      backgroundColor: selectedTypes.map(t => t.color),
+      data: boxes.map(b => b.stats),
+      backgroundColor: boxes.map(b => b.color),
       borderColor: '#000',
       borderWidth: 1,
+      outlierColor: '#000',
     }],
   };
 
@@ -36,9 +38,6 @@ const TimeToClose = ({
 
   const chartOptions = {
     maintainAspectRatio: false,
-    title: {
-      text: 'Time to Close',
-    },
     scales: {
       xAxes: [{
         scaleLabel: {
@@ -47,8 +46,7 @@ const TimeToClose = ({
         },
         ticks: {
           beginAtZero: true,
-          stepSize: 1,
-          coef: 0,
+          maxStats: 'whiskerMax',
         },
       }],
       yAxes: [{
@@ -78,11 +76,11 @@ const TimeToClose = ({
 };
 
 const mapStateToProps = state => ({
-  requestTypes: state.filters.requestTypes,
+  timeToClose: state.data.timeToClose,
 });
 
 export default connect(mapStateToProps)(TimeToClose);
 
 TimeToClose.propTypes = {
-  requestTypes: PropTypes.shape({}).isRequired,
+  timeToClose: PropTypes.shape({}).isRequired,
 };
