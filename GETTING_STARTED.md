@@ -34,6 +34,10 @@ CI Is driven by tests, they help instill confidence in pull requests because a d
 
 Our front end tests are run through Enzyme and our backend tests are run through Pytest.
 
+## System architecture
+Here is our rough draft of our architecture diagram, since the application is not yet 'deployed to production' this diagram might not be the exact representation of what currently exists
+![System diagram](311-system-architecture.png)
+
 ## Postgres
 Our persistence layer is run by Postgresql. It is recommended to review [this]([https://www.tutorialspoint.com/postgresql/postgresql_overview.htm](https://www.tutorialspoint.com/postgresql/postgresql_overview.htm)) if you are unfamiliar
 For local development, we utilize a volatile docker container through docker compose. This is meant for experimentation and working with datasets in isolation. When the application is ready for deployment, the persistence will be offloaded to a shared server in some cloud...somewhere
