@@ -14,6 +14,7 @@ import Choropleth from 'react-leaflet-choropleth';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
+import COLORS from '@styles/COLORS';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -21,16 +22,17 @@ import PropTypes from 'proptypes';
 import ncOverlay from '../../data/nc-boundary-2019.json';
 
 const { BaseLayer, Overlay } = LayersControl;
+const boundaryDefaultColor = COLORS.BRAND.MAIN;
+const boundaryHighlightColor = COLORS.BRAND.CTA1;
 
 class PinMap extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       position: [34.0094213, -118.6008506],
       zoom: 10,
-      mapUrl: `https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
-      satelliteUrl: `https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
+      mapUrl: `https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
+      satelliteUrl: `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
       geoJSON: ncOverlay,
       bounds: null,
     };
@@ -41,7 +43,7 @@ class PinMap extends Component {
 
     layer.setStyle({
       weight: 5,
-      color: 'grey',
+      color: boundaryHighlightColor,
     });
 
     layer.bringToFront();
@@ -53,7 +55,7 @@ class PinMap extends Component {
     layer.setStyle({
       weight: 2,
       opacity: 1,
-      color: '#959595',
+      color: boundaryDefaultColor,
     });
   }
 
@@ -172,7 +174,7 @@ class PinMap extends Component {
                       fillColor: 'white',
                       weight: 2,
                       opacity: 1,
-                      color: '#959595',
+                      color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
                     onEachFeature={this.onEachRegionFeature}
