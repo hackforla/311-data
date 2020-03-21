@@ -20,15 +20,36 @@
     background-color: rgba(153, 153, 153, 0.7);
     border-radius: 4px;
 
-    // this modifies the bulma styles
     .loader {
       margin: 20px auto;
       width: 50px;
       height: 50px;
-      animation: spinAround 750ms infinite linear;
-      border: 5px solid $brand-main-color;
-      border-right-color: transparent;
-      border-top-color: transparent;
+      border-width: 5px;
     }
+  }
+}
+
+.loader-button {
+  position: relative;
+  cursor: pointer;
+  border: 0;
+  &.cta {
+    color: $brand-main-color;
+    background-color: $brand-cta1-color;
+    font-family: $brand-heading-family;
+    font-size: 18px;
+    padding: 5px 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+  }
+  &.loading {
+    color: transparent;
+    cursor: default;
+  }
+  .loader-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }

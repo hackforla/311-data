@@ -5,17 +5,20 @@ import 'chartjs-chart-box-and-violin-plot';
 import ChartJSDataLabels from 'chartjs-plugin-datalabels';
 import clx from 'classnames';
 import COLORS from '@styles/COLORS';
-import ExportButton from './ExportButton';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 
 // ///////// CHARTJS DEFAULTS ///////////
 
 ChartJS.helpers.merge(ChartJS.defaults, {
   global: {
     defaultFontColor: COLORS.FONTS,
-    defaultFontFamily: 'Roboto',
+    defaultFontFamily: 'Roboto, sans-serif',
     animation: false,
     title: {
-      display: false,
+      display: true,
+      fontFamily: '"Open Sans", sans-serif',
+      fontSize: 20,
+      padding: 10,
     },
     legend: {
       display: false,
@@ -23,14 +26,14 @@ ChartJS.helpers.merge(ChartJS.defaults, {
     tooltips: {
       xPadding: 10,
       yPadding: 10,
-      titleFontFamily: 'Open Sans',
+      titleFontFamily: '"Open Sans", sans-serif',
       titleFontColor: COLORS.FONTS,
       titleFontSize: 14,
       titleFontWeight: 'bold',
-      bodyFontFamily: 'Roboto',
+      bodyFontFamily: 'Roboto, sans-serif',
       bodyFontSize: 14,
       bodyFontColor: COLORS.FONTS,
-      footerFontFamily: 'Roboto',
+      footerFontFamily: 'Roboto, sans-serif',
       footerFontSize: 14,
       footerFontColor: COLORS.FONTS,
       footerFontWeight: 'bold',
@@ -45,14 +48,15 @@ ChartJS.helpers.merge(ChartJS.defaults, {
         },
       },
       chartArea: {
-        backgroundColor: COLORS.BACKGROUND,
+        chartBgColor: COLORS.BACKGROUND,
+        pieBorderColor: COLORS.FORMS.STROKE,
       },
     },
   },
   scale: {
     scaleLabel: {
       display: true,
-      fontFamily: 'Open Sans',
+      fontFamily: '"Open Sans", sans-serif',
       fontSize: 14,
     },
   },
@@ -64,9 +68,10 @@ ChartJS.helpers.merge(ChartJS.defaults, {
 // https://stackoverflow.com/questions/37144031/background-colour-of-line-charts-in-chart-js?rq=1
 ChartJS.pluginService.register({
   beforeDraw: chart => {
-    const bgColor = chart.config.options.plugins.chartArea?.backgroundColor;
-    if (!bgColor) return;
+    const { chartArea: config } = chart.config.options.plugins;
+    if (!config) return;
 
+    const { chartBgColor, pieBorderColor, pieTitleHeight } = config;
     const { ctx } = chart.chart;
     const { chartArea } = chart;
     const { padding } = chart.config.options.layout;
@@ -78,13 +83,37 @@ ChartJS.pluginService.register({
     } : padding;
 
     ctx.save();
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(
-      chartArea.left - pad.left,
-      chartArea.top - pad.top,
-      chartArea.right - chartArea.left + pad.left + pad.right,
-      chartArea.bottom - chartArea.top + pad.top + pad.bottom,
-    );
+
+    const left = chartArea.left - pad.left;
+    const top = chartArea.top - pad.top;
+    const right = chartArea.right - chartArea.left + pad.left + pad.right;
+    const bottom = chartArea.bottom - chartArea.top + pad.top + pad.bottom;
+
+    if (chart.config.type === 'pie') {
+      // create border
+      ctx.fillStyle = pieBorderColor;
+      ctx.fillRect(
+        left,
+        top - pieTitleHeight,
+        right,
+        bottom + pieTitleHeight,
+      );
+
+      // fill interior
+      ctx.fillStyle = chartBgColor;
+      const thickness = 1;
+      ctx.fillRect(
+        left + thickness,
+        top - pieTitleHeight + thickness,
+        right - 2 * thickness,
+        bottom + pieTitleHeight - 2 * thickness,
+      );
+    } else {
+      // fill interior
+      ctx.fillStyle = chartBgColor;
+      ctx.fillRect(left, top, right, bottom);
+    }
+
     ctx.restore();
   },
 });
@@ -126,10 +155,11 @@ class Chart extends React.Component {
 
   render() {
     const {
-      title,
+      id,
       exportable,
       height,
-      className,
+      exportData,
+      options,
     } = this.props;
 
     const canvasWrapStyle = {
@@ -140,9 +170,14 @@ class Chart extends React.Component {
     };
 
     return (
-      <div className={clx('chart', className)}>
-        { title && <h1>{ title }</h1> }
-        { exportable && <ExportButton /> }
+      <div className={clx('chart', id)}>
+        { exportable && (
+          <ChartExportSelect
+            chartId={id}
+            chartTitle={options.title?.text}
+            exportData={exportData}
+          />
+        )}
         <div style={canvasWrapStyle}>
           <canvas ref={this.canvasRef} />
         </div>
@@ -154,20 +189,21 @@ class Chart extends React.Component {
 export default Chart;
 
 Chart.propTypes = {
+  id: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   data: PropTypes.shape({}).isRequired,
-  options: PropTypes.shape({}).isRequired,
-  title: PropTypes.string,
+  options: PropTypes.shape({
+    title: PropTypes.shape({}),
+  }).isRequired,
   height: PropTypes.number,
   datalabels: PropTypes.bool,
   exportable: PropTypes.bool,
-  className: PropTypes.string,
+  exportData: PropTypes.func,
 };
 
 Chart.defaultProps = {
-  title: null,
   height: undefined,
   datalabels: false,
   exportable: true,
-  className: undefined,
+  exportData: () => null,
 };

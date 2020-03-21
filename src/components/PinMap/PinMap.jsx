@@ -15,6 +15,7 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
+import MapExportButton from '@components/export/MapExportButton';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -36,6 +37,7 @@ class PinMap extends Component {
       geoJSON: ncOverlay,
       bounds: null,
     };
+    this.mapRef = React.createRef();
   }
 
   highlightRegion = e => {
@@ -140,12 +142,14 @@ class PinMap extends Component {
     return (
       <div className="map-container">
         <Map
+          ref={this.mapRef}
           center={position}
           zoom={zoom}
           maxZoom={18}
           bounds={bounds}
           style={{ height: '88.4vh' }}
           zoomControl={false}
+          preferCanvas // gets you the council boundaries when exporting
         >
           <ZoomControl position="topright" />
           <LayersControl
@@ -216,6 +220,15 @@ class PinMap extends Component {
             </Overlay>
           </LayersControl>
         </Map>
+        <MapExportButton
+          map={() => this.mapRef.current.contextValue.map}
+          style={{
+            position: 'absolute',
+            top: 18,
+            right: 50,
+            zIndex: 1000,
+          }}
+        />
       </div>
     );
   }

@@ -4,6 +4,7 @@ $header-height: 60px;
 $footer-height: 52px;
 $menu-width: 509px;
 $menu-transition: all 0.5s ease 0s;
+$vis-content-max-width: 840px;
 
 h1 {
   font-family: $brand-heading-family;
@@ -17,4 +18,12 @@ h2 {
   color: $brand-heading-color;
   font-size: $brand-subheading-size;
   font-weight: bold;
+}
+
+// modifies bulma loader
+.loader {
+  animation: spinAround 750ms infinite linear;
+  border: 2px solid $brand-main-color;
+  border-right-color: transparent;
+  border-top-color: transparent;
 }
