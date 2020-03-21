@@ -32,7 +32,7 @@ Body.propTypes = {
   openErrorModal: PropTypes.bool.isRequired,
 };
 
-Body.defaultPropTs = {
+Body.defaultProps = {
   error: null,
 };
 
