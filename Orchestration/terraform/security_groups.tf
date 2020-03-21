@@ -1,46 +1,41 @@
+# ALB Security Group: Edit to restrict access to the application
+resource "aws_security_group" "lb" {
+  name        = "${var.team}-load-balancer-security-group"
+  description = "controls access to the ALB"
+  vpc_id      = aws_vpc.main.id
 
-resource "aws_security_group" "three_one_one_security_group" {
-  name        = "three_one_one_security_group"
-  description = "Allow HTTP, HTTPS, and SSH"
-  vpc_id      = aws_vpc.vpc.id
-
-  // HTTP
   ingress {
-    from_port   = 80
-    to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // HTTPS
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // SSH
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port   = var.app_port
+    to_port     = var.app_port
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
+    protocol    = "-1"
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name        = "${var.team_prefix}_security_group"
-    Environment = var.environment_tag
   }
 }
 
-output "three_one_one_security_group_id" {
-  value = aws_security_group.three_one_one_security_group.id
+# Traffic to the ECS cluster should only come from the ALB
+resource "aws_security_group" "ecs_tasks" {
+  name        = "${var.team}-ecs-tasks-security-group"
+  description = "allow inbound access from the ALB only"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    protocol        = "tcp"
+    from_port       = var.app_port
+    to_port         = var.app_port
+    security_groups = [aws_security_group.lb.id]
+  }
+
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
