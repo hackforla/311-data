@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import Icon from '@components/common/Icon';
 
 const Legend = ({
   requestTypes,
@@ -17,11 +16,9 @@ const Legend = ({
           selectedTypes.length > 0
             ? selectedTypes.map(({ type, color, abbrev }) => (
               <span key={abbrev} className="legend-item">
-                <Icon
-                  id={`legend-icon-${type}`}
-                  icon="circle"
-                  size="small"
-                  style={{ color, marginRight: '8px' }}
+                <div
+                  className="circle"
+                  style={{ backgroundColor: color }}
                 />
                 { type }
                 {' '}

@@ -12,7 +12,7 @@ const Frequency = ({
 
   const randomPoints = (count, min, max) => Array.from({ length: count })
     .map((el, idx) => ({
-      x: moment().add(idx, 'd').toDate(),
+      x: moment().add(idx, 'd'),
       y: Math.round(Math.random() * (max - min) + min),
     }));
 
@@ -26,7 +26,7 @@ const Frequency = ({
 
   const chartData = {
     datasets: selectedTypes.map(t => ({
-      label: `${t.abbrev} requests`,
+      label: t.abbrev,
       backgroundColor: t.color,
       borderColor: t.color,
       fill: false,
@@ -35,10 +35,19 @@ const Frequency = ({
     })),
   };
 
+  const exportData = () => ({
+    header: chartData.datasets[0].data.map(d => d.x.format('MM/DD/YYYY')),
+    rows: chartData.datasets.map(dataset => dataset.data.map(d => d.y)),
+    index: chartData.datasets.map(dataset => dataset.label),
+  });
+
   // // OPTIONS ////
 
   const chartOptions = {
-    aspectRatio: 611 / 400,
+    title: {
+      text: 'Frequency',
+    },
+    aspectRatio: 11 / 8,
     scales: {
       xAxes: [{
         type: 'time',
@@ -72,11 +81,11 @@ const Frequency = ({
 
   return (
     <Chart
-      title="Frequency"
+      id="frequency"
       type="line"
       data={chartData}
       options={chartOptions}
-      className="frequency"
+      exportData={exportData}
     />
   );
 };

@@ -15,9 +15,9 @@ const TypeOfRequest = ({
 
   return (
     <PieChart
+      id="type-of-request"
       title="Type of Request"
       sectors={sectors}
-      className="type-of-request"
     />
   );
 };

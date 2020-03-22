@@ -34,13 +34,29 @@ const TotalRequests = ({
     })),
   };
 
+  const exportData = () => {
+    const header = chartData.labels;
+    const rows = chartData.datasets.map(dataset => dataset.data);
+    const index = chartData.datasets.map(dataset => dataset.label);
+
+    const totals = header.map((_, idx) => (
+      rows.reduce((p, c) => p + c[idx], 0)
+    ));
+
+    return {
+      header,
+      rows: [...rows, totals],
+      index: [...index, 'Total'],
+    };
+  };
+
   // // OPTIONS ////
 
   const chartOptions = {
-    aspectRatio: 611 / 400,
     title: {
       text: 'Total Requests',
     },
+    aspectRatio: 11 / 8,
     scales: {
       xAxes: [{
         stacked: true,
@@ -77,11 +93,11 @@ const TotalRequests = ({
 
   return (
     <Chart
-      title="Total Requests"
+      id="total-requests"
       type="bar"
       data={chartData}
       options={chartOptions}
-      className="total-requests"
+      exportData={exportData}
     />
   );
 };
