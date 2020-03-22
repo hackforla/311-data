@@ -1,0 +1,15 @@
+.map-container {
+  height: calc(100vh - #{$header-height + $footer-height});
+
+  .leaflet-control-easyPrint {
+    visibility: hidden;
+  }
+
+  .map-export-button {
+    @extend .cta-button;
+    position: absolute;
+    top: 18px;
+    right: 50px;
+    z-index: 1000;
+  }
+}

@@ -30,6 +30,7 @@
     "react-dom": "^16.8.6",
     "react-leaflet": "^2.4.0",
     "react-leaflet-choropleth": "^2.0.0",
+    "react-leaflet-easyprint": "^2.0.0",
     "react-leaflet-heatmap-layer": "^2.0.0",
     "react-leaflet-markercluster": "^2.0.0-rc3",
     "react-redux": "^7.1.3",

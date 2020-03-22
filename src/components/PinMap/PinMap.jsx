@@ -9,12 +9,14 @@ import {
   Tooltip,
   LayersControl,
   ZoomControl,
+  withLeaflet,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
+import PrintControlDefault from 'react-leaflet-easyprint';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -24,6 +26,8 @@ import ncOverlay from '../../data/nc-boundary-2019.json';
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
 const boundaryHighlightColor = COLORS.BRAND.CTA1;
+
+const PrintControl = withLeaflet(PrintControlDefault);
 
 class PinMap extends Component {
   constructor(props) {
@@ -35,7 +39,28 @@ class PinMap extends Component {
       satelliteUrl: `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
       geoJSON: ncOverlay,
       bounds: null,
+      ready: false,
+      width: null,
+      height: null,
     };
+    this.container = React.createRef();
+  }
+
+  componentDidMount() {
+    this.setDimensions();
+    this.setState({ ready: true });
+    window.addEventListener('resize', this.setDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.setDimensions);
+  }
+
+  setDimensions = () => {
+    this.setState({
+      width: this.container.current.offsetWidth,
+      height: this.container.current.offsetHeight,
+    });
   }
 
   highlightRegion = e => {
@@ -133,18 +158,20 @@ class PinMap extends Component {
       satelliteUrl,
       bounds,
       geoJSON,
+      width,
+      height,
     } = this.state;
 
     const { data } = this.props;
 
     return (
-      <div className="map-container">
+      <>
         <Map
           center={position}
           zoom={zoom}
           maxZoom={18}
           bounds={bounds}
-          style={{ height: '88.4vh' }}
+          style={{ width, height }}
           zoomControl={false}
         >
           <ZoomControl position="topright" />
@@ -215,14 +242,34 @@ class PinMap extends Component {
               />
             </Overlay>
           </LayersControl>
+          <PrintControl
+            sizeModes={['Current']}
+            hideControlContainer={false}
+            exportOnly
+          />
         </Map>
-      </div>
+        <button
+          type="button"
+          className="map-export-button"
+          onClick={() => {
+            const selector = '.leaflet-control-easyPrint .CurrentSize';
+            const link = document.body.querySelector(selector);
+            if (link) link.click();
+          }}
+        >
+          Export
+        </button>
+      </>
     );
   }
 
   render() {
+    const { ready } = this.state;
+
     return (
-      this.renderMap()
+      <div ref={this.container} className="map-container">
+        { ready ? this.renderMap() : null }
+      </div>
     );
   }
 }
