@@ -9,7 +9,7 @@ from datetime import datetime
 from multiprocessing import cpu_count
 
 from services.time_to_close import time_to_close
-from services.frequency import frequency
+from services.frequency import FrequencyService
 from services.pinService import PinService
 from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
@@ -68,16 +68,17 @@ async def timetoclose(request):
     return json(data)
 
 
-@app.route('/requestfrequency')
+@app.route('/requestfrequency', methods=["POST"])
 @compress.compress()
 async def requestfrequency(request):
-    freq_worker = frequency(app.config['Settings'])
+    freq_worker = FrequencyService(app.config['Settings'])
 
-    data = freq_worker.freq_view_data(service=True,
-                                      councils=[],
-                                      aggregate=True)
+    return_data = await freq_worker.get_frequency(startDate='2019-01-01',
+                                                  endDate='2020-12-31',
+                                                  ncList=['SHERMAN OAKS NC'],
+                                                  requestTypes=['Other'])
 
-    return json(data)
+    return json(return_data)
 
 
 @app.route('/sample-data')

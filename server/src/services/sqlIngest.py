@@ -81,8 +81,7 @@ class DataHandler:
     def ingestData(self, ingestMethod='replace',
                    tableName='ingest_staging_table'):
         '''Set up connection to database'''
-        asdf = 'Inserting data into ' + self.dialect + ' instance...'
-        print(asdf)
+        print('Inserting data into ' + self.dialect + ' instance...')
         ingestTimer = time.time()
         data = self.data.copy()  # shard deepcopy for other endpoint operations
         engine = db.create_engine(self.dbString)
@@ -252,4 +251,4 @@ if __name__ == "__main__":
     loader = DataHandler(config)
     loader.fetchSocrataFull()
     loader.cleanData()
-    loader.ingestData('ingest_staging_table')
+    loader.ingestData(tableName='ingest_staging_table')
