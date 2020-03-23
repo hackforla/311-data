@@ -39,7 +39,7 @@ const Criteria = ({
           <span>{ councilsText }</span>
           { councils.length > MAX_COUNCILS && (
             <span>
-              <span>{ showAll ? '' : '...'}</span>
+              <span>{ showAll ? '' : '...' }</span>
               <button
                 type="button"
                 className="show-toggle"

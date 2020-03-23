@@ -68,7 +68,7 @@ export default PdfTemplate;
 
 PdfTemplate.propTypes = {
   pages: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
-    img: PropTypes.string, // an object url
+    img: PropTypes.string, // a data url
     styles: PropTypes.shape({}),
   }))).isRequired,
   title: PropTypes.string,
