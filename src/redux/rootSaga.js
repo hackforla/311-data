@@ -50,8 +50,12 @@ function* getFrequency() {
   return yield {};
 }
 
-function* getTimeToClose() {
-  return yield {};
+function* getTimeToClose(filters) {
+  const ttcUrl = `${BASE_URL}/timetoclose`;
+
+  const { data: { data } } = yield call(axios.post, ttcUrl, filters);
+
+  return data;
 }
 
 /* //////////// COMBINED API CALL //////////// */
