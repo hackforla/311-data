@@ -35,31 +35,26 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: true,
       };
-    case types.GET_DATA_SUCCESS: {
-      const {
-        lastUpdated,
-        pins,
-        counts,
-        frequency,
-        timeToClose,
-      } = action.payload;
-
+    case types.GET_DATA_SUCCESS:
       return {
         ...state,
         error: null,
         isLoading: false,
-        lastUpdated,
-        pins,
-        counts,
-        frequency,
-        timeToClose,
+        ...action.payload,
       };
-    }
     case types.GET_DATA_FAILURE: {
-      const { error } = action.payload;
+      const {
+        response: { status },
+        message,
+      } = action.payload;
+
       return {
         ...state,
-        error,
+        error: {
+          code: status,
+          message,
+          error: action.payload,
+        },
         isLoading: false,
       };
     }
