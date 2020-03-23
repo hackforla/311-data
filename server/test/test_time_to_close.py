@@ -1,4 +1,4 @@
-from src.services.time_to_close import time_to_close
+from src.services.timeToCloseService import TimeToCloseService
 
 TESTCONFIG = {
     "Database": {
@@ -13,7 +13,7 @@ def test_serviceExists():
     print(testString)
 
     # Act
-    ttc_worker = time_to_close(TESTCONFIG)
+    ttc_worker = TimeToCloseService(TESTCONFIG)
     print(ttc_worker)
 
     # Assert
