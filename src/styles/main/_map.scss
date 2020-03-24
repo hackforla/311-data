@@ -5,11 +5,12 @@
     visibility: hidden;
   }
 
-  .map-export-button {
+  #btn-map-export {
     @extend .cta-button;
     position: absolute;
     top: 18px;
     right: 50px;
     z-index: 1000;
+    height: auto;
   }
 }

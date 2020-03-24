@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import Button from '@components/common/Button';
 
 // if more than this, use the more/less toggle
 const MAX_COUNCILS = 10;
@@ -40,13 +41,11 @@ const Criteria = ({
           { councils.length > MAX_COUNCILS && (
             <span>
               <span>{ showAll ? '' : '...' }</span>
-              <button
-                type="button"
-                className="show-toggle"
-                onClick={() => setShowAll(!showAll)}
-              >
-                { showAll ? '(show less)' : '(show more)' }
-              </button>
+              <Button
+                id="toggle-show-more"
+                label={showAll ? '(show less)' : '(show more)'}
+                handleClick={() => setShowAll(!showAll)}
+              />
             </span>
           )}
         </div>
