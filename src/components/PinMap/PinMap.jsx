@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { getPinInfoRequest } from '@reducers/data';
+import PinPopup from '@components/PinMap/PinPopup';
 import {
   Map,
   Marker,
-  Popup,
   TileLayer,
   Rectangle,
   Tooltip,
@@ -84,23 +85,54 @@ class PinMap extends Component {
   }
 
   renderMarkers = () => {
-    const { data, showMarkers } = this.props;
+    const {
+      data,
+      getPinInfo,
+      pinsInfo,
+    } = this.props;
 
-    if (showMarkers && data) {
+    if (data) {
       return data.map(d => {
         if (d.latitude && d.longitude) {
-          const position = [d.latitude, d.longitude];
+          const {
+            latitude,
+            longitude,
+            srnumber,
+            requesttype,
+          } = d;
+          const position = [latitude, longitude];
+          const {
+            status,
+            createddate,
+            updateddate,
+            closeddate,
+            address,
+            ncname,
+          } = pinsInfo[srnumber] || {};
+
+          const popup = (
+            <PinPopup
+              requestType={requesttype}
+              address={address}
+              createdDate={createddate}
+              updatedDate={updateddate}
+              closedDate={closeddate}
+              status={status}
+              ncName={ncname}
+            />
+          );
 
           return (
-            <Marker key={d.srnumber} position={position}>
-              {/* Fetching request details on marker click will be implemented in another PR */}
-              <Popup>
-                Type:
-                {d.requesttype}
-                <br />
-                Address:
-                {d.address}
-              </Popup>
+            <Marker
+              key={srnumber}
+              position={position}
+              onClick={() => {
+                if (!pinsInfo[srnumber]) {
+                  getPinInfo(srnumber);
+                }
+              }}
+            >
+              {popup}
             </Marker>
           );
         }
@@ -191,9 +223,7 @@ class PinMap extends Component {
             }
             <Overlay checked name="Markers">
               <MarkerClusterGroup
-                showCoverageOnHover
-                zoomToBoundsOnClick
-                removeOutsideVisibleBounds
+                animate={false}
                 maxClusterRadius={65}
               >
                 {this.renderMarkers()}
@@ -227,18 +257,24 @@ class PinMap extends Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
+});
+
 const mapStateToProps = state => ({
   data: state.data.pins,
+  pinsInfo: state.data.pinsInfo,
 });
 
 PinMap.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({})),
-  showMarkers: PropTypes.bool,
+  pinsInfo: PropTypes.shape({}),
+  getPinInfo: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {
   data: undefined,
-  showMarkers: true,
+  pinsInfo: {},
 };
 
-export default connect(mapStateToProps, null)(PinMap);
+export default connect(mapStateToProps, mapDispatchToProps)(PinMap);
