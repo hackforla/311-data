@@ -19,6 +19,7 @@ import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import PrintControlDefault from 'react-leaflet-easyprint';
+import Button from '@components/common/Button';
 
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
@@ -287,17 +288,15 @@ class PinMap extends Component {
             exportOnly
           />
         </Map>
-        <button
-          type="button"
-          className="map-export-button"
-          onClick={() => {
+        <Button
+          id="map-export"
+          label="Export"
+          handleClick={() => {
             const selector = '.leaflet-control-easyPrint .CurrentSize';
             const link = document.body.querySelector(selector);
             if (link) link.click();
           }}
-        >
-          Export
-        </button>
+        />
       </>
     );
   }
