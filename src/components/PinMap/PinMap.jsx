@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { getPinInfoRequest } from '@reducers/data';
+import PinPopup from '@components/PinMap/PinPopup';
+import CustomMarker from '@components/PinMap/CustomMarker';
 import {
   Map,
-  Marker,
-  Popup,
   TileLayer,
   Rectangle,
   Tooltip,
@@ -16,7 +17,9 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import PrintControlDefault from 'react-leaflet-easyprint';
+
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -109,24 +112,63 @@ class PinMap extends Component {
   }
 
   renderMarkers = () => {
-    const { data, showMarkers } = this.props;
+    const {
+      data,
+      getPinInfo,
+      pinsInfo,
+    } = this.props;
 
-    if (showMarkers && data) {
+    if (data) {
       return data.map(d => {
         if (d.latitude && d.longitude) {
-          const position = [d.latitude, d.longitude];
+          const {
+            latitude,
+            longitude,
+            srnumber,
+            requesttype,
+          } = d;
+          const position = [latitude, longitude];
+          const {
+            status,
+            createddate,
+            updateddate,
+            closeddate,
+            address,
+            ncname,
+          } = pinsInfo[srnumber] || {};
+          const { color, abbrev } = REQUEST_TYPES.find(req => req.type === requesttype
+            || req.fullType === requesttype);
+
+          const popup = (
+            <PinPopup
+              requestType={requesttype}
+              color={color}
+              abbrev={abbrev}
+              address={address}
+              createdDate={createddate}
+              updatedDate={updateddate}
+              closedDate={closeddate}
+              status={status}
+              ncName={ncname}
+            />
+          );
 
           return (
-            <Marker key={d.srnumber} position={position}>
-              {/* Fetching request details on marker click will be implemented in another PR */}
-              <Popup>
-                Type:
-                {d.requesttype}
-                <br />
-                Address:
-                {d.address}
-              </Popup>
-            </Marker>
+            <CustomMarker
+              key={srnumber}
+              position={position}
+              onClick={() => {
+                if (!pinsInfo[srnumber]) {
+                  getPinInfo(srnumber);
+                }
+              }}
+              color={color}
+              icon="map-marker-alt"
+              size="3x"
+              style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
+            >
+              {popup}
+            </CustomMarker>
           );
         }
 
@@ -218,10 +260,7 @@ class PinMap extends Component {
             }
             <Overlay checked name="Markers">
               <MarkerClusterGroup
-                showCoverageOnHover
-                zoomToBoundsOnClick
-                removeOutsideVisibleBounds
-                maxClusterRadius={65}
+                maxClusterRadius={40}
               >
                 {this.renderMarkers()}
               </MarkerClusterGroup>
@@ -274,18 +313,24 @@ class PinMap extends Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
+});
+
 const mapStateToProps = state => ({
   data: state.data.pins,
+  pinsInfo: state.data.pinsInfo,
 });
 
 PinMap.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({})),
-  showMarkers: PropTypes.bool,
+  pinsInfo: PropTypes.shape({}),
+  getPinInfo: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {
   data: undefined,
-  showMarkers: true,
+  pinsInfo: {},
 };
 
-export default connect(mapStateToProps, null)(PinMap);
+export default connect(mapStateToProps, mapDispatchToProps)(PinMap);

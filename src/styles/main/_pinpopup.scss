@@ -1,0 +1,53 @@
+.leaflet-popup {
+  border: 2px solid $brand-text-color;
+
+  .pin-popup {
+    min-height: 160px;
+    min-width: 220px;
+  }
+
+  .leaflet-popup-tip {
+    border: 2px solid $brand-text-color;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 0;
+    font-family: $brand-heading-family;
+    color: $brand-text-color;
+    
+  
+    .pin-popup-ncname {
+      margin-top: 3px;
+    }
+  
+    .pin-popup-type {
+      font-size: 18px;
+      margin-bottom: 0;
+    }
+  
+    .pin-popup-address {
+      font-size: 14px;
+    }
+  
+    .pin-popup-status p {
+      font-size: 14px;
+      margin-top: 3px;
+      margin-bottom: 3px;
+    }
+  }
+  
+  .loader {
+    margin: 20px auto;
+    width: 50px;
+    height: 50px;
+    animation: spinAround 750ms infinite linear;
+    border: 5px solid $brand-main-color;
+    border-right-color: transparent;
+    border-top-color: transparent;
+  }
+}
+
+
+
+
+
