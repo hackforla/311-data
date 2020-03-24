@@ -20,15 +20,25 @@
     background-color: rgba(153, 153, 153, 0.7);
     border-radius: 4px;
 
-    // this modifies the bulma styles
     .loader {
       margin: 20px auto;
       width: 50px;
       height: 50px;
-      animation: spinAround 750ms infinite linear;
-      border: 5px solid $brand-main-color;
-      border-right-color: transparent;
-      border-top-color: transparent;
+      border-width: 5px;
     }
+  }
+}
+
+.loader-button {
+  position: relative;
+  &.loading {
+    color: transparent;
+    cursor: default;
+  }
+  .loader-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }

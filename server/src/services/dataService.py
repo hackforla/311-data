@@ -27,7 +27,7 @@ class DataService(object):
         self.table = tableName
         self.data = None
         self.engine = db.create_engine(self.dbString)
-        self.session = sessionmaker(bind=self.engine)()
+        self.Session = sessionmaker(bind=self.engine)
 
     def standardFilters(self,
                         startDate=None,
@@ -54,10 +54,16 @@ class DataService(object):
         if not requestNumber or not isinstance(requestNumber, str):
             return {'Error': 'Missing request number'}
 
-        return self.session \
+        session = self.Session()
+        record = session \
             .query(Request) \
-            .get(requestNumber) \
-            ._asdict()
+            .get(requestNumber)
+        session.close()
+
+        if record:
+            return record._asdict()
+        else:
+            return {'Error': 'Request number not found'}
 
     @includeMeta
     def query(self, queryItems=[], queryFilters=[], limit=None):
@@ -70,11 +76,14 @@ class DataService(object):
             return {'Error': 'Missing query items'}
 
         selectFields = [getattr(Request, item) for item in queryItems]
-        records = self.session \
+
+        session = self.Session()
+        records = session \
             .query(*selectFields) \
             .filter(*queryFilters) \
             .limit(limit) \
             .all()
+        session.close()
 
         return [rec._asdict() for rec in records]
 
@@ -94,7 +103,7 @@ class DataService(object):
         return [{
             'field': field,
             'counts': df.groupby(by=field).size().to_dict()
-        } for field in countFields]
+        } for field in countFields if field in df.columns]
 
     def storedProc(self):
         pass

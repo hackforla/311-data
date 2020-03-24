@@ -49,8 +49,12 @@ function* getCounts(filters) {
   };
 }
 
-function* getFrequency() {
-  return yield {};
+function* getFrequency(filters) {
+  const frequencyUrl = `${BASE_URL}/requestfrequency`;
+
+  const { data: { data } } = yield call(axios.post, frequencyUrl, filters);
+
+  return data;
 }
 
 function* getTimeToClose(filters) {

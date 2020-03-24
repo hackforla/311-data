@@ -43,7 +43,10 @@ const initialState = {
   pins: [],
   pinsInfo: {},
   counts: {},
-  frequency: {},
+  frequency: {
+    bins: [],
+    counts: {},
+  },
   timeToClose: {},
 };
 
