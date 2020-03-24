@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getPinInfoRequest } from '@reducers/data';
 import PinPopup from '@components/PinMap/PinPopup';
+import CustomMarker from '@components/PinMap/CustomMarker';
 import {
   Map,
-  Marker,
   TileLayer,
   Rectangle,
   Tooltip,
@@ -16,6 +16,7 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -109,10 +110,14 @@ class PinMap extends Component {
             address,
             ncname,
           } = pinsInfo[srnumber] || {};
+          const { color, abbrev } = REQUEST_TYPES.find(req => req.type === requesttype
+            || req.fullType === requesttype);
 
           const popup = (
             <PinPopup
               requestType={requesttype}
+              color={color}
+              abbrev={abbrev}
               address={address}
               createdDate={createddate}
               updatedDate={updateddate}
@@ -123,7 +128,7 @@ class PinMap extends Component {
           );
 
           return (
-            <Marker
+            <CustomMarker
               key={srnumber}
               position={position}
               onClick={() => {
@@ -131,9 +136,13 @@ class PinMap extends Component {
                   getPinInfo(srnumber);
                 }
               }}
+              color={color}
+              icon="map-marker-alt"
+              size="3x"
+              style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
             >
               {popup}
-            </Marker>
+            </CustomMarker>
           );
         }
 
@@ -223,8 +232,7 @@ class PinMap extends Component {
             }
             <Overlay checked name="Markers">
               <MarkerClusterGroup
-                animate={false}
-                maxClusterRadius={65}
+                maxClusterRadius={40}
               >
                 {this.renderMarkers()}
               </MarkerClusterGroup>
