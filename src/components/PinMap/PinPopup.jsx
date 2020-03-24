@@ -4,10 +4,10 @@ import moment from 'moment';
 
 import { Popup } from 'react-leaflet';
 
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-
 const PinPopup = ({
   requestType,
+  color,
+  abbrev,
   address,
   createdDate,
   updatedDate,
@@ -15,10 +15,12 @@ const PinPopup = ({
   status,
   ncName,
 }) => {
-  const { color, abbrev } = REQUEST_TYPES.find(req => req.type === requestType
-    || req.fullType === requestType);
+  // Converts unix timestamp to MM/DD/YYYY
+  // 1558945500 -> 5/27/2019
   const created = moment.unix(createdDate).format('l');
   const updated = moment.unix(updatedDate).format('l');
+  // Converts date/time string to MM/DD/YYYY
+  // "2019-12-13 19:31:00" -> 12/13/2019
   const closed = moment(closedDate).format('l');
 
   return (
@@ -36,7 +38,6 @@ const PinPopup = ({
           </p>
           <p className="pin-popup-ncname">{ncName}</p>
           <p className="pin-popup-address has-text-weight-bold">{address}</p>
-
           <div className="pin-popup-status">
             <p>
               Reported on&nbsp;
@@ -63,7 +64,12 @@ const PinPopup = ({
             }
           </div>
         </>
-      ) : <div className="pin-popup-loading">Loading</div>}
+      ) : (
+        <>
+          <div className="loader" />
+          <p>Loading...</p>
+        </>
+      )}
     </Popup>
   );
 };
@@ -72,6 +78,8 @@ export default PinPopup;
 
 PinPopup.propTypes = {
   requestType: PropTypes.string,
+  color: PropTypes.string,
+  abbrev: PropTypes.string,
   address: PropTypes.string,
   createdDate: PropTypes.number,
   updatedDate: PropTypes.number,
@@ -82,6 +90,8 @@ PinPopup.propTypes = {
 
 PinPopup.defaultProps = {
   requestType: undefined,
+  color: 'black',
+  abbrev: undefined,
   address: undefined,
   createdDate: undefined,
   updatedDate: undefined,
