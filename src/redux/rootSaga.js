@@ -62,8 +62,7 @@ function* getTimeToClose(filters) {
 }
 
 function* fetchPinInfo(srnumber) {
-  // const pinInfoUrl = `${BASE_URL}/servicerequest/${srnumber}`;
-  const pinInfoUrl = `/servicerequest/${srnumber}`;
+  const pinInfoUrl = `${BASE_URL}/servicerequest/${srnumber}`;
 
   const { data: { data } } = yield call(axios.get, pinInfoUrl);
 
@@ -134,7 +133,6 @@ function* getPinData(action) {
     yield put(getPinInfoSuccess(data));
   } catch (e) {
     yield put(getPinInfoFailure(e));
-    // Maybe update this for marker-specific error instead of blocking entire UI?
     yield put(setErrorModal(true));
   }
 }
