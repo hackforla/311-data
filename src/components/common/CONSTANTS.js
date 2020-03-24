@@ -26,6 +26,7 @@ export const MONTHS = [
 export const REQUEST_TYPES = [
   {
     type: 'Dead Animal',
+    fullType: 'Dead Animal Removal',
     abbrev: 'DAN',
     color: '#4FEFEF',
   },
@@ -36,11 +37,13 @@ export const REQUEST_TYPES = [
   },
   {
     type: 'Single Streetlight',
+    fullType: 'Single Streetlight Issue',
     abbrev: 'SSL',
     color: '#AD7B56',
   },
   {
     type: 'Multiple Streetlight',
+    fullType: 'Multiple Streetlight Issue',
     abbrev: 'MSL',
     color: '#F7ADAD',
   },
@@ -56,6 +59,7 @@ export const REQUEST_TYPES = [
   },
   {
     type: 'E-Waste',
+    fullType: 'Electronic Waste',
     abbrev: 'EWT',
     color: '#DDEC9F',
   },
@@ -66,11 +70,13 @@ export const REQUEST_TYPES = [
   },
   {
     type: 'Graffiti',
+    fullType: 'Graffiti Removal',
     abbrev: 'GFT',
     color: '#2368D0',
   },
   {
     type: 'Illegal Dumping',
+    fullType: 'Illegal Dumping Pickup',
     abbrev: 'ILD',
     color: '#6A8011',
   },
@@ -79,11 +85,6 @@ export const REQUEST_TYPES = [
     abbrev: 'OTH',
     color: '#6D7C93',
   },
-
-  /*
-   * Is 'Report Water Waste' still a valid request type?
-   * If so, we're missing it on the front end mockups.
-   */
 ];
 
 export const REQUEST_SOURCES = [
