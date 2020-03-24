@@ -78,9 +78,7 @@ export default (state = initialState, action) => {
       };
     }
     case types.GET_PIN_INFO_REQUEST:
-      return {
-        ...state,
-      };
+      return state;
     case types.GET_PIN_INFO_SUCCESS:
       return {
         ...state,
