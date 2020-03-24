@@ -3,9 +3,9 @@ import PropTypes from 'proptypes';
 import Chart from './Chart';
 
 const PieChart = ({
-  sectors,
+  id,
   title,
-  className,
+  sectors,
   addLabels,
 }) => {
   // // SET ORDER OF SECTORS ////
@@ -57,13 +57,45 @@ const PieChart = ({
     }],
   };
 
+  const exportData = () => {
+    const counts = chartData.datasets[0].data;
+    const tot = counts.reduce((p, c) => p + c, 0);
+
+    return {
+      header: ['count', 'percentage'],
+      rows: counts.map(count => [
+        count,
+        (100 * (count / tot)).toFixed(2),
+      ]),
+      index: chartData.labels.map(label => label.substring(1)),
+    };
+  };
+
   // // OPTIONS ////
 
+  const vertPadding = 65;
+  const titleHeight = 130;
+
   const chartOptions = {
-    aspectRatio: 1.0,
+    title: {
+      text: title,
+      padding: 0,
+      lineHeight: 8.5,
+    },
+    aspectRatio: 0.90,
     animation: false,
     layout: {
-      padding: 65,
+      padding: {
+        top: vertPadding - titleHeight,
+        bottom: vertPadding,
+        left: 75,
+        right: 75,
+      },
+    },
+    plugins: {
+      chartArea: {
+        pieTitleHeight: titleHeight,
+      },
     },
     tooltips: {
       callbacks: {
@@ -79,12 +111,12 @@ const PieChart = ({
 
   return (
     <Chart
-      title={title}
+      id={id}
       type="pie"
       data={chartData}
       options={chartOptions}
       datalabels
-      className={className}
+      exportData={exportData}
     />
   );
 };
@@ -92,18 +124,17 @@ const PieChart = ({
 export default PieChart;
 
 PieChart.propTypes = {
+  id: PropTypes.string.isRequired,
   sectors: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string,
     value: PropTypes.number,
     color: PropTypes.string,
   })).isRequired,
   title: PropTypes.string,
-  className: PropTypes.string,
   addLabels: PropTypes.bool,
 };
 
 PieChart.defaultProps = {
   title: null,
-  className: undefined,
   addLabels: false,
 };

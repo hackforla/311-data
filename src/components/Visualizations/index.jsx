@@ -3,6 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import clx from 'classnames';
 import { MENU_TABS } from '@components/common/CONSTANTS';
+import VisExportSelect from '@components/export/VisExportSelect';
 import Criteria from './Criteria';
 import Legend from './Legend';
 import NumberOfRequests from './NumberOfRequests';
@@ -20,6 +21,7 @@ const Visualizations = ({
 
   return (
     <div className={clx('visualizations', { 'full-width': !menuIsOpen })}>
+      <VisExportSelect />
       <div className="info-section">
         <Criteria />
         <Legend />

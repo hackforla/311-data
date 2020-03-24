@@ -24,7 +24,10 @@ const initialState = {
   lastUpdated: null,
   pins: [],
   counts: {},
-  frequency: {},
+  frequency: {
+    bins: [],
+    counts: {},
+  },
   timeToClose: {},
 };
 

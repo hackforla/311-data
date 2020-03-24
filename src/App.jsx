@@ -5,6 +5,10 @@ import Header from './components/main/header/Header';
 import Body from './components/main/body/Body';
 import Footer from './components/main/footer/Footer';
 import Tooltip from './components/main/tooltip/Tooltip';
+import SnapshotService, { SnapshotRenderer } from './components/export/SnapshotService';
+import Visualizations from './components/Visualizations';
+
+SnapshotService.register({ Visualizations });
 
 const App = () => {
   useEffect(() => {
@@ -17,6 +21,7 @@ const App = () => {
       <Body />
       <Footer />
       <Tooltip />
+      <SnapshotRenderer />
     </>
   );
 };

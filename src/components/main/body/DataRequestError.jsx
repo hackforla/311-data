@@ -29,6 +29,7 @@ const DataRequestError = ({ closeModal }) => (
     <br />
     <div className="has-text-centered">
       <Button
+        id="data-request-back-button"
         label="Back"
         color="danger"
         handleClick={closeModal}

@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import Button from '@components/common/Button';
+
+// if more than this, use the more/less toggle
+const MAX_COUNCILS = 10;
 
 const Criteria = ({
   startDate,
   endDate,
   councils,
 }) => {
+  const [showAll, setShowAll] = useState(false);
+
   const dateText = startDate && endDate
     ? `From ${startDate} to ${endDate}`
     : 'No date range selected.';
 
+  const shownCouncils = showAll ? councils : councils.slice(0, MAX_COUNCILS);
+
   const councilsText = councils.length > 0
-    ? councils.join('; ')
+    ? shownCouncils.join('; ')
     : 'No councils selected.';
 
   return (
@@ -30,6 +38,16 @@ const Criteria = ({
             Neighborhood Council District
           </span>
           <span>{ councilsText }</span>
+          { councils.length > MAX_COUNCILS && (
+            <span>
+              <span>{ showAll ? '' : '...' }</span>
+              <Button
+                id="toggle-show-more"
+                label={showAll ? '(show less)' : '(show more)'}
+                handleClick={() => setShowAll(!showAll)}
+              />
+            </span>
+          )}
         </div>
       </div>
     </div>
