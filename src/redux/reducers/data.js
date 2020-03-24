@@ -80,7 +80,6 @@ export default (state = initialState, action) => {
     case types.GET_PIN_INFO_REQUEST:
       return {
         ...state,
-        isLoading: true,
       };
     case types.GET_PIN_INFO_SUCCESS:
       return {
