@@ -6,7 +6,11 @@ import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 const Legend = ({
   requestTypes,
 }) => {
-  const selectedTypes = REQUEST_TYPES.filter(el => requestTypes[el.type]);
+  const selectedTypes = (
+    Object.keys(requestTypes)
+      .filter(type => type !== 'All' && requestTypes[type])
+      .map(type => REQUEST_TYPES[type])
+  );
 
   return (
     <div className="legend">
@@ -14,13 +18,13 @@ const Legend = ({
       <div className="outline">
         {
           selectedTypes.length > 0
-            ? selectedTypes.map(({ type, color, abbrev }) => (
+            ? selectedTypes.map(({ displayName, color, abbrev }) => (
               <span key={abbrev} className="legend-item">
                 <div
                   className="circle"
                   style={{ backgroundColor: color }}
                 />
-                { type }
+                { displayName }
                 {' '}
                 [
                 <span style={{ color }}>{abbrev}</span>

@@ -15,7 +15,7 @@ const Frequency = ({
   const chartData = {
     labels: bins.slice(0, -1).map(bin => moment(bin).format('MMM D')),
     datasets: Object.keys(counts).map(key => {
-      const requestType = REQUEST_TYPES.find(t => t.type === key);
+      const requestType = REQUEST_TYPES[key];
       return {
         data: counts[key],
         label: requestType?.abbrev,

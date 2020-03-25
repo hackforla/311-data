@@ -23,69 +23,63 @@ export const MONTHS = [
   'December',
 ];
 
-export const REQUEST_TYPES = [
-  {
-    type: 'Dead Animal',
-    fullType: 'Dead Animal Removal',
+export const REQUEST_TYPES = {
+  'Dead Animal Removal': {
+    displayName: 'Dead Animal',
     abbrev: 'DAN',
     color: '#4FEFEF',
   },
-  {
-    type: 'Homeless Encampment',
+  'Homeless Encampment': {
+    displayName: 'Homeless Encampment',
     abbrev: 'HLE',
     color: '#ECB800',
   },
-  {
-    type: 'Single Streetlight',
-    fullType: 'Single Streetlight Issue',
+  'Single Streetlight Issue': {
+    displayName: 'Single Streetlight',
     abbrev: 'SSL',
     color: '#AD7B56',
   },
-  {
-    type: 'Multiple Streetlight',
-    fullType: 'Multiple Streetlight Issue',
+  'Multiple Streetlight Issue': {
+    displayName: 'Multiple Streetlight',
     abbrev: 'MSL',
     color: '#F7ADAD',
   },
-  {
-    type: 'Feedback',
+  'Feedback': {
+    displayName: 'Feedback',
     abbrev: 'FBK',
     color: '#FFE6B7',
   },
-  {
-    type: 'Bulky Items',
+  'Bulky Items': {
+    displayName: 'Bulky Items',
     abbrev: 'BLK',
     color: '#FF0000',
   },
-  {
-    type: 'E-Waste',
-    fullType: 'Electronic Waste',
+  'Electronic Waste': {
+    displayName: 'E-Waste',
     abbrev: 'EWT',
     color: '#DDEC9F',
   },
-  {
-    type: 'Metal/Household Appliances',
+  'Metal/Household Appliances': {
+    displayName: 'Metal/Household Appliances',
     abbrev: 'MHA',
     color: '#B8D0FF',
   },
-  {
-    type: 'Graffiti',
-    fullType: 'Graffiti Removal',
+  'Graffiti Removal': {
+    displayName: 'Graffiti',
     abbrev: 'GFT',
     color: '#2368D0',
   },
-  {
-    type: 'Illegal Dumping',
-    fullType: 'Illegal Dumping Pickup',
+  'Illegal Dumping Pickup': {
+    displayName: 'Illegal Dumping',
     abbrev: 'ILD',
     color: '#6A8011',
   },
-  {
-    type: 'Other',
+  'Other': {
+    displayName: 'Other',
     abbrev: 'OTH',
     color: '#6D7C93',
   },
-];
+};
 
 export const REQUEST_SOURCES = [
   {
