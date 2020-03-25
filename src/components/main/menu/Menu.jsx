@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import clx from 'classnames';
+import { useLocation } from 'react-router-dom';
 
 import {
   toggleMenu as reduxToggleMenu,
@@ -24,10 +25,40 @@ const Menu = ({
   toggleMenu,
   setMenuTab,
 }) => {
+  const location = useLocation();
   const tabs = [
     MENU_TABS.MAP,
     MENU_TABS.VISUALIZATIONS,
   ];
+
+  const renderMenu = () => {
+    let toRender;
+
+    switch (location.pathname) {
+      case '/comparison':
+        toRender = (
+          <>
+            <h1>Comparison Tool</h1>
+            <DateSelector />
+            <Submit />
+          </>
+        );
+        break;
+      default:
+        toRender = (
+          <>
+            <h1>Filters</h1>
+            <DateSelector />
+            <NCSelector />
+            <RequestTypeSelector />
+            <Submit />
+          </>
+        );
+        break;
+    }
+
+    return toRender;
+  };
 
   return (
     <div className={clx('menu-container', { open: isOpen })}>
@@ -52,11 +83,7 @@ const Menu = ({
       />
 
       <div className="menu-content">
-        <h1>Filters</h1>
-        <DateSelector />
-        <NCSelector />
-        <RequestTypeSelector />
-        <Submit />
+        {renderMenu()}
       </div>
     </div>
   );

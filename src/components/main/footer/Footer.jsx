@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import propTypes from 'proptypes';
 import moment from 'moment';
 
@@ -13,29 +14,47 @@ const footerTextStyle = {
 
 const Footer = ({
   lastUpdated,
-}) => (
-  <footer
-    className="navbar has-navbar-fixed-bottom"
-    style={{
-      position: 'fixed',
-      bottom: '0',
-      height: '45px',
-      background: '#002449',
-      // Really high z-index here to ensure Footer is on top of modal
-      zIndex: '20000',
-    }}
-  >
-    <div className="level has-text-centered">
-      <div className="level-item">
-        <p style={footerTextStyle}>
-          Data Updated Through:
-          &nbsp;
-          {lastUpdated && moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
-        </p>
-      </div>
-    </div>
-  </footer>
-);
+}) => {
+  const location = useLocation();
+
+  const renderFooter = () => {
+    let toRender;
+
+    switch (location.pathname) {
+      default:
+        toRender = (
+          <div className="level has-text-centered">
+            <div className="level-item">
+              <p style={footerTextStyle}>
+                Data Updated Through:
+                &nbsp;
+                {lastUpdated && moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
+              </p>
+            </div>
+          </div>
+        );
+        break;
+    }
+
+    return toRender;
+  };
+
+  return (
+    <footer
+      className="navbar has-navbar-fixed-bottom"
+      style={{
+        position: 'fixed',
+        bottom: '0',
+        height: '45px',
+        background: '#002449',
+        // Really high z-index here to ensure Footer is on top of modal
+        zIndex: '20000',
+      }}
+    >
+      {renderFooter()}
+    </footer>
+  );
+};
 
 const mapStateToProps = state => ({
   lastUpdated: state.data.lastUpdated,

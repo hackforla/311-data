@@ -13,17 +13,15 @@ const Body = ({
   openErrorModal,
   error,
 }) => (
-  <div id="body-container" className="body is-relative">
+  <div className="body is-relative">
     <Menu />
-    <main id="body-wrap">
-      <PinMap />
-      <Visualizations />
-      <Loader />
-      <Modal
-        open={openErrorModal}
-        content={<DataRequestError error={error} />}
-      />
-    </main>
+    <PinMap />
+    <Visualizations />
+    <Loader />
+    <Modal
+      open={openErrorModal}
+      content={<DataRequestError error={error} />}
+    />
   </div>
 );
 

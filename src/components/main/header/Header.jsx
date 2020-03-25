@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import COLORS from '../../../styles/COLORS';
 
 const Header = () => {
@@ -32,28 +32,30 @@ const Header = () => {
       }}
     >
       <div className="navbar-brand">
-        <div className="navbar-item">
-          <p style={cta1Style}>311</p>
-          <p style={cta2Style}>Data</p>
-        </div>
+        <Link to="/" className="navbar-item">
+          <div className="navbar-item">
+            <p style={cta1Style}>311</p>
+            <p style={cta2Style}>Data</p>
+          </div>
+        </Link>
       </div>
 
       <div id="navbar" className="navbar-menu">
         <div className="navbar-end">
           <div className="navbar-item">
-            <a href="/" style={cta2Style}>
-              CSV Reporter
-            </a>
+            <Link to="/comparison" style={cta2Style}>
+              Comparison Tool
+            </Link>
           </div>
           <div className="navbar-item">
-            <a href="/" style={backgroundStyle}>
+            <Link to="/about" style={backgroundStyle}>
               About 311 Data
-            </a>
+            </Link>
           </div>
           <div className="navbar-item">
-            <a href="/" style={backgroundStyle}>
+            <Link to="/contact" style={backgroundStyle}>
               Contact Us
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -34,6 +34,8 @@
     "react-leaflet-heatmap-layer": "^2.0.0",
     "react-leaflet-markercluster": "^2.0.0-rc3",
     "react-redux": "^7.1.3",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
     "react-test-renderer": "^16.12.0",
     "react-tooltip": "^4.0.3",
     "react-vis": "^1.11.7",
