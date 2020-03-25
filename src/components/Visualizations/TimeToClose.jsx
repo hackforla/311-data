@@ -10,7 +10,7 @@ const TimeToClose = ({
   // // DATA ////
 
   const boxes = Object.keys(timeToClose).map(key => {
-    const requestType = REQUEST_TYPES.find(t => t.type === key);
+    const requestType = REQUEST_TYPES[key];
     return {
       abbrev: requestType?.abbrev,
       color: requestType?.color,

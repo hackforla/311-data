@@ -137,12 +137,11 @@ class PinMap extends Component {
             address,
             ncname,
           } = pinsInfo[srnumber] || {};
-          const { color, abbrev } = REQUEST_TYPES.find(req => req.type === requesttype
-            || req.fullType === requesttype);
+          const { displayName, color, abbrev } = REQUEST_TYPES[requesttype];
 
           const popup = (
             <PinPopup
-              requestType={requesttype}
+              displayName={displayName}
               color={color}
               abbrev={abbrev}
               address={address}

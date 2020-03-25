@@ -1,3 +1,5 @@
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+
 export const types = {
   UPDATE_START_DATE: 'UPDATE_START_DATE',
   UPDATE_END_DATE: 'UPDATE_END_DATE',
@@ -35,39 +37,19 @@ export const updateNC = council => ({
   payload: council,
 });
 
+// set all types to either true or false
+const allRequestTypes = value => (
+  Object.keys(REQUEST_TYPES).reduce((acc, type) => {
+    acc[type] = value;
+    return acc;
+  }, { All: value })
+);
+
 const initialState = {
   startDate: null,
   endDate: null,
   councils: [],
-  requestTypes: {
-    All: false,
-    'Dead Animal': false,
-    'Homeless Encampment': false,
-    'Single Streetlight': false,
-    'Multiple Streetlight': false,
-    'Bulky Items': false,
-    'E-Waste': false,
-    'Metal/Household Appliances': false,
-    'Illegal Dumping': false,
-    Graffiti: false,
-    Feedback: false,
-    Other: false,
-  },
-};
-
-const allRequestTypes = {
-  All: true,
-  'Dead Animal': true,
-  'Homeless Encampment': true,
-  'Single Streetlight': true,
-  'Multiple Streetlight': true,
-  'Bulky Items': true,
-  'E-Waste': true,
-  'Metal/Household Appliances': true,
-  'Illegal Dumping': true,
-  Graffiti: true,
-  Feedback: true,
-  Other: true,
+  requestTypes: allRequestTypes(false),
 };
 
 export default (state = initialState, action) => {
@@ -96,7 +78,7 @@ export default (state = initialState, action) => {
     case types.SELECT_ALL_REQUEST_TYPES:
       return {
         ...state,
-        requestTypes: allRequestTypes,
+        requestTypes: allRequestTypes(true),
       };
     case types.DESELECT_ALL_REQUEST_TYPES:
       return {

@@ -25,18 +25,21 @@ const checkboxStyle = {
   paddingLeft: '3px',
 };
 
+const types = Object.keys(REQUEST_TYPES);
+
 const midIndex = (list => {
   if (list.length / 2 === 0) {
     return (list.length / 2);
   }
   return Math.floor(list.length / 2);
-})(REQUEST_TYPES);
+})(types);
 
-const leftColumnItems = REQUEST_TYPES.slice(0, midIndex);
-const rightColumnItems = REQUEST_TYPES.slice(midIndex);
+const leftColumnItems = types.slice(0, midIndex);
+const rightColumnItems = types.slice(midIndex);
 
 const RequestItem = ({
   type,
+  displayName,
   abbrev,
   selected,
   color,
@@ -66,7 +69,7 @@ const RequestItem = ({
       />
     </span>
     <span>
-      {`${type} [${abbrev}]`}
+      {`${displayName} [${abbrev}]`}
     </span>
   </div>
 );
@@ -82,16 +85,20 @@ const RequestTypeSelector = ({
     selectType(type);
   };
 
-  const renderRequestItems = items => items.map(item => (
-    <RequestItem
-      key={item.type}
-      type={item.type}
-      abbrev={item.abbrev}
-      handleClick={handleItemClick}
-      selected={requestTypes[item.type]}
-      color={item.color}
-    />
-  ));
+  const renderRequestItems = items => items.map(type => {
+    const item = REQUEST_TYPES[type];
+    return (
+      <RequestItem
+        key={type}
+        type={type}
+        displayName={item.displayName}
+        abbrev={item.abbrev}
+        handleClick={handleItemClick}
+        selected={requestTypes[type]}
+        color={item.color}
+      />
+    );
+  });
 
   return (
     <div id="type-selector-container" style={{ color: COLORS.FONTS }}>
@@ -166,6 +173,7 @@ export default connect(
 
 RequestItem.propTypes = {
   type: PropTypes.string,
+  displayName: PropTypes.string,
   abbrev: PropTypes.string,
   color: PropTypes.string,
   selected: PropTypes.bool,
@@ -174,6 +182,7 @@ RequestItem.propTypes = {
 
 RequestItem.defaultProps = {
   type: null,
+  displayName: null,
   abbrev: null,
   color: null,
   selected: false,

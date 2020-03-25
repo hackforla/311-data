@@ -8,9 +8,9 @@ const TypeOfRequest = ({
   typeCounts,
 }) => {
   const sectors = Object.keys(typeCounts).map(key => ({
-    label: key,
+    label: REQUEST_TYPES[key]?.displayName,
     value: typeCounts[key],
-    color: REQUEST_TYPES.find(t => t.type === key)?.color,
+    color: REQUEST_TYPES[key]?.color,
   }));
 
   return (
