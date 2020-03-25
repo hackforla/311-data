@@ -44,7 +44,7 @@ export const REQUEST_TYPES = {
     abbrev: 'MSL',
     color: '#F7ADAD',
   },
-  'Feedback': {
+  Feedback: {
     displayName: 'Feedback',
     abbrev: 'FBK',
     color: '#FFE6B7',
@@ -74,7 +74,7 @@ export const REQUEST_TYPES = {
     abbrev: 'ILD',
     color: '#6A8011',
   },
-  'Other': {
+  Other: {
     displayName: 'Other',
     abbrev: 'OTH',
     color: '#6D7C93',
