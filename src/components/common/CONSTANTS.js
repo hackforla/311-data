@@ -1,28 +1,5 @@
 export default {};
 
-export const YEARS = [
-  '2015',
-  '2016',
-  '2017',
-  '2018',
-  '2019',
-];
-
-export const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
 export const REQUEST_TYPES = {
   'Dead Animal Removal': {
     displayName: 'Dead Animal',
@@ -106,20 +83,6 @@ export const REQUEST_SOURCES = [
     type: 'Other',
     color: '#6A98F1',
   },
-];
-
-export const REQUESTS = [
-  'Bulky Items',
-  'Dead Animal Removal',
-  'Electronic Waste',
-  'Graffiti Removal',
-  'Homeless Encampment',
-  'Illegal Dumping Pickup',
-  'Metal/Household Appliances',
-  'Single Streetlight Issue',
-  'Multiple Streetlight Issue',
-  'Report Water Waste',
-  'Other',
 ];
 
 export const COUNCILS = [
