@@ -1,20 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { getPinInfoRequest } from '@reducers/data';
+import PinPopup from '@components/PinMap/PinPopup';
+import CustomMarker from '@components/PinMap/CustomMarker';
 import {
   Map,
-  Marker,
-  Popup,
   TileLayer,
   Rectangle,
   Tooltip,
   LayersControl,
   ZoomControl,
+  withLeaflet,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import PrintControlDefault from 'react-leaflet-easyprint';
+import Button from '@components/common/Button';
+
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -24,6 +30,8 @@ import ncOverlay from '../../data/nc-boundary-2019.json';
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
 const boundaryHighlightColor = COLORS.BRAND.CTA1;
+
+const PrintControl = withLeaflet(PrintControlDefault);
 
 class PinMap extends Component {
   constructor(props) {
@@ -35,7 +43,28 @@ class PinMap extends Component {
       satelliteUrl: `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
       geoJSON: ncOverlay,
       bounds: null,
+      ready: false,
+      width: null,
+      height: null,
     };
+    this.container = React.createRef();
+  }
+
+  componentDidMount() {
+    this.setDimensions();
+    this.setState({ ready: true });
+    window.addEventListener('resize', this.setDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.setDimensions);
+  }
+
+  setDimensions = () => {
+    this.setState({
+      width: this.container.current.offsetWidth,
+      height: this.container.current.offsetHeight,
+    });
   }
 
   highlightRegion = e => {
@@ -84,24 +113,63 @@ class PinMap extends Component {
   }
 
   renderMarkers = () => {
-    const { data, showMarkers } = this.props;
+    const {
+      data,
+      getPinInfo,
+      pinsInfo,
+    } = this.props;
 
-    if (showMarkers && data) {
+    if (data) {
       return data.map(d => {
         if (d.latitude && d.longitude) {
-          const position = [d.latitude, d.longitude];
+          const {
+            latitude,
+            longitude,
+            srnumber,
+            requesttype,
+          } = d;
+          const position = [latitude, longitude];
+          const {
+            status,
+            createddate,
+            updateddate,
+            closeddate,
+            address,
+            ncname,
+          } = pinsInfo[srnumber] || {};
+          const { color, abbrev } = REQUEST_TYPES.find(req => req.type === requesttype
+            || req.fullType === requesttype);
+
+          const popup = (
+            <PinPopup
+              requestType={requesttype}
+              color={color}
+              abbrev={abbrev}
+              address={address}
+              createdDate={createddate}
+              updatedDate={updateddate}
+              closedDate={closeddate}
+              status={status}
+              ncName={ncname}
+            />
+          );
 
           return (
-            <Marker key={d.srnumber} position={position}>
-              {/* Fetching request details on marker click will be implemented in another PR */}
-              <Popup>
-                Type:
-                {d.requesttype}
-                <br />
-                Address:
-                {d.address}
-              </Popup>
-            </Marker>
+            <CustomMarker
+              key={srnumber}
+              position={position}
+              onClick={() => {
+                if (!pinsInfo[srnumber]) {
+                  getPinInfo(srnumber);
+                }
+              }}
+              color={color}
+              icon="map-marker-alt"
+              size="3x"
+              style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
+            >
+              {popup}
+            </CustomMarker>
           );
         }
 
@@ -133,18 +201,20 @@ class PinMap extends Component {
       satelliteUrl,
       bounds,
       geoJSON,
+      width,
+      height,
     } = this.state;
 
     const { data } = this.props;
 
     return (
-      <div className="map-container">
+      <>
         <Map
           center={position}
           zoom={zoom}
           maxZoom={18}
           bounds={bounds}
-          style={{ height: '88.4vh' }}
+          style={{ width, height }}
           zoomControl={false}
         >
           <ZoomControl position="topright" />
@@ -191,10 +261,7 @@ class PinMap extends Component {
             }
             <Overlay checked name="Markers">
               <MarkerClusterGroup
-                showCoverageOnHover
-                zoomToBoundsOnClick
-                removeOutsideVisibleBounds
-                maxClusterRadius={65}
+                maxClusterRadius={40}
               >
                 {this.renderMarkers()}
               </MarkerClusterGroup>
@@ -215,30 +282,54 @@ class PinMap extends Component {
               />
             </Overlay>
           </LayersControl>
+          <PrintControl
+            sizeModes={['Current']}
+            hideControlContainer={false}
+            exportOnly
+          />
         </Map>
-      </div>
+        <Button
+          id="map-export"
+          label="Export"
+          handleClick={() => {
+            const selector = '.leaflet-control-easyPrint .CurrentSize';
+            const link = document.body.querySelector(selector);
+            if (link) link.click();
+          }}
+        />
+      </>
     );
   }
 
   render() {
+    const { ready } = this.state;
+
     return (
-      this.renderMap()
+      <div ref={this.container} className="map-container">
+        { ready ? this.renderMap() : null }
+      </div>
     );
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
+});
+
 const mapStateToProps = state => ({
   data: state.data.pins,
+  pinsInfo: state.data.pinsInfo,
 });
 
 PinMap.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({})),
-  showMarkers: PropTypes.bool,
+  pinsInfo: PropTypes.shape({}),
+  getPinInfo: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {
   data: undefined,
-  showMarkers: true,
+  pinsInfo: {},
 };
 
-export default connect(mapStateToProps, null)(PinMap);
+export default connect(mapStateToProps, mapDispatchToProps)(PinMap);

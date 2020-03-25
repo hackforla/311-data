@@ -8,8 +8,8 @@ from threading import Timer
 from datetime import datetime
 from multiprocessing import cpu_count
 
-from services.time_to_close import time_to_close
-from services.frequency import frequency
+from services.timeToCloseService import TimeToCloseService
+from services.frequencyService import FrequencyService
 from services.pinService import PinService
 from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
@@ -53,7 +53,7 @@ async def index(request):
 @app.route('/timetoclose', methods=["POST"])
 @compress.compress()
 async def timetoclose(request):
-    ttc_worker = time_to_close(app.config['Settings'])
+    ttc_worker = TimeToCloseService(app.config['Settings'])
 
     postArgs = request.json
     start = postArgs.get('startDate', None)
@@ -61,22 +61,28 @@ async def timetoclose(request):
     ncs = postArgs.get('ncList', [])
     requests = postArgs.get('requestTypes', [])
 
-    data = ttc_worker.ttc(startDate=start,
-                          endDate=end,
-                          ncList=ncs,
-                          requestTypes=requests)
+    data = await ttc_worker.get_ttc(startDate=start,
+                                    endDate=end,
+                                    ncList=ncs,
+                                    requestTypes=requests)
     return json(data)
 
 
-@app.route('/requestfrequency')
+@app.route('/requestfrequency', methods=["POST"])
 @compress.compress()
 async def requestfrequency(request):
-    freq_worker = frequency(app.config['Settings'])
+    freq_worker = FrequencyService(app.config['Settings'])
 
-    data = freq_worker.freq_view_data(service=True,
-                                      councils=[],
-                                      aggregate=True)
+    postArgs = request.json
+    start = postArgs.get('startDate', None)
+    end = postArgs.get('endDate', None)
+    ncs = postArgs.get('ncList', [])
+    requests = postArgs.get('requestTypes', [])
 
+    data = await freq_worker.get_frequency(startDate=start,
+                                           endDate=end,
+                                           ncList=ncs,
+                                           requestTypes=requests)
     return json(data)
 
 

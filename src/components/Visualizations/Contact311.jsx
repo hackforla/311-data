@@ -15,9 +15,9 @@ const Contact311 = ({
 
   return (
     <PieChart
+      id="contact-311"
       title="How People Contact 311"
       sectors={sectors}
-      className="contact-311"
       addLabels
     />
   );

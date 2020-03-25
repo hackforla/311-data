@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
   takeLatest,
+  takeEvery,
   call,
   put,
   select,
@@ -11,6 +12,8 @@ import {
   types,
   getDataSuccess,
   getDataFailure,
+  getPinInfoSuccess,
+  getPinInfoFailure,
 } from './reducers/data';
 
 import {
@@ -46,14 +49,26 @@ function* getCounts(filters) {
   };
 }
 
-function* getFrequency() {
-  return yield {};
+function* getFrequency(filters) {
+  const frequencyUrl = `${BASE_URL}/requestfrequency`;
+
+  const { data: { data } } = yield call(axios.post, frequencyUrl, filters);
+
+  return data;
 }
 
 function* getTimeToClose(filters) {
   const ttcUrl = `${BASE_URL}/timetoclose`;
 
   const { data: { data } } = yield call(axios.post, ttcUrl, filters);
+
+  return data;
+}
+
+function* fetchPinInfo(srnumber) {
+  const pinInfoUrl = `${BASE_URL}/servicerequest/${srnumber}`;
+
+  const { data: { data } } = yield call(axios.get, pinInfoUrl);
 
   return data;
 }
@@ -115,6 +130,18 @@ function* getData() {
   }
 }
 
+function* getPinData(action) {
+  try {
+    const srnumber = action.payload;
+    const data = yield call(fetchPinInfo, srnumber);
+    yield put(getPinInfoSuccess(data));
+  } catch (e) {
+    yield put(getPinInfoFailure(e));
+    yield put(setErrorModal(true));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(types.GET_DATA_REQUEST, getData);
+  yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
 }

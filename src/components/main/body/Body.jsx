@@ -28,8 +28,12 @@ const Body = ({
 );
 
 Body.propTypes = {
-  error: PropTypes.shape({}).isRequired,
+  error: PropTypes.shape({}),
   openErrorModal: PropTypes.bool.isRequired,
+};
+
+Body.defaultProps = {
+  error: null,
 };
 
 const mapStateToProps = state => ({

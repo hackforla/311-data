@@ -32,11 +32,25 @@ const TimeToClose = ({
     }],
   };
 
-  if (chartData.labels.length === 0) chartData.labels = [''];
+  const exportData = () => {
+    const header = [
+      'min', 'q1', 'median', 'q3', 'max',
+      'whiskerMin', 'whiskerMax', 'count',
+    ];
+
+    return {
+      header,
+      rows: chartData.datasets[0].data.map(stats => header.map(key => stats[key])),
+      index: chartData.labels,
+    };
+  };
 
   // // OPTIONS ////
 
   const chartOptions = {
+    title: {
+      text: 'Time to Close',
+    },
     maintainAspectRatio: false,
     scales: {
       xAxes: [{
@@ -65,12 +79,12 @@ const TimeToClose = ({
 
   return (
     <Chart
-      title="Time to Close"
+      id="time-to-close"
       type="horizontalBoxplot"
       data={chartData}
       options={chartOptions}
-      height={Math.max(160, 60 + (chartData.labels.length * 40))}
-      className="time-to-close"
+      height={Math.max(160, 130 + (chartData.labels.length * 40))}
+      exportData={exportData}
     />
   );
 };
