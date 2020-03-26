@@ -1,0 +1,17 @@
+.navbar {
+  font-family: $brand-heading-family;
+  font-weight: bold;
+  height: '60px';
+  box-shadow: '0 2px 4px rgba(0, 0, 0, 0.5)';
+  z-index: '20000';
+  background-color: $brand-heading-color;
+
+  .navbar-brand {
+    font-size: 20px;
+  }
+
+  .navbar-menu .navbar-item {
+    font-size: 16px;
+    margin-right: 46px;
+  }
+}
