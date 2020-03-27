@@ -1,0 +1,19 @@
+.about-311 {
+  position: absolute;
+  top: 62px;
+  bottom: 52px;
+  text-align: center;
+  padding-bottom: 100px;
+  overflow-y: auto;
+
+  #btn-about-311 {
+    background-color: $brand-cta1-color;
+    color: $brand-text-color;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: $brand-heading-family;
+    width: 256px;
+    height: 42px;
+    text-align: center;
+  }
+}

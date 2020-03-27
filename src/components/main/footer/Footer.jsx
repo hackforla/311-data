@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import propTypes from 'proptypes';
 import moment from 'moment';
+import StaticFooter from './StaticFooter';
 
 import COLORS from '../../../styles/COLORS';
 
@@ -25,28 +26,19 @@ const Footer = ({
       zIndex: '20000',
     }}
   >
-    <div className="level has-text-centered" style={{ width: '100vw' }}>
-      <div className="level-item">
-        <Switch>
-          <Route path="/contact">
-            <p style={footerTextStyle}>
-              renderContactFooter
-            </p>
-          </Route>
-          <Route path="/about">
-            <p style={footerTextStyle}>
-              renderAboutFooter
-            </p>
-          </Route>
-          <Route path="/">
+    <div className="level" style={{ width: '100vw' }}>
+      <Switch>
+        <Route path="/(about|contact)" component={StaticFooter} />
+        <Route path="/">
+          <div className="level-item">
             <p style={footerTextStyle}>
               Data Updated Through:
               &nbsp;
               {lastUpdated && moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
             </p>
-          </Route>
-        </Switch>
-      </div>
+          </div>
+        </Route>
+      </Switch>
     </div>
   </footer>
 );
