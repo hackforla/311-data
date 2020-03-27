@@ -3,7 +3,7 @@ import React from 'react';
 const StaticFooter = () => (
   <>
     <div className="static-footer level-left">
-      &copy; 2020 311 Data
+      &copy;2020 311 Data
       &nbsp;|&nbsp;
       All Rights Reserved
       &nbsp;|&nbsp;
