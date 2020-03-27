@@ -1,0 +1,16 @@
+.static-footer {
+  color: $brand-bg-color;
+  font-family: $brand-text-family;
+  font-size: 20px;
+  font-weight: normal;
+  margin-left: 40px;
+  margin-right: 40px;
+
+  .empowerla {
+    font-weight: bold;
+  }
+
+  a {
+    color: $brand-bg-color;
+  }
+}

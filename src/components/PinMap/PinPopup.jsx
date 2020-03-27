@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Popup } from 'react-leaflet';
 
 const PinPopup = ({
-  requestType,
+  displayName,
   color,
   abbrev,
   address,
@@ -28,7 +28,7 @@ const PinPopup = ({
       { createdDate ? (
         <>
           <p className="pin-popup-type has-text-weight-bold">
-            {requestType}
+            {displayName}
             &nbsp;
             [
             <span className="pin-popup-type-abbrev" style={{ color }}>
@@ -77,7 +77,7 @@ const PinPopup = ({
 export default PinPopup;
 
 PinPopup.propTypes = {
-  requestType: PropTypes.string,
+  displayName: PropTypes.string,
   color: PropTypes.string,
   abbrev: PropTypes.string,
   address: PropTypes.string,
@@ -89,7 +89,7 @@ PinPopup.propTypes = {
 };
 
 PinPopup.defaultProps = {
-  requestType: undefined,
+  displayName: undefined,
   color: 'black',
   abbrev: undefined,
   address: undefined,

@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 
+import Routes from './Routes';
 import Header from './components/main/header/Header';
-import Body from './components/main/body/Body';
 import Footer from './components/main/footer/Footer';
 import Tooltip from './components/main/tooltip/Tooltip';
 import SnapshotService, { SnapshotRenderer } from './components/export/SnapshotService';
@@ -16,13 +17,13 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <Router>
       <Header />
-      <Body />
+      <Routes />
       <Footer />
       <Tooltip />
       <SnapshotRenderer />
-    </>
+    </Router>
   );
 };
 

@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import clx from 'classnames';
+import { Switch, Route } from 'react-router-dom';
 
 import {
   toggleMenu as reduxToggleMenu,
@@ -52,11 +53,20 @@ const Menu = ({
       />
 
       <div className="menu-content">
-        <h1>Filters</h1>
-        <DateSelector />
-        <NCSelector />
-        <RequestTypeSelector />
-        <Submit />
+        <Switch>
+          <Route path="/comparison">
+            <h1>Comparison Tool</h1>
+            <DateSelector />
+            <Submit />
+          </Route>
+          <Route path="/">
+            <h1>Filters</h1>
+            <DateSelector />
+            <NCSelector />
+            <RequestTypeSelector />
+            <Submit />
+          </Route>
+        </Switch>
       </div>
     </div>
   );

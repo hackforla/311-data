@@ -4,13 +4,19 @@
 @import './bulma';
 @import './base';
 
+@import './main/header';
 @import './main/menu';
 @import './main/datepicker';
 @import './main/tooltip';
 @import './main/visualizations';
 @import './main/loader';
 @import './main/body';
-@import './main/pinmap';
 @import './main/pinpopup';
 @import './main/export';
 @import './main/map';
+@import './main/staticfooter';
+
+@import './about/about';
+@import './about/heroimage';
+@import './about/whatis311data';
+@import './about/howitworks';
