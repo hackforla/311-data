@@ -18,7 +18,7 @@ const App = () => {
 
   return (
     <Router
-      baseURL={process.env.BASE_URL || '/'}
+      basename={process.env.BASE_URL || '/'}
     >
       <Header />
       <Routes />
