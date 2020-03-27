@@ -1,17 +1,19 @@
 import React from 'react';
-import mobile from '@assets/mobile.svg';
-import dataserver from '@assets/dataserver.svg';
-import growth from '@assets/growth.svg';
-import datavisualization from '@assets/datavisualization.svg';
+// React-svg-loader for Webpack bundles SVGs and makes them available as
+// React components which simply return the imported SVG paths.
+import MobileSVG from '@assets/aboutmobile.svg';
+import DataServerSVG from '@assets/aboutdataserver.svg';
+import GrowthSVG from '@assets/aboutgrowth.svg';
+import DataVizSVG from '@assets/aboutdatavis.svg';
 
 const HowItWorks = () => (
   <div className="how-it-works">
     <h1>How It Works</h1>
     <div className="grid-container">
-      <img src={mobile} alt="" />
-      <img src={dataserver} alt="" />
-      <img src={datavisualization} alt="" />
-      <img src={growth} alt="" />
+      <MobileSVG />
+      <DataServerSVG />
+      <GrowthSVG />
+      <DataVizSVG />
       <p>Community members post reports via the City&apos;s easy-to-use mobile application.</p>
       <p>
         Reports are consolidated and entered into a central database and requests are
