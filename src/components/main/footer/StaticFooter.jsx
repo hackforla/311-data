@@ -4,9 +4,9 @@ const StaticFooter = () => (
   <>
     <div className="static-footer level-left">
       &copy; 2020 311 Data
-      &nbsp; | &nbsp;
+      &nbsp;|&nbsp;
       All Rights Reserved
-      &nbsp; | &nbsp;
+      &nbsp;|&nbsp;
       Powered by&nbsp;
       <span className="empowerla">EmpowerLA</span>
     </div>
