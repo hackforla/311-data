@@ -11,15 +11,15 @@ import Visualizations from './components/Visualizations';
 
 SnapshotService.register({ Visualizations });
 
+const basename = process.env.NODE_ENV === 'development' ? '/' : process.env.BASE_URL || '/';
+
 const App = () => {
   useEffect(() => {
     // fetch data on load??
   }, []);
 
   return (
-    <Router
-      basename={process.env.BASE_URL || '/'}
-    >
+    <Router basename={basename}>
       <Header />
       <Routes />
       <Footer />
