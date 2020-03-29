@@ -15,6 +15,7 @@ from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
 from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
+from services.githubRequest import GithubService
 
 app = Sanic(__name__)
 CORS(app)
@@ -178,6 +179,17 @@ async def requestDetails(request, srnumber):
 
     return_data = await detail_worker.get_request_detail(srnumber)
     return json(return_data)
+
+
+@app.route('/githubrequest', methods=["GET", "POST"])
+async def githubrequest(request):
+    github_worker = GithubService(app.config['Settings'])
+
+    data = await github_worker.create_issue(title='test',
+                                            body='test',
+                                            assignee='',
+                                            labels=[])
+    return json(data)
 
 
 @app.route('/test_multiple_workers')

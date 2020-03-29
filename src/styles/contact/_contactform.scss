@@ -1,0 +1,67 @@
+.form-container {
+    width: 50%;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.form-group {
+    float: left;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+#fname-form {
+    width: 45%;
+}
+
+#lname-form {
+    width: 45%;
+    float: right;
+}
+
+@media only screen and (max-width: 768px) {
+    #fname-form {
+        width: 100%;
+    }
+
+    #lname-form {
+        width: 100%;
+        float: none;
+    }
+}
+
+.asterisk, .error-msg {
+    color: red;
+}
+
+.error-msg {
+    float: left;
+    font-size: 14px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    text-align: left;
+}
+
+input, textarea {
+    width: 100%;
+}
+
+.btn-container {
+    text-align: center;
+    clear: both;
+}
+
+.contact-btn {
+    background-color: $brand-cta1-color;
+    color: $brand-text-color;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: $brand-heading-family;
+    width: 256px;
+    height: 42px;
+    margin-top: 30px;
+    border-radius: 10px;
+}
