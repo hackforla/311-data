@@ -5,6 +5,8 @@ export const types = {
   UPDATE_END_DATE: 'UPDATE_END_DATE',
   UPDATE_REQUEST_TYPE: 'UPDATE_REQUEST_TYPE',
   UPDATE_NEIGHBORHOOD_COUNCIL: 'UPDATE_NEIGHBORHOOD_COUNCIL',
+  UPDATE_COMPARISON_SELECTION: 'UPDATE_COMPARISON_SELECTION',
+  UPDATE_COMPARISON_CHART: 'UPDATE_COMPARISON_CHART',
   SELECT_ALL_REQUEST_TYPES: 'SELECT_ALL_REQUEST_TYPES',
   DESELECT_ALL_REQUEST_TYPES: 'DESELECT_ALL_REQUEST_TYPES',
 };
@@ -37,6 +39,19 @@ export const updateNC = council => ({
   payload: council,
 });
 
+export const updateComparisonSelection = (set, data) => ({
+  type: types.UPDATE_COMPARISON_SELECTION,
+  payload: {
+    set,
+    data,
+  },
+});
+
+export const updateComparisonChart = chart => ({
+  type: types.UPDATE_COMPARISON_CHART,
+  payload: chart,
+});
+
 // set all types to either true or false
 const allRequestTypes = value => (
   Object.keys(REQUEST_TYPES).reduce((acc, type) => {
@@ -49,6 +64,17 @@ const initialState = {
   startDate: null,
   endDate: null,
   councils: [],
+  comparison: {
+    chart: '',
+    set1: {
+      type: '',
+      list: [],
+    },
+    set2: {
+      type: '',
+      list: [],
+    },
+  },
   requestTypes: allRequestTypes(false),
 };
 
@@ -89,6 +115,22 @@ export default (state = initialState, action) => {
       return {
         ...state,
         councils: action.payload,
+      };
+    case types.UPDATE_COMPARISON_SELECTION:
+      return {
+        ...state,
+        comparison: {
+          ...state.comparison,
+          [action.payload.set]: action.payload.data,
+        },
+      };
+    case types.UPDATE_COMPARISON_CHART:
+      return {
+        ...state,
+        comparison: {
+          ...state.comparison,
+          chart: action.payload,
+        },
       };
     default:
       return state;

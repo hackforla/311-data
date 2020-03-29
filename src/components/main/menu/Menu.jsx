@@ -18,6 +18,8 @@ import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
+import DistrictSelector from './DistrictSelector';
+import ChartSelector from './ChartSelector';
 
 const Menu = ({
   isOpen,
@@ -32,17 +34,21 @@ const Menu = ({
 
   return (
     <div className={clx('menu-container', { open: isOpen })}>
-      <div className="menu-tabs">
-        {tabs.map(tab => (
-          <a
-            key={tab}
-            className={clx('menu-tab', { active: tab === activeTab })}
-            onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
-          >
-            { tab }
-          </a>
-        ))}
-      </div>
+      <Switch>
+        <Route exact path="/">
+          <div className="menu-tabs">
+            {tabs.map(tab => (
+              <a
+                key={tab}
+                className={clx('menu-tab', { active: tab === activeTab })}
+                onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
+              >
+                { tab }
+              </a>
+            ))}
+          </div>
+        </Route>
+      </Switch>
 
       <Button
         id="menu-toggle-button"
@@ -57,6 +63,9 @@ const Menu = ({
           <Route path="/comparison">
             <h1>Comparison Tool</h1>
             <DateSelector />
+            <DistrictSelector />
+            <ChartSelector />
+            <RequestTypeSelector />
             <Submit />
           </Route>
           <Route path="/">

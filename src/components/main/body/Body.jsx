@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import { Switch, Route } from 'react-router-dom';
 
 import Visualizations from '@components/Visualizations';
 import Loader from '@components/common/Loader';
@@ -15,8 +16,15 @@ const Body = ({
 }) => (
   <div className="body is-relative">
     <Menu />
-    <PinMap />
-    <Visualizations />
+    <Switch>
+      <Route path="/comparison">
+        <Visualizations />
+      </Route>
+      <Route path="/">
+        <PinMap />
+        <Visualizations />
+      </Route>
+    </Switch>
     <Loader />
     <Modal
       open={openErrorModal}
