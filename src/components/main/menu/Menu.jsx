@@ -18,7 +18,7 @@ import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
-import DistrictSelector from './DistrictSelector';
+import DistrictSelector from './DistrictSelector/DistrictSelector';
 import ChartSelector from './ChartSelector';
 
 const Menu = ({

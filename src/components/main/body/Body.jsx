@@ -18,7 +18,10 @@ const Body = ({
     <Menu />
     <Switch>
       <Route path="/comparison">
-        <Visualizations />
+        {/* <Visualizations /> */}
+        <div className="full-width">
+          TESTAOSDHIJOASDUIOAS*(D*(ASDUASH*DHASDHIASD))
+        </div>
       </Route>
       <Route path="/">
         <PinMap />
