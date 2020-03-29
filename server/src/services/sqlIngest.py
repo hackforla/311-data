@@ -49,7 +49,7 @@ class DataHandler:
 
         rowsInserted = 0
         endReached = False
-        
+
         for offset in range(0, limit, querySize):
             rows = self.fetchData(year, offset, querySize)
             self.insertData(rows)

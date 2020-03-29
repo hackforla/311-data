@@ -119,7 +119,7 @@ async def ingest(request):
         2018: 1210075
         2019: 1308093
         2020: 319628 (and counting)
-        
+
         GET https://data.lacity.org/resource/{ID}.json?$select=count(srnumber)
 
     Hint:
