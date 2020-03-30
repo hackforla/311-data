@@ -44,7 +44,6 @@ const DistrictSelectorModal = ({
         className="card"
         style={{
           padding: '35px',
-          width: '417px',
           height: '550px',
         }}
       >

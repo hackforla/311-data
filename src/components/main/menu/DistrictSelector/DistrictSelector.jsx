@@ -78,6 +78,7 @@ const DistrictSelector = ({
       </div>
       <Modal
         open={modalOpen}
+        style={{ width: '417px' }}
         content={(
           <DistrictSelectorModal
             set={comparisonSet}

@@ -17,10 +17,10 @@ const Modal = ({
       // This z-index is greater than the Menu component's z-index but less than
       // the Header and Footer. The modal will cover the Menu when open, but not
       // the Header or Footer.
-      style={{ zIndex: '10000', ...style }}
+      style={{ zIndex: '10000' }}
     >
       <div className="modal-background" />
-      <div className="modal-content" style={{ overflow: 'visible' }}>
+      <div className="modal-content" style={{ overflow: 'visible', ...style }}>
         {content}
       </div>
     </div>
