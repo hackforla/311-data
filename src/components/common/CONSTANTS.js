@@ -191,6 +191,17 @@ export const COUNCILS = [
   'ZAPATA KING NC',
 ];
 
+export const CITY_COUNCILS = {
+
+};
+
+export const DISTRICT_TYPES = [
+  'Neighborhood Council District',
+  'City Council District',
+  'Business Improvement District',
+  'Supervisory District',
+];
+
 export const MENU_TABS = {
   MAP: 'Map',
   VISUALIZATIONS: 'Data Visualization',
