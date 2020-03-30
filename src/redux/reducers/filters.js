@@ -5,7 +5,8 @@ export const types = {
   UPDATE_END_DATE: 'UPDATE_END_DATE',
   UPDATE_REQUEST_TYPE: 'UPDATE_REQUEST_TYPE',
   UPDATE_NEIGHBORHOOD_COUNCIL: 'UPDATE_NEIGHBORHOOD_COUNCIL',
-  UPDATE_COMPARISON_SELECTION: 'UPDATE_COMPARISON_SELECTION',
+  UPDATE_COMPARISON_LIST: 'UPDATE_COMPARISON_LIST',
+  UPDATE_COMPARISON_DISTRICT: 'UPDATE_COMPARISON_DISTRICT',
   UPDATE_COMPARISON_CHART: 'UPDATE_COMPARISON_CHART',
   SELECT_ALL_REQUEST_TYPES: 'SELECT_ALL_REQUEST_TYPES',
   DESELECT_ALL_REQUEST_TYPES: 'DESELECT_ALL_REQUEST_TYPES',
@@ -39,11 +40,19 @@ export const updateNC = council => ({
   payload: council,
 });
 
-export const updateComparisonSelection = (set, data) => ({
+export const updateComparisonList = (set, list) => ({
   type: types.UPDATE_COMPARISON_SELECTION,
   payload: {
     set,
-    data,
+    list,
+  },
+});
+
+export const updateComparisonDistrict = (set, district) => ({
+  type: types.UPDATE_COMPARISON_DISTRICT,
+  payload: {
+    set,
+    district,
   },
 });
 
@@ -67,11 +76,11 @@ const initialState = {
   comparison: {
     chart: '',
     set1: {
-      type: '',
+      district: '',
       list: [],
     },
     set2: {
-      type: '',
+      district: '',
       list: [],
     },
   },
@@ -116,12 +125,26 @@ export default (state = initialState, action) => {
         ...state,
         councils: action.payload,
       };
-    case types.UPDATE_COMPARISON_SELECTION:
+    case types.UPDATE_COMPARISON_LIST:
       return {
         ...state,
         comparison: {
           ...state.comparison,
-          [action.payload.set]: action.payload.data,
+          [action.payload.set]: {
+            ...state.comparison[action.payload.set],
+            list: action.payload.list,
+          },
+        },
+      };
+    case types.UPDATE_COMPARISON_DISTRICT:
+      return {
+        ...state,
+        comparison: {
+          ...state.comparison,
+          [action.payload.set]: {
+            ...state.comparison[action.payload.set],
+            district: action.payload.district,
+          },
         },
       };
     case types.UPDATE_COMPARISON_CHART:
