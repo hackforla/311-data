@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
 import time
+import json
 from .databaseOrm import Ingest, Base
 from .socrataClient import SocrataClient
 
@@ -143,5 +144,5 @@ class DataHandler:
             'cleaning': cleanReport,
             'totalMinutesElapsed': minutes
         }
-        log(report)
+        log(json.dumps(report, indent=2))
         return report
