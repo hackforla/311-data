@@ -68,6 +68,26 @@ async def timetoclose(request):
     return json(data)
 
 
+@app.route('/timetoclose-comparison', methods=["POST"])
+@compress.compress()
+async def timetoclose_comparison(request):
+    ttc_worker = TimeToCloseService(app.config['Settings'])
+
+    postArgs = request.json
+    startDate = postArgs.get('startDate', None)
+    endDate = postArgs.get('endDate', None)
+    requestTypes = postArgs.get('requestTypes', [])
+    ncList = postArgs.get('ncList', [])
+    cdList = postArgs.get('cdList', [])
+
+    data = await ttc_worker.get_ttc_comparison(startDate=startDate,
+                                               endDate=endDate,
+                                               requestTypes=requestTypes,
+                                               ncList=ncList,
+                                               cdList=cdList)
+    return json(data)
+
+
 @app.route('/requestfrequency', methods=["POST"])
 @compress.compress()
 async def requestfrequency(request):

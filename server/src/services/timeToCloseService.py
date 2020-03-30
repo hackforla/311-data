@@ -7,34 +7,7 @@ class TimeToCloseService(object):
     def __init__(self, config=None, tableName="ingest_staging_table"):
         self.dataAccess = DataService(config, tableName)
 
-    async def get_ttc(self,
-                      startDate=None,
-                      endDate=None,
-                      ncList=[],
-                      requestTypes=[]):
-        """
-        For each requestType, returns the statistics necessary to generate
-        a boxplot of the number of days it took to close the requests.
-
-        Example response:
-        {
-            lastPulled: Timestamp,
-            data: {
-                'Bulky Items': {
-                    'min': float,
-                    'q1': float,
-                    'median': float,
-                    'q3': float,
-                    'max': float,
-                    'whiskerMin': float,
-                    'whiskerMax': float,
-                    'outliers': [float],
-                    'count': int
-                }
-                ...
-            }
-        }
-        """
+    def ttc(self, groupField, filters):
 
         def get_boxplot_stats(arr, C=1.5):
             """
@@ -76,9 +49,7 @@ class TimeToCloseService(object):
             }
 
         # grab the necessary data from the db
-        fields = ['requesttype', 'createddate', 'closeddate']
-        filters = self.dataAccess.standardFilters(
-            startDate, endDate, ncList, requestTypes)
+        fields = [groupField, 'createddate', 'closeddate']
         data = self.dataAccess.query(fields, filters)
 
         # read into a dataframe, drop the nulls, and halt if no rows exist
@@ -94,12 +65,96 @@ class TimeToCloseService(object):
         df['time-to-close'] = df['closeddate'] - df['createddate']
         df['hours-to-close'] = df['time-to-close'].astype('timedelta64[h]')
         df['days-to-close'] = (df['hours-to-close'] / 24).round(2)
-        dtc_df = df[['requesttype', 'days-to-close']]
+        dtc_df = df[[groupField, 'days-to-close']]
 
         # group the requests by type and get box plot stats for each type
         data['data'] = dtc_df \
-            .groupby(by='requesttype') \
+            .groupby(by=groupField) \
             .apply(lambda df: get_boxplot_stats(df['days-to-close'].values)) \
             .to_dict()
 
         return data
+
+    async def get_ttc(self,
+                      startDate=None,
+                      endDate=None,
+                      ncList=[],
+                      requestTypes=[]):
+        """
+        For each requestType, returns the statistics necessary to generate
+        a boxplot of the number of days it took to close the requests.
+
+        Example response:
+        {
+            lastPulled: Timestamp,
+            data: {
+                'Bulky Items': {
+                    'min': float,
+                    'q1': float,
+                    'median': float,
+                    'q3': float,
+                    'max': float,
+                    'whiskerMin': float,
+                    'whiskerMax': float,
+                    'outliers': [float],
+                    'count': int
+                }
+                ...
+            }
+        }
+        """
+
+        filters = self.dataAccess.standardFilters(startDate=startDate,
+                                                  endDate=endDate,
+                                                  ncList=ncList,
+                                                  requestTypes=requestTypes)
+        return self.ttc('requesttype', filters)
+
+    async def get_ttc_comparison(self,
+                                 startDate=None,
+                                 endDate=None,
+                                 requestTypes=[],
+                                 ncList=[],
+                                 cdList=[]):
+
+        """
+        For each NC and CD, returns the statistics necessary to generate
+        a boxplot of the number of days it took to close the requests.
+
+        Example response:
+        {
+            lastPulled: Timestamp,
+            data: {
+                NCs: {
+                    'DOWNTOWN LOS ANGELES': { stats },
+                    'ARLETA NC': { stats }
+                },
+                CDs: {
+                    1: { stats }
+                    15: { stats }
+                }
+
+                ...
+            }
+        }
+        """
+
+        common = {
+            'startDate': startDate,
+            'endDate': endDate,
+            'requestTypes': requestTypes
+        }
+
+        filters = self.dataAccess.standardFilters(ncList=ncList, **common)
+        ncData = self.ttc('ncname', filters)
+
+        filters = self.dataAccess.standardFilters(cdList=cdList, **common)
+        cdData = self.ttc('cd', filters)
+
+        return {
+            'lastPulled': ncData['lastPulled'],
+            'data': {
+                'NCs': ncData['data'],
+                'CDs': cdData['data']
+            }
+        }
