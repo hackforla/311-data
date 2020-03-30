@@ -17,7 +17,9 @@ const App = () => {
   }, []);
 
   return (
-    <Router>
+    <Router
+      basename={process.env.BASE_URL || '/'}
+    >
       <Header />
       <Routes />
       <Footer />
