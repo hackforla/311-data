@@ -71,8 +71,7 @@ const DistrictSelectorModal = ({
         <div className="has-text-centered">
           <Button
             id="district-selector-submit"
-            label="Submit"
-            color="warning"
+            label="Select"
             handleClick={closeModal}
           />
         </div>
