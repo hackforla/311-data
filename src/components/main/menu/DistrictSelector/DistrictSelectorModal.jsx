@@ -19,16 +19,20 @@ const DistrictSelectorModal = ({
   comparison,
 }) => {
   const mungeDistrictTypes = () => DISTRICT_TYPES.map(district => ({
-    label: district,
-    value: district.split(' ')[0].toLowerCase(),
+    label: district.name,
+    value: district.id,
   }));
 
   const renderSelector = () => {
     switch (comparison[set].district) {
-      case 'neighborhood':
+      case 'nc':
         return <NCSelector />;
-      case 'city':
+      case 'cc':
         return 'City Selector';
+      case 'bid':
+        return 'Business Improvement District';
+      case 'sd':
+        return 'Supervisory District';
       default:
         return null;
     }
@@ -60,7 +64,7 @@ const DistrictSelectorModal = ({
         </div>
         <Dropdown
           list={mungeDistrictTypes()}
-          onClick={district => updateDistrict(set, district)}
+          onClick={districtId => updateDistrict(set, districtId)}
         />
         <br />
         {renderSelector()}
@@ -87,7 +91,10 @@ const mapDispatchToProps = dispatch => ({
 });
 
 DistrictSelectorModal.propTypes = {
+  updateDistrict: propTypes.func.isRequired,
   closeModal: propTypes.func.isRequired,
+  comparison: propTypes.shape({}).isRequired,
+  set: propTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DistrictSelectorModal);

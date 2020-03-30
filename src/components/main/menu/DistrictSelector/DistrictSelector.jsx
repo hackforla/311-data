@@ -2,10 +2,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import propTypes from 'proptypes';
 
 import Icon from '@components/common/Icon';
 import Modal from '@components/common/Modal';
 import HoverOverInfo from '@components/common/HoverOverInfo';
+import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import DistrictSelectorModal from './DistrictSelectorModal';
 
 const DistrictSelector = ({
@@ -25,23 +27,11 @@ const DistrictSelector = ({
 
   const renderSet = set => {
     const renderHeader = type => {
-      let header;
-
-      switch (type) {
-        case 'nc':
-          header = 'Neighborhood Counsil';
-          break;
-        case 'cc':
-          header = 'City Counsil';
-          break;
-        default:
-          break;
-      }
-
-      return `${header} District`;
+      const [header] = DISTRICT_TYPES.filter(district => district.id === type);
+      return header.name;
     };
 
-    if (comparison?.[set]?.list.length > 0) {
+    if (comparison[set]?.type && comparison[set]?.list.length > 0) {
       return (
         <div className={set} style={{ border: '1px solid black' }}>
           {renderHeader(comparison[set].type)}
@@ -102,5 +92,9 @@ const DistrictSelector = ({
 const mapStateToProps = state => ({
   comparison: state.filters.comparison,
 });
+
+DistrictSelector.propTypes = {
+  comparison: propTypes.shape({}).isRequired,
+};
 
 export default connect(mapStateToProps)(DistrictSelector);

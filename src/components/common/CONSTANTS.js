@@ -191,15 +191,29 @@ export const COUNCILS = [
   'ZAPATA KING NC',
 ];
 
-export const CITY_COUNCILS = {
-
-};
+export const CITY_COUNCILS = [
+  { id: 1, name: 'Council District 1' },
+  { id: 2, name: 'Council District 2' },
+  { id: 3, name: 'Council District 3' },
+  { id: 4, name: 'Council District 4' },
+  { id: 5, name: 'Council District 5' },
+  { id: 6, name: 'Council District 6' },
+  { id: 7, name: 'Council District 7' },
+  { id: 8, name: 'Council District 8' },
+  { id: 9, name: 'Council District 9' },
+  { id: 10, name: 'Council District 10' },
+  { id: 11, name: 'Council District 11' },
+  { id: 12, name: 'Council District 12' },
+  { id: 13, name: 'Council District 13' },
+  { id: 14, name: 'Council District 14' },
+  { id: 15, name: 'Council District 15' },
+];
 
 export const DISTRICT_TYPES = [
-  'Neighborhood Council District',
-  'City Council District',
-  'Business Improvement District',
-  'Supervisory District',
+  { id: 'nc', name: 'Neighborhood Council District' },
+  { id: 'cc', name: 'City Council District' },
+  { id: 'bid', name: 'Business Improvement District' },
+  { id: 'sd', name: 'Supervisory District' },
 ];
 
 export const MENU_TABS = {
