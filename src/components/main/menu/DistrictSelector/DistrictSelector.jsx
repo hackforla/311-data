@@ -12,8 +12,10 @@ const DistrictSelector = ({
   comparison,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [comparisonSet, setComparisonSet] = useState('set1');
 
-  const openModal = () => {
+  const openModal = set => {
+    setComparisonSet(set);
     setModalOpen(true);
   };
 
@@ -50,7 +52,7 @@ const DistrictSelector = ({
     }
 
     return (
-      <div onClick={openModal}>
+      <div onClick={() => openModal(set)}>
         <Icon
           id={`add-district-${set}`}
           icon="plus-circle"
@@ -86,7 +88,12 @@ const DistrictSelector = ({
       </div>
       <Modal
         open={modalOpen}
-        content={<DistrictSelectorModal closeModal={closeModal} />}
+        content={(
+          <DistrictSelectorModal
+            set={comparisonSet}
+            closeModal={closeModal}
+          />
+        )}
       />
     </>
   );
