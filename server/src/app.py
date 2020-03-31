@@ -94,7 +94,7 @@ async def sample_route(request):
     return json(sample_dataset)
 
 
-@app.route('/ingest', methods=["POST"])
+@app.route('/ingest', methods=["GET"])
 @compress.compress()
 async def ingest(request):
     """
