@@ -36,6 +36,7 @@ def environment_overrides():
         app.config['Settings']['Github']['GITHUB_TOKEN'] =\
             os.environ.get('GITHUB_TOKEN')
 
+
 def configure_app():
     # Settings initialization
     config = ConfigParser()
