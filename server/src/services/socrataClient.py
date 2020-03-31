@@ -12,13 +12,10 @@ kwargs are all of the normal socrata kwargs - select, limit, etc.
 """
 
 from sodapy import Socrata
-from configparser import ConfigParser
 
 
 class SocrataClient:
-    def __init__(self):
-        config = ConfigParser()
-        config.read('./settings.cfg')
+    def __init__(self, config=None):
         config = config['Socrata']
 
         domain = config['DOMAIN']

@@ -21,9 +21,11 @@ class Timer():
 
 class DataHandler:
     def __init__(self, config=None):
-        self.engine = create_engine(config['DB_CONNECTION_STRING'])
+        dbString = config['Database']['DB_CONNECTION_STRING']
+
+        self.engine = create_engine(dbString)
         self.session = sessionmaker(bind=self.engine)()
-        self.socrata = SocrataClient()
+        self.socrata = SocrataClient(config)
 
     def __del__(self):
         self.session.close()

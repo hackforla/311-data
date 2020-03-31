@@ -147,7 +147,7 @@ async def ingest(request):
     querySize = min([limit, querySize])
 
     # get data
-    loader = DataHandler(app.config['Settings']['Database'])
+    loader = DataHandler(app.config['Settings'])
     data = await loader.populateDatabase(years=years,
                                          limit=limit,
                                          querySize=querySize)
