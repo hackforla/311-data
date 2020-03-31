@@ -1,6 +1,10 @@
-.data-request-error {
-  border-radius: 5px;
-  background: rgba(153, 153, 153, 0.7);
-  padding: 10px 35px;
-  margin: 0 10em;
+.body {
+  height: calc(100vh - #{$header-height + $footer-height});
+
+  .data-request-error {
+    border-radius: 5px;
+    background: rgba(153, 153, 153, 0.7);
+    padding: 10px 35px;
+    margin: 0 10em;
+  }
 }

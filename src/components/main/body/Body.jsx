@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import { Switch, Route } from 'react-router-dom';
+import clx from 'classnames';
 
 import Visualizations from '@components/Visualizations';
 import Loader from '@components/common/Loader';
@@ -13,13 +14,14 @@ import DataRequestError from './DataRequestError';
 const Body = ({
   openErrorModal,
   error,
+  menuIsOpen,
 }) => (
   <div className="body is-relative">
     <Menu />
     <Switch>
       <Route path="/comparison">
         {/* <Visualizations /> */}
-        <div className="full-width">
+        <div className={clx('comparison', {'full-width': !menuIsOpen})}>
           TESTAOSDHIJOASDUIOAS*(D*(ASDUASH*DHASDHIASD))
         </div>
       </Route>
@@ -39,6 +41,7 @@ const Body = ({
 Body.propTypes = {
   error: PropTypes.shape({}),
   openErrorModal: PropTypes.bool.isRequired,
+  menuIsOpen: PropTypes.bool.isRequired,
 };
 
 Body.defaultProps = {
@@ -48,6 +51,7 @@ Body.defaultProps = {
 const mapStateToProps = state => ({
   error: state.data.error,
   openErrorModal: state.ui.error.isOpen,
+  menuIsOpen: state.ui.menu.isOpen,
 });
 
 export default connect(mapStateToProps, null)(Body);
