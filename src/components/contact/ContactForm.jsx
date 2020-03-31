@@ -9,15 +9,32 @@ class ContactForm extends Component {
       email: '',
       association: '',
       message: '',
-      errorMessage: '',
+      disableButton: true,
     };
   }
 
   onInputChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    event.preventDefault();
+
+    this.setState({ [event.target.name]: event.target.value }, 
+      () => {
+         const {
+          firstName,
+          lastName,
+          email,
+          message,
+        } = this.state;
+
+        if (firstName !== '' && lastName !== '' && email !== '' && message !== '') {
+          this.setState({ disableButton: false });
+        } else {
+          this.setState({ disableButton: true });
+        }
+      }
+    );
   };
 
-  handleSubmit = event => {
+  handleInputValidation = () => {
     const {
       firstName,
       lastName,
@@ -25,13 +42,17 @@ class ContactForm extends Component {
       message,
     } = this.state;
 
+    if (firstName !== '' && lastName !== '' && email !== '' && message !== '') {
+      this.setState({ disableButton: false });
+    } else {
+      this.setState({ disableButton: true });
+    }
+  }
+
+  handleSubmit = event => {
     event.preventDefault();
 
-    if (firstName === '' || lastName === '' || email === '' || message === '') {
-      this.setState({ errorMessage: 'Please fill out all required fields marked with an asterisk' });
-    } else {
-      this.setState({ errorMessage: '' });
-    }
+    console.log('Submitting message...');
   };
 
   render() {
@@ -41,7 +62,7 @@ class ContactForm extends Component {
       email,
       association,
       message,
-      errorMessage,
+      disableButton,
     } = this.state;
 
     return (
@@ -84,6 +105,7 @@ class ContactForm extends Component {
                 type="email"
                 className="form-control"
                 value={email}
+                required
                 onChange={this.onInputChange.bind(this)}
               />
             </label>
@@ -109,17 +131,15 @@ class ContactForm extends Component {
               <textarea
                 name="message"
                 className="form-control"
-                rows="6"
+                rows="7"
                 value={message}
                 onChange={this.onInputChange.bind(this)}
               />
             </label>
           </div>
 
-          <p className="error-msg">{errorMessage}</p>
-
           <div className="btn-container">
-            <button type="submit" className="contact-btn" onClick={event => this.handleSubmit(event)}>
+            <button type="submit" className="contact-btn" onClick={event => this.handleSubmit(event)} disabled={disableButton}>
               Submit
             </button>
           </div>

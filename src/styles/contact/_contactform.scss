@@ -54,6 +54,10 @@ input, textarea {
     clear: both;
 }
 
+textarea {
+    padding: 3px;
+}
+
 .contact-btn {
     background-color: $brand-cta1-color;
     color: $brand-text-color;
@@ -64,4 +68,10 @@ input, textarea {
     height: 42px;
     margin-top: 30px;
     border-radius: 10px;
+}
+
+.contact-btn:disabled,
+.contact-btn[disabled]{
+  border: none;
+  background-color: #cccccc;
 }
