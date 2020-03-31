@@ -33,10 +33,20 @@ class FeedbackService(object):
         payload = dumps(data)
 
         async with requests.Session() as session:
-            response = await session.post(self.issues_url, data=payload, headers=headers)
-            response_content = loads(response.content)
-            issue_id = response_content['id']
-            return issue_id
+            try:
+                response = await session.post(self.issues_url, data=payload, headers=headers)
+                response_content = loads(response.content)
+                issue_id = response_content['id']
+                response.raise_for_status()
+                return issue_id
+            except requests.exceptions.HTTPError as errh:
+                return "An Http Error occurred:" + repr(errh)
+            except requests.exceptions.ConnectionError as errc:
+                return "An Error Connecting to the API occurred:" + repr(errc)
+            except requests.exceptions.Timeout as errt:
+                return "A Timeout Error occurred:" + repr(errt)
+            except requests.exceptions.RequestException as err:
+                return "An Unknown Error occurred" + repr(err)
 
 
     async def add_issue_to_project(self, issue_id, content_type='Issue'):
@@ -58,5 +68,15 @@ class FeedbackService(object):
         payload = dumps(data)
 
         async with requests.Session() as session:
-            response = await session.post(self.project_url, data=payload, headers=headers)
-            return response
+            try:
+                response = await session.post(self.project_url, data=payload, headers=headers)
+                response.raise_for_status()
+                return response.status_code
+            except requests.exceptions.HTTPError as errh:
+                return "An Http Error occurred:" + repr(errh)
+            except requests.exceptions.ConnectionError as errc:
+                return "An Error Connecting to the API occurred:" + repr(errc)
+            except requests.exceptions.Timeout as errt:
+                return "A Timeout Error occurred:" + repr(errt)
+            except requests.exceptions.RequestException as err:
+                return "An Unknown Error occurred" + repr(err)
