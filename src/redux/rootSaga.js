@@ -73,6 +73,20 @@ function* fetchPinInfo(srnumber) {
   return data;
 }
 
+function* getTimeToCloseComparison(filters) {
+  // will hook up to comparison filters
+  const temp = {
+    ...filters,
+    cdList: [1, 2, 3],
+  };
+
+  const url = `${BASE_URL}/timetoclose-comparison`;
+
+  const { data: { data } } = yield call(axios.post, url, temp);
+
+  return data;
+}
+
 /* //////////// COMBINED API CALL //////////// */
 
 function* getAll(filters) {
@@ -81,11 +95,13 @@ function* getAll(filters) {
     counts,
     frequency,
     timeToClose,
+    timeToCloseComparison, // temporary
   ] = yield all([
     call(getPins, filters),
     call(getCounts, filters),
     call(getFrequency, filters),
     call(getTimeToClose, filters),
+    call(getTimeToCloseComparison, filters), // temporary
   ]);
 
   return {
@@ -94,6 +110,7 @@ function* getAll(filters) {
     counts,
     frequency,
     timeToClose,
+    timeToCloseComparison, // temporary
   };
 }
 

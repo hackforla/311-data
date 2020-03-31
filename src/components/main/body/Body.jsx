@@ -7,6 +7,7 @@ import clx from 'classnames';
 import Visualizations from '@components/Visualizations';
 import Loader from '@components/common/Loader';
 import Modal from '@components/common/Modal';
+import TimeToCloseComparison from '@components/Visualizations/TimeToCloseComparison';
 import Menu from '../menu/Menu';
 import PinMap from '../../PinMap/PinMap';
 import DataRequestError from './DataRequestError';
@@ -21,8 +22,8 @@ const Body = ({
     <Switch>
       <Route path="/comparison">
         {/* <Visualizations /> */}
-        <div className={clx('comparison', {'full-width': !menuIsOpen})}>
-          TESTAOSDHIJOASDUIOAS*(D*(ASDUASH*DHASDHIASD))
+        <div className={clx('comparison', { 'full-width': !menuIsOpen })}>
+          <TimeToCloseComparison />
         </div>
       </Route>
       <Route path="/">

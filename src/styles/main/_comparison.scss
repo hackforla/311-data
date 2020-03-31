@@ -9,8 +9,15 @@
   left: $menu-width;
   transition: $menu-transition;
   text-align: center;
+  padding: 0 30px;
 
   &.full-width {
     left: 0;
+  }
+
+  .chart {
+    &.time-to-close-comparison .chart-export-select {
+      right: $chart-padding + 5px;
+    }
   }
 }

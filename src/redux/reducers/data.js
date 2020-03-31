@@ -48,6 +48,10 @@ const initialState = {
     counts: {},
   },
   timeToClose: {},
+  timeToCloseComparison: {
+    NCs: {},
+    CDs: {},
+  },
 };
 
 export default (state = initialState, action) => {
