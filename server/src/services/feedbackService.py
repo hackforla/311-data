@@ -28,7 +28,7 @@ class FeedbackService(object):
             'body': body,
             'labels': labels,
             'milestone': milestone,
-            'assigness': assignees
+            'assignees': assignees
         }
         payload = dumps(data)
 
