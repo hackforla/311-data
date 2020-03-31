@@ -102,13 +102,10 @@ async def ingest(request):
         years:
             a comma-separated list of years to import.
             Ex. '/ingest?years=2015,2016,2017'
-            defaults to range(2015, 2021)
         limit:
             the max number of records per year
-            defaults to 2000000
         querySize:
             the number of records per request to socrata
-            defaults to 50000
 
     Counts:
         These are the counts you can expect if you do the full ingest:
@@ -125,25 +122,25 @@ async def ingest(request):
     Hint:
         Run /ingest without params to get all socrata data
     """
+
     # parse params
-    years = request.args.get('years', None)
-    limit = request.args.get('limit', None)
-    querySize = request.args.get('querySize', None)
+    defaults = app.config['Settings']['Ingestion']
+
+    years = request.args.get('years', defaults['YEARS'])
+    limit = request.args.get('limit', defaults['LIMIT'])
+    querySize = request.args.get('querySize', defaults['QUERY_SIZE'])
 
     # validate params
-    if years is None:
-        years = range(2015, 2021)
-    else:
-        current_year = datetime.now().year
-        allowed_years = [year for year in range(2015, current_year+1)]
-        years = set([int(year) for year in years.split(',')])
-        if not all(year in allowed_years for year in years):
-            return json({
-                'error': f"'years' param values must be one of {allowed_years}"
-            })
+    current_year = datetime.now().year
+    allowed_years = [year for year in range(2015, current_year+1)]
+    years = set([int(year) for year in years.split(',')])
+    if not all(year in allowed_years for year in years):
+        return json({
+            'error': f"'years' param values must be one of {allowed_years}"
+        })
 
-    limit = int(limit) if limit else 2000000
-    querySize = int(querySize) if querySize else 50000
+    limit = int(limit)
+    querySize = int(querySize)
     querySize = min([limit, querySize])
 
     # get data

@@ -122,10 +122,7 @@ class DataHandler:
 
         return report
 
-    async def populateDatabase(self,
-                               years=range(2015, 2021),
-                               limit=2000000,
-                               querySize=50000):
+    async def populateDatabase(self, years=[], limit=None, querySize=None):
         log('\nPopulating database for years: {}'.format(list(years)))
         timer = Timer()
 
