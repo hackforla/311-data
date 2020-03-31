@@ -16,9 +16,9 @@ class ContactForm extends Component {
   onInputChange = event => {
     event.preventDefault();
 
-    this.setState({ [event.target.name]: event.target.value }, 
+    this.setState({ [event.target.name]: event.target.value },
       () => {
-         const {
+        const {
           firstName,
           lastName,
           email,
@@ -30,8 +30,7 @@ class ContactForm extends Component {
         } else {
           this.setState({ disableButton: true });
         }
-      }
-    );
+      });
   };
 
   handleInputValidation = () => {
