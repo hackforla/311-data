@@ -114,8 +114,8 @@ class TimeToCloseService(object):
                                  startDate=None,
                                  endDate=None,
                                  requestTypes=[],
-                                 set1={ 'district': None, 'list': [] },
-                                 set2={ 'district': None, 'list': [] }):
+                                 set1={'district': None, 'list': []},
+                                 set2={'district': None, 'list': []}):
 
         """
         For each of the two sets, returns the statistics necessary to generate

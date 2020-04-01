@@ -230,6 +230,28 @@ async def requestCounts(request):
     return json(return_data)
 
 
+@app.route('/requestcounts-comparison', methods=["POST"])
+@compress.compress()
+async def requestCountsComparison(request):
+    worker = RequestCountsService(app.config['Settings'])
+
+    postArgs = request.json
+    startDate = postArgs.get('startDate', None)
+    endDate = postArgs.get('endDate', None)
+    requestTypes = postArgs.get('requestTypes', [])
+    set1 = postArgs.get('set1', None)
+    set2 = postArgs.get('set2', None)
+    countFields = postArgs.get('countFields', [])
+
+    data = await worker.get_req_counts_comparison(startDate=startDate,
+                                                  endDate=endDate,
+                                                  requestTypes=requestTypes,
+                                                  set1=set1,
+                                                  set2=set2,
+                                                  countFields=countFields)
+    return json(data)
+
+
 @app.route('/servicerequest/<srnumber>', methods=["GET"])
 async def requestDetails(request, srnumber):
     detail_worker = RequestDetailService(app.config['Settings'])
