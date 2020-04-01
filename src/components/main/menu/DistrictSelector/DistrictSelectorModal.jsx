@@ -10,7 +10,7 @@ import {
 } from '@components/common/CONSTANTS';
 import { updateComparisonDistrict } from '@reducers/filters';
 
-import NCSelector from '../NCSelector';
+import DistrictSelectorDropdown from './DistrictSelectorDropdown';
 
 const DistrictSelectorModal = ({
   set,
@@ -22,21 +22,6 @@ const DistrictSelectorModal = ({
     label: district.name,
     value: district.id,
   }));
-
-  const renderSelector = () => {
-    switch (comparison[set].district) {
-      case 'nc':
-        return <NCSelector />;
-      case 'cc':
-        return 'City Selector';
-      case 'bid':
-        return 'Business Improvement District';
-      case 'sd':
-        return 'Supervisory District';
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="district-selector-modal-content">
@@ -66,7 +51,9 @@ const DistrictSelectorModal = ({
           onClick={districtId => updateDistrict(set, districtId)}
         />
         <br />
-        {renderSelector()}
+        {comparison[set].district && (
+          <DistrictSelectorDropdown district={comparison[set].district} />
+        )}
         <br />
         <div className="has-text-centered">
           <Button
