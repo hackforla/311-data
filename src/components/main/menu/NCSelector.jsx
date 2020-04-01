@@ -13,12 +13,14 @@ const NCSelector = ({
   updateNCList,
 }) => {
   const [searchValue, setSearchValue] = useState('');
-  const [filteredCouncilList, setFilteredCouncilList] = useState(COUNCILS);
+  const [filteredCouncilList, setFilteredCouncilList] = useState(COUNCILS.map(c => c.name));
   const [selectedCouncilList, setSelectedCouncilList] = useState(
-    COUNCILS.reduce((acc, council) => {
-      acc[council] = false;
-      return acc;
-    }, { all: false }),
+    COUNCILS
+      .map(c => c.name)
+      .reduce((acc, council) => {
+        acc[council] = false;
+        return acc;
+      }, { all: false }),
   );
 
   const selectRowStyle = {
@@ -37,7 +39,7 @@ const NCSelector = ({
   const handleSearch = e => {
     const term = e.target.value;
     const searchFilter = new RegExp(term, 'i');
-    const searchList = COUNCILS.filter(council => searchFilter.test(council));
+    const searchList = COUNCILS.map(c => c.name).filter(council => searchFilter.test(council));
     setFilteredCouncilList(searchList);
     setSearchValue(e.target.value);
   };
