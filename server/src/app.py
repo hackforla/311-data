@@ -15,6 +15,7 @@ from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
 from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
+from services.feedbackService import FeedbackService
 
 app = Sanic(__name__)
 CORS(app)
@@ -31,6 +32,12 @@ def environment_overrides():
     if os.environ.get('TOKEN', None):
         app.config['Settings']['Socrata']['TOKEN'] =\
             os.environ.get('TOKEN')
+    if os.environ.get('GITHUB_TOKEN', None):
+        app.config['Settings']['Github']['GITHUB_TOKEN'] =\
+            os.environ.get('GITHUB_TOKEN')
+    if os.environ.get('PROJECT_URL', None):
+        app.config['Settings']['Github']['PROJECT_URL'] =\
+            os.environ.get('PROJECT_URL')
 
 
 def configure_app():
@@ -114,30 +121,61 @@ async def sample_route(request):
     return json(sample_dataset)
 
 
-@app.route('/ingest', methods=["POST"])
+@app.route('/ingest', methods=["GET"])
 @compress.compress()
 async def ingest(request):
-    """Accept POST requests with a list of years to import.
-        Query parameter name is 'years', and parameter value is
-        a comma-separated list of years to import.
-        Ex. '/ingest?years=2015,2016,2017'
     """
+    Query parameters:
+        years:
+            a comma-separated list of years to import.
+            Ex. '/ingest?years=2015,2016,2017'
+        limit:
+            the max number of records per year
+        querySize:
+            the number of records per request to socrata
+
+    Counts:
+        These are the counts you can expect if you do the full ingest:
+
+        2015: 237305
+        2016: 952486
+        2017: 1131558
+        2018: 1210075
+        2019: 1308093
+        2020: 319628 (and counting)
+
+        GET https://data.lacity.org/resource/{ID}.json?$select=count(srnumber)
+
+    Hint:
+        Run /ingest without params to get all socrata data
+    """
+
+    # parse params
+    defaults = app.config['Settings']['Ingestion']
+
+    years = request.args.get('years', defaults['YEARS'])
+    limit = request.args.get('limit', defaults['LIMIT'])
+    querySize = request.args.get('querySize', defaults['QUERY_SIZE'])
+
+    # validate params
     current_year = datetime.now().year
-    querySize = request.args.get("querySize", None)
-    limit = request.args.get("limit", None)
-    ALLOWED_YEARS = [year for year in range(2015, current_year+1)]
-    if not request.args.get("years"):
-        return json({"error": "'years' parameter is required."})
-    years = set([int(year) for year in request.args.get("years").split(",")])
-    if not all(year in ALLOWED_YEARS for year in years):
-        return json({"error":
-                    f"'years' param values must be one of {ALLOWED_YEARS}"})
+    allowed_years = [year for year in range(2015, current_year+1)]
+    years = set([int(year) for year in years.split(',')])
+    if not all(year in allowed_years for year in years):
+        return json({
+            'error': f"'years' param values must be one of {allowed_years}"
+        })
+
+    limit = int(limit)
+    querySize = int(querySize)
+    querySize = min([limit, querySize])
+
+    # get data
     loader = DataHandler(app.config['Settings'])
-    loader.populateFullDatabase(yearRange=years,
-                                querySize=querySize,
-                                limit=limit)
-    return_data = {'response': 'ingest ok'}
-    return json(return_data)
+    data = await loader.populateDatabase(years=years,
+                                         limit=limit,
+                                         querySize=querySize)
+    return json(data)
 
 
 @app.route('/update')
@@ -198,6 +236,19 @@ async def requestDetails(request, srnumber):
 
     return_data = await detail_worker.get_request_detail(srnumber)
     return json(return_data)
+
+
+@app.route('/feedback', methods=["POST"])
+@compress.compress()
+async def handle_feedback(request):
+    github_worker = FeedbackService(app.config['Settings'])
+    postArgs = request.json
+    title = postArgs.get('title', None)
+    body = postArgs.get('body', None)
+
+    issue_id = await github_worker.create_issue(title, body)
+    response = await github_worker.add_issue_to_project(issue_id)
+    return json(response)
 
 
 @app.route('/test_multiple_workers')
