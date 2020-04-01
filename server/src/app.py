@@ -35,6 +35,9 @@ def environment_overrides():
     if os.environ.get('GITHUB_TOKEN', None):
         app.config['Settings']['Github']['GITHUB_TOKEN'] =\
             os.environ.get('GITHUB_TOKEN')
+    if os.environ.get('PROJECT_URL', None):
+        app.config['Settings']['Github']['PROJECT_URL'] =\
+            os.environ.get('PROJECT_URL')
 
 
 def configure_app():
