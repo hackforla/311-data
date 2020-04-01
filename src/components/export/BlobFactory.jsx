@@ -51,12 +51,16 @@ const chartStyle = { width: '90%' };
 const pieStyle = { width: '55%' };
 
 export function getSinglePagePdf(chartId, chartTitle) {
+  const selector = ['contact-311', 'type-of-request'].includes(chartId)
+    ? `.chart.${chartId}`
+    : `.chart.${chartId} canvas`;
+
   return SnapshotService.snap({
     component: 'Visualizations',
     selectors: [
       '.criteria',
       '.legend',
-      `.chart.${chartId} canvas`,
+      selector,
     ],
   })
     .then(([
@@ -109,8 +113,8 @@ export function getMultiPagePdf() {
       '.chart.time-to-close canvas',
       '.chart.frequency canvas',
       '.chart.total-requests canvas',
-      '.chart.contact-311 canvas',
-      '.chart.type-of-request canvas',
+      '.chart.contact-311',
+      '.chart.type-of-request',
     ],
   })
     .then(([

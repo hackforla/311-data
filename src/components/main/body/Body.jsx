@@ -7,6 +7,7 @@ import clx from 'classnames';
 import Visualizations from '@components/Visualizations';
 import Loader from '@components/common/Loader';
 import Modal from '@components/common/Modal';
+import Contact311Comparison from '@components/Visualizations/Contact311Comparison';
 import TimeToCloseComparison from '@components/Visualizations/TimeToCloseComparison';
 import Menu from '../menu/Menu';
 import PinMap from '../../PinMap/PinMap';
@@ -23,6 +24,7 @@ const Body = ({
       <Route path="/comparison">
         {/* <Visualizations /> */}
         <div className={clx('comparison', { 'full-width': !menuIsOpen })}>
+          <Contact311Comparison />
           <TimeToCloseComparison />
         </div>
       </Route>

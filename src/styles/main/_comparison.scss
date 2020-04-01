@@ -1,5 +1,4 @@
 .comparison {
-
   background-color: $brand-bg-color;
   overflow: scroll;
   position: absolute;
@@ -9,15 +8,46 @@
   left: $menu-width;
   transition: $menu-transition;
   text-align: center;
-  padding: 0 30px;
+  padding: 30px 50px;
 
   &.full-width {
     left: 0;
   }
 
+  h1 {
+    margin-bottom: 8px;
+  }
+
   .chart {
+    margin: 0 auto;
+    max-width: $vis-content-max-width;
     &.time-to-close-comparison .chart-export-select {
-      right: $chart-padding + 5px;
+      top: $chart-padding + 14px;
+      right: $chart-padding + 11px;
+    }
+  }
+
+  .contact-311-comparison {
+    max-width: $vis-content-max-width;
+    margin: 0 auto;
+    position: relative;
+    padding: $chart-padding;
+    .chart-export-select {
+      position: absolute;
+      top: $chart-padding + 11px;
+      right: $chart-padding + 2px;
+    }
+    .chart-container {
+      display: inline-block;
+      width: 50%;
+      .chart {
+        width: 100%;
+        display: inline-block;
+        padding: 2px;
+        canvas {
+          border: 1px solid $brand-stroke-color;
+        }
+      }
     }
   }
 }

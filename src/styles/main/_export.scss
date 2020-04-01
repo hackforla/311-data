@@ -5,9 +5,25 @@
   width: $vis-content-max-width;
   .visualizations {
     left: 0;
+    .outline {
+      border-width: 2px;
+    }
     .chart-export-select {
       display: none;
     }
+  }
+}
+
+.chart-export-select {
+  .loader-button {
+    padding: 0 8px;
+    border: 1px solid $brand-stroke-color;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: default;
+    position: relative;
+    padding: 3px 10px;
+    background-color: transparent;
   }
 }
 

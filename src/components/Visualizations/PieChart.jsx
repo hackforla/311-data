@@ -7,6 +7,7 @@ const PieChart = ({
   title,
   sectors,
   addLabels,
+  exportable,
 }) => {
   // // SET ORDER OF SECTORS ////
   // This weird code goes a long way towards ensuring that the sectors
@@ -73,29 +74,14 @@ const PieChart = ({
 
   // // OPTIONS ////
 
-  const vertPadding = 65;
-  const titleHeight = 130;
-
   const chartOptions = {
     title: {
-      text: title,
-      padding: 0,
-      lineHeight: 8.5,
+      display: false,
     },
-    aspectRatio: 0.90,
+    aspectRatio: 1.0,
     animation: false,
     layout: {
-      padding: {
-        top: vertPadding - titleHeight,
-        bottom: vertPadding,
-        left: 75,
-        right: 75,
-      },
-    },
-    plugins: {
-      chartArea: {
-        pieTitleHeight: titleHeight,
-      },
+      padding: 65,
     },
     tooltips: {
       callbacks: {
@@ -113,9 +99,11 @@ const PieChart = ({
     <Chart
       id={id}
       type="pie"
+      title={title}
       data={chartData}
       options={chartOptions}
       datalabels
+      exportable={exportable}
       exportData={exportData}
     />
   );
@@ -132,9 +120,11 @@ PieChart.propTypes = {
   })).isRequired,
   title: PropTypes.string,
   addLabels: PropTypes.bool,
+  exportable: PropTypes.bool,
 };
 
 PieChart.defaultProps = {
   title: null,
   addLabels: false,
+  exportable: true,
 };

@@ -71,7 +71,7 @@ ChartJS.pluginService.register({
     const { chartArea: config } = chart.config.options.plugins;
     if (!config) return;
 
-    const { chartBgColor, pieBorderColor, pieTitleHeight } = config;
+    const { chartBgColor } = config;
     const { ctx } = chart.chart;
     const { chartArea } = chart;
     const { padding } = chart.config.options.layout;
@@ -89,30 +89,8 @@ ChartJS.pluginService.register({
     const right = chartArea.right - chartArea.left + pad.left + pad.right;
     const bottom = chartArea.bottom - chartArea.top + pad.top + pad.bottom;
 
-    if (chart.config.type === 'pie') {
-      // create border
-      ctx.fillStyle = pieBorderColor;
-      ctx.fillRect(
-        left,
-        top - pieTitleHeight,
-        right,
-        bottom + pieTitleHeight,
-      );
-
-      // fill interior
-      ctx.fillStyle = chartBgColor;
-      const thickness = 1;
-      ctx.fillRect(
-        left + thickness,
-        top - pieTitleHeight + thickness,
-        right - 2 * thickness,
-        bottom + pieTitleHeight - 2 * thickness,
-      );
-    } else {
-      // fill interior
-      ctx.fillStyle = chartBgColor;
-      ctx.fillRect(left, top, right, bottom);
-    }
+    ctx.fillStyle = chartBgColor;
+    ctx.fillRect(left, top, right, bottom);
 
     ctx.restore();
   },
@@ -160,6 +138,7 @@ class Chart extends React.Component {
       height,
       exportData,
       options,
+      title,
     } = this.props;
 
     const canvasWrapStyle = {
@@ -171,10 +150,11 @@ class Chart extends React.Component {
 
     return (
       <div className={clx('chart', id)}>
+        { title && <h1>{ title }</h1> }
         { exportable && (
           <ChartExportSelect
             chartId={id}
-            chartTitle={options.title?.text}
+            chartTitle={title || options.title?.text}
             exportData={exportData}
           />
         )}
@@ -192,13 +172,18 @@ Chart.propTypes = {
   id: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   data: PropTypes.shape({}).isRequired,
-  options: PropTypes.shape({
-    title: PropTypes.shape({}),
-  }).isRequired,
   height: PropTypes.number,
   datalabels: PropTypes.bool,
   exportable: PropTypes.bool,
   exportData: PropTypes.func,
+
+  // NOTE: the title can come in either through the chart options or
+  // a prop. If options, the title is on the chart canvas, which means
+  // the export is much quicker. If props, the title is an HTML element.
+  options: PropTypes.shape({
+    title: PropTypes.shape({}),
+  }).isRequired,
+  title: PropTypes.string,
 };
 
 Chart.defaultProps = {
@@ -206,4 +191,5 @@ Chart.defaultProps = {
   datalabels: false,
   exportable: true,
   exportData: () => null,
+  title: undefined,
 };

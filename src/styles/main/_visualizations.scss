@@ -25,7 +25,7 @@
 
   h1 {
     text-align: center;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
   }
 
   .info-section {
@@ -114,23 +114,29 @@
         width: 420px;
         display: inline-block;
         margin: 20px 10px 0 10px;
+        canvas {
+          border: 1px solid $brand-stroke-color;
+        }
       }
     }
   }
 
   .chart {
     &.time-to-close .chart-export-select {
+      top: $chart-padding + 14px;
       right: $chart-padding + 10px;
     }
     &.frequency .chart-export-select {
+      top: $chart-padding + 14px;
       right: $chart-padding + 9px;
     }
     &.total-requests .chart-export-select {
+      top: $chart-padding + 14px;
       right: $chart-padding + 4px;
     }
     &.contact-311 .chart-export-select,
     &.type-of-request .chart-export-select {
-      top: $chart-padding + 10px;
+      top: $chart-padding + 8px;
     }
   }
 }
