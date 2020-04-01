@@ -17,35 +17,35 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Setup settings
-      run: |
-        cp server/src/settings.example.cfg server/src/settings.cfg
-    - name: Build and Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: hackforla/311-data/backend
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        registry: docker.pkg.github.com
-        dockerfile: server/Dockerfile
-        context: server
-        tags: "latest, ${{github.sha}}"
+    # - name: Setup settings
+    #   run: |
+    #     cp server/src/settings.example.cfg server/src/settings.cfg
+    # - name: Build and Publish to Registry
+    #   uses: elgohr/Publish-Docker-Github-Action@master
+    #   with:
+    #     name: hackforla/311-data/backend
+    #     username: ${{ secrets.DOCKER_USERNAME }}
+    #     password: ${{ secrets.DOCKER_PASSWORD }}
+    #     registry: docker.pkg.github.com
+    #     dockerfile: server/Dockerfile
+    #     context: server
+    #     tags: "latest, ${{github.sha}}"
     - name: Login to heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: heroku container:login
-    - name: Build and push heroku
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: |
-        docker tag docker.pkg.github.com/hackforla/311-data/backend:${{github.sha}} registry.heroku.com/hackforla-311/web
-        docker push registry.heroku.com/hackforla-311/web
-    - name: Release
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: heroku container:release -a hackforla-311 web
+    # - name: Build and push heroku
+    #   env:
+    #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    #   run: |
+    #     docker tag docker.pkg.github.com/hackforla/311-data/backend:${{github.sha}} registry.heroku.com/hackforla-311/web
+    #     docker push registry.heroku.com/hackforla-311/web
+    # - name: Release
+    #   env:
+    #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    #   run: heroku container:release -a hackforla-311 web
     - name: Set production env secrets
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: |
-        heroku config:set PROJECT_URL=${{ secrets.PROJECT_URL }} GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }}
+        heroku config:set -a hackforla-311 PROJECT_URL=${{ secrets.PROJECT_URL }} GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }}
