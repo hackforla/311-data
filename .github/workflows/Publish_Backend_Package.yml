@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - 482-OPS-envVars
 
 jobs:
   build:
@@ -47,5 +48,4 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: |
-        heroku config:set PROJECT_URL=${{ secrets.PROJECT_URL }}
-        heroku config:set GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }}
+        heroku config:set PROJECT_URL=${{ secrets.PROJECT_URL }} GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }}
