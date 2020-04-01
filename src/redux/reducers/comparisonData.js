@@ -25,11 +25,11 @@ const initialState = {
   counts: {
     set1: {
       district: '',
-      data: {},
+      source: {},
     },
     set2: {
       district: '',
-      data: {},
+      source: {},
     },
   },
   timeToClose: {

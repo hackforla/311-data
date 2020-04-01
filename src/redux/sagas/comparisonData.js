@@ -20,6 +20,31 @@ import {
 
 const BASE_URL = process.env.DB_URL;
 
+function* getCountsComparison(filters) {
+  const url = `${BASE_URL}/requestcounts-comparison`;
+
+  const { data } = yield call(axios.post, url, {
+    ...filters,
+    countFields: ['requestsource'],
+  });
+
+  const { set1, set2 } = data.data;
+
+  return {
+    ...data,
+    data: {
+      set1: {
+        district: set1.district,
+        source: set1.data.find(d => d.field === 'requestsource')?.counts,
+      },
+      set2: {
+        district: set2.district,
+        source: set2.data.find(d => d.field === 'requestsource')?.counts,
+      },
+    },
+  };
+}
+
 function* getTimeToCloseComparison(filters) {
   const url = `${BASE_URL}/timetoclose-comparison`;
 
@@ -32,6 +57,13 @@ function* getTimeToCloseComparison(filters) {
 
 function* getChartData(filters) {
   switch (filters.chart) {
+    case 'contact': {
+      const data = yield call(getCountsComparison, filters);
+      return {
+        lastUpdated: data.lastPulled,
+        counts: data.data,
+      };
+    }
     case 'time': {
       const data = yield call(getTimeToCloseComparison, filters);
       return {
