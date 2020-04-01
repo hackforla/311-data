@@ -56,10 +56,15 @@ class DataService(object):
         if not requestNumber or not isinstance(requestNumber, str):
             return {'Error': 'Missing request number'}
 
+        fields = Request.__table__.columns.keys()
+        if 'id' in fields:
+            fields.remove('id')
+
         session = self.Session()
         record = session \
-            .query(Request) \
-            .get(requestNumber)
+            .query(*fields) \
+            .filter(Request.srnumber == requestNumber) \
+            .first()
         session.close()
 
         if record:

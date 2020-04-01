@@ -19,9 +19,7 @@ const PinPopup = ({
   // 1558945500 -> 5/27/2019
   const created = moment.unix(createdDate).format('l');
   const updated = moment.unix(updatedDate).format('l');
-  // Converts date/time string to MM/DD/YYYY
-  // "2019-12-13 19:31:00" -> 12/13/2019
-  const closed = moment(closedDate).format('l');
+  const closed = moment.unix(closedDate).format('l');
 
   return (
     <Popup className="pin-popup">
@@ -83,7 +81,7 @@ PinPopup.propTypes = {
   address: PropTypes.string,
   createdDate: PropTypes.number,
   updatedDate: PropTypes.number,
-  closedDate: PropTypes.string,
+  closedDate: PropTypes.number,
   status: PropTypes.string,
   ncName: PropTypes.string,
 };
