@@ -47,6 +47,8 @@ const DistrictSelectorModal = ({
           </div>
         </div>
         <Dropdown
+          id="district-selector-dropdown"
+          title=""
           list={mungeDistrictTypes()}
           onClick={districtId => updateDistrict(set, districtId)}
         />

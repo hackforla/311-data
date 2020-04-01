@@ -84,14 +84,14 @@ async def timetoclose_comparison(request):
     startDate = postArgs.get('startDate', None)
     endDate = postArgs.get('endDate', None)
     requestTypes = postArgs.get('requestTypes', [])
-    ncList = postArgs.get('ncList', [])
-    cdList = postArgs.get('cdList', [])
+    set1 = postArgs.get('set1', None)
+    set2 = postArgs.get('set2', None)
 
     data = await ttc_worker.get_ttc_comparison(startDate=startDate,
                                                endDate=endDate,
                                                requestTypes=requestTypes,
-                                               ncList=ncList,
-                                               cdList=cdList)
+                                               set1=set1,
+                                               set2=set2)
     return json(data)
 
 

@@ -22,21 +22,41 @@ const initialState = {
   isLoading: false,
   error: null,
   lastUpdated: null,
-  set1: {
-    counts: {},
-    frequency: {
-      bins: [],
-      counts: {},
+  counts: {
+    set1: {
+      district: '',
+      data: {},
     },
-    timeToClose: {},
+    set2: {
+      district: '',
+      data: {},
+    },
   },
-  set2: {
-    counts: {},
-    frequency: {
-      bins: [],
-      counts: {},
+  timeToClose: {
+    set1: {
+      district: '',
+      data: {},
     },
-    timeToClose: {},
+    set2: {
+      district: '',
+      data: {},
+    },
+  },
+  frequency: {
+    set1: {
+      district: '',
+      data: {
+        bins: [],
+        counts: [],
+      },
+    },
+    set2: {
+      district: '',
+      data: {
+        bins: [],
+        counts: [],
+      },
+    },
   },
 };
 

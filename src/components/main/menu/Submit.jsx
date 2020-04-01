@@ -1,14 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'proptypes';
-import { getDataRequest } from '../../../redux/reducers/data';
-import Button from '../../common/Button';
+import { useLocation } from 'react-router-dom';
+import { getDataRequest } from '@reducers/data';
+import { getComparisonDataRequest } from '@reducers/comparisonData';
+import Button from '@components/common/Button';
 
 const Submit = ({
   getData,
+  getComparisonData,
 }) => {
+  const { pathname } = useLocation();
+
   const handleSubmit = () => {
-    getData();
+    switch (pathname) {
+      case '/': return getData();
+      case '/comparison': return getComparisonData();
+      default: return null;
+    }
   };
 
   return (
@@ -26,14 +35,17 @@ const Submit = ({
 
 const mapDispatchToProps = dispatch => ({
   getData: () => dispatch(getDataRequest()),
+  getComparisonData: () => dispatch(getComparisonDataRequest()),
 });
 
 Submit.propTypes = {
   getData: propTypes.func,
+  getComparisonData: propTypes.func,
 };
 
 Submit.defaultProps = {
   getData: () => null,
+  getComparisonData: () => null,
 };
 
 export default connect(null, mapDispatchToProps)(Submit);

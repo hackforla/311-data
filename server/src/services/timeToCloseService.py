@@ -114,47 +114,67 @@ class TimeToCloseService(object):
                                  startDate=None,
                                  endDate=None,
                                  requestTypes=[],
-                                 ncList=[],
-                                 cdList=[]):
+                                 set1={ 'district': None, 'list': [] },
+                                 set2={ 'district': None, 'list': [] }):
 
         """
-        For each NC and CD, returns the statistics necessary to generate
+        For each of the two sets, returns the statistics necessary to generate
         a boxplot of the number of days it took to close the requests.
 
         Example response:
         {
             lastPulled: Timestamp,
             data: {
-                NCs: {
-                    'DOWNTOWN LOS ANGELES': { stats },
-                    'ARLETA NC': { stats }
+                set1: {
+                    district: 'nc',
+                    data: {
+                        'DOWNTOWN LOS ANGELES': { stats },
+                        'ARLETA NC': { stats }
+                        ...
+                    }
                 },
-                CDs: {
-                    1: { stats }
-                    15: { stats }
+                set2: {
+                    district: 'cc',
+                    data: {
+                        1: { stats },
+                        15: { stats }
+                        ...
+                    }
                 }
-
-                ...
             }
         }
         """
 
-        common = {
-            'startDate': startDate,
-            'endDate': endDate,
-            'requestTypes': requestTypes
-        }
+        def get_data(district, items):
+            common = {
+                'startDate': startDate,
+                'endDate': endDate,
+                'requestTypes': requestTypes
+            }
 
-        filters = self.dataAccess.standardFilters(ncList=ncList, **common)
-        ncData = self.ttc('ncname', filters)
+            if district == 'nc':
+                common['ncList'] = items
+                filters = self.dataAccess.standardFilters(**common)
+                return self.ttc('ncname', filters)
 
-        filters = self.dataAccess.standardFilters(cdList=cdList, **common)
-        cdData = self.ttc('cd', filters)
+            elif district == 'cc':
+                common['cdList'] = items
+                filters = self.dataAccess.standardFilters(**common)
+                return self.ttc('cd', filters)
+
+        set1data = get_data(set1['district'], set1['list'])
+        set2data = get_data(set2['district'], set2['list'])
 
         return {
-            'lastPulled': ncData['lastPulled'],
+            'lastPulled': set1data['lastPulled'],
             'data': {
-                'NCs': ncData['data'],
-                'CDs': cdData['data']
+                'set1': {
+                    'district': set1['district'],
+                    'data': set1data['data']
+                },
+                'set2': {
+                    'district': set2['district'],
+                    'data': set2data['data']
+                }
             }
         }

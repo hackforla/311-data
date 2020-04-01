@@ -4,23 +4,32 @@ import { connect } from 'react-redux';
 import Chart from './Chart';
 
 const TimeToCloseComparison = ({
-  timeToClose: { NCs, CDs },
+  timeToClose: { set1, set2 },
 }) => {
   // // DATA ////
 
-  const ncBoxes = Object.keys(NCs).map(nc => ({
-    label: nc,
-    color: '#DDEC9F',
-    stats: { ...NCs[nc], outliers: [] },
-  }));
+  const boxColors = {
+    nc: '#DDEC9F',
+    cc: '#565656',
+  };
 
-  const cdBoxes = Object.keys(CDs).map(cd => ({
-    label: `District ${cd}`,
-    color: '#565656',
-    stats: { ...CDs[cd], outliers: [] },
-  }));
+  const boxLabels = {
+    nc: name => name,
+    cc: name => `District ${name}`,
+  };
 
-  const boxes = [...ncBoxes, ...cdBoxes];
+  const getBoxes = ({ district, data }) => (
+    Object.keys(data).map(name => ({
+      label: boxLabels[district](name),
+      color: boxColors[district],
+      stats: { ...data[name], outliers: [] },
+    }))
+  );
+
+  const boxes = [
+    ...getBoxes(set1),
+    ...getBoxes(set2),
+  ];
 
   const chartData = {
     labels: boxes.map(b => b.label),
@@ -91,14 +100,14 @@ const TimeToCloseComparison = ({
 };
 
 const mapStateToProps = state => ({
-  timeToClose: state.data.timeToCloseComparison,
+  timeToClose: state.comparisonData.timeToClose,
 });
 
 export default connect(mapStateToProps)(TimeToCloseComparison);
 
 TimeToCloseComparison.propTypes = {
   timeToClose: PropTypes.shape({
-    NCs: PropTypes.shape({}),
-    CDs: PropTypes.shape({}),
+    set1: PropTypes.shape({}),
+    set2: PropTypes.shape({}),
   }).isRequired,
 };

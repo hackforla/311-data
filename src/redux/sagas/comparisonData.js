@@ -4,7 +4,6 @@ import {
   call,
   put,
   select,
-  all,
 } from 'redux-saga/effects';
 
 import {
@@ -21,71 +20,28 @@ import {
 
 const BASE_URL = process.env.DB_URL;
 
-function* getCounts(filters) {
-  const countsUrl = `${BASE_URL}/requestcounts`;
-
-  const { data: { data } } = yield call(axios.post, countsUrl, {
-    ...filters,
-    countFields: ['requesttype', 'requestsource'],
-  });
-
-  return {
-    type: data.find(d => d.field === 'requesttype')?.counts,
-    source: data.find(d => d.field === 'requestsource')?.counts,
-  };
-}
-
-function* getFrequency(filters) {
-  const frequencyUrl = `${BASE_URL}/requestfrequency`;
-
-  const { data: { data } } = yield call(axios.post, frequencyUrl, filters);
-
-  return data;
-}
-
-function* getTimeToClose(filters) {
-  const ttcUrl = `${BASE_URL}/timetoclose`;
-
-  const { data: { data } } = yield call(axios.post, ttcUrl, filters);
-
-  return data;
-}
-
 function* getTimeToCloseComparison(filters) {
-  // will hook up to comparison filters
-  const temp = {
-    ...filters,
-    cdList: [1, 2, 3],
-  };
-
   const url = `${BASE_URL}/timetoclose-comparison`;
 
-  const { data: { data } } = yield call(axios.post, url, temp);
+  const { data } = yield call(axios.post, url, filters);
 
   return data;
 }
 
-/* //////////// COMBINED API CALL //////////// */
+/* /////////////// CHART SWITCH /////////////// */
 
-function* getAll(filters) {
-  const [
-    { lastUpdated, pins },
-    counts,
-    frequency,
-    timeToClose,
-  ] = yield all([
-    call(getCounts, filters),
-    call(getFrequency, filters),
-    call(getTimeToClose, filters),
-  ]);
-
-  return {
-    lastUpdated,
-    pins,
-    counts,
-    frequency,
-    timeToClose,
-  };
+function* getChartData(filters) {
+  switch (filters.chart) {
+    case 'time': {
+      const data = yield call(getTimeToCloseComparison, filters);
+      return {
+        lastUpdated: data.lastPulled,
+        timeToClose: data.data,
+      };
+    }
+    default:
+      return {};
+  }
 }
 
 /* ////////////////// FILTERS //////////////// */
@@ -96,15 +52,26 @@ function* getFilters() {
   const {
     startDate,
     endDate,
-    councils,
     requestTypes,
-  } = yield select(getState, 'filters');
+    comparison,
+  } = yield select(getState, 'comparisonFilters');
 
   return {
     startDate,
     endDate,
-    ncList: councils,
     requestTypes: Object.keys(requestTypes).filter(req => req !== 'All' && requestTypes[req]),
+    ...comparison,
+
+    /* DELETE THESE LINES WHEN SET1/SET2 FILTERS ARE HOOKED UP */
+    set1: {
+      district: 'nc',
+      list: ['ARLETA NC', 'ARROYO SECO NC', 'VOICES OF 90037', 'ZAPATA KING NC'],
+    },
+    set2: {
+      district: 'cc',
+      list: [1, 2, 3, 7, 8],
+    },
+    /* /////////////////////////////////////////////////////// */
   };
 }
 
@@ -113,7 +80,7 @@ function* getFilters() {
 function* getData() {
   const filters = yield getFilters();
   try {
-    const data = yield call(getAll, filters);
+    const data = yield call(getChartData, filters);
     yield put(getComparisonDataSuccess(data));
   } catch (e) {
     yield put(getComparisonDataFailure(e));

@@ -20,7 +20,7 @@ const Loader = ({
 };
 
 const mapStateToProps = state => ({
-  isLoading: state.data.isLoading,
+  isLoading: state.data.isLoading || state.comparisonData.isLoading,
   menuIsOpen: state.ui.menu.isOpen,
 });
 
