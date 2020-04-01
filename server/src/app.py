@@ -15,6 +15,7 @@ from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
 from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
+from services.feedbackService import FeedbackService
 
 app = Sanic(__name__)
 CORS(app)
@@ -31,6 +32,9 @@ def environment_overrides():
     if os.environ.get('TOKEN', None):
         app.config['Settings']['Socrata']['TOKEN'] =\
             os.environ.get('TOKEN')
+    if os.environ.get('GITHUB_TOKEN', None):
+        app.config['Settings']['Github']['GITHUB_TOKEN'] =\
+            os.environ.get('GITHUB_TOKEN')
 
 
 def configure_app():
@@ -209,6 +213,19 @@ async def requestDetails(request, srnumber):
 
     return_data = await detail_worker.get_request_detail(srnumber)
     return json(return_data)
+
+
+@app.route('/feedback', methods=["POST"])
+@compress.compress()
+async def handle_feedback(request):
+    github_worker = FeedbackService(app.config['Settings'])
+    postArgs = request.json
+    title = postArgs.get('title', None)
+    body = postArgs.get('body', None)
+
+    issue_id = await github_worker.create_issue(title, body)
+    response = await github_worker.add_issue_to_project(issue_id)
+    return json(response)
 
 
 @app.route('/test_multiple_workers')
