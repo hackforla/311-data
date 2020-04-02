@@ -43,19 +43,14 @@ const initialState = {
     },
   },
   frequency: {
+    bins: [],
     set1: {
       district: '',
-      data: {
-        bins: [],
-        counts: [],
-      },
+      counts: [],
     },
     set2: {
       district: '',
-      data: {
-        bins: [],
-        counts: [],
-      },
+      counts: [],
     },
   },
 };

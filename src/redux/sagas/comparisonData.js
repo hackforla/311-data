@@ -53,6 +53,14 @@ function* getTimeToCloseComparison(filters) {
   return data;
 }
 
+function* getFrequencyComparison(filters) {
+  const url = `${BASE_URL}/requestfrequency-comparison`;
+
+  const { data } = yield call(axios.post, url, filters);
+
+  return data;
+}
+
 /* /////////////// CHART SWITCH /////////////// */
 
 function* getChartData(filters) {
@@ -69,6 +77,13 @@ function* getChartData(filters) {
       return {
         lastUpdated: data.lastPulled,
         timeToClose: data.data,
+      };
+    }
+    case 'frequency': {
+      const data = yield call(getFrequencyComparison, filters);
+      return {
+        lastUpdated: data.lastPulled,
+        frequency: data.data,
       };
     }
     default:
