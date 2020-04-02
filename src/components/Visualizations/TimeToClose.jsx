@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import Chart from './Chart';
+import Chart from '@components/Chart';
 
 const TimeToClose = ({
   timeToClose,

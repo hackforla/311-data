@@ -2,13 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import { Switch, Route } from 'react-router-dom';
-import clx from 'classnames';
 
 import Visualizations from '@components/Visualizations';
+import Comparison from '@components/Comparison';
 import Loader from '@components/common/Loader';
-import Modal from '@components/common/Modal';
-import Contact311Comparison from '@components/Visualizations/Contact311Comparison';
-import TimeToCloseComparison from '@components/Visualizations/TimeToCloseComparison';
+import Modal from '@components/common/Modal'; 
 import Menu from '../menu/Menu';
 import PinMap from '../../PinMap/PinMap';
 import DataRequestError from './DataRequestError';
@@ -22,11 +20,7 @@ const Body = ({
     <Menu />
     <Switch>
       <Route path="/comparison">
-        {/* <Visualizations /> */}
-        <div className={clx('comparison', { 'full-width': !menuIsOpen })}>
-          <Contact311Comparison />
-          <TimeToCloseComparison />
-        </div>
+        <Comparison fullWidth={!menuIsOpen} />
       </Route>
       <Route path="/">
         <PinMap />

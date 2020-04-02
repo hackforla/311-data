@@ -3,7 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import Chart from './Chart';
+import Chart from '@components/Chart';
 
 const TotalRequests = ({
   frequency: { bins, counts },

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import Chart from './Chart';
+import Chart from '@components/Chart';
 
 const TimeToCloseComparison = ({
   timeToClose: { set1, set2 },

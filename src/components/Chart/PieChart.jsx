@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'proptypes';
-import Chart from './Chart';
+import Chart from '.';
 
 const PieChart = ({
   id,

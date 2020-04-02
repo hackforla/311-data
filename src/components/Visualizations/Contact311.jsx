@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_SOURCES } from '@components/common/CONSTANTS';
-import PieChart from './PieChart';
+import PieChart from '@components/Chart/PieChart';
 
 // if a source has less than this percentage of the total, it will be grouped
 // into the "Other" category. This helps prevent the labels from overlapping.

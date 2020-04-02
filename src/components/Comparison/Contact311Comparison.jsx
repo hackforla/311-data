@@ -3,7 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import ChartExportSelect from '@components/export/ChartExportSelect';
-import Contact311 from './Contact311';
+import Contact311 from '@components/Visualizations/Contact311';
 
 const Contact311Comparison = ({
   counts: { set1, set2 },
