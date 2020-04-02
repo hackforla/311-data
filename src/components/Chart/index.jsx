@@ -102,7 +102,11 @@ ChartJS.plugins.unregister(ChartJSDataLabels);
 // //////////// COMPONENT //////////////
 
 class Chart extends React.Component {
-  canvasRef = React.createRef();
+  constructor(props) {
+    super(props);
+    this.canvasRef = React.createRef();
+    this.state = { rightEdge: null };
+  }
 
   componentDidMount() {
     const {
@@ -119,6 +123,7 @@ class Chart extends React.Component {
       options,
       plugins: datalabels ? [ChartJSDataLabels] : [],
     });
+    this.setRightEdge();
   }
 
   componentDidUpdate(prevProps) {
@@ -128,7 +133,26 @@ class Chart extends React.Component {
       this.chart.data = data;
       this.chart.options = options;
       this.chart.update();
+      this.setRightEdge();
     }
+  }
+
+  // calculate right edge of chart area so export select
+  // can be placed correctly
+  setRightEdge = () => {
+    const { width, chartArea, config } = this.chart;
+    const { layout } = config.options;
+
+    let paddingRight = 0;
+    if (layout) {
+      paddingRight = typeof layout.padding === 'number'
+        ? layout.padding
+        : layout.padding?.right || 0;
+    }
+
+    this.setState({
+      rightEdge: width - chartArea.right - paddingRight,
+    });
   }
 
   render() {
@@ -141,6 +165,8 @@ class Chart extends React.Component {
       title,
     } = this.props;
 
+    const { rightEdge } = this.state;
+
     const canvasWrapStyle = {
       position: 'relative',
       height: typeof height === 'undefined'
@@ -151,14 +177,15 @@ class Chart extends React.Component {
     return (
       <div className={clx('chart', id)}>
         { title && <h1>{ title }</h1> }
-        { exportable && (
-          <ChartExportSelect
-            chartId={id}
-            chartTitle={title || options.title?.text}
-            exportData={exportData}
-          />
-        )}
         <div style={canvasWrapStyle}>
+          { exportable && (
+            <ChartExportSelect
+              chartId={id}
+              chartTitle={title || options.title?.text}
+              exportData={exportData}
+              style={{ right: rightEdge }}
+            />
+          )}
           <canvas ref={this.canvasRef} />
         </div>
       </div>

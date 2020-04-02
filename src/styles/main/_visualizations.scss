@@ -112,26 +112,10 @@
         canvas {
           border: 1px solid $brand-stroke-color;
         }
+        .chart-export-select {
+          top: $chart-padding - 50px;
+        }
       }
-    }
-  }
-
-  .chart {
-    &.time-to-close .chart-export-select {
-      top: $chart-padding + 14px;
-      right: $chart-padding + 10px;
-    }
-    &.frequency .chart-export-select {
-      top: $chart-padding + 14px;
-      right: $chart-padding + 9px;
-    }
-    &.total-requests .chart-export-select {
-      top: $chart-padding + 14px;
-      right: $chart-padding + 4px;
-    }
-    &.contact-311 .chart-export-select,
-    &.type-of-request .chart-export-select {
-      top: $chart-padding + 8px;
     }
   }
 }

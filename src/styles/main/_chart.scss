@@ -4,8 +4,7 @@
 
   .chart-export-select {
     position: absolute;
-    top: $chart-padding;
-    right: $chart-padding;
+    top: $chart-padding - 6px;
     z-index: 1;
   }
 }

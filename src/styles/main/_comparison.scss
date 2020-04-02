@@ -16,18 +16,6 @@
   .chart {
     margin: 0 auto;
     max-width: $vis-content-max-width;
-    &.time-to-close-comparison .chart-export-select {
-      top: $chart-padding + 14px;
-      right: $chart-padding + 11px;
-    }
-    &.frequency-comparison .chart-export-select {
-      top: $chart-padding + 14px;
-      right: $chart-padding + 7px;
-    }
-    &.total-requests-comparison .chart-export-select {
-      top: $chart-padding + 14px;
-      right: $chart-padding + 2px;
-    }
   }
 
   .contact-311-comparison {
