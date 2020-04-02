@@ -58,25 +58,27 @@ const Menu = ({
         color="light"
       />
 
-      <div className="menu-content">
-        <Switch>
-          <Route path="/comparison">
+      <Switch>
+        <Route path="/comparison">
+          <div className="menu-content">
             <h1>Comparison Tool</h1>
             <DateSelector />
             <DistrictSelector />
             <ChartSelector />
             <RequestTypeSelector />
             <Submit />
-          </Route>
-          <Route path="/">
+          </div>
+        </Route>
+        <Route path="/">
+          <div className="menu-content with-tabs">
             <h1>Filters</h1>
             <DateSelector />
             <NCSelector />
             <RequestTypeSelector />
             <Submit />
-          </Route>
-        </Switch>
-      </div>
+          </div>
+        </Route>
+      </Switch>
     </div>
   );
 };
