@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import Chart from '@components/Chart';
+import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 
 const TimeToCloseComparison = ({
   timeToClose: { set1, set2 },
@@ -9,8 +10,8 @@ const TimeToCloseComparison = ({
   // // DATA ////
 
   const boxColors = {
-    nc: '#DDEC9F',
-    cc: '#565656',
+    nc: DISTRICT_TYPES.find(t => t.id === 'nc')?.color,
+    cc: DISTRICT_TYPES.find(t => t.id === 'cc')?.color,
   };
 
   const boxLabels = {

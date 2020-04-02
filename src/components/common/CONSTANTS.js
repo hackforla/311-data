@@ -523,8 +523,8 @@ export const CITY_COUNCILS = [
 ];
 
 export const DISTRICT_TYPES = [
-  { id: 'nc', name: 'Neighborhood Council District' },
-  { id: 'cc', name: 'City Council District' },
+  { id: 'nc', name: 'Neighborhood Council District', color: '#DDEC9F' },
+  { id: 'cc', name: 'City Council District', color: '#565656' },
   // { id: 'bid', name: 'Business Improvement District' },
   // { id: 'sd', name: 'Supervisory District' },
 ];
