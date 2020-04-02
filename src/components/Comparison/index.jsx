@@ -1,16 +1,12 @@
 import React from 'react';
-import PropTypes from 'proptypes';
-import clx from 'classnames';
 
 import Contact311Comparison from './Contact311Comparison';
 import TimeToCloseComparison from './TimeToCloseComparison';
 import FrequencyComparison from './FrequencyComparison';
 import TotalRequestsComparison from './TotalRequestsComparison';
 
-const Comparison = ({
-  fullWidth,
-}) => (
-  <div className={clx('comparison', { 'full-width': fullWidth })}>
+const Comparison = () => (
+  <div className="comparison">
     <TotalRequestsComparison />
     <FrequencyComparison />
     <Contact311Comparison />
@@ -19,11 +15,3 @@ const Comparison = ({
 );
 
 export default Comparison;
-
-Comparison.propTypes = {
-  fullWidth: PropTypes.bool,
-};
-
-Comparison.defaultProps = {
-  fullWidth: false,
-};

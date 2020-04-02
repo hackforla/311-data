@@ -2,11 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import { Switch, Route } from 'react-router-dom';
+import clx from 'classnames';
 
 import Visualizations from '@components/Visualizations';
 import Comparison from '@components/Comparison';
 import Loader from '@components/common/Loader';
-import Modal from '@components/common/Modal'; 
+import Modal from '@components/common/Modal';
 import Menu from '../menu/Menu';
 import PinMap from '../../PinMap/PinMap';
 import DataRequestError from './DataRequestError';
@@ -16,11 +17,11 @@ const Body = ({
   error,
   menuIsOpen,
 }) => (
-  <div className="body is-relative">
+  <div className={clx('body', { 'menu-is-open': menuIsOpen })}>
     <Menu />
     <Switch>
       <Route path="/comparison">
-        <Comparison fullWidth={!menuIsOpen} />
+        <Comparison />
       </Route>
       <Route path="/">
         <PinMap />

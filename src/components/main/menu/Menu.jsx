@@ -33,7 +33,7 @@ const Menu = ({
   ];
 
   return (
-    <div className={clx('menu-container', { open: isOpen })}>
+    <div className="menu-container">
       <Switch>
         <Route exact path="/">
           <div className="menu-tabs">

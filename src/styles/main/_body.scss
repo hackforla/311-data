@@ -1,5 +1,28 @@
 .body {
   height: calc(100vh - #{$header-height + $footer-height});
+  position: relative;
+
+  //// menu-toggle transition ////
+  .visualizations,
+  .comparison,
+  .loader-container,
+  .menu-container {
+    transition: $menu-transition;
+  }
+
+  &.menu-is-open {
+    .visualizations,
+    .comparison,
+    .loader-container {
+      left: $menu-width;
+    }
+  }
+  &:not(.menu-is-open) {
+    .menu-container {
+      transform: translateX(-100%);
+    }
+  }
+  /////////////////////////////////
 
   .data-request-error {
     border-radius: 5px;

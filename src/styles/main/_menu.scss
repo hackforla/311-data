@@ -9,10 +9,6 @@
   z-index: 1100;
   background: $brand-bg-color;
   box-shadow: 0px 4px 5px rgba(108, 108, 108, 0.3);
-  transition: $menu-transition;
-  &:not(.open) {
-    transform: translateX(-100%);
-  }
 
   .menu-tabs {
     .menu-tab {

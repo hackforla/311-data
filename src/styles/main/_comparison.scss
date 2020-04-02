@@ -5,14 +5,9 @@
   top: 0;
   right: 0;
   bottom: 0;
-  left: $menu-width;
-  transition: $menu-transition;
+  left: 0;
   text-align: center;
   padding: 30px 50px;
-
-  &.full-width {
-    left: 0;
-  }
 
   h1 {
     margin-bottom: 8px;
