@@ -118,7 +118,7 @@ const NCSelector = ({
         <div
           className="nc-list"
           style={{
-            height: '231px',
+            height: '200px',
             overflowX: 'hidden',
             msOverflowY: 'scroll',
             padding: '10px 23px 10px 10px',
