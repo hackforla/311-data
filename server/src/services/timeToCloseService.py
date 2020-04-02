@@ -7,7 +7,7 @@ class TimeToCloseService(object):
     def __init__(self, config=None, tableName="ingest_staging_table"):
         self.dataAccess = DataService(config, tableName)
 
-    def ttc(self, groupField, filters):
+    def ttc(self, groupField, groupFieldItems, filters):
 
         def get_boxplot_stats(arr, C=1.5):
             """
@@ -52,11 +52,8 @@ class TimeToCloseService(object):
         fields = [groupField, 'createddate', 'closeddate']
         data = self.dataAccess.query(fields, filters)
 
-        # read into a dataframe, drop the nulls, and halt if no rows exist
-        df = pd.DataFrame(data['data']).dropna()
-        if len(df) == 0:
-            data['data'] = {}
-            return data
+        # read into a dataframe and drop the nulls
+        df = pd.DataFrame(data['data'], columns=fields).dropna()
 
         # generate a new dataframe that contains the number of days it
         # takes to close each request, plus the type of request
@@ -72,6 +69,12 @@ class TimeToCloseService(object):
             .groupby(by=groupField) \
             .apply(lambda df: get_boxplot_stats(df['days-to-close'].values)) \
             .to_dict()
+
+        # if no rows exist for a particular item in the groupField,
+        # return a count of 0
+        for item in groupFieldItems:
+            if item not in data['data'].keys():
+                data['data'][item] = {'count': 0}
 
         return data
 
@@ -108,7 +111,7 @@ class TimeToCloseService(object):
                                                   endDate=endDate,
                                                   ncList=ncList,
                                                   requestTypes=requestTypes)
-        return self.ttc('requesttype', filters)
+        return self.ttc('requesttype', requestTypes, filters)
 
     async def get_ttc_comparison(self,
                                  startDate=None,
@@ -155,12 +158,12 @@ class TimeToCloseService(object):
             if district == 'nc':
                 common['ncList'] = items
                 filters = self.dataAccess.standardFilters(**common)
-                return self.ttc('ncname', filters)
+                return self.ttc('ncname', items, filters)
 
             elif district == 'cc':
                 common['cdList'] = items
                 filters = self.dataAccess.standardFilters(**common)
-                return self.ttc('cd', filters)
+                return self.ttc('cd', items, filters)
 
         set1data = get_data(set1['district'], set1['list'])
         set2data = get_data(set2['district'], set2['list'])
