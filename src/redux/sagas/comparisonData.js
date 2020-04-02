@@ -129,6 +129,7 @@ function* getData() {
   const filters = yield getFilters();
   try {
     const data = yield call(getChartData, filters);
+    data.chart = filters.chart;
     yield put(getComparisonDataSuccess(data));
   } catch (e) {
     yield put(getComparisonDataFailure(e));

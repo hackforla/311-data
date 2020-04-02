@@ -22,6 +22,7 @@ const initialState = {
   isLoading: false,
   error: null,
   lastUpdated: null,
+  chart: null,
   counts: {
     set1: {
       district: '',
