@@ -5,7 +5,12 @@ import {
   updateRequestType,
   selectAllRequestTypes,
   deselectAllRequestTypes,
-} from '../../../redux/reducers/filters';
+} from '@reducers/filters';
+import {
+  updateComparisonRequestType,
+  selectAllComparisonRequestTypes,
+  deselectAllComparisonRequestTypes,
+} from '@reducers/comparisonFilters';
 
 import Checkbox from '../../common/Checkbox';
 import Icon from '../../common/Icon';
@@ -75,14 +80,20 @@ const RequestItem = ({
 );
 
 const RequestTypeSelector = ({
+  comparison,
   requestTypes,
+  comparisonRequestTypes,
   selectType,
   selectAll,
   deselectAll,
+  selectComparisonType,
+  selectAllComparison,
+  deselectAllComparison,
 }) => {
   const handleItemClick = e => {
+    const dispatchSelect = comparison ? selectComparisonType : selectType;
     const type = e.target.value;
-    selectType(type);
+    dispatchSelect(type);
   };
 
   const renderRequestItems = items => items.map(type => {
@@ -94,11 +105,19 @@ const RequestTypeSelector = ({
         displayName={item.displayName}
         abbrev={item.abbrev}
         handleClick={handleItemClick}
-        selected={requestTypes[type]}
+        selected={comparison ? comparisonRequestTypes[type] : requestTypes[type]}
         color={item.color}
       />
     );
   });
+
+  const handleSelectAll = () => {
+    const requests = comparison ? comparisonRequestTypes : requestTypes;
+    const dispatchSelectAll = comparison ? selectAllComparison : selectAll;
+    const dispatchDeselectAll = comparison ? deselectAllComparison : deselectAll;
+
+    return (requests.All ? dispatchDeselectAll : dispatchSelectAll);
+  };
 
   return (
     <div id="type-selector-container" style={{ color: COLORS.FONTS }}>
@@ -138,8 +157,8 @@ const RequestTypeSelector = ({
                 value="all"
                 size="small"
                 style={{ paddingLeft: '10px' }}
-                handleClick={requestTypes.All ? deselectAll : selectAll}
-                checked={requestTypes.All}
+                handleClick={handleSelectAll()}
+                checked={comparison ? comparisonRequestTypes.All : requestTypes.All}
               />
             </span>
             <span className="has-text-weight-medium">
@@ -158,12 +177,16 @@ const RequestTypeSelector = ({
 
 const mapStateToProps = state => ({
   requestTypes: state.filters.requestTypes,
+  comparisonRequestTypes: state.comparisonFilters.requestTypes,
 });
 
 const mapDispatchToProps = dispatch => ({
   selectType: type => dispatch(updateRequestType(type)),
   selectAll: () => dispatch(selectAllRequestTypes()),
   deselectAll: () => dispatch(deselectAllRequestTypes()),
+  selectComparisonType: type => dispatch(updateComparisonRequestType(type)),
+  selectAllComparison: () => dispatch(selectAllComparisonRequestTypes()),
+  deselectAllComparison: () => dispatch(deselectAllComparisonRequestTypes()),
 });
 
 export default connect(
@@ -193,14 +216,20 @@ RequestTypeSelector.propTypes = {
   requestTypes: PropTypes.shape({
     All: PropTypes.bool,
   }),
-  selectType: PropTypes.func,
-  selectAll: PropTypes.func,
-  deselectAll: PropTypes.func,
+  comparisonRequestTypes: PropTypes.shape({
+    All: PropTypes.bool,
+  }),
+  selectType: PropTypes.func.isRequired,
+  selectAll: PropTypes.func.isRequired,
+  deselectAll: PropTypes.func.isRequired,
+  selectComparisonType: PropTypes.func.isRequired,
+  selectAllComparison: PropTypes.func.isRequired,
+  deselectAllComparison: PropTypes.func.isRequired,
+  comparison: PropTypes.bool,
 };
 
 RequestTypeSelector.defaultProps = {
   requestTypes: null,
-  selectType: () => null,
-  selectAll: () => null,
-  deselectAll: () => null,
+  comparisonRequestTypes: null,
+  comparison: false,
 };
