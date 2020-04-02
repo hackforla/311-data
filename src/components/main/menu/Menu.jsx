@@ -62,10 +62,10 @@ const Menu = ({
         <Route path="/comparison">
           <div className="menu-content">
             <h1>Comparison Tool</h1>
-            <DateSelector />
+            <DateSelector comparison />
             <DistrictSelector />
             <ChartSelector />
-            <RequestTypeSelector />
+            <RequestTypeSelector comparison />
             <Submit />
           </div>
         </Route>
