@@ -46,11 +46,11 @@ const initialState = {
     bins: [],
     set1: {
       district: '',
-      counts: [],
+      counts: {},
     },
     set2: {
       district: '',
-      counts: [],
+      counts: {},
     },
   },
 };

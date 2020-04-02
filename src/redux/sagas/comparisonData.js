@@ -79,7 +79,8 @@ function* getChartData(filters) {
         timeToClose: data.data,
       };
     }
-    case 'frequency': {
+    case 'frequency':
+    case 'request': {
       const data = yield call(getFrequencyComparison, filters);
       return {
         lastUpdated: data.lastPulled,

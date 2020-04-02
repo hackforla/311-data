@@ -5,11 +5,13 @@ import clx from 'classnames';
 import Contact311Comparison from './Contact311Comparison';
 import TimeToCloseComparison from './TimeToCloseComparison';
 import FrequencyComparison from './FrequencyComparison';
+import TotalRequestsComparison from './TotalRequestsComparison';
 
 const Comparison = ({
   fullWidth,
 }) => (
   <div className={clx('comparison', { 'full-width': fullWidth })}>
+    <TotalRequestsComparison />
     <FrequencyComparison />
     <Contact311Comparison />
     <TimeToCloseComparison />
