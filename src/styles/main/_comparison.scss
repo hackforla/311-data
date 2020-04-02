@@ -25,6 +25,10 @@
       top: $chart-padding + 14px;
       right: $chart-padding + 11px;
     }
+    &.frequency-comparison .chart-export-select {
+      top: $chart-padding + 14px;
+      right: $chart-padding + 7px;
+    }
   }
 
   .contact-311-comparison {
