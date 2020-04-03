@@ -16,6 +16,8 @@ import {
   setErrorModal,
 } from '../reducers/ui';
 
+import { CITY_COUNCILS } from '@components/common/CONSTANTS';
+
 /* /////////// INDIVIDUAL API CALLS /////////// */
 
 const BASE_URL = process.env.DB_URL;
@@ -104,22 +106,25 @@ function* getFilters() {
     comparison,
   } = yield select(getState, 'comparisonFilters');
 
+  // convert cc names to numeric ids
+  const convertIfCC = set => {
+    if (set.district !== 'cc') return set;
+    
+    return {
+      district: set.district,
+      list: set.list.map(name => CITY_COUNCILS.find(cc => cc.name === name)?.id),
+    };
+  };
+
+  const { chart, set1, set2 } = comparison;
+
   return {
     startDate,
     endDate,
     requestTypes: Object.keys(requestTypes).filter(req => req !== 'All' && requestTypes[req]),
-    ...comparison,
-
-    /* DELETE THESE LINES WHEN SET1/SET2 FILTERS ARE HOOKED UP */
-    set1: {
-      district: 'nc',
-      list: ['ARLETA NC', 'ARROYO SECO NC', 'VOICES OF 90037', 'ZAPATA KING NC'],
-    },
-    set2: {
-      district: 'cc',
-      list: [1, 2, 3, 7, 8],
-    },
-    /* /////////////////////////////////////////////////////// */
+    chart,
+    set1: convertIfCC(set1),
+    set2: convertIfCC(set2),
   };
 }
 

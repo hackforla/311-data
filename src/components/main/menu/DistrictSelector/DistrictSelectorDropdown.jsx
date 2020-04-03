@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'proptypes';
 
-import { updateNC } from '@reducers/filters';
+import { updateComparisonList } from '@reducers/comparisonFilters';
 
 import {
   COUNCILS,
@@ -12,7 +12,8 @@ import Checkbox from '@components/common/Checkbox';
 
 const DistrictSelectorDropdown = ({
   district,
-  updateNCList,
+  set,
+  updateCompList,
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [districtList, setDistrictList] = useState(null);
@@ -114,7 +115,7 @@ const DistrictSelectorDropdown = ({
     const newNCList = Object.keys(newSelectedDistrictList).filter(c => newSelectedDistrictList[c] && c !== 'all');
 
     setSelectedDistrictList(newSelectedDistrictList);
-    updateNCList(newNCList);
+    updateCompList(set, newNCList);
   };
 
   return (
@@ -206,15 +207,17 @@ const DistrictSelectorDropdown = ({
 };
 
 const mapDispatchToProps = dispatch => ({
-  updateNCList: council => dispatch(updateNC(council)),
+  updateCompList: (set, list) => dispatch(updateComparisonList(set, list)),
 });
 
 DistrictSelectorDropdown.propTypes = {
-  updateNCList: propTypes.func,
+  district: propTypes.string.isRequired,
+  set: propTypes.string.isRequired,
+  updateCompList: propTypes.func,
 };
 
 DistrictSelectorDropdown.defaultProps = {
-  updateNCList: () => null,
+  updateCompList: () => null,
 };
 
 export default connect(null, mapDispatchToProps)(DistrictSelectorDropdown);

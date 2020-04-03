@@ -41,7 +41,7 @@ export const updateNC = council => ({
 });
 
 export const updateComparisonList = (set, list) => ({
-  type: types.UPDATE_COMPARISON_SELECTION,
+  type: types.UPDATE_COMPARISON_LIST,
   payload: {
     set,
     list,
@@ -72,7 +72,6 @@ const allRequestTypes = value => (
 const initialState = {
   startDate: null,
   endDate: null,
-  councils: [],
   comparison: {
     chart: '',
     set1: {
@@ -119,11 +118,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         requestTypes: initialState.requestTypes,
-      };
-    case types.UPDATE_NEIGHBORHOOD_COUNCIL:
-      return {
-        ...state,
-        councils: action.payload,
       };
     case types.UPDATE_COMPARISON_LIST:
       return {

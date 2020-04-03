@@ -8,7 +8,7 @@ import Dropdown from '@components/common/Dropdown';
 import {
   DISTRICT_TYPES,
 } from '@components/common/CONSTANTS';
-import { updateComparisonDistrict } from '@reducers/filters';
+import { updateComparisonDistrict } from '@reducers/comparisonFilters';
 
 import DistrictSelectorDropdown from './DistrictSelectorDropdown';
 
@@ -54,7 +54,7 @@ const DistrictSelectorModal = ({
         />
         <br />
         {comparison[set].district && (
-          <DistrictSelectorDropdown district={comparison[set].district} />
+          <DistrictSelectorDropdown district={comparison[set].district} set={set} />
         )}
         <br />
         <div className="has-text-centered">

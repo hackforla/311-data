@@ -5,7 +5,7 @@ import PropTypes from 'proptypes';
 
 import Icon from '@components/common/Icon';
 import HoverOverInfo from '@components/common/HoverOverInfo';
-import { updateComparisonChart } from '@reducers/filters';
+import { updateComparisonChart } from '@reducers/comparisonFilters';
 
 const DistrictSelector = ({
   updateChart,

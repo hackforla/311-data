@@ -40,27 +40,6 @@ export const updateNC = council => ({
   payload: council,
 });
 
-export const updateComparisonList = (set, list) => ({
-  type: types.UPDATE_COMPARISON_SELECTION,
-  payload: {
-    set,
-    list,
-  },
-});
-
-export const updateComparisonDistrict = (set, district) => ({
-  type: types.UPDATE_COMPARISON_DISTRICT,
-  payload: {
-    set,
-    district,
-  },
-});
-
-export const updateComparisonChart = chart => ({
-  type: types.UPDATE_COMPARISON_CHART,
-  payload: chart,
-});
-
 // set all types to either true or false
 const allRequestTypes = value => (
   Object.keys(REQUEST_TYPES).reduce((acc, type) => {
