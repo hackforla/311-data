@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import COLORS from '../../../styles/COLORS';
 
 const Header = () => {
@@ -33,19 +33,19 @@ const Header = () => {
       <div id="navbar" className="navbar-menu">
         <div className="navbar-end">
           <div className="navbar-item">
-            <Link to="/comparison" style={cta2Style}>
+            <NavLink to="/comparison" activeClassName="navbar-selected" style={cta2Style}>
               Comparison Tool
-            </Link>
+            </NavLink>
           </div>
           <div className="navbar-item">
-            <Link to="/about" style={backgroundStyle}>
+            <NavLink to="/about" activeClassName="navbar-selected" style={backgroundStyle}>
               About 311 Data
-            </Link>
+            </NavLink>
           </div>
           <div className="navbar-item">
-            <Link to="/contact" style={backgroundStyle}>
+            <NavLink to="/contact" activeClassName="navbar-selected" style={backgroundStyle}>
               Contact Us
-            </Link>
+            </NavLink>
           </div>
         </div>
       </div>
