@@ -81,8 +81,8 @@ class TimeToCloseService(object):
     async def get_ttc(self,
                       startDate=None,
                       endDate=None,
-                      ncList=[],
-                      requestTypes=[]):
+                      requestTypes=[],
+                      ncList=[]):
         """
         For each requestType, returns the statistics necessary to generate
         a boxplot of the number of days it took to close the requests.
@@ -107,10 +107,9 @@ class TimeToCloseService(object):
         }
         """
 
-        filters = self.dataAccess.standardFilters(startDate=startDate,
-                                                  endDate=endDate,
-                                                  ncList=ncList,
-                                                  requestTypes=requestTypes)
+        filters = self.dataAccess.standardFilters(
+            startDate, endDate, requestTypes, ncList)
+
         return self.ttc('requesttype', requestTypes, filters)
 
     async def get_ttc_comparison(self,
@@ -157,12 +156,12 @@ class TimeToCloseService(object):
 
             if district == 'nc':
                 common['ncList'] = items
-                filters = self.dataAccess.standardFilters(**common)
+                filters = self.dataAccess.comparisonFilters(**common)
                 return self.ttc('ncname', items, filters)
 
             elif district == 'cc':
                 common['cdList'] = items
-                filters = self.dataAccess.standardFilters(**common)
+                filters = self.dataAccess.comparisonFilters(**common)
                 return self.ttc('cd', items, filters)
 
         set1data = get_data(set1['district'], set1['list'])

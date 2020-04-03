@@ -79,8 +79,8 @@ class FrequencyService(object):
     async def get_frequency(self,
                             startDate=None,
                             endDate=None,
-                            ncList=[],
-                            requestTypes=[]):
+                            requestTypes=[],
+                            ncList=[]):
 
         """
         Given a date range, covers the range with equal-length date bins, and
@@ -122,7 +122,7 @@ class FrequencyService(object):
         bins, start, end = self.get_bins(startDate, endDate)
 
         filters = self.dataAccess.standardFilters(
-            start, end, ncList, requestTypes)
+            start, end, requestTypes, ncList)
 
         return self.frequency('requesttype', requestTypes, bins, filters)
 
@@ -142,12 +142,12 @@ class FrequencyService(object):
 
             if district == 'nc':
                 common['ncList'] = items
-                filters = self.dataAccess.standardFilters(**common)
+                filters = self.dataAccess.comparisonFilters(**common)
                 return self.frequency('ncname', items, bins, filters)
 
             elif district == 'cc':
                 common['cdList'] = items
-                filters = self.dataAccess.standardFilters(**common)
+                filters = self.dataAccess.comparisonFilters(**common)
                 return self.frequency('cd', items, bins, filters)
 
         bins, start, end = self.get_bins(startDate, endDate)

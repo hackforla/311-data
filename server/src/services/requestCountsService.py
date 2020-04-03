@@ -8,8 +8,8 @@ class RequestCountsService(object):
     async def get_req_counts(self,
                              startDate=None,
                              endDate=None,
-                             ncList=[],
                              requestTypes=[],
+                             ncList=[],
                              countFields=[]):
         """
         For each countField, returns the counts of each distinct value
@@ -39,7 +39,7 @@ class RequestCountsService(object):
         """
 
         filters = self.dataAccess.standardFilters(
-            startDate, endDate, ncList, requestTypes)
+            startDate, endDate, requestTypes, ncList)
 
         return self.dataAccess.aggregateQuery(countFields, filters)
 
@@ -111,11 +111,11 @@ class RequestCountsService(object):
 
             if district == 'nc':
                 common['ncList'] = items
-                return self.dataAccess.standardFilters(**common)
+                return self.dataAccess.comparisonFilters(**common)
 
             elif district == 'cc':
                 common['cdList'] = items
-                return self.dataAccess.standardFilters(**common)
+                return self.dataAccess.comparisonFilters(**common)
 
         filters = get_filters(set1['district'], set1['list'])
         set1data = self.dataAccess.aggregateQuery(countFields, filters)
