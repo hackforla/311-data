@@ -20,11 +20,13 @@ const TimeToCloseComparison = ({
   };
 
   const getBoxes = ({ district, data }) => (
-    Object.keys(data).map(name => ({
-      label: boxLabels[district](name),
-      color: boxColors[district],
-      stats: { ...data[name], outliers: [] },
-    }))
+    Object.keys(data)
+      .filter(name => data[name].count !== 0)
+      .map(name => ({
+        label: boxLabels[district](name),
+        color: boxColors[district],
+        stats: { ...data[name], outliers: [] },
+      }))
   );
 
   const boxes = [

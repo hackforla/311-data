@@ -9,17 +9,19 @@ const TimeToClose = ({
 }) => {
   // // DATA ////
 
-  const boxes = Object.keys(timeToClose).map(key => {
-    const requestType = REQUEST_TYPES[key];
-    return {
-      abbrev: requestType?.abbrev,
-      color: requestType?.color,
-      stats: {
-        ...timeToClose[key],
-        outliers: [],
-      },
-    };
-  });
+  const boxes = Object.keys(timeToClose)
+    .filter(key => timeToClose[key].count !== 0)
+    .map(key => {
+      const requestType = REQUEST_TYPES[key];
+      return {
+        abbrev: requestType?.abbrev,
+        color: requestType?.color,
+        stats: {
+          ...timeToClose[key],
+          outliers: [],
+        },
+      };
+    });
 
   const chartData = {
     labels: boxes.map(b => b.abbrev),
