@@ -1,105 +1,20 @@
 import React from 'react';
 import PropTypes from 'proptypes';
+import clx from 'classnames';
 import ChartJS from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot';
 import ChartJSDataLabels from 'chartjs-plugin-datalabels';
-import clx from 'classnames';
-import COLORS from '@styles/COLORS';
 import ChartExportSelect from '@components/export/ChartExportSelect';
+import defaults from './defaults';
+import { chartArea } from './plugins';
 
-// ///////// CHARTJS DEFAULTS ///////////
+/* ///////// CHARTJS CONFIG ////////// */
 
-ChartJS.helpers.merge(ChartJS.defaults, {
-  global: {
-    defaultFontColor: COLORS.FONTS,
-    defaultFontFamily: 'Roboto, sans-serif',
-    animation: false,
-    title: {
-      display: true,
-      fontFamily: '"Open Sans", sans-serif',
-      fontSize: 20,
-      padding: 10,
-    },
-    legend: {
-      display: false,
-    },
-    tooltips: {
-      xPadding: 10,
-      yPadding: 10,
-      titleFontFamily: '"Open Sans", sans-serif',
-      titleFontColor: COLORS.FONTS,
-      titleFontSize: 14,
-      titleFontWeight: 'bold',
-      bodyFontFamily: 'Roboto, sans-serif',
-      bodyFontSize: 14,
-      bodyFontColor: COLORS.FONTS,
-      footerFontFamily: 'Roboto, sans-serif',
-      footerFontSize: 14,
-      footerFontColor: COLORS.FONTS,
-      footerFontWeight: 'bold',
-      backgroundColor: '#C4C4C4',
-      cornerRadius: 4,
-    },
-    plugins: {
-      datalabels: {
-        color: COLORS.FONTS,
-        font: {
-          size: 14,
-        },
-      },
-      chartArea: {
-        chartBgColor: COLORS.BACKGROUND,
-        pieBorderColor: COLORS.FORMS.STROKE,
-      },
-    },
-  },
-  scale: {
-    scaleLabel: {
-      display: true,
-      fontFamily: '"Open Sans", sans-serif',
-      fontSize: 14,
-    },
-  },
-});
-
-// ///////// CHARTJS PLUGINS ///////////
-
-// add background color to charts
-// https://stackoverflow.com/questions/37144031/background-colour-of-line-charts-in-chart-js?rq=1
-ChartJS.pluginService.register({
-  beforeDraw: chart => {
-    const { chartArea: config } = chart.config.options.plugins;
-    if (!config) return;
-
-    const { chartBgColor } = config;
-    const { ctx } = chart.chart;
-    const { chartArea } = chart;
-    const { padding } = chart.config.options.layout;
-    const pad = typeof padding === 'number' ? {
-      top: padding,
-      bottom: padding,
-      left: padding,
-      right: padding,
-    } : padding;
-
-    ctx.save();
-
-    const left = chartArea.left - pad.left;
-    const top = chartArea.top - pad.top;
-    const right = chartArea.right - chartArea.left + pad.left + pad.right;
-    const bottom = chartArea.bottom - chartArea.top + pad.top + pad.bottom;
-
-    ctx.fillStyle = chartBgColor;
-    ctx.fillRect(left, top, right, bottom);
-
-    ctx.restore();
-  },
-});
-
-// opt-in only
+ChartJS.helpers.merge(ChartJS.defaults, defaults);
+ChartJS.plugins.register(chartArea);
 ChartJS.plugins.unregister(ChartJSDataLabels);
 
-// //////////// COMPONENT //////////////
+/* //////////// COMPONENT //////////// */
 
 class Chart extends React.Component {
   constructor(props) {
