@@ -1,7 +1,8 @@
+export default {};
 
 // add background color to charts
 // https://stackoverflow.com/questions/37144031/background-colour-of-line-charts-in-chart-js?rq=1
-export const chartArea = {
+export const chartAreaPlugin = {
   beforeDraw: chart => {
     const { chartArea: config } = chart.config.options.plugins;
     if (!config) return;

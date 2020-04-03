@@ -15,53 +15,53 @@ const PinPopup = ({
   status,
   ncName,
 }) => (
-    <Popup className="pin-popup">
-      { createdDate ? (
-        <>
-          <p className="pin-popup-type has-text-weight-bold">
-            {displayName}
-            &nbsp;
-            [
-            <span className="pin-popup-type-abbrev" style={{ color }}>
-              {abbrev}
-            </span>
-            ]
+  <Popup className="pin-popup">
+    { createdDate ? (
+      <>
+        <p className="pin-popup-type has-text-weight-bold">
+          {displayName}
+          &nbsp;
+          [
+          <span className="pin-popup-type-abbrev" style={{ color }}>
+            {abbrev}
+          </span>
+          ]
+        </p>
+        <p className="pin-popup-ncname">{ncName}</p>
+        <p className="pin-popup-address has-text-weight-bold">{address}</p>
+        <div className="pin-popup-status">
+          <p>
+            Reported on&nbsp;
+            {moment.unix(createdDate).format('l')}
           </p>
-          <p className="pin-popup-ncname">{ncName}</p>
-          <p className="pin-popup-address has-text-weight-bold">{address}</p>
-          <div className="pin-popup-status">
-            <p>
-              Reported on&nbsp;
-              {moment.unix(createdDate).format('l')}
-            </p>
-            {
-              closedDate ? (
+          {
+            closedDate ? (
+              <p>
+                Closed on&nbsp;
+                {moment.unix(closedDate).format('l')}
+              </p>
+            ) : (
+              <>
                 <p>
-                  Closed on&nbsp;
-                  {moment.unix(closedDate).format('l')}
+                  Last updated on&nbsp;
+                  {moment.unix(updatedDate).format('l')}
                 </p>
-              ) : (
-                <>
-                  <p>
-                    Last updated on&nbsp;
-                    {moment.unix(updatedDate).format('l')}
-                  </p>
-                  <p>
-                    Status:&nbsp;
-                    {status}
-                  </p>
-                </>
-              )
-            }
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="loader" />
-          <p>Loading...</p>
-        </>
-      )}
-    </Popup>
+                <p>
+                  Status:&nbsp;
+                  {status}
+                </p>
+              </>
+            )
+          }
+        </div>
+      </>
+    ) : (
+      <>
+        <div className="loader" />
+        <p>Loading...</p>
+      </>
+    )}
+  </Popup>
 );
 
 

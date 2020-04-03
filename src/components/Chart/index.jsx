@@ -6,12 +6,12 @@ import 'chartjs-chart-box-and-violin-plot';
 import ChartJSDataLabels from 'chartjs-plugin-datalabels';
 import ChartExportSelect from '@components/export/ChartExportSelect';
 import defaults from './defaults';
-import { chartArea } from './plugins';
+import { chartAreaPlugin } from './plugins';
 
 /* ///////// CHARTJS CONFIG ////////// */
 
 ChartJS.helpers.merge(ChartJS.defaults, defaults);
-ChartJS.plugins.register(chartArea);
+ChartJS.plugins.register(chartAreaPlugin);
 ChartJS.plugins.unregister(ChartJSDataLabels);
 
 /* //////////// COMPONENT //////////// */
@@ -96,7 +96,7 @@ class Chart extends React.Component {
 
     const exportStyle = {
       position: 'absolute',
-      right: right,
+      right,
       top: top - 4,
       transform: 'translateY(-100%)',
     };
