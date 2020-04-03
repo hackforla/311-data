@@ -1,0 +1,11 @@
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+jobs:
+  curl:
+    runs-on: ubuntu-latest
+    steps:
+    - name: curl
+      uses: wei/curl@master
+      with:
+        args: ${{secrets.DB_URL}}/ingest?years=2015,2016,2017,2018,2019 &
