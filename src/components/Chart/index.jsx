@@ -20,7 +20,7 @@ class Chart extends React.Component {
   constructor(props) {
     super(props);
     this.canvasRef = React.createRef();
-    this.state = { rightEdge: null };
+    this.state = { top: 0, right: 0 };
   }
 
   componentDidMount() {
@@ -38,7 +38,7 @@ class Chart extends React.Component {
       options,
       plugins: datalabels ? [ChartJSDataLabels] : [],
     });
-    this.setRightEdge();
+    this.setTopRight();
   }
 
   componentDidUpdate(prevProps) {
@@ -48,25 +48,30 @@ class Chart extends React.Component {
       this.chart.data = data;
       this.chart.options = options;
       this.chart.update();
-      this.setRightEdge();
+      this.setTopRight();
     }
   }
 
-  // calculate right edge of chart area so export select
-  // can be placed correctly
-  setRightEdge = () => {
+  // calculate top-right corner of chart to position export select
+  setTopRight = () => {
     const { width, chartArea, config } = this.chart;
     const { layout } = config.options;
 
+    let paddingTop = 0;
     let paddingRight = 0;
+
     if (layout) {
+      paddingTop = typeof layout.padding === 'number'
+        ? layout.padding
+        : layout.padding?.top || 0;
       paddingRight = typeof layout.padding === 'number'
         ? layout.padding
         : layout.padding?.right || 0;
     }
 
     this.setState({
-      rightEdge: width - chartArea.right - paddingRight,
+      top: chartArea.top - paddingTop,
+      right: width - chartArea.right - paddingRight,
     });
   }
 
@@ -80,7 +85,7 @@ class Chart extends React.Component {
       title,
     } = this.props;
 
-    const { rightEdge } = this.state;
+    const { top, right } = this.state;
 
     const canvasWrapStyle = {
       position: 'relative',
@@ -89,17 +94,25 @@ class Chart extends React.Component {
         : `${height}px`,
     };
 
+    const exportStyle = {
+      position: 'absolute',
+      right: right,
+      top: top - 4,
+      transform: 'translateY(-100%)',
+    };
+
     return (
       <div className={clx('chart', id)}>
         { title && <h1>{ title }</h1> }
         <div style={canvasWrapStyle}>
           { exportable && (
-            <ChartExportSelect
-              chartId={id}
-              chartTitle={title || options.title?.text}
-              exportData={exportData}
-              style={{ right: rightEdge }}
-            />
+            <div style={exportStyle}>
+              <ChartExportSelect
+                chartId={id}
+                chartTitle={title || options.title?.text}
+                exportData={exportData}
+              />
+            </div>
           )}
           <canvas ref={this.canvasRef} />
         </div>

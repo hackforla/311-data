@@ -1,10 +1,4 @@
 .chart {
   position: relative;
   padding: $chart-padding;
-
-  .chart-export-select {
-    position: absolute;
-    top: $chart-padding - 6px;
-    z-index: 1;
-  }
 }

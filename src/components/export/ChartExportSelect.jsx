@@ -8,7 +8,6 @@ const ChartExportSelect = ({
   chartId,
   chartTitle,
   exportData,
-  style,
 }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,7 +19,6 @@ const ChartExportSelect = ({
       onFocus={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       onBlur={() => setOpen(false)}
-      style={style}
     >
       <LoaderButton
         label="Export"
@@ -75,12 +73,10 @@ ChartExportSelect.propTypes = {
   chartId: PropTypes.string,
   chartTitle: PropTypes.string,
   exportData: PropTypes.func,
-  style: PropTypes.shape({}),
 };
 
 ChartExportSelect.defaultProps = {
   chartId: undefined,
   chartTitle: undefined,
   exportData: () => null,
-  style: undefined,
 };
