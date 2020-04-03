@@ -14,14 +14,7 @@ const PinPopup = ({
   closedDate,
   status,
   ncName,
-}) => {
-  // Converts unix timestamp to MM/DD/YYYY
-  // 1558945500 -> 5/27/2019
-  const created = moment.unix(createdDate).format('l');
-  const updated = moment.unix(updatedDate).format('l');
-  const closed = moment.unix(closedDate).format('l');
-
-  return (
+}) => (
     <Popup className="pin-popup">
       { createdDate ? (
         <>
@@ -39,19 +32,19 @@ const PinPopup = ({
           <div className="pin-popup-status">
             <p>
               Reported on&nbsp;
-              {created}
+              {moment.unix(createdDate).format('l')}
             </p>
             {
               closedDate ? (
                 <p>
                   Closed on&nbsp;
-                  {closed}
+                  {moment.unix(closedDate).format('l')}
                 </p>
               ) : (
                 <>
                   <p>
                     Last updated on&nbsp;
-                    {updated}
+                    {moment.unix(updatedDate).format('l')}
                   </p>
                   <p>
                     Status:&nbsp;
@@ -69,8 +62,8 @@ const PinPopup = ({
         </>
       )}
     </Popup>
-  );
-};
+);
+
 
 export default PinPopup;
 
