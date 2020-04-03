@@ -42,11 +42,8 @@
 
   .menu-content {
     padding: 16px;
-    overflow: scroll;
-    height: 100%;
-    &.with-tabs {
-      height: calc(100% - #{$tabs-height});
-    }
+    overflow: auto;
+    height: calc(100% - #{$tabs-height});
     h1 {
       margin-bottom: 8px;
     }
