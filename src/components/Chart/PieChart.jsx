@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'proptypes';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 import Chart from '.';
 
 const PieChart = ({
-  id,
   title,
   sectors,
   addLabels,
   exportable,
+  componentName,
+  pdfTemplateName,
 }) => {
   // // SET ORDER OF SECTORS ////
   // This weird code goes a long way towards ensuring that the sectors
@@ -30,7 +32,7 @@ const PieChart = ({
     altSectors[i].label = String.fromCharCode(65 + i) + altSectors[i].label;
   }
 
-  // // DATA ////
+  /* /// DATA /// */
 
   const total = altSectors.reduce((p, c) => p + c.value, 0);
 
@@ -58,6 +60,8 @@ const PieChart = ({
     }],
   };
 
+  /* /// EXPORT /// */
+
   const exportData = () => {
     const counts = chartData.datasets[0].data;
     const tot = counts.reduce((p, c) => p + c, 0);
@@ -72,7 +76,18 @@ const PieChart = ({
     };
   };
 
-  // // OPTIONS ////
+  const exportButton = exportable
+    ? (
+      <ChartExportSelect
+        componentName={componentName}
+        pdfTemplateName={pdfTemplateName}
+        exportData={exportData}
+        filename={title}
+      />
+    )
+    : null;
+
+  /* /// OPTIONS /// */
 
   const chartOptions = {
     title: {
@@ -97,14 +112,13 @@ const PieChart = ({
 
   return (
     <Chart
-      id={id}
       type="pie"
+      className="pie"
       title={title}
       data={chartData}
       options={chartOptions}
       datalabels
-      exportable={exportable}
-      exportData={exportData}
+      exportButton={exportButton}
     />
   );
 };
@@ -112,7 +126,6 @@ const PieChart = ({
 export default PieChart;
 
 PieChart.propTypes = {
-  id: PropTypes.string.isRequired,
   sectors: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string,
     value: PropTypes.number,
@@ -121,10 +134,14 @@ PieChart.propTypes = {
   title: PropTypes.string,
   addLabels: PropTypes.bool,
   exportable: PropTypes.bool,
+  componentName: PropTypes.string,
+  pdfTemplateName: PropTypes.string,
 };
 
 PieChart.defaultProps = {
   title: null,
   addLabels: false,
   exportable: true,
+  componentName: undefined,
+  pdfTemplateName: undefined,
 };

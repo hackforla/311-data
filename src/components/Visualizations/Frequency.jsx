@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from '@components/Chart';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const Frequency = ({
   frequency: { bins, counts },
 }) => {
   if (!bins || !counts) return null;
 
-  // // DATA ////
+  /* /// DATA /// */
 
   const chartData = {
     labels: bins.slice(0, -1).map(bin => moment(bin).format('MMM D')),
@@ -27,18 +28,26 @@ const Frequency = ({
     }),
   };
 
+  /* /// EXPORT /// */
+
   const exportData = () => ({
     header: bins.slice(0, -1).map(bin => moment(bin).format('MM/DD/YYYY')),
     rows: chartData.datasets.map(dataset => dataset.data),
     index: chartData.datasets.map(dataset => dataset.label),
   });
 
-  // // OPTIONS ////
+  const exportButton = (
+    <ChartExportSelect
+      componentName="Frequency"
+      pdfTemplateName="VisPage"
+      exportData={exportData}
+      filename="Frequency"
+    />
+  );
+
+  /* /// OPTIONS /// */
 
   const chartOptions = {
-    title: {
-      text: 'Frequency',
-    },
     aspectRatio: 11 / 8,
     scales: {
       xAxes: [{
@@ -73,11 +82,11 @@ const Frequency = ({
 
   return (
     <Chart
-      id="frequency"
+      title="Frequency"
       type="line"
       data={chartData}
       options={chartOptions}
-      exportData={exportData}
+      exportButton={exportButton}
     />
   );
 };

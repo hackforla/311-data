@@ -3,11 +3,12 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import Chart from '@components/Chart';
 import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const TimeToCloseComparison = ({
   timeToClose: { set1, set2 },
 }) => {
-  // // DATA ////
+  /* /// DATA /// */
 
   const boxColors = {
     nc: DISTRICT_TYPES.find(t => t.id === 'nc')?.color,
@@ -45,6 +46,8 @@ const TimeToCloseComparison = ({
     }],
   };
 
+  /* /// EXPORT /// */
+
   const exportData = () => {
     const header = [
       'min', 'q1', 'median', 'q3', 'max',
@@ -58,12 +61,18 @@ const TimeToCloseComparison = ({
     };
   };
 
-  // // OPTIONS ////
+  const exportButton = (
+    <ChartExportSelect
+      componentName="TimeToCloseComparison"
+      pdfTemplateName="ComparisonPage"
+      exportData={exportData}
+      filename="Time to Close"
+    />
+  );
+
+  /* /// OPTIONS /// */
 
   const chartOptions = {
-    title: {
-      text: 'Time to Close',
-    },
     maintainAspectRatio: false,
     scales: {
       xAxes: [{
@@ -92,12 +101,12 @@ const TimeToCloseComparison = ({
 
   return (
     <Chart
-      id="time-to-close-comparison"
+      title="Time to Close"
       type="horizontalBoxplot"
       data={chartData}
       options={chartOptions}
       height={Math.max(160, 130 + (chartData.labels.length * 40))}
-      exportData={exportData}
+      exportButton={exportButton}
     />
   );
 };

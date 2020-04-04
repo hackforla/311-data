@@ -18,100 +18,29 @@
     }
   }
 
-  h1 {
-    text-align: center;
-    margin-bottom: 8px;
-  }
-
-  .info-section {
-    max-width: $vis-content-max-width;
-    margin: 0 auto;
-    padding: 30px 50px;
-  }
-
-  .outline {
-    border: 1px solid $brand-stroke-color;
-    padding: 20px;
-  }
-
-  .criteria {
-    &-type {
-      display: inline-block;
-      margin-right: 10px;
-      font-size: 18px;
-    }
-    .council-districts {
-      margin-top: 8px;
-      #btn-toggle-show-more {
-        color: $brand-main-color;
-        display: inline-block;
-        margin: 0 0 0 6px;
-        cursor: pointer;
-        background-color: transparent;
-        border: 0;
-        font-size: 16px;
-        line-height: 24px;
-        padding: 0;
-        height: auto;
-        &:focus:not(:active) {
-          box-shadow: none;
-        }
+  .chart-extras {
+    padding: 35px 50px 30px;
+    .chart-extra {
+      &:not(:last-child) {
+        margin-bottom: 30px;
       }
-    }
-  }
-
-  .legend {
-    margin-top: 30px;
-    .outline {
-      padding-bottom: 10px;
-      column-width: 200px;
-    }
-    &-item {
-      .circle {
-        display: inline-block;
-        width: 14px;
-        height: 14px;
-        border-radius: 8px;
-        margin-right: 8px;
-      }
-      display: inline-block;
-      margin: 0 15px 10px 0;
-    }
-  }
-
-  .number-of-requests {
-    margin-top: 30px;
-    .requests-box {
-      display: inline-block;
-      margin: 0 auto;
-      border: 4px grey solid;
-      border-color: $brand-stroke-color;
-      padding: 8px 16px;
     }
   }
 
   .chart-row {
     background-color: #F1F1F1;
-
-    &:not(.pies) {
-      padding: 20px 50px 20px;
-      border-bottom: 4px white solid;
-      .chart {
-        margin: 0 auto;
-        max-width: $vis-content-max-width;
-      }
+    padding: 30px 50px;
+    &:not(:last-child) {
+      margin-bottom: 4px;
     }
 
     &.pies {
-      padding: 10px 0 50px;
       text-align: center;
+      padding-top: 20px;
       .chart {
-        width: 420px;
+        width: ($chart-max-width - 30px) / 2;
         display: inline-block;
-        margin: 20px 10px 0 10px;
-        canvas {
-          border: 1px solid $brand-stroke-color;
-        }
+        margin: 15px 15px;
       }
     }
   }

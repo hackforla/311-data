@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import Chart from '@components/Chart';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const FrequencyComparison = ({
   bins,
   set1,
   set2,
 }) => {
-  // // DATA ////
+  /* /// DATA /// */
 
   const getDataSet = set => {
     const { district, counts } = set;
@@ -42,18 +43,26 @@ const FrequencyComparison = ({
     ],
   };
 
+  /* /// EXPORT /// */
+
   const exportData = () => ({
     header: bins.slice(0, -1).map(bin => moment(bin).format('MM/DD/YYYY')),
     rows: chartData.datasets.map(dataset => dataset.data),
     index: chartData.datasets.map(dataset => dataset.label),
   });
 
-  // // OPTIONS ////
+  const exportButton = (
+    <ChartExportSelect
+      componentName="FrequencyComparison"
+      pdfTemplateName="ComparisonPage"
+      exportData={exportData}
+      filename="Frequency"
+    />
+  );
+
+  /* /// OPTIONS /// */
 
   const chartOptions = {
-    title: {
-      text: 'Frequency',
-    },
     aspectRatio: 11 / 8,
     scales: {
       xAxes: [{
@@ -88,11 +97,11 @@ const FrequencyComparison = ({
 
   return (
     <Chart
-      id="frequency-comparison"
+      title="Frequency"
       type="line"
       data={chartData}
       options={chartOptions}
-      exportData={exportData}
+      exportButton={exportButton}
     />
   );
 };

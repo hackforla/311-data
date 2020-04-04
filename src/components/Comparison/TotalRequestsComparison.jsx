@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import Chart from '@components/Chart';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const TotalRequestsComparison = ({
   bins,
   set1,
   set2,
 }) => {
-  // // DATA ////
+  /* /// DATA /// */
 
   const getDataSet = set => {
     const { district, counts } = set;
@@ -42,18 +43,26 @@ const TotalRequestsComparison = ({
     ],
   };
 
+  /* /// EXPORT /// */
+
   const exportData = () => ({
     header: bins.slice(0, -1).map(bin => moment(bin).format('MM/DD/YYYY')),
     rows: chartData.datasets.map(dataset => dataset.data),
     index: chartData.datasets.map(dataset => dataset.label),
   });
 
-  // // OPTIONS ////
+  const exportButton = (
+    <ChartExportSelect
+      componentName="TotalRequestsComparison"
+      pdfTemplateName="ComparisonPage"
+      exportData={exportData}
+      filename="Total Requests"
+    />
+  );
+
+  /* /// OPTIONS /// */
 
   const chartOptions = {
-    title: {
-      text: 'Total Requests',
-    },
     aspectRatio: 11 / 8,
     scales: {
       xAxes: [{
@@ -88,11 +97,11 @@ const TotalRequestsComparison = ({
 
   return (
     <Chart
-      id="total-requests-comparison"
+      title="Total Requests"
       type="bar"
       data={chartData}
       options={chartOptions}
-      exportData={exportData}
+      exportButton={exportButton}
     />
   );
 };

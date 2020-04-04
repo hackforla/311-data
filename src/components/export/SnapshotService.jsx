@@ -1,5 +1,48 @@
+/* eslint-disable react/display-name */
+/* eslint-disable react/prop-types */
+
 import React from 'react';
-import { canvasToImage, elementToImage } from './utils';
+import Criteria from '@components/chartExtras/Criteria';
+import Legend from '@components/chartExtras/Legend';
+import ComparisonCriteria from '@components/chartExtras/ComparisonCriteria';
+import ComparisonLegend from '@components/chartExtras/ComparisonLegend';
+import { elementToImage } from './utils';
+
+/* ////////////////// TEMPLATES ///////////////// */
+
+const templates = {
+  ChartImage: ({ children }) => (
+    <div className="export-template chart-image">
+      { children }
+    </div>
+  ),
+  VisPage: ({ children }) => (
+    <div className="export-template">
+      <Criteria />
+      <Legend />
+      { children }
+    </div>
+  ),
+  VisPageNoLegend: ({ children }) => (
+    <div className="export-template">
+      <Criteria />
+      { children }
+    </div>
+  ),
+  ComparisonPage: ({ children }) => (
+    <div className="export-template">
+      <ComparisonCriteria />
+      <ComparisonLegend />
+      { children }
+    </div>
+  ),
+  ComparisonPageNoLegend: ({ children }) => (
+    <div className="export-template">
+      <ComparisonCriteria />
+      { children }
+    </div>
+  ),
+};
 
 /* /////////////////// SERVICE /////////////////// */
 /*
@@ -24,12 +67,12 @@ const SnapshotService = (() => {
         ..._components,
       };
     },
-    // get images of the DOM elements represented by the given CSS selectors
-    // within the given component. The accepted options are backgroundColor,
-    // which add a backgroundColor to the images, and scale, which scales
-    // the images.
-    snap: ({ component, selectors, options }) => (
-      renderer.snap(components[component], selectors, options)
+    snap: ({ componentName, templateName, options }) => (
+      renderer.snap({
+        Component: components[componentName],
+        Template: templates[templateName],
+        options,
+      })
     ),
   };
 })();
@@ -51,20 +94,25 @@ export class SnapshotRenderer extends React.Component {
     SnapshotService.link(this);
   }
 
-  snap = async (Content, selectors = [], options) => {
+  snap = async ({ Component, Template, options = {} }) => {
+    const Content = (() => {
+      if (Component && Template) {
+        return (
+          <Template>
+            <Component />
+          </Template>
+        );
+      }
+      if (Component) return <Component />;
+      if (Template) return <Template />;
+      return null;
+    })();
+
     this.setState({ Content });
-
-    const snapshots = await Promise.all(selectors.map(selector => {
-      const targetEl = this.ref.current.querySelector(selector);
-      return targetEl instanceof HTMLCanvasElement
-        ? canvasToImage(targetEl, options)
-        : elementToImage(targetEl, options);
-    }));
-
+    const snapshot = await elementToImage(this.ref.current, options);
     this.setState({ Content: null });
-
-    return snapshots;
-  };
+    return snapshot;
+  }
 
   render() {
     const { Content } = this.state;
@@ -73,7 +121,7 @@ export class SnapshotRenderer extends React.Component {
 
     return (
       <div ref={this.ref} className="snapshot-renderer">
-        <Content />
+        { Content }
       </div>
     );
   }

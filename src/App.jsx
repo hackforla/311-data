@@ -6,10 +6,7 @@ import Routes from './Routes';
 import Header from './components/main/header/Header';
 import Footer from './components/main/footer/Footer';
 import Tooltip from './components/main/tooltip/Tooltip';
-import SnapshotService, { SnapshotRenderer } from './components/export/SnapshotService';
-import Visualizations from './components/Visualizations';
-
-SnapshotService.register({ Visualizations });
+import { SnapshotRenderer } from './components/export/SnapshotService';
 
 const basename = process.env.NODE_ENV === 'development' ? '/' : process.env.BASE_URL || '/';
 

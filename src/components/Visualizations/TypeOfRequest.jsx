@@ -15,9 +15,10 @@ const TypeOfRequest = ({
 
   return (
     <PieChart
-      id="type-of-request"
       title="Type of Request"
       sectors={sectors}
+      componentName="TypeOfRequest"
+      pdfTemplateName="VisPage"
     />
   );
 };

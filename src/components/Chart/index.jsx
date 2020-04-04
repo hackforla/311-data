@@ -4,7 +4,6 @@ import clx from 'classnames';
 import ChartJS from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot';
 import ChartJSDataLabels from 'chartjs-plugin-datalabels';
-import ChartExportSelect from '@components/export/ChartExportSelect';
 import defaults from './defaults';
 import { chartAreaPlugin } from './plugins';
 
@@ -52,7 +51,7 @@ class Chart extends React.Component {
     }
   }
 
-  // calculate top-right corner of chart to position export select
+  // calculate top-right corner of chart to position exportButton
   setTopRight = () => {
     const { width, chartArea, config } = this.chart;
     const { layout } = config.options;
@@ -77,12 +76,10 @@ class Chart extends React.Component {
 
   render() {
     const {
-      id,
-      exportable,
+      className,
       height,
-      exportData,
-      options,
       title,
+      exportButton,
     } = this.props;
 
     const { top, right } = this.state;
@@ -94,7 +91,7 @@ class Chart extends React.Component {
         : `${height}px`,
     };
 
-    const exportStyle = {
+    const exportWrapStyle = {
       position: 'absolute',
       right,
       top: top - 4,
@@ -102,18 +99,10 @@ class Chart extends React.Component {
     };
 
     return (
-      <div className={clx('chart', id)}>
+      <div className={clx('chart', className)}>
         { title && <h1>{ title }</h1> }
         <div style={canvasWrapStyle}>
-          { exportable && (
-            <div style={exportStyle}>
-              <ChartExportSelect
-                chartId={id}
-                chartTitle={title || options.title?.text}
-                exportData={exportData}
-              />
-            </div>
-          )}
+          <div style={exportWrapStyle}>{ exportButton }</div>
           <canvas ref={this.canvasRef} />
         </div>
       </div>
@@ -124,27 +113,20 @@ class Chart extends React.Component {
 export default Chart;
 
 Chart.propTypes = {
-  id: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   data: PropTypes.shape({}).isRequired,
+  options: PropTypes.shape({}).isRequired,
+  title: PropTypes.string,
   height: PropTypes.number,
   datalabels: PropTypes.bool,
-  exportable: PropTypes.bool,
-  exportData: PropTypes.func,
-
-  // NOTE: the title can come in either through the chart options or
-  // a prop. If options, the title is on the chart canvas, which means
-  // the export is much quicker. If props, the title is an HTML element.
-  options: PropTypes.shape({
-    title: PropTypes.shape({}),
-  }).isRequired,
-  title: PropTypes.string,
+  exportButton: PropTypes.element,
+  className: PropTypes.string,
 };
 
 Chart.defaultProps = {
+  title: undefined,
   height: undefined,
   datalabels: false,
-  exportable: true,
-  exportData: () => null,
-  title: undefined,
+  exportButton: null,
+  className: undefined,
 };

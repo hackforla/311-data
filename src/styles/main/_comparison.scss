@@ -1,44 +1,37 @@
 .comparison {
-  background-color: $brand-bg-color;
-  overflow: scroll;
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  text-align: center;
+  overflow: scroll;
   padding: 30px 50px;
+  background-color: $brand-bg-color;
 
+  .chart-extra {
+    margin-bottom: 30px;
+  }
+}
+
+.contact-311-comparison {
+  margin: 0 auto;
+  position: relative;
+  max-width: $chart-max-width;
+  text-align: center;
   h1 {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
-
-  .chart {
-    margin: 0 auto;
-    max-width: $vis-content-max-width;
+  .chart-export-select {
+    position: absolute;
+    top: 10px;
+    right: 2px;
   }
-
-  .contact-311-comparison {
-    max-width: $vis-content-max-width;
-    margin: 0 auto;
-    position: relative;
-    padding: $chart-padding;
-    .chart-export-select {
-      position: absolute;
-      top: $chart-padding + 11px;
-      right: $chart-padding + 2px;
-    }
-    .chart-container {
-      display: inline-block;
-      width: 50%;
-      .chart {
-        width: 100%;
-        display: inline-block;
-        padding: 2px;
-        canvas {
-          border: 1px solid $brand-stroke-color;
-        }
-      }
+  .chart-container {
+    display: inline-block;
+    width: 50%;
+    .chart {
+      width: 100%;
+      padding: 2px;
     }
   }
 }

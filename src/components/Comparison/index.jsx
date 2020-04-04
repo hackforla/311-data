@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-
+import SnapshotService from '@components/export/SnapshotService';
+import ComparisonCriteria from '@components/chartExtras/ComparisonCriteria';
+import ComparisonLegend from '@components/chartExtras/ComparisonLegend';
 import TimeToCloseComparison from './TimeToCloseComparison';
 import FrequencyComparison from './FrequencyComparison';
 import TotalRequestsComparison from './TotalRequestsComparison';
 import Contact311Comparison from './Contact311Comparison';
+
+SnapshotService.register({
+  TimeToCloseComparison,
+  FrequencyComparison,
+  TotalRequestsComparison,
+  Contact311Comparison,
+});
 
 const Comparison = ({
   chartType,
@@ -22,6 +31,8 @@ const Comparison = ({
 
   return (
     <div className="comparison">
+      <ComparisonCriteria />
+      { chartType !== 'contact' && <ComparisonLegend /> }
       { chart }
     </div>
   );

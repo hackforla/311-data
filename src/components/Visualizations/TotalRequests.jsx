@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from '@components/Chart';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const TotalRequests = ({
   frequency: { bins, counts },
 }) => {
   if (!bins || !counts) return null;
 
-  // // DATA ////
+  /* /// DATA /// */
 
   const chartData = {
     labels: bins.slice(0, -1).map(bin => moment(bin).format('MMM D')),
@@ -25,6 +26,8 @@ const TotalRequests = ({
       };
     }),
   };
+
+  /* /// EXPORT /// */
 
   const exportData = () => {
     const header = bins.slice(0, -1).map(bin => moment(bin).format('MM/DD/YYYY'));
@@ -42,12 +45,18 @@ const TotalRequests = ({
     };
   };
 
-  // // OPTIONS ////
+  const exportButton = (
+    <ChartExportSelect
+      componentName="TotalRequests"
+      pdfTemplateName="VisPage"
+      exportData={exportData}
+      filename="Total Requests"
+    />
+  );
+
+  /* /// OPTIONS /// */
 
   const chartOptions = {
-    title: {
-      text: 'Total Requests',
-    },
     aspectRatio: 11 / 8,
     scales: {
       xAxes: [{
@@ -93,11 +102,11 @@ const TotalRequests = ({
 
   return (
     <Chart
-      id="total-requests"
+      title="Total Requests"
       type="bar"
       data={chartData}
       options={chartOptions}
-      exportData={exportData}
+      exportButton={exportButton}
     />
   );
 };

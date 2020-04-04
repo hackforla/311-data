@@ -9,9 +9,9 @@ function addCommas(num) {
 const NumberOfRequests = ({
   numRequests,
 }) => (
-  <div className="number-of-requests">
-    <h1 className="has-text-centered">Number of Requests</h1>
-    <div className="has-text-centered has-text-weight-bold">
+  <div className="chart-extra number-of-requests">
+    <h1>Number of Requests</h1>
+    <div className="requests-box-container">
       <span className="requests-box">
         { addCommas(numRequests) }
       </span>

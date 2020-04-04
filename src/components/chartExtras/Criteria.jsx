@@ -1,53 +1,43 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import Button from '@components/common/Button';
-
-// if more than this, use the more/less toggle
-const MAX_COUNCILS = 10;
+import CollapsibleText from './CollapsibleText';
 
 const Criteria = ({
   startDate,
   endDate,
   councils,
 }) => {
-  const [showAll, setShowAll] = useState(false);
-
   const dateText = startDate && endDate
     ? `From ${startDate} to ${endDate}`
     : 'No date range selected.';
 
-  const shownCouncils = showAll ? councils : councils.slice(0, MAX_COUNCILS);
-
   const councilsText = councils.length > 0
-    ? shownCouncils.join('; ')
+    ? (
+      <CollapsibleText
+        items={councils}
+        delimiter="; "
+        maxToShow={10}
+        buttonId="toggle-show-more"
+      />
+    )
     : 'No councils selected.';
 
   return (
-    <div className="criteria">
-      <h1 className="has-text-centered">Criteria</h1>
+    <div className="chart-extra criteria">
+      <h1>Criteria</h1>
       <div className="outline">
         <div className="date-range">
-          <span className="criteria-type has-text-weight-bold">
+          <span className="criteria-type">
             Date Range
           </span>
-          <span>{ dateText }</span>
+          { dateText }
         </div>
         <div className="council-districts">
-          <span className="criteria-type has-text-weight-bold">
+          <span className="criteria-type">
             Neighborhood Council District
           </span>
-          <span>{ councilsText }</span>
-          { councils.length > MAX_COUNCILS && (
-            <span>
-              <span>{ showAll ? '' : '...' }</span>
-              <Button
-                id="toggle-show-more"
-                label={showAll ? '(show less)' : '(show more)'}
-                handleClick={() => setShowAll(!showAll)}
-              />
-            </span>
-          )}
+          { councilsText }
         </div>
       </div>
     </div>

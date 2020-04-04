@@ -7,7 +7,7 @@ export default {
     defaultFontFamily: 'Roboto, sans-serif',
     animation: false,
     title: {
-      display: true,
+      display: false,
       fontFamily: '"Open Sans", sans-serif',
       fontSize: 20,
       padding: 10,

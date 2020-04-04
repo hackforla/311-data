@@ -3,11 +3,12 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import Chart from '@components/Chart';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const TimeToClose = ({
   timeToClose,
 }) => {
-  // // DATA ////
+  /* /// DATA /// */
 
   const boxes = Object.keys(timeToClose)
     .filter(key => timeToClose[key].count !== 0)
@@ -34,6 +35,8 @@ const TimeToClose = ({
     }],
   };
 
+  /* /// EXPORT /// */
+
   const exportData = () => {
     const header = [
       'min', 'q1', 'median', 'q3', 'max',
@@ -47,12 +50,18 @@ const TimeToClose = ({
     };
   };
 
-  // // OPTIONS ////
+  const exportButton = (
+    <ChartExportSelect
+      componentName="TimeToClose"
+      pdfTemplateName="VisPage"
+      exportData={exportData}
+      filename="Time to Close"
+    />
+  );
+
+  /* /// OPTIONS /// */
 
   const chartOptions = {
-    title: {
-      text: 'Time to Close',
-    },
     maintainAspectRatio: false,
     scales: {
       xAxes: [{
@@ -81,12 +90,12 @@ const TimeToClose = ({
 
   return (
     <Chart
-      id="time-to-close"
+      title="Time to Close"
       type="horizontalBoxplot"
       data={chartData}
       options={chartOptions}
       height={Math.max(160, 130 + (chartData.labels.length * 40))}
-      exportData={exportData}
+      exportButton={exportButton}
     />
   );
 };
