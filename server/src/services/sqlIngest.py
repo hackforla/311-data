@@ -10,6 +10,7 @@ if __name__ == '__main__':
     from databaseOrm import tableFields, insertFields, readFields
 else:
     from .databaseOrm import tableFields, insertFields, readFields
+import sys
 
 
 class DataHandler:
@@ -137,9 +138,9 @@ class DataHandler:
         client.timeout = self.timeout
         # Fetch data
         # Loop for querying dataset
-        tableInit = False
-        query = int(querySize)
-        maxRecords = int(totalRequestRecords)
+        tableInit = True
+        query = 10000
+        maxRecords = 100000
         for i in range(0, maxRecords, query):
             fetchTimer = time.time()
             print('Fetching %d records with offset %d up to a max of %d'
@@ -161,6 +162,7 @@ class DataHandler:
                 self.ingestData(ingestMethod='append')
             print('%d records retrieved in %.2f minutes' %
                   (self.data.shape[0], self.elapsedTimer(fetchTimer)))
+            sys.stdout.flush()
 
     def fetchSocrataFull(self, year=2019, limit=10**7):
         '''Fetch entirety of dataset via Socrata'''

@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'proptypes';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import { getContactRequest } from '@reducers/data';
 
 class ContactForm extends Component {
   constructor(props) {
@@ -10,6 +14,7 @@ class ContactForm extends Component {
       association: '',
       message: '',
       disableButton: true,
+      buttonText: 'Submit',
     };
   }
 
@@ -42,16 +47,28 @@ class ContactForm extends Component {
     } = this.state;
 
     if (firstName !== '' && lastName !== '' && email !== '' && message !== '') {
-      this.setState({ disableButton: false });
+      this.setState({
+        disableButton: false,
+        buttonText: 'Submite',
+      });
     } else {
-      this.setState({ disableButton: true });
+      this.setState({
+        disableButton: true,
+      });
     }
   }
 
   handleSubmit = event => {
     event.preventDefault();
 
-    console.log('Submitting message...');
+    this.setState({
+      disableButton: true,
+      buttonText: 'Message Sent',
+    });
+
+    const { data } = this.state;
+    print(data)
+    this.props.getContact({ data });
   };
 
   render() {
@@ -62,6 +79,7 @@ class ContactForm extends Component {
       association,
       message,
       disableButton,
+      buttonText,
     } = this.state;
 
     return (
@@ -139,7 +157,7 @@ class ContactForm extends Component {
 
           <div className="btn-container">
             <button type="submit" className="contact-btn" onClick={event => this.handleSubmit(event)} disabled={disableButton}>
-              Submit
+              {buttonText}
             </button>
           </div>
         </form>
@@ -148,4 +166,24 @@ class ContactForm extends Component {
   }
 }
 
-export default ContactForm;
+const mapDispatchToProps = dispatch => ({
+  getContact: email => dispatch(getContactRequest(email)),
+});
+
+const mapStateToProps = state => ({
+  data: state.data,
+});
+
+ContactForm.propTypes = {
+  data: PropTypes.shape({}),
+  contact: PropTypes.shape({}),
+  getContact: PropTypes.func.isRequired,
+  dispatch: PropTypes.func,
+};
+
+ContactForm.defaultProps = {
+  data: undefined,
+  contact: {},
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

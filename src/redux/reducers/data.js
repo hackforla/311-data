@@ -5,6 +5,9 @@ export const types = {
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
+  GET_CONTACT_REQUEST: 'GET_CONTACT_REQUEST',
+  GET_CONTACT_SUCCESS: 'GET_CONTACT_SUCCESS',
+  GET_CONTACT_FAILURE: 'GET_CONTACT_FAILURE',
 };
 
 export const getDataRequest = () => ({
@@ -33,6 +36,20 @@ export const getPinInfoSuccess = response => ({
 
 export const getPinInfoFailure = error => ({
   type: types.GET_PIN_INFO_FAILURE,
+  payload: error,
+});
+
+export const getContactRequest = () => ({
+  type: types.GET_CONTACT_REQUEST,
+});
+
+export const getContactSuccess = response => ({
+  type: types.GET_CONTACT_SUCCESS,
+  payload: response,
+});
+
+export const getContactFailure = error => ({
+  type: types.GET_CONTACT_FAILURE,
   payload: error,
 });
 
@@ -97,6 +114,33 @@ export default (state = initialState, action) => {
         response: { status },
         message,
       } = action.payload;
+      return {
+        ...state,
+        error: {
+          code: status,
+          message,
+          error: action.payload,
+        },
+        isLoading: false,
+      };
+    }
+    case types.GET_CONTACT_REQUEST:
+      return {
+        state,
+      };
+    case types.GET_CONTACT_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        isLoading: false,
+        ...action.payload,
+      };
+    case types.GET_CONTACT_FAILURE: {
+      const {
+        response: { status },
+        message,
+      } = action.payload;
+
       return {
         ...state,
         error: {

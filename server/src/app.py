@@ -153,6 +153,13 @@ async def pinMap(request):
     return json(return_data)
 
 
+@app.route('/feedback', methods=['POST'])
+@compress.compress()
+async def feedback(request):
+    print("hi")
+    return json(request)
+
+
 @app.route('/requestcounts', methods=["POST"])
 @compress.compress()
 async def requestCounts(request):
