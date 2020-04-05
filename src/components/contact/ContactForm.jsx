@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getContactRequest } from '@reducers/data';
 
 class ContactForm extends Component {
@@ -66,9 +65,8 @@ class ContactForm extends Component {
       buttonText: 'Message Sent',
     });
 
-    const { data } = this.state;
-    print(data)
-    this.props.getContact({ data });
+    const { getContact } = this.props;
+    getContact(this.state);
   };
 
   render() {
@@ -171,18 +169,17 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  data: state.data,
+  data: state,
 });
 
 ContactForm.propTypes = {
   data: PropTypes.shape({}),
   contact: PropTypes.shape({}),
   getContact: PropTypes.func.isRequired,
-  dispatch: PropTypes.func,
 };
 
 ContactForm.defaultProps = {
-  data: undefined,
+  data: {},
   contact: {},
 };
 

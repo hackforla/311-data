@@ -78,7 +78,10 @@ function* fetchPinInfo(srnumber) {
 function* getContact(fields) {
   const contactURL = `${BASE_URL}/feedback`;
 
-  const { data: { data } } = yield call(axios.post, contactURL, fields);
+  const { data: { data } } = yield call(axios.post, contactURL, {
+    title: fields.email,
+    body: fields,
+  });
 
   return data;
 }
@@ -152,18 +155,18 @@ function* getPinData(action) {
 }
 
 function* getContactData(action) {
-   try {
-      const email = action.payload;
-      const data = yield call(getContact, email);
-      yield put(getContactSuccess(data));
-   } catch (e) {
-      yield put(getContactFailure(e));
-      yield put(setErrorModal(true));
-   }
+  try {
+    const email = action.payload;
+    const data = yield call(getContact, email);
+    yield put(getContactSuccess(data));
+  } catch (e) {
+    yield put(getContactFailure(e));
+    yield put(setErrorModal(true));
+  }
 }
 
 export default function* rootSaga() {
   yield takeLatest(types.GET_DATA_REQUEST, getData);
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
-  yield takeEvery(types.GET_CONTACT_REQUEST, getContact);
+  yield takeLatest(types.GET_CONTACT_REQUEST, getContactData);
 }
