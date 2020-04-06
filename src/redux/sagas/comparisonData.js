@@ -5,6 +5,7 @@ import {
   put,
   select,
 } from 'redux-saga/effects';
+import { CITY_COUNCILS } from '@components/common/CONSTANTS';
 
 import {
   types,
@@ -15,8 +16,6 @@ import {
 import {
   setErrorModal,
 } from '../reducers/ui';
-
-import { CITY_COUNCILS } from '@components/common/CONSTANTS';
 
 /* /////////// INDIVIDUAL API CALLS /////////// */
 
@@ -109,7 +108,7 @@ function* getFilters() {
   // convert cc names to numeric ids
   const convertIfCC = set => {
     if (set.district !== 'cc') return set;
-    
+
     return {
       district: set.district,
       list: set.list.map(name => CITY_COUNCILS.find(cc => cc.name === name)?.id),

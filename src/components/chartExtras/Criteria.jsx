@@ -16,8 +16,8 @@ const Criteria = ({
     ? (
       <CollapsibleText
         items={councils}
+        maxShown={10}
         delimiter="; "
-        maxToShow={10}
         buttonId="toggle-show-more"
       />
     )
@@ -27,13 +27,13 @@ const Criteria = ({
     <div className="chart-extra criteria">
       <h1>Criteria</h1>
       <div className="outline">
-        <div className="date-range">
+        <div>
           <span className="criteria-type">
             Date Range
           </span>
           { dateText }
         </div>
-        <div className="council-districts">
+        <div>
           <span className="criteria-type">
             Neighborhood Council District
           </span>

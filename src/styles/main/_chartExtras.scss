@@ -41,6 +41,11 @@
     }
   }
 
+  &.comparison-criteria .criteria-type:not(:first-of-type) {
+    display: block;
+    margin-top: 10px;
+  }
+
   &.legend {
     .outline {
       padding-bottom: 10px;

@@ -6,17 +6,17 @@ const CollapsibleText = ({
   items,
   buttonId,
   delimiter,
-  maxToShow,
+  maxShown,
 }) => {
   const [showAll, setShowAll] = useState(false);
 
-  const shownItems = showAll ? items : items.slice(0, maxToShow);
+  const shownItems = showAll ? items : items.slice(0, maxShown);
   const itemsText = shownItems.join(delimiter);
 
   return (
     <>
       <span>{ itemsText }</span>
-      { items.length > maxToShow && (
+      { items.length > maxShown && (
         <span>
           <span>{ showAll ? '' : '...' }</span>
           <Button
@@ -36,10 +36,10 @@ CollapsibleText.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string).isRequired,
   buttonId: PropTypes.string.isRequired,
   delimiter: PropTypes.string,
-  maxToShow: PropTypes.number,
+  maxShown: PropTypes.number,
 };
 
 CollapsibleText.defaultProps = {
   delimiter: '; ',
-  maxToShow: undefined,
+  maxShown: Infinity,
 };
