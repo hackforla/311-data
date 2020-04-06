@@ -61,26 +61,32 @@ export const REQUEST_TYPES = {
 export const REQUEST_SOURCES = [
   {
     type: 'Mobile App',
+    abbrev: 'MA',
     color: '#1D66F2',
   },
   {
     type: 'Call',
+    abbrev: 'Call',
     color: '#D8E5FF',
   },
   {
     type: 'Email',
+    abbrev: 'Email',
     color: '#708ABD',
   },
   {
     type: 'Driver Self Report',
+    abbrev: 'DSR',
     color: '#C4C6C9',
   },
   {
     type: 'Self Service',
+    abbrev: 'SS',
     color: '#0C2A64',
   },
   {
     type: 'Other',
+    abbrev: 'Other',
     color: '#6A98F1',
   },
 ];

@@ -17,11 +17,15 @@ const Contact311Comparison = ({
 
   const setSectors = counts => (
     Object.keys(counts)
-      .map(key => ({
-        label: key,
-        value: counts[key],
-        color: REQUEST_SOURCES.find(s => s.type === key)?.color,
-      }))
+      .map(key => {
+        const source = REQUEST_SOURCES.find(s => s.type === key);
+        return {
+          label: key,
+          value: counts[key],
+          color: source?.color,
+          abbrev: source?.abbrev,
+        };
+      })
   );
 
   const set1name = setName(set1.district);

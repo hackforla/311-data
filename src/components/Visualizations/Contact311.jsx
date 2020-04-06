@@ -11,11 +11,15 @@ const Contact311 = ({
   const altCounts = transformCounts(sourceCounts);
 
   const sectors = Object.keys(altCounts)
-    .map(key => ({
-      label: key,
-      value: altCounts[key],
-      color: REQUEST_SOURCES.find(s => s.type === key)?.color,
-    }));
+    .map(key => {
+      const source = REQUEST_SOURCES.find(s => s.type === key);
+      return {
+        label: key,
+        value: altCounts[key],
+        color: source?.color,
+        abbrev: source?.abbrev,
+      };
+    });
 
   return (
     <PieChart

@@ -47,10 +47,10 @@ const PieChart = ({
             align: 'end',
             anchor: 'end',
             formatter: (value, ctx) => {
-              const { label } = altSectors[ctx.dataIndex];
+              const { label, abbrev } = altSectors[ctx.dataIndex];
               const percentage = (100 * (value / total)).toFixed(1);
               return addLabels
-                ? `${label.substring(1)}\n${percentage}%`
+                ? `${abbrev || label.substring(1)}\n${percentage}%`
                 : `${percentage}%`;
             },
             offset: 4,
