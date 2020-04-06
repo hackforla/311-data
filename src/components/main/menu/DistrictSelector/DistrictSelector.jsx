@@ -57,7 +57,7 @@ const DistrictSelector = ({
   return (
     <>
       <div className="container">
-        <p className="is-size-6" style={{ padding: '15px 0' }}>
+        <div className="is-size-6" style={{ padding: '15px 0' }}>
           <strong style={{ paddingRight: '10px' }}>
             District Selection
           </strong>
@@ -71,7 +71,7 @@ const DistrictSelector = ({
               size="small"
             />
           </HoverOverInfo>
-        </p>
+        </div>
         {renderSet('set1')}
         <br />
         {renderSet('set2')}

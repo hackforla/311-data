@@ -5,7 +5,6 @@ import { HashRouter as Router } from 'react-router-dom';
 import Routes from './Routes';
 import Header from './components/main/header/Header';
 import Footer from './components/main/footer/Footer';
-import Tooltip from './components/main/tooltip/Tooltip';
 import { SnapshotRenderer } from './components/export/SnapshotService';
 
 const basename = process.env.NODE_ENV === 'development' ? '/' : process.env.BASE_URL || '/';
@@ -20,7 +19,6 @@ const App = () => {
       <Header />
       <Routes />
       <Footer />
-      <Tooltip />
       <SnapshotRenderer />
     </Router>
   );

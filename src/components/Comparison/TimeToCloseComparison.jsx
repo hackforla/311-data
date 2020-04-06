@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import Chart from '@components/Chart';
+import Chart, { ChartTooltip as Tooltip } from '@components/Chart';
 import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import ChartExportSelect from '@components/export/ChartExportSelect';
 
@@ -44,6 +44,34 @@ const TimeToCloseComparison = ({
       borderWidth: 1,
       outlierColor: '#000',
     }],
+  };
+
+  /* /// TOOLTIP /// */
+
+  const tooltip = ttData => {
+    const { index } = ttData.dataPoints[0];
+    const box = boxes[index];
+    const { stats } = box;
+
+    const lines = [{
+      text: box.label,
+      bold: true,
+      color: box.color,
+    }, {
+      text: `min: ${stats.min.toFixed(2)} days`,
+    }, {
+      text: `25%: ${stats.q1.toFixed(2)} days`,
+    }, {
+      text: `50%: ${stats.median.toFixed(2)} days`,
+    }, {
+      text: `75%: ${stats.q3.toFixed(2)} days`,
+    }, {
+      text: `max: ${stats.max.toFixed(2)} days`,
+    }, {
+      text: `count: ${stats.count} requests`,
+    }];
+
+    return <Tooltip lines={lines} />;
   };
 
   /* /// EXPORT /// */
@@ -91,12 +119,6 @@ const TimeToCloseComparison = ({
         },
       }],
     },
-    tooltips: {
-      callbacks: {
-        title: () => null,
-      },
-    },
-    tooltipDecimals: 1,
   };
 
   return (
@@ -107,6 +129,7 @@ const TimeToCloseComparison = ({
       options={chartOptions}
       height={Math.max(160, 130 + (chartData.labels.length * 40))}
       exportButton={exportButton}
+      tooltip={tooltip}
     />
   );
 };

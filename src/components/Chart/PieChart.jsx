@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import ChartExportSelect from '@components/export/ChartExportSelect';
-import Chart from '.';
+import Chart from './Chart';
 
 const PieChart = ({
   title,

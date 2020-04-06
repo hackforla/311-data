@@ -19,7 +19,7 @@ const DistrictSelector = ({
 
   return (
     <div className="container">
-      <p className="is-size-6" style={{ padding: '10px 0' }}>
+      <div className="is-size-6" style={{ padding: '10px 0' }}>
         <strong style={{ paddingRight: '10px' }}>
           Chart Selection
         </strong>
@@ -33,7 +33,7 @@ const DistrictSelector = ({
             size="small"
           />
         </HoverOverInfo>
-      </p>
+      </div>
       <div className="field">
         <div className="control">
           <div className="columns is-vcentered">

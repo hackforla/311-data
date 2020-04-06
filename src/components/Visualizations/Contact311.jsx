@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_SOURCES } from '@components/common/CONSTANTS';
-import PieChart from '@components/Chart/PieChart';
+import { PieChart } from '@components/Chart';
 import { transformCounts } from '@utils';
 
 const Contact311 = ({

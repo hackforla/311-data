@@ -4,6 +4,8 @@ import clx from 'classnames';
 import ChartJS from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot';
 import ChartJSDataLabels from 'chartjs-plugin-datalabels';
+import { DynamicTooltip } from '@components/common/Tooltip';
+import { adapter } from './ChartTooltip';
 import defaults from './defaults';
 import { chartAreaPlugin } from './plugins';
 
@@ -19,6 +21,7 @@ class Chart extends React.Component {
   constructor(props) {
     super(props);
     this.canvasRef = React.createRef();
+    this.tooltipRef = React.createRef();
     this.state = { top: 0, right: 0 };
   }
 
@@ -26,7 +29,6 @@ class Chart extends React.Component {
     const {
       type,
       data,
-      options,
       datalabels,
     } = this.props;
 
@@ -34,10 +36,11 @@ class Chart extends React.Component {
     this.chart = new ChartJS(ctx, {
       type,
       data,
-      options,
+      options: this.getOptions(),
       plugins: datalabels ? [ChartJSDataLabels] : [],
     });
     this.setTopRight();
+    this.chart.tooltipRef = this.tooltipRef.current;
   }
 
   componentDidUpdate(prevProps) {
@@ -45,11 +48,26 @@ class Chart extends React.Component {
 
     if (prevProps.data !== data || prevProps.options !== options) {
       this.chart.data = data;
-      this.chart.options = options;
+      this.chart.options = this.getOptions();
       this.chart.update();
       this.setTopRight();
     }
   }
+
+  // add tooltip if passed as prop
+  getOptions = () => {
+    const { options, tooltip } = this.props;
+
+    return {
+      ...options,
+      ...(tooltip ? {
+        tooltips: {
+          enabled: false,
+          custom: adapter(tooltip),
+        },
+      } : {}),
+    };
+  };
 
   // calculate top-right corner of chart to position exportButton
   setTopRight = () => {
@@ -102,8 +120,9 @@ class Chart extends React.Component {
       <div className={clx('chart', className)}>
         { title && <h1>{ title }</h1> }
         <div style={canvasWrapStyle}>
-          <div style={exportWrapStyle}>{ exportButton }</div>
           <canvas ref={this.canvasRef} />
+          <div style={exportWrapStyle}>{ exportButton }</div>
+          <DynamicTooltip ref={this.tooltipRef} />
         </div>
       </div>
     );
@@ -121,6 +140,7 @@ Chart.propTypes = {
   datalabels: PropTypes.bool,
   exportButton: PropTypes.element,
   className: PropTypes.string,
+  tooltip: PropTypes.func,
 };
 
 Chart.defaultProps = {
@@ -129,4 +149,5 @@ Chart.defaultProps = {
   datalabels: false,
   exportButton: null,
   className: undefined,
+  tooltip: undefined,
 };
