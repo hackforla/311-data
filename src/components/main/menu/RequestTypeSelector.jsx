@@ -20,7 +20,7 @@ import { REQUEST_TYPES } from '../../common/CONSTANTS';
 import COLORS from '../../../styles/COLORS';
 
 const typeContainerStyle = {
-  padding: '2px 0 2px 0',
+  padding: '2px 0 0',
   fontSize: '14px',
 };
 

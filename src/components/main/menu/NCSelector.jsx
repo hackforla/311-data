@@ -24,7 +24,7 @@ const NCSelector = ({
   );
 
   const selectRowStyle = {
-    margin: '0 0 7px 0',
+    margin: '0',
   };
 
   const selectRowTextStyle = {
@@ -120,7 +120,7 @@ const NCSelector = ({
         <div
           className="nc-list"
           style={{
-            height: '200px',
+            height: '205px',
             overflowX: 'hidden',
             msOverflowY: 'scroll',
             padding: '10px 23px 10px 10px',
@@ -132,7 +132,7 @@ const NCSelector = ({
           <div className="level" style={selectRowStyle}>
             <div className="level-left">
               <div className="level-item">
-                <p className="is-size-7" style={selectRowTextStyle}>
+                <p className="is-size-6" style={selectRowTextStyle}>
                   SELECT ALL
                 </p>
               </div>
@@ -154,7 +154,7 @@ const NCSelector = ({
             <div key={council} className="level" style={selectRowStyle}>
               <div className="level-left">
                 <div className="level-item">
-                  <p className="is-size-7" style={selectRowTextStyle}>
+                  <p className="is-size-6" style={selectRowTextStyle}>
                     {council}
                   </p>
                 </div>

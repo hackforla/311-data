@@ -61,8 +61,8 @@ const Menu = ({
       <Switch>
         <Route path="/comparison">
           <div className="menu-content">
-            <h1>Comparison Tool</h1>
-            <DateSelector comparison />
+            <h1>Comparison Filters</h1>
+            <DateSelector comparison key="comparison-dateselector" />
             <DistrictSelector />
             <ChartSelector />
             <RequestTypeSelector comparison />
@@ -72,7 +72,7 @@ const Menu = ({
         <Route path="/">
           <div className="menu-content with-tabs">
             <h1>Filters</h1>
-            <DateSelector />
+            <DateSelector key="data-dateselector" />
             <NCSelector />
             <RequestTypeSelector />
             <Submit />
