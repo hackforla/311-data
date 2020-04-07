@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import CollapsibleText from './CollapsibleText';
+import CollapsibleList from '@components/common/CollapsibleList';
 
 const Criteria = ({
   startDate,
@@ -11,17 +11,6 @@ const Criteria = ({
   const dateText = startDate && endDate
     ? `From ${startDate} to ${endDate}`
     : 'No date range selected.';
-
-  const councilsText = councils.length > 0
-    ? (
-      <CollapsibleText
-        items={councils}
-        maxShown={10}
-        delimiter="; "
-        buttonId="toggle-show-more"
-      />
-    )
-    : 'No councils selected.';
 
   return (
     <div className="chart-extra criteria">
@@ -37,7 +26,13 @@ const Criteria = ({
           <span className="criteria-type">
             Neighborhood Council District
           </span>
-          { councilsText }
+          <CollapsibleList
+            items={councils}
+            maxShown={10}
+            delimiter="; "
+            buttonId="toggle-show-more"
+            ifEmpty="No councils selected."
+          />
         </div>
       </div>
     </div>

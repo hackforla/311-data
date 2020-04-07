@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { DISTRICT_TYPES, REQUEST_TYPES } from '@components/common/CONSTANTS';
-import CollapsibleText from './CollapsibleText';
+import CollapsibleList from '@components/common/CollapsibleList';
 
 const ComparisonCriteria = ({
   startDate,
@@ -18,7 +18,16 @@ const ComparisonCriteria = ({
 
   // DISTRICTS //
   const districtSelection = set => {
-    if (!set.district) return null;
+    if (!set.district) {
+      return (
+        <>
+          <span className="criteria-type">
+            District Selection
+          </span>
+          No districts selected.
+        </>
+      );
+    }
 
     const { name } = DISTRICT_TYPES.find(t => set.district === t.id);
     return (
@@ -26,11 +35,12 @@ const ComparisonCriteria = ({
         <span className="criteria-type">
           { name }
         </span>
-        <CollapsibleText
+        <CollapsibleList
           items={set.list}
           maxShown={10}
           delimiter="; "
-          buttonId="toggle-show-more"
+          buttonId={`toggle-show-more-${set.district}`}
+          ifEmpty="None selected."
         />
       </>
     );
@@ -44,13 +54,10 @@ const ComparisonCriteria = ({
         .map(type => REQUEST_TYPES[type])
     );
 
-    if (selectedTypes.length === 0) return null;
+    if (selectedTypes.length === 0) return 'No types selected.';
 
     return (
       <>
-        <span className="criteria-type">
-          Request Type Selection
-        </span>
         { selectedTypes.map(type => (
           <span key={type.displayName}>
             { type.displayName }
@@ -73,6 +80,9 @@ const ComparisonCriteria = ({
         { dateText }
         { districtSelection(set1) }
         { districtSelection(set2) }
+        <span className="criteria-type">
+          Request Type Selection
+        </span>
         { typeSelection }
       </div>
     </div>

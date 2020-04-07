@@ -6,7 +6,10 @@ import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 const ComparisonLegend = ({
   set1,
   set2,
+  chart,
 }) => {
+  if (!chart) return null;
+
   const legendItem = set => {
     if (!set.district) return null;
 
@@ -36,6 +39,7 @@ const ComparisonLegend = ({
 const mapStateToProps = state => ({
   set1: state.comparisonFilters.comparison.set1,
   set2: state.comparisonFilters.comparison.set2,
+  chart: state.comparisonFilters.comparison.chart,
 });
 
 export default connect(mapStateToProps)(ComparisonLegend);
@@ -47,4 +51,9 @@ ComparisonLegend.propTypes = {
   set2: PropTypes.shape({
     district: PropTypes.string,
   }).isRequired,
+  chart: PropTypes.string,
+};
+
+ComparisonLegend.defaultProps = {
+  chart: null,
 };
