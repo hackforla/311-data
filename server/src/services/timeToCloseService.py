@@ -31,6 +31,10 @@ class TimeToCloseService(object):
             whiskerMin = arr[arr >= q1 - C * iqr].min()
             whiskerMax = arr[arr <= q3 + C * iqr].max()
 
+            # don't let whiskers be inside range q1 -> q3
+            whiskerMin = min([q1, whiskerMin])
+            whiskerMax= max([q3, whiskerMax])
+
             # calculate outliers
             minOutliers = arr[arr < whiskerMin]
             maxOutliers = arr[arr > whiskerMax]
@@ -130,8 +134,8 @@ class TimeToCloseService(object):
                 set1: {
                     district: 'nc',
                     data: {
-                        'DOWNTOWN LOS ANGELES': { stats },
-                        'ARLETA NC': { stats }
+                        4: { stats },
+                        8: { stats }
                         ...
                     }
                 },
@@ -157,7 +161,7 @@ class TimeToCloseService(object):
             if district == 'nc':
                 common['ncList'] = items
                 filters = self.dataAccess.comparisonFilters(**common)
-                return self.ttc('ncname', items, filters)
+                return self.ttc('nc', items, filters)
 
             elif district == 'cc':
                 common['cdList'] = items

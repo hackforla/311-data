@@ -6,6 +6,7 @@ const Button = ({
   id,
   label,
   handleClick,
+  className,
   /*
    *  Props below correspond with Bulma modifiers.
    *  bulma.io/documentation/elements/button/
@@ -28,7 +29,7 @@ const Button = ({
   iconStyle,
 }) => {
   // Dynamically generates button className from props to comply with Bulma styling modifiers.
-  const buttonClassName = classNames('button', {
+  const buttonClassName = classNames('button', className, {
     [`is-${color}`]: color,
     'is-light': light,
     [`is-${size}`]: size,
@@ -73,6 +74,7 @@ Button.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
   handleClick: PropTypes.func,
+  className: PropTypes.string,
   color: PropTypes.string,
   light: PropTypes.bool,
   size: PropTypes.oneOf(['small', 'normal', 'medium', 'large']),
@@ -94,6 +96,7 @@ Button.propTypes = {
 Button.defaultProps = {
   label: null,
   handleClick: () => null,
+  className: undefined,
   color: 'primary',
   light: false,
   size: 'normal',

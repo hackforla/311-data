@@ -143,7 +143,7 @@ class FrequencyService(object):
             if district == 'nc':
                 common['ncList'] = items
                 filters = self.dataAccess.comparisonFilters(**common)
-                return self.frequency('ncname', items, bins, filters)
+                return self.frequency('nc', items, bins, filters)
 
             elif district == 'cc':
                 common['cdList'] = items

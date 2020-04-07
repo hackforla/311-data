@@ -1,24 +1,34 @@
 @charset "utf-8";
 
-@import './brand';
+@import './variables';
 @import './bulma';
 @import './base';
 
+@import './common/tooltip';
+@import './common/loader';
+@import './common/collapsibleList';
+
 @import './main/header';
-@import './main/menu';
-@import './main/datepicker';
-@import './main/tooltip';
-@import './main/chart';
-@import './main/visualizations';
-@import './main/comparison';
-@import './main/loader';
 @import './main/body';
-@import './main/pinpopup';
-@import './main/export';
-@import './main/map';
+@import './main/footer';
 @import './main/staticfooter';
-@import './main/districtSelector';
-@import './main/chartExtras';
+
+@import './menu/menu';
+@import './menu/datepicker';
+@import './menu/districtSelector';
+
+@import './map/map';
+@import './map/pinpopup';
+
+@import './charts/chart';
+@import './charts/chartExtras';
+
+@import './visualizations/visualizations';
+@import './comparison/comparison';
+
+@import './export/snapshot-renderer';
+@import './export/chart-export-select';
+@import './export/export-dropdown';
 
 @import './about/about';
 @import './about/heroimage';

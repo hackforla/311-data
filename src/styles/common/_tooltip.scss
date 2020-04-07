@@ -5,7 +5,7 @@
   $margin: 6px;
 
   position: absolute;
-  z-index: 1101;
+  z-index: $z-tooltip;
   pointer-events: none;
   background-color: $bg-color;
   border-radius: 4px;

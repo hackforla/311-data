@@ -7,7 +7,7 @@
   .comparison,
   .loader-container,
   .menu-container {
-    transition: $menu-transition;
+    transition: all 0.5s ease 0s;
   }
 
   &.menu-is-open {

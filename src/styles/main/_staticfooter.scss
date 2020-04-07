@@ -13,4 +13,8 @@
   a {
     color: $brand-bg-color;
   }
+
+  &.level-left {
+    flex: 1;
+  }
 }
