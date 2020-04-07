@@ -15,6 +15,7 @@ import {
 
 import {
   setErrorModal,
+  showComparisonCharts,
 } from '../reducers/ui';
 
 /* /////////// INDIVIDUAL API CALLS /////////// */
@@ -139,6 +140,7 @@ function* getData() {
     const data = yield call(getChartData, filters);
     data.chart = filters.chart;
     yield put(getComparisonDataSuccess(data));
+    yield put(showComparisonCharts(true));
   } catch (e) {
     yield put(getComparisonDataFailure(e));
     yield put(setErrorModal(true));

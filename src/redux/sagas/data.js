@@ -19,6 +19,7 @@ import {
 
 import {
   setErrorModal,
+  showDataCharts,
 } from '../reducers/ui';
 
 
@@ -130,6 +131,7 @@ function* getData() {
   try {
     const data = yield call(getAll, filters);
     yield put(getDataSuccess(data));
+    yield put(showDataCharts(true));
   } catch (e) {
     yield put(getDataFailure(e));
     yield put(setErrorModal(true));
