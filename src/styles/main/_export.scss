@@ -1,6 +1,5 @@
 .snapshot-renderer {
-  // switch to positive for debugging
-  z-index: -100000;
+  z-index: $z-snapshot-renderer;
   background-color: white;
   outline: 3px red solid;
 
@@ -44,7 +43,6 @@
 }
 
 .chart-export-select {
-  z-index: 1;
   .loader-button {
     padding: 0 8px;
     border: 1px solid $brand-stroke-color;
@@ -66,7 +64,6 @@
   white-space: nowrap;
   text-align: left;
   background-color: $brand-bg-color;
-  z-index: 10000;
   font-size: 14px;
   line-height: 18px;
   cursor: default;

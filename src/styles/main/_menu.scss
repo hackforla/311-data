@@ -6,7 +6,7 @@
   top: $header-height;
   bottom: $footer-height;
   width: $menu-width;
-  z-index: 1100;
+  z-index: $z-menu;
   background: $brand-bg-color;
   box-shadow: 0px 4px 5px rgba(108, 108, 108, 0.3);
 

@@ -1,9 +1,9 @@
 .navbar {
   font-family: $brand-heading-family;
   font-weight: bold;
-  height: '60px';
-  box-shadow: '0 2px 4px rgba(0, 0, 0, 0.5)';
-  z-index: '20000';
+  height: $header-height;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: $z-navbar;
   background-color: $brand-heading-color;
 
   .navbar-brand {
