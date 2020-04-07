@@ -38,6 +38,8 @@ const Submit = ({
             && councils.length > 0
             && Object.values(requestTypes).includes(true)) {
           setDisableSubmit(false);
+        } else {
+          setDisableSubmit(true);
         }
         break;
       }
@@ -62,6 +64,8 @@ const Submit = ({
             && set2.list.length > 0
             && Object.values(requestTypes).includes(true)) {
           setDisableSubmit(false);
+        } else {
+          setDisableSubmit(true);
         }
         break;
       }
