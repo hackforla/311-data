@@ -1,0 +1,15 @@
+footer.navbar {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  height: $footer-height;
+  background: $brand-main-color;
+
+  p {
+    width: 100vw;
+    color: $brand-bg-color;
+    font-weight: bold;
+    text-align: center;
+    line-height: $footer-height;
+  }
+}

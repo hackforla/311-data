@@ -1,0 +1,42 @@
+.export-dropdown {
+  position: absolute;
+  top: 0px;
+  right: 100%;
+  border: 1px solid $brand-stroke-color;
+  padding: 6px 0;
+  white-space: nowrap;
+  text-align: left;
+  background-color: $brand-bg-color;
+  font-size: 14px;
+  line-height: 18px;
+  cursor: default;
+
+  h3 {
+    font-weight: bold;
+    margin: 0 10px 2px;
+    &:last-of-type:not(:first-of-type) {
+      margin-top: 6px;
+    }
+  }
+
+  button {
+    outline: none;
+    padding: 1px 10px;
+    font-size: 14px;
+    display: block;
+    border: 0;
+    color: $brand-main-color;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    background-color: transparent;
+    &:hover {
+      background-color: #F1F1F1;
+    }
+  }
+
+  div {
+    padding: 1px 10px;
+    color: $brand-stroke-color;
+  }
+}
