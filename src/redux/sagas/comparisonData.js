@@ -5,7 +5,7 @@ import {
   put,
   select,
 } from 'redux-saga/effects';
-import { CITY_COUNCILS } from '@components/common/CONSTANTS';
+import { CITY_COUNCILS, COUNCILS } from '@components/common/CONSTANTS';
 
 import {
   types,
@@ -105,9 +105,13 @@ function* getFilters() {
     comparison,
   } = yield select(getState, 'comparisonFilters');
 
-  // convert cc names to numeric ids
-  const convertIfCC = set => {
-    if (set.district !== 'cc') return set;
+  const convertCouncilNameToID = set => {
+    if (set.district !== 'cc') {
+      return {
+        district: set.district,
+        list: set.list.map(name => COUNCILS.find(nc => nc.name === name)?.id),
+      };
+    }
 
     return {
       district: set.district,
@@ -122,8 +126,8 @@ function* getFilters() {
     endDate,
     requestTypes: Object.keys(requestTypes).filter(req => req !== 'All' && requestTypes[req]),
     chart,
-    set1: convertIfCC(set1),
-    set2: convertIfCC(set2),
+    set1: convertCouncilNameToID(set1),
+    set2: convertCouncilNameToID(set2),
   };
 }
 
