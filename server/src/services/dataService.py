@@ -37,7 +37,6 @@ class DataService(object):
         '''
         Generates filters for dates, request types, and ncs.
         '''
-
         return [
             Request.createddate > startDate if startDate else False,
             Request.createddate < endDate if endDate else False,
