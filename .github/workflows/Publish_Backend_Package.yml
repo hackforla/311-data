@@ -47,4 +47,4 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: |
-        heroku config:set -a hackforla-311 PROJECT_URL=${{ secrets.PROJECT_URL }} GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }}
+        heroku config:set -a hackforla-311 PROJECT_URL=${{ secrets.PROJECT_URL }} GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }} TOKEN=${{ secrets.SOCRATA_TOKEN }}
