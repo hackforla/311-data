@@ -7,12 +7,12 @@ import SnapshotService from '@components/export/SnapshotService';
 import Criteria from '@components/chartExtras/Criteria';
 import Legend from '@components/chartExtras/Legend';
 import NumberOfRequests from '@components/chartExtras/NumberOfRequests';
+import VisualizationsPlaceholder from '@components/Visualizations/VisualizationsPlaceholder';
 import TimeToClose from './TimeToClose';
 import Frequency from './Frequency';
 import TotalRequests from './TotalRequests';
 import Contact311 from './Contact311';
 import TypeOfRequest from './TypeOfRequest';
-import VisualizationsPlaceholder from '@components/Visualizations/VisualizationsPlaceholder';
 
 SnapshotService.register({
   NumberOfRequests,
@@ -69,4 +69,5 @@ export default connect(mapStateToProps)(Visualizations);
 
 Visualizations.propTypes = {
   menuActiveTab: PropTypes.string.isRequired,
+  chartsVisibility: PropTypes.bool.isRequired,
 };
