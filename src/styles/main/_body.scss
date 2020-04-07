@@ -6,14 +6,16 @@
   .visualizations,
   .comparison,
   .loader-container,
-  .menu-container {
+  .menu-container,
+  .visualizations-placeholder {
     transition: all 0.5s ease 0s;
   }
 
   &.menu-is-open {
     .visualizations,
     .comparison,
-    .loader-container {
+    .loader-container,
+    .visualizations-placeholder {
       left: $menu-width;
     }
   }
