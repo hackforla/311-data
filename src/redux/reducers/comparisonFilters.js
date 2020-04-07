@@ -4,9 +4,9 @@ export const types = {
   UPDATE_COMPARISON_START_DATE: 'UPDATE_COMPARISON_START_DATE',
   UPDATE_COMPARISON_END_DATE: 'UPDATE_COMPARISON_END_DATE',
   UPDATE_COMPARISON_REQUEST_TYPE: 'UPDATE_COMPARISON_REQUEST_TYPE',
-  UPDATE_NEIGHBORHOOD_COUNCIL: 'UPDATE_NEIGHBORHOOD_COUNCIL',
   UPDATE_COMPARISON_LIST: 'UPDATE_COMPARISON_LIST',
   UPDATE_COMPARISON_DISTRICT: 'UPDATE_COMPARISON_DISTRICT',
+  CLEAR_COMPARISON_SET: 'CLEAR_COMPARISON_SET',
   UPDATE_COMPARISON_CHART: 'UPDATE_COMPARISON_CHART',
   SELECT_ALL_COMPARISON_REQUEST_TYPES: 'SELECT_ALL_COMPARISON_REQUEST_TYPES',
   DESELECT_ALL_COMPARISON_REQUEST_TYPES: 'DESELECT_ALL_COMPARISON_REQUEST_TYPES',
@@ -35,11 +35,6 @@ export const deselectAllComparisonRequestTypes = () => ({
   type: types.DESELECT_ALL_COMPARISON_REQUEST_TYPES,
 });
 
-export const updateNC = council => ({
-  type: types.UPDATE_NEIGHBORHOOD_COUNCIL,
-  payload: council,
-});
-
 export const updateComparisonList = (set, list) => ({
   type: types.UPDATE_COMPARISON_LIST,
   payload: {
@@ -54,6 +49,11 @@ export const updateComparisonDistrict = (set, district) => ({
     set,
     district,
   },
+});
+
+export const clearComparisonSet = set => ({
+  type: types.CLEAR_COMPARISON_SET,
+  payload: set,
 });
 
 export const updateComparisonChart = chart => ({
@@ -139,6 +139,14 @@ export default (state = initialState, action) => {
             ...state.comparison[action.payload.set],
             district: action.payload.district,
           },
+        },
+      };
+    case types.CLEAR_COMPARISON_SET:
+      return {
+        ...state,
+        comparison: {
+          ...state.comparison,
+          [action.payload]: initialState.comparison[action.payload],
         },
       };
     case types.UPDATE_COMPARISON_CHART:
