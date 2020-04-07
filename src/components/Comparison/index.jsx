@@ -8,6 +8,7 @@ import TimeToCloseComparison from './TimeToCloseComparison';
 import FrequencyComparison from './FrequencyComparison';
 import TotalRequestsComparison from './TotalRequestsComparison';
 import Contact311Comparison from './Contact311Comparison';
+import VisualizationsPlaceholder from '@components/Visualizations/VisualizationsPlaceholder';
 
 SnapshotService.register({
   TimeToCloseComparison,
@@ -18,6 +19,7 @@ SnapshotService.register({
 
 const Comparison = ({
   chartType,
+  chartsVisibility,
 }) => {
   const chart = (() => {
     switch (chartType) {
@@ -29,17 +31,22 @@ const Comparison = ({
     }
   })();
 
-  return (
-    <div className="comparison">
-      <ComparisonCriteria />
-      { chartType !== 'contact' && <ComparisonLegend /> }
-      { chart }
-    </div>
-  );
+  if (chartsVisibility) {
+    return (
+      <div className="comparison">
+        <ComparisonCriteria />
+        { chartType !== 'contact' && <ComparisonLegend /> }
+        { chart }
+      </div>
+    );
+  }
+
+  return <VisualizationsPlaceholder />;
 };
 
 const mapStateToProps = state => ({
   chartType: state.comparisonData.chart,
+  chartsVisibility: state.ui.showComparisonCharts,
 });
 
 export default connect(mapStateToProps)(Comparison);

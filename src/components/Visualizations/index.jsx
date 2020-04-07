@@ -12,6 +12,7 @@ import Frequency from './Frequency';
 import TotalRequests from './TotalRequests';
 import Contact311 from './Contact311';
 import TypeOfRequest from './TypeOfRequest';
+import VisualizationsPlaceholder from '@components/Visualizations/VisualizationsPlaceholder';
 
 SnapshotService.register({
   NumberOfRequests,
@@ -24,36 +25,44 @@ SnapshotService.register({
 
 const Visualizations = ({
   menuActiveTab,
+  chartsVisibility,
 }) => {
-  if (menuActiveTab !== MENU_TABS.VISUALIZATIONS) return null;
+  if (menuActiveTab !== MENU_TABS.VISUALIZATIONS) {
+    return null;
+  }
 
-  return (
-    <div className="visualizations">
-      <VisExportSelect />
-      <div className="chart-extras">
-        <Criteria />
-        <Legend />
-        <NumberOfRequests />
+  if (chartsVisibility) {
+    return (
+      <div className="visualizations">
+        <VisExportSelect />
+        <div className="chart-extras">
+          <Criteria />
+          <Legend />
+          <NumberOfRequests />
+        </div>
+        <div className="chart-row">
+          <TimeToClose />
+        </div>
+        <div className="chart-row">
+          <Frequency />
+        </div>
+        <div className="chart-row">
+          <TotalRequests />
+        </div>
+        <div className="chart-row pies">
+          <Contact311 />
+          <TypeOfRequest />
+        </div>
       </div>
-      <div className="chart-row">
-        <TimeToClose />
-      </div>
-      <div className="chart-row">
-        <Frequency />
-      </div>
-      <div className="chart-row">
-        <TotalRequests />
-      </div>
-      <div className="chart-row pies">
-        <Contact311 />
-        <TypeOfRequest />
-      </div>
-    </div>
-  );
+    );
+  }
+
+  return <VisualizationsPlaceholder />;
 };
 
 const mapStateToProps = state => ({
   menuActiveTab: state.ui.menu.activeTab,
+  chartsVisibility: state.ui.showDataCharts,
 });
 
 export default connect(mapStateToProps)(Visualizations);
