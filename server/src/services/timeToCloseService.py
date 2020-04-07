@@ -33,7 +33,7 @@ class TimeToCloseService(object):
 
             # don't let whiskers be inside range q1 -> q3
             whiskerMin = min([q1, whiskerMin])
-            whiskerMax= max([q3, whiskerMax])
+            whiskerMax = max([q3, whiskerMax])
 
             # calculate outliers
             minOutliers = arr[arr < whiskerMin]
