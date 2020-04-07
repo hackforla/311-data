@@ -5,21 +5,21 @@ import PropTypes from 'proptypes';
 
 import Icon from '@components/common/Icon';
 import HoverOverInfo from '@components/common/HoverOverInfo';
+import Checkbox from '@components/common/Checkbox';
 import { updateComparisonChart } from '@reducers/comparisonFilters';
 
-const DistrictSelector = ({
+const ChartSelector = ({
+  comparisonChart,
   updateChart,
 }) => {
-  const labelStyle = { marginLeft: '0' };
-  const inputStyle = { marginRight: '0.5em' };
-
+  const labelStyle = { margin: '0' };
   const onChartSelect = chart => {
     updateChart(chart);
   };
 
   return (
     <div className="container">
-      <div className="is-size-6" style={{ padding: '10px 0' }}>
+      <div className="is-size-6" style={{ padding: '15px 0' }}>
         <strong style={{ paddingRight: '10px' }}>
           Chart Selection
         </strong>
@@ -34,50 +34,60 @@ const DistrictSelector = ({
           />
         </HoverOverInfo>
       </div>
-      <div className="field">
+      <div className="chart-selector field">
         <div className="control">
           <div className="columns is-vcentered">
             <div className="column">
-              <label className="radio" style={labelStyle}>
-                <input
+              <div>
+                <Checkbox
+                  id="radio-chart-freq"
                   type="radio"
                   name="chart-selector"
-                  style={inputStyle}
-                  onClick={() => onChartSelect('frequency')}
+                  size="small"
+                  handleClick={() => onChartSelect('frequency')}
+                  checked={comparisonChart === 'frequency'}
+                  style={labelStyle}
                 />
                 Frequency Chart
-              </label>
-              <label className="radio" style={labelStyle}>
-                <input
+              </div>
+              <div>
+                <Checkbox
+                  id="radio-chart-request"
                   type="radio"
                   name="chart-selector"
-                  style={inputStyle}
-                  onClick={() => onChartSelect('request')}
-
+                  size="small"
+                  handleClick={() => onChartSelect('request')}
+                  checked={comparisonChart === 'request'}
+                  style={labelStyle}
                 />
                 Total Request Chart
-              </label>
+              </div>
             </div>
             <div className="column">
-              <label className="radio" style={labelStyle}>
-                <input
+              <div>
+                <Checkbox
+                  id="radio-chart-time"
                   type="radio"
                   name="chart-selector"
-                  style={inputStyle}
-                  onClick={() => onChartSelect('time')}
-
+                  size="small"
+                  handleClick={() => onChartSelect('time')}
+                  checked={comparisonChart === 'time'}
+                  style={labelStyle}
                 />
                 Time-to-Close Chart
-              </label>
-              <label className="radio" style={labelStyle}>
-                <input
+              </div>
+              <div>
+                <Checkbox
+                  id="radio-chart-contact"
                   type="radio"
                   name="chart-selector"
-                  style={inputStyle}
-                  onClick={() => onChartSelect('contact')}
+                  size="small"
+                  handleClick={() => onChartSelect('contact')}
+                  checked={comparisonChart === 'contact'}
+                  style={labelStyle}
                 />
                 311 Contact Pie Chart
-              </label>
+              </div>
             </div>
           </div>
         </div>
@@ -90,8 +100,13 @@ const mapDispatchToProps = dispatch => ({
   updateChart: chart => dispatch(updateComparisonChart(chart)),
 });
 
-DistrictSelector.propTypes = {
+const mapStateToProps = state => ({
+  comparisonChart: state.comparisonFilters.comparison.chart,
+});
+
+ChartSelector.propTypes = {
   updateChart: PropTypes.func.isRequired,
+  comparisonChart: PropTypes.string.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(DistrictSelector);
+export default connect(mapStateToProps, mapDispatchToProps)(ChartSelector);
