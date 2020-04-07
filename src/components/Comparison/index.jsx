@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import SnapshotService from '@components/export/SnapshotService';
 import ComparisonCriteria from '@components/chartExtras/ComparisonCriteria';
 import ComparisonLegend from '@components/chartExtras/ComparisonLegend';
+import VisualizationsPlaceholder from '@components/Visualizations/VisualizationsPlaceholder';
 import TimeToCloseComparison from './TimeToCloseComparison';
 import FrequencyComparison from './FrequencyComparison';
 import TotalRequestsComparison from './TotalRequestsComparison';
 import Contact311Comparison from './Contact311Comparison';
-import VisualizationsPlaceholder from '@components/Visualizations/VisualizationsPlaceholder';
 
 SnapshotService.register({
   TimeToCloseComparison,
@@ -53,6 +53,7 @@ export default connect(mapStateToProps)(Comparison);
 
 Comparison.propTypes = {
   chartType: PropTypes.string,
+  chartsVisibility: PropTypes.bool.isRequired,
 };
 
 Comparison.defaultProps = {
