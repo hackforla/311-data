@@ -16,7 +16,7 @@ const TimeToCloseComparison = ({
   };
 
   const boxLabels = {
-    nc: id => COUNCILS.find(c => parseInt(id) === c.id)['name'],
+    nc: id => COUNCILS.find(c => parseInt(id, 10) === c.id).name,
     cc: name => `District ${name}`,
   };
 
