@@ -7,6 +7,7 @@ import {
   select,
   all,
 } from 'redux-saga/effects';
+import { COUNCILS } from '@components/common/CONSTANTS';
 
 import {
   types,
@@ -19,6 +20,7 @@ import {
 import {
   setErrorModal,
 } from '../reducers/ui';
+
 
 /* /////////// INDIVIDUAL API CALLS /////////// */
 
@@ -109,10 +111,14 @@ function* getFilters() {
     requestTypes,
   } = yield select(getState, 'filters');
 
+  const convertCouncilNameToID = ncList => (
+    ncList.map(name => COUNCILS.find(nc => nc.name === name)?.id)
+  );
+
   return {
     startDate,
     endDate,
-    ncList: councils,
+    ncList: convertCouncilNameToID(councils),
     requestTypes: Object.keys(requestTypes).filter(req => req !== 'All' && requestTypes[req]),
   };
 }
