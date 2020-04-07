@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'proptypes';
 import { useLocation } from 'react-router-dom';
@@ -9,8 +9,11 @@ import Button from '@components/common/Button';
 const Submit = ({
   getData,
   getComparisonData,
+  filters,
+  comparisonFilters,
 }) => {
   const { pathname } = useLocation();
+  const [disableSubmit, setDisableSubmit] = useState(true);
 
   const handleSubmit = () => {
     switch (pathname) {
@@ -20,6 +23,54 @@ const Submit = ({
     }
   };
 
+  useEffect(() => {
+    switch (pathname) {
+      case '/': {
+        const {
+          startDate,
+          endDate,
+          councils,
+          requestTypes,
+        } = filters;
+
+        if (startDate
+            && endDate
+            && councils.length > 0
+            && Object.values(requestTypes).includes(true)) {
+          setDisableSubmit(false);
+        }
+        break;
+      }
+      case '/comparison': {
+        const {
+          startDate,
+          endDate,
+          comparison: {
+            chart,
+            set1,
+            set2,
+          },
+          requestTypes,
+        } = comparisonFilters;
+
+        if (startDate
+            && endDate
+            && chart
+            && set1.district
+            && set1.list.length > 0
+            && set2.district
+            && set2.list.length > 0
+            && Object.values(requestTypes).includes(true)) {
+          setDisableSubmit(false);
+        }
+        break;
+      }
+      default: return null;
+    }
+
+    return () => {};
+  }, [disableSubmit, filters, comparisonFilters, pathname]);
+
   return (
     <div className="level" style={{ padding: '25px 192px 15px' }}>
       <div className="level-item">
@@ -27,11 +78,17 @@ const Submit = ({
           id="sidebar-submit-button"
           label="Submit"
           handleClick={handleSubmit}
+          disabled={disableSubmit}
         />
       </div>
     </div>
   );
 };
+
+const mapStateToProps = state => ({
+  filters: state.filters,
+  comparisonFilters: state.comparisonFilters,
+});
 
 const mapDispatchToProps = dispatch => ({
   getData: () => dispatch(getDataRequest()),
@@ -41,6 +98,28 @@ const mapDispatchToProps = dispatch => ({
 Submit.propTypes = {
   getData: propTypes.func,
   getComparisonData: propTypes.func,
+  filters: propTypes.shape({
+    startDate: propTypes.string,
+    endDate: propTypes.string,
+    councils: propTypes.array,
+    requestTypes: propTypes.shape({}),
+  }).isRequired,
+  comparisonFilters: propTypes.shape({
+    startDate: propTypes.string,
+    endDate: propTypes.string,
+    comparison: propTypes.shape({
+      chart: propTypes.string,
+      set1: propTypes.shape({
+        district: propTypes.string,
+        list: propTypes.array,
+      }),
+      set2: propTypes.shape({
+        district: propTypes.string,
+        list: propTypes.array,
+      }),
+    }),
+    requestTypes: propTypes.shape({}),
+  }).isRequired,
 };
 
 Submit.defaultProps = {
@@ -48,4 +127,4 @@ Submit.defaultProps = {
   getComparisonData: () => null,
 };
 
-export default connect(null, mapDispatchToProps)(Submit);
+export default connect(mapStateToProps, mapDispatchToProps)(Submit);
