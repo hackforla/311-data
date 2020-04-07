@@ -5,9 +5,6 @@ export const types = {
   UPDATE_END_DATE: 'UPDATE_END_DATE',
   UPDATE_REQUEST_TYPE: 'UPDATE_REQUEST_TYPE',
   UPDATE_NEIGHBORHOOD_COUNCIL: 'UPDATE_NEIGHBORHOOD_COUNCIL',
-  UPDATE_COMPARISON_LIST: 'UPDATE_COMPARISON_LIST',
-  UPDATE_COMPARISON_DISTRICT: 'UPDATE_COMPARISON_DISTRICT',
-  UPDATE_COMPARISON_CHART: 'UPDATE_COMPARISON_CHART',
   SELECT_ALL_REQUEST_TYPES: 'SELECT_ALL_REQUEST_TYPES',
   DESELECT_ALL_REQUEST_TYPES: 'DESELECT_ALL_REQUEST_TYPES',
 };
@@ -52,17 +49,6 @@ const initialState = {
   startDate: null,
   endDate: null,
   councils: [],
-  comparison: {
-    chart: '',
-    set1: {
-      district: '',
-      list: [],
-    },
-    set2: {
-      district: '',
-      list: [],
-    },
-  },
   requestTypes: allRequestTypes(false),
 };
 
@@ -103,36 +89,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         councils: action.payload,
-      };
-    case types.UPDATE_COMPARISON_LIST:
-      return {
-        ...state,
-        comparison: {
-          ...state.comparison,
-          [action.payload.set]: {
-            ...state.comparison[action.payload.set],
-            list: action.payload.list,
-          },
-        },
-      };
-    case types.UPDATE_COMPARISON_DISTRICT:
-      return {
-        ...state,
-        comparison: {
-          ...state.comparison,
-          [action.payload.set]: {
-            ...state.comparison[action.payload.set],
-            district: action.payload.district,
-          },
-        },
-      };
-    case types.UPDATE_COMPARISON_CHART:
-      return {
-        ...state,
-        comparison: {
-          ...state.comparison,
-          chart: action.payload,
-        },
       };
     default:
       return state;
