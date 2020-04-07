@@ -10,7 +10,7 @@ import propTypes from 'proptypes';
 import Icon from '@components/common/Icon';
 import Modal from '@components/common/Modal';
 import HoverOverInfo from '@components/common/HoverOverInfo';
-import CollapsibleText from '@components/chartExtras/CollapsibleText';
+import CollapsibleList from '@components/common/CollapsibleList';
 import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import DistrictSelectorModal from './DistrictSelectorModal';
 
@@ -45,7 +45,7 @@ const DistrictSelector = ({
               :
             </span>
             <br />
-            <CollapsibleText
+            <CollapsibleList
               items={comparison[set].list}
               maxShown={10}
               delimiter="; "
