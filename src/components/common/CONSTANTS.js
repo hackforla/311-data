@@ -91,424 +91,17 @@ export const REQUEST_SOURCES = [
   },
 ];
 
-export const COUNCILS = [
-  {
-    id: 6,
-    name: 'ARLETA NC',
-  },
-  {
-    id: 42,
-    name: 'ARROYO SECO NC',
-  },
-  {
-    id: 37,
-    name: 'ATWATER VILLAGE NC',
-  },
-  {
-    id: 64,
-    name: 'BEL AIR-BEVERLY CREST NC',
-  },
-  {
-    id: 50,
-    name: 'BOYLE HEIGHTS NC',
-  },
-  {
-    id: 65,
-    name: 'BRENTWOOD CC',
-  },
-  {
-    id: 13,
-    name: 'CANOGA PARK NC',
-  },
-  {
-    id: 110,
-    name: 'CENTRAL ALAMEDA NC',
-  },
-  {
-    id: 32,
-    name: 'CENTRAL HOLLYWOOD NC',
-  },
-  {
-    id: 95,
-    name: 'CENTRAL SAN PEDRO NC',
-  },
-  {
-    id: 99,
-    name: 'CHATSWORTH NC',
-  },
-  {
-    id: 96,
-    name: 'COASTAL SAN PEDRO NC',
-  },
-  {
-    id: 86,
-    name: 'COMMUNITY AND NEIGHBORS FOR NINTH DISTRICT UNITY (CANNDU)',
-  },
-  {
-    id: 70,
-    name: 'DEL REY NC',
-  },
-  {
-    id: 52,
-    name: 'DOWNTOWN LOS ANGELES',
-  },
-  {
-    id: 40,
-    name: 'EAGLE ROCK NC',
-  },
-  {
-    id: 34,
-    name: 'EAST HOLLYWOOD NC',
-  },
-  {
-    id: 44,
-    name: 'ECHO PARK NC',
-  },
-  {
-    id: 43,
-    name: 'ELYSIAN VALLEY RIVERSIDE NC',
-  },
-  {
-    id: 81,
-    name: 'EMPOWERMENT CONGRESS CENTRAL AREA NDC',
-  },
-  {
-    id: 77,
-    name: 'EMPOWERMENT CONGRESS NORTH AREA NDC',
-  },
-  {
-    id: 87,
-    name: 'EMPOWERMENT CONGRESS SOUTHEAST AREA NDC',
-  },
-  {
-    id: 84,
-    name: 'EMPOWERMENT CONGRESS SOUTHWEST AREA NDC',
-  },
-  {
-    id: 79,
-    name: 'EMPOWERMENT CONGRESS WEST AREA NDC',
-  },
-  {
-    id: 18,
-    name: 'ENCINO NC',
-  },
-  {
-    id: 9,
-    name: 'FOOTHILL TRAILS DISTRICT NC',
-  },
-  {
-    id: 39,
-    name: 'GLASSELL PARK NC',
-  },
-  {
-    id: 4,
-    name: 'GRANADA HILLS NORTH NC',
-  },
-  {
-    id: 118,
-    name: 'GRANADA HILLS SOUTH NC',
-  },
-  {
-    id: 102,
-    name: 'GREATER CYPRESS PARK NC',
-  },
-  {
-    id: 28,
-    name: 'GREATER TOLUCA LAKE NC',
-  },
-  {
-    id: 21,
-    name: 'GREATER VALLEY GLEN COUNCIL',
-  },
-  {
-    id: 119,
-    name: 'GREATER WILSHIRE NC',
-  },
-  {
-    id: 92,
-    name: 'HARBOR CITY NC',
-  },
-  {
-    id: 90,
-    name: 'HARBOR GATEWAY NORTH NC',
-  },
-  {
-    id: 91,
-    name: 'HARBOR GATEWAY SOUTH NC',
-  },
-  {
-    id: 126,
-    name: 'HERMON NC',
-  },
-  {
-    id: 46,
-    name: 'HISTORIC CULTURAL NC',
-  },
-  {
-    id: 128,
-    name: 'HISTORIC CULTURAL NORTH NC',
-  },
-  {
-    id: 122,
-    name: 'HISTORIC FILIPINOTOWN NC',
-  },
-  {
-    id: 41,
-    name: 'HISTORIC HIGHLAND PARK NC',
-  },
-  {
-    id: 29,
-    name: 'HOLLYWOOD HILLS WEST NC',
-  },
-  {
-    id: 33,
-    name: 'HOLLYWOOD STUDIO DISTRICT NC',
-  },
-  {
-    id: 30,
-    name: 'HOLLYWOOD UNITED NC',
-  },
-  {
-    id: 48,
-    name: 'LA-32 NC',
-  },
-  {
-    id: 19,
-    name: 'LAKE BALBOA NC',
-  },
-  {
-    id: 47,
-    name: 'LINCOLN HEIGHTS NC',
-  },
-  {
-    id: 36,
-    name: 'LOS FELIZ NC',
-  },
-  {
-    id: 54,
-    name: 'MACARTHUR PARK NC',
-  },
-  {
-    id: 67,
-    name: 'MAR VISTA CC',
-  },
-  {
-    id: 73,
-    name: 'MID CITY NC',
-  },
-  {
-    id: 58,
-    name: 'MID CITY WEST CC',
-  },
-  {
-    id: 101,
-    name: 'MISSION HILLS NC',
-  },
-  {
-    id: 25,
-    name: 'NC VALLEY VILLAGE',
-  },
-  {
-    id: 71,
-    name: 'NC WESTCHESTER/PLAYA',
-  },
-  {
-    id: 24,
-    name: 'NOHO NC',
-  },
-  {
-    id: 22,
-    name: 'NOHO WEST NC',
-  },
-  {
-    id: 112,
-    name: 'NORTH HILLS EAST',
-  },
-  {
-    id: 111,
-    name: 'NORTH HILLS WEST NC',
-  },
-  {
-    id: 23,
-    name: 'NORTH HOLLYWOOD NORTHEAST NC',
-  },
-  {
-    id: 120,
-    name: 'NORTHRIDGE EAST',
-  },
-  {
-    id: 124,
-    name: 'NORTHRIDGE SOUTH NC',
-  },
-  {
-    id: 113,
-    name: 'NORTHRIDGE WEST',
-  },
-  {
-    id: 94,
-    name: 'NORTHWEST SAN PEDRO NC',
-  },
-  {
-    id: 127,
-    name: 'NORTH WESTWOOD NC',
-  },
-  {
-    id: 2,
-    name: 'OLD NORTHRIDGE CC',
-  },
-  {
-    id: 104,
-    name: 'OLYMPIC PARK NC',
-  },
-  {
-    id: 117,
-    name: 'PACIFIC PALISADES NC',
-  },
-  {
-    id: 7,
-    name: 'PACOIMA NC',
-  },
-  {
-    id: 115,
-    name: 'PALMS NC',
-  },
-  {
-    id: 100,
-    name: 'PANORAMA CITY NC',
-  },
-  {
-    id: 80,
-    name: 'PARK MESA HEIGHTS CC',
-  },
-  {
-    id: 60,
-    name: 'P.I.C.O. NC',
-  },
-  {
-    id: 76,
-    name: 'PICO UNION NC',
-  },
-  {
-    id: 114,
-    name: 'PORTER RANCH NC',
-  },
-  {
-    id: 53,
-    name: 'RAMPART VILLAGE NC',
-  },
-  {
-    id: 15,
-    name: 'RESEDA NC',
-  },
-  {
-    id: 26,
-    name: 'SHERMAN OAKS NC',
-  },
-  {
-    id: 38,
-    name: 'SILVER LAKE NC',
-  },
-  {
-    id: 78,
-    name: 'SOUTH CENTRAL NC',
-  },
-  {
-    id: 61,
-    name: 'SOUTH ROBERTSON NC',
-  },
-  {
-    id: 27,
-    name: 'STUDIO CITY NC',
-  },
-  {
-    id: 10,
-    name: 'SUNLAND-TUJUNGA NC',
-  },
-  {
-    id: 8,
-    name: 'SUN VALLEY AREA NC',
-  },
-  {
-    id: 5,
-    name: 'SYLMAR NC',
-  },
-  {
-    id: 17,
-    name: 'TARZANA NC',
-  },
-  {
-    id: 123,
-    name: 'UNITED FOR VICTORY',
-  },
-  {
-    id: 74,
-    name: 'UNITED NEIGHBORHOODS OF THE HISTORIC ARLINGTON HEIGHTS, WEST ADAMS, AND JEFFERSON PARK COMMUNITY',
-  },
-  {
-    id: 20,
-    name: 'VAN NUYS NC',
-  },
-  {
-    id: 68,
-    name: 'VENICE NC',
-  },
-  {
-    id: 109,
-    name: 'VOICES OF 90037',
-  },
-  {
-    id: 88,
-    name: 'WATTS NC',
-  },
-  {
-    id: 75,
-    name: 'WEST ADAMS NC',
-  },
-  {
-    id: 11,
-    name: 'WEST HILLS NC',
-  },
-  {
-    id: 97,
-    name: 'WESTLAKE NORTH NC',
-  },
-  {
-    id: 121,
-    name: 'WESTLAKE SOUTH NC',
-  },
-  {
-    id: 66,
-    name: 'WEST LOS ANGELES NC',
-  },
-  {
-    id: 62,
-    name: 'WESTSIDE NC',
-  },
-  {
-    id: 63,
-    name: 'WESTWOOD NC',
-  },
-  {
-    id: 93,
-    name: 'WILMINGTON NC',
-  },
-  {
-    id: 55,
-    name: 'WILSHIRE CENTER - KOREATOWN NC',
-  },
-  {
-    id: 14,
-    name: 'WINNETKA NC',
-  },
-  {
-    id: 16,
-    name: 'WOODLAND HILLS-WARNER CENTER NC',
-  },
-  {
-    id: 125,
-    name: 'ZAPATA KING NC',
-  },
+export const DISTRICT_TYPES = [
+  { id: 'nc', name: 'Neighborhood Council District', color: '#DDEC9F' },
+  { id: 'cc', name: 'City Council District', color: '#565656' },
+  // { id: 'bid', name: 'Business Improvement District' },
+  // { id: 'sd', name: 'Supervisory District' },
 ];
+
+export const MENU_TABS = {
+  MAP: 'Map',
+  VISUALIZATIONS: 'Data Visualization',
+};
 
 export const CITY_COUNCILS = [
   { id: 1, name: 'Council District 1' },
@@ -528,14 +121,115 @@ export const CITY_COUNCILS = [
   { id: 15, name: 'Council District 15' },
 ];
 
-export const DISTRICT_TYPES = [
-  { id: 'nc', name: 'Neighborhood Council District', color: '#DDEC9F' },
-  { id: 'cc', name: 'City Council District', color: '#565656' },
-  // { id: 'bid', name: 'Business Improvement District' },
-  // { id: 'sd', name: 'Supervisory District' },
+export const COUNCILS = [
+  { id: 6, name: 'Arleta NC' },
+  { id: 42, name: 'Arroyo Seco NC' },
+  { id: 37, name: 'Atwater Village NC' },
+  { id: 64, name: 'Bel Air-Beverly Crest NC' },
+  { id: 50, name: 'Boyle Heights NC' },
+  { id: 65, name: 'Brentwood CC' },
+  { id: 13, name: 'Canoga Park NC' },
+  { id: 110, name: 'Central Alameda NC' },
+  { id: 32, name: 'Central Hollywood NC' },
+  { id: 95, name: 'Central San Pedro NC' },
+  { id: 99, name: 'Chatsworth NC' },
+  { id: 96, name: 'Coastal San Pedro NC' },
+  {
+    id: 86,
+    name: 'Community And Neighbors For Ninth District Unity (CANNDU)',
+  },
+  { id: 70, name: 'Del Rey NC' },
+  { id: 52, name: 'Downtown Los Angeles' },
+  { id: 40, name: 'Eagle Rock NC' },
+  { id: 34, name: 'East Hollywood NC' },
+  { id: 44, name: 'Echo Park NC' },
+  { id: 43, name: 'Elysian Valley Riverside NC' },
+  { id: 81, name: 'Empowerment Congress Central Area NDC' },
+  { id: 77, name: 'Empowerment Congress North Area NDC' },
+  { id: 87, name: 'Empowerment Congress Southeast Area NDC' },
+  { id: 84, name: 'Empowerment Congress Southwest Area NDC' },
+  { id: 79, name: 'Empowerment Congress West Area NDC' },
+  { id: 18, name: 'Encino NC' },
+  { id: 9, name: 'Foothill Trails District NC' },
+  { id: 39, name: 'Glassell Park NC' },
+  { id: 4, name: 'Granada Hills North NC' },
+  { id: 118, name: 'Granada Hills South NC' },
+  { id: 102, name: 'Greater Cypress Park NC' },
+  { id: 28, name: 'Greater Toluca Lake NC' },
+  { id: 21, name: 'Greater Valley Glen Council' },
+  { id: 119, name: 'Greater Wilshire NC' },
+  { id: 92, name: 'Harbor City NC' },
+  { id: 90, name: 'Harbor Gateway North NC' },
+  { id: 91, name: 'Harbor Gateway South NC' },
+  { id: 126, name: 'Hermon NC' },
+  { id: 46, name: 'Historic Cultural NC' },
+  { id: 128, name: 'Historic Cultural North NC' },
+  { id: 122, name: 'Historic Filipinotown NC' },
+  { id: 41, name: 'Historic Highland Park NC' },
+  { id: 29, name: 'Hollywood Hills West NC' },
+  { id: 33, name: 'Hollywood Studio District NC' },
+  { id: 30, name: 'Hollywood United NC' },
+  { id: 48, name: 'LA-32 NC' },
+  { id: 19, name: 'Lake Balboa NC' },
+  { id: 47, name: 'Lincoln Heights NC' },
+  { id: 36, name: 'Los Feliz NC' },
+  { id: 54, name: 'Macarthur Park NC' },
+  { id: 67, name: 'Mar Vista CC' },
+  { id: 73, name: 'Mid City NC' },
+  { id: 58, name: 'Mid City West CC' },
+  { id: 101, name: 'Mission Hills NC' },
+  { id: 25, name: 'NC Valley Village' },
+  { id: 71, name: 'NC Westchester/Playa' },
+  { id: 24, name: 'Noho NC' },
+  { id: 22, name: 'Noho West NC' },
+  { id: 112, name: 'North Hills East' },
+  { id: 111, name: 'North Hills West NC' },
+  { id: 23, name: 'North Hollywood Northeast NC' },
+  { id: 120, name: 'Northridge East' },
+  { id: 124, name: 'Northridge South NC' },
+  { id: 113, name: 'Northridge West' },
+  { id: 94, name: 'Northwest San Pedro NC' },
+  { id: 127, name: 'North Westwood NC' },
+  { id: 2, name: 'Old Northridge CC' },
+  { id: 104, name: 'Olympic Park NC' },
+  { id: 117, name: 'Pacific Palisades NC' },
+  { id: 7, name: 'Pacoima NC' },
+  { id: 115, name: 'Palms NC' },
+  { id: 100, name: 'Panorama City NC' },
+  { id: 80, name: 'Park Mesa Heights CC' },
+  { id: 60, name: 'P.I.C.O. NC' },
+  { id: 76, name: 'Pico Union NC' },
+  { id: 114, name: 'Porter Ranch NC' },
+  { id: 53, name: 'Rampart Village NC' },
+  { id: 15, name: 'Reseda NC' },
+  { id: 26, name: 'Sherman Oaks NC' },
+  { id: 38, name: 'Silver Lake NC' },
+  { id: 78, name: 'South Central NC' },
+  { id: 61, name: 'South Robertson NC' },
+  { id: 27, name: 'Studio City NC' },
+  { id: 10, name: 'Sunland-Tujunga NC' },
+  { id: 8, name: 'Sun Valley Area NC' },
+  { id: 5, name: 'Sylmar NC' },
+  { id: 17, name: 'Tarzana NC' },
+  { id: 123, name: 'United For Victory' },
+  {
+    id: 74,
+    name: 'United Neighborhoods Of The Historic Arlington Heights, West Adams, And Jefferson Park Community',
+  },
+  { id: 20, name: 'Van Nuys NC' },
+  { id: 68, name: 'Venice NC' },
+  { id: 109, name: 'Voices Of 90037' },
+  { id: 88, name: 'Watts NC' },
+  { id: 75, name: 'West Adams NC' },
+  { id: 11, name: 'West Hills NC' },
+  { id: 97, name: 'Westlake North NC' },
+  { id: 121, name: 'Westlake South NC' },
+  { id: 66, name: 'West Los Angeles NC' },
+  { id: 62, name: 'Westside NC' },
+  { id: 63, name: 'Westwood NC' },
+  { id: 93, name: 'Wilmington NC' },
+  { id: 55, name: 'Wilshire Center - Koreatown NC' },
+  { id: 14, name: 'Winnetka NC' },
+  { id: 16, name: 'Woodland Hills-Warner Center NC' },
+  { id: 125, name: 'Zapata King NC' },
 ];
-
-export const MENU_TABS = {
-  MAP: 'Map',
-  VISUALIZATIONS: 'Data Visualization',
-};
