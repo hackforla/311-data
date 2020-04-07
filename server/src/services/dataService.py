@@ -42,7 +42,7 @@ class DataService(object):
             Request.createddate > startDate if startDate else False,
             Request.createddate < endDate if endDate else False,
             Request.requesttype.in_(requestTypes),
-            Request.ncname.in_(ncList),
+            Request.nc.in_(ncList),
         ]
 
     def comparisonFilters(self,
@@ -58,7 +58,7 @@ class DataService(object):
             Request.createddate > startDate if startDate else False,
             Request.createddate < endDate if endDate else False,
             Request.requesttype.in_(requestTypes),
-            db.or_(Request.ncname.in_(ncList), Request.cd.in_(cdList))
+            db.or_(Request.nc.in_(ncList), Request.cd.in_(cdList))
         ]
 
     @includeMeta
