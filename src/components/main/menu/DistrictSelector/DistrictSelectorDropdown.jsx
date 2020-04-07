@@ -20,56 +20,56 @@ const DistrictSelectorDropdown = ({
   const [filteredDistrictList, setFilteredDistrictList] = useState(null);
   const [selectedDistrictList, setSelectedDistrictList] = useState(null);
 
-  const createDistrictSelectedList = () => {
-    let list = [];
-
-    switch (district) {
-      case 'nc':
-        list = COUNCILS.map(d => d.name);
-        break;
-      case 'cc':
-        list = CITY_COUNCILS.map(d => d.name);
-        break;
-      default:
-        break;
-    }
-
-    list.reduce((acc, council) => {
-      acc[council] = false;
-      return acc;
-    }, { all: false });
-  };
-
-  const getDistrictList = () => {
-    let list;
-
-    switch (district) {
-      case 'nc':
-        list = COUNCILS.map(d => d.name);
-        break;
-      case 'cc':
-        list = CITY_COUNCILS.map(d => d.name);
-        break;
-      default:
-        list = null;
-        break;
-    }
-
-    setFilteredDistrictList(list);
-    setDistrictList(list);
-    setSelectedDistrictList(list ? list.reduce((acc, council) => {
-      acc[council] = false;
-      return acc;
-    }, { all: false }) : null);
-  };
-
   useEffect(() => {
+    const createDistrictSelectedList = () => {
+      let list = [];
+
+      switch (district) {
+        case 'nc':
+          list = COUNCILS.map(d => d.name);
+          break;
+        case 'cc':
+          list = CITY_COUNCILS.map(d => d.name);
+          break;
+        default:
+          break;
+      }
+
+      list.reduce((acc, council) => {
+        acc[council] = false;
+        return acc;
+      }, { all: false });
+    };
+
+    const getDistrictList = () => {
+      let list;
+
+      switch (district) {
+        case 'nc':
+          list = COUNCILS.map(d => d.name);
+          break;
+        case 'cc':
+          list = CITY_COUNCILS.map(d => d.name);
+          break;
+        default:
+          list = null;
+          break;
+      }
+
+      setFilteredDistrictList(list);
+      setDistrictList(list);
+      setSelectedDistrictList(list ? list.reduce((acc, council) => {
+        acc[council] = false;
+        return acc;
+      }, { all: false }) : null);
+    };
+
     getDistrictList();
     createDistrictSelectedList();
   }, [district]);
 
   const selectRowStyle = {
-    margin: '0 0 7px 0',
+    margin: '0',
   };
 
   const selectRowTextStyle = {
@@ -160,7 +160,7 @@ const DistrictSelectorDropdown = ({
           <div className="level" style={selectRowStyle}>
             <div className="level-left">
               <div className="level-item">
-                <p className="is-size-7" style={selectRowTextStyle}>
+                <p className="is-size-6" style={selectRowTextStyle}>
                   SELECT ALL
                 </p>
               </div>
@@ -179,10 +179,10 @@ const DistrictSelectorDropdown = ({
           </div>
 
           {filteredDistrictList && filteredDistrictList.map(council => (
-            <div key={council} className="level" style={selectRowStyle}>
+            <div key={council} className="comparison-council level" style={selectRowStyle}>
               <div className="level-left">
                 <div className="level-item">
-                  <p className="is-size-7" style={selectRowTextStyle}>
+                  <p className="is-size-6" style={selectRowTextStyle}>
                     {council}
                   </p>
                 </div>

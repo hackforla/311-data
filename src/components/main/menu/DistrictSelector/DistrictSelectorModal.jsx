@@ -48,7 +48,7 @@ const DistrictSelectorModal = ({
         </div>
         <Dropdown
           id="district-selector-dropdown"
-          title=""
+          title="Select District Type"
           list={mungeDistrictTypes()}
           onClick={districtId => updateDistrict(set, districtId)}
         />
@@ -70,7 +70,7 @@ const DistrictSelectorModal = ({
 };
 
 const mapStateToProps = state => ({
-  comparison: state.filters.comparison,
+  comparison: state.comparisonFilters.comparison,
 });
 
 const mapDispatchToProps = dispatch => ({

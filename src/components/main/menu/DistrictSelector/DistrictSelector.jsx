@@ -2,16 +2,21 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import {
+  clearComparisonSet,
+} from '@reducers/comparisonFilters';
 import propTypes from 'proptypes';
 
 import Icon from '@components/common/Icon';
 import Modal from '@components/common/Modal';
 import HoverOverInfo from '@components/common/HoverOverInfo';
+import CollapsibleText from '@components/chartExtras/CollapsibleText';
 import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import DistrictSelectorModal from './DistrictSelectorModal';
 
 const DistrictSelector = ({
   comparison,
+  clearSet,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [comparisonSet, setComparisonSet] = useState('set1');
@@ -31,12 +36,35 @@ const DistrictSelector = ({
       return header.name;
     };
 
-    if (comparison[set]?.type && comparison[set]?.list.length > 0) {
+    if (comparison[set]?.district && comparison[set]?.list.length > 0) {
       return (
-        <div className={set} style={{ border: '1px solid black' }}>
-          {renderHeader(comparison[set].type)}
-          <br />
-          {comparison[set].list}
+        <div className="comparison-set">
+          <div className={set}>
+            <span className="comparison-set-header">
+              {renderHeader(comparison[set].district)}
+              :
+            </span>
+            <br />
+            <CollapsibleText
+              items={comparison[set].list}
+              maxShown={10}
+              delimiter="; "
+              buttonId="toggle-show-more"
+            />
+          </div>
+          <div className="clear-set-container">
+            <Icon
+              id={`clear-${set}`}
+              icon="plus-circle"
+              size="small"
+              style={{
+                color: '#D10000',
+                transform: 'rotate(45deg)',
+                cursor: 'pointer',
+              }}
+              handleClick={() => clearSet(set)}
+            />
+          </div>
         </div>
       );
     }
@@ -47,6 +75,7 @@ const DistrictSelector = ({
           id={`add-district-${set}`}
           icon="plus-circle"
           size="small"
+          style={{ cursor: 'pointer' }}
         />
         &nbsp;
         Add District
@@ -56,7 +85,7 @@ const DistrictSelector = ({
 
   return (
     <>
-      <div className="container">
+      <div className="district-selector container">
         <div className="is-size-6" style={{ padding: '15px 0' }}>
           <strong style={{ paddingRight: '10px' }}>
             District Selection
@@ -90,12 +119,20 @@ const DistrictSelector = ({
   );
 };
 
+const mapDispatchToProps = dispatch => ({
+  clearSet: set => dispatch(clearComparisonSet(set)),
+});
+
 const mapStateToProps = state => ({
-  comparison: state.filters.comparison,
+  comparison: state.comparisonFilters.comparison,
 });
 
 DistrictSelector.propTypes = {
   comparison: propTypes.shape({}).isRequired,
+  clearSet: propTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(DistrictSelector);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DistrictSelector);
