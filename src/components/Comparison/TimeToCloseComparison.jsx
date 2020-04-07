@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import Chart, { ChartTooltip as Tooltip } from '@components/Chart';
-import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
+import { DISTRICT_TYPES, COUNCILS } from '@components/common/CONSTANTS';
 import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const TimeToCloseComparison = ({
@@ -16,7 +16,7 @@ const TimeToCloseComparison = ({
   };
 
   const boxLabels = {
-    nc: name => name,
+    nc: id => COUNCILS.find(c => parseInt(id) === c.id)['name'],
     cc: name => `District ${name}`,
   };
 
