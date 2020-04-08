@@ -22,7 +22,7 @@ const VisExportSelect = () => {
       />
       { open && (
         <div className="export-dropdown">
-          <h3>Export Image</h3>
+          <h3>Export Images</h3>
           <SelectItem
             label="PDF"
             filename="charts.pdf"
@@ -33,9 +33,9 @@ const VisExportSelect = () => {
             }}
             onComplete={() => setLoading(false)}
           />
-          <div>Email</div>
+          {/* <div>Email</div>
           <div>Link</div>
-          <div>Excel</div>
+          <div>Excel</div> */}
         </div>
       )}
     </span>

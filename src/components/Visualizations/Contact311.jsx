@@ -2,23 +2,32 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_SOURCES } from '@components/common/CONSTANTS';
-import PieChart from './PieChart';
+import { PieChart } from '@components/Chart';
+import { transformCounts } from '@utils';
 
 const Contact311 = ({
   sourceCounts,
 }) => {
-  const sectors = Object.keys(sourceCounts).map(key => ({
-    label: key,
-    value: sourceCounts[key],
-    color: REQUEST_SOURCES.find(s => s.type === key)?.color,
-  }));
+  const altCounts = transformCounts(sourceCounts);
+
+  const sectors = Object.keys(altCounts)
+    .map(key => {
+      const source = REQUEST_SOURCES.find(s => s.type === key);
+      return {
+        label: key,
+        value: altCounts[key],
+        color: source?.color,
+        abbrev: source?.abbrev,
+      };
+    });
 
   return (
     <PieChart
-      id="contact-311"
       title="How People Contact 311"
       sectors={sectors}
       addLabels
+      componentName="Contact311"
+      pdfTemplateName="VisPageNoLegend"
     />
   );
 };

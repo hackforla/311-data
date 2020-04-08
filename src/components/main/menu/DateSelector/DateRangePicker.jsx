@@ -7,7 +7,11 @@ import DatePicker from 'react-datepicker';
 import {
   updateStartDate,
   updateEndDate,
-} from '../../../../redux/reducers/filters';
+} from '@reducers/filters';
+import {
+  updateComparisonStartDate,
+  updateComparisonEndDate,
+} from '@reducers/comparisonFilters';
 
 import Button from '../../../common/Button';
 import Icon from '../../../common/Icon';
@@ -53,9 +57,12 @@ const DateRangePicker = ({
   id,
   title,
   style,
+  comparison,
   handleClick,
   updateStart,
   updateEnd,
+  updateComparisonStart,
+  updateComparisonEnd,
 }) => {
   const [startDate, updateLocalStart] = useState();
   const [endDate, updateLocalEnd] = useState();
@@ -180,8 +187,10 @@ const DateRangePicker = ({
             handleClick={() => {
               if (startDate && endDate) {
                 const formatDate = date => moment(date).format('MM/DD/YYYY');
-                updateStart(formatDate(startDate));
-                updateEnd(formatDate(endDate));
+                const dispatchStart = comparison ? updateComparisonStart : updateStart;
+                const dispatchEnd = comparison ? updateComparisonEnd : updateEnd;
+                dispatchStart(formatDate(startDate));
+                dispatchEnd(formatDate(endDate));
                 handleClick();
               } else {
                 alert('Provide valid start and end dates.');
@@ -197,6 +206,8 @@ const DateRangePicker = ({
 const mapDispatchToProps = dispatch => ({
   updateStart: newStartDate => dispatch(updateStartDate(newStartDate)),
   updateEnd: newEndDate => dispatch(updateEndDate(newEndDate)),
+  updateComparisonStart: newStartDate => dispatch(updateComparisonStartDate(newStartDate)),
+  updateComparisonEnd: newEndDate => dispatch(updateComparisonEndDate(newEndDate)),
 });
 
 export default connect(
@@ -211,9 +222,13 @@ DateRangePicker.propTypes = {
   handleClick: PropTypes.func.isRequired,
   updateStart: PropTypes.func.isRequired,
   updateEnd: PropTypes.func.isRequired,
+  updateComparisonStart: PropTypes.func.isRequired,
+  updateComparisonEnd: PropTypes.func.isRequired,
+  comparison: PropTypes.bool,
 };
 
 DateRangePicker.defaultProps = {
   title: undefined,
   style: undefined,
+  comparison: false,
 };

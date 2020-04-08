@@ -71,7 +71,7 @@ export default (state = initialState, action) => {
         ...state,
         requestTypes: {
           ...state.requestTypes,
-          // Flips boolean value for selected request type
+          All: false,
           [action.payload]: !state.requestTypes[action.payload],
         },
       };

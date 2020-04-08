@@ -13,16 +13,18 @@ const NCSelector = ({
   updateNCList,
 }) => {
   const [searchValue, setSearchValue] = useState('');
-  const [filteredCouncilList, setFilteredCouncilList] = useState(COUNCILS);
+  const [filteredCouncilList, setFilteredCouncilList] = useState(COUNCILS.map(c => c.name));
   const [selectedCouncilList, setSelectedCouncilList] = useState(
-    COUNCILS.reduce((acc, council) => {
-      acc[council] = false;
-      return acc;
-    }, { all: false }),
+    COUNCILS
+      .map(c => c.name)
+      .reduce((acc, council) => {
+        acc[council] = false;
+        return acc;
+      }, { all: false }),
   );
 
   const selectRowStyle = {
-    margin: '0 0 7px 0',
+    margin: '0',
   };
 
   const selectRowTextStyle = {
@@ -37,7 +39,7 @@ const NCSelector = ({
   const handleSearch = e => {
     const term = e.target.value;
     const searchFilter = new RegExp(term, 'i');
-    const searchList = COUNCILS.filter(council => searchFilter.test(council));
+    const searchList = COUNCILS.map(c => c.name).filter(council => searchFilter.test(council));
     setFilteredCouncilList(searchList);
     setSearchValue(e.target.value);
   };
@@ -74,7 +76,7 @@ const NCSelector = ({
   return (
     <div className="nc-selector" style={{ width: '349px' }}>
       <div className="nc-title">
-        <p className="is-size-6" style={{ padding: '15px 0' }}>
+        <div className="is-size-6" style={{ padding: '15px 0' }}>
           <strong style={{ paddingRight: '10px' }}>
             Neighborhood Council (NC) Selection
           </strong>
@@ -88,7 +90,7 @@ const NCSelector = ({
               size="small"
             />
           </HoverOverInfo>
-        </p>
+        </div>
       </div>
 
       <div className="nc-seach-list-wrapper">
@@ -118,7 +120,7 @@ const NCSelector = ({
         <div
           className="nc-list"
           style={{
-            height: '200px',
+            height: '205px',
             overflowX: 'hidden',
             msOverflowY: 'scroll',
             padding: '10px 23px 10px 10px',
@@ -130,7 +132,7 @@ const NCSelector = ({
           <div className="level" style={selectRowStyle}>
             <div className="level-left">
               <div className="level-item">
-                <p className="is-size-7" style={selectRowTextStyle}>
+                <p className="is-size-6" style={selectRowTextStyle}>
                   SELECT ALL
                 </p>
               </div>
@@ -152,7 +154,7 @@ const NCSelector = ({
             <div key={council} className="level" style={selectRowStyle}>
               <div className="level-left">
                 <div className="level-item">
-                  <p className="is-size-7" style={selectRowTextStyle}>
+                  <p className="is-size-6" style={selectRowTextStyle}>
                     {council}
                   </p>
                 </div>
