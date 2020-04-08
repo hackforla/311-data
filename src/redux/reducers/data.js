@@ -5,9 +5,9 @@ export const types = {
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
-  GET_CONTACT_REQUEST: 'GET_CONTACT_REQUEST',
-  GET_CONTACT_SUCCESS: 'GET_CONTACT_SUCCESS',
-  GET_CONTACT_FAILURE: 'GET_CONTACT_FAILURE',
+  SEND_GIT_REQUEST: 'GET_CONTACT_REQUEST',
+  GIT_RESPONSE_SUCCESS: 'GET_CONTACT_SUCCESS',
+  GIT_RESPONSE_FAILURE: 'GET_CONTACT_FAILURE',
 };
 
 export const getDataRequest = () => ({
@@ -39,17 +39,18 @@ export const getPinInfoFailure = error => ({
   payload: error,
 });
 
-export const getContactRequest = () => ({
-  type: types.GET_CONTACT_REQUEST,
+export const SendGitRequest = fields => ({
+  type: types.SEND_GIT_REQUEST,
+  payload: fields,
 });
 
-export const getContactSuccess = response => ({
-  type: types.GET_CONTACT_SUCCESS,
+export const gitResponseSuccess = response => ({
+  type: types.GIT_RESPONSE_SUCCESS,
   payload: response,
 });
 
-export const getContactFailure = error => ({
-  type: types.GET_CONTACT_FAILURE,
+export const gitResponseFailure = error => ({
+  type: types.GIT_RESPONSE_FAILURE,
   payload: error,
 });
 
@@ -98,7 +99,7 @@ export default (state = initialState, action) => {
       };
     }
     case types.GET_PIN_INFO_REQUEST:
-      return state;
+      return ...state;
     case types.GET_PIN_INFO_SUCCESS:
       return {
         ...state,
@@ -124,18 +125,18 @@ export default (state = initialState, action) => {
         isLoading: false,
       };
     }
-    case types.GET_CONTACT_REQUEST:
+    case types.SEND_GIT_REQUEST:
       return {
         state,
       };
-    case types.GET_CONTACT_SUCCESS:
+    case types.GIT_RESPONSE_SUCCESS:
       return {
         ...state,
         error: null,
-        isLoading: false,
+        isLoading: true,
         ...action.payload,
       };
-    case types.GET_CONTACT_FAILURE: {
+    case types.GIT_RESPONSE_FAILURE: {
       const {
         response: { status },
         message,

@@ -30,32 +30,15 @@ class ContactForm extends Component {
         } = this.state;
 
         if (firstName !== '' && lastName !== '' && email !== '' && message !== '') {
-          this.setState({ disableButton: false });
+          this.setState({
+            disableButton: false,
+            buttonText: 'Submit',
+          });
         } else {
-          this.setState({ disableButton: true });
-        }
-      });
+          this.setState({
+          disableButton: true,
+        });
   };
-
-  handleInputValidation = () => {
-    const {
-      firstName,
-      lastName,
-      email,
-      message,
-    } = this.state;
-
-    if (firstName !== '' && lastName !== '' && email !== '' && message !== '') {
-      this.setState({
-        disableButton: false,
-        buttonText: 'Submite',
-      });
-    } else {
-      this.setState({
-        disableButton: true,
-      });
-    }
-  }
 
   handleSubmit = event => {
     event.preventDefault();
@@ -65,8 +48,8 @@ class ContactForm extends Component {
       buttonText: 'Message Sent',
     });
 
-    const { getContact } = this.props;
-    getContact(this.state);
+    const { sendContact } = this.props;
+    sendContact(this.state);
   };
 
   render() {
@@ -165,7 +148,8 @@ class ContactForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  getContact: email => dispatch(getContactRequest(email)),
+  sendContact: fields => dispatch(sendGitRequest(fields)),
+  contactSuccess: () => dispatch(GitResponseSuccess)
 });
 
 const mapStateToProps = state => ({
@@ -175,7 +159,7 @@ const mapStateToProps = state => ({
 ContactForm.propTypes = {
   data: PropTypes.shape({}),
   contact: PropTypes.shape({}),
-  getContact: PropTypes.func.isRequired,
+  sendContact: PropTypes.func.isRequired,
 };
 
 ContactForm.defaultProps = {

@@ -14,8 +14,8 @@ import {
   getDataFailure,
   getPinInfoSuccess,
   getPinInfoFailure,
-  getContactSuccess,
-  getContactFailure,
+  gitResponseSuccess,
+  gitResponseFailure,
 } from './reducers/data';
 
 import {
@@ -75,7 +75,7 @@ function* fetchPinInfo(srnumber) {
   return data;
 }
 
-function* getContact(fields) {
+function* getContact(data) {
   const contactURL = `${BASE_URL}/feedback`;
 
   const { data: { data } } = yield call(axios.post, contactURL, {
@@ -154,13 +154,13 @@ function* getPinData(action) {
   }
 }
 
-function* getContactData(action) {
+function* sendContactData(action) {
   try {
-    const email = action.payload;
-    const data = yield call(getContact, email);
-    yield put(getContactSuccess(data));
+    const fields = action.payload;
+    const data = yield call(getContact, fields);
+    yield put(gitResponseSuccess(data));
   } catch (e) {
-    yield put(getContactFailure(e));
+    yield put(gitResponseFailure(e));
     yield put(setErrorModal(true));
   }
 }
@@ -168,5 +168,5 @@ function* getContactData(action) {
 export default function* rootSaga() {
   yield takeLatest(types.GET_DATA_REQUEST, getData);
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
-  yield takeLatest(types.GET_CONTACT_REQUEST, getContactData);
+  yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
 }

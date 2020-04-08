@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ContactIntro = () => (
-  <div className="intro-text">
+  <div className="contact-intro-text">
     <h1>Don&apos;t See What You Need?</h1>
     <p>
       We want to build a tool that works for you. We are open to suggestions and feedback and would
