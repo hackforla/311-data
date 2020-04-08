@@ -5,9 +5,9 @@ export const types = {
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
-  SEND_GIT_REQUEST: 'GET_CONTACT_REQUEST',
-  GIT_RESPONSE_SUCCESS: 'GET_CONTACT_SUCCESS',
-  GIT_RESPONSE_FAILURE: 'GET_CONTACT_FAILURE',
+  SEND_GIT_REQUEST: 'SEND_GIT_REQUEST',
+  GIT_RESPONSE_SUCCESS: 'GIT_RESPONSE_SUCCESS',
+  GIT_RESPONSE_FAILURE: 'GIT_RESPONSE_FAILURE',
 };
 
 export const getDataRequest = () => ({
@@ -39,7 +39,7 @@ export const getPinInfoFailure = error => ({
   payload: error,
 });
 
-export const SendGitRequest = fields => ({
+export const sendGitRequest = fields => ({
   type: types.SEND_GIT_REQUEST,
   payload: fields,
 });

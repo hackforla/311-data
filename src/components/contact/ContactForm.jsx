@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import { getContactRequest } from '@reducers/data';
+import { sendGitRequest } from '@reducers/data';
 
 class ContactForm extends Component {
   constructor(props) {
@@ -36,9 +36,11 @@ class ContactForm extends Component {
           });
         } else {
           this.setState({
-          disableButton: true,
-        });
-  };
+            disableButton: true,
+          });
+        }
+      });
+  }
 
   handleSubmit = event => {
     event.preventDefault();
@@ -149,7 +151,6 @@ class ContactForm extends Component {
 
 const mapDispatchToProps = dispatch => ({
   sendContact: fields => dispatch(sendGitRequest(fields)),
-  contactSuccess: () => dispatch(GitResponseSuccess)
 });
 
 const mapStateToProps = state => ({

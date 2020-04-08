@@ -57,6 +57,12 @@
         height: 42px;
         margin-top: 30px;
         border-radius: 10px;
+        &:focus:not(:active),
+        &:hover {
+            box-shadow: none;
+            background-color: transparent;
+            color: $brand-main-color;
+        }
     }
     
     .contact-btn:disabled,
