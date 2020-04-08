@@ -8,6 +8,7 @@ import {
   Image,
   View,
   Text,
+  pdf,
 } from '@react-pdf/renderer';
 import COLORS from '@styles/COLORS';
 
@@ -15,17 +16,15 @@ const styles = {
   page: {
     flexDirection: 'column',
     backgroundColor: COLORS.BACKGROUND,
-    paddingVertical: 20,
+    paddingVertical: 40,
     paddingHorizontal: 40,
     alignItems: 'center',
   },
   content: {
     flex: 1,
-    alignItems: 'center',
   },
-  section: {
+  image: {
     width: '100%',
-    marginTop: 20,
   },
   pageNumbers: {
     fontSize: 10,
@@ -35,22 +34,20 @@ const styles = {
 };
 
 const PdfTemplate = ({
-  pages,
+  images,
   title,
 }) => (
   <Document title={title}>
-    { pages.map((page, idx) => (
+    { images.map((image, idx) => (
       <Page key={idx} size="A4" style={styles.page}>
         <View style={styles.content}>
-          { page.map((section, idx2) => (
-            <Image
-              key={idx2}
-              src={section.img}
-              style={[styles.section, section.style]}
-            />
-          ))}
+          <Image
+            key={idx}
+            src={image}
+            style={styles.image}
+          />
         </View>
-        { pages.length > 1 && (
+        { images.length > 1 && (
           <Text
             fixed
             style={styles.pageNumbers}
@@ -64,16 +61,20 @@ const PdfTemplate = ({
   </Document>
 );
 
-export default PdfTemplate;
-
 PdfTemplate.propTypes = {
-  pages: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
-    img: PropTypes.string, // a data url
-    styles: PropTypes.shape({}),
-  }))).isRequired,
+  images: PropTypes.arrayOf(PropTypes.string).isRequired,
   title: PropTypes.string,
 };
 
 PdfTemplate.defaultProps = {
   title: undefined,
 };
+
+export default function imageToPdf({ images, title }) {
+  return pdf(
+    <PdfTemplate
+      images={images}
+      title={title}
+    />,
+  ).toBlob();
+}

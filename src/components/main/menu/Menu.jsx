@@ -18,6 +18,8 @@ import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
+import DistrictSelector from './DistrictSelector/DistrictSelector';
+import ChartSelector from './ChartSelector';
 
 const Menu = ({
   isOpen,
@@ -31,18 +33,22 @@ const Menu = ({
   ];
 
   return (
-    <div className={clx('menu-container', { open: isOpen })}>
-      <div className="menu-tabs">
-        {tabs.map(tab => (
-          <a
-            key={tab}
-            className={clx('menu-tab', { active: tab === activeTab })}
-            onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
-          >
-            { tab }
-          </a>
-        ))}
-      </div>
+    <div className="menu-container">
+      <Switch>
+        <Route exact path="/">
+          <div className="menu-tabs">
+            {tabs.map(tab => (
+              <a
+                key={tab}
+                className={clx('menu-tab', { active: tab === activeTab })}
+                onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
+              >
+                { tab }
+              </a>
+            ))}
+          </div>
+        </Route>
+      </Switch>
 
       <Button
         id="menu-toggle-button"
@@ -52,22 +58,27 @@ const Menu = ({
         color="light"
       />
 
-      <div className="menu-content">
-        <Switch>
-          <Route path="/comparison">
-            <h1>Comparison Tool</h1>
-            <DateSelector />
+      <Switch>
+        <Route path="/comparison">
+          <div className="menu-content">
+            <h1>Comparison Filters</h1>
+            <DateSelector comparison key="comparison-dateselector" />
+            <DistrictSelector />
+            <ChartSelector />
+            <RequestTypeSelector comparison />
             <Submit />
-          </Route>
-          <Route path="/">
+          </div>
+        </Route>
+        <Route path="/">
+          <div className="menu-content with-tabs">
             <h1>Filters</h1>
-            <DateSelector />
+            <DateSelector key="data-dateselector" />
             <NCSelector />
             <RequestTypeSelector />
             <Submit />
-          </Route>
-        </Switch>
-      </div>
+          </div>
+        </Route>
+      </Switch>
     </div>
   );
 };

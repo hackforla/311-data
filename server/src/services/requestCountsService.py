@@ -8,8 +8,8 @@ class RequestCountsService(object):
     async def get_req_counts(self,
                              startDate=None,
                              endDate=None,
-                             ncList=[],
                              requestTypes=[],
+                             ncList=[],
                              countFields=[]):
         """
         For each countField, returns the counts of each distinct value
@@ -39,6 +39,100 @@ class RequestCountsService(object):
         """
 
         filters = self.dataAccess.standardFilters(
-            startDate, endDate, ncList, requestTypes)
+            startDate, endDate, requestTypes, ncList)
 
         return self.dataAccess.aggregateQuery(countFields, filters)
+
+    async def get_req_counts_comparison(self,
+                                        startDate=None,
+                                        endDate=None,
+                                        requestTypes=[],
+                                        set1={'district': None, 'list': []},
+                                        set2={'district': None, 'list': []},
+                                        countFields=[]):
+
+        """
+        {
+            "lastPulled": 1585778153,
+            "data": {
+                "set1": {
+                    "district": "nc",
+                    "data": [
+                        {
+                            "field": "requestsource",
+                            "counts": {
+                                "Call": 48,
+                                "Driver Self Report": 68,
+                                "Mobile App": 41,
+                                "Self Service": 41
+                            }
+                        },
+                        {
+                            "field": "requesttype",
+                            "counts": {
+                                "Bulky Items": 93,
+                                "Graffiti Removal": 105
+                            }
+                        }
+                    ]
+                },
+                "set2": {
+                    "district": "cc",
+                    "data": [
+                        {
+                            "field": "requestsource",
+                            "counts": {
+                                "Call": 572,
+                                "Driver Self Report": 279,
+                                "Email": 2,
+                                "Mobile App": 530,
+                                "Self Service": 159
+                            }
+                        },
+                        {
+                            "field": "requesttype",
+                            "counts": {
+                                "Bulky Items": 1053,
+                                "Graffiti Removal": 489
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        """
+
+        def get_filters(district, items):
+            common = {
+                'startDate': startDate,
+                'endDate': endDate,
+                'requestTypes': requestTypes
+            }
+
+            if district == 'nc':
+                common['ncList'] = items
+                return self.dataAccess.comparisonFilters(**common)
+
+            elif district == 'cc':
+                common['cdList'] = items
+                return self.dataAccess.comparisonFilters(**common)
+
+        filters = get_filters(set1['district'], set1['list'])
+        set1data = self.dataAccess.aggregateQuery(countFields, filters)
+
+        filters = get_filters(set2['district'], set2['list'])
+        set2data = self.dataAccess.aggregateQuery(countFields, filters)
+
+        return {
+            'lastPulled': set1data['lastPulled'],
+            'data': {
+                'set1': {
+                    'district': set1['district'],
+                    'data': set1data['data']
+                },
+                'set2': {
+                    'district': set2['district'],
+                    'data': set2data['data']
+                }
+            }
+        }

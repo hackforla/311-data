@@ -2,24 +2,27 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import Chart from './Chart';
+import Chart, { ChartTooltip as Tooltip } from '@components/Chart';
+import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const TimeToClose = ({
   timeToClose,
 }) => {
-  // // DATA ////
+  /* /// DATA /// */
 
-  const boxes = Object.keys(timeToClose).map(key => {
-    const requestType = REQUEST_TYPES[key];
-    return {
-      abbrev: requestType?.abbrev,
-      color: requestType?.color,
-      stats: {
-        ...timeToClose[key],
-        outliers: [],
-      },
-    };
-  });
+  const boxes = Object.keys(timeToClose)
+    .filter(key => timeToClose[key].count !== 0)
+    .map(key => {
+      const requestType = REQUEST_TYPES[key];
+      return {
+        abbrev: requestType?.abbrev,
+        color: requestType?.color,
+        stats: {
+          ...timeToClose[key],
+          outliers: [],
+        },
+      };
+    });
 
   const chartData = {
     labels: boxes.map(b => b.abbrev),
@@ -31,6 +34,10 @@ const TimeToClose = ({
       outlierColor: '#000',
     }],
   };
+
+  if (boxes.length === 0) chartData.labels = [''];
+
+  /* /// EXPORT /// */
 
   const exportData = () => {
     const header = [
@@ -45,12 +52,46 @@ const TimeToClose = ({
     };
   };
 
-  // // OPTIONS ////
+  const exportButton = (
+    <ChartExportSelect
+      componentName="TimeToClose"
+      pdfTemplateName="VisPage"
+      exportData={exportData}
+      filename="Time to Close"
+    />
+  );
+
+  /* /// TOOLTIP /// */
+
+  const tooltip = ttData => {
+    const { index } = ttData.dataPoints[0];
+    const box = boxes[index];
+    const { stats } = box;
+
+    const lines = [{
+      text: box.abbrev,
+      bold: true,
+      color: box.color,
+    }, {
+      text: `min: ${stats.min.toFixed(2)} days`,
+    }, {
+      text: `25%: ${stats.q1.toFixed(2)} days`,
+    }, {
+      text: `50%: ${stats.median.toFixed(2)} days`,
+    }, {
+      text: `75%: ${stats.q3.toFixed(2)} days`,
+    }, {
+      text: `max: ${stats.max.toFixed(2)} days`,
+    }, {
+      text: `count: ${stats.count} requests`,
+    }];
+
+    return <Tooltip lines={lines} />;
+  };
+
+  /* /// OPTIONS /// */
 
   const chartOptions = {
-    title: {
-      text: 'Time to Close',
-    },
     maintainAspectRatio: false,
     scales: {
       xAxes: [{
@@ -69,22 +110,17 @@ const TimeToClose = ({
         },
       }],
     },
-    tooltips: {
-      callbacks: {
-        title: () => null,
-      },
-    },
-    tooltipDecimals: 1,
   };
 
   return (
     <Chart
-      id="time-to-close"
+      title="Time to Close"
       type="horizontalBoxplot"
       data={chartData}
       options={chartOptions}
       height={Math.max(160, 130 + (chartData.labels.length * 40))}
-      exportData={exportData}
+      exportButton={exportButton}
+      tooltip={tooltip}
     />
   );
 };

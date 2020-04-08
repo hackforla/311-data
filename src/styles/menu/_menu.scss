@@ -6,13 +6,9 @@
   top: $header-height;
   bottom: $footer-height;
   width: $menu-width;
-  z-index: 1100;
+  z-index: $z-menu;
   background: $brand-bg-color;
   box-shadow: 0px 4px 5px rgba(108, 108, 108, 0.3);
-  transition: $menu-transition;
-  &:not(.open) {
-    transform: translateX(-100%);
-  }
 
   .menu-tabs {
     .menu-tab {
@@ -47,7 +43,10 @@
   .menu-content {
     padding: 16px;
     overflow: auto;
-    height: calc(100% - #{$tabs-height});
+    height: 100%;
+    &.with-tabs {
+      height: calc(100% - #{$tabs-height});
+    }
     h1 {
       margin-bottom: 8px;
     }

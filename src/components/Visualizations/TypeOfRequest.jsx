@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import PieChart from './PieChart';
+import { PieChart } from '@components/Chart';
 
 const TypeOfRequest = ({
   typeCounts,
@@ -15,9 +15,10 @@ const TypeOfRequest = ({
 
   return (
     <PieChart
-      id="type-of-request"
       title="Type of Request"
       sectors={sectors}
+      componentName="TypeOfRequest"
+      pdfTemplateName="VisPage"
     />
   );
 };

@@ -5,9 +5,10 @@ import SelectItem from './SelectItem';
 import { getImage, getCsv, getSinglePagePdf } from './BlobFactory';
 
 const ChartExportSelect = ({
-  chartId,
-  chartTitle,
+  componentName,
+  pdfTemplateName,
   exportData,
+  filename,
 }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -30,8 +31,8 @@ const ChartExportSelect = ({
           <h3>Export Image</h3>
           <SelectItem
             label="PNG"
-            filename={`${chartTitle}.png`}
-            getData={() => getImage(chartId)}
+            filename={`${filename}.png`}
+            getData={() => getImage(componentName)}
             onClick={() => {
               setOpen(false);
               setLoading(true);
@@ -40,26 +41,30 @@ const ChartExportSelect = ({
           />
           <SelectItem
             label="PDF"
-            filename={`${chartTitle}.pdf`}
-            getData={() => getSinglePagePdf(chartId, chartTitle)}
+            filename={`${filename}.pdf`}
+            getData={() => getSinglePagePdf({
+              componentName,
+              templateName: pdfTemplateName,
+              pdfTitle: filename,
+            })}
             onClick={() => {
               setOpen(false);
               setLoading(true);
             }}
             onComplete={() => setLoading(false)}
           />
-          <div>Email</div>
+          {/* <div>Email</div>
           <div>Link</div>
-          <div>Excel</div>
+          <div>Excel</div> */}
 
           <h3>Export Data</h3>
           <SelectItem
             label="CSV"
-            filename={`${chartTitle}.csv`}
+            filename={`${filename}.csv`}
             getData={() => getCsv(exportData())}
             onClick={() => setOpen(false)}
           />
-          <div>Excel</div>
+          {/* <div>Excel</div> */}
 
         </div>
       )}
@@ -70,13 +75,15 @@ const ChartExportSelect = ({
 export default ChartExportSelect;
 
 ChartExportSelect.propTypes = {
-  chartId: PropTypes.string,
-  chartTitle: PropTypes.string,
+  componentName: PropTypes.string,
+  pdfTemplateName: PropTypes.string,
   exportData: PropTypes.func,
+  filename: PropTypes.string,
 };
 
 ChartExportSelect.defaultProps = {
-  chartId: undefined,
-  chartTitle: undefined,
+  componentName: undefined,
+  pdfTemplateName: undefined,
   exportData: () => null,
+  filename: undefined,
 };

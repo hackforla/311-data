@@ -8,8 +8,8 @@ class PinService(object):
     async def get_base_pins(self,
                             startDate=None,
                             endDate=None,
-                            ncList=[],
-                            requestTypes=[]):
+                            requestTypes=[],
+                            ncList=[]):
         """
         Returns the base pin data given times, ncs, and request filters
         {
@@ -17,6 +17,7 @@ class PinService(object):
           'data': [
             {
               'srnumber':'String',
+              'requesttype': 'String',
               'latitude': 'String',
               'longitude': 'String',
             }
@@ -30,6 +31,6 @@ class PinService(object):
                  'longitude']
 
         filters = self.dataAccess.standardFilters(
-            startDate, endDate, ncList, requestTypes)
+            startDate, endDate, requestTypes, ncList)
 
         return self.dataAccess.query(items, filters)
