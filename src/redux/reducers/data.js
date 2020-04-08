@@ -99,7 +99,7 @@ export default (state = initialState, action) => {
       };
     }
     case types.GET_PIN_INFO_REQUEST:
-      return ...state;
+      return state;
     case types.GET_PIN_INFO_SUCCESS:
       return {
         ...state,
@@ -127,7 +127,7 @@ export default (state = initialState, action) => {
     }
     case types.SEND_GIT_REQUEST:
       return {
-        state,
+        ...state,
       };
     case types.GIT_RESPONSE_SUCCESS:
       return {

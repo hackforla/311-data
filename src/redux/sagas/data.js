@@ -78,7 +78,7 @@ function* fetchPinInfo(srnumber) {
   return data;
 }
 
-function* getContact(data) {
+function* getContact(fields) {
   const contactURL = `${BASE_URL}/feedback`;
 
   const { data: { data } } = yield call(axios.post, contactURL, {
