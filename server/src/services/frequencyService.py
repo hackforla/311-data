@@ -8,11 +8,80 @@ class FrequencyService(object):
     def __init__(self, config=None, tableName="ingest_staging_table"):
         self.dataAccess = DataService(config, tableName)
 
+    def get_bins(self, startDate, endDate):
+        """
+        Takes a date range a returns a list of equal-size date bins that
+        cover the range.
+
+        For ranges of 24 days or less, each bin covers one calendar day.
+
+        For larger ranges, each bin is the largest size such that:
+        (1) the size is a whole number of days (i.e. the bin edges
+        are all at midnight)
+        (2) the number of bins is at least 12.
+
+        Not all date ranges are evenly divisible by a whole number of
+        days, so in cases where they aren't, we move the end date forward
+        so that the last bin is the same size as the rest.
+        """
+        start = pd.to_datetime(startDate)
+        end = pd.to_datetime(endDate) + pd.Timedelta(days=1)
+        diff = (end - start).days
+
+        # calculate size and number of bins
+        bin_size = 1 if diff <= 24 else diff // 12
+        num_bins = math.ceil(diff / bin_size)
+
+        # move the end date forward in cases where the range can't
+        # be evenly divided
+        if diff != num_bins * bin_size:
+            end = start + num_bins * pd.Timedelta(days=bin_size)
+
+        bins = pd.date_range(start, end, freq='{}D'.format(bin_size))
+        return bins, start, end
+
+    def frequency(self, groupField, groupFieldItems, bins, filters):
+        def get_counts(dates, bins):
+            """ count the number of dates in each date bin """
+            dates = dates.astype('datetime64[s]').astype('float')
+            counts, _ = np.histogram(dates, bins=bins)
+            return list(map(int, counts))
+
+        # grab the necessary data from the db
+        fields = [groupField, 'createddate']
+        data = self.dataAccess.query(fields, filters)
+
+        # read into a dataframe and drop the nulls
+        df = pd.DataFrame(data['data'], columns=fields).dropna()
+
+        # convert bins to float so numpy can use them
+        bins_fl = np.array(bins).astype('datetime64[s]').astype('float')
+
+        # count the requests created in each bin
+        counts = df \
+            .groupby(by=groupField) \
+            .apply(lambda x: get_counts(x['createddate'].values, bins_fl)) \
+            .to_dict()
+
+        # if no rows exist for a particular item in the groupField,
+        # return all 0's for that item
+        for item in groupFieldItems:
+            if item not in counts.keys():
+                counts[item] = [0 for bin in bins][:-1]
+
+        data['data'] = {
+            'bins': list(bins.astype(str)),
+            'counts': counts
+        }
+
+        return data
+
     async def get_frequency(self,
                             startDate=None,
                             endDate=None,
-                            ncList=[],
-                            requestTypes=[]):
+                            requestTypes=[],
+                            ncList=[]):
+
         """
         Given a date range, covers the range with equal-length date bins, and
         counts the number of requests that were created in each date bin.
@@ -50,71 +119,53 @@ class FrequencyService(object):
         because the list of bins includes the end date of the final bin.
         """
 
-        def get_bins(startDate, endDate):
-            """
-            Takes a date range a returns a list of equal-size date bins that
-            cover the range.
+        bins, start, end = self.get_bins(startDate, endDate)
 
-            For ranges of 24 days or less, each bin covers one calendar day.
-
-            For larger ranges, each bin is the largest size such that:
-            (1) the size is a whole number of days (i.e. the bin edges
-            are all at midnight)
-            (2) the number of bins is at least 12.
-
-            Not all date ranges are evenly divisible by a whole number of
-            days, so in cases where they aren't, we move the end date forward
-            so that the last bin is the same size as the rest.
-            """
-            start = pd.to_datetime(startDate)
-            end = pd.to_datetime(endDate) + pd.Timedelta(days=1)
-            diff = (end - start).days
-
-            # calculate size and number of bins
-            bin_size = 1 if diff <= 24 else diff // 12
-            num_bins = math.ceil(diff / bin_size)
-
-            # move the end date forward in cases where the range can't
-            # be evenly divided
-            if diff != num_bins * bin_size:
-                end = start + num_bins * pd.Timedelta(days=bin_size)
-
-            bins = pd.date_range(start, end, freq='{}D'.format(bin_size))
-            return bins, start, end
-
-        def get_counts(dates, bins):
-            """ count the number of dates in each date bin """
-            dates = dates.astype('datetime64[s]').astype('float')
-            counts, _ = np.histogram(dates, bins=bins)
-            return list(map(int, counts))
-
-        # generate the bins
-        bins, start, end = get_bins(startDate, endDate)
-
-        # grab the necessary data from the db
-        fields = ['requesttype', 'createddate']
         filters = self.dataAccess.standardFilters(
-            start, end, ncList, requestTypes)
-        data = self.dataAccess.query(fields, filters)
+            start, end, requestTypes, ncList)
 
-        # read into a dataframe, drop the nulls, and halt if no rows exist
-        df = pd.DataFrame(data['data']).dropna()
-        if len(df) == 0:
-            data['data'] = {}
-            return data
+        return self.frequency('requesttype', requestTypes, bins, filters)
 
-        # convert bins to float so numpy can use them
-        bins_fl = np.array(bins).astype('datetime64[s]').astype('float')
+    async def get_frequency_comparison(self,
+                                       startDate=None,
+                                       endDate=None,
+                                       requestTypes=[],
+                                       set1={'district': None, 'list': []},
+                                       set2={'district': None, 'list': []}):
 
-        # count the requests created in each bin
-        counts = df \
-            .groupby(by='requesttype') \
-            .apply(lambda x: get_counts(x['createddate'].values, bins_fl)) \
-            .to_dict()
+        def get_data(district, items, bins, start, end):
+            common = {
+                'startDate': start,
+                'endDate': end,
+                'requestTypes': requestTypes
+            }
 
-        data['data'] = {
-            'bins': list(bins.astype(str)),
-            'counts': counts
+            if district == 'nc':
+                common['ncList'] = items
+                filters = self.dataAccess.comparisonFilters(**common)
+                return self.frequency('nc', items, bins, filters)
+
+            elif district == 'cc':
+                common['cdList'] = items
+                filters = self.dataAccess.comparisonFilters(**common)
+                return self.frequency('cd', items, bins, filters)
+
+        bins, start, end = self.get_bins(startDate, endDate)
+
+        set1data = get_data(set1['district'], set1['list'], bins, start, end)
+        set2data = get_data(set2['district'], set2['list'], bins, start, end)
+
+        return {
+            'lastPulled': set1data['lastPulled'],
+            'data': {
+                'bins': set1data['data']['bins'],
+                'set1': {
+                    'district': set1['district'],
+                    'counts': set1data['data']['counts']
+                },
+                'set2': {
+                    'district': set2['district'],
+                    'counts': set2data['data']['counts']
+                }
+            }
         }
-
-        return data

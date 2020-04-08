@@ -75,21 +75,61 @@ async def timetoclose(request):
     return json(data)
 
 
+@app.route('/timetoclose-comparison', methods=["POST"])
+@compress.compress()
+async def timetoclose_comparison(request):
+    ttc_worker = TimeToCloseService(app.config['Settings'])
+
+    postArgs = request.json
+    startDate = postArgs.get('startDate', None)
+    endDate = postArgs.get('endDate', None)
+    requestTypes = postArgs.get('requestTypes', [])
+    set1 = postArgs.get('set1', None)
+    set2 = postArgs.get('set2', None)
+
+    data = await ttc_worker.get_ttc_comparison(startDate=startDate,
+                                               endDate=endDate,
+                                               requestTypes=requestTypes,
+                                               set1=set1,
+                                               set2=set2)
+    return json(data)
+
+
 @app.route('/requestfrequency', methods=["POST"])
 @compress.compress()
 async def requestfrequency(request):
     freq_worker = FrequencyService(app.config['Settings'])
 
     postArgs = request.json
-    start = postArgs.get('startDate', None)
-    end = postArgs.get('endDate', None)
-    ncs = postArgs.get('ncList', [])
-    requests = postArgs.get('requestTypes', [])
+    startDate = postArgs.get('startDate', None)
+    endDate = postArgs.get('endDate', None)
+    ncList = postArgs.get('ncList', [])
+    requestTypes = postArgs.get('requestTypes', [])
 
-    data = await freq_worker.get_frequency(startDate=start,
-                                           endDate=end,
-                                           ncList=ncs,
-                                           requestTypes=requests)
+    data = await freq_worker.get_frequency(startDate=startDate,
+                                           endDate=endDate,
+                                           ncList=ncList,
+                                           requestTypes=requestTypes)
+    return json(data)
+
+
+@app.route('/requestfrequency-comparison', methods=["POST"])
+@compress.compress()
+async def requestfrequency_comparison(request):
+    worker = FrequencyService(app.config['Settings'])
+
+    postArgs = request.json
+    startDate = postArgs.get('startDate', None)
+    endDate = postArgs.get('endDate', None)
+    requestTypes = postArgs.get('requestTypes', [])
+    set1 = postArgs.get('set1', None)
+    set2 = postArgs.get('set2', None)
+
+    data = await worker.get_frequency_comparison(startDate=startDate,
+                                                 endDate=endDate,
+                                                 requestTypes=requestTypes,
+                                                 set1=set1,
+                                                 set2=set2)
     return json(data)
 
 
@@ -208,6 +248,28 @@ async def requestCounts(request):
                                                      requestTypes=requests,
                                                      countFields=countFields)
     return json(return_data)
+
+
+@app.route('/requestcounts-comparison', methods=["POST"])
+@compress.compress()
+async def requestCountsComparison(request):
+    worker = RequestCountsService(app.config['Settings'])
+
+    postArgs = request.json
+    startDate = postArgs.get('startDate', None)
+    endDate = postArgs.get('endDate', None)
+    requestTypes = postArgs.get('requestTypes', [])
+    set1 = postArgs.get('set1', None)
+    set2 = postArgs.get('set2', None)
+    countFields = postArgs.get('countFields', [])
+
+    data = await worker.get_req_counts_comparison(startDate=startDate,
+                                                  endDate=endDate,
+                                                  requestTypes=requestTypes,
+                                                  set1=set1,
+                                                  set2=set2,
+                                                  countFields=countFields)
+    return json(data)
 
 
 @app.route('/servicerequest/<srnumber>', methods=["GET"])

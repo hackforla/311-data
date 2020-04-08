@@ -1,20 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'proptypes';
+import Icon from './Icon';
+import Tooltip from './Tooltip';
 
 const HoverOverInfo = ({
   title,
   text,
   position,
   children,
-}) => (
-  <span
-    data-for="react-tooltip"
-    data-tip={JSON.stringify({ title, text })}
-    data-place={position}
-  >
-    { children }
-  </span>
-);
+}) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  return (
+    <span
+      className="is-relative"
+      onMouseEnter={() => setShowTooltip(true)}
+      onFocus={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+      onBlur={() => setShowTooltip(false)}
+    >
+      { children }
+      { showTooltip && (
+        <Tooltip position={position}>
+          <div className="hover-over-tooltip">
+            <div className="title-row">
+              <Icon
+                id="tooltip-icon"
+                icon="info-circle"
+                size="small"
+                style={{ marginRight: '6px' }}
+              />
+              { title }
+            </div>
+            { text }
+          </div>
+        </Tooltip>
+      )}
+    </span>
+  );
+};
 
 export default HoverOverInfo;
 

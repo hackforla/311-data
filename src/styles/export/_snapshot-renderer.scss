@@ -1,0 +1,43 @@
+.snapshot-renderer {
+  z-index: $z-snapshot-renderer;
+  background-color: white;
+  outline: 3px red solid;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  .export-template {
+    width: $chart-max-width;
+    .chart-extra {
+      margin-bottom: 30px;
+      .outline {
+        border-width: 2px;
+      }
+    }
+    .chart-export-select {
+      display: none;
+    }
+    .chart {
+      width: 90%;
+    }
+    .chart.pie {
+      width: 50%;
+      canvas {
+        border-width: 2px;
+      }
+    }
+    .contact-311-comparison {
+      width: 90%;
+      .chart {
+        width: 100%;
+      }
+    }
+  }
+  .chart-image {
+    padding: 20px;
+    .chart.pie {
+      width: 100%;
+    }
+  }
+}

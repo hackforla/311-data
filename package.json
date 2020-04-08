@@ -37,7 +37,6 @@
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-test-renderer": "^16.12.0",
-    "react-tooltip": "^4.0.3",
     "react-vis": "^1.11.7",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",

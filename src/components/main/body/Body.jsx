@@ -1,8 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import { Switch, Route } from 'react-router-dom';
+import clx from 'classnames';
 
 import Visualizations from '@components/Visualizations';
+import Comparison from '@components/Comparison';
 import Loader from '@components/common/Loader';
 import Modal from '@components/common/Modal';
 import Menu from '../menu/Menu';
@@ -12,11 +15,19 @@ import DataRequestError from './DataRequestError';
 const Body = ({
   openErrorModal,
   error,
+  menuIsOpen,
 }) => (
-  <div className="body is-relative">
+  <div className={clx('body', { 'menu-is-open': menuIsOpen })}>
     <Menu />
-    <PinMap />
-    <Visualizations />
+    <Switch>
+      <Route path="/comparison">
+        <Comparison />
+      </Route>
+      <Route path="/">
+        <PinMap />
+        <Visualizations />
+      </Route>
+    </Switch>
     <Loader />
     <Modal
       open={openErrorModal}
@@ -28,6 +39,7 @@ const Body = ({
 Body.propTypes = {
   error: PropTypes.shape({}),
   openErrorModal: PropTypes.bool.isRequired,
+  menuIsOpen: PropTypes.bool.isRequired,
 };
 
 Body.defaultProps = {
@@ -37,6 +49,7 @@ Body.defaultProps = {
 const mapStateToProps = state => ({
   error: state.data.error,
   openErrorModal: state.ui.error.isOpen,
+  menuIsOpen: state.ui.menu.isOpen,
 });
 
 export default connect(mapStateToProps, null)(Body);

@@ -13,8 +13,8 @@ const Legend = ({
   );
 
   return (
-    <div className="legend">
-      <h1 className="has-text-centered">Legend</h1>
+    <div className="chart-extra legend">
+      <h1>Legend</h1>
       <div className="outline">
         {
           selectedTypes.length > 0
