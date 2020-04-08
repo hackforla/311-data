@@ -1,57 +1,73 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import clx from 'classnames';
 import { MENU_TABS } from '@components/common/CONSTANTS';
 import VisExportSelect from '@components/export/VisExportSelect';
-import Criteria from './Criteria';
-import Legend from './Legend';
-import NumberOfRequests from './NumberOfRequests';
+import SnapshotService from '@components/export/SnapshotService';
+import Criteria from '@components/chartExtras/Criteria';
+import Legend from '@components/chartExtras/Legend';
+import NumberOfRequests from '@components/chartExtras/NumberOfRequests';
+import VisualizationsPlaceholder from '@components/Visualizations/VisualizationsPlaceholder';
 import TimeToClose from './TimeToClose';
 import Frequency from './Frequency';
 import TotalRequests from './TotalRequests';
 import Contact311 from './Contact311';
 import TypeOfRequest from './TypeOfRequest';
 
-const Visualizations = ({
-  menuIsOpen,
-  menuActiveTab,
-}) => {
-  if (menuActiveTab !== MENU_TABS.VISUALIZATIONS) return null;
+SnapshotService.register({
+  NumberOfRequests,
+  TimeToClose,
+  Frequency,
+  TotalRequests,
+  Contact311,
+  TypeOfRequest,
+});
 
-  return (
-    <div className={clx('visualizations', { 'full-width': !menuIsOpen })}>
-      <VisExportSelect />
-      <div className="info-section">
-        <Criteria />
-        <Legend />
-        <NumberOfRequests />
+const Visualizations = ({
+  menuActiveTab,
+  chartsVisibility,
+}) => {
+  if (menuActiveTab !== MENU_TABS.VISUALIZATIONS) {
+    return null;
+  }
+
+  if (chartsVisibility) {
+    return (
+      <div className="visualizations">
+        <VisExportSelect />
+        <div className="chart-extras">
+          <Criteria />
+          <Legend />
+          <NumberOfRequests />
+        </div>
+        <div className="chart-row">
+          <TimeToClose />
+        </div>
+        <div className="chart-row">
+          <Frequency />
+        </div>
+        <div className="chart-row">
+          <TotalRequests />
+        </div>
+        <div className="chart-row pies">
+          <Contact311 />
+          <TypeOfRequest />
+        </div>
       </div>
-      <div className="chart-row">
-        <TimeToClose />
-      </div>
-      <div className="chart-row">
-        <Frequency />
-      </div>
-      <div className="chart-row">
-        <TotalRequests />
-      </div>
-      <div className="chart-row pies">
-        <Contact311 />
-        <TypeOfRequest />
-      </div>
-    </div>
-  );
+    );
+  }
+
+  return <VisualizationsPlaceholder />;
 };
 
 const mapStateToProps = state => ({
-  menuIsOpen: state.ui.menu.isOpen,
   menuActiveTab: state.ui.menu.activeTab,
+  chartsVisibility: state.ui.showDataCharts,
 });
 
 export default connect(mapStateToProps)(Visualizations);
 
 Visualizations.propTypes = {
-  menuIsOpen: PropTypes.bool.isRequired,
   menuActiveTab: PropTypes.string.isRequired,
+  chartsVisibility: PropTypes.bool.isRequired,
 };

@@ -5,11 +5,9 @@ import { HashRouter as Router } from 'react-router-dom';
 import Routes from './Routes';
 import Header from './components/main/header/Header';
 import Footer from './components/main/footer/Footer';
-import Tooltip from './components/main/tooltip/Tooltip';
-import SnapshotService, { SnapshotRenderer } from './components/export/SnapshotService';
-import Visualizations from './components/Visualizations';
+import { SnapshotRenderer } from './components/export/SnapshotService';
 
-SnapshotService.register({ Visualizations });
+const basename = process.env.NODE_ENV === 'development' ? '/' : process.env.BASE_URL || '/';
 
 const App = () => {
   useEffect(() => {
@@ -17,13 +15,10 @@ const App = () => {
   }, []);
 
   return (
-    <Router
-      basename={process.env.BASE_URL || '/'}
-    >
+    <Router basename={basename}>
       <Header />
       <Routes />
       <Footer />
-      <Tooltip />
       <SnapshotRenderer />
     </Router>
   );

@@ -1,0 +1,18 @@
+button.is-primary.show-more-toggle-btn {
+  color: $brand-main-color;
+  display: inline-block;
+  margin: 0 0 0 6px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 0;
+  height: auto;
+  &:focus:not(:active),
+  &:hover {
+    box-shadow: none;
+    background-color: transparent;
+    color: $brand-main-color;
+  }
+}

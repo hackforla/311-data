@@ -1,10 +1,7 @@
 
-// layout vars
-$header-height: 62px;
-$footer-height: 52px;
-$menu-width: 509px;
-$menu-transition: all 0.5s ease 0s;
-$vis-content-max-width: 840px;
+html {
+  overflow: hidden;
+}
 
 h1 {
   font-family: $brand-heading-family;
@@ -18,6 +15,10 @@ h2 {
   color: $brand-heading-color;
   font-size: $brand-subheading-size;
   font-weight: bold;
+}
+
+.modal {
+  z-index: $z-modal;
 }
 
 // modifies bulma loader

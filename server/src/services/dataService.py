@@ -32,17 +32,32 @@ class DataService(object):
     def standardFilters(self,
                         startDate=None,
                         endDate=None,
-                        ncList=[],
-                        requestTypes=[]):
+                        requestTypes=[],
+                        ncList=[]):
         '''
-        Generates filters for dates, ncs, and request types.
+        Generates filters for dates, request types, and ncs.
         '''
-
         return [
-            Request.createddate > startDate if startDate else True,
-            Request.createddate < endDate if endDate else True,
-            Request.ncname.in_(ncList) if ncList else True,
-            Request.requesttype.in_(requestTypes) if requestTypes else True
+            Request.createddate > startDate if startDate else False,
+            Request.createddate < endDate if endDate else False,
+            Request.requesttype.in_(requestTypes),
+            Request.nc.in_(ncList),
+        ]
+
+    def comparisonFilters(self,
+                          startDate=None,
+                          endDate=None,
+                          requestTypes=[],
+                          ncList=[],
+                          cdList=[]):
+        '''
+        Generates filters for the comparison endpoints.
+        '''
+        return [
+            Request.createddate > startDate if startDate else False,
+            Request.createddate < endDate if endDate else False,
+            Request.requesttype.in_(requestTypes),
+            db.or_(Request.nc.in_(ncList), Request.cd.in_(cdList))
         ]
 
     @includeMeta
@@ -54,10 +69,15 @@ class DataService(object):
         if not requestNumber or not isinstance(requestNumber, str):
             return {'Error': 'Missing request number'}
 
+        fields = Request.__table__.columns.keys()
+        if 'id' in fields:
+            fields.remove('id')
+
         session = self.Session()
         record = session \
-            .query(Request) \
-            .get(requestNumber)
+            .query(*fields) \
+            .filter(Request.srnumber == requestNumber) \
+            .first()
         session.close()
 
         if record:

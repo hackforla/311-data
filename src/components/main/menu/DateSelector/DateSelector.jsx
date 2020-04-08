@@ -5,7 +5,11 @@ import moment from 'moment';
 import {
   updateStartDate,
   updateEndDate,
-} from '../../../../redux/reducers/filters';
+} from '@reducers/filters';
+import {
+  updateComparisonStartDate,
+  updateComparisonEndDate,
+} from '@reducers/comparisonFilters';
 
 import Dropdown from '../../../common/Dropdown';
 import Modal from '../../../common/Modal';
@@ -36,19 +40,23 @@ const getDates = dateOptionValue => {
     case 'YEAR_TO_DATE':
       newStartDate = moment().startOf('year').format('MM/DD/YYYY');
       break;
-
-    // comment below circumvents eslint(default-case)
-    // no default
+    default:
+      break;
   }
   return { newStartDate, newEndDate };
 };
 
 const DateSelector = ({
   style,
+  comparison,
   startDate,
   endDate,
+  comparisonStartDate,
+  comparisonEndDate,
   updateStart,
   updateEnd,
+  updateComparisonStart,
+  updateComparisonEnd,
 }) => {
   const placeHolder = 'MM/DD/YYYY';
   const dateRangeOptions = [
@@ -60,6 +68,19 @@ const DateSelector = ({
     { label: 'Custom Date Range', value: 'CUSTOM_DATE_RANGE' },
   ];
   const [modalOpen, setModalOpen] = useState(false);
+
+  const handleSelection = dateOption => {
+    const dispatchStart = comparison ? updateComparisonStart : updateStart;
+    const dispatchEnd = comparison ? updateComparisonEnd : updateEnd;
+
+    if (dateOption !== 'CUSTOM_DATE_RANGE') {
+      const { newStartDate, newEndDate } = getDates(dateOption);
+      dispatchStart(newStartDate);
+      dispatchEnd(newEndDate);
+    } else {
+      setModalOpen(true);
+    }
+  };
 
   useEffect(() => {
     const handleEscapeClick = e => {
@@ -109,7 +130,8 @@ const DateSelector = ({
       </div>
       <div className="date-selector-dates" style={{ padding: '15px 0 10px' }}>
         <span className="has-text-weight-normal">
-          {`Start ${startDate || placeHolder} To ${endDate || placeHolder}`}
+          {`Start ${(comparison ? comparisonStartDate : startDate) || placeHolder} 
+          To ${(comparison ? comparisonEndDate : endDate) || placeHolder}`}
         </span>
       </div>
       <div className="date-selector-dropdown">
@@ -119,15 +141,7 @@ const DateSelector = ({
           title="Select Date Range"
           width="349px"
           style={{ color: COLORS.FONTS }}
-          onClick={dateOption => {
-            if (dateOption !== 'CUSTOM_DATE_RANGE') {
-              const { newStartDate, newEndDate } = getDates(dateOption);
-              updateStart(newStartDate);
-              updateEnd(newEndDate);
-            } else {
-              setModalOpen(true);
-            }
-          }}
+          onClick={handleSelection}
         />
       </div>
       <Modal
@@ -136,6 +150,7 @@ const DateSelector = ({
           <DateRangePicker
             id="date-range-picker"
             title="Custom Range Filter"
+            comparison={comparison}
             handleClick={() => setModalOpen(false)}
           />
         )}
@@ -147,11 +162,15 @@ const DateSelector = ({
 const mapStateToProps = state => ({
   startDate: state.filters.startDate,
   endDate: state.filters.endDate,
+  comparisonStartDate: state.comparisonFilters.startDate,
+  comparisonEndDate: state.comparisonFilters.endDate,
 });
 
 const mapDispatchToProps = dispatch => ({
   updateStart: newStartDate => dispatch(updateStartDate(newStartDate)),
   updateEnd: newEndDate => dispatch(updateEndDate(newEndDate)),
+  updateComparisonStart: newStartDate => dispatch(updateComparisonStartDate(newStartDate)),
+  updateComparisonEnd: newEndDate => dispatch(updateComparisonEndDate(newEndDate)),
 });
 
 export default connect(
@@ -162,13 +181,21 @@ export default connect(
 DateSelector.propTypes = {
   updateStart: PropTypes.func.isRequired,
   updateEnd: PropTypes.func.isRequired,
+  updateComparisonStart: PropTypes.func.isRequired,
+  updateComparisonEnd: PropTypes.func.isRequired,
   style: PropTypes.shape({}),
   startDate: PropTypes.string,
   endDate: PropTypes.string,
+  comparisonStartDate: PropTypes.string,
+  comparisonEndDate: PropTypes.string,
+  comparison: PropTypes.bool,
 };
 
 DateSelector.defaultProps = {
   style: undefined,
   startDate: undefined,
   endDate: undefined,
+  comparisonStartDate: undefined,
+  comparisonEndDate: undefined,
+  comparison: false,
 };

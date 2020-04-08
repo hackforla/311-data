@@ -12,11 +12,17 @@ class FeedbackService(object):
         self.project_url = None if not self.config \
             else self.config['Github']['PROJECT_URL']
 
-    async def create_issue(self, title, body, labels=['feedback'], milestone=None, assignees=[]):
+    async def create_issue(self,
+                           title,
+                           body,
+                           labels=['feedback'],
+                           milestone=None,
+                           assignees=[]):
         """
         Creates a Github issue via Github API v3 and returns the new issue id.
 
-        Note: Per Github, the API (and required 'Accept' headers) may change without notice.
+        Note: Per Github, the API (and required 'Accept' headers) may change
+        without notice.
         See https://developer.github.com/v3/issues/
         """
         headers = {
@@ -34,7 +40,9 @@ class FeedbackService(object):
 
         async with requests.Session() as session:
             try:
-                response = await session.post(self.issues_url, data=payload, headers=headers)
+                response = await session.post(self.issues_url,
+                                              data=payload,
+                                              headers=headers)
                 response_content = loads(response.content)
                 issue_id = response_content['id']
                 response.raise_for_status()
@@ -53,7 +61,8 @@ class FeedbackService(object):
         Takes a Github issue id and adds the issue to a project board card.
         Returns the response from Github API.
 
-        Note: Per Github, the API (and required 'Accept' headers) may change without notice.
+        Note: Per Github, the API (and required 'Accept' headers) may change
+        without notice.
         See https://developer.github.com/v3/projects/cards/
         """
         headers = {
@@ -68,7 +77,9 @@ class FeedbackService(object):
 
         async with requests.Session() as session:
             try:
-                response = await session.post(self.project_url, data=payload, headers=headers)
+                response = await session.post(self.project_url,
+                                              data=payload,
+                                              headers=headers)
                 response.raise_for_status()
                 return response.status_code
             except requests.exceptions.HTTPError as errh:
