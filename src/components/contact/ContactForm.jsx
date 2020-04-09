@@ -1,25 +1,66 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
 import { sendGitRequest } from '@reducers/data';
+import { showFeedbackSuccess } from '@reducers/ui';
+
+import Loader from '@components/common/Loader';
+import Modal from '@components/common/Modal';
+import DataRequestError from '@components/main/body/DataRequestError';
+
+const contactInitialState = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  association: '',
+  message: '',
+  disableButton: true,
+  invalidEmail: false,
+};
 
 class ContactForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      association: '',
-      message: '',
-      disableButton: true,
-      buttonText: 'Submit',
-    };
+    this.state = contactInitialState;
+    this.timer = null;
+  }
+
+  componentDidUpdate() {
+    const { displayFeedbackSuccess } = this.props;
+    // Hide success message and clear form fields after 5 seconds
+    if (displayFeedbackSuccess) {
+      this.timer = setTimeout(() => this.clearFeedback(), 5000);
+    }
+  }
+
+  componentWillUnmount() {
+    const { displayFeedbackSuccess } = this.props;
+    if (displayFeedbackSuccess) {
+      this.clearFeedback();
+    }
+    // Clear timeout to prevent memory leak if user navigates to another page before timer fires
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+  }
+
+  clearFeedback = () => {
+    // Dispatches UI action to hide feedback success message and clears form fields
+    const { showSuccessMessage } = this.props;
+    showSuccessMessage(false);
+    this.setState(contactInitialState);
+  };
+
+  validateEmail = email => {
+    // eslint-disable-next-line
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      return true;
+    }
+    return false;
   }
 
   onInputChange = event => {
     event.preventDefault();
-
     this.setState({ [event.target.name]: event.target.value },
       () => {
         const {
@@ -32,11 +73,11 @@ class ContactForm extends Component {
         if (firstName !== '' && lastName !== '' && email !== '' && message !== '') {
           this.setState({
             disableButton: false,
-            buttonText: 'Submit',
           });
         } else {
           this.setState({
             disableButton: true,
+            invalidEmail: false,
           });
         }
       });
@@ -44,14 +85,35 @@ class ContactForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    const {
+      firstName,
+      lastName,
+      email,
+      association,
+      message,
+    } = this.state;
 
-    this.setState({
-      disableButton: true,
-      buttonText: 'Message Sent',
-    });
+    if (this.validateEmail(email)) {
+      const { submitFeedback } = this.props;
+      this.setState({
+        disableButton: true,
+        invalidEmail: false,
+      });
 
-    const { sendContact } = this.props;
-    sendContact(this.state);
+      const body = [
+        `First name: ${firstName}`,
+        `Last name: ${lastName}`,
+        `Email: ${email}`,
+        `Association: ${association || 'Not provided'}`,
+        `Message: ${message}`,
+      ].join('\n');
+
+      submitFeedback({ title: email, body });
+    } else {
+      this.setState({
+        invalidEmail: true,
+      });
+    }
   };
 
   render() {
@@ -62,11 +124,16 @@ class ContactForm extends Component {
       association,
       message,
       disableButton,
-      buttonText,
+      invalidEmail,
     } = this.state;
 
+    const {
+      openErrorModal,
+      displayFeedbackSuccess,
+    } = this.props;
+
     return (
-      <div className="form-container">
+      <div className="feedback-form form-container">
         <form id="contact-form">
           <div className="form-group" id="fname-form">
             <label htmlFor="firstName">
@@ -78,6 +145,7 @@ class ContactForm extends Component {
                 className="form-control"
                 value={firstName}
                 onChange={this.onInputChange.bind(this)}
+                required
               />
             </label>
           </div>
@@ -92,6 +160,7 @@ class ContactForm extends Component {
                 className="form-control"
                 value={lastName}
                 onChange={this.onInputChange.bind(this)}
+                required
               />
             </label>
           </div>
@@ -109,6 +178,9 @@ class ContactForm extends Component {
                 onChange={this.onInputChange.bind(this)}
               />
             </label>
+            { invalidEmail && (
+              <p className="invalid-email-message">Please provide a valid email address.</p>
+            )}
           </div>
 
           <div className="form-group">
@@ -134,38 +206,45 @@ class ContactForm extends Component {
                 rows="7"
                 value={message}
                 onChange={this.onInputChange.bind(this)}
+                required
               />
             </label>
           </div>
 
           <div className="btn-container">
+            { displayFeedbackSuccess && (
+              <p className="has-text-centered feedback-success">Thanks for your feedback!</p>
+            )}
             <button type="submit" className="contact-btn" onClick={event => this.handleSubmit(event)} disabled={disableButton}>
-              {buttonText}
+              Submit
             </button>
           </div>
         </form>
+        <Loader />
+        <Modal
+          open={openErrorModal}
+          content={<DataRequestError />}
+        />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  sendContact: fields => dispatch(sendGitRequest(fields)),
+const mapStateToProps = state => ({
+  openErrorModal: state.ui.error.isOpen,
+  displayFeedbackSuccess: state.ui.displayFeedbackSuccess,
 });
 
-const mapStateToProps = state => ({
-  data: state,
+const mapDispatchToProps = dispatch => ({
+  submitFeedback: fields => dispatch(sendGitRequest(fields)),
+  showSuccessMessage: bool => dispatch(showFeedbackSuccess(bool)),
 });
 
 ContactForm.propTypes = {
-  data: PropTypes.shape({}),
-  contact: PropTypes.shape({}),
-  sendContact: PropTypes.func.isRequired,
-};
-
-ContactForm.defaultProps = {
-  data: {},
-  contact: {},
+  submitFeedback: PropTypes.func.isRequired,
+  openErrorModal: PropTypes.bool.isRequired,
+  showSuccessMessage: PropTypes.func.isRequired,
+  displayFeedbackSuccess: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
