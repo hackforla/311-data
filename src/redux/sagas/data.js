@@ -22,6 +22,7 @@ import {
 import {
   setErrorModal,
   showDataCharts,
+  showFeedbackSuccess,
 } from '../reducers/ui';
 
 
@@ -78,15 +79,11 @@ function* fetchPinInfo(srnumber) {
   return data;
 }
 
-function* getContact(fields) {
+function* postFeedback(message) {
   const contactURL = `${BASE_URL}/feedback`;
 
-  const { data: { data } } = yield call(axios.post, contactURL, {
-    title: fields.email,
-    body: fields,
-  });
-
-  return data;
+  const response = yield call(axios.post, contactURL, message);
+  return response;
 }
 
 /* //////////// COMBINED API CALL //////////// */
@@ -164,9 +161,10 @@ function* getPinData(action) {
 
 function* sendContactData(action) {
   try {
-    const fields = action.payload;
-    const data = yield call(getContact, fields);
+    const message = action.payload;
+    const data = yield call(postFeedback, message);
     yield put(gitResponseSuccess(data));
+    yield put(showFeedbackSuccess(true));
   } catch (e) {
     yield put(gitResponseFailure(e));
     yield put(setErrorModal(true));
