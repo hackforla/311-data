@@ -128,13 +128,13 @@ export default (state = initialState, action) => {
     case types.SEND_GIT_REQUEST:
       return {
         ...state,
+        isLoading: true,
       };
     case types.GIT_RESPONSE_SUCCESS:
       return {
         ...state,
         error: null,
-        isLoading: true,
-        ...action.payload,
+        isLoading: false,
       };
     case types.GIT_RESPONSE_FAILURE: {
       const {
