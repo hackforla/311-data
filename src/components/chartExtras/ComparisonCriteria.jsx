@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { DISTRICT_TYPES, REQUEST_TYPES } from '@components/common/CONSTANTS';
+import { DISTRICT_TYPES, REQUEST_TYPES, COMPARISON_SETS } from '@components/common/CONSTANTS';
 import CollapsibleList from '@components/common/CollapsibleList';
 
 const ComparisonCriteria = ({
   startDate,
   endDate,
-  set1,
-  set2,
+  sets,
   requestTypes,
 }) => {
   // DATES //
@@ -17,7 +16,9 @@ const ComparisonCriteria = ({
     : 'No date range selected.';
 
   // DISTRICTS //
-  const districtSelection = set => {
+  const districtSelection = setId => {
+    const set = sets[setId];
+
     if (!set.district) {
       return (
         <>
@@ -30,10 +31,14 @@ const ComparisonCriteria = ({
     }
 
     const { name } = DISTRICT_TYPES.find(t => set.district === t.id);
+    const { name: setName } = COMPARISON_SETS[setId];
     return (
       <>
         <span className="criteria-type">
           { name }
+          &nbsp;(
+          { setName }
+          )
         </span>
         <CollapsibleList
           items={set.list}
@@ -78,8 +83,8 @@ const ComparisonCriteria = ({
           Date Range
         </span>
         { dateText }
-        { districtSelection(set1) }
-        { districtSelection(set2) }
+        { districtSelection('set1') }
+        { districtSelection('set2') }
         <span className="criteria-type">
           Request Type Selection
         </span>
@@ -92,8 +97,10 @@ const ComparisonCriteria = ({
 const mapStateToProps = state => ({
   startDate: state.comparisonFilters.startDate,
   endDate: state.comparisonFilters.endDate,
-  set1: state.comparisonFilters.comparison.set1,
-  set2: state.comparisonFilters.comparison.set2,
+  sets: {
+    set1: state.comparisonFilters.comparison.set1,
+    set2: state.comparisonFilters.comparison.set2,
+  },
   requestTypes: state.comparisonFilters.requestTypes,
 });
 
@@ -102,13 +109,15 @@ export default connect(mapStateToProps)(ComparisonCriteria);
 ComparisonCriteria.propTypes = {
   startDate: PropTypes.string,
   endDate: PropTypes.string,
-  set1: PropTypes.shape({
-    district: PropTypes.string,
-    list: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  set2: PropTypes.shape({
-    district: PropTypes.string,
-    list: PropTypes.arrayOf(PropTypes.string),
+  sets: PropTypes.shape({
+    set1: PropTypes.shape({
+      district: PropTypes.string,
+      list: PropTypes.array,
+    }),
+    set2: PropTypes.shape({
+      district: PropTypes.string,
+      list: PropTypes.array,
+    }),
   }).isRequired,
   requestTypes: PropTypes.shape({}).isRequired,
 };
