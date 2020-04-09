@@ -33,7 +33,7 @@ const DistrictSelector = ({
   const renderSet = set => {
     const renderHeader = type => {
       const [header] = DISTRICT_TYPES.filter(district => district.id === type);
-      return header.name;
+      return `${header.name} (Set ${set.charAt(set.length - 1)}):`;
     };
 
     if (comparison[set]?.district && comparison[set]?.list.length > 0) {
@@ -42,7 +42,6 @@ const DistrictSelector = ({
           <div className={set}>
             <span className="comparison-set-header">
               {renderHeader(comparison[set].district)}
-              :
             </span>
             <br />
             <CollapsibleList
