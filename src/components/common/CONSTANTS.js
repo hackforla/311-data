@@ -92,11 +92,22 @@ export const REQUEST_SOURCES = [
 ];
 
 export const DISTRICT_TYPES = [
-  { id: 'nc', name: 'Neighborhood Council District', color: '#DDEC9F' },
-  { id: 'cc', name: 'City Council District', color: '#565656' },
+  { id: 'nc', name: 'Neighborhood Council District' },
+  { id: 'cc', name: 'City Council District' },
   // { id: 'bid', name: 'Business Improvement District' },
   // { id: 'sd', name: 'Supervisory District' },
 ];
+
+export const COMPARISON_SETS = {
+  set1: {
+    color: '#DDEC9F',
+    name: 'Set 1',
+  },
+  set2: {
+    color: '#565656',
+    name: 'Set 2',
+  },
+};
 
 export const MENU_TABS = {
   MAP: 'Map',
