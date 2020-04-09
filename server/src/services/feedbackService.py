@@ -43,18 +43,18 @@ class FeedbackService(object):
                 response = await session.post(self.issues_url,
                                               data=payload,
                                               headers=headers)
+                response.raise_for_status()
                 response_content = loads(response.content)
                 issue_id = response_content['id']
-                response.raise_for_status()
                 return issue_id
             except requests.exceptions.HTTPError as errh:
-                return "An Http Error occurred:" + repr(errh)
+                return errh
             except requests.exceptions.ConnectionError as errc:
-                return "An Error Connecting to the API occurred:" + repr(errc)
+                return errc
             except requests.exceptions.Timeout as errt:
-                return "A Timeout Error occurred:" + repr(errt)
+                return errt
             except requests.exceptions.RequestException as err:
-                return "An Unknown Error occurred" + repr(err)
+                return err
 
     async def add_issue_to_project(self, issue_id, content_type='Issue'):
         """
@@ -83,10 +83,10 @@ class FeedbackService(object):
                 response.raise_for_status()
                 return response.status_code
             except requests.exceptions.HTTPError as errh:
-                return "An Http Error occurred:" + repr(errh)
+                return errh
             except requests.exceptions.ConnectionError as errc:
-                return "An Error Connecting to the API occurred:" + repr(errc)
+                return errc
             except requests.exceptions.Timeout as errt:
-                return "A Timeout Error occurred:" + repr(errt)
+                return errt
             except requests.exceptions.RequestException as err:
-                return "An Unknown Error occurred" + repr(err)
+                return err
