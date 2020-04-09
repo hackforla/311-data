@@ -2,19 +2,18 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
+import { DISTRICT_TYPES, COMPARISON_SETS } from '@components/common/CONSTANTS';
 import Chart from '@components/Chart';
 import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const FrequencyComparison = ({
   bins,
-  set1,
-  set2,
+  sets,
 }) => {
   /* /// DATA /// */
 
-  const getDataSet = set => {
-    const { district, counts } = set;
+  const getDataSet = setId => {
+    const { district, counts } = sets[setId];
 
     const totals = Array.from({ length: bins.length - 1 }).map((_, idx) => (
       Object.keys(counts).reduce((acc, name) => (
@@ -22,8 +21,9 @@ const FrequencyComparison = ({
       ), 0)
     ));
 
-    const color = DISTRICT_TYPES.find(t => t.id === district)?.color;
-    const label = DISTRICT_TYPES.find(t => t.id === district)?.name;
+    const { color, name: setName } = COMPARISON_SETS[setId];
+    const label = DISTRICT_TYPES.find(t => t.id === district)?.name
+                                .replace(' District', ` (${setName})`);
 
     return {
       data: totals,
@@ -38,8 +38,8 @@ const FrequencyComparison = ({
   const chartData = {
     labels: bins.slice(0, -1).map(bin => moment(bin).format('MMM D')),
     datasets: [
-      getDataSet(set1),
-      getDataSet(set2),
+      getDataSet('set1'),
+      getDataSet('set2'),
     ],
   };
 
@@ -108,20 +108,24 @@ const FrequencyComparison = ({
 
 const mapStateToProps = state => ({
   bins: state.comparisonData.frequency.bins,
-  set1: state.comparisonData.frequency.set1,
-  set2: state.comparisonData.frequency.set2,
+  sets: {
+    set1: state.comparisonData.frequency.set1,
+    set2: state.comparisonData.frequency.set2,
+  },
 });
 
 export default connect(mapStateToProps)(FrequencyComparison);
 
 FrequencyComparison.propTypes = {
   bins: PropTypes.arrayOf(PropTypes.string).isRequired,
-  set1: PropTypes.shape({
-    district: PropTypes.string,
-    counts: PropTypes.shape({}).isRequired,
-  }).isRequired,
-  set2: PropTypes.shape({
-    district: PropTypes.string,
-    counts: PropTypes.shape({}).isRequired,
+  sets: PropTypes.shape({
+    set1: PropTypes.shape({
+      district: PropTypes.string,
+      counts: PropTypes.shape({}),
+    }),
+    set2: PropTypes.shape({
+      district: PropTypes.string,
+      counts: PropTypes.shape({}),
+    }),
   }).isRequired,
 };
