@@ -24,15 +24,8 @@ const DropdownItem = ({
       onClickCapture={handleClick}
       style={{ width, paddingRight: '0rem' }}
     >
-      <span id="dropdown-item-label">
+      <span className="dropdown-item-label">
         {label}
-      </span>
-      <span style={{ position: 'absolute', right: '0' }}>
-        <Checkbox
-          id={`dd-chkbx-${label}`}
-          checked={active}
-          circle
-        />
       </span>
     </a>
   );
