@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
-import Checkbox from './Checkbox';
 
 const DropdownItem = ({
   label,
