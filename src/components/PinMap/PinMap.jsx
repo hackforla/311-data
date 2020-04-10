@@ -296,6 +296,17 @@ class PinMap extends Component {
             if (link) link.click();
           }}
         />
+        <div className="heatmap-legend-wrapper has-text-centered">
+          Concentration of Reports (Heatmap)
+          <div id="heatmap-gradient-legend" className="level">
+            <span className="level-left">
+              Low
+            </span>
+            <span className="level-right">
+              High
+            </span>
+          </div>
+        </div>
       </>
     );
   }
