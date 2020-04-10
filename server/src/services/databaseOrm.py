@@ -55,10 +55,10 @@ class Ingest(Base, Mixin):
 
     # politics
     apc = Column(String)
-    cd = Column(Integer)
+    cd = Column(Integer, index=True)
     cdmember = Column(String)
     nc = Column(Integer, index=True)
-    ncname = Column(String, index=True)
+    ncname = Column(String)
     policeprecinct = Column(String)
 
     # misc
