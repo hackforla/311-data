@@ -6,6 +6,7 @@ const types = {
   SET_ERROR_MODAL: 'SET_ERROR_MODAL',
   SHOW_DATA_CHARTS: 'SHOW_DATA_CHARTS',
   SHOW_COMPARISON_CHARTS: 'SHOW_COMPARISON_CHARTS',
+  SHOW_FEEDBACK_SUCCESS: 'SHOW_FEEDBACK_SUCCESS',
 };
 
 export const toggleMenu = () => ({
@@ -32,6 +33,11 @@ export const showComparisonCharts = isShown => ({
   payload: isShown,
 });
 
+export const showFeedbackSuccess = isShown => ({
+  type: types.SHOW_FEEDBACK_SUCCESS,
+  payload: isShown,
+});
+
 const initialState = {
   menu: {
     isOpen: true,
@@ -42,6 +48,7 @@ const initialState = {
   },
   showDataCharts: false,
   showComparisonCharts: false,
+  displayFeedbackSuccess: false,
 };
 
 export default (state = initialState, action) => {
@@ -79,6 +86,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         showComparisonCharts: action.payload,
+      };
+    case types.SHOW_FEEDBACK_SUCCESS:
+      return {
+        ...state,
+        displayFeedbackSuccess: action.payload,
       };
     default:
       return state;

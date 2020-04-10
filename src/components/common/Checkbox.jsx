@@ -11,6 +11,7 @@ const Checkbox = ({
   value,
   checked,
   style,
+  tabbable,
   /*
    *  Props below correspond with Bulma modifiers.
    *  wikiki.github.io/form/checkradio/
@@ -48,8 +49,12 @@ const Checkbox = ({
         className={checkboxClassName}
         checked={checked}
         disabled={disabled}
+        tabIndex={tabbable ? 0 : -1}
       />
-      <label htmlFor={checkboxId} style={style}>
+      <label
+        htmlFor={checkboxId}
+        style={style}
+      >
         {label}
       </label>
     </>
@@ -67,6 +72,7 @@ Checkbox.propTypes = {
   value: PropTypes.string,
   checked: PropTypes.bool,
   style: PropTypes.shape({}),
+  tabbable: PropTypes.bool,
   rightToLeft: PropTypes.bool,
   color: PropTypes.string,
   size: PropTypes.oneOf(['small', '', 'medium', 'large']),
@@ -85,6 +91,7 @@ Checkbox.defaultProps = {
   value: undefined,
   checked: false,
   style: undefined,
+  tabbable: true,
   rightToLeft: false,
   color: 'primary',
   size: '',

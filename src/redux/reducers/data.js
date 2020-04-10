@@ -5,6 +5,9 @@ export const types = {
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
+  SEND_GIT_REQUEST: 'SEND_GIT_REQUEST',
+  GIT_RESPONSE_SUCCESS: 'GIT_RESPONSE_SUCCESS',
+  GIT_RESPONSE_FAILURE: 'GIT_RESPONSE_FAILURE',
 };
 
 export const getDataRequest = () => ({
@@ -33,6 +36,21 @@ export const getPinInfoSuccess = response => ({
 
 export const getPinInfoFailure = error => ({
   type: types.GET_PIN_INFO_FAILURE,
+  payload: error,
+});
+
+export const sendGitRequest = fields => ({
+  type: types.SEND_GIT_REQUEST,
+  payload: fields,
+});
+
+export const gitResponseSuccess = response => ({
+  type: types.GIT_RESPONSE_SUCCESS,
+  payload: response,
+});
+
+export const gitResponseFailure = error => ({
+  type: types.GIT_RESPONSE_FAILURE,
   payload: error,
 });
 
@@ -97,6 +115,33 @@ export default (state = initialState, action) => {
         response: { status },
         message,
       } = action.payload;
+      return {
+        ...state,
+        error: {
+          code: status,
+          message,
+          error: action.payload,
+        },
+        isLoading: false,
+      };
+    }
+    case types.SEND_GIT_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case types.GIT_RESPONSE_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        isLoading: false,
+      };
+    case types.GIT_RESPONSE_FAILURE: {
+      const {
+        response: { status },
+        message,
+      } = action.payload;
+
       return {
         ...state,
         error: {

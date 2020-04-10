@@ -2,37 +2,33 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import Chart, { ChartTooltip as Tooltip } from '@components/Chart';
-import { DISTRICT_TYPES, COUNCILS } from '@components/common/CONSTANTS';
+import { COUNCILS, COMPARISON_SETS } from '@components/common/CONSTANTS';
 import ChartExportSelect from '@components/export/ChartExportSelect';
 
 const TimeToCloseComparison = ({
-  timeToClose: { set1, set2 },
+  timeToClose,
 }) => {
   /* /// DATA /// */
-
-  const boxColors = {
-    nc: DISTRICT_TYPES.find(t => t.id === 'nc')?.color,
-    cc: DISTRICT_TYPES.find(t => t.id === 'cc')?.color,
-  };
 
   const boxLabels = {
     nc: id => COUNCILS.find(c => parseInt(id, 10) === c.id).name,
     cc: name => `District ${name}`,
   };
 
-  const getBoxes = ({ district, data }) => (
-    Object.keys(data)
+  const getBoxes = setId => {
+    const { district, data } = timeToClose[setId];
+    return Object.keys(data)
       .filter(name => data[name].count !== 0)
       .map(name => ({
         label: boxLabels[district](name),
-        color: boxColors[district],
+        color: COMPARISON_SETS[setId].color,
         stats: { ...data[name], outliers: [] },
-      }))
-  );
+      }));
+  };
 
   const boxes = [
-    ...getBoxes(set1),
-    ...getBoxes(set2),
+    ...getBoxes('set1'),
+    ...getBoxes('set2'),
   ];
 
   const chartData = {
