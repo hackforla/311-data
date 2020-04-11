@@ -16,6 +16,7 @@ from services.requestDetailService import RequestDetailService
 from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
 from services.feedbackService import FeedbackService
+from services.emailService import EmailService
 
 app = Sanic(__name__)
 CORS(app)
@@ -291,6 +292,18 @@ async def handle_feedback(request):
     issue_id = await github_worker.create_issue(title, body)
     response = await github_worker.add_issue_to_project(issue_id)
     return json(response)
+
+
+@app.get('/send-email')
+async def sendEmail(request):
+    email_worker = EmailService(app.config['Settings'], app)
+    # postArgs = request.json
+    # subject = postArgs.get('subject', None)
+    # content = postArgs.get('content', None)
+
+    result = await email_worker.send_email(subject="test",
+                                           content="Email sent with sanic.")
+    return json(result)
 
 
 @app.route('/test_multiple_workers')
