@@ -1,10 +1,10 @@
 .menu-container {
   $tabs-height: 40px;
 
-  position: fixed;
+  position: absolute;
   left: 0;
-  top: $header-height;
-  bottom: $footer-height;
+  top: 0;
+  bottom: 0;
   width: $menu-width;
   z-index: $z-menu;
   background: $brand-bg-color;
@@ -32,7 +32,8 @@
   }
 
   #btn-menu-toggle-button {
-    position: fixed;
+    position: absolute;
+    top: $tabs-height;
     left: $menu-width;
     height: 60px;
     width: 26px;
