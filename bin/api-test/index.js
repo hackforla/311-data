@@ -27,7 +27,6 @@ function runTest(path, test) {
 				const time = +performance.executionTime;
 				total += time;
 				console.log(`#${idx + 1}: ${time} seconds`);
-				console.log(typeof time);
 			});
 	})
 		.then(() => ({
