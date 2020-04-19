@@ -17,6 +17,8 @@ from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
 from services.feedbackService import FeedbackService
 
+from utils.sanic import add_performance_header
+
 app = Sanic(__name__)
 CORS(app)
 compress = Compress()
@@ -40,6 +42,8 @@ def configure_app():
     environment_overrides()
     app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
     os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
+    if app.config['Settings']['Server']['Debug']:
+        add_performance_header(app)
 
 
 @app.route('/apistatus')
