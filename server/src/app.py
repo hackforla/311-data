@@ -13,7 +13,6 @@ from services.frequencyService import FrequencyService
 from services.pinService import PinService
 from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
-from services.ingress_service import ingress_service
 from services.sqlIngest import DataHandler
 from services.feedbackService import FeedbackService
 
@@ -133,14 +132,6 @@ async def requestfrequency_comparison(request):
     return json(data)
 
 
-@app.route('/sample-data')
-@compress.compress()
-async def sample_route(request):
-    sample_dataset = {'cool_key': ['value1', 'value2'],
-                      app.config['REDACTED']: app.config['REDACTED']}
-    return json(sample_dataset)
-
-
 @app.route('/ingest', methods=["GET"])
 @compress.compress()
 async def ingest(request):
@@ -196,22 +187,6 @@ async def ingest(request):
                                          limit=limit,
                                          querySize=querySize)
     return json(data)
-
-
-@app.route('/update')
-@compress.compress()
-async def update(request):
-    ingress_worker = ingress_service()
-    return_data = ingress_worker.update()
-    return json(return_data)
-
-
-@app.route('/delete')
-@compress.compress()
-async def delete(request):
-    ingress_worker = ingress_service()
-    return_data = ingress_worker.delete()
-    return json(return_data)
 
 
 @app.route('/pins', methods=["POST"])
