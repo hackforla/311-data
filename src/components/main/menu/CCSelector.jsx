@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { updateNC } from '@reducers/filters';
 import { updateComparisonList } from '@reducers/comparisonFilters';
-import { COUNCILS } from '@components/common/CONSTANTS';
+import { CITY_COUNCILS } from '@components/common/CONSTANTS';
 import MultiSelect from '@components/common/MultiSelect';
 
-const NCSelector = ({
+const CCSelector = ({
   selectedCouncils,
   updateSelectedCouncils,
 }) => {
-  const items = COUNCILS.map(council => ({
+  const items = CITY_COUNCILS.map(council => ({
     ...council,
     selected: selectedCouncils.includes(council.name),
   }));
@@ -27,7 +26,6 @@ const NCSelector = ({
     <MultiSelect
       items={items}
       onChange={onChange}
-      groupBy="region"
       searchBar
       selectAll
     />
@@ -35,25 +33,21 @@ const NCSelector = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  selectedCouncils: ownProps.comparison
-    ? state.comparisonFilters.comparison[ownProps.set].list
-    : state.filters.councils,
+  selectedCouncils: state.comparisonFilters.comparison[ownProps.set].list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  updateSelectedCouncils: ownProps.comparison
-    ? councils => dispatch(updateComparisonList(ownProps.set, councils))
-    : councils => dispatch(updateNC(councils)),
+  updateSelectedCouncils: councils => dispatch(updateComparisonList(ownProps.set, councils)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NCSelector);
+export default connect(mapStateToProps, mapDispatchToProps)(CCSelector);
 
-NCSelector.propTypes = {
+CCSelector.propTypes = {
   selectedCouncils: PropTypes.arrayOf(PropTypes.string),
   updateSelectedCouncils: PropTypes.func,
 };
 
-NCSelector.defaultProps = {
+CCSelector.defaultProps = {
   selectedCouncils: [],
   updateSelectedCouncils: () => null,
 };
