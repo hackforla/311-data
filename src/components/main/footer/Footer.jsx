@@ -31,7 +31,9 @@ const Footer = ({
                   backendSha.substr(0, 7),
                 ]}
               >
-                Version { version }
+                Version
+                &nbsp;
+                { version }
               </HoverOverInfo>
             </span>
           )}
