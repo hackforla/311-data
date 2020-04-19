@@ -49,8 +49,16 @@ def configure_app():
 @compress.compress()
 async def healthcheck(request):
     currentTime = datetime.utcnow()
-    githubSha = app.config['Settings']['Github']['GITHUB_SHA']
-    return json({'currentTime': currentTime, 'gitSha': githubSha})
+    settings = app.config['Settings']
+    githubSha = settings['Github']['GITHUB_SHA']
+    semVersion = '{}.{}.{}'.format(
+        settings['Version']['VER_MAJOR'],
+        settings['Version']['VER_MINOR'],
+        settings['Version']['VER_PATCH'])
+
+    return json({'currentTime': currentTime,
+                 'gitSha': githubSha,
+                 'version': semVersion})
 
 
 @app.route('/')
