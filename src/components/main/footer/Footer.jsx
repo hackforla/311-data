@@ -3,35 +3,60 @@ import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import propTypes from 'proptypes';
 import moment from 'moment';
+import HoverOverInfo from '@components/common/HoverOverInfo';
 import StaticFooter from './StaticFooter';
 
 const Footer = ({
   lastUpdated,
-}) => (
-  <footer className="navbar has-navbar-fixed-bottom">
-    <Switch>
-      <Route path="/(about|contact)" component={StaticFooter} />
-      <Route path="/">
-        <p>
-          Data Updated Through:
-          &nbsp;
-          {lastUpdated && moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
-        </p>
-      </Route>
-    </Switch>
-  </footer>
-);
+  version,
+  backendSha,
+}) => {
+  const frontendSha = process.env.GITHUB_SHA || 'DEVELOPMENT';
+  return (
+    <footer className="navbar has-navbar-fixed-bottom">
+      <Switch>
+        <Route path="/(about|contact)" component={StaticFooter} />
+        <Route path="/">
+          <span className="last-updated">
+            Data Updated Through:
+            &nbsp;
+            {lastUpdated && moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
+          </span>
+          { version && backendSha && (
+            <span className="version">
+              <HoverOverInfo
+                position="top"
+                text={[
+                  frontendSha.substr(0, 7),
+                  backendSha.substr(0, 7),
+                ]}
+              >
+                Version { version }
+              </HoverOverInfo>
+            </span>
+          )}
+        </Route>
+      </Switch>
+    </footer>
+  );
+};
 
 const mapStateToProps = state => ({
   lastUpdated: state.data.lastUpdated,
+  version: state.metadata.version,
+  backendSha: state.metadata.gitSha,
 });
 
 Footer.propTypes = {
   lastUpdated: propTypes.number,
+  version: propTypes.string,
+  backendSha: propTypes.string,
 };
 
 Footer.defaultProps = {
   lastUpdated: undefined,
+  version: undefined,
+  backendSha: undefined,
 };
 
 export default connect(mapStateToProps, null)(Footer);
