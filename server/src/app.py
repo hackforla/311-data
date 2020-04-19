@@ -24,21 +24,12 @@ compress = Compress()
 
 
 def environment_overrides():
-    if os.environ.get('DB_CONNECTION_STRING', None):
-        app.config['Settings']['Database']['DB_CONNECTION_STRING'] =\
-            os.environ.get('DB_CONNECTION_STRING')
-    if os.environ.get('PORT', None):
-        app.config['Settings']['Server']['PORT'] =\
-            os.environ.get('PORT')
-    if os.environ.get('TOKEN', None):
-        app.config['Settings']['Socrata']['TOKEN'] =\
-            os.environ.get('TOKEN')
-    if os.environ.get('GITHUB_TOKEN', None):
-        app.config['Settings']['Github']['GITHUB_TOKEN'] =\
-            os.environ.get('GITHUB_TOKEN')
-    if os.environ.get('PROJECT_URL', None):
-        app.config['Settings']['Github']['PROJECT_URL'] =\
-            os.environ.get('PROJECT_URL')
+    settings = app.config['Settings']
+    for section in settings:
+        for key in settings[section]:
+            envKey = key.upper()
+            if os.environ.get(envKey, None):
+                settings[section][envKey] = os.environ.get(envKey)
 
 
 def configure_app():
@@ -52,6 +43,14 @@ def configure_app():
     os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
     if app.config['Settings']['Server']['Debug']:
         add_performance_header(app)
+
+
+@app.route('/apistatus')
+@compress.compress()
+async def healthcheck(request):
+    currentTime = datetime.utcnow()
+    githubSha = app.config['Settings']['Github']['GITHUB_SHA']
+    return json({'currentTime': currentTime, 'gitSha': githubSha})
 
 
 @app.route('/')
