@@ -3,7 +3,7 @@ dist/
 # Test results
 coverage/
 jmeter.log
-!server/performanceStatistics/BenchmarkReport/sbadmin2-1.0.7/**/dist
+server/performanceStatistics/htmlReports/
 
 # dependencies
 /node_modules
