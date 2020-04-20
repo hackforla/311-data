@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { HashRouter as Router } from 'react-router-dom';
+
+import { getMetadataRequest } from '@reducers/metadata';
 
 import Routes from './Routes';
 import Header from './components/main/header/Header';
@@ -9,10 +12,12 @@ import { SnapshotRenderer } from './components/export/SnapshotService';
 
 const basename = process.env.NODE_ENV === 'development' ? '/' : process.env.BASE_URL || '/';
 
-const App = () => {
+const App = ({
+  getMetadata,
+}) => {
   useEffect(() => {
-    // fetch data on load??
-  }, []);
+    getMetadata();
+  });
 
   return (
     <Router basename={basename}>
@@ -24,4 +29,12 @@ const App = () => {
   );
 };
 
-export default connect(null, null)(App);
+const mapDispatchToProps = dispatch => ({
+  getMetadata: () => dispatch(getMetadataRequest()),
+});
+
+export default connect(null, mapDispatchToProps)(App);
+
+App.propTypes = {
+  getMetadata: PropTypes.func.isRequired,
+};
