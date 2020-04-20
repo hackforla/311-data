@@ -57,5 +57,8 @@
 .nc-list {
   .level {
     font-size: 16px;
+    .level-item {
+      position: relative;
+    }
   }
 }

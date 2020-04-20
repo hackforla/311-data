@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import moment from 'moment';
+import clx from 'classnames';
 import DatePicker from 'react-datepicker';
-
+import Button from '@components/common/Button';
+import DatePickerSVG from '@assets/datepicker.svg';
 import {
   updateStartDate,
   updateEndDate,
@@ -12,46 +14,6 @@ import {
   updateComparisonStartDate,
   updateComparisonEndDate,
 } from '@reducers/comparisonFilters';
-
-import Button from '../../../common/Button';
-import Icon from '../../../common/Icon';
-
-import COLORS from '../../../../styles/COLORS';
-
-const cardStyle = {
-  height: '200px',
-  width: '400px',
-  overflow: 'visible',
-  boxShadow: '0px 6px 5px rgba(0, 0, 0, 0.5)',
-};
-
-const headerStyle = {
-  height: '50px',
-  background: COLORS.BACKGROUND,
-  color: COLORS.FONTS,
-  fontWeight: 'bold',
-  fontSize: '20px',
-  border: 'none',
-  borderRadius: '0',
-};
-
-const textStyle = {
-  fontSize: '16px',
-};
-
-const inputSpanStyle = {
-  display: 'inline-block',
-  width: '100px',
-  color: headerStyle.color,
-  ...textStyle,
-};
-
-const containerDivStyle = {
-  height: '42px',
-  width: '317px',
-  display: 'flex',
-  alignItems: 'center',
-};
 
 const DateRangePicker = ({
   id,
@@ -66,125 +28,108 @@ const DateRangePicker = ({
 }) => {
   const [startDate, updateLocalStart] = useState();
   const [endDate, updateLocalEnd] = useState();
+  const [focus, setFocus] = useState();
+  const [error, setError] = useState();
+  const [startError, setStartError] = useState();
+  const [endError, setEndError] = useState();
 
   const handleDateChange = (updateStartOrEndDate, date) => {
     updateStartOrEndDate(date);
   };
 
+  const clearErrors = () => {
+    setError(null);
+    setStartError(false);
+    setEndError(false);
+  };
+
   return (
     <div
       id={id}
-      className="modal-card"
-      style={{ ...cardStyle, ...style }}
+      className="date-range-picker modal-card"
+      style={style}
     >
       {/* ---------- Modal Card Header ---------- */}
-      <header
-        className="modal-card-head"
-        style={headerStyle}
-      >
-        <p
-          className="modal-card-title has-text-weight-bold is-size-5"
-          style={{
-            color: headerStyle.color,
-            paddingLeft: '18px',
-            paddingTop: '18px',
-          }}
-        >
-          {title}
-        </p>
-        <a href="# " onClick={handleClick}>
-          <Icon
-            id="date-picker-close-button"
-            icon="times"
-            color="grey"
-          />
-        </a>
+      <header className="modal-card-head">
+        <h1>{ title }</h1>
+        <Button
+          id="date-picker-close-button"
+          className="picker-close-button"
+          icon="times"
+          handleClick={() => { clearErrors(); handleClick(); }}
+        />
       </header>
 
       {/* ---------- Modal Card Body - main content ---------- */}
-      <section
-        className="modal-card-body"
-        style={{
-          overflow: 'visible',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+      <section className="modal-card-body">
         <div className="container">
-          <div className="container" style={containerDivStyle}>
-            &nbsp;
-            <span style={inputSpanStyle}>
+          <div className={clx('container', 'inner', { focus: focus === 'start' })}>
+            <span className="input-label">
               Start Date
             </span>
-            <DatePicker
-              todayButton="Today"
-              selected={startDate}
-              startDate={startDate}
-              endDate={endDate}
-              minDate={moment('01/01/2015', 'MM/DD/YYYY').toDate()}
-              maxDate={moment().toDate()}
-              selectsStart
-              showYearDropdown
-              showMonthDropdown
-              showPopperArrow={false}
-              popperPlacement="right"
-              onChange={date => handleDateChange(updateLocalStart, date)}
-              placeholderText="MM/DD/YYYY"
-            />
+            <span className={clx('input-wrapper', { error: startError })}>
+              <DatePicker
+                todayButton="Today"
+                selected={startDate}
+                startDate={startDate}
+                endDate={endDate}
+                minDate={moment('01/01/2015', 'MM/DD/YYYY').toDate()}
+                maxDate={moment().toDate()}
+                selectsStart
+                showYearDropdown
+                showMonthDropdown
+                showPopperArrow={false}
+                popperPlacement="right"
+                onChange={date => handleDateChange(updateLocalStart, date)}
+                onFocus={() => { setFocus('start'); clearErrors(); }}
+                placeholderText="MM/DD/YYYY"
+                className="date-input"
+              />
+              <span className="svg-wrapper">
+                <DatePickerSVG />
+              </span>
+            </span>
           </div>
-          <div
-            className="container"
-            style={{
-              background: COLORS.FORMS.STROKE,
-              ...containerDivStyle,
-            }}
-          >
-            &nbsp;
-            <span style={{ ...inputSpanStyle }}>
+          <div className={clx('container', 'inner', { focus: focus === 'end' })}>
+            <span className="input-label">
               End Date
             </span>
-            <DatePicker
-              todayButton="Today"
-              selected={endDate}
-              startDate={endDate}
-              endDate={endDate}
-              minDate={startDate}
-              maxDate={moment().toDate()}
-              showYearDropdown
-              showMonthDropdown
-              selectsEnd
-              showPopperArrow={false}
-              popperPlacement="right"
-              onChange={date => handleDateChange(updateLocalEnd, date)}
-              placeholderText="MM/DD/YYYY"
-            />
+            <span className={clx('input-wrapper', { error: endError })}>
+              <DatePicker
+                todayButton="Today"
+                selected={endDate}
+                startDate={endDate}
+                endDate={endDate}
+                minDate={startDate}
+                maxDate={moment().toDate()}
+                showYearDropdown
+                showMonthDropdown
+                selectsEnd
+                showPopperArrow={false}
+                popperPlacement="right"
+                onChange={date => handleDateChange(updateLocalEnd, date)}
+                onFocus={() => { setFocus('end'); clearErrors(); }}
+                placeholderText="MM/DD/YYYY"
+                className="date-input"
+              />
+              <span className="svg-wrapper">
+                <DatePickerSVG />
+              </span>
+            </span>
           </div>
+          <div className="error-message">{ error }</div>
         </div>
       </section>
 
       {/* ---------- Modal Card Footer - button(s) ---------- */}
-      <footer
-        className="modal-card-foot"
-        style={{
-          background: headerStyle.background,
-          border: 'none',
-          textAlign: 'center',
-          borderRadius: '0',
-          height: '75px',
-        }}
-      >
-        <div className="container" style={{ paddingBottom: '30px' }}>
+      <footer className="modal-card-foot">
+        <div className="container">
           <Button
             id="date-range-button"
+            className="date-range-button"
             label="Save"
-            style={{
-              background: COLORS.BRAND.CTA1,
-              color: COLORS.FONTS,
-              fontWeight: 'bold',
-              width: '125px',
-              height: '42px',
-            }}
             handleClick={() => {
+              setFocus(null);
               if (startDate && endDate) {
                 const formatDate = date => moment(date).format('MM/DD/YYYY');
                 const dispatchStart = comparison ? updateComparisonStart : updateStart;
@@ -192,8 +137,16 @@ const DateRangePicker = ({
                 dispatchStart(formatDate(startDate));
                 dispatchEnd(formatDate(endDate));
                 handleClick();
-              } else {
-                alert('Provide valid start and end dates.');
+              } else if (!startDate && !endDate) {
+                setError('Please provide start and end dates.');
+                setStartError(true);
+                setEndError(true);
+              } else if (!startDate) {
+                setError('Please provide a start date.');
+                setStartError(true);
+              } else if (!endDate) {
+                setError('Please provide an end date.');
+                setEndError(true);
               }
             }}
           />
