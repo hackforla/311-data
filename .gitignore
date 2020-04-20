@@ -2,6 +2,7 @@
 dist/
 # Test results
 coverage/
+jmeter.log
 
 # dependencies
 /node_modules
