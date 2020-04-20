@@ -4,12 +4,29 @@ footer.navbar {
   width: 100vw;
   height: $footer-height;
   background: $brand-main-color;
+  color: $brand-bg-color;
+  text-align: center;
 
-  p {
-    width: 100vw;
-    color: $brand-bg-color;
-    font-weight: bold;
-    text-align: center;
+  .last-updated {
+    display: inline-block;
+    margin: 0 auto;
     line-height: $footer-height;
+  }
+
+  .version {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    line-height: $footer-height;
+    font-size: 12px;
+    cursor: default;
+    .hover-over-tooltip {
+      color: $brand-main-color;
+      font-weight: normal;
+      font-size: 14px;
+      font-family: $brand-text-family;
+      width: auto;
+      word-break: keep-all;
+    }
   }
 }
