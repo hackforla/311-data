@@ -51,6 +51,17 @@
     h1 {
       margin-bottom: 8px;
     }
+    h2 {
+      margin: 15px 0;
+      font-size: 16px;
+      font-family: $brand-text-family;
+    }
+    .multi-select {
+      width: 349px;
+      .multi-select-content {
+        height: 205px;
+      }
+    }
     #btn-sidebar-submit-button {
       background-color: $brand-cta1-color;
       color: $brand-text-color;
