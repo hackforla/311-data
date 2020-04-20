@@ -32,6 +32,7 @@ jobs:
         echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
         echo DB_URL=${{ secrets.DB_URL }} >> .env
         echo BASE_URL=${{ secrets.BASE_URL }} >> .env
+        echo GITHUB_SHA=${{ github.sha }} >> .env
     - name: Build project
       run: npm run build
     - name: Run Tests
