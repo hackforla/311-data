@@ -15,6 +15,7 @@ from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
 from services.sqlIngest import DataHandler
 from services.feedbackService import FeedbackService
+from services.dataService import DataService
 
 from utils.sanic import add_performance_header
 
@@ -56,9 +57,13 @@ async def healthcheck(request):
         settings['Version']['VER_MINOR'],
         settings['Version']['VER_PATCH'])
 
+    data_worker = DataService(settings)
+    lastPulled = await data_worker.lastPulled()
+
     return json({'currentTime': currentTime,
                  'gitSha': githubSha,
-                 'version': semVersion})
+                 'version': semVersion,
+                 'lastPulled': lastPulled})
 
 
 @app.route('/')

@@ -33,18 +33,15 @@ const BASE_URL = process.env.DB_URL;
 function* getPins(filters) {
   const pinUrl = `${BASE_URL}/pins`;
 
-  const { data: { lastPulled, data } } = yield call(axios.post, pinUrl, filters);
+  const { data } = yield call(axios.post, pinUrl, filters);
 
-  return {
-    lastUpdated: lastPulled,
-    pins: data,
-  };
+  return data;
 }
 
 function* getCounts(filters) {
   const countsUrl = `${BASE_URL}/requestcounts`;
 
-  const { data: { data } } = yield call(axios.post, countsUrl, {
+  const { data } = yield call(axios.post, countsUrl, {
     ...filters,
     countFields: ['requesttype', 'requestsource'],
   });
@@ -58,7 +55,7 @@ function* getCounts(filters) {
 function* getFrequency(filters) {
   const frequencyUrl = `${BASE_URL}/requestfrequency`;
 
-  const { data: { data } } = yield call(axios.post, frequencyUrl, filters);
+  const { data } = yield call(axios.post, frequencyUrl, filters);
 
   return data;
 }
@@ -66,7 +63,7 @@ function* getFrequency(filters) {
 function* getTimeToClose(filters) {
   const ttcUrl = `${BASE_URL}/timetoclose`;
 
-  const { data: { data } } = yield call(axios.post, ttcUrl, filters);
+  const { data } = yield call(axios.post, ttcUrl, filters);
 
   return data;
 }
@@ -74,7 +71,7 @@ function* getTimeToClose(filters) {
 function* fetchPinInfo(srnumber) {
   const pinInfoUrl = `${BASE_URL}/servicerequest/${srnumber}`;
 
-  const { data: { data } } = yield call(axios.get, pinInfoUrl);
+  const { data } = yield call(axios.get, pinInfoUrl);
 
   return data;
 }
@@ -90,7 +87,7 @@ function* postFeedback(message) {
 
 function* getAll(filters) {
   const [
-    { lastUpdated, pins },
+    pins,
     counts,
     frequency,
     timeToClose,
@@ -102,7 +99,6 @@ function* getAll(filters) {
   ]);
 
   return {
-    lastUpdated,
     pins,
     counts,
     frequency,
