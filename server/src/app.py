@@ -301,8 +301,8 @@ async def sendEmail(request):
     # subject = postArgs.get('subject', None)
     # content = postArgs.get('content', None)
 
-    result = await email_worker.send_email(subject="test",
-                                           content="Email sent with sanic.")
+    result = await email_worker.send_mail(subject="test",
+                                          content="Email sent with sanic.")
     return json(result)
 
 
