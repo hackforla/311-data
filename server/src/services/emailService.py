@@ -38,7 +38,6 @@ class EmailService(object):
             subject=subject,
             content=content,
         )
-        print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         return {'result': 'email sent'}
 
 
