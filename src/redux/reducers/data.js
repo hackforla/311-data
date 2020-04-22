@@ -57,7 +57,6 @@ export const gitResponseFailure = error => ({
 const initialState = {
   isLoading: false,
   error: null,
-  lastUpdated: null,
   pins: [],
   pinsInfo: {},
   counts: {},

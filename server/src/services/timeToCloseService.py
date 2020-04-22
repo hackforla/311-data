@@ -57,7 +57,7 @@ class TimeToCloseService(object):
         data = self.dataAccess.query(fields, filters)
 
         # read into a dataframe and drop the nulls
-        df = pd.DataFrame(data['data'], columns=fields).dropna()
+        df = pd.DataFrame(data, columns=fields).dropna()
 
         # generate a new dataframe that contains the number of days it
         # takes to close each request, plus the type of request
@@ -69,7 +69,7 @@ class TimeToCloseService(object):
         dtc_df = df[[groupField, 'days-to-close']]
 
         # group the requests by type and get box plot stats for each type
-        data['data'] = dtc_df \
+        data = dtc_df \
             .groupby(by=groupField) \
             .apply(lambda df: get_boxplot_stats(df['days-to-close'].values)) \
             .to_dict()
@@ -77,8 +77,8 @@ class TimeToCloseService(object):
         # if no rows exist for a particular item in the groupField,
         # return a count of 0
         for item in groupFieldItems:
-            if item not in data['data'].keys():
-                data['data'][item] = {'count': 0}
+            if item not in data.keys():
+                data[item] = {'count': 0}
 
         return data
 
@@ -93,21 +93,18 @@ class TimeToCloseService(object):
 
         Example response:
         {
-            lastPulled: Timestamp,
-            data: {
-                'Bulky Items': {
-                    'min': float,
-                    'q1': float,
-                    'median': float,
-                    'q3': float,
-                    'max': float,
-                    'whiskerMin': float,
-                    'whiskerMax': float,
-                    'outliers': [float],
-                    'count': int
-                }
-                ...
+            'Bulky Items': {
+                'min': float,
+                'q1': float,
+                'median': float,
+                'q3': float,
+                'max': float,
+                'whiskerMin': float,
+                'whiskerMax': float,
+                'outliers': [float],
+                'count': int
             }
+            ...
         }
         """
 
@@ -129,23 +126,20 @@ class TimeToCloseService(object):
 
         Example response:
         {
-            lastPulled: Timestamp,
-            data: {
-                set1: {
-                    district: 'nc',
-                    data: {
-                        4: { stats },
-                        8: { stats }
-                        ...
-                    }
-                },
-                set2: {
-                    district: 'cc',
-                    data: {
-                        1: { stats },
-                        15: { stats }
-                        ...
-                    }
+            set1: {
+                district: 'nc',
+                data: {
+                    4: { stats },
+                    8: { stats }
+                    ...
+                }
+            },
+            set2: {
+                district: 'cc',
+                data: {
+                    1: { stats },
+                    15: { stats }
+                    ...
                 }
             }
         }
@@ -172,15 +166,12 @@ class TimeToCloseService(object):
         set2data = get_data(set2['district'], set2['list'])
 
         return {
-            'lastPulled': set1data['lastPulled'],
-            'data': {
-                'set1': {
-                    'district': set1['district'],
-                    'data': set1data['data']
-                },
-                'set2': {
-                    'district': set2['district'],
-                    'data': set2data['data']
-                }
+            'set1': {
+                'district': set1['district'],
+                'data': set1data
+            },
+            'set2': {
+                'district': set2['district'],
+                'data': set2data
             }
         }

@@ -17,11 +17,13 @@ const Footer = ({
       <Switch>
         <Route path="/(about|contact)" component={StaticFooter} />
         <Route path="/">
-          <span className="last-updated">
-            Data Updated Through:
-            &nbsp;
-            {lastUpdated && moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
-          </span>
+          { lastUpdated && (
+            <span className="last-updated">
+              Data Updated Through:
+              &nbsp;
+              {moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
+            </span>
+          )}
           { version && backendSha && (
             <span className="version">
               <HoverOverInfo
@@ -44,7 +46,7 @@ const Footer = ({
 };
 
 const mapStateToProps = state => ({
-  lastUpdated: state.data.lastUpdated,
+  lastUpdated: state.metadata.lastPulled,
   version: state.metadata.version,
   backendSha: state.metadata.gitSha,
 });
