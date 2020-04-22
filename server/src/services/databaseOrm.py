@@ -24,13 +24,13 @@ class Ingest(Base, Mixin):
     srnumber = Column(String)
 
     # dates
-    createddate = Column(DateTime)
+    createddate = Column(DateTime, index=True)
     updateddate = Column(DateTime)
     servicedate = Column(DateTime)
     closeddate = Column(DateTime)
 
     # about
-    requesttype = Column(String)
+    requesttype = Column(String, index=True)
     requestsource = Column(String)
     actiontaken = Column(String)
     owner = Column(String)
@@ -55,9 +55,9 @@ class Ingest(Base, Mixin):
 
     # politics
     apc = Column(String)
-    cd = Column(Integer)
+    cd = Column(Integer, index=True)
     cdmember = Column(String)
-    nc = Column(Integer)
+    nc = Column(Integer, index=True)
     ncname = Column(String)
     policeprecinct = Column(String)
 
