@@ -86,7 +86,7 @@ class DataHandler:
 
             report.append({
                 'description': 'dropped duplicate rows by srnumber',
-                'rows': rows.rowcount
+                'rowsAffected': rows.rowcount
             })
 
         def switchPrimaryKey(table, report):
@@ -97,7 +97,7 @@ class DataHandler:
 
             report.append({
                 'description': 'switched primary key column to srnumber',
-                'rows': 'N/A'
+                'rowsAffected': 'N/A'
             })
 
         def removeInvalidClosedDates(table, report):
@@ -112,6 +112,45 @@ class DataHandler:
                 'rowsAffected': result.rowcount
             })
 
+        def setDaysToClose(table, report):
+            result = exec_sql(f"""
+              UPDATE {table}
+              SET _daystoclose = EXTRACT (
+                  EPOCH FROM
+                  (closeddate::timestamp - createddate::timestamp) /
+                  (60 * 60 * 24)
+              );
+            """)
+
+            report.append({
+              'description': 'set _daystoclose column',
+              'rowsAffected': result.rowcount
+            })
+
+        def fixNorthWestwood(table, report):
+            result = exec_sql(f"""
+              UPDATE {table}
+              SET nc = 127
+              WHERE nc = 0 AND ncname = 'NORTH WESTWOOD NC'
+            """)
+
+            report.append({
+              'description': 'fix nc code for North Westwood NC',
+              'rowsAffected': result.rowcount
+            })
+
+        def fixHistoricCulturalNorth(table, report):
+            result = exec_sql(f"""
+              UPDATE {table}
+              SET nc = 128
+              WHERE nc = 0 AND ncname = 'HISTORIC CULTURAL NORTH NC'
+            """)
+
+            report.append({
+              'description': 'fix nc code for Historic Cultural North NC',
+              'rowsAffected': result.rowcount
+            })
+
         log('\nCleaning ingest table.')
         table = Ingest.__tablename__
         report = []
@@ -119,6 +158,9 @@ class DataHandler:
         dropDuplicates(table, report)
         switchPrimaryKey(table, report)
         removeInvalidClosedDates(table, report)
+        setDaysToClose(table, report)
+        fixNorthWestwood(table, report)
+        fixHistoricCulturalNorth(table, report)
 
         return report
 

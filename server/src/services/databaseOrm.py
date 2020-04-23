@@ -25,9 +25,10 @@ class Ingest(Base, Mixin):
 
     # dates
     createddate = Column(DateTime, index=True)
+    closeddate = Column(DateTime)
+    _daystoclose = Column(Float(1))
     updateddate = Column(DateTime)
     servicedate = Column(DateTime)
-    closeddate = Column(DateTime)
 
     # about
     requesttype = Column(String, index=True)

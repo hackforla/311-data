@@ -53,25 +53,16 @@ class TimeToCloseService(object):
             }
 
         # grab the necessary data from the db
-        fields = [groupField, 'createddate', 'closeddate']
+        fields = [groupField, '_daystoclose']
         data = self.dataAccess.query(fields, filters)
 
         # read into a dataframe and drop the nulls
-        df = pd.DataFrame(data, columns=fields).dropna()
-
-        # generate a new dataframe that contains the number of days it
-        # takes to close each request, plus the type of request
-        df['closeddate'] = pd.to_datetime(df['closeddate'])
-        df['createddate'] = pd.to_datetime(df['createddate'])
-        df['time-to-close'] = df['closeddate'] - df['createddate']
-        df['hours-to-close'] = df['time-to-close'].astype('timedelta64[h]')
-        df['days-to-close'] = (df['hours-to-close'] / 24).round(2)
-        dtc_df = df[[groupField, 'days-to-close']]
+        dtc_df = pd.DataFrame(data, columns=fields).dropna()
 
         # group the requests by type and get box plot stats for each type
         data = dtc_df \
             .groupby(by=groupField) \
-            .apply(lambda df: get_boxplot_stats(df['days-to-close'].values)) \
+            .apply(lambda df: get_boxplot_stats(df['_daystoclose'].values)) \
             .to_dict()
 
         # if no rows exist for a particular item in the groupField,
