@@ -1,3 +1,6 @@
+# Project led by Nikolas Papastavrou
+# Code developed by Varun Bopardikar, Hana Ahmed, and Selina Ho
+
 import pandas as pd
 import numpy as np
 from datetime import datetime
