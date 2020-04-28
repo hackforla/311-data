@@ -16,10 +16,10 @@ const WhatIs311Data = () => (
     </p>
     <div className="logos level">
       <span className="level-item">
-        <EmpowerLaSVG />
+        <EmpowerLaSVG alt="EmpowerLA Neighborhood Council Logo" />
       </span>
       <span className="level-item">
-        <HackforLaSVG />
+        <HackforLaSVG alt="Hack for LA Logo" />
       </span>
     </div>
     <p>
