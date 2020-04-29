@@ -1,12 +1,13 @@
 import { MENU_TABS } from '@components/common/CONSTANTS';
 
-const types = {
+export const types = {
   TOGGLE_MENU: 'TOGGLE_MENU',
   SET_MENU_TAB: 'SET_MENU_TAB',
   SET_ERROR_MODAL: 'SET_ERROR_MODAL',
   SHOW_DATA_CHARTS: 'SHOW_DATA_CHARTS',
   SHOW_COMPARISON_CHARTS: 'SHOW_COMPARISON_CHARTS',
   SHOW_FEEDBACK_SUCCESS: 'SHOW_FEEDBACK_SUCCESS',
+  UPDATE_MAP_POSITION: 'UPDATE_MAP_POSITION',
 };
 
 export const toggleMenu = () => ({
@@ -38,11 +39,17 @@ export const showFeedbackSuccess = isShown => ({
   payload: isShown,
 });
 
+export const updateMapPosition = position => ({
+  type: types.UPDATE_MAP_POSITION,
+  payload: position,
+});
+
 const initialState = {
   menu: {
     isOpen: true,
     activeTab: MENU_TABS.MAP,
   },
+  map: {},
   error: {
     isOpen: false,
   },
@@ -91,6 +98,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         displayFeedbackSuccess: action.payload,
+      };
+    case types.UPDATE_MAP_POSITION:
+      return {
+        ...state,
+        map: action.payload,
       };
     default:
       return state;
