@@ -11,10 +11,13 @@ def add_performance_header(sanic_app):
         req.ctx.start = time.perf_counter()
 
     async def response(req, res):
-        duration = time.perf_counter() - req.ctx.start
-        res.headers['x-performance'] = json.dumps({
-            'executionTime': round(duration, 4)
-        })
+        try:
+            duration = time.perf_counter() - req.ctx.start
+            res.headers['x-performance'] = json.dumps({
+                'executionTime': round(duration, 4)
+            })
+        except Exception:
+            pass
 
     sanic_app.register_middleware(request, attach_to='request')
     sanic_app.register_middleware(response, attach_to='response')
