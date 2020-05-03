@@ -8,6 +8,8 @@ from threading import Timer
 from datetime import datetime
 from multiprocessing import cpu_count
 
+from services.visualizationsService import VisualizationsService
+from services.comparisonService import ComparisonService
 from services.timeToCloseService import TimeToCloseService
 from services.frequencyService import FrequencyService
 from services.pinService import PinService
@@ -76,6 +78,45 @@ async def healthcheck(request):
 @compress.compress()
 async def index(request):
     return json('You hit the index')
+
+
+@app.route('/visualizations', methods=["POST"])
+@compress.compress()
+async def visualizations(request):
+    worker = VisualizationsService()
+
+    postArgs = request.json
+    start = postArgs.get('startDate', None)
+    end = postArgs.get('endDate', None)
+    ncs = postArgs.get('ncList', [])
+    requests = postArgs.get('requestTypes', [])
+
+    data = await worker.visualizations(startDate=start,
+                                       endDate=end,
+                                       requestTypes=requests,
+                                       ncList=ncs)
+    return json(data)
+
+
+@app.route('/comparison/<type>', methods=["POST"])
+@compress.compress()
+async def comparison(request, type):
+    worker = ComparisonService()
+
+    postArgs = request.json
+    startDate = postArgs.get('startDate', None)
+    endDate = postArgs.get('endDate', None)
+    requestTypes = postArgs.get('requestTypes', [])
+    set1 = postArgs.get('set1', None)
+    set2 = postArgs.get('set2', None)
+
+    data = await worker.comparison(type=type,
+                                   startDate=startDate,
+                                   endDate=endDate,
+                                   requestTypes=requestTypes,
+                                   set1=set1,
+                                   set2=set2)
+    return json(data)
 
 
 @app.route('/timetoclose', methods=["POST"])
