@@ -12,6 +12,7 @@ from services.timeToCloseService import TimeToCloseService
 from services.frequencyService import FrequencyService
 from services.pinService import PinService
 from services.pinClusterService import PinClusterService
+from services.heatmapService import HeatmapService
 from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
 from services.sqlIngest import DataHandler
@@ -231,8 +232,26 @@ async def pinClusters(request):
     worker = PinClusterService(app.config['Settings'])
 
     postArgs = request.json
+    filters = {
+        'startDate': postArgs.get('startDate', None),
+        'endDate': postArgs.get('endDate', None),
+        'requestTypes': postArgs.get('requestTypes', []),
+        'ncList': postArgs.get('ncList', [])
+    }
     zoom = int(postArgs.get('zoom', 0))
     bounds = postArgs.get('bounds', {})
+    options = postArgs.get('options', {})
+
+    clusters = await worker.get_pin_clusters(filters, zoom, bounds, options)
+    return json(clusters)
+
+
+@app.route('/heatmap', methods=["POST"])
+@compress.compress()
+async def heatmap(request):
+    worker = HeatmapService(app.config['Settings'])
+
+    postArgs = request.json
     filters = {
         'startDate': postArgs.get('startDate', None),
         'endDate': postArgs.get('endDate', None),
@@ -240,8 +259,8 @@ async def pinClusters(request):
         'ncList': postArgs.get('ncList', [])
     }
 
-    clusters = await worker.get_pin_clusters(filters, zoom, bounds)
-    return json(clusters)
+    heatmap = await worker.get_heatmap(filters)
+    return json(heatmap)
 
 
 @app.route('/requestcounts', methods=["POST"])

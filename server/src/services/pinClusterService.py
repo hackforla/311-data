@@ -76,6 +76,6 @@ class PinClusterService(object):
 
         return clusters
 
-    async def get_pin_clusters(self, filters, zoom, bounds):
+    async def get_pin_clusters(self, filters, zoom, bounds, options):
         pins = self.get_pins(filters)
-        return self.pin_clusters(pins, zoom, bounds)
+        return self.pin_clusters(pins, zoom, bounds, options)
