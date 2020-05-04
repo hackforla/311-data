@@ -11,7 +11,7 @@
     grid-template-columns: 1fr 55px;
     grid-column-gap: 0;
     align-items: center;
-    
+
     .set1, .set2 {
       border: 1px solid $brand-stroke-color;
       border-radius: 3px;
@@ -47,15 +47,9 @@
   }
 }
 
-.district-selector-dropdown{
+.district-selector-dropdown {
   .dropdown-item-label {
     font: $brand-text-family;
-    font-size: 16px;
-  }
-}
-
-.nc-list {
-  .level {
     font-size: 16px;
   }
 }

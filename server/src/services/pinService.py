@@ -13,7 +13,6 @@ class PinService(object):
         """
         Returns the base pin data given times, ncs, and request filters
         {
-          'LastPulled': 'Timestamp',
           'data': [
             {
               'srnumber':'String',

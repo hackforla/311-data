@@ -9,7 +9,6 @@ class RequestDetailService(object):
         """
         Returns all properties tied to a service request given the srNumber
         {
-          'LastPulled': 'Timestamp',
           'data': {
               'ncname':'String',
               'requesttype':'String',

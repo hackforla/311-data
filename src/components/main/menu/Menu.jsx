@@ -14,6 +14,7 @@ import {
 
 import { MENU_TABS } from '@components/common/CONSTANTS';
 import Button from '@components/common/Button';
+import InfoTitle from '@components/common/InfoTitle';
 import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
@@ -73,6 +74,11 @@ const Menu = ({
           <div className="menu-content with-tabs">
             <h1>Filters</h1>
             <DateSelector key="data-dateselector" />
+            <InfoTitle
+              title="Neighborhood Council (NC) Selection"
+              element="h2"
+              infoText="This filter allows the user to select specific neighborhood councils."
+            />
             <NCSelector />
             <RequestTypeSelector />
             <Submit />

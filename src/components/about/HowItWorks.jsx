@@ -10,10 +10,10 @@ const HowItWorks = () => (
   <div className="how-it-works">
     <h1>How It Works</h1>
     <div className="grid-container">
-      <MobileSVG />
-      <DataServerSVG />
-      <GrowthSVG />
-      <DataVizSVG />
+      <MobileSVG alt="Mobile Telephone" />
+      <DataServerSVG alt="Cloud Database" />
+      <DataVizSVG alt="Laptop Computer Displaying Data Visualizations" />
+      <GrowthSVG alt="Upturned Hand Holding Seedling" />
       <p>Community members post reports via the City&apos;s easy-to-use mobile application.</p>
       <p>
         Reports are consolidated and entered into a central database and requests are
