@@ -1,5 +1,5 @@
 .how-it-works{
-  margin: 75px 5em 5em 100px;
+  margin: 75px 15em 5em 15em;
 
   h1 {
     text-align: center;
@@ -15,7 +15,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-row-gap: 20px;
-    grid-column-gap: 75px;
+    grid-column-gap: 50px;
     justify-items: center;
   }
 }
