@@ -11,6 +11,8 @@ from multiprocessing import cpu_count
 from services.timeToCloseService import TimeToCloseService
 from services.frequencyService import FrequencyService
 from services.pinService import PinService
+from services.pinClusterService import PinClusterService
+from services.heatmapService import HeatmapService
 from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
 from services.sqlIngest import DataHandler
@@ -18,6 +20,7 @@ from services.feedbackService import FeedbackService
 from services.dataService import DataService
 
 from utils.sanic import add_performance_header
+from utils.redis import cache
 
 app = Sanic(__name__)
 CORS(app)
@@ -44,6 +47,7 @@ def configure_app():
     os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
     if app.config['Settings']['Server']['Debug']:
         add_performance_header(app)
+    cache.config(app.config['Settings']['Redis'])
 
 
 @app.route('/apistatus')
@@ -220,6 +224,43 @@ async def pinMap(request):
                                                  ncList=ncs,
                                                  requestTypes=requests)
     return json(return_data)
+
+
+@app.route('/pin-clusters', methods=["POST"])
+@compress.compress()
+async def pinClusters(request):
+    worker = PinClusterService(app.config['Settings'])
+
+    postArgs = request.json
+    filters = {
+        'startDate': postArgs.get('startDate', None),
+        'endDate': postArgs.get('endDate', None),
+        'requestTypes': postArgs.get('requestTypes', []),
+        'ncList': postArgs.get('ncList', [])
+    }
+    zoom = int(postArgs.get('zoom', 0))
+    bounds = postArgs.get('bounds', {})
+    options = postArgs.get('options', {})
+
+    clusters = await worker.get_pin_clusters(filters, zoom, bounds, options)
+    return json(clusters)
+
+
+@app.route('/heatmap', methods=["POST"])
+@compress.compress()
+async def heatmap(request):
+    worker = HeatmapService(app.config['Settings'])
+
+    postArgs = request.json
+    filters = {
+        'startDate': postArgs.get('startDate', None),
+        'endDate': postArgs.get('endDate', None),
+        'requestTypes': postArgs.get('requestTypes', []),
+        'ncList': postArgs.get('ncList', [])
+    }
+
+    heatmap = await worker.get_heatmap(filters)
+    return json(heatmap)
 
 
 @app.route('/requestcounts', methods=["POST"])
