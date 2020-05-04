@@ -12,6 +12,7 @@ services:
      PROJECT_URL: REDACTED
      GITHUB_TOKEN: REDACTED
      TOKEN: REDACTED
+     REDIS_URL: redis://redis:6379
    ports:
      - 5000:5000
 

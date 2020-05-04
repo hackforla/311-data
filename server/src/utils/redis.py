@@ -4,11 +4,15 @@ from datetime import timedelta
 
 
 class RedisCache(object):
+    def __init__(self):
+        self.enabled = False
+
     def config(self, config):
-        self.enabled = config['ENABLED'] == 'True'
-        if self.enabled:
+        redis_url = config.get('REDIS_URL')
+        if redis_url != 'None':
+            self.enabled = True
             self.ttl = int(config['TTL_SECONDS'])
-            self.r = redis.Redis(host='redis')
+            self.r = redis.from_url(redis_url)
 
     def get(self, key):
         if not self.enabled:
