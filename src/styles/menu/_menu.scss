@@ -4,7 +4,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 0;
+  bottom: -$footer-height;
   width: $menu-width;
   z-index: $z-menu;
   background: $brand-bg-color;
