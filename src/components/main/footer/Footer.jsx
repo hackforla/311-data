@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useLocation } from 'react-router-dom';
 import propTypes from 'proptypes';
 import moment from 'moment';
+import clx from 'classnames';
 import HoverOverInfo from '@components/common/HoverOverInfo';
 import StaticFooter from './StaticFooter';
 
@@ -10,10 +11,14 @@ const Footer = ({
   lastUpdated,
   version,
   backendSha,
+  menuIsOpen,
 }) => {
   const frontendSha = process.env.GITHUB_SHA || 'DEVELOPMENT';
+  const location = useLocation();
   return (
-    <footer className="navbar has-navbar-fixed-bottom">
+    <footer
+      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen && ['/', '/comparison'].includes(location.pathname) })}
+    >
       <Switch>
         <Route path="/(about|contact)" component={StaticFooter} />
         <Route path="/">
@@ -49,12 +54,14 @@ const mapStateToProps = state => ({
   lastUpdated: state.metadata.lastPulled,
   version: state.metadata.version,
   backendSha: state.metadata.gitSha,
+  menuIsOpen: state.ui.menu.isOpen,
 });
 
 Footer.propTypes = {
   lastUpdated: propTypes.number,
   version: propTypes.string,
   backendSha: propTypes.string,
+  menuIsOpen: propTypes.bool.isRequired,
 };
 
 Footer.defaultProps = {
