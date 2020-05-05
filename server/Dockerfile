@@ -1,7 +1,7 @@
 FROM python:3.7-slim
 
 RUN apt-get update && apt-get install -yq \
-    python3 python3-dev gcc \
+    python3 python3-dev gcc g++ \
     gfortran musl-dev
 
 ENV DB_CONNECTION_STRING=REDACTED
