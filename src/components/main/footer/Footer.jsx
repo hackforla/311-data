@@ -1,11 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, useLocation } from 'react-router-dom';
 import propTypes from 'proptypes';
 import moment from 'moment';
 import clx from 'classnames';
 import HoverOverInfo from '@components/common/HoverOverInfo';
-import StaticFooter from './StaticFooter';
 
 const Footer = ({
   lastUpdated,
@@ -14,38 +12,32 @@ const Footer = ({
   menuIsOpen,
 }) => {
   const frontendSha = process.env.GITHUB_SHA || 'DEVELOPMENT';
-  const location = useLocation();
   return (
     <footer
-      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen && ['/', '/comparison'].includes(location.pathname) })}
+      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen })}
     >
-      <Switch>
-        <Route path="/(about|contact)" component={StaticFooter} />
-        <Route path="/">
-          { lastUpdated && (
-            <span className="last-updated">
-              Data Updated Through:
-              &nbsp;
-              {moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
-            </span>
-          )}
-          { version && backendSha && (
-            <span className="version">
-              <HoverOverInfo
-                position="top"
-                text={[
-                  frontendSha.substr(0, 7),
-                  backendSha.substr(0, 7),
-                ]}
-              >
-                Version
-                &nbsp;
-                { version }
-              </HoverOverInfo>
-            </span>
-          )}
-        </Route>
-      </Switch>
+      { lastUpdated && (
+        <span className="last-updated">
+          Data Updated Through:
+          &nbsp;
+          {moment(1000 * lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
+        </span>
+      )}
+      { version && backendSha && (
+        <span className="version">
+          <HoverOverInfo
+            position="top"
+            text={[
+              frontendSha.substr(0, 7),
+              backendSha.substr(0, 7),
+            ]}
+          >
+            Version
+            &nbsp;
+            { version }
+          </HoverOverInfo>
+        </span>
+      )}
     </footer>
   );
 };
