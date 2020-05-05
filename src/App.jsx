@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { HashRouter as Router } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { getMetadataRequest } from '@reducers/metadata';
 
 import Routes from './Routes';
 import Header from './components/main/header/Header';
 import Footer from './components/main/footer/Footer';
+import StaticFooter from './components/main/footer/StaticFooter';
 import { SnapshotRenderer } from './components/export/SnapshotService';
 
 const basename = process.env.NODE_ENV === 'development' ? '/' : process.env.BASE_URL || '/';
@@ -23,7 +24,10 @@ const App = ({
     <Router basename={basename}>
       <Header />
       <Routes />
-      <Footer />
+      <Switch>
+        <Route path="/(about|contact)" component={StaticFooter} />
+        <Route path="/" component={Footer} />
+      </Switch>
       <SnapshotRenderer />
     </Router>
   );
