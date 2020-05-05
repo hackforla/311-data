@@ -1,6 +1,7 @@
 import pandas as pd
 from .databaseOrm import Ingest
 from utils.database import db
+from utils.picklebase import pb
 
 
 class DataService(object):
@@ -18,6 +19,12 @@ class DataService(object):
         '''
         Generates filters for dates, request types, and ncs.
         '''
+        if pb.enabled:
+            return {
+                'startDate': startDate,
+                'endDate': endDate,
+                'requestTypes': requestTypes,
+                'ncList': ncList}
 
         requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
         ncList = (', ').join([str(nc) for nc in ncList])
@@ -37,6 +44,13 @@ class DataService(object):
         '''
         Generates filters for the comparison endpoints.
         '''
+        if pb.enabled:
+            return {
+                'startDate': startDate,
+                'endDate': endDate,
+                'requestTypes': requestTypes,
+                'ncList': ncList,
+                'cdList': cdList}
 
         requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
         if len(ncList) > 0:
@@ -79,6 +93,9 @@ class DataService(object):
     def query(self, fields, filters, table=default_table):
         if not fields or not filters:
             return {'Error': 'fields and filters are required'}
+
+        if pb.enabled:
+            return pb.query(table, fields, filters)
 
         fields = (', ').join(fields)
         return pd.read_sql(f"""
