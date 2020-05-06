@@ -1,10 +1,14 @@
 export const types = {
   GET_DATA_REQUEST: 'GET_DATA_REQUEST',
-  GET_DATA_SUCCESS: 'GET_DATA_SUCCESS',
-  GET_DATA_FAILURE: 'GET_DATA_FAILURE',
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
+  GET_PIN_CLUSTERS_SUCCESS: 'GET_PIN_CLUSTERS_SUCCESS',
+  GET_PIN_CLUSTERS_FAILURE: 'GET_PIN_CLUSTERS_FAILURE',
+  GET_HEATMAP_SUCCESS: 'GET_HEATMAP_SUCCESS',
+  GET_HEATMAP_FAILURE: 'GET_HEATMAP_FAILURE',
+  GET_VIS_DATA_SUCCESS: 'GET_VIS_DATA_SUCCESS',
+  GET_VIS_DATA_FAILURE: 'GET_VIS_DATA_FAILURE',
   SEND_GIT_REQUEST: 'SEND_GIT_REQUEST',
   GIT_RESPONSE_SUCCESS: 'GIT_RESPONSE_SUCCESS',
   GIT_RESPONSE_FAILURE: 'GIT_RESPONSE_FAILURE',
@@ -12,16 +16,6 @@ export const types = {
 
 export const getDataRequest = () => ({
   type: types.GET_DATA_REQUEST,
-});
-
-export const getDataSuccess = response => ({
-  type: types.GET_DATA_SUCCESS,
-  payload: response,
-});
-
-export const getDataFailure = error => ({
-  type: types.GET_DATA_FAILURE,
-  payload: error,
 });
 
 export const getPinInfoRequest = srnumber => ({
@@ -36,6 +30,36 @@ export const getPinInfoSuccess = response => ({
 
 export const getPinInfoFailure = error => ({
   type: types.GET_PIN_INFO_FAILURE,
+  payload: error,
+});
+
+export const getPinClustersSuccess = response => ({
+  type: types.GET_PIN_CLUSTERS_SUCCESS,
+  payload: response,
+});
+
+export const getPinClustersFailure = error => ({
+  type: types.GET_PIN_CLUSTERS_FAILURE,
+  payload: error,
+});
+
+export const getHeatmapSuccess = response => ({
+  type: types.GET_HEATMAP_SUCCESS,
+  payload: response,
+});
+
+export const getHeatmapFailure = error => ({
+  type: types.GET_HEATMAP_FAILURE,
+  payload: error,
+});
+
+export const getVisDataSuccess = response => ({
+  type: types.GET_VIS_DATA_SUCCESS,
+  payload: response,
+});
+
+export const getVisDataFailure = error => ({
+  type: types.GET_VIS_DATA_FAILURE,
   payload: error,
 });
 
@@ -55,9 +79,11 @@ export const gitResponseFailure = error => ({
 });
 
 const initialState = {
-  isLoading: false,
+  isMapLoading: false,
+  isVisLoading: false,
   error: null,
-  pins: [],
+  pinClusters: [],
+  heatmap: [],
   pinsInfo: {},
   counts: {},
   frequency: {
@@ -72,33 +98,9 @@ export default (state = initialState, action) => {
     case types.GET_DATA_REQUEST:
       return {
         ...state,
-        isLoading: true,
+        isMapLoading: true,
+        isVisLoading: true,
       };
-    case types.GET_DATA_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        isLoading: false,
-        ...action.payload,
-      };
-    case types.GET_DATA_FAILURE: {
-      const {
-        response: { status },
-        message,
-      } = action.payload;
-
-      return {
-        ...state,
-        error: {
-          code: status,
-          message,
-          error: action.payload,
-        },
-        isLoading: false,
-      };
-    }
-    case types.GET_PIN_INFO_REQUEST:
-      return state;
     case types.GET_PIN_INFO_SUCCESS:
       return {
         ...state,
@@ -107,7 +109,6 @@ export default (state = initialState, action) => {
           ...state.pinsInfo,
           [action.payload.srnumber]: action.payload,
         },
-        isLoading: false,
       };
     case types.GET_PIN_INFO_FAILURE: {
       const {
@@ -121,19 +122,76 @@ export default (state = initialState, action) => {
           message,
           error: action.payload,
         },
-        isLoading: false,
       };
     }
-    case types.SEND_GIT_REQUEST:
+    case types.GET_PIN_CLUSTERS_SUCCESS:
       return {
         ...state,
-        isLoading: true,
+        error: null,
+        pinClusters: action.payload,
+        isMapLoading: false,
       };
+    case types.GET_PIN_CLUSTERS_FAILURE: {
+      const {
+        response: { status },
+        message,
+      } = action.payload;
+      return {
+        ...state,
+        error: {
+          code: status,
+          message,
+          error: action.payload,
+        },
+        isMapLoading: false,
+      };
+    }
+    case types.GET_HEATMAP_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        heatmap: action.payload,
+      };
+    case types.GET_HEATMAP_FAILURE: {
+      const {
+        response: { status },
+        message,
+      } = action.payload;
+      return {
+        ...state,
+        error: {
+          code: status,
+          message,
+          error: action.payload,
+        },
+      };
+    }
+    case types.GET_VIS_DATA_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        ...action.payload,
+        isVisLoading: false,
+      };
+    case types.GET_VIS_DATA_FAILURE: {
+      const {
+        response: { status },
+        message,
+      } = action.payload;
+      return {
+        ...state,
+        error: {
+          code: status,
+          message,
+          error: action.payload,
+        },
+        isVisLoading: false,
+      };
+    }
     case types.GIT_RESPONSE_SUCCESS:
       return {
         ...state,
         error: null,
-        isLoading: false,
       };
     case types.GIT_RESPONSE_FAILURE: {
       const {
@@ -148,7 +206,6 @@ export default (state = initialState, action) => {
           message,
           error: action.payload,
         },
-        isLoading: false,
       };
     }
     default:
