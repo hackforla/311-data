@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getPinInfoRequest } from '@reducers/data';
+import { updateMapPosition } from '@reducers/ui';
 import PinPopup from '@components/PinMap/PinPopup';
 import CustomMarker from '@components/PinMap/CustomMarker';
+import ClusterMarker from '@components/PinMap/ClusterMarker';
 import {
   Map,
   TileLayer,
   Rectangle,
   Tooltip,
   LayersControl,
+  LayerGroup,
   ZoomControl,
   withLeaflet,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
@@ -46,6 +48,7 @@ class PinMap extends Component {
       ready: false,
       width: null,
       height: null,
+      heatmapVisible: false,
     };
     this.container = React.createRef();
   }
@@ -93,6 +96,14 @@ class PinMap extends Component {
     this.setState({ bounds });
   }
 
+  updatePosition = ({ target: map }) => {
+    const { updatePosition } = this.props;
+    updatePosition({
+      zoom: map.getZoom(),
+      bounds: map.getBounds(),
+    });
+  }
+
   onEachRegionFeature = (feature, layer) => {
     // Popup text when clicking on a region
     const popupText = `
@@ -114,65 +125,77 @@ class PinMap extends Component {
 
   renderMarkers = () => {
     const {
-      data,
+      pinClusters,
       getPinInfo,
       pinsInfo,
     } = this.props;
 
-    if (data) {
-      return data.map(d => {
-        if (d.latitude && d.longitude) {
-          const {
-            latitude,
-            longitude,
-            srnumber,
-            requesttype,
-          } = d;
-          const position = [latitude, longitude];
-          const {
-            status,
-            createddate,
-            updateddate,
-            closeddate,
-            address,
-            ncname,
-          } = pinsInfo[srnumber] || {};
-          const { displayName, color, abbrev } = REQUEST_TYPES[requesttype];
+    if (pinClusters) {
+      return pinClusters.map(({
+        id,
+        count,
+        latitude,
+        longitude,
+        expansion_zoom: expansionZoom,
+        srnumber,
+        requesttype,
+      }) => {
+        const position = [latitude, longitude];
 
-          const popup = (
-            <PinPopup
-              displayName={displayName}
-              color={color}
-              abbrev={abbrev}
-              address={address}
-              createdDate={createddate}
-              updatedDate={updateddate}
-              closedDate={closeddate}
-              status={status}
-              ncName={ncname}
-            />
-          );
-
+        if (count > 1) {
           return (
-            <CustomMarker
-              key={srnumber}
+            <ClusterMarker
+              key={id}
               position={position}
-              onClick={() => {
-                if (!pinsInfo[srnumber]) {
-                  getPinInfo(srnumber);
-                }
+              count={count}
+              onClick={({ latlng }) => {
+                this.map.flyTo(latlng, expansionZoom);
               }}
-              color={color}
-              icon="map-marker-alt"
-              size="3x"
-              style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
-            >
-              {popup}
-            </CustomMarker>
+            />
           );
         }
 
-        return null;
+        const {
+          status,
+          createddate,
+          updateddate,
+          closeddate,
+          address,
+          ncname,
+        } = pinsInfo[srnumber] || {};
+        const { displayName, color, abbrev } = REQUEST_TYPES[requesttype];
+
+        const popup = (
+          <PinPopup
+            displayName={displayName}
+            color={color}
+            abbrev={abbrev}
+            address={address}
+            createdDate={createddate}
+            updatedDate={updateddate}
+            closedDate={closeddate}
+            status={status}
+            ncName={ncname}
+          />
+        );
+
+        return (
+          <CustomMarker
+            key={srnumber}
+            position={position}
+            onClick={() => {
+              if (!pinsInfo[srnumber]) {
+                getPinInfo(srnumber);
+              }
+            }}
+            color={color}
+            icon="map-marker-alt"
+            size="3x"
+            style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
+          >
+            {popup}
+          </CustomMarker>
+        );
       });
     }
 
@@ -202,9 +225,10 @@ class PinMap extends Component {
       geoJSON,
       width,
       height,
+      heatmapVisible,
     } = this.state;
 
-    const { data } = this.props;
+    const { heatmap } = this.props;
 
     return (
       <>
@@ -215,6 +239,21 @@ class PinMap extends Component {
           bounds={bounds}
           style={{ width, height }}
           zoomControl={false}
+          whenReady={e => {
+            this.map = e.target;
+            this.updatePosition(e);
+          }}
+          onMoveend={this.updatePosition}
+          onOverlayadd={({ name }) => {
+            if (name === 'Heatmap') {
+              this.setState({ heatmapVisible: true });
+            }
+          }}
+          onOverlayremove={({ name }) => {
+            if (name === 'Heatmap') {
+              this.setState({ heatmapVisible: false });
+            }
+          }}
         >
           <ZoomControl position="topright" />
           <LayersControl
@@ -259,24 +298,24 @@ class PinMap extends Component {
               )
             }
             <Overlay checked name="Markers">
-              <MarkerClusterGroup
-                maxClusterRadius={40}
-              >
+              <LayerGroup>
                 {this.renderMarkers()}
-              </MarkerClusterGroup>
+              </LayerGroup>
             </Overlay>
             <Overlay name="Heatmap">
               {/* intensityExtractor is required and requires a callback as the value.
                 * The heatmap is working with an empty callback but we'll probably
                 * improve functionality post-MVP by generating a heatmap list
                 * on the backend. */}
+              {/* The heatmapVisible test prevents the component from doing
+                * unnecessary calculations when the heatmap isn't visible */}
               <HeatmapLayer
                 max={1}
-                points={data}
+                points={heatmapVisible ? heatmap : []}
                 radius={20}
                 blur={25}
-                longitudeExtractor={m => m.longitude}
-                latitudeExtractor={m => m.latitude}
+                longitudeExtractor={m => m[1]}
+                latitudeExtractor={m => m[0]}
                 intensityExtractor={() => 1}
               />
             </Overlay>
@@ -324,22 +363,27 @@ class PinMap extends Component {
 
 const mapDispatchToProps = dispatch => ({
   getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
+  updatePosition: position => dispatch(updateMapPosition(position)),
 });
 
 const mapStateToProps = state => ({
-  data: state.data.pins,
   pinsInfo: state.data.pinsInfo,
+  pinClusters: state.data.pinClusters,
+  heatmap: state.data.heatmap,
 });
 
 PinMap.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({})),
   pinsInfo: PropTypes.shape({}),
+  pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
+  heatmap: PropTypes.arrayOf(PropTypes.array),
   getPinInfo: PropTypes.func.isRequired,
+  updatePosition: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {
-  data: undefined,
   pinsInfo: {},
+  pinClusters: [],
+  heatmap: [],
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PinMap);
