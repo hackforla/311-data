@@ -1,10 +1,10 @@
 .menu-container {
   $tabs-height: 40px;
 
-  position: fixed;
+  position: absolute;
   left: 0;
-  top: $header-height;
-  bottom: $footer-height;
+  top: 0;
+  bottom: -$footer-height;
   width: $menu-width;
   z-index: $z-menu;
   background: $brand-bg-color;
@@ -32,12 +32,14 @@
   }
 
   #btn-menu-toggle-button {
-    position: fixed;
+    position: absolute;
+    top: $tabs-height;
     left: $menu-width;
     height: 60px;
     width: 26px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     border-radius: 0;
+    border: none;
   }
 
   .menu-content {
@@ -49,6 +51,17 @@
     }
     h1 {
       margin-bottom: 8px;
+    }
+    h2 {
+      margin: 15px 0;
+      font-size: 16px;
+      font-family: $brand-text-family;
+    }
+    .multi-select {
+      width: 349px;
+      .multi-select-content {
+        height: 205px;
+      }
     }
     #btn-sidebar-submit-button {
       background-color: $brand-cta1-color;
