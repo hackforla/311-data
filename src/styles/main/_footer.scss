@@ -6,6 +6,12 @@ footer.navbar {
   background: $brand-main-color;
   color: $brand-bg-color;
   text-align: center;
+  transition: all 0.5s ease 0s;
+
+  &.menu-is-open {
+    width: calc(100vw - #{$menu-width});
+    margin-left: $menu-width;
+  }
 
   .last-updated {
     display: inline-block;
