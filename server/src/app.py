@@ -21,6 +21,7 @@ from services.dataService import DataService
 
 from utils.sanic import add_performance_header
 from utils.redis import cache
+from utils.database import db
 
 app = Sanic(__name__)
 CORS(app)
@@ -48,6 +49,7 @@ def configure_app():
     if app.config['Settings']['Server']['Debug']:
         add_performance_header(app)
     cache.config(app.config['Settings']['Redis'])
+    db.config(app.config['Settings']['Database'])
 
 
 @app.route('/apistatus')
