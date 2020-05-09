@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 from .dataService import DataService
 
@@ -52,12 +51,9 @@ class TimeToCloseService(object):
                 'outlierCount': len(outliers)
             }
 
-        # grab the necessary data from the db
+        # grab the necessary data from the db and drop nulls
         fields = [groupField, '_daystoclose']
-        data = self.dataAccess.query(fields, filters)
-
-        # read into a dataframe and drop the nulls
-        dtc_df = pd.DataFrame(data, columns=fields).dropna()
+        dtc_df = self.dataAccess.query(fields, filters).dropna()
 
         # group the requests by type and get box plot stats for each type
         data = dtc_df \
