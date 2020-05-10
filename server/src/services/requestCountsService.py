@@ -2,8 +2,8 @@ from .dataService import DataService
 
 
 class RequestCountsService(object):
-    def __init__(self, config=None, tableName="ingest_staging_table"):
-        self.dataAccess = DataService(config, tableName)
+    def __init__(self, config=None):
+        self.dataAccess = DataService()
 
     async def get_req_counts(self,
                              startDate=None,

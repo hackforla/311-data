@@ -1,6 +1,4 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import text
+from utils.database import db
 import time
 import json
 from .databaseOrm import Ingest, Base
@@ -21,10 +19,7 @@ class Timer():
 
 class DataHandler:
     def __init__(self, config=None):
-        dbString = config['Database']['DB_CONNECTION_STRING']
-
-        self.engine = create_engine(dbString)
-        self.session = sessionmaker(bind=self.engine)()
+        self.session = db.Session()
         self.socrata = SocrataClient(config)
 
     def __del__(self):
@@ -32,8 +27,8 @@ class DataHandler:
 
     def resetDatabase(self):
         log('\nResetting database.')
-        Base.metadata.drop_all(self.engine)
-        Base.metadata.create_all(self.engine)
+        Base.metadata.drop_all(db.engine)
+        Base.metadata.create_all(db.engine)
 
     def fetchData(self, year, offset, limit):
         log('\tFetching {} rows, offset {}'.format(limit, offset))
@@ -74,12 +69,8 @@ class DataHandler:
         }
 
     def cleanTable(self):
-        def exec_sql(sql):
-            with self.engine.connect() as conn:
-                return conn.execute(text(sql))
-
         def dropDuplicates(table, report):
-            rows = exec_sql(f"""
+            rows = db.exec_sql(f"""
                 DELETE FROM {table} a USING {table} b
                 WHERE a.id < b.id AND a.srnumber = b.srnumber;
             """)
@@ -90,7 +81,7 @@ class DataHandler:
             })
 
         def switchPrimaryKey(table, report):
-            exec_sql(f"""
+            db.exec_sql(f"""
                 ALTER TABLE {table} DROP COLUMN id;
                 ALTER TABLE {table} ADD PRIMARY KEY (srnumber);
             """)
@@ -101,7 +92,7 @@ class DataHandler:
             })
 
         def removeInvalidClosedDates(table, report):
-            result = exec_sql(f"""
+            result = db.exec_sql(f"""
                 UPDATE {table}
                 SET closeddate = NULL
                 WHERE closeddate::timestamp < createddate::timestamp;
@@ -113,7 +104,7 @@ class DataHandler:
             })
 
         def setDaysToClose(table, report):
-            result = exec_sql(f"""
+            result = db.exec_sql(f"""
               UPDATE {table}
               SET _daystoclose = EXTRACT (
                   EPOCH FROM
@@ -128,7 +119,7 @@ class DataHandler:
             })
 
         def fixNorthWestwood(table, report):
-            result = exec_sql(f"""
+            result = db.exec_sql(f"""
               UPDATE {table}
               SET nc = 127
               WHERE nc = 0 AND ncname = 'NORTH WESTWOOD NC'
@@ -140,7 +131,7 @@ class DataHandler:
             })
 
         def fixHistoricCulturalNorth(table, report):
-            result = exec_sql(f"""
+            result = db.exec_sql(f"""
               UPDATE {table}
               SET nc = 128
               WHERE nc = 0 AND ncname = 'HISTORIC CULTURAL NORTH NC'

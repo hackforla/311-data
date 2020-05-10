@@ -20,7 +20,7 @@ class HeatmapService(object):
 
         fields = ['latitude', 'longitude']
         if pins is None:
-            dataAccess = DataService(self.config)
+            dataAccess = DataService()
 
             filters = dataAccess.standardFilters(
                 filters['startDate'],

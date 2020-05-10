@@ -4,8 +4,8 @@ from .dataService import DataService
 
 
 class TimeToCloseService(object):
-    def __init__(self, config=None, tableName="ingest_staging_table"):
-        self.dataAccess = DataService(config, tableName)
+    def __init__(self, config=None):
+        self.dataAccess = DataService()
 
     def ttc(self, groupField, groupFieldItems, filters):
 

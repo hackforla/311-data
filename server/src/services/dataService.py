@@ -1,21 +1,11 @@
 import datetime
 import pandas as pd
-import sqlalchemy as db
-from sqlalchemy.orm import sessionmaker
 from .databaseOrm import Ingest as Request
+from utils.database import db
+import sqlalchemy as sql
 
 
 class DataService(object):
-    def __init__(self, config=None, tableName="ingest_staging_table"):
-        self.config = config
-        self.dbString = None if not self.config  \
-            else self.config['Database']['DB_CONNECTION_STRING']
-
-        self.table = tableName
-        self.data = None
-        self.engine = db.create_engine(self.dbString)
-        self.Session = sessionmaker(bind=self.engine)
-
     async def lastPulled(self):
         # Will represent last time the ingest pipeline ran
         return datetime.datetime.utcnow()
@@ -48,7 +38,7 @@ class DataService(object):
             Request.createddate > startDate if startDate else False,
             Request.createddate < endDate if endDate else False,
             Request.requesttype.in_(requestTypes),
-            db.or_(Request.nc.in_(ncList), Request.cd.in_(cdList))
+            sql.or_(Request.nc.in_(ncList), Request.cd.in_(cdList))
         ]
 
     def itemQuery(self, requestNumber):
@@ -63,7 +53,7 @@ class DataService(object):
         if 'id' in fields:
             fields.remove('id')
 
-        session = self.Session()
+        session = db.Session()
         record = session \
             .query(*fields) \
             .filter(Request.srnumber == requestNumber) \
@@ -86,7 +76,7 @@ class DataService(object):
 
         selectFields = [getattr(Request, item) for item in queryItems]
 
-        session = self.Session()
+        session = db.Session()
         records = session \
             .query(*selectFields) \
             .filter(*queryFilters) \

@@ -1,16 +1,10 @@
 from src.services.dataService import DataService
 
-TESTCONFIG = {
-    "Database": {
-        "DB_CONNECTION_STRING": "postgresql://testingString/postgresql"
-    }
-}
-
 
 def test_serviceExists():
     # Arrange
     # Act
-    data_worker = DataService(TESTCONFIG)
+    data_worker = DataService()
     # Assert
     assert isinstance(data_worker, DataService)
 
@@ -18,7 +12,7 @@ def test_serviceExists():
 def test_emptyQuery():
     # Arrange
     queryItems = []
-    data_worker = DataService(TESTCONFIG)
+    data_worker = DataService()
     # Act
     result = data_worker.query(queryItems)
     # Assert
@@ -28,7 +22,7 @@ def test_emptyQuery():
 def test_nullQuery():
     # Arrange
     queryItems = None
-    data_worker = DataService(TESTCONFIG)
+    data_worker = DataService()
     # Act
     result = data_worker.query(queryItems)
     # Assert
