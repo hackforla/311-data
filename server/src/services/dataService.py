@@ -2,12 +2,10 @@ import datetime
 import pandas as pd
 from .databaseOrm import Ingest as Request
 from utils.database import db
+import sqlalchemy as sql
 
 
 class DataService(object):
-    def __init__(self, config=None, tableName="ingest_staging_table"):
-        pass
-
     async def lastPulled(self):
         # Will represent last time the ingest pipeline ran
         return datetime.datetime.utcnow()
@@ -40,7 +38,7 @@ class DataService(object):
             Request.createddate > startDate if startDate else False,
             Request.createddate < endDate if endDate else False,
             Request.requesttype.in_(requestTypes),
-            db.or_(Request.nc.in_(ncList), Request.cd.in_(cdList))
+            sql.or_(Request.nc.in_(ncList), Request.cd.in_(cdList))
         ]
 
     def itemQuery(self, requestNumber):
