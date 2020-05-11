@@ -78,6 +78,9 @@ class DataService(object):
             return {'Error': 'Request number not found'}
 
     def query(self, fields, filters, table=default_table):
+        if not fields or not filters:
+            return {'Error': 'fields and filters are required'}
+
         fields = (', ').join(fields)
         return pd.read_sql(f"""
             SELECT {fields}

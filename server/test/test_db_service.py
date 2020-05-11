@@ -12,9 +12,10 @@ def test_serviceExists():
 def test_emptyQuery():
     # Arrange
     queryItems = []
+    filters = None
     data_worker = DataService()
     # Act
-    result = data_worker.query(queryItems)
+    result = data_worker.query(queryItems, filters)
     # Assert
     assert result['Error'] is not None
 
@@ -22,8 +23,9 @@ def test_emptyQuery():
 def test_nullQuery():
     # Arrange
     queryItems = None
+    filters = None
     data_worker = DataService()
     # Act
-    result = data_worker.query(queryItems)
+    result = data_worker.query(queryItems, filters)
     # Assert
     assert result['Error'] is not None
