@@ -53,7 +53,7 @@ class TimeToCloseService(object):
 
         # grab the necessary data from the db and drop nulls
         fields = [groupField, '_daystoclose']
-        dtc_df = self.dataAccess.query(fields, filters).dropna()
+        dtc_df = self.dataAccess.query(fields, filters, table='vis').dropna()
 
         # group the requests by type and get box plot stats for each type
         data = dtc_df \

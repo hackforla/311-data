@@ -28,7 +28,7 @@ class HeatmapService(object):
                 filters['requestTypes'],
                 filters['ncList'])
 
-            pins = dataAccess.query(fields, filters)
+            pins = dataAccess.query(fields, filters, table='map')
             pins = pd.DataFrame(pins, columns=fields)
         else:
             pins = pins[fields]

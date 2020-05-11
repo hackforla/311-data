@@ -49,7 +49,7 @@ class FrequencyService(object):
 
         # grab the necessary data from the db and drop nulls
         fields = [groupField, 'createddate']
-        df = self.dataAccess.query(fields, filters).dropna()
+        df = self.dataAccess.query(fields, filters, table='vis').dropna()
 
         # convert bins to float so numpy can use them
         bins_fl = np.array(bins).astype('datetime64[s]').astype('float')
