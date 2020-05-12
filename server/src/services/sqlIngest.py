@@ -28,7 +28,11 @@ class DataHandler:
     def resetDatabase(self):
         log('\nResetting database.')
         db.exec_sql(f"""
-            DROP TABLE IF EXISTS {Ingest.__tablename__} CASCADE
+            DROP TABLE IF EXISTS {Ingest.__tablename__} CASCADE;
+
+            DROP TABLE IF EXISTS metadata;
+            CREATE TABLE metadata AS
+            SELECT * FROM (VALUES (NOW())) as vals(last_pulled);
         """)
         Base.metadata.create_all(db.engine)
 

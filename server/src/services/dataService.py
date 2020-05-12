@@ -1,4 +1,3 @@
-import datetime
 import pandas as pd
 from .databaseOrm import Ingest
 from utils.database import db
@@ -8,8 +7,8 @@ class DataService(object):
     default_table = Ingest.__tablename__
 
     async def lastPulled(self):
-        # Will represent last time the ingest pipeline ran
-        return datetime.datetime.utcnow()
+        rows = db.exec_sql('SELECT last_pulled FROM metadata')
+        return rows.first()[0]
 
     def standardFilters(self,
                         startDate=None,
