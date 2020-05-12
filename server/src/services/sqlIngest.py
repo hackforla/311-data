@@ -27,7 +27,9 @@ class DataHandler:
 
     def resetDatabase(self):
         log('\nResetting database.')
-        Base.metadata.drop_all(db.engine)
+        db.exec_sql(f"""
+            DROP TABLE IF EXISTS {Ingest.__tablename__} CASCADE
+        """)
         Base.metadata.create_all(db.engine)
 
     def fetchData(self, year, offset, limit):
@@ -155,6 +157,70 @@ class DataHandler:
 
         return report
 
+    def createViews(self):
+        def createMapView(table, report):
+            rows = db.exec_sql(f"""
+                CREATE MATERIALIZED VIEW map AS
+                    SELECT
+                        srnumber,
+                        requesttype,
+                        nc,
+                        latitude,
+                        longitude,
+                        createddate
+                    FROM {table}
+                    WHERE
+                        latitude IS NOT NULL AND
+                        longitude IS NOT NULL
+                WITH DATA;
+            """)
+
+            db.exec_sql("""
+                CREATE INDEX map_nc_index ON map(nc);
+                CREATE INDEX map_requesttype_index ON map(requesttype);
+                CREATE INDEX map_createddate_index ON map(createddate);
+            """)
+
+            report.append({
+                'description': 'create map view',
+                'rowsAffected': rows.rowcount
+            })
+
+        def createVisView(table, report):
+            rows = db.exec_sql(f"""
+                CREATE MATERIALIZED VIEW vis AS
+                    SELECT
+                        requesttype,
+                        requestsource,
+                        nc,
+                        cd,
+                        createddate,
+                        _daystoclose
+                    FROM {table}
+                WITH DATA;
+            """)
+
+            db.exec_sql("""
+                CREATE INDEX vis_nc_index ON vis(nc);
+                CREATE INDEX vis_cd_index ON vis(cd);
+                CREATE INDEX vis_requesttype_index ON vis(requesttype);
+                CREATE INDEX vis_createddate_index ON vis(createddate);
+            """)
+
+            report.append({
+                'description': 'create vis view',
+                'rowsAffected': rows.rowcount
+            })
+
+        log('\nCreating views on ingest table.')
+        table = Ingest.__tablename__
+        report = []
+
+        createMapView(table, report)
+        createVisView(table, report)
+
+        return report
+
     async def populateDatabase(self, years=[], limit=None, querySize=None):
         log('\nPopulating database for years: {}'.format(list(years)))
         timer = Timer()
@@ -167,6 +233,7 @@ class DataHandler:
             insertReport.append(inserts)
 
         cleanReport = self.cleanTable()
+        viewsReport = self.createViews()
 
         minutes = timer.end()
         log('\nDone with ingestion after {} minutes.\n'.format(minutes))
@@ -174,6 +241,7 @@ class DataHandler:
         report = {
             'insertion': insertReport,
             'cleaning': cleanReport,
+            'views': viewsReport,
             'totalMinutesElapsed': minutes
         }
         log(json.dumps(report, indent=2))

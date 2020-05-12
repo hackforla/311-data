@@ -63,7 +63,7 @@ async def healthcheck(request):
         settings['Version']['VER_MINOR'],
         settings['Version']['VER_PATCH'])
 
-    data_worker = DataService(settings)
+    data_worker = DataService()
     lastPulled = await data_worker.lastPulled()
 
     return json({'currentTime': currentTime,

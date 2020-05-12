@@ -47,12 +47,9 @@ class FrequencyService(object):
             counts, _ = np.histogram(dates, bins=bins)
             return list(map(int, counts))
 
-        # grab the necessary data from the db
+        # grab the necessary data from the db and drop nulls
         fields = [groupField, 'createddate']
-        data = self.dataAccess.query(fields, filters)
-
-        # read into a dataframe and drop the nulls
-        df = pd.DataFrame(data, columns=fields).dropna()
+        df = self.dataAccess.query(fields, filters, table='vis').dropna()
 
         # convert bins to float so numpy can use them
         bins_fl = np.array(bins).astype('datetime64[s]').astype('float')

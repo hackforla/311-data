@@ -38,7 +38,8 @@ class RequestCountsService(object):
         filters = self.dataAccess.standardFilters(
             startDate, endDate, requestTypes, ncList)
 
-        return self.dataAccess.aggregateQuery(countFields, filters)
+        return self.dataAccess.aggregateQuery(
+            countFields, filters, table='vis')
 
     async def get_req_counts_comparison(self,
                                         startDate=None,
@@ -112,10 +113,12 @@ class RequestCountsService(object):
                 return self.dataAccess.comparisonFilters(**common)
 
         filters = get_filters(set1['district'], set1['list'])
-        set1data = self.dataAccess.aggregateQuery(countFields, filters)
+        set1data = self.dataAccess.aggregateQuery(
+            countFields, filters, table='vis')
 
         filters = get_filters(set2['district'], set2['list'])
-        set2data = self.dataAccess.aggregateQuery(countFields, filters)
+        set2data = self.dataAccess.aggregateQuery(
+            countFields, filters, table='vis')
 
         return {
             'set1': {
