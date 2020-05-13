@@ -106,14 +106,15 @@ class PinMap extends Component {
 
   onEachRegionFeature = (feature, layer) => {
     // Popup text when clicking on a region
-    const popupText = `
+    // Updating to tooltip on hover
+    const toolTipText = `
       <div class="overlay_feature_popup">
         ${feature.properties.name}
         <br />
         ${feature.properties.service_re}
       </div>
     `;
-    layer.bindPopup(popupText);
+    layer.bindTooltip(toolTipText);
 
     // Sets mouseover/out/click event handlers for each region
     layer.on({
