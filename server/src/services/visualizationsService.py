@@ -26,8 +26,8 @@ class VisualizationsService(object):
         df = self.dataAccess.query(fields, filters, table='vis')
 
         inner_df = df.loc[
-            (df['createddate'] > startDate) &
-            (df['createddate'] < endDate)]
+            (df['createddate'] >= startDate) &
+            (df['createddate'] <= endDate)]
 
         return {
             'frequency': {

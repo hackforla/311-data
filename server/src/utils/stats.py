@@ -128,7 +128,7 @@ def date_histograms(df, dateField, bins, groupField, groupFieldItems):
     # count the requests created in each bin
     counts = df \
         .groupby(by=groupField) \
-        .apply(lambda x: date_histogram(x[dateField].values, bins_fl)) \
+        .apply(lambda df: date_histogram(df[dateField].values, bins_fl)) \
         .to_dict()
 
     # if no rows exist for a particular item in the groupField,
