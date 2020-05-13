@@ -5,7 +5,6 @@ import {
   call,
   put,
   select,
-  all,
 } from 'redux-saga/effects';
 import { COUNCILS } from '@components/common/CONSTANTS';
 
