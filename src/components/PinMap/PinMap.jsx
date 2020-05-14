@@ -49,6 +49,8 @@ class PinMap extends Component {
       width: null,
       height: null,
       heatmapVisible: false,
+        zoomBreak: 12,
+        zoomThresholdMet:false,
     };
     this.container = React.createRef();
   }
@@ -227,6 +229,8 @@ class PinMap extends Component {
       width,
       height,
       heatmapVisible,
+        zoomBreak,
+        zoomThresholdMet,
     } = this.state;
 
     const { heatmap } = this.props;
@@ -255,6 +259,17 @@ class PinMap extends Component {
               this.setState({ heatmapVisible: false });
             }
           }}
+            //Need to get current zoom level, "Zoom" is the default level when loading
+            onZoomEnd={({ zoom }) => {
+            if (zoom => this.zoomBreak) {
+                this.setState({zoomThresholdMet: true});
+            }
+            }}
+            onZoomEnd={({ zoom }) => {
+            if (zoom < this.zoomBreak) {
+                this.setState({zoomThresholdMet: false});
+            }}
+            }
         >
           <ZoomControl position="topright" />
           <LayersControl
@@ -286,6 +301,7 @@ class PinMap extends Component {
                       color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
+                    //Try defining state based on zoom level and changing function based on state
                     onEachFeature={this.onEachRegionFeature}
                     ref={el => {
                       if (el) {
