@@ -6,6 +6,7 @@ from sqlalchemy.sql import text
 class Database(object):
     def __init__(self, verbose=False):
         self.verbose = verbose
+        self.engine = None
 
     def config(self, config):
         if self.engine is not None:
