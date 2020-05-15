@@ -76,63 +76,6 @@ async def index(request):
     return json('You hit the index')
 
 
-@app.route('/ingest', methods=["GET"])
-@compress.compress()
-async def ingest(request):
-    """
-    Query parameters:
-        years:
-            a comma-separated list of years to import.
-            Ex. '/ingest?years=2015,2016,2017'
-        limit:
-            the max number of records per year
-        querySize:
-            the number of records per request to socrata
-
-    Counts:
-        These are the counts you can expect if you do the full ingest:
-
-        2015: 237305
-        2016: 952486
-        2017: 1131558
-        2018: 1210075
-        2019: 1308093
-        2020: 319628 (and counting)
-
-        GET https://data.lacity.org/resource/{ID}.json?$select=count(srnumber)
-
-    Hint:
-        Run /ingest without params to get all socrata data
-    """
-
-    # parse params
-    defaults = app.config['Settings']['Ingestion']
-
-    years = request.args.get('years', defaults['YEARS'])
-    limit = request.args.get('limit', defaults['LIMIT'])
-    querySize = request.args.get('querySize', defaults['QUERY_SIZE'])
-
-    # validate params
-    current_year = datetime.now().year
-    allowed_years = [year for year in range(2015, current_year+1)]
-    years = set([int(year) for year in years.split(',')])
-    if not all(year in allowed_years for year in years):
-        return json({
-            'error': f"'years' param values must be one of {allowed_years}"
-        })
-
-    limit = int(limit)
-    querySize = int(querySize)
-    querySize = min([limit, querySize])
-
-    # get data
-    loader = DataHandler(app.config['Settings'])
-    data = await loader.populateDatabase(years=years,
-                                         limit=limit,
-                                         querySize=querySize)
-    return json(data)
-
-
 @app.route('/pin-clusters', methods=["POST"])
 @compress.compress()
 async def pinClusters(request):

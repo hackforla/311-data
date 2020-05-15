@@ -8,6 +8,9 @@ class Database(object):
         self.verbose = verbose
 
     def config(self, config):
+        if self.engine is not None:
+            return
+
         self.engine = create_engine(config['DB_CONNECTION_STRING'])
         self.Session = sessionmaker(bind=self.engine)
 
