@@ -13,7 +13,6 @@ from services.heatmapService import HeatmapService
 from services.requestDetailService import RequestDetailService
 from services.visualizationsService import VisualizationsService
 from services.comparisonService import ComparisonService
-from services.sqlIngest import DataHandler
 from services.feedbackService import FeedbackService
 from services.dataService import DataService
 
