@@ -8,13 +8,11 @@ from threading import Timer
 from datetime import datetime
 from multiprocessing import cpu_count
 
-from services.timeToCloseService import TimeToCloseService
-from services.frequencyService import FrequencyService
-from services.pinService import PinService
 from services.pinClusterService import PinClusterService
 from services.heatmapService import HeatmapService
-from services.requestCountsService import RequestCountsService
 from services.requestDetailService import RequestDetailService
+from services.visualizationsService import VisualizationsService
+from services.comparisonService import ComparisonService
 from services.sqlIngest import DataHandler
 from services.feedbackService import FeedbackService
 from services.dataService import DataService
@@ -78,82 +76,6 @@ async def index(request):
     return json('You hit the index')
 
 
-@app.route('/timetoclose', methods=["POST"])
-@compress.compress()
-async def timetoclose(request):
-    ttc_worker = TimeToCloseService(app.config['Settings'])
-
-    postArgs = request.json
-    start = postArgs.get('startDate', None)
-    end = postArgs.get('endDate', None)
-    ncs = postArgs.get('ncList', [])
-    requests = postArgs.get('requestTypes', [])
-
-    data = await ttc_worker.get_ttc(startDate=start,
-                                    endDate=end,
-                                    ncList=ncs,
-                                    requestTypes=requests)
-    return json(data)
-
-
-@app.route('/timetoclose-comparison', methods=["POST"])
-@compress.compress()
-async def timetoclose_comparison(request):
-    ttc_worker = TimeToCloseService(app.config['Settings'])
-
-    postArgs = request.json
-    startDate = postArgs.get('startDate', None)
-    endDate = postArgs.get('endDate', None)
-    requestTypes = postArgs.get('requestTypes', [])
-    set1 = postArgs.get('set1', None)
-    set2 = postArgs.get('set2', None)
-
-    data = await ttc_worker.get_ttc_comparison(startDate=startDate,
-                                               endDate=endDate,
-                                               requestTypes=requestTypes,
-                                               set1=set1,
-                                               set2=set2)
-    return json(data)
-
-
-@app.route('/requestfrequency', methods=["POST"])
-@compress.compress()
-async def requestfrequency(request):
-    freq_worker = FrequencyService(app.config['Settings'])
-
-    postArgs = request.json
-    startDate = postArgs.get('startDate', None)
-    endDate = postArgs.get('endDate', None)
-    ncList = postArgs.get('ncList', [])
-    requestTypes = postArgs.get('requestTypes', [])
-
-    data = await freq_worker.get_frequency(startDate=startDate,
-                                           endDate=endDate,
-                                           ncList=ncList,
-                                           requestTypes=requestTypes)
-    return json(data)
-
-
-@app.route('/requestfrequency-comparison', methods=["POST"])
-@compress.compress()
-async def requestfrequency_comparison(request):
-    worker = FrequencyService(app.config['Settings'])
-
-    postArgs = request.json
-    startDate = postArgs.get('startDate', None)
-    endDate = postArgs.get('endDate', None)
-    requestTypes = postArgs.get('requestTypes', [])
-    set1 = postArgs.get('set1', None)
-    set2 = postArgs.get('set2', None)
-
-    data = await worker.get_frequency_comparison(startDate=startDate,
-                                                 endDate=endDate,
-                                                 requestTypes=requestTypes,
-                                                 set1=set1,
-                                                 set2=set2)
-    return json(data)
-
-
 @app.route('/ingest', methods=["GET"])
 @compress.compress()
 async def ingest(request):
@@ -211,23 +133,6 @@ async def ingest(request):
     return json(data)
 
 
-@app.route('/pins', methods=["POST"])
-@compress.compress()
-async def pinMap(request):
-    pin_worker = PinService(app.config['Settings'])
-    postArgs = request.json
-    start = postArgs.get('startDate', '2015-01-01')
-    end = postArgs.get('endDate', '2015-12-31 01:01:01')
-    ncs = postArgs.get('ncList', ['SHERMAN OAKS NC'])
-    requests = postArgs.get('requestTypes', ['Bulky Items'])
-
-    return_data = await pin_worker.get_base_pins(startDate=start,
-                                                 endDate=end,
-                                                 ncList=ncs,
-                                                 requestTypes=requests)
-    return json(return_data)
-
-
 @app.route('/pin-clusters', methods=["POST"])
 @compress.compress()
 async def pinClusters(request):
@@ -265,29 +170,36 @@ async def heatmap(request):
     return json(heatmap)
 
 
-@app.route('/requestcounts', methods=["POST"])
+@app.route('/servicerequest/<srnumber>', methods=["GET"])
+async def requestDetails(request, srnumber):
+    detail_worker = RequestDetailService(app.config['Settings'])
+
+    return_data = await detail_worker.get_request_detail(srnumber)
+    return json(return_data)
+
+
+@app.route('/visualizations', methods=["POST"])
 @compress.compress()
-async def requestCounts(request):
-    counts_worker = RequestCountsService(app.config['Settings'])
+async def visualizations(request):
+    worker = VisualizationsService()
+
     postArgs = request.json
     start = postArgs.get('startDate', None)
     end = postArgs.get('endDate', None)
     ncs = postArgs.get('ncList', [])
     requests = postArgs.get('requestTypes', [])
-    countFields = postArgs.get('countFields', [])
 
-    return_data = await counts_worker.get_req_counts(startDate=start,
-                                                     endDate=end,
-                                                     ncList=ncs,
-                                                     requestTypes=requests,
-                                                     countFields=countFields)
-    return json(return_data)
+    data = await worker.visualizations(startDate=start,
+                                       endDate=end,
+                                       requestTypes=requests,
+                                       ncList=ncs)
+    return json(data)
 
 
-@app.route('/requestcounts-comparison', methods=["POST"])
+@app.route('/comparison/<type>', methods=["POST"])
 @compress.compress()
-async def requestCountsComparison(request):
-    worker = RequestCountsService(app.config['Settings'])
+async def comparison(request, type):
+    worker = ComparisonService()
 
     postArgs = request.json
     startDate = postArgs.get('startDate', None)
@@ -295,23 +207,14 @@ async def requestCountsComparison(request):
     requestTypes = postArgs.get('requestTypes', [])
     set1 = postArgs.get('set1', None)
     set2 = postArgs.get('set2', None)
-    countFields = postArgs.get('countFields', [])
 
-    data = await worker.get_req_counts_comparison(startDate=startDate,
-                                                  endDate=endDate,
-                                                  requestTypes=requestTypes,
-                                                  set1=set1,
-                                                  set2=set2,
-                                                  countFields=countFields)
+    data = await worker.comparison(type=type,
+                                   startDate=startDate,
+                                   endDate=endDate,
+                                   requestTypes=requestTypes,
+                                   set1=set1,
+                                   set2=set2)
     return json(data)
-
-
-@app.route('/servicerequest/<srnumber>', methods=["GET"])
-async def requestDetails(request, srnumber):
-    detail_worker = RequestDetailService(app.config['Settings'])
-
-    return_data = await detail_worker.get_request_detail(srnumber)
-    return json(return_data)
 
 
 @app.route('/feedback', methods=["POST"])
