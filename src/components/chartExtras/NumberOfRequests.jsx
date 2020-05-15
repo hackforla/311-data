@@ -20,7 +20,7 @@ const NumberOfRequests = ({
 );
 
 const mapStateToProps = state => ({
-  numRequests: Object.values(state.data.counts.type).reduce((p, c) => p + c, 0),
+  numRequests: Object.values(state.data.counts.type || {}).reduce((p, c) => p + c, 0),
 });
 
 export default connect(mapStateToProps)(NumberOfRequests);

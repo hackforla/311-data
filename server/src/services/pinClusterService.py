@@ -20,7 +20,7 @@ class PinClusterService(object):
         pins = cache.get(key)
 
         if pins is None:
-            dataAccess = DataService(self.config)
+            dataAccess = DataService()
 
             fields = [
                 'srnumber',
@@ -34,7 +34,7 @@ class PinClusterService(object):
                 filters['requestTypes'],
                 filters['ncList'])
 
-            pins = dataAccess.query(fields, filters)
+            pins = dataAccess.query(fields, filters, table='map')
             pins = pd.DataFrame(pins, columns=fields)
 
             cache.set(key, pins)

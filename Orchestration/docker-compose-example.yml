@@ -26,7 +26,6 @@ services:
    environment:
      REACT_APP_MAPBOX_TOKEN: REDACTED
      DB_URL: http://localhost:5000
-     BASE_URL: ''
    ports:
      - 3000:3000
 
