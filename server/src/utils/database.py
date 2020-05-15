@@ -6,8 +6,12 @@ from sqlalchemy.sql import text
 class Database(object):
     def __init__(self, verbose=False):
         self.verbose = verbose
+        self.engine = None
 
     def config(self, config):
+        if self.engine is not None:
+            return
+
         self.engine = create_engine(config['DB_CONNECTION_STRING'])
         self.Session = sessionmaker(bind=self.engine)
 
