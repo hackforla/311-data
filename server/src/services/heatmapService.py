@@ -6,9 +6,6 @@ from .dataService import DataService
 
 
 class HeatmapService(object):
-    def __init__(self, config=None):
-        self.config = config
-
     def pins_key(self, filters):
         filters_json = json.dumps(filters, sort_keys=True).encode('utf-8')
         hashed_json = hashlib.md5(filters_json).hexdigest()

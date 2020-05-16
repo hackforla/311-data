@@ -1,18 +1,19 @@
 import redis
 import pickle
 from datetime import timedelta
+from config import config
 
 
 class RedisCache(object):
     def __init__(self):
-        self.enabled = False
+        conf = config['Redis']
 
-    def config(self, config):
-        redis_url = config.get('REDIS_URL')
-        if redis_url != 'None':
+        if conf['URL'] is None:
+            self.enabled = False
+        else:
+            self.r = redis.from_url(conf['URL'])
+            self.ttl = conf['TTL_SECONDS']
             self.enabled = True
-            self.ttl = int(config['TTL_SECONDS'])
-            self.r = redis.from_url(redis_url)
 
     def get(self, key):
         if not self.enabled:

@@ -1,9 +1,7 @@
-import os
 from sanic import Sanic
 from sanic.response import json
 from sanic_cors import CORS
 from sanic_gzip import Compress
-from configparser import ConfigParser
 from threading import Timer
 from datetime import datetime
 from multiprocessing import cpu_count
@@ -17,48 +15,22 @@ from services.feedbackService import FeedbackService
 from services.dataService import DataService
 
 from utils.sanic import add_performance_header
-from utils.redis import cache
-from utils.database import db
+from config import config
 
 app = Sanic(__name__)
 CORS(app)
 compress = Compress()
 
 
-def environment_overrides():
-    settings = app.config['Settings']
-    for section in settings:
-        for key in settings[section]:
-            envKey = key.upper()
-            if os.environ.get(envKey, None):
-                settings[section][envKey] = os.environ.get(envKey)
-
-
-def configure_app():
-    # Settings initialization
-    config = ConfigParser()
-    settings_file = os.path.join(os.getcwd(), 'settings.cfg')
-    config.read(settings_file)
-    app.config['Settings'] = config
-    environment_overrides()
-    app.config["STATIC_DIR"] = os.path.join(os.getcwd(), "static")
-    os.makedirs(os.path.join(app.config["STATIC_DIR"], "temp"), exist_ok=True)
-    if app.config['Settings']['Server']['Debug']:
-        add_performance_header(app)
-    cache.config(app.config['Settings']['Redis'])
-    db.config(app.config['Settings']['Database'])
-
-
 @app.route('/apistatus')
 @compress.compress()
 async def healthcheck(request):
     currentTime = datetime.utcnow()
-    settings = app.config['Settings']
-    githubSha = settings['Github']['GITHUB_SHA']
+    githubSha = config['Github']['SHA']
     semVersion = '{}.{}.{}'.format(
-        settings['Version']['VER_MAJOR'],
-        settings['Version']['VER_MINOR'],
-        settings['Version']['VER_PATCH'])
+        config['Version']['MAJOR'],
+        config['Version']['MINOR'],
+        config['Version']['PATCH'])
 
     data_worker = DataService()
     lastPulled = await data_worker.lastPulled()
@@ -78,7 +50,7 @@ async def index(request):
 @app.route('/pin-clusters', methods=["POST"])
 @compress.compress()
 async def pinClusters(request):
-    worker = PinClusterService(app.config['Settings'])
+    worker = PinClusterService()
 
     postArgs = request.json
     filters = {
@@ -98,7 +70,7 @@ async def pinClusters(request):
 @app.route('/heatmap', methods=["POST"])
 @compress.compress()
 async def heatmap(request):
-    worker = HeatmapService(app.config['Settings'])
+    worker = HeatmapService()
 
     postArgs = request.json
     filters = {
@@ -113,8 +85,9 @@ async def heatmap(request):
 
 
 @app.route('/servicerequest/<srnumber>', methods=["GET"])
+@compress.compress()
 async def requestDetails(request, srnumber):
-    detail_worker = RequestDetailService(app.config['Settings'])
+    detail_worker = RequestDetailService()
 
     return_data = await detail_worker.get_request_detail(srnumber)
     return json(return_data)
@@ -162,7 +135,7 @@ async def comparison(request, type):
 @app.route('/feedback', methods=["POST"])
 @compress.compress()
 async def handle_feedback(request):
-    github_worker = FeedbackService(app.config['Settings'])
+    github_worker = FeedbackService()
     postArgs = request.json
     title = postArgs.get('title', None)
     body = postArgs.get('body', None)
@@ -180,9 +153,21 @@ async def test_multiple_workers(request):
 
 
 if __name__ == '__main__':
-    configure_app()
-    worker_count = max(cpu_count()//2, 1)
-    app.run(host=app.config['Settings']['Server']['HOST'],
-            port=int(app.config['Settings']['Server']['PORT']),
-            workers=worker_count,
-            debug=app.config['Settings']['Server']['DEBUG'])
+    conf = config['Server']
+
+    port = conf['PORT']
+    host = conf['HOST']
+    debug = conf['DEBUG']
+    workers = conf['WORKERS']
+
+    if debug:
+        add_performance_header(app)
+
+    if workers == -1:
+        workers = max(cpu_count() // 2, 1)
+
+    app.run(
+        port=port,
+        host=host,
+        debug=debug,
+        workers=workers)

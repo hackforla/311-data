@@ -18,9 +18,9 @@ class Timer():
 
 
 class DataHandler:
-    def __init__(self, config=None):
+    def __init__(self):
         self.session = db.Session()
-        self.socrata = SocrataClient(config)
+        self.socrata = SocrataClient()
 
     def __del__(self):
         self.session.close()

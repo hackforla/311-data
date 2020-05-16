@@ -1,21 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
+from config import config
 
 
 class Database(object):
     def __init__(self, verbose=False):
-        self.verbose = verbose
-        self.engine = None
-
-    def config(self, config):
-        if self.engine is not None:
-            return
-
-        self.engine = create_engine(config['DB_CONNECTION_STRING'])
+        self.engine = create_engine(config['Database']['URL'])
         self.Session = sessionmaker(bind=self.engine)
 
-        if self.verbose:
+        if verbose:
             self.log_connection_events()
 
     def exec_sql(self, sql):
