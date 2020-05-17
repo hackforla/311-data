@@ -104,6 +104,7 @@ class PinMap extends Component {
       zoom: map.getZoom(),
       bounds: map.getBounds(),
     });
+    this.setState({ zoom: map.getZoom() });
   }
 
   onEachRegionFeature = (feature, layer) => {
