@@ -1,12 +1,16 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
-from config import config
+from config import config, print_config
 
 
 class Database(object):
     def __init__(self, verbose=False):
-        self.engine = create_engine(config['Database']['URL'])
+        database_url = config['Database']['URL']
+        if database_url is None:
+            return
+
+        self.engine = create_engine(database_url)
         self.Session = sessionmaker(bind=self.engine)
 
         if verbose:
