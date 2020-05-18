@@ -49,8 +49,8 @@ class PinMap extends Component {
       width: null,
       height: null,
       heatmapVisible: false,
-        zoomBreak: 12,
-        zoomThresholdMet:false,
+      zoomBreak: 12,
+      zoomThresholdMet: false,
     };
     this.container = React.createRef();
   }
@@ -104,12 +104,13 @@ class PinMap extends Component {
       zoom: map.getZoom(),
       bounds: map.getBounds(),
     });
-    this.setState({ zoom: map.getZoom() });
+    this.setState({zoomThresholdMet: (map.getZoom() >= this.state.zoomBreak)});
+    this.setState({zoom: map.getZoom()});
   }
+
 
   onEachRegionFeature = (feature, layer) => {
     // Popup text when clicking on a region
-    // Updating to tooltip on hover
     const toolTipText = `
       <div class="overlay_feature_popup">
         ${feature.properties.name}
@@ -127,6 +128,16 @@ class PinMap extends Component {
     });
   }
 
+  onEachRegionFeatureNoTooltip = (feature, layer) => {
+
+    // Sets mouseover/out/click event handlers for each region
+    layer.on({
+      mouseover: this.highlightRegion,
+      mouseout: this.resetRegionHighlight,
+      click: this.zoomToRegion,
+    });
+  }
+  
   renderMarkers = () => {
     const {
       pinClusters,
@@ -230,8 +241,8 @@ class PinMap extends Component {
       width,
       height,
       heatmapVisible,
-        zoomBreak,
-        zoomThresholdMet,
+      zoomBreak,
+      zoomThresholdMet,
     } = this.state;
 
     const { heatmap } = this.props;
@@ -260,17 +271,6 @@ class PinMap extends Component {
               this.setState({ heatmapVisible: false });
             }
           }}
-            //Need to get current zoom level, "Zoom" is the default level when loading
-            onZoomEnd={({ zoom }) => {
-            if (zoom => this.zoomBreak) {
-                this.setState({zoomThresholdMet: true});
-            }
-            }}
-            onZoomEnd={({ zoom }) => {
-            if (zoom < this.zoomBreak) {
-                this.setState({zoomThresholdMet: false});
-            }}
-            }
         >
           <ZoomControl position="topright" />
           <LayersControl
@@ -302,7 +302,6 @@ class PinMap extends Component {
                       color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
-                    //Try defining state based on zoom level and changing function based on state
                     onEachFeature={this.onEachRegionFeature}
                     ref={el => {
                       if (el) {
@@ -367,10 +366,8 @@ class PinMap extends Component {
       </>
     );
   }
-
   render() {
     const { ready } = this.state;
-
     return (
       <div ref={this.container} className="map-container">
         { ready ? this.renderMap() : null }
@@ -378,18 +375,15 @@ class PinMap extends Component {
     );
   }
 }
-
 const mapDispatchToProps = dispatch => ({
   getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
   updatePosition: position => dispatch(updateMapPosition(position)),
 });
-
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   pinClusters: state.data.pinClusters,
   heatmap: state.data.heatmap,
 });
-
 PinMap.propTypes = {
   pinsInfo: PropTypes.shape({}),
   pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
@@ -397,11 +391,9 @@ PinMap.propTypes = {
   getPinInfo: PropTypes.func.isRequired,
   updatePosition: PropTypes.func.isRequired,
 };
-
 PinMap.defaultProps = {
   pinsInfo: {},
   pinClusters: [],
   heatmap: [],
 };
-
 export default connect(mapStateToProps, mapDispatchToProps)(PinMap);
