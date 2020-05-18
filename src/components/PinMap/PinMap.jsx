@@ -105,7 +105,6 @@ class PinMap extends Component {
       bounds: map.getBounds(),
     });
     this.setState({zoomThresholdMet: (map.getZoom() >= this.state.zoomBreak)});
-    this.setState({zoom: map.getZoom()});
   }
 
 
