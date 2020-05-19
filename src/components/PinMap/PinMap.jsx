@@ -289,7 +289,7 @@ class PinMap extends Component {
               />
             </BaseLayer>
             {
-              geoJSON
+              (this.state.zoomThresholdMet===false && geoJSON) 
               && (
                 <Overlay checked name="Neighborhood Council Boundaries">
                   <Choropleth
@@ -301,7 +301,33 @@ class PinMap extends Component {
                       color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
-                    onEachFeature={this.onEachRegionFeature}
+                    onEachFeature= {this.onEachRegionFeature}
+                
+                    ref={el => {
+                      if (el) {
+                        this.choropleth = el.leafletElement;
+                        return this.choropleth;
+                      }
+                      return null;
+                    }}
+                  />
+                </Overlay>
+              )
+              }
+            {(this.state.zoomThresholdMet===true && geoJSON) 
+              && (
+              <Overlay checked name="Neighborhood Council Boundaries">
+                  <Choropleth
+                    data={geoJSON}
+                    style={{
+                      fillColor: 'white',
+                      weight: 2,
+                      opacity: 1,
+                      color: boundaryDefaultColor,
+                      dashArray: '3',
+                    }}
+                    onEachFeature= {this.onEachRegionFeatureNoTooltip}
+                
                     ref={el => {
                       if (el) {
                         this.choropleth = el.leafletElement;
