@@ -1,16 +1,15 @@
 from json import dumps, loads
 import requests_async as requests
+from config import config
 
 
 class FeedbackService(object):
-    def __init__(self, config=None):
-        self.config = config
-        self.token = None if not self.config  \
-            else self.config['Github']['GITHUB_TOKEN']
-        self.issues_url = None if not self.config \
-            else self.config['Github']['ISSUES_URL']
-        self.project_url = None if not self.config \
-            else self.config['Github']['PROJECT_URL']
+    def __init__(self):
+        conf = config['Github']
+
+        self.token = conf['TOKEN']
+        self.issues_url = conf['ISSUES_URL']
+        self.project_url = conf['PROJECT_URL']
 
     async def create_issue(self,
                            title,

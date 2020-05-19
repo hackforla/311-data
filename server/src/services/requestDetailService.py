@@ -2,7 +2,7 @@ from .dataService import DataService
 
 
 class RequestDetailService(object):
-    def __init__(self, config=None):
+    def __init__(self):
         self.dataAccess = DataService()
 
     async def get_request_detail(self, requestNumber=None):

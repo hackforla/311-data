@@ -3,7 +3,7 @@ from utils.stats import box_plots, date_bins, date_histograms, counts
 
 
 class VisualizationsService(object):
-    def __init__(self, config=None):
+    def __init__(self):
         self.dataAccess = DataService()
 
     async def visualizations(self,
