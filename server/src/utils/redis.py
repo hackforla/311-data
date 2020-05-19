@@ -1,3 +1,4 @@
+import os
 import redis
 import pickle
 from datetime import timedelta
@@ -35,4 +36,34 @@ class RedisCache(object):
             print(e)
 
 
-cache = RedisCache()
+class PickleCache(object):
+    CACHE_DIR = os.path.join(os.getcwd(), 'static/cache')
+
+    def __init__(self):
+        print('PICKLECACHE ENABLED')
+        os.makedirs(self.CACHE_DIR, exist_ok=True)
+
+    def config(self, config=None):
+        pass
+
+    def get(self, key):
+        try:
+            path = os.path.join(self.CACHE_DIR, key)
+            with open(path, 'rb') as f:
+                return pickle.load(f)
+        except Exception:
+            return None
+
+    def set(self, key, value):
+        try:
+            path = os.path.join(self.CACHE_DIR, key)
+            with open(path, 'wb') as f:
+                pickle.dump(value, f, protocol=pickle.HIGHEST_PROTOCOL)
+        except Exception as e:
+            print(e)
+
+
+if int(os.environ.get('PICKLECACHE', 0)) == 1:
+    cache = PickleCache()
+else:
+    cache = RedisCache()
