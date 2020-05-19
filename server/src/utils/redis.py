@@ -63,7 +63,7 @@ class PickleCache(object):
             print(e)
 
 
-if int(os.environ.get('PICKLECACHE')) == 1:
+if int(os.environ.get('PICKLECACHE', 0)) == 1:
     cache = PickleCache()
 else:
     cache = RedisCache()
