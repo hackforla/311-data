@@ -7,9 +7,6 @@ from .dataService import DataService
 
 
 class PinClusterService(object):
-    def __init__(self, config=None):
-        self.config = config
-
     def pins_key(self, filters):
         filters_json = json.dumps(filters, sort_keys=True).encode('utf-8')
         hashed_json = hashlib.md5(filters_json).hexdigest()
@@ -20,7 +17,7 @@ class PinClusterService(object):
         pins = cache.get(key)
 
         if pins is None:
-            dataAccess = DataService(self.config)
+            dataAccess = DataService()
 
             fields = [
                 'srnumber',
@@ -34,7 +31,7 @@ class PinClusterService(object):
                 filters['requestTypes'],
                 filters['ncList'])
 
-            pins = dataAccess.query(fields, filters)
+            pins = dataAccess.query(fields, filters, table='map')
             pins = pd.DataFrame(pins, columns=fields)
 
             cache.set(key, pins)

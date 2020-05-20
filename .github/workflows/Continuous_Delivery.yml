@@ -24,7 +24,6 @@ jobs:
       run: |
         echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
         echo DB_URL=${{ secrets.DB_URL }} >> .env
-        echo BASE_URL=${{ secrets.BASE_URL }} >> .env
         echo GITHUB_SHA=${{ github.sha }} >> .env
     - name: Build project
       run: npm run build
@@ -36,7 +35,6 @@ jobs:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         REACT_APP_MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
         DB_URL: ${{ secrets.DB_URL }}
-        BASE_URL: ${{ secrets.BASE_URL }}
         BASE_BRANCH: master # The branch the action should deploy from.
         BRANCH: gh-pages # The branch the action should deploy to.
         FOLDER: dist # The folder the action should deploy.

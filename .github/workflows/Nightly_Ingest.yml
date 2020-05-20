@@ -8,4 +8,4 @@ jobs:
     - name: curl
       uses: wei/curl@master
       with:
-        args: ${{secrets.DB_URL}}/ingest?years=2015,2016,2017,2018,2019 &
+        args: ${{secrets.DB_URL}}/ingest?years=2017,2018,2019,2020 &

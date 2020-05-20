@@ -2,19 +2,23 @@ version: '3.4'
 
 services:
   backend:
-   # build:
-   #   context: ../server
-   image: docker.pkg.github.com/hackforla/311-data/backend:efdd561e412d78a9a97a074abdb3b73f28e108ce
-   restart: always
-   container_name: "311-backend"
-   environment:
-     DB_CONNECTION_STRING: postgresql://REDACTED:REDACTED@db:5432/postgres
-     PROJECT_URL: REDACTED
-     GITHUB_TOKEN: REDACTED
-     TOKEN: REDACTED
-     REDIS_URL: redis://redis:6379
-   ports:
-     - 5000:5000
+    # build:
+    #   context: ../server
+    image: docker.pkg.github.com/hackforla/311-data/backend:latest
+    container_name: "311-backend"
+    environment:
+      PORT: 5000
+      WORKERS: -1
+      DATABASE_URL: postgresql://REDACTED:REDACTED@db:5432/postgres
+      REDIS_URL: redis://redis:6379
+      SOCRATA_TOKEN: REDACTED
+      GITHUB_TOKEN: REDACTED
+      GITHUB_PROJECT_URL: REDACTED
+    ports:
+      - 5000:5000
+    volumes:
+      - ../server/src/:/app
+    command: bash -c "python config/check.py && python app.py"
 
   frontend:
    build:
@@ -26,7 +30,6 @@ services:
    environment:
      REACT_APP_MAPBOX_TOKEN: REDACTED
      DB_URL: http://localhost:5000
-     BASE_URL: ''
    ports:
      - 3000:3000
 

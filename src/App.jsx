@@ -11,8 +11,6 @@ import Footer from './components/main/footer/Footer';
 import StaticFooter from './components/main/footer/StaticFooter';
 import { SnapshotRenderer } from './components/export/SnapshotService';
 
-const basename = process.env.NODE_ENV === 'development' ? '/' : process.env.BASE_URL || '/';
-
 const App = ({
   getMetadata,
 }) => {
@@ -21,7 +19,7 @@ const App = ({
   });
 
   return (
-    <Router basename={basename}>
+    <Router>
       <Header />
       <Routes />
       <Switch>
