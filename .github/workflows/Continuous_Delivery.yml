@@ -35,6 +35,7 @@ jobs:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         REACT_APP_MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
         DB_URL: ${{ secrets.DB_URL }}
+        GITHUB_SHA: ${{ github.sha }}
         BASE_BRANCH: master # The branch the action should deploy from.
         BRANCH: gh-pages # The branch the action should deploy to.
         FOLDER: dist # The folder the action should deploy.
