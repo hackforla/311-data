@@ -12,6 +12,8 @@ def get_batch_nums(table, startDate, endDate):
 
 
 def query(table, fields, filters):
+    print('QUERYING PICKLEBASE')
+
     startDate = pd.to_datetime(filters['startDate'])
     endDate = pd.to_datetime(filters['endDate'])
     requestTypes = filters['requestTypes']
