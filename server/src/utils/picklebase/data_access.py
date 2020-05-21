@@ -4,7 +4,8 @@ import shutil
 import json
 
 
-DATA_DIR = os.path.join(os.getcwd(), 'static/picklebase')
+TMP_DIR = os.environ.get('TMP_DIR', os.getcwd())
+DATA_DIR = os.path.join(TMP_DIR, 'static/picklebase')
 
 
 def clear_data():

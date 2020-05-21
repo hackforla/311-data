@@ -18,5 +18,10 @@ pb = PickleBase()
 
 
 if int(os.environ.get('PICKLEBASE', 0)) == 1:
-    pb.populate()
-    pb.enabled = True
+    print('PICKLEBASE ENABLED')
+    try:
+        pb.populate()
+        pb.enabled = True
+    except Exception as e:
+        print('FAILED TO POPULATE PICKLEBASE')
+        print(e)
