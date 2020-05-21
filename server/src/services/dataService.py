@@ -19,7 +19,7 @@ class DataService(object):
         '''
         Generates filters for dates, request types, and ncs.
         '''
-        if pb.enabled:
+        if pb.available():
             return {
                 'startDate': startDate,
                 'endDate': endDate,
@@ -44,7 +44,7 @@ class DataService(object):
         '''
         Generates filters for the comparison endpoints.
         '''
-        if pb.enabled:
+        if pb.available():
             return {
                 'startDate': startDate,
                 'endDate': endDate,
@@ -94,7 +94,7 @@ class DataService(object):
         if not fields or not filters:
             return {'Error': 'fields and filters are required'}
 
-        if pb.enabled:
+        if pb.available():
             return pb.query(table, fields, filters)
 
         fields = (', ').join(fields)
