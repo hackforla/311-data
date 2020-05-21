@@ -14,6 +14,7 @@ services:
       SOCRATA_TOKEN: REDACTED
       GITHUB_TOKEN: REDACTED
       GITHUB_PROJECT_URL: REDACTED
+      GITHUB_SHA: DEVELOPMENT
     ports:
       - 5000:5000
     volumes:
