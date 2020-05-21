@@ -62,7 +62,7 @@ def load_meta(table):
 
 
 def set_ready():
-    with open(READY_FILE, 'w') as f:
+    with open(READY_FILE, 'w'):
         pass
 
 
