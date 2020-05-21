@@ -38,7 +38,8 @@ class RedisCache(object):
 
 
 class PickleCache(object):
-    CACHE_DIR = os.path.join(os.getcwd(), 'static/cache')
+    TMP_DIR = os.environ.get('TMP_DIR', os.getcwd())
+    CACHE_DIR = os.path.join(TMP_DIR, 'static/picklecache')
 
     def __init__(self):
         print('PICKLECACHE ENABLED')
