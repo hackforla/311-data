@@ -66,8 +66,6 @@ def create_table(table,
         batches.append(batch_meta)
         batch_num += 1
 
-    engine.dispose()
-
     meta = {
         'table': table,
         'from': from_table,
