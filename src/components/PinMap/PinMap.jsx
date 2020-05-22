@@ -298,7 +298,7 @@ class PinMap extends Component {
               )
             }
             <Overlay checked name="Markers">
-              <MarkerClusterGroup spiderfyOnMaxZoom>
+              <MarkerClusterGroup maxClusterRadius={0}>
                 {this.renderMarkers()}
               </MarkerClusterGroup>
             </Overlay>
