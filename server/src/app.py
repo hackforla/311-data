@@ -4,7 +4,7 @@ from sanic_cors import CORS
 from sanic_gzip import Compress
 from threading import Timer
 from datetime import datetime
-from multiprocessing import cpu_count
+from multiprocessing import cpu_count, Process
 
 from services.pinClusterService import PinClusterService
 from services.heatmapService import HeatmapService
@@ -15,6 +15,7 @@ from services.feedbackService import FeedbackService
 from services.dataService import DataService
 
 from utils.sanic import add_performance_header
+from utils.picklebase import pb
 from config import config
 
 app = Sanic(__name__)
@@ -165,6 +166,9 @@ if __name__ == '__main__':
 
     if workers == -1:
         workers = max(cpu_count() // 2, 1)
+
+    if pb.enabled:
+        Process(target=pb.populate).start()
 
     app.run(
         port=port,
