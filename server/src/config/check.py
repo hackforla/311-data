@@ -40,3 +40,31 @@ if __name__ == '__main__':
     if update:
         with open(SETTINGS_FILE, 'w') as f:
             settings.write(f)
+
+    # TEMPORARY CODE: migrate dev DBs to new format
+    import sys
+    import os
+    sys.path.append(os.getcwd())
+    from utils.database import db
+    from config import config
+    from ingest import populate
+    import time
+
+    try:
+        time.sleep(1)
+        db.exec_sql('SELECT * FROM requests LIMIT 1')
+    except Exception:
+        print("""
+Hey guys, I needed to change some database stuff so we're running
+an ingest for 2020. If you want more data than that, set YEARS in
+server/settings.cfg to whatever years you want, and then run:
+
+docker exec -it 311-backend /bin/bash
+python ingest.py
+
+Thanks! Jake
+
+P.S. this should take 5 to 10 minutes, and then the server will start.
+        """)
+        config.set('Ingestion', 'YEARS', '2020')
+        populate()

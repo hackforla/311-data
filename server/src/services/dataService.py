@@ -1,11 +1,10 @@
 import pandas as pd
-from .databaseOrm import Ingest
 from utils.database import db
 from utils.picklebase import pb
 
 
 class DataService(object):
-    default_table = Ingest.__tablename__
+    default_table = 'requests'
 
     async def lastPulled(self):
         rows = db.exec_sql('SELECT last_pulled FROM metadata')

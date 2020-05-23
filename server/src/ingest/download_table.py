@@ -5,17 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class Mixin:
-    """
-    Adds `_asdict()` to easily serialize objects to dictionaries.
-    """
-    def _asdict(self):
-        cols = self.__table__.columns
-        return {col.name: getattr(self, col.name) for col in cols}
-
-
-class Ingest(Base, Mixin):
-    __tablename__ = 'ingest_staging_table'
+class Download(Base):
+    __tablename__ = 'download'
 
     # a temporary primary key
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -24,14 +15,14 @@ class Ingest(Base, Mixin):
     srnumber = Column(String)
 
     # dates
-    createddate = Column(DateTime, index=True)
+    createddate = Column(DateTime)
     closeddate = Column(DateTime)
     _daystoclose = Column(Float(1))
     updateddate = Column(DateTime)
     servicedate = Column(DateTime)
 
     # about
-    requesttype = Column(String, index=True)
+    requesttype = Column(String)
     requestsource = Column(String)
     actiontaken = Column(String)
     owner = Column(String)
@@ -56,9 +47,9 @@ class Ingest(Base, Mixin):
 
     # politics
     apc = Column(String)
-    cd = Column(Integer, index=True)
+    cd = Column(Integer)
     cdmember = Column(String)
-    nc = Column(Integer, index=True)
+    nc = Column(Integer)
     ncname = Column(String)
     policeprecinct = Column(String)
 

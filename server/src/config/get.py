@@ -9,6 +9,10 @@ SETTINGS_FILE = join(dirname(__file__), '../settings.cfg')
 
 class CustomInterpolation(BasicInterpolation):
     def before_get(self, parser, section, option, value, defaults):
+        # TODO: need better way to handle this
+        if section == 'Ingestion' and option == 'YEARS':
+            return [int(year) for year in value.split(',')]
+
         # use environment variable if value looks like this: __$VAR_NAME__
         # print warning and return None if the variable is not defined
         # in the environment

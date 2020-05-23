@@ -12,11 +12,11 @@ from services.requestDetailService import RequestDetailService
 from services.visualizationsService import VisualizationsService
 from services.comparisonService import ComparisonService
 from services.feedbackService import FeedbackService
-from services.dataService import DataService
 
 from utils.sanic import add_performance_header
 from utils.picklebase import pb
 from config import config
+import ingest
 
 app = Sanic(__name__)
 CORS(app)
@@ -26,20 +26,18 @@ compress = Compress()
 @app.route('/apistatus')
 @compress.compress()
 async def healthcheck(request):
-    currentTime = datetime.utcnow()
+    currentTime = datetime.utcnow().replace(microsecond=0)
     githubSha = config['Github']['SHA']
     semVersion = '{}.{}.{}'.format(
         config['Version']['MAJOR'],
         config['Version']['MINOR'],
         config['Version']['PATCH'])
 
-    data_worker = DataService()
-    lastPulled = await data_worker.lastPulled()
-
-    return json({'currentTime': currentTime,
-                 'gitSha': githubSha,
-                 'version': semVersion,
-                 'lastPulled': lastPulled})
+    return json({
+        'currentTime': f'{currentTime.isoformat()}Z',
+        'gitSha': githubSha,
+        'version': semVersion,
+        'lastPulled': f'{ingest.last_updated().isoformat()}Z'})
 
 
 @app.route('/')
@@ -153,7 +151,18 @@ async def test_multiple_workers(request):
     return json("Done")
 
 
+def setup():
+    time_since_update = datetime.utcnow() - ingest.last_updated()
+    if time_since_update.days >= 1:
+        ingest.update()
+
+    if pb.enabled:
+        pb.populate()
+
+
 if __name__ == '__main__':
+    Process(target=setup).start()
+
     conf = config['Server']
 
     port = conf['PORT']
@@ -166,9 +175,6 @@ if __name__ == '__main__':
 
     if workers == -1:
         workers = max(cpu_count() // 2, 1)
-
-    if pb.enabled:
-        Process(target=pb.populate).start()
 
     app.run(
         port=port,

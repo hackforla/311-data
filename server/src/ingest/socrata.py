@@ -47,3 +47,10 @@ class SocrataClient:
     def get_metadata(self, year):
         id = self.dataset_id(year)
         return self.client.get_metadata(id)
+
+    def get_datasets(self):
+        '''
+        Search for "MyLA311 Service Request Data" within the response
+        to get the dataset ids for each year.
+        '''
+        return self.client.datasets()
