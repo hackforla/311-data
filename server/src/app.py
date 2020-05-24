@@ -1,7 +1,7 @@
 from sanic import Sanic
 from sanic.response import json
 from sanic_cors import CORS
-from sanic_gzip import Compress
+from sanic_compress import Compress
 from threading import Timer
 from datetime import datetime
 from multiprocessing import cpu_count, Process
@@ -20,11 +20,10 @@ import ingest
 
 app = Sanic(__name__)
 CORS(app)
-compress = Compress()
+Compress(app)
 
 
 @app.route('/apistatus', methods=["GET", "HEAD"])
-@compress.compress()
 async def healthcheck(request):
     currentTime = datetime.utcnow().replace(microsecond=0)
     githubSha = config['Github']['SHA']
@@ -41,13 +40,11 @@ async def healthcheck(request):
 
 
 @app.route('/')
-@compress.compress()
 async def index(request):
     return json('You hit the index')
 
 
 @app.route('/pin-clusters', methods=["POST"])
-@compress.compress()
 async def pinClusters(request):
     worker = PinClusterService()
 
@@ -67,7 +64,6 @@ async def pinClusters(request):
 
 
 @app.route('/heatmap', methods=["POST"])
-@compress.compress()
 async def heatmap(request):
     worker = HeatmapService()
 
@@ -84,7 +80,6 @@ async def heatmap(request):
 
 
 @app.route('/servicerequest/<srnumber>', methods=["GET"])
-@compress.compress()
 async def requestDetails(request, srnumber):
     detail_worker = RequestDetailService()
 
@@ -93,7 +88,6 @@ async def requestDetails(request, srnumber):
 
 
 @app.route('/visualizations', methods=["POST"])
-@compress.compress()
 async def visualizations(request):
     worker = VisualizationsService()
 
@@ -111,7 +105,6 @@ async def visualizations(request):
 
 
 @app.route('/comparison/<type>', methods=["POST"])
-@compress.compress()
 async def comparison(request, type):
     worker = ComparisonService()
 
@@ -132,7 +125,6 @@ async def comparison(request, type):
 
 
 @app.route('/feedback', methods=["POST"])
-@compress.compress()
 async def handle_feedback(request):
     github_worker = FeedbackService()
     postArgs = request.json
