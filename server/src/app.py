@@ -23,7 +23,7 @@ CORS(app)
 compress = Compress()
 
 
-@app.route('/apistatus')
+@app.route('/apistatus', methods=["GET", "HEAD"])
 @compress.compress()
 async def healthcheck(request):
     currentTime = datetime.utcnow().replace(microsecond=0)
