@@ -2,7 +2,6 @@ from sanic import Sanic
 from sanic.response import json
 from sanic_cors import CORS
 from sanic_compress import Compress
-from threading import Timer
 from datetime import datetime
 from multiprocessing import cpu_count, Process
 
@@ -134,13 +133,6 @@ async def handle_feedback(request):
     issue_id = await github_worker.create_issue(title, body)
     response = await github_worker.add_issue_to_project(issue_id)
     return json(response)
-
-
-@app.route('/test_multiple_workers')
-@compress.compress()
-async def test_multiple_workers(request):
-    Timer(10.0, print, ["Timer Test."]).start()
-    return json("Done")
 
 
 def setup():
