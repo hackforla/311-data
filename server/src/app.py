@@ -14,12 +14,18 @@ from services.feedbackService import FeedbackService
 
 from utils.sanic import add_performance_header
 from utils.picklebase import pb
+import utils.resource as resource
 from config import config
 import ingest
 
 app = Sanic(__name__)
 CORS(app)
 Compress(app)
+
+
+@app.route('/')
+async def index(request):
+    return json('You hit the index')
 
 
 @app.route('/apistatus', methods=["GET", "HEAD"])
@@ -38,9 +44,13 @@ async def healthcheck(request):
         'lastPulled': f'{ingest.last_updated().isoformat()}Z'})
 
 
-@app.route('/')
-async def index(request):
-    return json('You hit the index')
+@app.route('/system')
+async def system(request):
+    return json({
+        'cpuCount': cpu_count(),
+        'pageSize': resource.page_size(),
+        'limits': resource.limits(),
+        'usage': resource.usage()})
 
 
 @app.route('/pin-clusters', methods=["POST"])
