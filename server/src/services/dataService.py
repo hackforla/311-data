@@ -6,10 +6,6 @@ from utils.picklebase import pb
 class DataService(object):
     default_table = 'requests'
 
-    async def lastPulled(self):
-        rows = db.exec_sql('SELECT last_pulled FROM metadata')
-        return rows.first()[0]
-
     def standardFilters(self,
                         startDate=None,
                         endDate=None,
@@ -102,19 +98,3 @@ class DataService(object):
             FROM {table}
             WHERE {filters}
         """, db.engine)
-
-    def aggregateQuery(self, fields, filters, table=default_table):
-        '''
-        Returns the counts of distinct values in the specified fields,
-        after filtering.
-        '''
-
-        if not fields or not isinstance(fields, list):
-            return {'Error': 'Missing count fields'}
-
-        df = self.query(fields, filters, table)
-
-        return [{
-            'field': field,
-            'counts': df.groupby(by=field).size().to_dict()
-        } for field in fields if field in df.columns]
