@@ -8,7 +8,7 @@ DATABASE_URL = config['Database']['URL']
 VERBOSE = False
 
 
-engine = create_engine(DATABASE_URL)
+engine = None if DATABASE_URL is None else create_engine(DATABASE_URL)
 
 
 Session = sessionmaker(bind=engine)
