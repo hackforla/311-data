@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
+import { trackMapExport } from '@reducers/analytics';
 import PinPopup from '@components/PinMap/PinPopup';
 import CustomMarker from '@components/PinMap/CustomMarker';
 import ClusterMarker from '@components/PinMap/ClusterMarker';
@@ -330,9 +331,11 @@ class PinMap extends Component {
           id="map-export"
           label="Export"
           handleClick={() => {
+            const { exportMap } = this.props;
             const selector = '.leaflet-control-easyPrint .CurrentSize';
             const link = document.body.querySelector(selector);
             if (link) link.click();
+            exportMap();
           }}
         />
         <div className="heatmap-legend-wrapper has-text-centered">
@@ -364,6 +367,7 @@ class PinMap extends Component {
 const mapDispatchToProps = dispatch => ({
   getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
   updatePosition: position => dispatch(updateMapPosition(position)),
+  exportMap: () => dispatch(trackMapExport()),
 });
 
 const mapStateToProps = state => ({
@@ -378,6 +382,7 @@ PinMap.propTypes = {
   heatmap: PropTypes.arrayOf(PropTypes.array),
   getPinInfo: PropTypes.func.isRequired,
   updatePosition: PropTypes.func.isRequired,
+  exportMap: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {

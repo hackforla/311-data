@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { getMetadataRequest } from '@reducers/metadata';
 
+import RouteChange from '@components/main/util/RouteChange';
+import actions from '@components/main/util/routeChangeActions';
 import Routes from './Routes';
 import Header from './components/main/header/Header';
 import Footer from './components/main/footer/Footer';
@@ -20,6 +22,7 @@ const App = ({
 
   return (
     <Router>
+      <RouteChange actions={actions} />
       <Header />
       <Routes />
       <Switch>

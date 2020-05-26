@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
+import { trackChartExport } from '@reducers/analytics';
 import LoaderButton from '@components/common/LoaderButton';
 import SelectItem from './SelectItem';
 import { getImage, getCsv, getSinglePagePdf } from './BlobFactory';
@@ -9,9 +12,11 @@ const ChartExportSelect = ({
   pdfTemplateName,
   exportData,
   filename,
+  trackExport,
 }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { pathname } = useLocation();
 
   return (
     <span
@@ -36,6 +41,11 @@ const ChartExportSelect = ({
             onClick={() => {
               setOpen(false);
               setLoading(true);
+              trackExport({
+                pageArea: `${filename} Chart`,
+                fileType: 'PNG',
+                path: pathname,
+              });
             }}
             onComplete={() => setLoading(false)}
           />
@@ -50,6 +60,11 @@ const ChartExportSelect = ({
             onClick={() => {
               setOpen(false);
               setLoading(true);
+              trackExport({
+                pageArea: `${filename} Chart`,
+                fileType: 'PDF',
+                path: pathname,
+              });
             }}
             onComplete={() => setLoading(false)}
           />
@@ -62,7 +77,14 @@ const ChartExportSelect = ({
             label="CSV"
             filename={`${filename}.csv`}
             getData={() => getCsv(exportData())}
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setOpen(false);
+              trackExport({
+                pageArea: `${filename} Chart`,
+                fileType: 'CSV',
+                path: pathname,
+              });
+            }}
           />
           {/* <div>Excel</div> */}
 
@@ -72,13 +94,18 @@ const ChartExportSelect = ({
   );
 };
 
-export default ChartExportSelect;
+const mapDispatchToProps = dispatch => ({
+  trackExport: properties => dispatch(trackChartExport(properties)),
+});
+
+export default connect(null, mapDispatchToProps)(ChartExportSelect);
 
 ChartExportSelect.propTypes = {
   componentName: PropTypes.string,
   pdfTemplateName: PropTypes.string,
   exportData: PropTypes.func,
   filename: PropTypes.string,
+  trackExport: PropTypes.func.isRequired,
 };
 
 ChartExportSelect.defaultProps = {
