@@ -6,6 +6,7 @@ import json
 
 TMP_DIR = os.environ.get('TMP_DIR', os.getcwd())
 DATA_DIR = os.path.join(TMP_DIR, 'static/picklebase')
+READY_FILE = os.path.join(DATA_DIR, 'ready')
 
 
 def clear_data():
@@ -58,3 +59,12 @@ def load_meta(table):
     path = meta_path(table)
     with open(path, 'r') as f:
         return json.load(f)
+
+
+def set_ready():
+    with open(READY_FILE, 'w'):
+        pass
+
+
+def check_ready():
+    return os.path.isfile(READY_FILE)

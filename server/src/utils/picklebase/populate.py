@@ -1,6 +1,5 @@
 import os
 from utils.database import db
-from .data_access import clear_data
 from .create_table import create_table
 
 
@@ -52,6 +51,5 @@ def create_vis_table():
 
 
 def populate():
-    clear_data()
     create_map_table()
     create_vis_table()
