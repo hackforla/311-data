@@ -18,5 +18,15 @@ const handleReferralCode = (
   }
 };
 
+const logAboutPageVisit = location => {
+  const { pathname } = location;
+  if (pathname === '/about') {
+    Mixpanel.track('About 311');
+  }
+};
 
-export default [handleReferralCode];
+
+export default [
+  handleReferralCode,
+  logAboutPageVisit,
+];
