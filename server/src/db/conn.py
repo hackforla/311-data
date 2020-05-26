@@ -9,10 +9,6 @@ DATABASE_URL = config['Database']['URL']
 VERBOSE = False
 
 
-if DATABASE_URL is None:
-    sys.exit('$DATABASE_URL must be defined in environment.')
-
-
 engine = create_engine(DATABASE_URL)
 
 
