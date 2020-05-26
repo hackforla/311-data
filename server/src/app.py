@@ -16,7 +16,7 @@ from utils.sanic import add_performance_header
 from utils.picklebase import pb
 import utils.resource as resource
 from config import config
-import ingest
+import db
 
 app = Sanic(__name__)
 CORS(app)
@@ -41,7 +41,7 @@ async def healthcheck(request):
         'currentTime': f'{currentTime.isoformat()}Z',
         'gitSha': githubSha,
         'version': semVersion,
-        'lastPulled': f'{ingest.last_updated().isoformat()}Z'})
+        'lastPulled': f'{db.info.last_updated().isoformat()}Z'})
 
 
 @app.route('/system')
@@ -51,6 +51,13 @@ async def system(request):
         'pageSize': resource.page_size(),
         'limits': resource.limits(),
         'usage': resource.usage()})
+
+
+@app.route('/database')
+async def database(request):
+    return json({
+        'tables': db.info.tables(),
+        'rows': db.info.rows()})
 
 
 @app.route('/pin-clusters', methods=["POST"])
@@ -146,9 +153,9 @@ async def handle_feedback(request):
 
 
 def setup():
-    time_since_update = datetime.utcnow() - ingest.last_updated()
+    time_since_update = datetime.utcnow() - db.info.last_updated()
     if time_since_update.days >= 1:
-        ingest.update()
+        db.requests.update()
 
     if pb.enabled:
         pb.populate()

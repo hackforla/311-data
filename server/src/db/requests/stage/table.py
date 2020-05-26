@@ -1,12 +1,13 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float, JSON
 from sqlalchemy.ext.declarative import declarative_base
+from ...conn import engine, Session
 
 
 Base = declarative_base()
 
 
-class Download(Base):
-    __tablename__ = 'download'
+class Stage(Base):
+    __tablename__ = 'stage'
 
     # a temporary primary key
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -57,3 +58,18 @@ class Download(Base):
     tbmpage = Column(String)
     tbmcolumn = Column(String)
     tbmrow = Column(Integer)
+
+
+def create():
+    Base.metadata.create_all(engine)
+
+
+def insert(rows):
+    session = Session()
+    session.bulk_insert_mappings(Stage, rows)
+    session.commit()
+    session.close()
+
+
+def drop():
+    Base.metadata.drop_all(engine)

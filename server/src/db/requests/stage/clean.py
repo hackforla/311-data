@@ -1,35 +1,35 @@
-from utils.database import db
+from ...conn import exec_sql
 from utils.log import log
 
 
-def clean_download_table():
-    log('\nCleaning download table')
+def clean_table():
+    log('\nCleaning staging table')
 
     # drop duplicates
-    res = db.exec_sql(f"""
-        DELETE FROM download a USING download b
+    res = exec_sql(f"""
+        DELETE FROM stage a USING stage b
         WHERE a.id < b.id AND a.srnumber = b.srnumber;
     """)
     log(f'\tDropped duplicate rows by srnumber: {res.rowcount} rows')
 
     # switch primary key
-    db.exec_sql(f"""
-        ALTER TABLE download DROP COLUMN id;
-        ALTER TABLE download ADD PRIMARY KEY (srnumber);
+    exec_sql(f"""
+        ALTER TABLE stage DROP COLUMN id;
+        ALTER TABLE stage ADD PRIMARY KEY (srnumber);
     """)
     log(f'\tSwitched primary key column to srnumber')
 
     # remove invalid closed dates
-    res = db.exec_sql(f"""
-        UPDATE download
+    res = exec_sql(f"""
+        UPDATE stage
         SET closeddate = NULL
         WHERE closeddate::timestamp < createddate::timestamp;
     """)
     log(f'\tRemoved invalid closed dates: {res.rowcount} rows')
 
     # set _daystoclose
-    res = db.exec_sql(f"""
-      UPDATE download
+    res = exec_sql(f"""
+      UPDATE stage
       SET _daystoclose = EXTRACT (
           EPOCH FROM
           (closeddate::timestamp - createddate::timestamp) /
@@ -39,16 +39,16 @@ def clean_download_table():
     log(f'\tSet _daystoclose column: {res.rowcount} rows')
 
     # fix North Westwood
-    res = db.exec_sql(f"""
-      UPDATE download
+    res = exec_sql(f"""
+      UPDATE stage
       SET nc = 127
       WHERE nc = 0 AND ncname = 'NORTH WESTWOOD NC'
     """)
     log(f'\tFixed nc code for North Westwood NC: {res.rowcount} rows')
 
     # fix Historic Cultural North
-    res = db.exec_sql(f"""
-      UPDATE download
+    res = exec_sql(f"""
+      UPDATE stage
       SET nc = 128
       WHERE nc = 0 AND ncname = 'HISTORIC CULTURAL NORTH NC'
     """)

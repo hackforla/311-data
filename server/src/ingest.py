@@ -1,4 +1,7 @@
-from ingest import populate
+import db
+from config import config
+
 
 if __name__ == '__main__':
-    populate()
+    db.reset()
+    db.requests.add_years(config['Ingestion']['YEARS'])

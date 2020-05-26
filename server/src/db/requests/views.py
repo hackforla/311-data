@@ -1,12 +1,9 @@
-from utils.database import db
-from .download import log
+from utils.log import log
+from ..conn import exec_sql
 
 
-def create_views():
-    log('\nCreating views on requests table')
-
-    # map view
-    res = db.exec_sql(f"""
+def create():
+    exec_sql(f"""
         CREATE MATERIALIZED VIEW map AS
             SELECT
                 srnumber,
@@ -18,21 +15,15 @@ def create_views():
             FROM requests
             WHERE
                 latitude IS NOT NULL AND
-                longitude IS NOT NULL
-        WITH DATA;
-    """)
+                longitude IS NOT NULL;
 
-    db.exec_sql(f"""
         CREATE UNIQUE INDEX ON map(srnumber);
         CREATE INDEX ON map(nc);
         CREATE INDEX ON map(requesttype);
         CREATE INDEX ON map(createddate);
     """)
 
-    log(f'\tcreated map view: {res.rowcount} rows')
-
-    # vis view
-    res = db.exec_sql(f"""
+    exec_sql(f"""
         CREATE MATERIALIZED VIEW vis AS
             SELECT
                 srnumber,
@@ -42,11 +33,8 @@ def create_views():
                 cd,
                 requestsource,
                 _daystoclose
-            FROM requests
-        WITH DATA;
-    """)
+            FROM requests;
 
-    db.exec_sql(f"""
         CREATE UNIQUE INDEX ON vis(srnumber);
         CREATE INDEX ON vis(nc);
         CREATE INDEX ON vis(cd);
@@ -54,18 +42,10 @@ def create_views():
         CREATE INDEX ON vis(createddate);
     """)
 
-    log(f'\tcreated vis view: {res.rowcount} rows')
 
-
-def refresh_views():
+def refresh():
     log('\nRefreshing views')
-
-    db.exec_sql(f"""
-        REFRESH MATERIALIZED VIEW CONCURRENTLY map
+    exec_sql(f"""
+        REFRESH MATERIALIZED VIEW CONCURRENTLY map;
+        REFRESH MATERIALIZED VIEW CONCURRENTLY vis;
     """)
-    log('\tRefreshed map view')
-
-    db.exec_sql(f"""
-        REFRESH MATERIALIZED VIEW CONCURRENTLY vis
-    """)
-    log('\tRefreshed vis view')

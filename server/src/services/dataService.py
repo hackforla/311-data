@@ -1,5 +1,5 @@
 import pandas as pd
-from utils.database import db
+import db
 from utils.picklebase import pb
 
 

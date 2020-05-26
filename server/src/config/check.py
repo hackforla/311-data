@@ -44,11 +44,9 @@ if __name__ == '__main__':
     # TEMPORARY CODE: migrate dev DBs to new format
     import sys
     import os
-    sys.path.append(os.getcwd())
-    from utils.database import db
-    from config import config
-    from ingest import populate
     import time
+    sys.path.append(os.getcwd())
+    import db
 
     try:
         time.sleep(1)
@@ -66,5 +64,6 @@ Thanks! Jake
 
 P.S. this should take 5 to 10 minutes, and then the server will start.
         """)
-        config.set('Ingestion', 'YEARS', '2020')
-        populate()
+        db.exec_sql('DROP TABLE IF EXISTS ingest_staging_table CASCADE')
+        db.reset()
+        db.requests.add_years([2020])
