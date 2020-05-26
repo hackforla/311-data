@@ -134,7 +134,7 @@ const DateRangePicker = ({
                 const formatDate = date => moment(date).format('MM/DD/YYYY');
                 const dispatchStart = comparison ? updateComparisonStart : updateStart;
                 const dispatchEnd = comparison ? updateComparisonEnd : updateEnd;
-                dispatchStart(formatDate(startDate));
+                dispatchStart({ dateRange: 'CUSTOM_DATE_RANGE', startDate: formatDate(startDate) });
                 dispatchEnd(formatDate(endDate));
                 handleClick();
               } else if (!startDate && !endDate) {
