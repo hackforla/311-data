@@ -10,8 +10,17 @@ from ..conn import exec_sql
 BATCH_SIZE = config['Ingestion']['QUERY_SIZE']
 
 
-def __update_requests_table():
+def __update_requests_table(year):
     log('\nUpdating requests table')
+
+    # TODO: make this more robust.
+    # Request 1-870704814 shows up in both 2017 and 2018 in socrata's data.
+    # It's the only request out of 5.4 million that appears in multiple years.
+    # Need to delete one of them since srnumber is constrained to be unique in
+    # the requests table.
+    if year == 2017:
+        exec_sql("DELETE FROM stage WHERE srnumber = '1-870704814'")
+
     inserted = exec_sql(f"""
         INSERT INTO requests SELECT * FROM stage
     """)
@@ -33,7 +42,7 @@ def add_years(years, rows_per_year=math.inf, batch_size=BATCH_SIZE):
             num_rows=rows_per_year,
             batch_size=batch_size)
         stage.clean_table()
-        __update_requests_table()
+        __update_requests_table(year)
         stage.drop_table()
 
     # finish up
