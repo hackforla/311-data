@@ -11,9 +11,9 @@ services:
       WORKERS: -1
       DATABASE_URL: postgresql://REDACTED:REDACTED@db:5432/postgres
       REDIS_URL: redis://redis:6379
-      SOCRATA_TOKEN: REDACTED
-      GITHUB_TOKEN: REDACTED
-      GITHUB_PROJECT_URL: REDACTED
+      SOCRATA_TOKEN: None
+      GITHUB_TOKEN: None
+      GITHUB_PROJECT_URL: None
       GITHUB_SHA: DEVELOPMENT
     ports:
       - 5000:5000
