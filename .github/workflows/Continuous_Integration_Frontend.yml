@@ -14,6 +14,9 @@ jobs:
       run: |
         echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
         echo DB_URL=${{ secrets.DB_URL }} >> .env
+        echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> .env
+        echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> .env
+        echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env
     - name: Build project
       run: npm run build
     - name: Run Tests
