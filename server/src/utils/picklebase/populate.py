@@ -1,5 +1,5 @@
 import os
-from utils.database import db
+import db
 from .create_table import create_table
 
 

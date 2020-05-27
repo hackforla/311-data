@@ -39,3 +39,11 @@ def timer(name=None):
                 return f(*args, **kwargs)
         return decorated_function
     return decorator
+
+
+class Timer():
+    def __init__(self):
+        self.start = time.perf_counter()
+
+    def end(self):
+        return round((time.perf_counter() - self.start) / 60, 2)

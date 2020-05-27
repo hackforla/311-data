@@ -1,8 +1,7 @@
 from sanic import Sanic
 from sanic.response import json
 from sanic_cors import CORS
-from sanic_gzip import Compress
-from threading import Timer
+from sanic_compress import Compress
 from datetime import datetime
 from multiprocessing import cpu_count, Process
 
@@ -12,44 +11,56 @@ from services.requestDetailService import RequestDetailService
 from services.visualizationsService import VisualizationsService
 from services.comparisonService import ComparisonService
 from services.feedbackService import FeedbackService
-from services.dataService import DataService
 
 from utils.sanic import add_performance_header
 from utils.picklebase import pb
+import utils.resource as resource
 from config import config
+import db
 
 app = Sanic(__name__)
 CORS(app)
-compress = Compress()
+Compress(app)
 
 
-@app.route('/apistatus')
-@compress.compress()
+@app.route('/')
+async def index(request):
+    return json('You hit the index')
+
+
+@app.route('/apistatus', methods=["GET", "HEAD"])
 async def healthcheck(request):
-    currentTime = datetime.utcnow()
+    currentTime = datetime.utcnow().replace(microsecond=0)
     githubSha = config['Github']['SHA']
     semVersion = '{}.{}.{}'.format(
         config['Version']['MAJOR'],
         config['Version']['MINOR'],
         config['Version']['PATCH'])
 
-    data_worker = DataService()
-    lastPulled = await data_worker.lastPulled()
-
-    return json({'currentTime': currentTime,
-                 'gitSha': githubSha,
-                 'version': semVersion,
-                 'lastPulled': lastPulled})
+    return json({
+        'currentTime': f'{currentTime.isoformat()}Z',
+        'gitSha': githubSha,
+        'version': semVersion,
+        'lastPulled': f'{db.info.last_updated().isoformat()}Z'})
 
 
-@app.route('/')
-@compress.compress()
-async def index(request):
-    return json('You hit the index')
+@app.route('/system')
+async def system(request):
+    return json({
+        'cpuCount': cpu_count(),
+        'pageSize': resource.page_size(),
+        'limits': resource.limits(),
+        'usage': resource.usage()})
+
+
+@app.route('/database')
+async def database(request):
+    return json({
+        'tables': db.info.tables(),
+        'rows': db.info.rows()})
 
 
 @app.route('/pin-clusters', methods=["POST"])
-@compress.compress()
 async def pinClusters(request):
     worker = PinClusterService()
 
@@ -69,7 +80,6 @@ async def pinClusters(request):
 
 
 @app.route('/heatmap', methods=["POST"])
-@compress.compress()
 async def heatmap(request):
     worker = HeatmapService()
 
@@ -86,7 +96,6 @@ async def heatmap(request):
 
 
 @app.route('/servicerequest/<srnumber>', methods=["GET"])
-@compress.compress()
 async def requestDetails(request, srnumber):
     detail_worker = RequestDetailService()
 
@@ -95,7 +104,6 @@ async def requestDetails(request, srnumber):
 
 
 @app.route('/visualizations', methods=["POST"])
-@compress.compress()
 async def visualizations(request):
     worker = VisualizationsService()
 
@@ -113,7 +121,6 @@ async def visualizations(request):
 
 
 @app.route('/comparison/<type>', methods=["POST"])
-@compress.compress()
 async def comparison(request, type):
     worker = ComparisonService()
 
@@ -134,7 +141,6 @@ async def comparison(request, type):
 
 
 @app.route('/feedback', methods=["POST"])
-@compress.compress()
 async def handle_feedback(request):
     github_worker = FeedbackService()
     postArgs = request.json
@@ -146,14 +152,18 @@ async def handle_feedback(request):
     return json(response)
 
 
-@app.route('/test_multiple_workers')
-@compress.compress()
-async def test_multiple_workers(request):
-    Timer(10.0, print, ["Timer Test."]).start()
-    return json("Done")
+def setup():
+    time_since_update = datetime.utcnow() - db.info.last_updated()
+    if time_since_update.days >= 1:
+        db.requests.update()
+
+    if pb.enabled:
+        pb.populate()
 
 
 if __name__ == '__main__':
+    Process(target=setup).start()
+
     conf = config['Server']
 
     port = conf['PORT']
@@ -166,9 +176,6 @@ if __name__ == '__main__':
 
     if workers == -1:
         workers = max(cpu_count() // 2, 1)
-
-    if pb.enabled:
-        Process(target=pb.populate).start()
 
     app.run(
         port=port,

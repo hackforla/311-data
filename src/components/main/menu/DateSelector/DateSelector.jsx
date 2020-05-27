@@ -75,7 +75,7 @@ const DateSelector = ({
 
     if (dateOption !== 'CUSTOM_DATE_RANGE') {
       const { newStartDate, newEndDate } = getDates(dateOption);
-      dispatchStart(newStartDate);
+      dispatchStart({ dateRange: dateOption, startDate: newStartDate });
       dispatchEnd(newEndDate);
     } else {
       setModalOpen(true);
