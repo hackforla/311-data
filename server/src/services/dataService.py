@@ -1,15 +1,10 @@
 import pandas as pd
-from .databaseOrm import Ingest
-from utils.database import db
+import db
 from utils.picklebase import pb
 
 
 class DataService(object):
-    default_table = Ingest.__tablename__
-
-    async def lastPulled(self):
-        rows = db.exec_sql('SELECT last_pulled FROM metadata')
-        return rows.first()[0]
+    default_table = 'requests'
 
     def standardFilters(self,
                         startDate=None,
@@ -103,19 +98,3 @@ class DataService(object):
             FROM {table}
             WHERE {filters}
         """, db.engine)
-
-    def aggregateQuery(self, fields, filters, table=default_table):
-        '''
-        Returns the counts of distinct values in the specified fields,
-        after filtering.
-        '''
-
-        if not fields or not isinstance(fields, list):
-            return {'Error': 'Missing count fields'}
-
-        df = self.query(fields, filters, table)
-
-        return [{
-            'field': field,
-            'counts': df.groupby(by=field).size().to_dict()
-        } for field in fields if field in df.columns]

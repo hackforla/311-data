@@ -1,21 +1,13 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float, JSON
 from sqlalchemy.ext.declarative import declarative_base
+from ...conn import engine, Session
 
 
 Base = declarative_base()
 
 
-class Mixin:
-    """
-    Adds `_asdict()` to easily serialize objects to dictionaries.
-    """
-    def _asdict(self):
-        cols = self.__table__.columns
-        return {col.name: getattr(self, col.name) for col in cols}
-
-
-class Ingest(Base, Mixin):
-    __tablename__ = 'ingest_staging_table'
+class Stage(Base):
+    __tablename__ = 'stage'
 
     # a temporary primary key
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -24,14 +16,14 @@ class Ingest(Base, Mixin):
     srnumber = Column(String)
 
     # dates
-    createddate = Column(DateTime, index=True)
+    createddate = Column(DateTime)
     closeddate = Column(DateTime)
     _daystoclose = Column(Float(1))
     updateddate = Column(DateTime)
     servicedate = Column(DateTime)
 
     # about
-    requesttype = Column(String, index=True)
+    requesttype = Column(String)
     requestsource = Column(String)
     actiontaken = Column(String)
     owner = Column(String)
@@ -56,9 +48,9 @@ class Ingest(Base, Mixin):
 
     # politics
     apc = Column(String)
-    cd = Column(Integer, index=True)
+    cd = Column(Integer)
     cdmember = Column(String)
-    nc = Column(Integer, index=True)
+    nc = Column(Integer)
     ncname = Column(String)
     policeprecinct = Column(String)
 
@@ -66,3 +58,18 @@ class Ingest(Base, Mixin):
     tbmpage = Column(String)
     tbmcolumn = Column(String)
     tbmrow = Column(Integer)
+
+
+def create():
+    Base.metadata.create_all(engine)
+
+
+def insert(rows):
+    session = Session()
+    session.bulk_insert_mappings(Stage, rows)
+    session.commit()
+    session.close()
+
+
+def drop():
+    Base.metadata.drop_all(engine)
