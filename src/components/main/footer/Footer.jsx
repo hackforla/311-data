@@ -50,7 +50,7 @@ const mapStateToProps = state => ({
 });
 
 Footer.propTypes = {
-  lastUpdated: propTypes.number,
+  lastUpdated: propTypes.string,
   version: propTypes.string,
   backendSha: propTypes.string,
   menuIsOpen: propTypes.bool.isRequired,
