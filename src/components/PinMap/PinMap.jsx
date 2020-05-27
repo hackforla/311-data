@@ -127,7 +127,7 @@ class PinMap extends Component {
     });
   }
 
-  onEachRegionFeatureNoTooltip = (feature, layer) => {
+  onEachRegionFeatureNoTooltip = (feature) => {
 
     // Sets mouseover/out/click event handlers for each region
     layer.on({
@@ -135,6 +135,23 @@ class PinMap extends Component {
       mouseout: this.resetRegionHighlight,
       click: this.zoomToRegion,
     });
+    }
+  // Not yet working. Need to figure out.
+  renderLabels = (feature, layer) => {
+    const labelText = `
+    <div class="div_icon_label">
+        ${feature.properties.name}
+      </div>
+    `;
+    const labelIcon = L.divIcon(labelText);
+    const getCentroid = function (arr) {
+      return arr.reduce(function (x,y) {
+        return [x[0] + y[0]/arr.length, x[1] + y[1]/arr.length] 
+    }, [0,0]) 
+}
+
+L.marker([getCentroid(this.properties.geometry)], {icon: labelIcon}).addTo(map)
+    
   }
   
   renderMarkers = () => {
@@ -314,7 +331,8 @@ class PinMap extends Component {
                 </Overlay>
               )
               }
-            {(this.state.zoomThresholdMet===true && geoJSON) 
+            {
+              (this.state.zoomThresholdMet===true && geoJSON) 
               && (
               <Overlay checked name="Neighborhood Council Boundaries">
                   <Choropleth
@@ -336,7 +354,11 @@ class PinMap extends Component {
                       return null;
                     }}
                   />
+                  <LayerGroup>
+                    {this.renderLabels()}
+                  </LayerGroup>
                 </Overlay>
+                
               )
             }
             <Overlay checked name="Markers">
