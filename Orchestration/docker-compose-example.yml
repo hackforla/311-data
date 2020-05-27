@@ -31,6 +31,9 @@ services:
    environment:
      REACT_APP_MAPBOX_TOKEN: REDACTED
      DB_URL: http://localhost:5000
+     MIXPANEL_ENABLED: -1
+     MIXPANEL_TOKEN_PROD: REDACTED
+     MIXPANEL_TOKEN_DEV: REDACTED
    ports:
      - 3000:3000
 
