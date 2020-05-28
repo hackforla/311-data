@@ -17,6 +17,7 @@ import {
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
+import DivIcon from 'react-leaflet-div-icon';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
@@ -27,7 +28,7 @@ import Button from '@components/common/Button';
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
-import ncOverlay from '../../data/nc-boundary-2019.json';
+import ncOverlay from '../../data/nc-boundary-2019-centroid.json';
 
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
@@ -138,19 +139,15 @@ class PinMap extends Component {
     }
   // Not yet working. Need to figure out.
   renderLabels = (feature, layer) => {
-    const labelText = `
-    <div class="div_icon_label">
+    const labelText = 
+          (
+    <DivIcon position = {feature.properties.centerLat, feature.properties.centerLong}>
+              <div class="div_icon_label">
         ${feature.properties.name}
       </div>
-    `;
-    const labelIcon = L.divIcon(labelText);
-    const getCentroid = function (arr) {
-      return arr.reduce(function (x,y) {
-        return [x[0] + y[0]/arr.length, x[1] + y[1]/arr.length] 
-    }, [0,0]) 
-}
-
-L.marker([getCentroid(this.properties.geometry)], {icon: labelIcon}).addTo(map)
+            </DivIcon> )
+      
+    
     
   }
   
@@ -354,13 +351,20 @@ L.marker([getCentroid(this.properties.geometry)], {icon: labelIcon}).addTo(map)
                       return null;
                     }}
                   />
-                  <LayerGroup>
-                    {this.renderLabels()}
-                  </LayerGroup>
-                </Overlay>
-                
+                  </Overlay>
               )
             }
+            {
+              (this.state.zoomThresholdMet===true && geoJSON) 
+              && (
+              <Overlay checked name="Neighborhood Council Labels">      
+                    <LayerGroup
+                      data={geoJSON}
+                    onEachFeature= {this.renderLabels}
+                  />
+                </Overlay>
+                )
+                  }
             <Overlay checked name="Markers">
               <LayerGroup>
                 {this.renderMarkers()}
