@@ -110,7 +110,7 @@ class PinMap extends Component {
 
 
   onEachRegionFeature = (feature, layer) => {
-    // Popup text when clicking on a region
+    // Tooltip text when mousing over on a region
     const toolTipText = `
       <div class="overlay_feature_popup">
         ${feature.properties.name}
@@ -128,7 +128,7 @@ class PinMap extends Component {
     });
   }
 
-  onEachRegionFeatureNoTooltip = (feature) => {
+  onEachRegionFeatureNoTooltip = (feature, layer) => {
 
     // Sets mouseover/out/click event handlers for each region
     layer.on({
@@ -139,14 +139,16 @@ class PinMap extends Component {
     }
   // Not yet working. Need to figure out.
   renderLabels = (feature, layer) => {
-    const labelText = 
-          (
-    <DivIcon position = {feature.properties.centerLat, feature.properties.centerLong}>
-              <div class="div_icon_label">
-        ${feature.properties.name}
-      </div>
+    const latlng = {lat: feature.properties.centerLat, long: feature.properties.centerLong};
+    const marker = (
+          
+    <DivIcon position = {this.latlng}>
+    <svg className ="div_icon_label" viewbox="0 0 120 120" version= "1.1" xmlns= "${feature.properties.name}">
+        
+      </svg>
             </DivIcon> )
-      
+      ;
+    return(marker);
     
     
   }
