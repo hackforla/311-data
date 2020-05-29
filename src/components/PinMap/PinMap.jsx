@@ -14,15 +14,17 @@ import {
   LayerGroup,
   ZoomControl,
   withLeaflet,
+  Marker,
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
-import DivIcon from 'react-leaflet-div-icon';
+import divIcon from 'leaflet';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import PrintControlDefault from 'react-leaflet-easyprint';
 import Button from '@components/common/Button';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
@@ -50,7 +52,7 @@ class PinMap extends Component {
       width: null,
       height: null,
       heatmapVisible: false,
-      zoomBreak: 12,
+      zoomBreak: 13,
       zoomThresholdMet: false,
     };
     this.container = React.createRef();
@@ -138,17 +140,19 @@ class PinMap extends Component {
     });
     }
   // Not yet working. Need to figure out.
-  renderLabels = (feature, layer) => {
-    const latlng = {lat: feature.properties.centerLat, long: feature.properties.centerLong};
-    const marker = (
-          
-    <DivIcon position = {this.latlng}>
-    <svg className ="div_icon_label" viewbox="0 0 120 120" version= "1.1" xmlns= "${feature.properties.name}">
-        
-      </svg>
-            </DivIcon> )
-      ;
-    return(marker);
+  renderLabels = (geoJSON) => {
+    const labelmarkers = []
+    for(let i = 0; i <= geoJSON.length-1; i++){
+      const latlng = [geoJSON[i].properties.centerLat,  geoJSON[i].properties.centerLong];
+      const marker = divIcon({
+    className: 'nc-label',
+    html: 'THIS IS SOME TEXT',
+    })
+      labelmarkers.push(<Marker position={latlng} icon={marker} />)
+  };
+
+  return labelmarkers
+    //console.log(labelmarkers)
     
     
   }
@@ -356,17 +360,17 @@ class PinMap extends Component {
                   </Overlay>
               )
             }
-            {
-              (this.state.zoomThresholdMet===true && geoJSON) 
-              && (
-              <Overlay checked name="Neighborhood Council Labels">      
-                    <LayerGroup
-                      data={geoJSON}
-                    onEachFeature= {this.renderLabels}
-                  />
+            <Overlay checked name="Neighborhood Council Labels">      
+                    <LayerGroup>
+                    {this.renderLabels(geoJSON.features)}
+                  </LayerGroup>
                 </Overlay>
-                )
-                  }
+            {/*
+              //(this.state.zoomThresholdMet===true && geoJSON) 
+              //&& (
+              
+               // )
+                */ }
             <Overlay checked name="Markers">
               <LayerGroup>
                 {this.renderMarkers()}
