@@ -7,6 +7,7 @@ import { getMetadataRequest } from '@reducers/metadata';
 
 import RouteChange from '@components/main/util/RouteChange';
 import actions from '@components/main/util/routeChangeActions';
+import CookieNotice from '@components/main/body/CookieNotice';
 import Routes from './Routes';
 import Header from './components/main/header/Header';
 import Footer from './components/main/footer/Footer';
@@ -30,6 +31,7 @@ const App = ({
         <Route path="/" component={Footer} />
       </Switch>
       <SnapshotRenderer />
+      <CookieNotice />
     </Router>
   );
 };
