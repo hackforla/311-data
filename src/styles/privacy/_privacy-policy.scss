@@ -9,7 +9,10 @@
   padding-right: 25%;
   background-color: $brand-bg-color;
   color: $brand-text-color;
-  font-family: $brand-text-family;
+
+  h1, h2, h3 {
+    font-family: $brand-text-family;
+  }
 
   h2 {
     font-size: 24px;
