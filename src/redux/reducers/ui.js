@@ -8,6 +8,7 @@ export const types = {
   SHOW_COMPARISON_CHARTS: 'SHOW_COMPARISON_CHARTS',
   SHOW_FEEDBACK_SUCCESS: 'SHOW_FEEDBACK_SUCCESS',
   UPDATE_MAP_POSITION: 'UPDATE_MAP_POSITION',
+  ACCEPT_COOKIES: 'ACCEPT_COOKIES',
 };
 
 export const toggleMenu = () => ({
@@ -44,6 +45,10 @@ export const updateMapPosition = position => ({
   payload: position,
 });
 
+export const acceptCookies = () => ({
+  type: types.ACCEPT_COOKIES,
+});
+
 const initialState = {
   menu: {
     isOpen: true,
@@ -56,6 +61,7 @@ const initialState = {
   showDataCharts: false,
   showComparisonCharts: false,
   displayFeedbackSuccess: false,
+  cookiesAccepted: false,
 };
 
 export default (state = initialState, action) => {
@@ -103,6 +109,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         map: action.payload,
+      };
+    case types.ACCEPT_COOKIES:
+      return {
+        ...state,
+        cookiesAccepted: true,
       };
     default:
       return state;

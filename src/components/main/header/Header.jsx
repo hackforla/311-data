@@ -27,6 +27,9 @@ const Header = () => {
             <p style={cta1Style}>311</p>
             <p style={cta2Style}>DATA</p>
           </div>
+          <div className="navbar-item beta-tag-wrapper">
+            <span className="beta-tag">BETA</span>
+          </div>
         </Link>
       </div>
 
