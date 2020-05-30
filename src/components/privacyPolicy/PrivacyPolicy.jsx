@@ -33,11 +33,12 @@ const PrivacyPolicy = () => (
           the services you've requested.`}
         </li>
         <li>
-          We use cookies (such as those stored by Google Analytics) to provide a better experience and improve our website.
+          We use cookies (such as those stored by Google Analytics) to provide a better
+          experience and improve our website.
         </li>
         <li>
-          We will not knowingly disclose or sell your personal information to any third party, except as provided
-          in this privacy policy.
+          We will not knowingly disclose or sell your personal information to any third
+          party, except as provided in this privacy policy.
         </li>
         <li>
           Protecting your personal information is extremely important to us and we take all
@@ -78,16 +79,17 @@ const PrivacyPolicy = () => (
           </ul>
         </li>
         <li>
-          None of the information we collect about you when you visit 311-data.org is personally identifiable
-          unless you submit your contact information in the form on the Contact Us submit page.
+          None of the information we collect about you when you visit 311-data.org is personally
+          identifiable unless you submit your contact information in the form on the Contact Us
+          submit page.
         </li>
         <li>
-          We use this non personally identifiable information to understand how the 311-data.org website is used,
-          to improve the website, and to monitor usage for security purposes.
+          We use this non personally identifiable information to understand how the 311-data.org
+          website is used, to improve the website, and to monitor usage for security purposes.
         </li>
         <li>
-          We will not collect personal information from you without your knowledge and consent, except in a few limited
-          circumstances as described in this policy.
+          We will not collect personal information from you without your knowledge and consent,
+          except in a few limited circumstances as described in this policy.
         </li>
       </ul>
 
@@ -97,8 +99,8 @@ const PrivacyPolicy = () => (
           We use github to process requests from our contact us page.
         </li>
         <li>
-          When you submit the contact us form, your personal data will be transferred to github and a ticket is created so someone
-          from our team can get back to you.
+          When you submit the contact us form, your personal data will be transferred to github
+          and a ticket is created so someone from our team can get back to you.
         </li>
         <li>
           The personal data we collect when you sign up to our mailing list includes:
@@ -116,13 +118,15 @@ const PrivacyPolicy = () => (
               IP address
             </li>
             <li>
-              Operating system on your computer and information about the browser you used when visiting the site
+              Operating system on your computer and information about the browser you used when
+              visiting the site
             </li>
             <li>
               Date and time when you submit the form
             </li>
             <li>
-              Address of the page on our website, or the third-party website that connected you to sign-up form
+              Address of the page on our website, or the third-party website that connected you
+              to sign-up form
             </li>
           </ul>
         </li>
@@ -131,14 +135,16 @@ const PrivacyPolicy = () => (
           If you are interested in additional information about Hack for LA or Code for America, feel free to reach out.`}
         </li>
         <li>
-          We use the personal data we collect to understand how people ask us questions and to improve the experience of doing so.
+          We use the personal data we collect to understand how people ask us questions and to
+          improve the experience of doing so.
         </li>
       </ul>
 
       <h3 className="has-text-weight-semibold">Google Analytics</h3>
       <ul>
         <li>
-          We use Google Analytics to understand how visitors use our site and to gather aggregate performance metrics.
+          We use Google Analytics to understand how visitors use our site and to gather aggregate
+          performance metrics.
         </li>
         <li>
           We’ve set up Google Analytics so that it doesn’t collect your full IP address.
@@ -164,12 +170,14 @@ const PrivacyPolicy = () => (
       <h2 className="has-text-left">Cookies and other tracking technologies</h2>
       <ul>
         <li>
-          Cookies are small text files that websites place on the computers and mobile devices of people who visit those websites. Pixel
-          tags (also called web beacons) are small blocks of code placed on websites and emails.
+          Cookies are small text files that websites place on the computers and mobile devices of
+          people who visit those websites. Pixel tags (also called web beacons) are small blocks of
+          code placed on websites and emails.
         </li>
         <li>
-          We use cookies and other technologies like pixel tags to remember your preferences, enhance your online experience, and to gather
-          data on how you use our Sites to improve the way we promote our content, programs, and events.
+          We use cookies and other technologies like pixel tags to remember your preferences,
+          enhance your online experience, and to gather data on how you use our Sites to improve
+          the way we promote our content, programs, and events.
         </li>
         <li>
           Your use of our Sites indicates your consent to such use of Cookies.
@@ -178,39 +186,42 @@ const PrivacyPolicy = () => (
 
       <h3 className="has-text-weight-semibold">Third party service providers</h3>
       <p>
-        We use third-party service providers to track and analyze statistical usage and volume information from our Site users.
-        These third-party service providers use persistent Cookies to help us to improve the user experience, manage the content
-        on our Sites, and analyze how users navigate and use the Sites.
+        We use third-party service providers to track and analyze statistical usage and volume
+        information from our Site users. These third-party service providers use persistent
+        Cookies to help us to improve the user experience, manage the content on our Sites, and
+        analyze how users navigate and use the Sites.
       </p>
       <p>
         Third-party service providers we use include&nbsp;
         <a href="https://analytics.google.com/">Google Analytics</a>
-        {`, `}
+        {', '}
         <a href="https://mixpanel.com/">Mixpanel</a>
-        {`, `}
+        {', '}
         <a href="https://www.eventbrite.com/">Eventbrite</a>
-        {`, `}
+        {', '}
         <a href="https://donorbox.org/">Donorbox</a>
-        {`, `}
+        {', '}
         <a href="https://medium.com/">Medium</a>
-        {`, `}
+        {', '}
         <a href="https://twitter.com/?lang=en">Twitter</a>
-        {`, `}
+        {', '}
         <a href="https://www.facebook.com/">Facebook</a>
-        {`, `}
+        {', '}
         <a href="https://www.linkedin.com/">LinkedIn</a>
         .
       </p>
 
       <h3 className="has-text-weight-semibold">How to opt-out of the use of cookies</h3>
       <p>
-        Most browsers are initially set up to accept HTTP cookies. If you want to restrict or block the cookies that are set by our
-        Site, or any other site, you can do so through your browser setting. The ‘Help’ function in your browser should explain how.
+        Most browsers are initially set up to accept HTTP cookies. If you want to restrict or
+        block the cookies that are set by our Site, or any other site, you can do so through your
+        browser setting. The ‘Help’ function in your browser should explain how.
         Alternatively, you can visit&nbsp;
         <a href="http://www.aboutcookies.org">www.aboutcookies.org</a>
-        {`, `}
-        which contains comprehensive information on how to do this on a wide variety of browsers. You will find general information
-        about cookies and details on how to delete cookies from your machine.
+        {', '}
+        which contains comprehensive information on how to do this on a wide variety of browsers.
+        You will find general information about cookies and details on how to delete cookies from
+        your machine.
       </p>
     </section>
 
@@ -220,10 +231,12 @@ const PrivacyPolicy = () => (
       <h2 className="has-text-left">As required by law and similar disclosures</h2>
       <ul>
         <li>
-          We may access, preserve, and disclose your information if we believe doing so is required or appropriate to:
+          We may access, preserve, and disclose your information if we believe doing so is required
+          or appropriate to:
           <ul className="sub-list">
             <li>
-              comply with law enforcement requests and legal process, such as a court order or subpoena;
+              comply with law enforcement requests and legal process, such as a court order or
+              subpoena;
             </li>
             <li>
               respond to your requests; or
@@ -234,7 +247,8 @@ const PrivacyPolicy = () => (
           </ul>
         </li>
         <li>
-          For the avoidance of doubt, the disclosure of your information may occur if you post any objectionable content on or through the Site.
+          For the avoidance of doubt, the disclosure of your information may occur if you post any
+          objectionable content on or through the Site.
         </li>
       </ul>
     </section>
@@ -245,11 +259,12 @@ const PrivacyPolicy = () => (
       <h2 className="has-text-left">Merger, sale, or other asset transfers</h2>
       <ul>
         <li>
-          We may transfer your information to service providers, advisors, potential transactional partners, or other third parties in
-          connection with the consideration, negotiation, or completion of a corporate transaction in which we are acquired by or merged
-          with another company or we sell, liquidate, or transfer all or a portion of our assets. The use of your information following
-          any of these events will be governed by the provisions of this Privacy Policy in effect at the time the applicable information
-          was collected.
+          We may transfer your information to service providers, advisors, potential transactional
+          partners, or other third parties in connection with the consideration, negotiation, or
+          completion of a corporate transaction in which we are acquired by or merged with another
+          company or we sell, liquidate, or transfer all or a portion of our assets. The use of your
+          information following any of these events will be governed by the provisions of this
+          Privacy Policy in effect at the time the applicable information was collected.
         </li>
       </ul>
     </section>
@@ -260,7 +275,8 @@ const PrivacyPolicy = () => (
       <h2 className="has-text-left">Consent</h2>
       <ul>
         <li>
-          We may also disclose information from you or about you or your devices with your permission.
+          We may also disclose information from you or about you or your devices with your
+          permission.
         </li>
       </ul>
     </section>
@@ -271,12 +287,12 @@ const PrivacyPolicy = () => (
       <h2 className="has-text-left">Children’s privacy</h2>
       <ul>
         <li>
-          We do not knowingly collect, maintain, or use personal information from children under 13 years of age,
-          and no part of our Site is directed to children.
+          We do not knowingly collect, maintain, or use personal information from children under
+          13 years of age, and no part of our Site is directed to children.
         </li>
         <li>
-          If you learn that a child has provided us with personal information in violation of this Privacy Policy,
-          then you may alert us at&nbsp;
+          If you learn that a child has provided us with personal information in violation of this
+          Privacy Policy, then you may alert us at&nbsp;
           <a href="mailto:info@codeforamerica.org">info@codeforamerica.org</a>
           .
         </li>
@@ -289,9 +305,10 @@ const PrivacyPolicy = () => (
       <h2 className="has-text-left">Security</h2>
       <ul>
         <li>
-          We make reasonable efforts to protect your information by using physical and electronic safeguards designed
-          to improve the security of the information we maintain. However, as our Services are hosted electronically,
-          we can make no guarantees as to the security or privacy of your information.
+          We make reasonable efforts to protect your information by using physical and electronic
+          safeguards designed to improve the security of the information we maintain. However, as
+          our Services are hosted electronically, we can make no guarantees as to the security or
+          privacy of your information.
         </li>
       </ul>
     </section>
@@ -302,13 +319,15 @@ const PrivacyPolicy = () => (
       <h2 className="has-text-left">Right to be forgotten and rectification</h2>
       <ul>
         <li>
-          You may request that we delete your personal data at any time. Requests can be submitted to&nbsp;
+          You may request that we delete your personal data at any time. Requests can
+          be submitted to&nbsp;
           <a href="mailto:privacy@codeforamerica.org">privacy@codeforamerica.org</a>
           .
         </li>
         <li>
-          You may request that we make corrections to your personal data at any time. You may request that incomplete data be
-          completed or that incorrect data be corrected. Requests can be submitted to&nbsp;
+          You may request that we make corrections to your personal data at any time. You may
+          request that incomplete data be completed or that incorrect data be corrected. Requests
+          can be submitted to&nbsp;
           <a href="mailto:privacy@codeforamerica.org">privacy@codeforamerica.org</a>
            .
         </li>
@@ -320,8 +339,9 @@ const PrivacyPolicy = () => (
     <section className="section changes">
       <h2 className="has-text-left">Changes</h2>
       <p>
-        We may change this Privacy Policy from time to time. Please check this page frequently for updates as your continued use of
-        this site after any changes in this Privacy Policy will constitute your acceptance of the changes.
+        We may change this Privacy Policy from time to time. Please check this page frequently for
+        updates as your continued use of this site after any changes in this Privacy Policy will
+        constitute your acceptance of the changes.
       </p>
     </section>
 
@@ -341,7 +361,8 @@ const PrivacyPolicy = () => (
     <section className="section questions">
       <h2 className="has-text-left">Questions</h2>
       <p>
-        If you have any questions, comments, concerns, or complaints related to our websites, please contact us by email at&nbsp;
+        If you have any questions, comments, concerns, or complaints related to our websites, please
+        contact us by email at&nbsp;
         <a href="mailto:info@codeforamerica.org">info@codeforamerica.org</a>
         , by phone at&nbsp;
         <a href="tel:4158161286">(415) 816-1286</a>
