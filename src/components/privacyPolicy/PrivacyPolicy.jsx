@@ -329,7 +329,7 @@ const PrivacyPolicy = () => (
           request that incomplete data be completed or that incorrect data be corrected. Requests
           can be submitted to&nbsp;
           <a href="mailto:privacy@codeforamerica.org">privacy@codeforamerica.org</a>
-           .
+          .
         </li>
       </ul>
     </section>
