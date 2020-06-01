@@ -18,7 +18,7 @@ import {
 } from 'react-leaflet';
 import Choropleth from 'react-leaflet-choropleth';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
-import divIcon from 'leaflet';
+import { divIcon } from 'leaflet';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
@@ -103,13 +103,14 @@ class PinMap extends Component {
 
   updatePosition = ({ target: map }) => {
     const { updatePosition } = this.props;
+    const { zoomBreak } = this.state;
+    const mapZoom = map.getZoom();
     updatePosition({
-      zoom: map.getZoom(),
+      zoom: mapZoom,
       bounds: map.getBounds(),
     });
-    this.setState({zoomThresholdMet: (map.getZoom() >= this.state.zoomBreak)});
+    this.setState({ zoomThresholdMet: (mapZoom >= zoomBreak) });
   }
-
 
   onEachRegionFeature = (feature, layer) => {
     // Tooltip text when mousing over on a region
@@ -131,32 +132,29 @@ class PinMap extends Component {
   }
 
   onEachRegionFeatureNoTooltip = (feature, layer) => {
-
-    // Sets mouseover/out/click event handlers for each region
+    const { name } = feature.properties;
+    layer.bindTooltip(name, { permanent: true, direction: 'center' });
     layer.on({
       mouseover: this.highlightRegion,
       mouseout: this.resetRegionHighlight,
       click: this.zoomToRegion,
     });
-    }
-  // Not yet working. Need to figure out.
-  renderLabels = (geoJSON) => {
-    const labelmarkers = []
-    for(let i = 0; i <= geoJSON.length-1; i++){
-      const latlng = [geoJSON[i].properties.centerLat,  geoJSON[i].properties.centerLong];
-      const marker = divIcon({
-    className: 'nc-label',
-    html: 'THIS IS SOME TEXT',
-    })
-      labelmarkers.push(<Marker position={latlng} icon={marker} />)
-  };
-
-  return labelmarkers
-    //console.log(labelmarkers)
-    
-    
   }
-  
+
+  // Not yet working. Need to figure out.
+  renderLabels = geoJSON => {
+    const labelmarkers = [];
+    for (let i = 0; i <= geoJSON.length - 1; i += 1) {
+      const latlng = [geoJSON[i].properties.centerLat, geoJSON[i].properties.centerLong];
+      const marker = divIcon({
+        className: 'nc-label',
+        html: 'THIS IS SOME TEXT',
+      });
+      labelmarkers.push(<Marker position={latlng} icon={marker} />);
+    }
+    return labelmarkers;
+  }
+
   renderMarkers = () => {
     const {
       pinClusters,
@@ -309,20 +307,18 @@ class PinMap extends Component {
               />
             </BaseLayer>
             {
-              (this.state.zoomThresholdMet===false && geoJSON) 
+              (zoomThresholdMet === false && geoJSON)
               && (
                 <Overlay checked name="Neighborhood Council Boundaries">
                   <Choropleth
                     data={geoJSON}
                     style={{
-                      fillColor: 'white',
+                      fillColor: 'transparent',
                       weight: 2,
-                      opacity: 1,
                       color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
-                    onEachFeature= {this.onEachRegionFeature}
-                
+                    onEachFeature={this.onEachRegionFeature}
                     ref={el => {
                       if (el) {
                         this.choropleth = el.leafletElement;
@@ -333,22 +329,20 @@ class PinMap extends Component {
                   />
                 </Overlay>
               )
-              }
+            }
             {
-              (this.state.zoomThresholdMet===true && geoJSON) 
+              (zoomThresholdMet === true && geoJSON)
               && (
-              <Overlay checked name="Neighborhood Council Boundaries">
+                <Overlay checked name="Neighborhood Council Boundaries">
                   <Choropleth
                     data={geoJSON}
                     style={{
-                      fillColor: 'white',
+                      fillColor: 'transparent',
                       weight: 2,
-                      opacity: 1,
                       color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
-                    onEachFeature= {this.onEachRegionFeatureNoTooltip}
-                
+                    onEachFeature={this.onEachRegionFeatureNoTooltip}
                     ref={el => {
                       if (el) {
                         this.choropleth = el.leafletElement;
@@ -357,20 +351,14 @@ class PinMap extends Component {
                       return null;
                     }}
                   />
-                  </Overlay>
+                </Overlay>
               )
             }
-            <Overlay checked name="Neighborhood Council Labels">      
-                    <LayerGroup>
-                    {this.renderLabels(geoJSON.features)}
-                  </LayerGroup>
-                </Overlay>
-            {/*
-              //(this.state.zoomThresholdMet===true && geoJSON) 
-              //&& (
-              
-               // )
-                */ }
+            {/* <Overlay checked name="Neighborhood Council Labels">
+              <LayerGroup>
+                {this.renderLabels(geoJSON.features)}
+              </LayerGroup>
+            </Overlay> */}
             <Overlay checked name="Markers">
               <LayerGroup>
                 {this.renderMarkers()}
