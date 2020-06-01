@@ -6,6 +6,7 @@ import { trackMapExport } from '@reducers/analytics';
 import PinPopup from '@components/PinMap/PinPopup';
 import CustomMarker from '@components/PinMap/CustomMarker';
 import ClusterMarker from '@components/PinMap/ClusterMarker';
+import HeatmapLegend from '@components/PinMap/HeatmapLegend';
 import {
   Map,
   TileLayer,
@@ -13,6 +14,7 @@ import {
   Tooltip,
   LayersControl,
   ZoomControl,
+  ScaleControl,
   withLeaflet,
 } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
@@ -257,70 +259,76 @@ class PinMap extends Component {
           }}
         >
           <ZoomControl position="topright" />
-          <LayersControl
-            position="bottomright"
-            collapsed={false}
-          >
-            <BaseLayer checked name="Streets">
-              <TileLayer
-                url={mapUrl}
-                attribution="MapBox"
-              />
-            </BaseLayer>
-            <BaseLayer name="Satellite">
-              <TileLayer
-                url={satelliteUrl}
-                attribution="MapBox"
-              />
-            </BaseLayer>
+          <div>
             {
-              geoJSON
-              && (
-                <Overlay checked name="Neighborhood Council Boundaries">
-                  <Choropleth
-                    data={geoJSON}
-                    style={{
-                      fillColor: 'white',
-                      weight: 2,
-                      opacity: 1,
-                      color: boundaryDefaultColor,
-                      dashArray: '3',
-                    }}
-                    onEachFeature={this.onEachRegionFeature}
-                    ref={el => {
-                      if (el) {
-                        this.choropleth = el.leafletElement;
-                        return this.choropleth;
-                      }
-                      return null;
-                    }}
-                  />
-                </Overlay>
-              )
+              heatmapVisible && <HeatmapLegend visible={heatmapVisible} />
             }
-            <Overlay checked name="Markers">
-              <MarkerClusterGroup maxClusterRadius={0}>
-                {this.renderMarkers()}
-              </MarkerClusterGroup>
-            </Overlay>
-            <Overlay name="Heatmap">
-              {/* intensityExtractor is required and requires a callback as the value.
-                * The heatmap is working with an empty callback but we'll probably
-                * improve functionality post-MVP by generating a heatmap list
-                * on the backend. */}
-              {/* The heatmapVisible test prevents the component from doing
-                * unnecessary calculations when the heatmap isn't visible */}
-              <HeatmapLayer
-                max={1}
-                points={heatmapVisible ? heatmap : []}
-                radius={20}
-                blur={25}
-                longitudeExtractor={m => m[1]}
-                latitudeExtractor={m => m[0]}
-                intensityExtractor={() => 1}
-              />
-            </Overlay>
-          </LayersControl>
+            {/* <ScaleControl position="bottomright" /> */}
+            <LayersControl
+              position="bottomright"
+              collapsed={false}
+            >
+              <BaseLayer checked name="Streets">
+                <TileLayer
+                  url={mapUrl}
+                  attribution="MapBox"
+                />
+              </BaseLayer>
+              <BaseLayer name="Satellite">
+                <TileLayer
+                  url={satelliteUrl}
+                  attribution="MapBox"
+                />
+              </BaseLayer>
+              {
+                geoJSON
+                && (
+                  <Overlay checked name="Neighborhood Council Boundaries">
+                    <Choropleth
+                      data={geoJSON}
+                      style={{
+                        fillColor: 'white',
+                        weight: 2,
+                        opacity: 1,
+                        color: boundaryDefaultColor,
+                        dashArray: '3',
+                      }}
+                      onEachFeature={this.onEachRegionFeature}
+                      ref={el => {
+                        if (el) {
+                          this.choropleth = el.leafletElement;
+                          return this.choropleth;
+                        }
+                        return null;
+                      }}
+                    />
+                  </Overlay>
+                )
+              }
+              <Overlay checked name="Markers">
+                <MarkerClusterGroup maxClusterRadius={0}>
+                  {this.renderMarkers()}
+                </MarkerClusterGroup>
+              </Overlay>
+              <Overlay name="Heatmap">
+                {/* intensityExtractor is required and requires a callback as the value.
+                  * The heatmap is working with an empty callback but we'll probably
+                  * improve functionality post-MVP by generating a heatmap list
+                  * on the backend. */}
+                {/* The heatmapVisible test prevents the component from doing
+                  * unnecessary calculations when the heatmap isn't visible */}
+                <HeatmapLayer
+                  max={1}
+                  points={heatmapVisible ? heatmap : []}
+                  radius={20}
+                  blur={25}
+                  longitudeExtractor={m => m[1]}
+                  latitudeExtractor={m => m[0]}
+                  intensityExtractor={() => 1}
+                />
+              </Overlay>
+            </LayersControl>
+          </div>
           <PrintControl
             sizeModes={['Current']}
             hideControlContainer={false}
@@ -338,17 +346,6 @@ class PinMap extends Component {
             exportMap();
           }}
         />
-        <div className="heatmap-legend-wrapper has-text-centered">
-          Concentration of Reports (Heatmap)
-          <div id="heatmap-gradient-legend" className="level">
-            <span className="level-left">
-              Low
-            </span>
-            <span className="level-right">
-              High
-            </span>
-          </div>
-        </div>
       </>
     );
   }
