@@ -1,6 +1,6 @@
 .about-hero {
-  height: 55vh;
-  background-image: url('../assets/about311hero860-min.png');
+  height: calc(100vh - #{$header-height + $footer-height});
+  background-image: url('../assets/about311hero.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
