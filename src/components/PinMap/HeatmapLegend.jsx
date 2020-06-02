@@ -11,7 +11,7 @@ const HeatmapLegend = ({
       <Control position={position}>
         <div className="heatmap-legend-wrapper has-text-centered">
           <div className="has-text-centered">
-            Concentration of Reports (Heatmap)
+            Concentration of Reports
           </div>
           <div id="heatmap-gradient-legend" className="level columns">
             <span className="column has-text-left level-item">

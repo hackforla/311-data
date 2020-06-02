@@ -5,6 +5,14 @@
     visibility: hidden;
   }
 
+  .leaflet-bottom.leaflet-right {
+    font-family: $brand-text-family;
+  }
+
+  .leaflet-control-layers-expanded {
+    min-width: 218px;
+  }
+
   #btn-map-export {
     @extend .cta-button;
     position: absolute;
@@ -26,6 +34,26 @@
       color: white;
       margin: 0;
       border-radius: 3px;
+      .span {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+  }
+
+  .export-legend-wrapper {
+    background-color: $brand-bg-color;
+    min-width: 218px;
+    padding: 6px;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    font-size: 11px;
+
+    .export-legend-title {
+      font-weight: 600;
+      font-size: 11px;
+      line-height: 11px;
+      margin-bottom: 3px;
     }
   }
 }
