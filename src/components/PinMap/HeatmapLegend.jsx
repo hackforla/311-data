@@ -1,31 +1,40 @@
 import React from 'react';
 import PropTypes from 'proptypes';
-// import { createPortal } from 'react-dom';
+import Control from 'react-leaflet-control';
 
 const HeatmapLegend = ({
-  // visible,
+  visible,
+  position,
 }) => {
-  // if (visible) {
-  return (
-    <div className="heatmap-legend-wrapper has-text-centered">
-      Concentration of Reports (Heatmap)
-      <div id="heatmap-gradient-legend" className="level">
-        <span className="level-left">
-          Low
-        </span>
-        <span className="level-right">
-          High
-        </span>
-      </div>
-    </div>
-  );
-  // }
-  // return null;
+  if (visible) {
+    return (
+      <Control position={position}>
+        <div className="heatmap-legend-wrapper has-text-centered">
+          <div className="has-text-centered">
+            Concentration of Reports (Heatmap)
+          </div>
+          <div id="heatmap-gradient-legend" className="level columns">
+            <span className="column has-text-left level-item">
+              Low
+            </span>
+            <span className="column has-text-right level-item">
+              High
+            </span>
+          </div>
+        </div>
+      </Control>
+    );
+  }
+  return null;
 };
 
-// HeatmapLegend.propTypes = {
-//   visible: PropTypes.bool.isRequired,
-// };
+HeatmapLegend.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  position: PropTypes.oneOf(['topright', 'topleft', 'bottomright', 'bottomleft']),
+};
 
-// export default createPortal(HeatmapLegend, 'leaflet-bottom leaflet-right');
+HeatmapLegend.defaultProps = {
+  position: 'bottomright',
+};
+
 export default HeatmapLegend;

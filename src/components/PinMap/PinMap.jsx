@@ -259,76 +259,72 @@ class PinMap extends Component {
           }}
         >
           <ZoomControl position="topright" />
-          <div>
+          <HeatmapLegend visible={heatmapVisible} position="bottomright" />
+          <ScaleControl position="bottomright" />
+          <LayersControl
+            position="bottomright"
+            collapsed={false}
+          >
+            <BaseLayer checked name="Streets">
+              <TileLayer
+                url={mapUrl}
+                attribution="MapBox"
+              />
+            </BaseLayer>
+            <BaseLayer name="Satellite">
+              <TileLayer
+                url={satelliteUrl}
+                attribution="MapBox"
+              />
+            </BaseLayer>
             {
-              heatmapVisible && <HeatmapLegend visible={heatmapVisible} />
+              geoJSON
+              && (
+                <Overlay checked name="Neighborhood Council Boundaries">
+                  <Choropleth
+                    data={geoJSON}
+                    style={{
+                      fillColor: 'white',
+                      weight: 2,
+                      opacity: 1,
+                      color: boundaryDefaultColor,
+                      dashArray: '3',
+                    }}
+                    onEachFeature={this.onEachRegionFeature}
+                    ref={el => {
+                      if (el) {
+                        this.choropleth = el.leafletElement;
+                        return this.choropleth;
+                      }
+                      return null;
+                    }}
+                  />
+                </Overlay>
+              )
             }
-            {/* <ScaleControl position="bottomright" /> */}
-            <LayersControl
-              position="bottomright"
-              collapsed={false}
-            >
-              <BaseLayer checked name="Streets">
-                <TileLayer
-                  url={mapUrl}
-                  attribution="MapBox"
-                />
-              </BaseLayer>
-              <BaseLayer name="Satellite">
-                <TileLayer
-                  url={satelliteUrl}
-                  attribution="MapBox"
-                />
-              </BaseLayer>
-              {
-                geoJSON
-                && (
-                  <Overlay checked name="Neighborhood Council Boundaries">
-                    <Choropleth
-                      data={geoJSON}
-                      style={{
-                        fillColor: 'white',
-                        weight: 2,
-                        opacity: 1,
-                        color: boundaryDefaultColor,
-                        dashArray: '3',
-                      }}
-                      onEachFeature={this.onEachRegionFeature}
-                      ref={el => {
-                        if (el) {
-                          this.choropleth = el.leafletElement;
-                          return this.choropleth;
-                        }
-                        return null;
-                      }}
-                    />
-                  </Overlay>
-                )
-              }
-              <Overlay checked name="Markers">
-                <MarkerClusterGroup maxClusterRadius={0}>
-                  {this.renderMarkers()}
-                </MarkerClusterGroup>
-              </Overlay>
-              <Overlay name="Heatmap">
-                {/* intensityExtractor is required and requires a callback as the value.
-                  * The heatmap is working with an empty callback but we'll probably
-                  * improve functionality post-MVP by generating a heatmap list
-                  * on the backend. */}
-                {/* The heatmapVisible test prevents the component from doing
-                  * unnecessary calculations when the heatmap isn't visible */}
-                <HeatmapLayer
-                  max={1}
-                  points={heatmapVisible ? heatmap : []}
-                  radius={20}
-                  blur={25}
-                  longitudeExtractor={m => m[1]}
-                  latitudeExtractor={m => m[0]}
-                  intensityExtractor={() => 1}
-                />
-              </Overlay>
-            </LayersControl>
-          </div>
+            <Overlay checked name="Markers">
+              <MarkerClusterGroup maxClusterRadius={0}>
+                {this.renderMarkers()}
+              </MarkerClusterGroup>
+            </Overlay>
+            <Overlay name="Heatmap">
+              {/* intensityExtractor is required and requires a callback as the value.
+                * The heatmap is working with an empty callback but we'll probably
+                * improve functionality post-MVP by generating a heatmap list
+                * on the backend. */}
+              {/* The heatmapVisible test prevents the component from doing
+                * unnecessary calculations when the heatmap isn't visible */}
+              <HeatmapLayer
+                max={1}
+                points={heatmapVisible ? heatmap : []}
+                radius={20}
+                blur={25}
+                longitudeExtractor={m => m[1]}
+                latitudeExtractor={m => m[0]}
+                intensityExtractor={() => 1}
+              />
+            </Overlay>
+          </LayersControl>
           <PrintControl
             sizeModes={['Current']}
             hideControlContainer={false}
