@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import propTypes from 'proptypes';
+import PropTypes from 'proptypes';
 import moment from 'moment';
 import clx from 'classnames';
 import HoverOverInfo from '@components/common/HoverOverInfo';
@@ -10,11 +10,12 @@ const Footer = ({
   version,
   backendSha,
   menuIsOpen,
+  splashPageDisabled,
 }) => {
   const frontendSha = process.env.GITHUB_SHA || 'DEVELOPMENT';
   return (
     <footer
-      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen })}
+      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen && splashPageDisabled })}
     >
       { lastUpdated && (
         <span className="last-updated">
@@ -47,13 +48,15 @@ const mapStateToProps = state => ({
   version: state.metadata.version,
   backendSha: state.metadata.gitSha,
   menuIsOpen: state.ui.menu.isOpen,
+  splashPageDisabled: state.ui.splashPageDisabled,
 });
 
 Footer.propTypes = {
-  lastUpdated: propTypes.string,
-  version: propTypes.string,
-  backendSha: propTypes.string,
-  menuIsOpen: propTypes.bool.isRequired,
+  lastUpdated: PropTypes.string,
+  version: PropTypes.string,
+  backendSha: PropTypes.string,
+  menuIsOpen: PropTypes.bool.isRequired,
+  splashPageDisabled: PropTypes.bool.isRequired,
 };
 
 Footer.defaultProps = {

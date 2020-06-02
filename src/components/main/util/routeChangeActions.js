@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 import Mixpanel from '@utils/Mixpanel';
-import { acceptCookies } from '@reducers/ui';
+import { acceptCookies, disableSplashPage } from '@reducers/ui';
 import store from '../../../redux/store';
 
 
@@ -35,9 +35,18 @@ const checkAcceptedCookies = () => {
   }
 };
 
+const handleSplashPageView = location => {
+  const { pathname } = location;
+  const { ui } = store.getState();
+  if (pathname !== '/' && !ui.disableSplashPage) {
+    store.dispatch(disableSplashPage());
+  }
+};
+
 
 export default [
   handleReferralCode,
   logAboutPageVisit,
   checkAcceptedCookies,
+  handleSplashPageView,
 ];
