@@ -42,8 +42,9 @@ class ContactForm extends Component {
   }
 
   componentWillUnmount() {
-    const { showSuccessMessage } = this.props;
+    const { showSuccessMessage, showErrorModal } = this.props;
     showSuccessMessage(false);
+    showErrorModal(false);
     this.clearFields();
   }
 
@@ -281,6 +282,7 @@ ContactForm.propTypes = {
   openErrorModal: PropTypes.bool.isRequired,
   showSuccessMessage: PropTypes.func.isRequired,
   displayFeedbackSuccess: PropTypes.bool.isRequired,
+  showErrorModal: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
