@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'proptypes';
+import clx from 'classnames';
 import { connect } from 'react-redux';
 import { sendGitRequest } from '@reducers/data';
-import { showFeedbackSuccess } from '@reducers/ui';
+import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
 
 import Loader from '@components/common/Loader';
 import Modal from '@components/common/Modal';
+import Button from '@components/common/Button';
 import DataRequestError from '@components/main/body/DataRequestError';
+import SuccessPopup from './SuccessPopup';
 
 const contactInitialState = {
   firstName: '',
@@ -14,40 +17,37 @@ const contactInitialState = {
   email: '',
   association: '',
   message: '',
-  disableButton: true,
-  invalidEmail: false,
+  errors: {
+    missingFirstName: false,
+    missingLastName: false,
+    missingEmail: false,
+    invalidEmail: false,
+    missingMessage: false,
+  },
+  loading: false,
 };
 
 class ContactForm extends Component {
   constructor(props) {
     super(props);
     this.state = contactInitialState;
-    this.timer = null;
   }
 
-  componentDidUpdate() {
-    const { displayFeedbackSuccess } = this.props;
-    // Hide success message and clear form fields after 5 seconds
-    if (displayFeedbackSuccess) {
-      this.timer = setTimeout(() => this.clearFeedback(), 5000);
+  static getDerivedStateFromProps = nextProps => {
+    const { displayFeedbackSuccess, openErrorModal } = nextProps;
+    if (displayFeedbackSuccess || openErrorModal) {
+      return { loading: false };
     }
+    return null;
   }
 
   componentWillUnmount() {
-    const { displayFeedbackSuccess } = this.props;
-    if (displayFeedbackSuccess) {
-      this.clearFeedback();
-    }
-    // Clear timeout to prevent memory leak if user navigates to another page before timer fires
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-  }
-
-  clearFeedback = () => {
-    // Dispatches UI action to hide feedback success message and clears form fields
     const { showSuccessMessage } = this.props;
     showSuccessMessage(false);
+    this.clearFields();
+  }
+
+  clearFields = () => {
     this.setState(contactInitialState);
   };
 
@@ -59,28 +59,37 @@ class ContactForm extends Component {
     return false;
   }
 
+  validateForm = () => {
+    const {
+      firstName,
+      lastName,
+      email,
+      message,
+    } = this.state;
+
+    const noFirstName = firstName.trim().length === 0;
+    const noLastName = lastName.trim().length === 0;
+    const noEmail = email.trim().length === 0;
+    const noMessage = message.trim().length === 0;
+    const incompleteEmail = (!noEmail && !this.validateEmail(email));
+    if (!noFirstName && !noLastName && !noEmail && !noMessage && !incompleteEmail) {
+      return true;
+    }
+    this.setState({
+      errors: {
+        missingFirstName: noFirstName,
+        missingLastName: noLastName,
+        missingEmail: noEmail,
+        invalidEmail: incompleteEmail,
+        missingMessage: noMessage,
+      },
+    });
+    return false;
+  };
+
   onInputChange = event => {
     event.preventDefault();
-    this.setState({ [event.target.name]: event.target.value },
-      () => {
-        const {
-          firstName,
-          lastName,
-          email,
-          message,
-        } = this.state;
-
-        if (firstName !== '' && lastName !== '' && email !== '' && message !== '') {
-          this.setState({
-            disableButton: false,
-          });
-        } else {
-          this.setState({
-            disableButton: true,
-            invalidEmail: false,
-          });
-        }
-      });
+    this.setState({ [event.target.name]: event.target.value });
   }
 
   handleSubmit = event => {
@@ -93,13 +102,8 @@ class ContactForm extends Component {
       message,
     } = this.state;
 
-    if (this.validateEmail(email)) {
+    if (this.validateForm()) {
       const { submitFeedback } = this.props;
-      this.setState({
-        disableButton: true,
-        invalidEmail: false,
-      });
-
       const body = [
         `First name: ${firstName}`,
         `Last name: ${lastName}`,
@@ -109,10 +113,7 @@ class ContactForm extends Component {
       ].join('\n');
 
       submitFeedback({ title: email, body });
-    } else {
-      this.setState({
-        invalidEmail: true,
-      });
+      this.setState({ loading: true });
     }
   };
 
@@ -123,8 +124,14 @@ class ContactForm extends Component {
       email,
       association,
       message,
-      disableButton,
-      invalidEmail,
+      errors: {
+        missingFirstName,
+        missingLastName,
+        missingEmail,
+        invalidEmail,
+        missingMessage,
+      },
+      loading,
     } = this.state;
 
     const {
@@ -135,95 +142,123 @@ class ContactForm extends Component {
     return (
       <div className="feedback-form form-container">
         <form id="contact-form">
-          <div className="form-group" id="fname-form">
-            <label htmlFor="firstName">
-              First Name
-              <span className="asterisk">*</span>
-              <input
-                name="firstName"
-                type="text"
-                className="form-control"
-                value={firstName}
-                onChange={this.onInputChange.bind(this)}
-                required
-              />
-            </label>
+
+          <div className="field columns">
+            <div className="column">
+              <label className="label" htmlFor="contact-firstname">
+                First Name
+                <span className="asterisk has-text-danger">*</span>
+                <div className="control">
+                  <input
+                    id="contact-firstname"
+                    className={clx('input', { 'is-danger': missingFirstName })}
+                    name="firstName"
+                    type="text"
+                    value={firstName}
+                    onChange={this.onInputChange}
+                    required
+                  />
+                </div>
+              </label>
+              { missingFirstName && <p className="help is-danger has-text-left">Please provide a first name.</p> }
+            </div>
+
+            <div className="column">
+              <label className="label" htmlFor="contact-lastname">
+                Last Name
+                <span className="asterisk has-text-danger">*</span>
+                <div className="control">
+                  <input
+                    id="contact-lastname"
+                    className={clx('input', { 'is-danger': missingLastName })}
+                    name="lastName"
+                    type="text"
+                    value={lastName}
+                    onChange={this.onInputChange}
+                    required
+                  />
+                </div>
+              </label>
+              { missingLastName && <p className="help is-danger has-text-left">Please provide a last name.</p> }
+            </div>
           </div>
 
-          <div className="form-group" id="lname-form">
-            <label htmlFor="lastName">
-              Last Name
-              <span className="asterisk">*</span>
-              <input
-                name="lastName"
-                type="text"
-                className="form-control"
-                value={lastName}
-                onChange={this.onInputChange.bind(this)}
-                required
-              />
-            </label>
-          </div>
-
-          <div className="form-group" id="email-form">
-            <label htmlFor="email">
+          <div className="field">
+            <label className="label" htmlFor="contact-email">
               Email
-              <span className="asterisk">*</span>
-              <input
-                name="email"
-                type="email"
-                className="form-control"
-                value={email}
-                required
-                onChange={this.onInputChange.bind(this)}
-              />
+              <span className="asterisk has-text-danger">*</span>
+              <div className="control">
+                <input
+                  id="contact-email"
+                  className={clx('input', { 'is-danger': missingEmail || invalidEmail })}
+                  name="email"
+                  type="email"
+                  value={email}
+                  required
+                  onChange={this.onInputChange}
+                />
+              </div>
             </label>
-            { invalidEmail && (
-              <p className="invalid-email-message">Please provide a valid email address.</p>
-            )}
+            { missingEmail && <p className="help is-danger has-text-left">Please provide an email address.</p> }
+            { invalidEmail && <p className="help is-danger has-text-left">Please provide a valid email address.</p> }
           </div>
 
-          <div className="form-group">
-            <label htmlFor="association">
+          <div className="field">
+            <label className="label" htmlFor="contact-association">
               Association
-              <input
-                name="association"
-                type="text"
-                className="form-control"
-                value={association}
-                onChange={this.onInputChange.bind(this)}
-              />
+              <div className="control">
+                <input
+                  id="contact-association"
+                  className="input"
+                  name="association"
+                  type="text"
+                  value={association}
+                  onChange={this.onInputChange}
+                />
+              </div>
             </label>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="message">
+          <div className="field">
+            <label className="label" htmlFor="contact-message">
               Message
-              <span className="asterisk">*</span>
-              <textarea
-                name="message"
-                className="form-control"
-                rows="7"
-                value={message}
-                onChange={this.onInputChange.bind(this)}
-                required
-              />
+              <span className="asterisk has-text-danger">*</span>
+              <div className="control">
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  className={clx('textarea', { 'is-danger': missingMessage })}
+                  rows="6"
+                  value={message}
+                  required
+                  onChange={this.onInputChange}
+                />
+              </div>
             </label>
+            { missingMessage && <p className="help is-danger has-text-left">Please provide a message.</p> }
           </div>
-
-          <div className="btn-container">
-            { displayFeedbackSuccess && (
-              <p className="has-text-centered feedback-success">Thanks for your feedback!</p>
-            )}
-            <button type="submit" className="contact-btn" onClick={event => this.handleSubmit(event)} disabled={disableButton}>
-              Submit
-            </button>
-          </div>
+          <Button
+            id="contact-submit"
+            className={clx('contact-button', { 'is-loading': loading })}
+            type="submit"
+            label="Submit"
+            handleClick={this.handleSubmit}
+          />
         </form>
         <Loader />
         <Modal
           open={openErrorModal}
-          content={<DataRequestError />}
+          content={<DataRequestError message="We failed to process your message. Please try again later." />}
+        />
+        <Modal
+          open={displayFeedbackSuccess}
+          content={(
+            <SuccessPopup
+              header="Thanks for your feedback!"
+              message="We received your message. Our team will contact you at the email address provided."
+              onClick={this.clearFields}
+            />
+          )}
         />
       </div>
     );
@@ -238,6 +273,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   submitFeedback: fields => dispatch(sendGitRequest(fields)),
   showSuccessMessage: bool => dispatch(showFeedbackSuccess(bool)),
+  showErrorModal: bool => dispatch(setErrorModal(bool)),
 });
 
 ContactForm.propTypes = {
