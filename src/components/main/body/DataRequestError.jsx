@@ -7,7 +7,10 @@ import { setErrorModal } from '@reducers/ui';
 import Icon from '@components/common/Icon';
 import Button from '@components/common/Button';
 
-const DataRequestError = ({ closeModal }) => (
+const DataRequestError = ({
+  closeModal,
+  message,
+}) => (
   <div className="data-request-error">
     <div className="has-text-centered">
       <Icon
@@ -24,7 +27,7 @@ const DataRequestError = ({ closeModal }) => (
     </p>
     <br />
     <p className="has-text-centered">
-      We failed to retrieve data for this request; please try again.
+      { message }
     </p>
     <br />
     <div className="has-text-centered">
@@ -40,6 +43,11 @@ const DataRequestError = ({ closeModal }) => (
 
 DataRequestError.propTypes = {
   closeModal: propTypes.func.isRequired,
+  message: propTypes.string,
+};
+
+DataRequestError.defaultProps = {
+  message: 'We failed to retrieve data for this request; please try again.',
 };
 
 const mapDispatchToProps = dispatch => ({

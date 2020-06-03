@@ -363,13 +363,13 @@ const PrivacyPolicy = () => (
       <p>
         If you have any questions, comments, concerns, or complaints related to our websites, please
         contact us by email at&nbsp;
-        <a href="mailto:info@codeforamerica.org">info@codeforamerica.org</a>
+        <a href="mailto:311-data@hackforla.org">311-data@hackforla.org</a>
         , by phone at&nbsp;
         <a href="tel:4158161286">(415) 816-1286</a>
         , or by mail at:
         <br />
         <br />
-        Code for America
+        Hack for LA
         <br />
         155 9th Street
         <br />
