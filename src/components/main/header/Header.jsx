@@ -1,8 +1,14 @@
 import React from 'react';
+import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
+import { disableSplashPage } from '@reducers/ui';
 import COLORS from '../../../styles/COLORS';
 
-const Header = () => {
+const Header = ({
+  disableSplash,
+  splashPageDisabled,
+}) => {
   const cta2Style = {
     color: COLORS.BRAND.CTA2,
   };
@@ -22,7 +28,15 @@ const Header = () => {
       aria-label="main navigation"
     >
       <div className="navbar-brand">
-        <Link to="/" className="navbar-item">
+        <Link
+          to="/"
+          className="navbar-item"
+          onClick={() => {
+            if (!splashPageDisabled) {
+              disableSplash();
+            }
+          }}
+        >
           <div className="navbar-item">
             <p style={cta1Style}>311</p>
             <p style={cta2Style}>DATA</p>
@@ -56,4 +70,17 @@ const Header = () => {
   );
 };
 
-export default Header;
+Header.propTypes = {
+  splashPageDisabled: PropTypes.bool.isRequired,
+  disableSplash: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+  splashPageDisabled: state.ui.splashPageDisabled,
+});
+
+const mapDispatchToProps = dispatch => ({
+  disableSplash: () => dispatch(disableSplashPage()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

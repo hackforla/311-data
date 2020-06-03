@@ -6,6 +6,8 @@ import { trackMapExport } from '@reducers/analytics';
 import PinPopup from '@components/PinMap/PinPopup';
 import CustomMarker from '@components/PinMap/CustomMarker';
 import ClusterMarker from '@components/PinMap/ClusterMarker';
+import HeatmapLegend from '@components/PinMap/HeatmapLegend';
+import ExportLegend from '@components/PinMap/ExportLegend';
 import {
   Map,
   TileLayer,
@@ -13,6 +15,7 @@ import {
   Tooltip,
   LayersControl,
   ZoomControl,
+  ScaleControl,
   withLeaflet,
 } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
@@ -49,6 +52,7 @@ class PinMap extends Component {
       ready: false,
       width: null,
       height: null,
+      markersVisible: true,
       heatmapVisible: false,
     };
     this.container = React.createRef();
@@ -227,6 +231,7 @@ class PinMap extends Component {
       width,
       height,
       heatmapVisible,
+      markersVisible,
     } = this.state;
 
     const { heatmap } = this.props;
@@ -249,14 +254,21 @@ class PinMap extends Component {
             if (name === 'Heatmap') {
               this.setState({ heatmapVisible: true });
             }
+            if (name === 'Markers') {
+              this.setState({ markersVisible: true });
+            }
           }}
           onOverlayremove={({ name }) => {
             if (name === 'Heatmap') {
               this.setState({ heatmapVisible: false });
             }
+            if (name === 'Markers') {
+              this.setState({ markersVisible: false });
+            }
           }}
         >
           <ZoomControl position="topright" />
+          <ScaleControl position="bottomright" />
           <LayersControl
             position="bottomright"
             collapsed={false}
@@ -321,6 +333,8 @@ class PinMap extends Component {
               />
             </Overlay>
           </LayersControl>
+          <ExportLegend visible={markersVisible} position="bottomright" />
+          <HeatmapLegend visible={heatmapVisible} position="bottomright" />
           <PrintControl
             sizeModes={['Current']}
             hideControlContainer={false}
@@ -338,17 +352,6 @@ class PinMap extends Component {
             exportMap();
           }}
         />
-        <div className="heatmap-legend-wrapper has-text-centered">
-          Concentration of Reports (Heatmap)
-          <div id="heatmap-gradient-legend" className="level">
-            <span className="level-left">
-              Low
-            </span>
-            <span className="level-right">
-              High
-            </span>
-          </div>
-        </div>
       </>
     );
   }
