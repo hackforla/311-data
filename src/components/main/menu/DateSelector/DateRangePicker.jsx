@@ -51,7 +51,10 @@ const DateRangePicker = ({
     >
       {/* ---------- Modal Card Header ---------- */}
       <header className="modal-card-head">
-        <h1>{ title }</h1>
+        <div className="modal-title has-text is-size-4 has-text-weight-bold">
+          { title }
+          <div className="has-text is-size-7 has-text-weight-normal">*limited to 6-month timespan</div>
+        </div>
         <Button
           id="date-picker-close-button"
           className="picker-close-button"
@@ -73,7 +76,8 @@ const DateRangePicker = ({
                 selected={startDate}
                 startDate={startDate}
                 endDate={endDate}
-                minDate={moment('01/01/2015', 'MM/DD/YYYY').toDate()}
+                minDate={endDate ? moment(startDate).subtract(6, 'months')
+                  : moment('01/01/2015', 'MM/DD/YYYY').toDate()}
                 maxDate={moment().toDate()}
                 selectsStart
                 showYearDropdown

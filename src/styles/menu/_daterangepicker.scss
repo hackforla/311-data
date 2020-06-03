@@ -5,13 +5,14 @@
   box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.5);
 
   .modal-card-head {
-    height: 50px;
+    height: 70px;
     border: none;
     border-radius: 0;
 
-    h1 {
-      margin-left: 18px;
+    .modal-title {
+      font-family: $brand-heading-family;
       margin-top: 18px;
+      margin-left: 18px;
     }
 
     .picker-close-button {
