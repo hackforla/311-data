@@ -3,28 +3,8 @@
   margin: 50px auto;
   text-align: center;
 
-  .form-group {
-    float: left;
-    margin-bottom: 15px;
-    width: 100%;
-  }
-
-  #fname-form {
-    width: 45%;
-  }
-
-  #lname-form {
-    width: 45%;
-    float: right;
-  }
-
-  .asterisk, .error-msg {
-    color: red;
-  }
-  
-  .error-msg {
-    float: left;
-    font-size: 14px;
+  .column {
+    padding-bottom: 0;
   }
   
   label {
@@ -32,50 +12,19 @@
     display: block;
     text-align: left;
   }
-  
-  input, textarea {
-    width: 100%;
-  }
-  
-  .btn-container {
-    text-align: center;
-    clear: both;
-  }
-  
-  textarea {
-    padding: 3px;
-  }
 
-  .feedback-success {
-    font-weight: bold;
-  }
-
-  .invalid-email-message {
-    text-align: left;
-  }
-  
-  .contact-btn {
+  #btn-contact-submit {
     background-color: $brand-cta1-color;
     color: $brand-text-color;
+    min-width: 250px;
     font-weight: bold;
-    font-size: 18px;
     font-family: $brand-heading-family;
-    width: 256px;
-    height: 42px;
-    margin-top: 30px;
-    border-radius: 10px;
-    &:focus:not(:active),
-    &:hover {
-      box-shadow: none;
-      background-color: transparent;
-      color: $brand-main-color;
+    font-size: 18px;
+    margin-top: 25px;
+
+    &:after {
+      color: $brand-text-color;
     }
-  }
-  
-  .contact-btn:disabled,
-  .contact-btn[disabled]{
-    border: none;
-    background-color: #cccccc;
   }
 
   .loader-container {
@@ -89,15 +38,14 @@
     padding: 10px 35px;
     margin: 0 10em;
   }
+}
 
-  @media only screen and (max-width: 768px) {
-    #fname-form {
-      width: 100%;
-    }
-
-    #lname-form {
-      width: 100%;
-      float: none;
-    }
+.contact-success-popup {
+  border-radius: 5px;
+  background-color: $brand-bg-color;
+  padding: 20px 35px;
+  margin: 0 10em;
+  button {
+    min-width: 100px;
   }
 }
