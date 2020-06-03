@@ -279,10 +279,10 @@ const mapDispatchToProps = dispatch => ({
 
 ContactForm.propTypes = {
   submitFeedback: PropTypes.func.isRequired,
+  showErrorModal: PropTypes.func.isRequired,
   openErrorModal: PropTypes.bool.isRequired,
   showSuccessMessage: PropTypes.func.isRequired,
   displayFeedbackSuccess: PropTypes.bool.isRequired,
-  showErrorModal: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
