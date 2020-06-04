@@ -13,7 +13,7 @@ const WhatIs311Data = () => (
       Department of Transportation. The agency responds to the request, addresses it, and
       then closes it once it is fixed. The expansive amount of data associated with these
       311 requests is available online. However, it is difficult to make actionable at the
-      neighbourhood level.
+      neighborhood level.
     </p>
     <div className="logos columns level">
       <div className="column level-item">
