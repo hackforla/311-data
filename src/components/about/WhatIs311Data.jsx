@@ -12,13 +12,13 @@ const WhatIs311Data = forwardRef((props, ref) => (
       issues such as illegal dumping and graffiti in their neighborhoods. These requests
       are then received by relevant agencies, such as the Police, Building and Safety, or
       Department of Transportation. The agency responds to the request, addresses it, and
-      then closes it once it is fixed. Thanks to the Mayor's
+      then closes it once it is fixed. Thanks to the Mayor&apos;s
       {' '}
       <a href="https://data.lacity.org/">Open Data Initiative</a>
       {', '}
       the expansive amount of data associated with these
-      311 requests is available online. The mayor has encouraged us to create apps with this 
-      data, and that's where this project comes in.
+      311 requests is available online. The mayor has encouraged us to create apps with this
+      data, and that&apos;s where this project comes in.
     </p>
     <div className="logos columns level">
       <div className="column level-item">
