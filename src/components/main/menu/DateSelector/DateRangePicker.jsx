@@ -43,6 +43,24 @@ const DateRangePicker = ({
     setEndError(false);
   };
 
+  const calcMaxDate = start => {
+    const today = moment();
+    if (start) {
+      const maxDate = moment(start).add(1, 'year');
+      return maxDate.isBefore(today) ? maxDate.toDate() : today.toDate();
+    }
+    return today.toDate();
+  };
+
+  const calcMinDate = end => {
+    const min = moment('01/01/2015', 'MM/DD/YYYY');
+    if (end) {
+      const minDate = moment(end).subtract(1, 'year');
+      return minDate.isAfter(min) ? minDate.toDate() : min.toDate();
+    }
+    return min.toDate();
+  };
+
   return (
     <div
       id={id}
@@ -51,12 +69,20 @@ const DateRangePicker = ({
     >
       {/* ---------- Modal Card Header ---------- */}
       <header className="modal-card-head">
-        <h1>{ title }</h1>
+        <div className="modal-title has-text is-size-4 has-text-weight-bold">
+          { title }
+          <div className="has-text is-size-7 has-text-weight-normal">*limited to 1-year timespan</div>
+        </div>
         <Button
           id="date-picker-close-button"
           className="picker-close-button"
           icon="times"
-          handleClick={() => { clearErrors(); handleClick(); }}
+          handleClick={() => {
+            clearErrors();
+            handleClick();
+            updateLocalStart(null);
+            updateLocalEnd(null);
+          }}
         />
       </header>
 
@@ -73,8 +99,8 @@ const DateRangePicker = ({
                 selected={startDate}
                 startDate={startDate}
                 endDate={endDate}
-                minDate={moment('01/01/2015', 'MM/DD/YYYY').toDate()}
-                maxDate={moment().toDate()}
+                minDate={startDate || calcMinDate(endDate)}
+                maxDate={endDate || moment().toDate()}
                 selectsStart
                 showYearDropdown
                 showMonthDropdown
@@ -100,8 +126,8 @@ const DateRangePicker = ({
                 selected={endDate}
                 startDate={endDate}
                 endDate={endDate}
-                minDate={startDate}
-                maxDate={moment().toDate()}
+                minDate={startDate || calcMinDate(endDate)}
+                maxDate={endDate || calcMaxDate(startDate)}
                 showYearDropdown
                 showMonthDropdown
                 selectsEnd

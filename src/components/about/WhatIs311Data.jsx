@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import EmpowerLA from '@assets/empowerla.png';
 import HackforLA from '@assets/hackforla.png';
 import CFALogo from '@assets/cfa-logo.png';
 
-const WhatIs311Data = () => (
-  <div className="main-text">
+// eslint-disable-next-line react/display-name
+const WhatIs311Data = forwardRef((props, ref) => (
+  <div className="main-text" ref={ref}>
     <h1>What is 311 Data?</h1>
     <p>
       Each day, Los Angelenos report thousands of 311 requests all across LA to resolve
@@ -13,7 +14,7 @@ const WhatIs311Data = () => (
       Department of Transportation. The agency responds to the request, addresses it, and
       then closes it once it is fixed. The expansive amount of data associated with these
       311 requests is available online. However, it is difficult to make actionable at the
-      neighbourhood level.
+      neighborhood level.
     </p>
     <div className="logos columns level">
       <div className="column level-item">
@@ -49,6 +50,6 @@ const WhatIs311Data = () => (
       application built and maintained by volunteers throughout our community.
     </p>
   </div>
-);
+));
 
 export default WhatIs311Data;
