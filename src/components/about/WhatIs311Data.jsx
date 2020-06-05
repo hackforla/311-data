@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import EmpowerLA from '@assets/empowerla.png';
 import HackforLA from '@assets/hackforla.png';
 import CFALogo from '@assets/cfa-logo.png';
 
-const WhatIs311Data = () => (
-  <div className="main-text">
+// eslint-disable-next-line react/display-name
+const WhatIs311Data = forwardRef((props, ref) => (
+  <div className="main-text" ref={ref}>
     <h1>What is 311 Data?</h1>
     <p>
       Each day, Los Angelenos report thousands of 311 requests all across LA to resolve
       issues such as illegal dumping and graffiti in their neighborhoods. These requests
       are then received by relevant agencies, such as the Police, Building and Safety, or
       Department of Transportation. The agency responds to the request, addresses it, and
-      then closes it once it is fixed. The expansive amount of data associated with these
-      311 requests is available online. However, it is difficult to make actionable at the
-      neighbourhood level.
+      then closes it once it is fixed. Thanks to the mayor&apos;s
+      {' '}
+      <a href="https://data.lacity.org/">Open Data Initiative</a>
+      {', '}
+      the expansive amount of data associated with these
+      311 requests is available online. The mayor has encouraged us to create apps with this
+      data, and that&apos;s where this project comes in.
     </p>
     <div className="logos columns level">
       <div className="column level-item">
@@ -49,6 +54,6 @@ const WhatIs311Data = () => (
       application built and maintained by volunteers throughout our community.
     </p>
   </div>
-);
+));
 
 export default WhatIs311Data;
