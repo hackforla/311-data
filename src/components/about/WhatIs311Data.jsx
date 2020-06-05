@@ -12,7 +12,7 @@ const WhatIs311Data = forwardRef((props, ref) => (
       issues such as illegal dumping and graffiti in their neighborhoods. These requests
       are then received by relevant agencies, such as the Police, Building and Safety, or
       Department of Transportation. The agency responds to the request, addresses it, and
-      then closes it once it is fixed. Thanks to the Mayor&apos;s
+      then closes it once it is fixed. Thanks to the mayor&apos;s
       {' '}
       <a href="https://data.lacity.org/">Open Data Initiative</a>
       {', '}
