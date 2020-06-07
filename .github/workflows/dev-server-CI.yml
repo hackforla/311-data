@@ -1,0 +1,25 @@
+name: dev-server-CI
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Pull, Build, Restart
+        uses: peterkimzz/aws-ssm-send-command@1.0.1
+        id: ssm
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_CI_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_CI_SECRET_ACCESS_KEY }}
+          instance-ids: ${{ secrets.AWS_DEV_INSTANCE_ID }}
+          working-directory: /home/ec2-user/311-data/server
+          command: |
+            git pull
+            docker-compose build server
+            docker-compose up --no-deps -d server
