@@ -21,5 +21,5 @@ jobs:
           working-directory: /home/ec2-user/311-data/server
           command: |
             git pull
-            docker-compose build server
-            docker-compose up --no-deps -d server
+            docker-compose build api
+            docker-compose up --no-deps -d api
