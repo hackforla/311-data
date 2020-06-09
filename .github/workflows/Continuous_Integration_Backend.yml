@@ -17,7 +17,7 @@ jobs:
       run: |
         sudo apt install libpq-dev python3-dev
         python -m pip install --upgrade pip
-        pip install -r server/requirements.txt
+        pip install -r server/api/requirements.txt
         cp server/.env.example server/api/.env
     - name: Lint with flake8
       run: flake8 server
