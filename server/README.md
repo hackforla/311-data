@@ -59,7 +59,7 @@ If you decide later that you need more data, just run the command again with the
 ### Optional Dependencies
 
   - #### Postman
-
+[Postman](https://www.postman.com/) is an api-development tool that lets you save api requests so you can run them over and over without having to remember what all the parameters are (or use the awkward syntax of `curl`). You can also group api calls together in collections, and run all of the api calls in a collection at once -- which is a great way to test the entire api. If you'd like to use it, see the README in `/server/postman`, which explains how to set it up with a collection that contains pre-defined api calls for all of our endpoints.
 
 ### Useful commands
 ```
@@ -68,9 +68,7 @@ docker-compose up --build             # start the backend services after rebuild
 
 docker-compose run api bash           # log in to api shell
 docker-compose run api flake8         # lint your python code
-docker-compose run api pytest         # run unit tests against python code
-
-docker-compose run redis redis-cli    # run the redis cli  
+docker-compose run api pytest         # run unit tests against python code 
 ```
 
 ### Using the python interpreter

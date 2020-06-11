@@ -28,6 +28,11 @@ def get_cli_args():
         help='number of rows per call to Socrata api ' +
              f'(default: {Socrata.BATCH_SIZE})')
 
+    parser.add_argument(
+        '--reset',
+        action='store_true',
+        help='reset the database before seeding')
+
     return parser.parse_args()
 
 
@@ -58,5 +63,9 @@ if __name__ == '__main__':
     years = parse_years(args.years)
     rows = -1 if args.rows is None else args.rows
     batch = Socrata.BATCH_SIZE if args.batch is None else args.batch
+    reset = args.reset
+
+    if reset:
+        db.reset()
 
     db.requests.add_years(years, rows_per_year=rows, batch_size=batch)
