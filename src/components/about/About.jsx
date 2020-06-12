@@ -11,7 +11,6 @@ import HeroImage from './HeroImage';
 import WhatIs311Data from './WhatIs311Data';
 import HowItWorks from './HowItWorks';
 
-
 const About = ({
   disableSplash,
 }) => {
@@ -44,7 +43,6 @@ const About = ({
     </div>
   );
 };
-
 
 const mapDispatchToProps = dispatch => ({
   disableSplash: () => dispatch(disableSplashPage()),
