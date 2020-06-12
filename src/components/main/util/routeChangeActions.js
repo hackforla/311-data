@@ -3,7 +3,6 @@ import Mixpanel from '@utils/Mixpanel';
 import { acceptCookies, disableSplashPage } from '@reducers/ui';
 import store from '../../../redux/store';
 
-
 const handleReferralCode = (
   location,
   history,
@@ -42,7 +41,6 @@ const handleSplashPageView = location => {
     store.dispatch(disableSplashPage());
   }
 };
-
 
 export default [
   handleReferralCode,

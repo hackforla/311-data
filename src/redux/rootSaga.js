@@ -5,7 +5,6 @@ import data from './sagas/data';
 import comparisonData from './sagas/comparisonData';
 import analytics from './sagas/analytics';
 
-
 export default function* rootSaga() {
   yield all([
     metadata(),
