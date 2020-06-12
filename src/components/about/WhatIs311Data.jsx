@@ -51,11 +51,11 @@ const WhatIs311Data = forwardRef((props, ref) => (
       .
       {' '}
       The 311 Data project makes navigating the wealth of 311 data easier using an open source
-      application built and maintained by volunteers throughout our community. 
-      <br>
-      Much like the neighborhoods we serve, our volunteers are professionals that work hard to 
-      empower their communities and gain expereince that can be applied in the workforce. 
-      This symbiotic the partnership is ongoing serves to develop ideas for additional applications, 
+      application built and maintained by volunteers throughout our community.
+      <br />
+      Much like the neighborhoods we serve, our volunteers are professionals that work hard to
+      empower their communities and gain experience that can be applied in the workforce.
+      This symbiotic the partnership is ongoing serves to develop ideas for additional applications,
       like our
       {' '}
       <a href="https://hackforla.github.io/311-report/">Report Tool Alpha</a>
