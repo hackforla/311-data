@@ -65,3 +65,7 @@ class Socrata:
 class Slack:
     WEBHOOK_URL = env('SLACK_WEBHOOK_URL')
     ERROR_CODES = env('SLACK_ERROR_CODES', to.LIST_OF_INTS)
+
+
+class Sendgrid:
+    API_KEY = env('SENDGRID_API_KEY')
