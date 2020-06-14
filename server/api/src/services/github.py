@@ -41,7 +41,8 @@ async def create_issue(title,
             response.raise_for_status()
             response_content = loads(response.content)
             issue_id = response_content['id']
-            return issue_id
+            issue_number = response_content['number']
+            return issue_id, issue_number
         except requests.exceptions.HTTPError as errh:
             return errh
         except requests.exceptions.ConnectionError as errc:
