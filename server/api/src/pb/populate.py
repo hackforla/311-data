@@ -1,5 +1,6 @@
 import db
 from .create_table import create_table
+from .data_access import clear_stage, commit_pb
 from settings import Picklebase
 
 
@@ -51,5 +52,7 @@ def create_vis_table():
 
 
 def populate():
+    clear_stage()
     create_map_table()
     create_vis_table()
+    commit_pb()

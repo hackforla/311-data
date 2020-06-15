@@ -1,6 +1,6 @@
 from .query import query as query_pb
 from .populate import populate as populate_pb
-from .data_access import clear_data, set_ready, check_ready
+from .data_access import clear_data as clear_pb, check_ready
 from settings import Picklebase
 from utils.log import log, log_heading
 
@@ -33,9 +33,7 @@ def populate():
 
     try:
         log_heading('populating picklebase', spacing=(1, 0))
-        clear_data()
         populate_pb()
-        set_ready()
         log('\nPicklebase ready.')
     except Exception as e:
         enabled = False
@@ -47,3 +45,7 @@ def populate():
 
 def query(table, fields, filters):
     return query_pb(table, fields, filters)
+
+
+def clear_data():
+    clear_pb()
