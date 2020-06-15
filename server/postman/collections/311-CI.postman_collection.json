@@ -413,13 +413,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/comparison/frequency",
+					"raw": "{{base_url}}/comparison/counts",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"comparison",
-						"frequency"
+						"counts"
 					]
 				}
 			},
@@ -685,13 +685,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/comparison/frequency",
+					"raw": "{{base_url}}/comparison/counts",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"comparison",
-						"frequency"
+						"counts"
 					]
 				}
 			},
