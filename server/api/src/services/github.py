@@ -41,15 +41,16 @@ async def create_issue(title,
             response.raise_for_status()
             response_content = loads(response.content)
             issue_id = response_content['id']
-            return issue_id
+            issue_number = response_content['number']
+            return issue_id, issue_number
         except requests.exceptions.HTTPError as errh:
-            return errh
+            raise errh
         except requests.exceptions.ConnectionError as errc:
-            return errc
+            raise errc
         except requests.exceptions.Timeout as errt:
-            return errt
+            raise errt
         except requests.exceptions.RequestException as err:
-            return err
+            raise err
 
 
 async def add_issue_to_project(issue_id, content_type='Issue'):
@@ -79,10 +80,10 @@ async def add_issue_to_project(issue_id, content_type='Issue'):
             response.raise_for_status()
             return response.status_code
         except requests.exceptions.HTTPError as errh:
-            return errh
+            raise errh
         except requests.exceptions.ConnectionError as errc:
-            return errc
+            raise errc
         except requests.exceptions.Timeout as errt:
-            return errt
+            raise errt
         except requests.exceptions.RequestException as err:
-            return err
+            raise err

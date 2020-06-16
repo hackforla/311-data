@@ -6,7 +6,8 @@ from services import (
     comparison as comp_svc,
     github as github_svc,
     map as map_svc,
-    status as status_svc)
+    status as status_svc,
+    email as email_svc)
 
 
 async def index(request):
@@ -92,7 +93,8 @@ async def feedback(request):
         'title': to.req.STR,
         'body': to.req.STR})
 
-    issue_id = await github_svc.create_issue(args['title'], args['body'])
-    response = await github_svc.add_issue_to_project(issue_id)
+    id, number = await github_svc.create_issue(args['title'], args['body'])
+    await github_svc.add_issue_to_project(id)
+    await email_svc.respond_to_feedback(args['body'], number)
 
-    return json(response)
+    return json({'success': True})
