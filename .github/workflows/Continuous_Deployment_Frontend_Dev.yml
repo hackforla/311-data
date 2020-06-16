@@ -1,4 +1,4 @@
-name: DevDeployCI
+name: DevDeploy
 on:
   push:
     branches:
@@ -24,8 +24,6 @@ jobs:
         echo GITHUB_SHA=${{ github.sha }} >> .env
     - name: Build project
       run: npm run build
-    - name: Run Tests
-      run: export CI=true && npm run test -- --coverage
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
