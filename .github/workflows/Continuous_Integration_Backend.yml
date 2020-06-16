@@ -1,26 +1,34 @@
 name: Dev_CI_Backend
-on: [pull_request]
+
+on:
+  pull_request:
+    paths:
+      - 'server/**'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: server
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.7]
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        sudo apt install libpq-dev python3-dev
-        python -m pip install --upgrade pip
-        pip install -r server/api/requirements.txt
-        cp server/.env.example server/api/.env
-    - name: Lint with flake8
-      run: flake8 server
-    # disabled until we have a test DB to connect to
-    # - name: Test with pytest
-    #   run: pytest server
+      - uses: actions/checkout@v2
+
+      - name: Install and Run Api
+        run: |
+          cp .env.example .env
+          echo SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }} >> .env
+          docker-compose up --no-start api
+          docker-compose run api python bin/db_seed.py --years 2020 --rows 500 --reset
+          docker-compose up -d api
+
+      - name: Linting
+        run: docker-compose run api flake8
+
+      - name: Unit Tests
+        run: docker-compose run api pytest
+
+      - name: Postman Tests
+        run: chmod +x postman/test.sh && postman/test.sh

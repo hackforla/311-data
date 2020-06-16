@@ -20,10 +20,10 @@ routes = {
         ['GET', 'HEAD'], R.status.api),
 
     '/status/sys': (
-        ['GET', 'HEAD'], R.status.sys),
+        ['GET'], R.status.sys),
 
     '/status/db': (
-        ['GET', 'HEAD'], R.status.db),
+        ['GET'], R.status.db),
 
     '/servicerequest/<srnumber>': (
         ['GET'], R.request_detail),

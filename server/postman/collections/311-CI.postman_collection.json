@@ -1,0 +1,724 @@
+{
+	"info": {
+		"_postman_id": "086080e5-c63f-4313-8818-651d0a8bedeb",
+		"name": "311-CI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3d4ca159-53fa-4ebd-a748-7b34314b484d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}",
+					"host": [
+						"{{base_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/status/api",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7a73f45a-6eec-4204-9b7c-3607859381e2",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/status/api",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"status",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/servicerequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0ffe8438-1ba1-4d7d-9f00-ecec86286dc4",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/servicerequest/1-1583501221",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"servicerequest",
+						"1-1583501221"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/map/clusters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "874a8e2e-ebd0-414d-9ee5-81992dd5b352",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2019-01-01\",\n\t\"endDate\": \"2020-06-01\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\", \"Dead Animal Removal\"],\n\t\"ncList\": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20],\n\t\"zoom\": 14,\n\t\"bounds\": {\n\t\t\"north\": 90,\n\t\t\"south\": -90,\n\t\t\"west\": -180,\n\t\t\"east\": 180\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/map/clusters",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"map",
+						"clusters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/map/heat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "56817d4c-d21f-4b88-8284-fd5cfeb0f727",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2020-05-01\",\n\t\"endDate\": \"2020-06-02\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\", \"Dead Animal Removal\"],\n\t\"ncList\": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/map/heat",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"map",
+						"heat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/visualizations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ced42e4a-38f6-4a3e-b675-3b57903ac27a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2020-02-01\",\n\t\"endDate\": \"2020-05-15\",\n\t\"requestTypes\": {{all_request_types}},\n\t\"ncList\": [4, 5, 6]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/visualizations",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"visualizations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/comparison/frequency",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e747ba5c-ade7-4d92-9091-af25a8cd3533",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2020-01-24\",\n\t\"endDate\": \"2020-05-24\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\"],\n\t\"set1\": {\n\t\t\"district\": \"nc\",\n\t\t\"list\": [4, 8, 10, 11, 12, 13, 14, 15, 16]\n\t},\n\t\"set2\": {\n\t\t\"district\": \"cc\",\n\t\t\"list\": [7, 8, 9, 10]\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/comparison/frequency",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"comparison",
+						"frequency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/comparison/timetoclose",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d2e5c7f3-23e7-4406-953d-6bfaee5ac538",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2020-01-24\",\n\t\"endDate\": \"2020-05-24\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\"],\n\t\"set1\": {\n\t\t\"district\": \"nc\",\n\t\t\"list\": [4, 6, 7, 10, 15, 20, 30]\n\t},\n\t\"set2\": {\n\t\t\"district\": \"cc\",\n\t\t\"list\": [7, 10, 15, 20, 30]\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/comparison/timetoclose",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"comparison",
+						"timetoclose"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/comparison/counts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4f35b717-52c3-4e13-b896-95ad35b1da93",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2019-01-24\",\n\t\"endDate\": \"2020-03-24\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\"],\n\t\"set1\": {\n\t\t\"district\": \"nc\",\n\t\t\"list\": [4]\n\t},\n\t\"set2\": {\n\t\t\"district\": \"cc\",\n\t\t\"list\": [7]\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/comparison/counts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"comparison",
+						"counts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/invalid-endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "27f722cc-4d1c-46c0-b908-448c3825623d",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/invalid-endpoint",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"invalid-endpoint"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/status/api -- invalid method",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1284655d-dbf4-47be-bead-9691faa9e9e3",
+						"exec": [
+							"pm.test(\"Status code is 405\", function () {",
+							"    pm.response.to.have.status(405);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/status/api",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"status",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/map/clusters -- invalid ncList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eaf88891-878e-4ab6-b1bf-b03101326461",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2019-01-01\",\n\t\"endDate\": \"2020-06-01\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\", \"Dead Animal Removal\"],\n\t\"ncList\": \"4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20\",\n\t\"zoom\": 14,\n\t\"bounds\": {\n\t\t\"north\": 90,\n\t\t\"south\": -90,\n\t\t\"west\": -180,\n\t\t\"east\": 180\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/map/clusters",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"map",
+						"clusters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/visualizations -- missing startDate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7b817388-1582-4ae6-a528-55cd117e6e85",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"endDate\": \"06/20/20\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\"],\n\t\"ncList\": [4, 5, 6]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/visualizations",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"visualizations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/comparison/frequency -- invalid cc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b9124b20-d2fc-4207-bf57-43be22772f69",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2020-01-24\",\n\t\"endDate\": \"2020-05-24\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\"],\n\t\"set1\": {\n\t\t\"district\": \"nc\",\n\t\t\"list\": [4, 8, 10, 11, 12, 13, 14, 15, 16]\n\t},\n\t\"set2\": {\n\t\t\"district\": \"cc\",\n\t\t\"list\": [7, 8, 9, 10, \"District 1\"]\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/comparison/frequency",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"comparison",
+						"frequency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/comparison/counts -- invalid district",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4bfd4f4b-3f04-4208-909b-273fec1fff04",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2019-01-24\",\n\t\"endDate\": \"2020-03-24\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\"],\n\t\"set1\": {\n\t\t\"district\": \"dd\",\n\t\t\"list\": [4]\n\t},\n\t\"set2\": {\n\t\t\"district\": \"cc\",\n\t\t\"list\": [7]\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/comparison/counts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"comparison",
+						"counts"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "02a8fc97-0af5-480f-b8c4-5cb5cdde5911",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "3e303a6b-f3ec-4a96-8b10-d547c8194109",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
