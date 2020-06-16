@@ -2,18 +2,13 @@ name: DevDeployCI
 on:
   push:
     branches:
-      - 656-FRONT-continuousDeployment
-# env:
-  # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  # AWS_DEFAULT_REGION: 'us-east-1'
-  # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - dev
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Check-out Repository Code
+    - name: Checkout Repository Code
       uses: actions/checkout@v1
     - name: Rebuild sass
       run: npm rebuild node-sass
@@ -22,7 +17,7 @@ jobs:
     - name: Setup environment
       run: |
         echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
-        echo DB_URL=${{ secrets.DB_URL }} >> .env
+        echo DB_URL=${{ secrets.SERVER_URL_DEV }} >> .env
         echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> .env
         echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> .env
         echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env
@@ -37,7 +32,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_CI_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_CI_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-    - name: Upload Development Build To S3
+    - name: Sync Development Build To S3
       run: |
         aws s3 sync dist s3://${{ secrets.S3_BUCKET_DEV }} --follow-symlinks --delete
     - name: Invalidate Cloudfront Cache
