@@ -1,0 +1,45 @@
+name: DevDeployCI
+on:
+  push:
+    branches:
+      - 656-FRONT-continuousDeployment
+# env:
+  # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # AWS_DEFAULT_REGION: 'us-east-1'
+  # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check-out Repository Code
+      uses: actions/checkout@v1
+    - name: Rebuild sass
+      run: npm rebuild node-sass
+    - name: Install Packages
+      run: npm install
+    - name: Setup environment
+      run: |
+        echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
+        echo DB_URL=${{ secrets.DB_URL }} >> .env
+        echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> .env
+        echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> .env
+        echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env
+        echo GITHUB_SHA=${{ github.sha }} >> .env
+    - name: Build project
+      run: npm run build
+    - name: Run Tests
+      run: export CI=true && npm run test -- --coverage
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - name: Upload Development Build To S3
+      run: |
+        aws s3 sync dist s3://${{ secrets.S3_BUCKET_DEV }} --follow-symlinks --delete
+    - name: Invalidate Cloudfront Cache
+      run: |
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.CDN_DISTRIBUTION_ID_DEV }} --paths "/*"
