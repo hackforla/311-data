@@ -1,0 +1,45 @@
+.privacy-policy-container {
+  position: absolute;
+  top: $header-height;
+  bottom: $footer-height;
+  overflow-y: auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-left: 25%;
+  padding-right: 25%;
+  background-color: $brand-bg-color;
+  color: $brand-text-color;
+
+  h1, h2, h3 {
+    font-family: $brand-text-family;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 18px;
+    margin-top: 25px;
+  }
+
+  p {
+    margin-top: 12px;
+  }
+
+  section {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  ul {
+    list-style-type: disc;
+    li {
+      margin: 12px;
+    }
+  }
+
+  .sub-list {
+    list-style-type: circle;
+  }
+}

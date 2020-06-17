@@ -12,9 +12,9 @@ export const types = {
   DESELECT_ALL_COMPARISON_REQUEST_TYPES: 'DESELECT_ALL_COMPARISON_REQUEST_TYPES',
 };
 
-export const updateComparisonStartDate = newStartDate => ({
+export const updateComparisonStartDate = ({ dateRange, startDate }) => ({
   type: types.UPDATE_COMPARISON_START_DATE,
-  payload: newStartDate,
+  payload: { dateRange, startDate },
 });
 
 export const updateComparisonEndDate = newEndDate => ({
@@ -70,6 +70,7 @@ const allRequestTypes = value => (
 );
 
 const initialState = {
+  dateRange: null,
   startDate: null,
   endDate: null,
   comparison: {
@@ -89,9 +90,11 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.UPDATE_COMPARISON_START_DATE: {
+      const { dateRange, startDate } = action.payload;
       return {
         ...state,
-        startDate: action.payload,
+        startDate,
+        dateRange,
       };
     }
     case types.UPDATE_COMPARISON_END_DATE: {

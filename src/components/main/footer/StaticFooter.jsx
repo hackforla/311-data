@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const StaticFooter = () => (
   <footer className="navbar has-navbar-fixed-bottom">
@@ -11,11 +12,7 @@ const StaticFooter = () => (
       <span className="empowerla">EmpowerLA</span>
     </div>
     <div className="static-footer level-right">
-      {/* **** NEED TO REPLACE HREF WITH VALID LINK WHEN AVAILABLE **** */}
-      <a href="/">Terms & Conditions</a>
-      &nbsp; | &nbsp;
-      {/* **** NEED TO REPLACE HREF WITH VALID LINK WHEN AVAILABLE **** */}
-      <a href="/">Privacy Policy</a>
+      <Link to="/privacy">Privacy Policy</Link>
     </div>
   </footer>
 );

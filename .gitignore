@@ -38,7 +38,6 @@ config.js
 .env
 settings.cfg
 
-docker-compose.yml
 Orchestration/docker-compose.yml
 
 __pycache__/
@@ -46,6 +45,7 @@ __pycache__/
 # csv files
 /dataAnalysis/datasets
 /server/src/static
+__tmp__
 
 # checkpoints
 /dataAnalysis/.ipynb_checkpoints
