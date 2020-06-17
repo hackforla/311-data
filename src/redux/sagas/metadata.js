@@ -12,7 +12,7 @@ import {
 } from '../reducers/metadata';
 
 function* getMetadata() {
-  const url = `${process.env.DB_URL}/apistatus`;
+  const url = `${process.env.DB_URL}/status/api`;
   try {
     const { data } = yield call(axios.get, url);
     yield put(getMetadataSuccess(data));

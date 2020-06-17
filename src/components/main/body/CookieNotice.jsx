@@ -7,7 +7,6 @@ import { acceptCookies } from '@reducers/ui';
 import Button from '@components/common/Button';
 import Icon from '@components/common/Icon';
 
-
 const CookieNotice = ({
   showCookieNotice,
   acceptCookieNotice,

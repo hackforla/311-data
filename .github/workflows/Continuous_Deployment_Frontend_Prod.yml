@@ -1,0 +1,61 @@
+name: MasterDeploy
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v1
+    - name: Rebuild sass
+      run: npm rebuild node-sass
+    - name: Install Packages
+      run: npm install
+    - name: Setup environment
+      run: |
+        echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
+        echo DB_URL=${{ secrets.DB_URL }} >> .env
+        echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> .env
+        echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> .env
+        echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env
+        echo GITHUB_SHA=${{ github.sha }} >> .env
+    - name: Build project
+      run: npm run build
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_CI_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_CI_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - name: Sync Production Build To S3
+      run: |
+        aws s3 sync dist s3://${{ secrets.S3_BUCKET_PROD }} --follow-symlinks --delete
+    - name: Invalidate Cloudfront Cache
+      run: |
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.CDN_DISTRIBUTION_ID_PROD }} --paths "/*"
+
+  #  - name: Terraform Init
+  #    uses: hashicorp/terraform-github-actions@master
+  #    with:
+  #      tf_actions_version: ${{ env.tf_version }}
+  #      tf_actions_working_dir: ${{ env.tf_working_dir }}
+  #      tf_actions_subcommand: 'init'
+  #  - name: Terraform Validate
+  #    uses: hashicorp/terraform-github-actions@master
+  #    with:
+  #      tf_actions_version: ${{ env.tf_version }}
+  #      tf_actions_working_dir: ${{ env.tf_working_dir }}
+  #      tf_actions_subcommand: 'validate'
+  #      tf_actions_comment: true
+  #   - name: Terraform Apply
+  #     uses: hashicorp/terraform-github-actions@master
+  #     with:
+  #       tf_actions_version: ${{ env.tf_version }}
+  #       tf_actions_working_dir: ${{ env.tf_working_dir }}
+  #       tf_actions_subcommand: 'apply'
+  #       tf_actions_comment: true
