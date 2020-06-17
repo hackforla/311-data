@@ -20,7 +20,7 @@ jobs:
           script: |
             set -e
             cd 311-data/server
-            git pull
+            sudo git pull
             echo GITHUB_SHA=${{ github.sha }} >> .env
             docker-compose build api
             docker-compose up --no-deps -d api
