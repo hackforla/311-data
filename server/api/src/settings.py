@@ -17,6 +17,7 @@ class Server:
     AUTO_RELOAD = env('AUTO_RELOAD', to.BOOL)
     WORKERS = env('WORKERS', to.INT)
     TMP_DIR = env('TMP_DIR', to.ABS_PATH)
+    UPDATE_ON_START = env('UPDATE_ON_START', to.BOOL)
 
 
 class Database:
