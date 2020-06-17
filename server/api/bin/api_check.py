@@ -72,6 +72,7 @@ def show_db_contents():
 if __name__ == '__main__':
     from utils.log import log_heading
     import time
+    from settings import Server
 
     time.sleep(1)
 
@@ -82,11 +83,12 @@ if __name__ == '__main__':
     # log_heading('database contents')
     # show_db_contents()
 
-    import pb
-    if not pb.enabled:
-        pb.clear_data()
-    elif not pb.available():
-        pb.populate()
+    if not Server.UPDATE_ON_START:
+        import pb
+        if not pb.enabled:
+            pb.clear_data()
+        elif not pb.available():
+            pb.populate()
 
     from utils.settings import log_settings
     log_heading('settings')
