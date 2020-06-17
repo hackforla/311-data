@@ -27,7 +27,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         registry: docker.pkg.github.com
         dockerfile: server/api/Dockerfile
-        context: server
+        context: server/api
         tags: "latest, ${{github.sha}}"
     - name: Login to heroku
       env:
@@ -37,7 +37,7 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: |
-        docker tag docker.pkg.github.com/hackforla/311-data/api:${{github.sha}} registry.heroku.com/hackforla-311/web
+        docker tag docker.pkg.github.com/hackforla/311-data/backend:${{github.sha}} registry.heroku.com/hackforla-311/web
         docker push registry.heroku.com/hackforla-311/web
     - name: Release
       env:
