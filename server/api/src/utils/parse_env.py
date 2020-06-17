@@ -30,7 +30,7 @@ class to:
             if os.path.isabs(value):
                 return value
             else:
-                value = os.path.join(os.getcwd(), value)
+                value = os.path.join(os.path.dirname(__file__), '../..', value)
                 return os.path.normpath(value)
 
         return value
