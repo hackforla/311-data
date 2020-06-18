@@ -39,6 +39,7 @@ class Picklebase:
 
 class Picklecache:
     ENABLED = env('PICKLECACHE_ENABLED', to.BOOL)
+    TTL_SECONDS = env('PICKLECACHE_TTL_SECONDS', to.INT)
 
 
 class Github:
