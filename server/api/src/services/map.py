@@ -2,7 +2,13 @@ import pysupercluster
 import hashlib
 import json
 import cache
+import pandas as pd
+from os.path import join, dirname
 from . import requests
+
+
+CENTROIDS_FILE = join(dirname(__file__), '../../data/centroids.pkl')
+CENTROIDS = pd.read_pickle(CENTROIDS_FILE)
 
 
 def pins_key(filters):
@@ -80,6 +86,35 @@ async def clusters(startDate,
 
     pins = get_pins(filters)
     return get_clusters(pins, zoom, bounds, options)
+
+
+async def clusters2(startDate,
+                   endDate,
+                   requestTypes=[],
+                   ncList=[],
+                   zoom=0,
+                   bounds={},
+                   options={}):
+
+    # TODO: add caching
+
+    filters = {
+        'startDate': startDate,
+        'endDate': endDate,
+        'requestTypes': requestTypes,
+        'ncList': ncList}
+
+    df = requests.standard_query(['nc'], filters, table='map')
+    counts = df.groupby('nc').size()
+
+    out = pd.DataFrame(counts) \
+        .reset_index() \
+        .rename(columns={0: 'count'})
+    out['expansion_zoom'] = 14
+
+    return out.merge(CENTROIDS, on='nc') \
+        .rename(columns={'nc': 'id'}) \
+        .to_dict(orient='records')
 
 
 async def heatmap(startDate,

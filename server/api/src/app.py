@@ -29,7 +29,7 @@ routes = {
         ['GET'], R.request_detail),
 
     '/map/clusters': (
-        ['POST'], R.map.clusters),
+        ['POST'], R.map.clusters2),
 
     '/map/heat': (
         ['POST'], R.map.heat),

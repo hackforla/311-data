@@ -46,6 +46,18 @@ class map:
 
         return json(data)
 
+    async def clusters2(request):
+        data = await map_svc.clusters2(**to.parse(request.json, {
+            'startDate': to.req.DATE,
+            'endDate': to.req.DATE,
+            'requestTypes': to.opt.LIST_OF_STR,
+            'ncList': to.opt.LIST_OF_INT,
+            'zoom': to.opt.INT,
+            'bounds': to.opt.DICT_OF_FLOAT,
+            'options': to.opt.DICT_OF_INT}))
+
+        return json(data)
+
     async def heat(request):
         data = await map_svc.heatmap(**to.parse(request.json, {
             'startDate': to.req.DATE,
