@@ -3,7 +3,8 @@ dist/
 # Test results
 coverage/
 jmeter.log
-server/performanceStatistics/htmlReports/
+server/jmeter/out/
+server/jmeter/html/
 
 # dependencies
 /node_modules
