@@ -36,10 +36,15 @@ class ErrorHandler(EH):
         else:
             qs = '?{}'.format(request.query_string)
 
-        if request.json is None:
+        try:
+            json = request.json
+        except Exception:
+            json = None
+
+        if json is None:
             params = ''
         else:
-            params = '\n{}'.format(dumps(request.json, indent=2))
+            params = '\n{}'.format(dumps(json, indent=2))
 
         message = f"""
 ```
