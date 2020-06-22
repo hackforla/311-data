@@ -26,8 +26,7 @@ def get_engine(url):
         attempt = 0
         while True:
             try:
-                with engine.connect():
-                    pass
+                engine.connect()
             except Exception:
                 if attempt < ATTEMPTS:
                     log(f'Could not connect to DB, retrying in {DELAY}')
@@ -37,6 +36,7 @@ def get_engine(url):
 
                 fail('Cannot connect to database.')
             else:
+                engine.dispose()
                 return engine
 
 
