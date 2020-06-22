@@ -13,6 +13,8 @@ class log_colors:
 
 
 def log(message='', color=None, dedent=False):
+    message = str(message)
+
     if dedent:
         message = dedenter(message)
 
