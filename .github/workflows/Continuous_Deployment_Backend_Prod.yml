@@ -1,9 +1,9 @@
-name: Deploy_Backend_Dev
+name: Deploy_Backend_Prod
 
 on:
   push:
     branches:
-      - dev
+      - master
     paths:
       - 'server/**'
 
@@ -11,11 +11,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: run deploy script on AWS dev
+      - name: run deploy script on AWS prod
         uses: appleboy/ssh-action@master
         with:
           username: ec2-user
-          host: ${{ secrets.AWS_HOST_DEV }}
+          host: ${{ secrets.AWS_HOST_PROD }}
           key: ${{ secrets.AWS_PEM_KEY }}
           script: |
             set -e
