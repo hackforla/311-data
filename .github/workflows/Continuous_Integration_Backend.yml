@@ -1,4 +1,4 @@
-name: Dev_CI_Backend
+name: CI_Backend
 
 on:
   pull_request:
