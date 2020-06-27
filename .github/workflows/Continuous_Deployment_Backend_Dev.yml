@@ -15,8 +15,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           username: ec2-user
-          host: ${{ secrets.AWS_HOST_DEV }}
-          key: ${{ secrets.AWS_PEM_KEY }}
+          host: ${{ secrets.AWS_SSH_HOST_DEV }}
+          key: ${{ secrets.AWS_SSH_PEM_KEY }}
           script: |
             set -e
             cd 311-data/server
