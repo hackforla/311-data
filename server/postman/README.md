@@ -16,8 +16,9 @@ Click the Import button at the top left, select "Folder" from the tabs, and then
   - **311-all**: a collection containing all of the endpoints that the api currently supports, with prepopulated params for each api call.
   - **311-CI**: a collection containing all of the tests we run during continuous integration. These include tests for bad input -- e.g., a missing required param should return 400, an unsupported endpoint should return a 404.
 
-The import will also add two environments:
+The import will also add three environments:
   - **311-local**: all api calls go to your local server (which should be running)
+  - **311-dev**: api calls go to the dev server
   - **311-prod**: api calls go to the production server
 
 ### 4. Activate the `311-local` environment.

@@ -2,7 +2,7 @@ name: Daily_Backend_Update
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 7 * * *'
 
 jobs:
   dev_update:
@@ -12,8 +12,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           username: ec2-user
-          host: ${{ secrets.AWS_HOST_DEV }}
-          key: ${{ secrets.AWS_PEM_KEY }}
+          host: ${{ secrets.AWS_SSH_HOST_DEV }}
+          key: ${{ secrets.AWS_SSH_PEM_KEY }}
           command_timeout: 60m
           script: |
             set -e
@@ -27,8 +27,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           username: ec2-user
-          host: ${{ secrets.AWS_HOST_PROD }}
-          key: ${{ secrets.AWS_PEM_KEY }}
+          host: ${{ secrets.AWS_SSH_HOST_PROD }}
+          key: ${{ secrets.AWS_SSH_PEM_KEY }}
           command_timeout: 60m
           script: |
             set -e
