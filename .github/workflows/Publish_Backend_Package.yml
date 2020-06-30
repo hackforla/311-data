@@ -1,8 +1,8 @@
 name: PublishBackendImage
 on:
   push:
-    branches:
-      - master
+    branches-ignore:
+      - '**'
 
 jobs:
   build:
@@ -47,4 +47,4 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: |
-        heroku config:set -a hackforla-311 GITHUB_PROJECT_URL=${{ secrets.PROJECT_URL }} GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }} SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }} GITHUB_SHA=${{ github.sha }}
+        heroku config:set -a hackforla-311 GITHUB_PROJECT_URL=${{ secrets.GH_PROJECT_URL }} GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }} SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }} GITHUB_SHA=${{ github.sha }}

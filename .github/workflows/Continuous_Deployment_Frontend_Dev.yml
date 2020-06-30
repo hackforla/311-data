@@ -1,4 +1,5 @@
-name: DevDeploy
+name: Deploy_Frontend_Dev
+
 on:
   push:
     branches:
@@ -19,7 +20,7 @@ jobs:
     - name: Setup environment
       run: |
         echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
-        echo DB_URL=${{ secrets.SERVER_URL_DEV }} >> .env
+        echo DB_URL=${{ secrets.API_URL_DEV }} >> .env
         echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> .env
         echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> .env
         echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env
