@@ -72,7 +72,9 @@ module.exports = {
     ],
   },
   plugins: [
-    new Dotenv(),
+    new Dotenv({
+      path: 'src/.env',
+    }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       title: '311-Data',

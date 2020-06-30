@@ -4,7 +4,7 @@ const tests = require('./tests');
 
 ////////////////// CONFIG /////////////////////
 
-const API_URL = process.env.DB_URL;
+const { API_URL } = process.env;
 const CALLS_PER_TEST = 5;
 
 ////////////////// HELPERS ////////////////////
