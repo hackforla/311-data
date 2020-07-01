@@ -72,10 +72,13 @@ module.exports = {
     ],
   },
   plugins: [
-    new Dotenv(),
+    new Dotenv({
+      path: 'src/.env',
+    }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       title: '311-Data',
+      favicon: './public/favicon.png',
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',

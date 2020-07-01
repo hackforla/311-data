@@ -112,11 +112,11 @@ ComparisonCriteria.propTypes = {
   sets: PropTypes.shape({
     set1: PropTypes.shape({
       district: PropTypes.string,
-      list: PropTypes.array,
+      list: PropTypes.arrayOf(PropTypes.string),
     }),
     set2: PropTypes.shape({
       district: PropTypes.string,
-      list: PropTypes.array,
+      list: PropTypes.arrayOf(PropTypes.string),
     }),
   }).isRequired,
   requestTypes: PropTypes.shape({}).isRequired,

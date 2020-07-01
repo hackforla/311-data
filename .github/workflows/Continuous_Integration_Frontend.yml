@@ -16,8 +16,10 @@ jobs:
       run: npm run lint
     - name: Setup environment
       run: |
-        echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
-        echo DB_URL=${{ secrets.API_URL_PROD }} >> .env
+        echo MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
+        echo MAPBOX_STREETS_URL=${{ secrets.MAPBOX_STREETS_URL }} > .env
+        echo MAPBOX_SATELLITE_URL=${{ secrets.MAPBOX_SATELLITE_URL }} > .env
+        echo API_URL=${{ secrets.API_URL_PROD }} >> .env
         echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> .env
         echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> .env
         echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env

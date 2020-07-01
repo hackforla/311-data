@@ -44,8 +44,8 @@ class PinMap extends Component {
     this.state = {
       position: [34.0094213, -118.6008506],
       zoom: 10,
-      mapUrl: `https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
-      satelliteUrl: `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
+      streetsLayerUrl: `${process.env.MAPBOX_STREETS_URL}?access_token=${process.env.MAPBOX_TOKEN}`,
+      satelliteLayerUrl: `${process.env.MAPBOX_SATELLITE_URL}?access_token=${process.env.MAPBOX_TOKEN}`,
       geoJSON: ncOverlay,
       bounds: null,
       ready: false,
@@ -223,8 +223,8 @@ class PinMap extends Component {
     const {
       position,
       zoom,
-      mapUrl,
-      satelliteUrl,
+      streetsLayerUrl,
+      satelliteLayerUrl,
       bounds,
       geoJSON,
       width,
@@ -274,13 +274,13 @@ class PinMap extends Component {
           >
             <BaseLayer checked name="Streets">
               <TileLayer
-                url={mapUrl}
+                url={streetsLayerUrl}
                 attribution="MapBox"
               />
             </BaseLayer>
             <BaseLayer name="Satellite">
               <TileLayer
-                url={satelliteUrl}
+                url={satelliteLayerUrl}
                 attribution="MapBox"
               />
             </BaseLayer>

@@ -5,7 +5,7 @@ const token = envCheck ? process.env.MIXPANEL_TOKEN_PROD : process.env.MIXPANEL_
 
 // Set MIXPANEL_ENABLED env variable to:
 //   1 or greater to enable Mixpanel logging
-//  -1 to disable Mixpanel logging
+//   0 to disable Mixpanel logging
 const mixpanelEnabled = process.env.MIXPANEL_ENABLED > 0;
 
 if (mixpanelEnabled) {
