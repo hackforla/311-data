@@ -2,10 +2,12 @@ name: Deploy_Frontend_Dev
 
 on:
   push:
+    # branches:
+    #   - dev
+    # paths:
+    #   - 'src/**'
     branches:
-      - dev
-    paths:
-      - 'src/**'
+      - FRONT-envCleanup
 
 jobs:
   build:
@@ -20,8 +22,8 @@ jobs:
     - name: Setup environment
       run: |
         echo MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > src/.env
-        echo MAPBOX_STREETS_URL=${{ secrets.MAPBOX_STREETS_URL }} > src/.env
-        echo MAPBOX_SATELLITE_URL=${{ secrets.MAPBOX_SATELLITE_URL }} > src/.env
+        echo MAPBOX_STREETS_URL=${{ secrets.MAPBOX_STREETS_URL }} >> src/.env
+        echo MAPBOX_SATELLITE_URL=${{ secrets.MAPBOX_SATELLITE_URL }} >> src/.env
         echo API_URL=${{ secrets.API_URL_DEV }} >> src/.env
         echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> src/.env
         echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> src/.env
