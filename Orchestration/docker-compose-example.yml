@@ -31,7 +31,7 @@ services:
    environment:
      MAPBOX_TOKEN: REDACTED
      API_URL: http://localhost:5000
-     MIXPANEL_ENABLED: -1
+     MIXPANEL_ENABLED: 0
      MIXPANEL_TOKEN_PROD: REDACTED
      MIXPANEL_TOKEN_DEV: REDACTED
    ports:
