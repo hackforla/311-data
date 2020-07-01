@@ -30,6 +30,8 @@ services:
    container_name: "311-frontend"
    environment:
      MAPBOX_TOKEN: REDACTED
+     MAPBOX_STREETS_URL: REDACTED
+     MAPBOX_SATELLITE_URL: REDACTED
      API_URL: http://localhost:5000
      MIXPANEL_ENABLED: 0
      MIXPANEL_TOKEN_PROD: REDACTED
