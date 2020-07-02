@@ -61,6 +61,9 @@ If you decide later that you need more data, just run the command again with the
   - #### Postman
 [Postman](https://www.postman.com/) is an api-development tool that lets you save api requests so you can run them over and over without having to remember what all the parameters are (or use the awkward syntax of `curl`). You can also group api calls together in collections, and run all of the api calls in a collection at once -- which is a great way to test the entire api. If you'd like to use it, see the README in `/server/postman`, which explains how to set it up with a collection that contains pre-defined api calls for all of our endpoints.
 
+  - #### Jmeter
+[Jmeter](https://jmeter.apache.org/) is a performance-focused api testing tool. It produces reports that show how the api performs when multiple users are using the app simultaneously. For more info, see the README in `/server/jmeter`.
+
 ### Useful commands
 ```
 docker-compose up                     # start the backend services
@@ -68,7 +71,7 @@ docker-compose up --build             # start the backend services after rebuild
 
 docker-compose run api bash           # log in to api shell
 docker-compose run api flake8         # lint your python code
-docker-compose run api pytest         # run unit tests against python code 
+docker-compose run api pytest         # run unit tests against python code
 ```
 
 ### Using the python interpreter
@@ -88,10 +91,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> db.requests.drop_years([2018])    # drop 2018
 >>> db.reset()                        # wipe the DB and recreate tables/views
 ```
-
-### Dev workflow
-
-
 
 ## Uninstall
 Run this command to remove all docker containers, images, volumes, and networks that are specific to this project. It will leave in place generic docker assets (like the `postgres` and `python` images) that you may be using for other purposes.
