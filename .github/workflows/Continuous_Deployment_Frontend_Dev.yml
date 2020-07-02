@@ -2,12 +2,10 @@ name: Deploy_Frontend_Dev
 
 on:
   push:
-    # branches:
-    #   - dev
-    # paths:
-    #   - 'src/**'
     branches:
-      - FRONT-envCleanup
+      - dev
+    paths:
+      - 'src/**'
 
 jobs:
   build:
