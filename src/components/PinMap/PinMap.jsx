@@ -30,7 +30,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
-import ncOverlay from '../../data/nc-boundary-2019-centroid.json';
+import ncOverlay from '../../data/nc-boundary-2019.json';
 
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
@@ -112,7 +112,7 @@ class PinMap extends Component {
     this.setState({ zoomThresholdMet: (mapZoom >= zoomBreak) });
   }
 
-  onEachRegionFeature = (feature, layer) => {
+  onEachRegionFeatureMouseTooltip = (feature, layer) => {
     // Tooltip text when mousing over on a region
     const toolTipText = `
       <div class="overlay_feature_popup">
@@ -131,9 +131,10 @@ class PinMap extends Component {
     });
   }
 
-  onEachRegionFeatureNoTooltip = (feature, layer) => {
+  onEachRegionFeatureLabelTooltip = (feature, layer) => {
     const { name } = feature.properties;
     layer.bindTooltip(name, { permanent: true, direction: 'center' });
+    layer.bringToBack();
     layer.on({
       mouseover: this.highlightRegion,
       mouseout: this.resetRegionHighlight,
@@ -141,19 +142,6 @@ class PinMap extends Component {
     });
   }
 
-  // Not yet working. Need to figure out.
-  renderLabels = geoJSON => {
-    const labelmarkers = [];
-    for (let i = 0; i <= geoJSON.length - 1; i += 1) {
-      const latlng = [geoJSON[i].properties.centerLat, geoJSON[i].properties.centerLong];
-      const marker = divIcon({
-        className: 'nc-label',
-        html: 'THIS IS SOME TEXT',
-      });
-      labelmarkers.push(<Marker position={latlng} icon={marker} />);
-    }
-    return labelmarkers;
-  }
 
   renderMarkers = () => {
     const {
@@ -230,21 +218,6 @@ class PinMap extends Component {
         );
       });
     }
-
-    const tooltipPosition = [[34.0173157, -118.2497254], [34.1, -118.1497254]];
-
-    return (
-      <Rectangle bounds={tooltipPosition} color="black">
-        <Tooltip
-          permanent
-          direction="top"
-          offset={[0, 20]}
-          opacity={1}
-        >
-          No Data To Display
-        </Tooltip>
-      </Rectangle>
-    );
   }
 
   renderMap = () => {
@@ -318,7 +291,7 @@ class PinMap extends Component {
                       color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
-                    onEachFeature={this.onEachRegionFeature}
+                    onEachFeature={this.onEachRegionFeatureMouseTooltip}
                     ref={el => {
                       if (el) {
                         this.choropleth = el.leafletElement;
@@ -342,7 +315,7 @@ class PinMap extends Component {
                       color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
-                    onEachFeature={this.onEachRegionFeatureNoTooltip}
+                    onEachFeature={this.onEachRegionFeatureLabelTooltip}
                     ref={el => {
                       if (el) {
                         this.choropleth = el.leafletElement;
@@ -354,11 +327,7 @@ class PinMap extends Component {
                 </Overlay>
               )
             }
-            {/* <Overlay checked name="Neighborhood Council Labels">
-              <LayerGroup>
-                {this.renderLabels(geoJSON.features)}
-              </LayerGroup>
-            </Overlay> */}
+            
             <Overlay checked name="Markers">
               <LayerGroup>
                 {this.renderMarkers()}
