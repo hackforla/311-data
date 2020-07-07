@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SocialTags = require('social-tags-webpack-plugin');
 
-const env = process.env.NODE_ENV;
+const envUrl = process.env.NODE_ENV === 'production' ? 'https://311-data.org/' : 'http://dev.311-data.org/';
 
 module.exports = {
   entry: './src/index.js',
@@ -87,11 +87,11 @@ module.exports = {
       filename: '[name].css',
     }),
     new SocialTags({
-      appUrl: 'https://311-data.org/',
+      appUrl: envUrl,
       facebook: {
         // 'fb:app_id': '123456789',
         'og:type': 'website',
-        'og:url': env === 'production' ? 'https://311-data.org/' : 'http://dev.311-data.org/',
+        'og:url': envUrl,
         'og:title': '311-Data Neighborhood Engagement Tool',
         'og:image': './public/social-media-card-image.png',
         'og:description': 'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.',
@@ -101,7 +101,7 @@ module.exports = {
         // 'twitter:site': '@site_account',
         // 'twitter:creator': '@individual_account',
         'twitter:card': 'summary',
-        'twitter:url': env === 'production' ? 'https://311-data.org/' : 'http://dev.311-data.org/',
+        'twitter:url': envUrl,
         'twitter:title': '311-Data Neighborhood Engagement Tool',
         'twitter:description': 'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.',
         'twitter:image': './public/social-media-card-image.png',
