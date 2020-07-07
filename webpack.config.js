@@ -100,10 +100,10 @@ module.exports = {
       twitter: {
         // 'twitter:site': '@site_account',
         // 'twitter:creator': '@individual_account',
-        'twitter:card': 'summary',
+        'twitter:card': 'summary_large_image',
         'twitter:url': envUrl,
         'twitter:title': '311-Data Neighborhood Engagement Tool',
-        'twitter:description': 'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.',
+        'twitter:description': 'Hack for LA’s 311-Data Team has partnered with the LA Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide City of LA neighborhoods with actionable information at the local level.',
         'twitter:image': './public/social-media-card-image.png',
       },
     }),
