@@ -284,6 +284,8 @@ class PinMap extends Component {
               <TileLayer
                 url={satelliteLayerUrl}
                 attribution="MapBox"
+                tileSize={512}
+                zoomOffset={-1}
               />
             </BaseLayer>
             {
