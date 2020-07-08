@@ -3,11 +3,9 @@ name: Deploy_Frontend_Dev
 on:
   push:
     branches:
-      # - dev
-      - 680-FRONT-socialMediaTags
-    
-    # paths:
-    #   - 'src/**'
+      - dev
+    paths:
+      - 'src/**'
 
 jobs:
   build:
