@@ -17,7 +17,8 @@ import {
   ZoomControl,
   ScaleControl,
   withLeaflet,
-  LayerGroup
+  LayerGroup,
+  GridLayer
 } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Choropleth from 'react-leaflet-choropleth';
@@ -27,6 +28,7 @@ import COLORS from '@styles/COLORS';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import PrintControlDefault from 'react-leaflet-easyprint';
 import Button from '@components/common/Button';
+import {} from 'mapbox-gl-leaflet';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -38,6 +40,14 @@ const boundaryDefaultColor = COLORS.BRAND.MAIN;
 const boundaryHighlightColor = COLORS.BRAND.CTA1;
 
 const PrintControl = withLeaflet(PrintControlDefault);
+
+// https://stackoverflow.com/questions/42765309/render-mapbox-vector-tiles-inside-react-leaflet
+class MapBoxGLLayer extends GridLayer {
+  createLeafletElement(props) {
+    return L.mapboxGL(props);
+  }
+}
+const MapBoxGL = withLeaflet(MapBoxGLLayer);
 
 class PinMap extends Component {
   constructor(props) {
@@ -274,11 +284,15 @@ class PinMap extends Component {
             collapsed={false}
           >
             <BaseLayer checked name="Streets">
-              <TileLayer
+              {/*<TileLayer
                 url={streetsLayerUrl}
                 attribution="MapBox"
                 tileSize={512}
                 zoomOffset={-1}
+              />*/}
+              <MapBoxGL
+                accessToken={process.env.MAPBOX_TOKEN}
+                style="mapbox://styles/mapbox/streets-v11"
               />
             </BaseLayer>
             <BaseLayer name="Satellite">
