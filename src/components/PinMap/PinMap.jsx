@@ -17,6 +17,7 @@ import {
   ZoomControl,
   ScaleControl,
   withLeaflet,
+  LayerGroup
 } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Choropleth from 'react-leaflet-choropleth';
@@ -314,9 +315,11 @@ class PinMap extends Component {
               )
             }
             <Overlay checked name="Markers">
-              <MarkerClusterGroup maxClusterRadius={0}>
+              {/*<MarkerClusterGroup maxClusterRadius={0}>*/}
+              <LayerGroup>
                 {this.renderMarkers()}
-              </MarkerClusterGroup>
+              </LayerGroup>
+              {/*</MarkerClusterGroup>*/}
             </Overlay>
             <Overlay name="Heatmap">
               {/* intensityExtractor is required and requires a callback as the value.

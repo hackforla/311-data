@@ -16,7 +16,8 @@ const CustomMarker = ({
 }) => {
   const markerIcon = divIcon({
     className: 'custom-marker-icon',
-    html: renderToString(<Icon id="marker-icon" icon={icon} iconSize={size} style={{ color, ...style }} />),
+    html: renderToString(<div style={{ backgroundColor: color, width: 8, height: 8, borderRadius: '50%', ...style }} />),
+    //html: renderToString(<Icon id="marker-icon" icon={icon} iconSize={size} style={{ color, ...style }} />),
   });
 
   return (
