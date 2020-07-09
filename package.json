@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "homepage": "https://hackforla.github.io/311-data",
   "dependencies": {
+    "@mapbox/geojson-extent": "^0.3.2",
     "@react-pdf/renderer": "^1.6.8",
     "axios": "^0.19.0",
     "babel-jest": "^24.9.0",

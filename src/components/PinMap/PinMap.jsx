@@ -1,388 +1,314 @@
 import React, { Component } from 'react';
+import mapboxgl from 'mapbox-gl';
+mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 import { connect } from 'react-redux';
+import PropTypes from 'proptypes';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
-import { trackMapExport } from '@reducers/analytics';
-import PinPopup from '@components/PinMap/PinPopup';
-import CustomMarker from '@components/PinMap/CustomMarker';
-import ClusterMarker from '@components/PinMap/ClusterMarker';
-import HeatmapLegend from '@components/PinMap/HeatmapLegend';
-import ExportLegend from '@components/PinMap/ExportLegend';
-import {
-  Map,
-  TileLayer,
-  Rectangle,
-  Tooltip,
-  LayersControl,
-  ZoomControl,
-  ScaleControl,
-  withLeaflet,
-  LayerGroup,
-  GridLayer
-} from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
-import Choropleth from 'react-leaflet-choropleth';
-import HeatmapLayer from 'react-leaflet-heatmap-layer';
-import PropTypes from 'proptypes';
-import COLORS from '@styles/COLORS';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import PrintControlDefault from 'react-leaflet-easyprint';
-import Button from '@components/common/Button';
-import {} from 'mapbox-gl-leaflet';
-
-// import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
-// import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
-// import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 import ncOverlay from '../../data/nc-boundary-2019.json';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import geojsonExtent from '@mapbox/geojson-extent';
 
-const { BaseLayer, Overlay } = LayersControl;
-const boundaryDefaultColor = COLORS.BRAND.MAIN;
-const boundaryHighlightColor = COLORS.BRAND.CTA1;
+/////////////////// CONSTANTS ///////////////
 
-const PrintControl = withLeaflet(PrintControlDefault);
+const REQUEST_COLORS = Object.keys(REQUEST_TYPES).reduce((p, c) => {
+  return [...p, c, REQUEST_TYPES[c].color]
+}, []);
 
-// https://stackoverflow.com/questions/42765309/render-mapbox-vector-tiles-inside-react-leaflet
-class MapBoxGLLayer extends GridLayer {
-  createLeafletElement(props) {
-    return L.mapboxGL(props);
-  }
-}
-const MapBoxGL = withLeaflet(MapBoxGLLayer);
+///////////////////// MAP ///////////////////
 
 class PinMap extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      position: [34.0094213, -118.6008506],
-      zoom: 10,
-      streetsLayerUrl: `${process.env.MAPBOX_STREETS_URL}?access_token=${process.env.MAPBOX_TOKEN}`,
-      satelliteLayerUrl: `${process.env.MAPBOX_SATELLITE_URL}?access_token=${process.env.MAPBOX_TOKEN}`,
-      geoJSON: ncOverlay,
-      bounds: null,
-      ready: false,
-      width: null,
-      height: null,
-      markersVisible: true,
-      heatmapVisible: false,
-    };
-    this.container = React.createRef();
-  }
 
-  componentDidMount() {
-    this.setDimensions();
-    this.setState({ ready: true });
-    window.addEventListener('resize', this.setDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.setDimensions);
-  }
-
-  setDimensions = () => {
-    this.setState({
-      width: this.container.current.offsetWidth,
-      height: this.container.current.offsetHeight,
+  activeTypes = props => {
+    const active = [];
+    props.requestTypes.forEach((t, idx) => {
+      if (t.active)
+        active.push(idx);
     });
+    return active;
   }
 
-  highlightRegion = e => {
-    const layer = e.target;
-
-    layer.setStyle({
-      weight: 5,
-      color: boundaryHighlightColor,
-    });
-
-    layer.bringToFront();
+  typeFilter = props => {
+    return ['in', ['number', ['get', 'type']], ['literal', this.activeTypes(props)]];
   }
 
-  resetRegionHighlight = e => {
-    const layer = e.target;
-
-    layer.setStyle({
-      weight: 2,
-      opacity: 1,
-      color: boundaryDefaultColor,
-    });
+  startDateFilter = props => {
+    return [">=", ['number', ['get', 'date']], props.startDate];
   }
 
-  zoomToRegion = e => {
-    const bounds = e.target.getBounds();
-    this.setState({ bounds });
+  endDateFilter = props => {
+    return ["<=", ['number', ['get', 'date']], props.endDate];
   }
 
-  updatePosition = ({ target: map }) => {
+  filters = props => [
+    'all',
+    this.typeFilter(props),
+    this.startDateFilter(props),
+    this.endDateFilter(props)
+  ]
+
+  getRequests = () => ({
+    "type": "FeatureCollection",
+    "features": this.props.pinClusters.map(cluster => ({
+      "type": "Feature",
+      "properties": {
+        id: cluster.srnumber,
+        type: cluster.requesttype,
+        point_count: cluster.count
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          cluster.longitude,
+          cluster.latitude
+        ]
+      }
+    }))
+  });
+
+  updatePosition = map => {
     const { updatePosition } = this.props;
+    const bounds = map.getBounds();
+    const zoom = map.getZoom();
+    console.log('ZOOM:', zoom);
     updatePosition({
-      zoom: map.getZoom(),
-      bounds: map.getBounds(),
+      zoom,
+      bounds: {
+        _northEast: bounds.getNorthEast(),
+        _southWest: bounds.getSouthWest(),
+      },
     });
   }
 
-  onEachRegionFeature = (feature, layer) => {
-    // Popup text when clicking on a region
-    const popupText = `
-      <div class="overlay_feature_popup">
-        ${feature.properties.name}
-        <br />
-        ${feature.properties.service_re}
-      </div>
-    `;
-    layer.bindPopup(popupText);
+  //// CREATE ELEMENTS ////
 
-    // Sets mouseover/out/click event handlers for each region
-    layer.on({
-      mouseover: this.highlightRegion,
-      mouseout: this.resetRegionHighlight,
-      click: this.zoomToRegion,
+  createMap() {
+    return new mapboxgl.Map({
+      container: this.mapContainer,
+      style: 'mapbox://styles/mapbox/dark-v10',
+      center: [-118.6008506, 34.0094213],
+      zoom: 9,
+      pitchWithRotate: false,
+      dragRotate: false,
+      touchZoomRotate: false
     });
   }
+  //// GLOBALS ////
 
-  renderMarkers = () => {
-    const {
-      pinClusters,
-      getPinInfo,
-      pinsInfo,
-    } = this.props;
+  map;            // the map
+  hoveredNCId = null;
 
-    if (pinClusters) {
-      return pinClusters.map(({
-        id,
-        count,
-        latitude,
-        longitude,
-        expansion_zoom: expansionZoom,
-        srnumber,
-        requesttype,
-      }) => {
-        const position = [latitude, longitude];
+  //// MAP INITIALIZATION ////
 
-        if (count > 1) {
-          return (
-            <ClusterMarker
-              key={id}
-              position={position}
-              count={count}
-              onClick={({ latlng }) => {
-                this.map.flyTo(latlng, expansionZoom);
-              }}
-            />
+  onMapLoad = map => {
+
+    map.addSource('requests', {
+      type: 'geojson',
+      data: this.getRequests()
+    });
+
+    map.addSource('nc', {
+      type: 'geojson',
+      data: ncOverlay,
+      promoteId: 'nc_id'
+    });
+
+    map.addLayer({
+      id: 'nc-borders',
+      source: 'nc',
+      type: 'line',
+      paint: {
+        'line-color': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          '#FF0000',
+          '#000'
+        ]
+      }
+    });
+
+    map.addLayer({
+      id: 'nc-fills',
+      source: 'nc',
+      type: 'fill',
+      layout: {},
+      paint: {
+        'fill-color': '#627BC1',
+        'fill-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          0.8,
+          0.2
+        ]
+      }
+    });
+
+    map.on('moveend', event => {
+      this.updatePosition(map);
+      //console.log(map.getCanvas().toDataURL());
+    });
+
+    map.on('mousemove', event => {
+      if (map.loaded()) {
+        const features = map.queryRenderedFeatures(event.point, {
+          layers: ['nc-fills']
+        });
+
+        map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+
+        if (features.length) {
+          const { nc_id } = features[0].properties;
+          if (nc_id === this.hoveredNCId)
+            return;
+
+          // const sourceFeatures = map.querySourceFeatures('requests', {
+          //   filter: [
+          //     ...this.filters(this.props),
+          //     ['==', ['number', ['get', 'nc']], Number(nc_id)]
+          //   ],
+          //   // sourceLayer: 'requests-5K-8hyxj9',
+          //   // sourceLayer: 'requests-500K-7qk8nw'
+          // })
+          // const counts = this.props.requestTypes.map((el, idx) => 0);
+          // sourceFeatures.forEach(feat => counts[feat.properties.type] += 1)
+          // console.log(counts)
+
+          if (this.hoveredNCId) {
+            map.setFeatureState(
+              { source: 'nc', id: this.hoveredNCId },
+              { hover: false }
+            );
+          }
+          this.hoveredNCId = features[0].id;
+          map.setFeatureState(
+            { source: 'nc', id: this.hoveredNCId },
+            { hover: true }
           );
         }
+      }
+    });
 
-        const {
-          status,
-          createddate,
-          updateddate,
-          closeddate,
-          address,
-          ncname,
-        } = pinsInfo[srnumber] || {};
-        const { displayName, color, abbrev } = REQUEST_TYPES[requesttype];
-
-        const popup = (
-          <PinPopup
-            displayName={displayName}
-            color={color}
-            abbrev={abbrev}
-            address={address}
-            createdDate={createddate}
-            updatedDate={updateddate}
-            closedDate={closeddate}
-            status={status}
-            ncName={ncname}
-          />
+    map.on('mouseleave', 'nc-fills', () => {
+      if (this.hoveredNCId) {
+        map.setFeatureState(
+          { source: 'nc', id: this.hoveredNCId },
+          { hover: false }
         );
+      }
+      this.hoveredNCId = null;
+    });
 
-        return (
-          <CustomMarker
-            key={srnumber}
-            position={position}
-            onClick={() => {
-              if (!pinsInfo[srnumber]) {
-                getPinInfo(srnumber);
-              }
-            }}
-            color={color}
-            icon="map-marker-alt"
-            size="3x"
-            style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
-          >
-            {popup}
-          </CustomMarker>
-        );
-      });
-    }
+    map.addLayer({
+      id: 'requests',
+      type: 'circle',
+      source: 'requests',
+      paint: {
+        'circle-radius': {
+          'base': 1.75,
+          'stops': [
+            [12, 2],
+            [22, 180]
+          ],
+        },
+        'circle-color': [
+          'match',
+          ['get', 'type'],
+          ...REQUEST_COLORS,
+          '#000000'
+        ],
+        'circle-opacity': 0.8
+      },
+      // filter: this.filters(this.props)
+    });
 
-    const tooltipPosition = [[34.0173157, -118.2497254], [34.1, -118.1497254]];
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'requests',
+      filter: ['>', ['get', 'point_count'], 1],
+      paint: {
+        // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+        // with three steps to implement three types of circles:
+        //   * Blue, 20px circles when point count is less than 100
+        //   * Yellow, 30px circles when point count is between 100 and 750
+        //   * Pink, 40px circles when point count is greater than or equal to 750
+        'circle-color': [
+          'step',
+          ['get', 'point_count'],
+          '#51bbd6', 100,
+          '#f1f075', 750,
+          '#f28cb1'
+        ],
+        'circle-radius': [
+          'step',
+          ['get', 'point_count'],
+          10, 100,
+          20, 750,
+          30
+        ]
+      }
+    });
 
-    return (
-      <Rectangle bounds={tooltipPosition} color="black">
-        <Tooltip
-          permanent
-          direction="top"
-          offset={[0, 20]}
-          opacity={1}
-        >
-          No Data To Display
-        </Tooltip>
-      </Rectangle>
-    );
+    map.on('click', 'nc-fills', function(e) {
+      const nc_id = map.queryRenderedFeatures(e.point, {
+        layers: ['nc-fills']
+      })[0].properties.nc_id;
+      const nc = ncOverlay.features.find(el => el.properties.nc_id === nc_id);
+      map.fitBounds(geojsonExtent(nc), { padding: 50 });
+    });
+
+    map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'requests',
+      filter: ['>', ['get', 'point_count'], 1],
+      layout: {
+        'text-field': '{point_count}',
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 12,
+      }
+    });
   }
 
-  renderMap = () => {
-    const {
-      position,
-      zoom,
-      streetsLayerUrl,
-      satelliteLayerUrl,
-      bounds,
-      geoJSON,
-      width,
-      height,
-      heatmapVisible,
-      markersVisible,
-    } = this.state;
+  //// LIFECYCLE ////
 
-    const { heatmap } = this.props;
+  componentDidMount() {
+    // create elements
+    this.map = this.createMap();
 
-    return (
-      <>
-        <Map
-          center={position}
-          zoom={zoom}
-          maxZoom={18}
-          bounds={bounds}
-          style={{ width, height }}
-          zoomControl={false}
-          whenReady={e => {
-            this.map = e.target;
-            this.updatePosition(e);
-          }}
-          onMoveend={this.updatePosition}
-          onOverlayadd={({ name }) => {
-            if (name === 'Heatmap') {
-              this.setState({ heatmapVisible: true });
-            }
-            if (name === 'Markers') {
-              this.setState({ markersVisible: true });
-            }
-          }}
-          onOverlayremove={({ name }) => {
-            if (name === 'Heatmap') {
-              this.setState({ heatmapVisible: false });
-            }
-            if (name === 'Markers') {
-              this.setState({ markersVisible: false });
-            }
-          }}
-        >
-          <ZoomControl position="topright" />
-          <ScaleControl position="bottomright" />
-          <LayersControl
-            position="bottomright"
-            collapsed={false}
-          >
-            <BaseLayer checked name="Streets">
-              {/*<TileLayer
-                url={streetsLayerUrl}
-                attribution="MapBox"
-                tileSize={512}
-                zoomOffset={-1}
-              />*/}
-              <MapBoxGL
-                accessToken={process.env.MAPBOX_TOKEN}
-                style="mapbox://styles/mapbox/streets-v11"
-              />
-            </BaseLayer>
-            <BaseLayer name="Satellite">
-              <TileLayer
-                url={satelliteLayerUrl}
-                attribution="MapBox"
-                tileSize={512}
-                zoomOffset={-1}
-              />
-            </BaseLayer>
-            {
-              geoJSON
-              && (
-                <Overlay checked name="Neighborhood Council Boundaries">
-                  <Choropleth
-                    data={geoJSON}
-                    style={{
-                      fillColor: 'white',
-                      weight: 2,
-                      opacity: 1,
-                      color: boundaryDefaultColor,
-                      dashArray: '3',
-                    }}
-                    onEachFeature={this.onEachRegionFeature}
-                    ref={el => {
-                      if (el) {
-                        this.choropleth = el.leafletElement;
-                        return this.choropleth;
-                      }
-                      return null;
-                    }}
-                  />
-                </Overlay>
-              )
-            }
-            <Overlay checked name="Markers">
-              {/*<MarkerClusterGroup maxClusterRadius={0}>*/}
-              <LayerGroup>
-                {this.renderMarkers()}
-              </LayerGroup>
-              {/*</MarkerClusterGroup>*/}
-            </Overlay>
-            <Overlay name="Heatmap">
-              {/* intensityExtractor is required and requires a callback as the value.
-                * The heatmap is working with an empty callback but we'll probably
-                * improve functionality post-MVP by generating a heatmap list
-                * on the backend. */}
-              {/* The heatmapVisible test prevents the component from doing
-                * unnecessary calculations when the heatmap isn't visible */}
-              <HeatmapLayer
-                max={1}
-                points={heatmapVisible ? heatmap : []}
-                radius={20}
-                blur={25}
-                longitudeExtractor={m => m[1]}
-                latitudeExtractor={m => m[0]}
-                intensityExtractor={() => 1}
-              />
-            </Overlay>
-          </LayersControl>
-          <ExportLegend visible={markersVisible} position="bottomright" />
-          <HeatmapLegend visible={heatmapVisible} position="bottomright" />
-          <PrintControl
-            sizeModes={['Current']}
-            hideControlContainer={false}
-            exportOnly
-          />
-        </Map>
-        <Button
-          id="map-export"
-          label="Export"
-          handleClick={() => {
-            const { exportMap } = this.props;
-            const selector = '.leaflet-control-easyPrint .CurrentSize';
-            const link = document.body.querySelector(selector);
-            if (link) link.click();
-            exportMap();
-          }}
-        />
-      </>
-    );
+    // enable touch zoom (but not rotation)
+    this.map.touchZoomRotate.enable();
+    this.map.touchZoomRotate.disableRotation();
+
+    // map events
+    this.map.on('load', () => this.onMapLoad(this.map));
+
+    this.updatePosition(this.map);
   }
+
+  componentDidUpdate() {
+    this.map.getSource('requests').setData(this.getRequests());
+    // this.map.setFilter('requests', this.filters(this.props));
+    // let p = this.props, np = nextProps;
+    //
+    // // if (p.requestTypes !== np.requestTypes)
+    // //   this.map.setFilter('requests', ['in', ['number', ['get', 'type']], ['literal', this.activeTypes(np)]])
+    //
+    // if (p.startDate !== np.startDate || p.endDate !== np.endDate)
+    //   this.map.setFilter('requests', [
+    //     'all',
+    //     // [">=", ['get', 'date'], np.startDate],
+    //     // ["<=", ['get', 'date'], np.endDate]
+    //     [">=", ['number', ['get', 'date']], np.startDate],
+    //     ["<=", ['number', ['get', 'date']], np.endDate]
+    //   ])
+  }
+
+  //// RENDER ////
 
   render() {
-    const { ready } = this.state;
-
     return (
-      <div ref={this.container} className="map-container">
-        { ready ? this.renderMap() : null }
-      </div>
+      <div className="map-container" ref={el => this.mapContainer = el} />
     );
   }
 }

@@ -102,13 +102,13 @@ async def clusters2(startDate,
         'requestTypes': requestTypes,
         'ncList': ncList}
 
-    if zoom > 13:
+    if zoom > 10:
         pins = get_pins(filters)
         pins['count'] = 1
         return pins.to_dict(orient='records')
 
     # TODO: add caching
-    
+
     df = requests.standard_query(['nc'], filters, table='map')
     counts = df.groupby('nc').size()
 
