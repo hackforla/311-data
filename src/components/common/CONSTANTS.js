@@ -4,57 +4,57 @@ export const REQUEST_TYPES = {
   'Dead Animal Removal': {
     displayName: 'Dead Animal',
     abbrev: 'DAN',
-    color: '#4FEFEF',
+    color: '#768393',
   },
   'Homeless Encampment': {
     displayName: 'Homeless Encampment',
     abbrev: 'HLE',
-    color: '#ECB800',
+    color: '#C16B1A',
   },
   'Single Streetlight Issue': {
     displayName: 'Single Streetlight',
     abbrev: 'SSL',
-    color: '#AD7B56',
+    color: '#2B87C5',
   },
   'Multiple Streetlight Issue': {
     displayName: 'Multiple Streetlight',
     abbrev: 'MSL',
-    color: '#F7ADAD',
+    color: '#1B9365',
   },
   Feedback: {
     displayName: 'Feedback',
     abbrev: 'FBK',
-    color: '#FFE6B7',
+    color: '#0E251D',
   },
   'Bulky Items': {
     displayName: 'Bulky Items',
     abbrev: 'BLK',
-    color: '#FF0000',
+    color: '#C056C8',
   },
   'Electronic Waste': {
     displayName: 'E-Waste',
     abbrev: 'EWT',
-    color: '#DDEC9F',
+    color: '#EA435C',
   },
   'Metal/Household Appliances': {
     displayName: 'Metal/Household Appliances',
     abbrev: 'MHA',
-    color: '#B8D0FF',
+    color: '#4F7CEE',
   },
   'Graffiti Removal': {
     displayName: 'Graffiti',
     abbrev: 'GFT',
-    color: '#2368D0',
+    color: '#4F5564',
   },
   'Illegal Dumping Pickup': {
     displayName: 'Illegal Dumping',
     abbrev: 'ILD',
-    color: '#6A8011',
+    color: '#8F70D7',
   },
   Other: {
     displayName: 'Other',
     abbrev: 'OTH',
-    color: '#6D7C93',
+    color: '#842D8B',
   },
 };
 
