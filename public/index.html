@@ -3,19 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>311-Data Neighborhood Engagement Tool</title>
+    <link rel="canonical" href="https://www.311-data.org/">
 
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166263401-1"></script> 
-    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-166263401-1'); </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166263401-1"></script>
+    <script>
+      const devHostname = window.location.hostname === 'localhost' || window.location.hostname === '0.0.0.0';
+      window['ga-disable-UA-166263401-1'] = devHostname;
+      window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-166263401-1');
+    </script>
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/react-vis/dist/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-          crossorigin=""/>
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:700|Roboto&display=swap" >
+
+    <!-- Webpack injected tags -->
+    <title><%= htmlWebpackPlugin.options.title %></title>
+
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
