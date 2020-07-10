@@ -1,7 +1,7 @@
 {
   "name": "311-data",
   "version": "0.1.0",
-  "homepage": "https://hackforla.github.io/311-data",
+  "homepage": "https://www.311-data.org/",
   "dependencies": {
     "@react-pdf/renderer": "^1.6.8",
     "axios": "^0.19.0",
