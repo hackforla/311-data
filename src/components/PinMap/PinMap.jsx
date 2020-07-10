@@ -8,6 +8,7 @@ import { updateMapPosition } from '@reducers/ui';
 import ncBoundaries from '../../data/nc-boundary-2019.json';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import geojsonExtent from '@mapbox/geojson-extent';
+import * as turf from '@turf/turf';
 
 /////////////////// CONSTANTS ///////////////
 
@@ -19,13 +20,33 @@ const ZOOM_OUT_EXTENT = geojsonExtent(ncBoundaries);
 
 ///////////////////// MAP ///////////////////
 
+class MapViz extends React.PureComponent {
+  render() {
+    const { filterPolygon, requests } = this.props;
+
+    const filteredRequests = filterPolygon
+      ? turf.within(requests, filterPolygon)
+      : requests;
+
+    const counts = {};
+    filteredRequests.features.forEach(feature => {
+      const { type } = feature.properties;
+      counts[type] = (counts[type] || 0) + 1;
+    })
+    console.log('counts,', counts);
+    
+    return null;
+  }
+}
+
 class PinMap extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       hoveredNCId: null,
-      selectedNCId: null
+      selectedNCId: null,
+      requests: this.convertRequests(),
     };
 
     this.map = null;
@@ -41,240 +62,61 @@ class PinMap extends Component {
     });
 
     this.zoomOut(false);
+    this.updatePosition(this.map);
 
     this.map.touchZoomRotate.enable();
     this.map.touchZoomRotate.disableRotation();
 
-    this.map.on('load', () => this.onMapLoad(this.map));
+    this.map.on('load', () => {
+      this.map.on('moveend', e => {
+        this.updatePosition(this.map);
+      });
 
-    this.updatePosition(this.map);
+      // this.addShed(this.map);
+      this.addRequests(this.map);
+      this.addNCs(this.map);
+    });
   }
 
-  componentDidUpdate() {
-    let source = this.map.getSource('requests');
-    if (source)
-      source.setData(this.getRequests());
+  componentDidUpdate(prevProps) {
+    if (this.props.pinClusters !== prevProps.pinClusters) {
+      const requests = this.convertRequests();
+      this.setState({ requests });
+
+      const source = this.map.getSource('requests');
+      if (source)
+        source.setData(requests);
+    }
   }
 
-  addShed = map => {
-    var canvas = map.getCanvasContainer();
-
-    const center = map.getCenter();
-
-    var geojson = {
-      'type': 'FeatureCollection',
-      'features': [{
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [center.lng, center.lat]
-        }
-      }]
-    };
-
-    function onMove(e) {
-      var coords = e.lngLat;
-
-      // Set a UI indicator for dragging.
-      canvas.style.cursor = 'grabbing';
-
-      // Update the Point feature in `geojson` coordinates
-      // and call setData to the source layer `point` on it.
-      geojson.features[0].geometry.coordinates = [coords.lng, coords.lat];
-      map.getSource('point').setData(geojson);
-    }
-
-    function onUp(e) {
-      var coords = e.lngLat;
-      console.log('up coordinates', coords)
-
-      // Print the coordinates of where the point had
-      // finished being dragged to on the map.
-      // coordinates.style.display = 'block';
-      // coordinates.innerHTML =
-      //     'Longitude: ' + coords.lng + '<br />Latitude: ' + coords.lat;
-      canvas.style.cursor = '';
-
-      // Unbind mouse/touch events
-      map.off('mousemove', onMove);
-      map.off('touchmove', onMove);
-    }
-
-    map.addSource('point', {
-      'type': 'geojson',
-      'data': geojson
+  addRequests = map => {
+    map.addSource('requests', {
+      type: 'geojson',
+      data: this.state.requests
     });
 
     map.addLayer({
-      'id': 'point',
-      'type': 'circle',
-      'source': 'point',
-      'paint': {
-        'circle-radius': 100,
-        'circle-color': '#FFFFFF',
-        'circle-opacity': 0,
-        'circle-stroke-color': '#FFFFFF',
-        'circle-stroke-opacity': 1,
-        'circle-stroke-width': 2
-      }
+      id: 'requests',
+      type: 'circle',
+      source: 'requests',
+      paint: {
+        'circle-radius': {
+          'base': 1.75,
+          'stops': [
+            [12, 2],
+            [22, 180]
+          ],
+        },
+        'circle-color': [
+          'match',
+          ['get', 'type'],
+          ...REQUEST_COLORS,
+          '#FFFFFF'
+        ],
+        'circle-opacity': 0.8
+      },
+      // filter: this.filters(this.props)
     });
-
-    // When the cursor enters a feature in the point layer, prepare for dragging.
-    map.on('mouseenter', 'point', function() {
-      map.setPaintProperty('point', 'circle-color', '#3bb2d0');
-      canvas.style.cursor = 'move';
-    });
-
-    map.on('mouseleave', 'point', function() {
-      map.setPaintProperty('point', 'circle-color', '#3887be');
-      canvas.style.cursor = '';
-    });
-
-    map.on('mousedown', 'point', function(e) {
-      // Prevent the default map drag behavior.
-      e.preventDefault();
-
-      canvas.style.cursor = 'grab';
-
-      map.on('mousemove', onMove);
-      map.once('mouseup', onUp);
-    });
-
-    map.on('touchstart', 'point', function(e) {
-      if (e.points.length !== 1) return;
-
-      // Prevent the default map drag behavior.
-      e.preventDefault();
-
-      map.on('touchmove', onMove);
-      map.once('touchend', onUp);
-    });
-  };
-
-  onMapLoad = map => {
-    this.addShed(map);
-    //
-    // map.addSource('requests', {
-    //   type: 'geojson',
-    //   data: this.getRequests()
-    // });
-    //
-    // map.addSource('nc', {
-    //   type: 'geojson',
-    //   data: ncBoundaries,
-    //   promoteId: 'nc_id'
-    // });
-    //
-    // map.addLayer({
-    //   id: 'nc-borders',
-    //   source: 'nc',
-    //   type: 'line',
-    //   paint: {
-    //     // 'line-color': [
-    //     //   'case',
-    //     //   ['boolean', ['feature-state', 'hover'], false],
-    //     //   '#FF0000',
-    //     //   '#000'
-    //     // ]
-    //     'line-color': '#FFFFFF',
-    //     'line-width': 0.5
-    //   }
-    // });
-    //
-    // map.addLayer({
-    //   id: 'nc-fills',
-    //   source: 'nc',
-    //   type: 'fill',
-    //   layout: {},
-    //   paint: {
-    //     'fill-color': '#627BC1',
-    //     'fill-opacity': [
-    //       'case',
-    //       ['boolean', ['feature-state', 'hover'], false],
-    //       0.2,
-    //       0
-    //     ]
-    //   }
-    // });
-    //
-    // map.on('moveend', event => {
-    //   this.updatePosition(map);
-    // });
-    //
-    // map.on('mousemove', event => {
-    //   if (map.loaded()) {
-    //     const features = map.queryRenderedFeatures(event.point, {
-    //       layers: ['nc-fills']
-    //     });
-    //
-    //     map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-    //
-    //     if (features.length) {
-    //       const { id } = features[0];
-    //       if (id === this.state.hoveredNCId)
-    //         return;
-    //
-    //       // const sourceFeatures = map.querySourceFeatures('requests', {
-    //       //   filter: [
-    //       //     ...this.filters(this.props),
-    //       //     ['==', ['number', ['get', 'nc']], Number(nc_id)]
-    //       //   ],
-    //       //   // sourceLayer: 'requests-5K-8hyxj9',
-    //       //   // sourceLayer: 'requests-500K-7qk8nw'
-    //       // })
-    //       // const counts = this.props.requestTypes.map((el, idx) => 0);
-    //       // sourceFeatures.forEach(feat => counts[feat.properties.type] += 1)
-    //       // console.log(counts)
-    //
-    //       if (this.state.hoveredNCId) {
-    //         map.setFeatureState(
-    //           { source: 'nc', id: this.state.hoveredNCId },
-    //           { hover: false }
-    //         );
-    //       }
-    //       map.setFeatureState(
-    //         { source: 'nc', id },
-    //         { hover: true }
-    //       );
-    //
-    //       this.setState({ hoveredNCId: id });
-    //     }
-    //   }
-    // });
-    //
-    // map.on('mouseleave', 'nc-fills', () => {
-    //   const { hoveredNCId } = this.state;
-    //   if (hoveredNCId) {
-    //     map.setFeatureState(
-    //       { source: 'nc', id: hoveredNCId },
-    //       { hover: false }
-    //     );
-    //     this.setState({ hoveredNCId: null })
-    //   }
-    // });
-    //
-    // map.addLayer({
-    //   id: 'requests',
-    //   type: 'circle',
-    //   source: 'requests',
-    //   paint: {
-    //     'circle-radius': {
-    //       'base': 1.75,
-    //       'stops': [
-    //         [12, 2],
-    //         [22, 180]
-    //       ],
-    //     },
-    //     'circle-color': [
-    //       'match',
-    //       ['get', 'type'],
-    //       ...REQUEST_COLORS,
-    //       '#000000'
-    //     ],
-    //     'circle-opacity': 0.8
-    //   },
-    //   // filter: this.filters(this.props)
-    // });
     //
     // map.addLayer({
     //   id: 'clusters',
@@ -299,21 +141,6 @@ class PinMap extends Component {
     //   }
     // });
     //
-    // map.on('click', 'nc-fills', e => {
-    //   const nc_id = map.queryRenderedFeatures(e.point, {
-    //     layers: ['nc-fills']
-    //   })[0].properties.nc_id;
-    //
-    //   if (nc_id === this.state.selectedNCId) {
-    //     this.zoomOut();
-    //     this.setState({ selectedNCId: null });
-    //   } else {
-    //     const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id === nc_id);
-    //     map.fitBounds(geojsonExtent(ncGeo), { padding: 50 });
-    //     this.setState({ selectedNCId: nc_id });
-    //   }
-    // });
-    //
     // map.addLayer({
     //   id: 'cluster-count',
     //   type: 'symbol',
@@ -325,6 +152,189 @@ class PinMap extends Component {
     //     'text-size': 12,
     //   }
     // });
+  };
+
+  addShed = map => {
+    var { lng, lat } = map.getCenter();
+    let circle = turf.circle([lng, lat], 1, { units: 'miles' });
+    this.setState({ filterPolygon: circle });
+
+    var canvas = map.getCanvasContainer();
+
+    const onMove = e => {
+      canvas.style.cursor = 'grabbing';
+
+      const { lng, lat } = e.lngLat;
+      circle = turf.circle([lng, lat], 1, { units: 'miles' });
+
+      // console.log('within circle', turf.within(this.state.requests, circle).features.length)
+      this.setState({ filterPolygon: circle });
+      map.getSource('shed').setData(circle);
+    }
+
+    const onUp = e => {
+      //var coords = e.lngLat;
+      canvas.style.cursor = '';
+      map.off('mousemove', onMove);
+      map.off('touchmove', onMove);
+    }
+
+    map.addSource('shed', {
+      'type': 'geojson',
+      'data': circle
+    });
+
+    map.addLayer({
+      'id': 'shed-border',
+      'type': 'line',
+      'source': 'shed',
+      'paint': {
+        'line-width': 1.5,
+        'line-color': '#FFFFFF'
+      }
+    });
+
+    map.addLayer({
+      'id': 'shed-fill',
+      'type': 'fill',
+      'source': 'shed',
+      'paint': {
+        'fill-color': 'transparent',
+        'fill-opacity': 0.2
+      }
+    });
+
+    //When the cursor enters a feature in the point layer, prepare for dragging.
+    map.on('mouseenter', 'shed-fill', function() {
+      map.setPaintProperty('shed-fill', 'fill-color', '#FFFFFF');
+      canvas.style.cursor = 'move';
+    });
+
+    map.on('mouseleave', 'shed-fill', function() {
+      map.setPaintProperty('shed-fill', 'fill-color', 'transparent');
+      canvas.style.cursor = '';
+    });
+
+    map.on('mousedown', 'shed-fill', function(e) {
+      // Prevent the default map drag behavior.
+      e.preventDefault();
+
+      canvas.style.cursor = 'grab';
+
+      map.on('mousemove', onMove);
+      map.once('mouseup', onUp);
+    });
+
+    map.on('touchstart', 'shed-fill', function(e) {
+      if (e.points.length !== 1) return;
+
+      // Prevent the default map drag behavior.
+      e.preventDefault();
+
+      map.on('touchmove', onMove);
+      map.once('touchend', onUp);
+    });
+  };
+
+  addNCs = map => {
+    map.addSource('nc', {
+      type: 'geojson',
+      data: ncBoundaries,
+      promoteId: 'nc_id'
+    });
+
+    map.addLayer({
+      id: 'nc-borders',
+      source: 'nc',
+      type: 'line',
+      paint: {
+        'line-color': '#FFFFFF',
+        'line-width': 0.5
+      }
+    });
+
+    map.addLayer({
+      id: 'nc-fills',
+      source: 'nc',
+      type: 'fill',
+      layout: {},
+      paint: {
+        'fill-color': '#627BC1',
+        'fill-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          0.2,
+          0
+        ]
+      }
+    });
+
+    map.on('mousemove', event => {
+      if (map.loaded()) {
+        const features = map.queryRenderedFeatures(event.point, {
+          layers: ['nc-fills']
+        });
+
+        map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+
+        if (features.length) {
+          const { id } = features[0];
+          if (id === this.state.hoveredNCId)
+            return;
+
+          // const sourceFeatures = map.querySourceFeatures('requests', {
+          //   filter: [
+          //     ...this.filters(this.props),
+          //     ['==', ['number', ['get', 'nc']], Number(nc_id)]
+          //   ],
+          //   // sourceLayer: 'requests-5K-8hyxj9',
+          //   // sourceLayer: 'requests-500K-7qk8nw'
+          // })
+          // const counts = this.props.requestTypes.map((el, idx) => 0);
+          // sourceFeatures.forEach(feat => counts[feat.properties.type] += 1)
+          // console.log(counts)
+
+          if (this.state.hoveredNCId) {
+            map.setFeatureState(
+              { source: 'nc', id: this.state.hoveredNCId },
+              { hover: false }
+            );
+          }
+          map.setFeatureState(
+            { source: 'nc', id },
+            { hover: true }
+          );
+
+          this.setState({ hoveredNCId: id });
+        }
+      }
+    });
+
+    map.on('mouseleave', 'nc-fills', () => {
+      const { hoveredNCId } = this.state;
+      if (hoveredNCId) {
+        map.setFeatureState(
+          { source: 'nc', id: hoveredNCId },
+          { hover: false }
+        );
+        this.setState({ hoveredNCId: null })
+      }
+    });
+
+    map.on('click', 'nc-fills', e => {
+      const nc_id = map.queryRenderedFeatures(e.point, {
+        layers: ['nc-fills']
+      })[0].properties.nc_id;
+
+      if (nc_id === this.state.selectedNCId) {
+        this.zoomOut();
+        this.setState({ selectedNCId: null });
+      } else {
+        const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id === nc_id);
+        map.fitBounds(geojsonExtent(ncGeo), { padding: 50 });
+        this.setState({ selectedNCId: nc_id, filterPolygon: ncGeo });
+      }
+    });
   }
 
   activeTypes = props => {
@@ -355,7 +365,7 @@ class PinMap extends Component {
     this.endDateFilter(props)
   ]
 
-  getRequests = () => ({
+  convertRequests = () => ({
     "type": "FeatureCollection",
     "features": this.props.pinClusters.map(cluster => ({
       "type": "Feature",
@@ -378,7 +388,6 @@ class PinMap extends Component {
     const { updatePosition } = this.props;
     const bounds = map.getBounds();
     const zoom = map.getZoom();
-    console.log('ZOOM:', zoom);
     updatePosition({
       zoom,
       bounds: {
@@ -395,10 +404,6 @@ class PinMap extends Component {
   export = () => {
     console.log(map.getCanvas().toDataURL());
   }
-
-  //// LIFECYCLE ////
-
-
 
   hoveredNCName = () => {
     const { hoveredNCId } = this.state;
@@ -417,6 +422,10 @@ class PinMap extends Component {
     const ncName = this.hoveredNCName();
     return (
       <div className="map-container">
+        <MapViz
+          filterPolygon={this.state.filterPolygon}
+          requests={this.state.requests}
+        />
         <div style={{
           position: 'absolute',
           zIndex: 1,
