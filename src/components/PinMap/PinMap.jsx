@@ -204,8 +204,9 @@ class PinMap extends Component {
   };
 
   addShed = map => {
-    var { lng, lat } = map.getCenter();
-    let circle = turf.circle([lng, lat], 1, { units: 'miles' });
+    let offset;
+    let center = map.getCenter();
+    let circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
     this.setState({ filterPolygon: circle });
 
     var canvas = map.getCanvasContainer();
@@ -214,15 +215,23 @@ class PinMap extends Component {
       canvas.style.cursor = 'grabbing';
 
       const { lng, lat } = e.lngLat;
-      circle = turf.circle([lng, lat], 1, { units: 'miles' });
-
+      center = {
+        lng: lng - offset.lng,
+        lat: lat - offset.lat
+      }
+      circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
+      
       // this.setState({ filterPolygon: circle });
       map.getSource('shed').setData(circle);
     }
 
     const onUp = e => {
       const { lng, lat } = e.lngLat;
-      circle = turf.circle([lng, lat], 1, { units: 'miles' });
+      center = {
+        lng: lng - offset.lng,
+        lat: lat - offset.lat
+      }
+      circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
 
       this.setState({ filterPolygon: circle });
       map.getSource('shed').setData(circle);
@@ -273,6 +282,11 @@ class PinMap extends Component {
       e.preventDefault();
 
       canvas.style.cursor = 'grab';
+
+      offset = {
+        lng: e.lngLat.lng - center.lng,
+        lat: e.lngLat.lat - center.lat,
+      };
 
       map.on('mousemove', onMove);
       map.once('mouseup', onUp);
