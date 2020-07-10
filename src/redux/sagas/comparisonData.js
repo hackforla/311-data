@@ -20,7 +20,7 @@ import {
 
 /* /////////// INDIVIDUAL API CALLS /////////// */
 
-const BASE_URL = process.env.DB_URL;
+const BASE_URL = process.env.API_URL;
 
 function* getCountsComparison(filters) {
   const url = `${BASE_URL}/comparison/counts`;

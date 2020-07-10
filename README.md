@@ -1,4 +1,4 @@
-# 311-data [![Build Status](https://travis-ci.com/hackforla/311-data.svg?branch=master)](https://travis-ci.com/hackforla/311-data)
+# 311-data
 Empower Neighborhood Associations to Improve analysis of their initiatives using 311 data
 
 ## Frontend Technologies
@@ -6,11 +6,10 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
   * Redux
   * Bulma
   * HTML/CSS
-  * Docker + Docker Compose
 
 ## Backend Technologies
   * Python
-  * Sanic(Asynchronous Flask)
+  * Sanic (Asynchronous Flask)
   * Pandas
   * PostgreSql
   * Docker + Docker Compose
@@ -21,7 +20,7 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
   * Numpy
   * PostgreSql
   * Socrata API
-  
+
 ## Management Philosophies:
   * Open Source
   * Kanban
@@ -31,7 +30,7 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
   * Google Drive
   * Adobe CC
   * Miro
-  
+
 ## 🎉🎉 Engineers start [here](https://github.com/hackforla/311-data/blob/master/GETTING_STARTED.md)!!!! 🎉🎉🎉
 
 ## Resources

@@ -1,23 +1,13 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 dist/
+
 # Test results
 coverage/
-jmeter.log
-server/performanceStatistics/htmlReports/
 
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-.terraform/
-terraform.tfstate
-terraform.tfstate.*
 
 # misc
 .DS_Store
@@ -36,17 +26,8 @@ package-lock.json
 # config
 config.js
 .env
-settings.cfg
 
-Orchestration/docker-compose.yml
-
-__pycache__/
-
-# csv files
+# dataAnalysis
 /dataAnalysis/datasets
-/server/src/static
-__tmp__
-
-# checkpoints
 /dataAnalysis/.ipynb_checkpoints
-server/src/static/temp
+__pycache__

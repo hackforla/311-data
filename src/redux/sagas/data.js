@@ -31,7 +31,7 @@ import {
 
 /* ////////////////// API CALLS  //////////////// */
 
-const BASE_URL = process.env.DB_URL;
+const BASE_URL = process.env.API_URL;
 
 /* ////  MAP //// */
 

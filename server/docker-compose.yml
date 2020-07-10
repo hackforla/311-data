@@ -60,15 +60,5 @@ services:
   #   volumes:
   #     - ../:/home/jovyan/work
 
-  # frontend:
-  #  build:
-  #    context: ..
-  #  network_mode: host
-  #  image: docker.pkg.github.com/hackforla/311-data/frontend:latest
-  #  restart: always
-  #  container_name: 311-frontend
-  #  ports:
-  #    - 3000:3000
-
 volumes:
   backend_data:
