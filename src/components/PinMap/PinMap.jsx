@@ -9,6 +9,7 @@ import ncBoundaries from '../../data/nc-boundary-2019.json';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
+import { VegaLite } from 'react-vega'
 
 /////////////////// CONSTANTS ///////////////
 
@@ -32,10 +33,58 @@ class MapViz extends React.PureComponent {
     filteredRequests.features.forEach(feature => {
       const { type } = feature.properties;
       counts[type] = (counts[type] || 0) + 1;
-    })
-    console.log('counts,', counts);
-    
-    return null;
+    });
+
+    const table = [];
+    Object.keys(REQUEST_TYPES).forEach(type => {
+      table.push({
+        requestType: REQUEST_TYPES[type]?.abbrev,
+        count: counts[type] || 0,
+        color: REQUEST_TYPES[type]?.color
+      });
+    });
+
+    const spec = {
+      width: 300,
+      height: 200,
+      mark: 'bar',
+      encoding: {
+        y: {
+          field: 'requestType',
+          type: 'nominal',
+          axis: {
+            title: 'request type'
+          }
+        },
+        x: {
+          field: 'count',
+          type: 'quantitative',
+          axis: {
+            title: 'count'
+          }
+        },
+        color: {
+          field: 'color',
+          type: 'nominal',
+          scale: null
+        }
+      },
+      data: { name: 'table' },
+    }
+
+    const barData = { table: table };
+
+    return (
+      <div style={{
+        backgroundColor: 'white',
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        right: 0,
+      }}>
+        <VegaLite spec={spec} data={barData} />
+      </div>
+    );
   }
 }
 
@@ -72,9 +121,9 @@ class PinMap extends Component {
         this.updatePosition(this.map);
       });
 
-      // this.addShed(this.map);
       this.addRequests(this.map);
-      this.addNCs(this.map);
+      this.addShed(this.map);
+      // this.addNCs(this.map);
     });
   }
 
@@ -167,13 +216,17 @@ class PinMap extends Component {
       const { lng, lat } = e.lngLat;
       circle = turf.circle([lng, lat], 1, { units: 'miles' });
 
-      // console.log('within circle', turf.within(this.state.requests, circle).features.length)
-      this.setState({ filterPolygon: circle });
+      // this.setState({ filterPolygon: circle });
       map.getSource('shed').setData(circle);
     }
 
     const onUp = e => {
-      //var coords = e.lngLat;
+      const { lng, lat } = e.lngLat;
+      circle = turf.circle([lng, lat], 1, { units: 'miles' });
+
+      this.setState({ filterPolygon: circle });
+      map.getSource('shed').setData(circle);
+
       canvas.style.cursor = '';
       map.off('mousemove', onMove);
       map.off('touchmove', onMove);
@@ -305,7 +358,8 @@ class PinMap extends Component {
             { hover: true }
           );
 
-          this.setState({ hoveredNCId: id });
+          const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id === id);
+          this.setState({ hoveredNCId: id, filterPolygon: ncGeo });
         }
       }
     });
@@ -422,10 +476,19 @@ class PinMap extends Component {
     const ncName = this.hoveredNCName();
     return (
       <div className="map-container">
-        <MapViz
-          filterPolygon={this.state.filterPolygon}
-          requests={this.state.requests}
-        />
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          width: 400,
+          backgroundColor: 'white'
+        }}>
+          <MapViz
+            filterPolygon={this.state.filterPolygon}
+            requests={this.state.requests}
+          />
+        </div>
         <div style={{
           position: 'absolute',
           zIndex: 1,
@@ -452,7 +515,13 @@ class PinMap extends Component {
         }}>
           { ncName }
         </div>
-        <div style={{ width: '100%', height: '100%'}} ref={el => this.mapContainer = el} />
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 400,
+          right: 0
+        }} ref={el => this.mapContainer = el} />
       </div>
     );
   }

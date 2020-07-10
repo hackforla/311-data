@@ -102,7 +102,7 @@ async def clusters2(startDate,
         'requestTypes': requestTypes,
         'ncList': ncList}
 
-    if zoom > 10:
+    if zoom > -1:
         pins = get_pins(filters)
         pins['count'] = 1
         return pins.to_dict(orient='records')
