@@ -6,6 +6,7 @@ import PropTypes from 'proptypes';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import ncBoundaries from '../../data/nc-boundary-2019.json';
+import openRequests from '../../data/open_requests.json';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
@@ -59,6 +60,7 @@ class MapViz extends React.PureComponent {
         x: {
           field: 'count',
           type: 'quantitative',
+          start: 0,
           axis: {
             title: 'count'
           }
@@ -220,7 +222,7 @@ class PinMap extends Component {
         lat: lat - offset.lat
       }
       circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
-      
+
       // this.setState({ filterPolygon: circle });
       map.getSource('shed').setData(circle);
     }
@@ -549,7 +551,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
-  pinClusters: state.data.pinClusters,
+  // pinClusters: state.data.pinClusters,
+  pinClusters: openRequests,
   heatmap: state.data.heatmap,
   position: state.ui.map
 });
