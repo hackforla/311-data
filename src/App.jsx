@@ -8,11 +8,11 @@ import { getMetadataRequest } from '@reducers/metadata';
 import RouteChange from '@components/main/util/RouteChange';
 import actions from '@components/main/util/routeChangeActions';
 import CookieNotice from '@components/main/body/CookieNotice';
+import Header from '@components/main/header/Header';
+import Footer from '@components/main/footer/Footer';
+import StaticFooter from '@components/main/footer/StaticFooter';
+import { SnapshotRenderer } from '@components/export/SnapshotService';
 import Routes from './Routes';
-import Header from './components/main/header/Header';
-import Footer from './components/main/footer/Footer';
-import StaticFooter from './components/main/footer/StaticFooter';
-import { SnapshotRenderer } from './components/export/SnapshotService';
 
 const App = ({
   getMetadata,
