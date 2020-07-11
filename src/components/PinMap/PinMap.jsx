@@ -146,7 +146,7 @@ class PinMap extends Component {
 
       this.setState({ filterPolygon: circle });
       this.map.getSource('shed').setData(circle);
-      this.map.fitBounds(geojsonExtent(circle), { padding: 50 });
+      this.zoomTo(circle);
     });
 
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map));
@@ -355,7 +355,7 @@ class PinMap extends Component {
         'fill-opacity': [
           'case',
           ['boolean', ['feature-state', 'hover'], false],
-          0.2,
+          0.5,
           0
         ]
       }
@@ -397,8 +397,11 @@ class PinMap extends Component {
             { hover: true }
           );
 
-          const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id === id);
-          this.setState({ hoveredNCId: id, filterPolygon: ncGeo });
+          this.setState({ hoveredNCId: id });
+
+          // update chart on hover
+          // const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id === id);
+          // this.setState({ hoveredNCId: id, filterPolygon: ncGeo });
         }
       }
     });
@@ -424,7 +427,7 @@ class PinMap extends Component {
         this.setState({ selectedNCId: null });
       } else {
         const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id === nc_id);
-        map.fitBounds(geojsonExtent(ncGeo), { padding: 50 });
+        this.zoomTo(ncGeo);
         this.setState({ selectedNCId: nc_id, filterPolygon: ncGeo });
       }
     });
@@ -488,6 +491,10 @@ class PinMap extends Component {
         _southWest: bounds.getSouthWest(),
       },
     });
+  }
+
+  zoomTo = (geojson) => {
+    this.map.fitBounds(geojsonExtent(geojson), { padding: 50 });
   }
 
   zoomOut = (animate=true) => {
