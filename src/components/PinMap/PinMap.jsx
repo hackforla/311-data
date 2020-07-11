@@ -8,19 +8,21 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import geojsonExtent from '@mapbox/geojson-extent';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+
+import BoundaryLayer from './BoundaryLayer';
+import AddressLayer from './AddressLayer';
+import MapCharts from './MapCharts';
+import MapSearch from './MapSearch';
+// import MapLayers from './MapLayers';
+// import MapRequestFilters from './MapRequestFilters';
+
 import ncBoundaries from '../../data/nc-boundary-2019.json';
 import ccBoundaries from '../../data/la-city-council-districts-2012.json';
 import openRequests from '../../data/open_requests.json';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import geojsonExtent from '@mapbox/geojson-extent';
-import * as turf from '@turf/turf';
-import MapCharts from './MapCharts';
-// import MapLayers from './MapLayers';
-import MapSearch from './MapSearch';
-// import MapRequestFilters from './MapRequestFilters';
-import BoundaryLayer from './BoundaryLayer';
 
 /////////////////// CONSTANTS ///////////////
 
@@ -45,9 +47,7 @@ class PinMap extends Component {
     };
 
     this.map = null;
-
-    this.center = null;
-
+    this.addressLayer = null;
     this.ncLayer = null;
     this.ccLayer = null;
   }
@@ -68,12 +68,12 @@ class PinMap extends Component {
     this.map.touchZoomRotate.disableRotation();
 
     this.map.on('load', () => {
-      this.map.on('moveend', e => {
-        this.updatePosition(this.map);
-      });
-
       this.addRequests(this.map);
-      this.addShed(this.map);
+
+      this.addressLayer = AddressLayer({
+        map: this.map,
+        onSelectRegion: geo => this.setState({ filterPolygon: geo })
+      });
 
       this.ncLayer = BoundaryLayer({
         map: this.map,
@@ -89,6 +89,10 @@ class PinMap extends Component {
         sourceData: ccBoundaries,
         idProperty: 'name',
         onSelectRegion: geo => this.setState({ filterPolygon: geo })
+      });
+
+      this.map.on('moveend', e => {
+        this.updatePosition(this.map);
       });
     });
 
@@ -171,112 +175,6 @@ class PinMap extends Component {
     // });
   };
 
-  addShed = map => {
-    let offset;
-    this.center = map.getCenter();
-    let circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
-    this.setState({ filterPolygon: circle });
-
-    var canvas = map.getCanvasContainer();
-
-    const onMove = e => {
-      canvas.style.cursor = 'grabbing';
-
-      const { lng, lat } = e.lngLat;
-      this.center = {
-        lng: lng - offset.lng,
-        lat: lat - offset.lat
-      }
-      circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
-
-      // this.setState({ filterPolygon: circle });
-      map.getSource('shed').setData(circle);
-    }
-
-    const onUp = e => {
-      const { lng, lat } = e.lngLat;
-      this.center = {
-        lng: lng - offset.lng,
-        lat: lat - offset.lat
-      }
-      circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
-
-      this.setState({ filterPolygon: circle });
-      map.getSource('shed').setData(circle);
-
-      canvas.style.cursor = '';
-      map.off('mousemove', onMove);
-      map.off('touchmove', onMove);
-    }
-
-    map.addSource('shed', {
-      'type': 'geojson',
-      'data': circle
-    });
-
-    map.addLayer({
-      'id': 'shed-border',
-      'type': 'line',
-      'source': 'shed',
-      layout: {
-        visibility: 'visible'
-      },
-      'paint': {
-        'line-width': 1.5,
-        'line-color': '#FFFFFF'
-      }
-    });
-
-    map.addLayer({
-      'id': 'shed-fill',
-      'type': 'fill',
-      'source': 'shed',
-      layout: {
-        visibility: 'visible'
-      },
-      'paint': {
-        'fill-color': 'transparent',
-        'fill-opacity': 0.2
-      }
-    });
-
-    //When the cursor enters a feature in the point layer, prepare for dragging.
-    map.on('mouseenter', 'shed-fill', e => {
-      map.setPaintProperty('shed-fill', 'fill-color', '#FFFFFF');
-      canvas.style.cursor = 'move';
-    });
-
-    map.on('mouseleave', 'shed-fill', e => {
-      map.setPaintProperty('shed-fill', 'fill-color', 'transparent');
-      canvas.style.cursor = '';
-    });
-
-    map.on('mousedown', 'shed-fill', e => {
-      // Prevent the default map drag behavior.
-      e.preventDefault();
-
-      canvas.style.cursor = 'grab';
-
-      offset = {
-        lng: e.lngLat.lng - this.center.lng,
-        lat: e.lngLat.lat - this.center.lat,
-      };
-
-      map.on('mousemove', onMove);
-      map.once('mouseup', onUp);
-    });
-
-    map.on('touchstart', 'shed-fill', e => {
-      if (e.points.length !== 1) return;
-
-      // Prevent the default map drag behavior.
-      e.preventDefault();
-
-      map.on('touchmove', onMove);
-      map.once('touchend', onUp);
-    });
-  };
-
   onGeocoderResult = ({ result }) => {
     if (result.properties.type === 'nc')
       return this.ncLayer.zoomToRegion(result.id);
@@ -284,42 +182,30 @@ class PinMap extends Component {
     if (result.properties.type === 'cc')
       return this.ccLayer.zoomToRegion(result.id);
 
-    this.center = {
+    this.addressLayer.setCenter({
       lng: result.center[0],
       lat: result.center[1]
-    };
-
-    const circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
-
-    this.map.getSource('shed').setData(circle);
-    this.zoomTo(circle);
-    this.map.once('zoomend', () => this.setState({ filterPolygon: circle }));
+    });
   }
 
   onChangeSearchTab = tab => {
     switch(tab) {
       case 'address':
+        this.addressLayer.show();
         this.ncLayer.hide();
         this.ccLayer.hide();
-
-        this.map.setLayoutProperty('shed-border', 'visibility', 'visible');
-        this.map.setLayoutProperty('shed-fill', 'visibility', 'visible');
         break;
 
       case 'nc':
-        this.map.setLayoutProperty('shed-border', 'visibility', 'none');
-        this.map.setLayoutProperty('shed-fill', 'visibility', 'none');
-
         this.ncLayer.show();
         this.ccLayer.hide();
+        this.addressLayer.hide();
         break;
 
       case 'cc':
-        this.map.setLayoutProperty('shed-border', 'visibility', 'none');
-        this.map.setLayoutProperty('shed-fill', 'visibility', 'none');
-
-        this.ncLayer.hide();
         this.ccLayer.show();
+        this.ncLayer.hide();
+        this.addressLayer.hide();
         break;
     }
 
