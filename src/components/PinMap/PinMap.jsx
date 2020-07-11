@@ -5,15 +5,15 @@ import PropTypes from 'proptypes';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import ncBoundaries from '../../data/nc-boundary-2019.json';
-import openRequests from '../../data/open_requests.json';
+//import openRequests from '../../data/open_requests.json';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import MapCharts from './MapCharts';
-import MapLayers from './MapLayers';
+// import MapCharts from './MapCharts';
+// import MapLayers from './MapLayers';
 import MapSearch from './MapSearch';
-import MapRequestFilters from './MapRequestFilters';
+// import MapRequestFilters from './MapRequestFilters';
 
 /////////////////// CONSTANTS ///////////////
 
@@ -460,14 +460,13 @@ class PinMap extends Component {
     const ncName = this.hoveredNCName();
     return (
       <div className="map-container">
-        {/*<div id='geocoder'></div>*/}
-        <MapCharts
+        {/*<MapCharts
           requests={this.state.requests}
           filterPolygon={this.state.filterPolygon}
-        />
-        <MapLayers />
+        />*/}
+        {/*<MapLayers />*/}
         <MapSearch />
-        <MapRequestFilters />
+        {/*<MapRequestFilters />*/}
         <div style={{
           position: 'absolute',
           zIndex: 1,
@@ -516,7 +515,8 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   // pinClusters: state.data.pinClusters,
-  pinClusters: openRequests,
+  //pinClusters: openRequests,
+  pinClusters: [],
   heatmap: state.data.heatmap,
   position: state.ui.map
 });
