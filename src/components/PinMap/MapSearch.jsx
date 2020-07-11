@@ -2,7 +2,17 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
+const TABS = [
+  'address',
+  'nc',
+  'cc'
+]
+
 class MapSearch extends React.Component {
+  state = {
+    activeTab: 'address'
+  };
+
   componentDidMount() {
     const { map, mapboxgl } = this.props;
 
@@ -10,7 +20,8 @@ class MapSearch extends React.Component {
       accessToken: process.env.MAPBOX_TOKEN,
       flyTo: false,
       mapboxgl: mapboxgl,
-      marker: false
+      marker: false,
+      placeholder: 'Enter address',
     });
 
     this.geocoder.on('result', ({ result }) => {
@@ -20,9 +31,34 @@ class MapSearch extends React.Component {
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(map));
   }
 
+  setTab = tab => {
+    if (tab !== this.state.activeTab) {
+      console.log(this.geocoder);
+      this.setState({ activeTab: tab })
+      this.props.onChangeTab(tab);
+      this.geocoder.clear();
+      switch(tab) {
+        case 'address': return this.geocoder.setPlaceholder('Enter address');
+        case 'nc': return this.geocoder.setPlaceholder('Enter NC');
+        case 'cc': return this.geocoder.setPlaceholder('Enter CC');
+      }
+    }
+  }
+
   render() {
     return (
       <div className="map-search map-control">
+        <div className="search-tabs">
+          { TABS.map(tab => (
+            <div
+              key={tab}
+              className="search-tab"
+              onClick={this.setTab.bind(null, tab)}
+            >
+              { tab }
+            </div>
+          ))}
+        </div>
         <div id="geocoder" />
       </div>
     );
@@ -32,13 +68,15 @@ class MapSearch extends React.Component {
 MapSearch.propTypes = {
   mapboxgl: PropTypes.shape({}),
   map: PropTypes.shape({}),
-  onGeocoderResult: PropTypes.func
+  onGeocoderResult: PropTypes.func,
+  onChangeTab: PropTypes.func,
 };
 
 MapSearch.defaultProps = {
   mapboxgl: null,
   map: null,
-  onGeocoderResult: () => {}
+  onGeocoderResult: () => {},
+  onChangeTab: () => {},
 };
 
 export default MapSearch;

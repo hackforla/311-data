@@ -1,4 +1,17 @@
 .map-search {
   top: 10px;
   right: 10px;
+
+  .search-tabs {
+    display: flex;
+    .search-tab {
+      flex: 1;
+      border: 1px white solid;
+      padding: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: red;
+      }
+    }
+  }
 }

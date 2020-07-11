@@ -64,7 +64,7 @@ class PinMap extends Component {
 
       this.addRequests(this.map);
       this.addShed(this.map);
-      // this.addNCs(this.map);
+      this.addNCs(this.map);
     });
 
     this.setState({ mapReady: true })
@@ -193,6 +193,9 @@ class PinMap extends Component {
       'id': 'shed-border',
       'type': 'line',
       'source': 'shed',
+      layout: {
+        visibility: 'visible'
+      },
       'paint': {
         'line-width': 1.5,
         'line-color': '#FFFFFF'
@@ -203,6 +206,9 @@ class PinMap extends Component {
       'id': 'shed-fill',
       'type': 'fill',
       'source': 'shed',
+      layout: {
+        visibility: 'visible'
+      },
       'paint': {
         'fill-color': 'transparent',
         'fill-opacity': 0.2
@@ -257,6 +263,9 @@ class PinMap extends Component {
       id: 'nc-borders',
       source: 'nc',
       type: 'line',
+      layout: {
+        visibility: 'none'
+      },
       paint: {
         'line-color': '#FFFFFF',
         'line-width': 0.5
@@ -267,7 +276,9 @@ class PinMap extends Component {
       id: 'nc-fills',
       source: 'nc',
       type: 'fill',
-      layout: {},
+      layout: {
+        visibility: 'none'
+      },
       paint: {
         'fill-color': '#627BC1',
         'fill-opacity': [
@@ -362,6 +373,29 @@ class PinMap extends Component {
     this.setState({ filterPolygon: circle });
     this.map.getSource('shed').setData(circle);
     this.zoomTo(circle);
+  }
+
+  onChangeSearchTab = tab => {
+    console.log('changed tab:', tab)
+    switch(tab) {
+      case 'address':
+        this.map.setLayoutProperty('nc-borders', 'visibility', 'none');
+        this.map.setLayoutProperty('nc-fills', 'visibility', 'none');
+
+        this.map.setLayoutProperty('shed-border', 'visibility', 'visible');
+        this.map.setLayoutProperty('shed-fill', 'visibility', 'visible');
+        break;
+
+      case 'nc':
+        this.map.setLayoutProperty('shed-border', 'visibility', 'none');
+        this.map.setLayoutProperty('shed-fill', 'visibility', 'none');
+
+        this.map.setLayoutProperty('nc-borders', 'visibility', 'visible');
+        this.map.setLayoutProperty('nc-fills', 'visibility', 'visible');
+        break;
+    }
+
+    this.zoomOut();
   }
 
   activeTypes = props => {
@@ -464,6 +498,7 @@ class PinMap extends Component {
               map={this.map}
               mapboxgl={mapboxgl}
               onGeocoderResult={this.onGeocoderResult}
+              onChangeTab={this.onChangeSearchTab}
             /> :
             null
         }
