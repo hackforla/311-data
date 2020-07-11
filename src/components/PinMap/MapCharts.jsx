@@ -28,7 +28,7 @@ class MapCharts extends React.PureComponent {
     });
 
     const spec = {
-      width: 300,
+      width: 210,
       height: 200,
       mark: 'bar',
       encoding: {
@@ -59,13 +59,7 @@ class MapCharts extends React.PureComponent {
     const barData = { table: table };
 
     return (
-      <div style={{
-        backgroundColor: 'white',
-        position: 'absolute',
-        left: 0,
-        bottom: 0,
-        right: 0,
-      }}>
+      <div className="map-charts map-control">
         <VegaLite spec={spec} data={barData} />
       </div>
     );

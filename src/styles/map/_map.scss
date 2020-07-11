@@ -1,6 +1,18 @@
 .map-container {
   height: calc(100vh - #{$header-height + $footer-height});
 
+  .map-control {
+    z-index: 1;
+    position: absolute;
+    padding: 20px;
+    background-color: #1d1d1d;
+    // width: 300px;
+    // height: 300px;
+    color: white;
+    border-radius: 5px;
+
+  }
+
   .leaflet-control-easyPrint {
     visibility: hidden;
   }

@@ -11,6 +11,9 @@ import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import MapCharts from './MapCharts';
+import MapLayers from './MapLayers';
+import MapSearch from './MapSearch';
+import MapRequestFilters from './MapRequestFilters';
 
 /////////////////// CONSTANTS ///////////////
 
@@ -66,7 +69,9 @@ class PinMap extends Component {
 
     this.geocoder = new MapboxGeocoder({
       accessToken: process.env.MAPBOX_TOKEN,
-      flyTo: false
+      flyTo: false,
+      mapboxgl: mapboxgl,
+      marker: false
     });
 
     this.geocoder.on('result', ({ result }) => {
@@ -455,25 +460,20 @@ class PinMap extends Component {
     const ncName = this.hoveredNCName();
     return (
       <div className="map-container">
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          width: 400,
-          backgroundColor: 'white'
-        }}>
-          <div id='geocoder'></div>
-          <MapCharts
-            requests={this.state.requests}
-            filterPolygon={this.state.filterPolygon}
-          />
-        </div>
+        {/*<div id='geocoder'></div>*/}
+        <MapCharts
+          requests={this.state.requests}
+          filterPolygon={this.state.filterPolygon}
+        />
+        <MapLayers />
+        <MapSearch />
+        <MapRequestFilters />
         <div style={{
           position: 'absolute',
           zIndex: 1,
-          top: 10,
-          right: 10,
+          bottom: 10,
+          left: '50%',
+          transform: 'translateX(-50%)',
           padding: 5,
           border: '1px white solid',
           backgroundColor: 'black',
@@ -499,7 +499,7 @@ class PinMap extends Component {
           position: 'absolute',
           top: 0,
           bottom: 0,
-          left: 400,
+          left: 0,
           right: 0
         }} ref={el => this.mapContainer = el} />
       </div>
