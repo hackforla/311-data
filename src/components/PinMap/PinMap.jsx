@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
-mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import { getPinInfoRequest } from '@reducers/data';
@@ -10,10 +9,12 @@ import openRequests from '../../data/open_requests.json';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
-import { VegaLite } from 'react-vega';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import MapCharts from './MapCharts';
 
 /////////////////// CONSTANTS ///////////////
+
+mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
 const REQUEST_COLORS = Object.keys(REQUEST_TYPES).reduce((p, c) => {
   return [...p, c, REQUEST_TYPES[c].color]
@@ -22,74 +23,6 @@ const REQUEST_COLORS = Object.keys(REQUEST_TYPES).reduce((p, c) => {
 const ZOOM_OUT_EXTENT = geojsonExtent(ncBoundaries);
 
 ///////////////////// MAP ///////////////////
-
-class MapViz extends React.PureComponent {
-  render() {
-    const { filterPolygon, requests } = this.props;
-
-    const filteredRequests = filterPolygon
-      ? turf.within(requests, filterPolygon)
-      : requests;
-
-    const counts = {};
-    filteredRequests.features.forEach(feature => {
-      const { type } = feature.properties;
-      counts[type] = (counts[type] || 0) + 1;
-    });
-
-    const table = [];
-    Object.keys(REQUEST_TYPES).forEach(type => {
-      table.push({
-        requestType: REQUEST_TYPES[type]?.abbrev,
-        count: counts[type] || 0,
-        color: REQUEST_TYPES[type]?.color
-      });
-    });
-
-    const spec = {
-      width: 300,
-      height: 200,
-      mark: 'bar',
-      encoding: {
-        y: {
-          field: 'requestType',
-          type: 'nominal',
-          axis: {
-            title: 'request type'
-          }
-        },
-        x: {
-          field: 'count',
-          type: 'quantitative',
-          start: 0,
-          axis: {
-            title: 'count'
-          }
-        },
-        color: {
-          field: 'color',
-          type: 'nominal',
-          scale: null
-        }
-      },
-      data: { name: 'table' },
-    }
-
-    const barData = { table: table };
-
-    return (
-      <div style={{
-        backgroundColor: 'white',
-        position: 'absolute',
-        left: 0,
-        bottom: 0,
-        right: 0,
-      }}>
-        <VegaLite spec={spec} data={barData} />
-      </div>
-    );
-  }
-}
 
 class PinMap extends Component {
   constructor(props) {
@@ -531,9 +464,9 @@ class PinMap extends Component {
           backgroundColor: 'white'
         }}>
           <div id='geocoder'></div>
-          <MapViz
-            filterPolygon={this.state.filterPolygon}
+          <MapCharts
             requests={this.state.requests}
+            filterPolygon={this.state.filterPolygon}
           />
         </div>
         <div style={{

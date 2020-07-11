@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+  <title>311-Data</title>
+</head>
+<body>
+
+  <div id="app">
+    <div id="chart"></div>
+    Service Request
+    <select class="request-dropdown">
+      <option value="Bulky Items">Bulky Items</option>
+      <option value="Dead Animal Removal">Dead Animal Removal</option>
+      <option value="Electronic Waste">Electronic Waste</option>
+      <option value="Graffiti Removal">Graffiti Removal</option>
+      <option value="Homeless Encampment">Homeless Encampment</option>
+      <option value="Illegal Dumping Pickup">Illegal Dumping Pickup</option>
+      <option value="Metal/Household Appliances">Metal/Household Appliances</option>
+      <option value="Single Streetlight Issue">Single Streetlight Issue</option>
+      <option value="Multiple Streetlight Issue">Multiple Streetlight Issue</option>
+      <option value="Report Water Waste">Report Water Waste</option>
+      <option value="Other">Other</option>
+    </select>
+    <br>
+    Data Set 1
+    <select class="data-dropdown">
+      <option value="2015" selected="selected">2015</option>
+      <option value="2016">2016</option>
+      <option value="2017">2017</option>
+      <option value="2018">2018</option>
+      <option value="2019">2019</option>
+    </select>
+    <br>
+    Data Set 2
+    <select class="data-dropdown">
+      <option value="2015">2015</option>
+      <option value="2016">2016</option>
+      <option value="2017">2017</option>
+      <option value="2018" selected="selected">2018</option>
+      <option value="2019">2019</option>
+    </select>
+    <br>
+    Chart Type
+    <select class="chart-type">
+      <option value="scatter" selected="selected">Scatter</option>
+      <option value="bar">Bar</option>
+      <option value="pie">Pie</option>
+      <option value="line">Line</option>
+      <option value="area">Area</option>
+    </select>
+    <p>
+    <input type="checkbox" name="total" value="false">Display Total Requests per year
+    <p>
+    <button type="button">Submit</button>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
