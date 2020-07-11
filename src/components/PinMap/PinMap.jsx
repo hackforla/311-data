@@ -10,7 +10,8 @@ import openRequests from '../../data/open_requests.json';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
-import { VegaLite } from 'react-vega'
+import { VegaLite } from 'react-vega';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 /////////////////// CONSTANTS ///////////////
 
@@ -101,6 +102,8 @@ class PinMap extends Component {
     };
 
     this.map = null;
+
+    this.center = null;
   }
 
   componentDidMount() {
@@ -127,6 +130,26 @@ class PinMap extends Component {
       this.addShed(this.map);
       // this.addNCs(this.map);
     });
+
+    this.geocoder = new MapboxGeocoder({
+      accessToken: process.env.MAPBOX_TOKEN,
+      flyTo: false
+    });
+
+    this.geocoder.on('result', ({ result }) => {
+      this.center = {
+        lng: result.center[0],
+        lat: result.center[1]
+      };
+
+      const circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
+
+      this.setState({ filterPolygon: circle });
+      this.map.getSource('shed').setData(circle);
+      this.map.fitBounds(geojsonExtent(circle), { padding: 50 });
+    });
+
+    document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map));
   }
 
   componentDidUpdate(prevProps) {
@@ -207,8 +230,8 @@ class PinMap extends Component {
 
   addShed = map => {
     let offset;
-    let center = map.getCenter();
-    let circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
+    this.center = map.getCenter();
+    let circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
     this.setState({ filterPolygon: circle });
 
     var canvas = map.getCanvasContainer();
@@ -217,11 +240,11 @@ class PinMap extends Component {
       canvas.style.cursor = 'grabbing';
 
       const { lng, lat } = e.lngLat;
-      center = {
+      this.center = {
         lng: lng - offset.lng,
         lat: lat - offset.lat
       }
-      circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
+      circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
 
       // this.setState({ filterPolygon: circle });
       map.getSource('shed').setData(circle);
@@ -229,11 +252,11 @@ class PinMap extends Component {
 
     const onUp = e => {
       const { lng, lat } = e.lngLat;
-      center = {
+      this.center = {
         lng: lng - offset.lng,
         lat: lat - offset.lat
       }
-      circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
+      circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
 
       this.setState({ filterPolygon: circle });
       map.getSource('shed').setData(circle);
@@ -269,32 +292,32 @@ class PinMap extends Component {
     });
 
     //When the cursor enters a feature in the point layer, prepare for dragging.
-    map.on('mouseenter', 'shed-fill', function() {
+    map.on('mouseenter', 'shed-fill', e => {
       map.setPaintProperty('shed-fill', 'fill-color', '#FFFFFF');
       canvas.style.cursor = 'move';
     });
 
-    map.on('mouseleave', 'shed-fill', function() {
+    map.on('mouseleave', 'shed-fill', e => {
       map.setPaintProperty('shed-fill', 'fill-color', 'transparent');
       canvas.style.cursor = '';
     });
 
-    map.on('mousedown', 'shed-fill', function(e) {
+    map.on('mousedown', 'shed-fill', e => {
       // Prevent the default map drag behavior.
       e.preventDefault();
 
       canvas.style.cursor = 'grab';
 
       offset = {
-        lng: e.lngLat.lng - center.lng,
-        lat: e.lngLat.lat - center.lat,
+        lng: e.lngLat.lng - this.center.lng,
+        lat: e.lngLat.lat - this.center.lat,
       };
 
       map.on('mousemove', onMove);
       map.once('mouseup', onUp);
     });
 
-    map.on('touchstart', 'shed-fill', function(e) {
+    map.on('touchstart', 'shed-fill', e => {
       if (e.points.length !== 1) return;
 
       // Prevent the default map drag behavior.
@@ -500,6 +523,7 @@ class PinMap extends Component {
           width: 400,
           backgroundColor: 'white'
         }}>
+          <div id='geocoder'></div>
           <MapViz
             filterPolygon={this.state.filterPolygon}
             requests={this.state.requests}
