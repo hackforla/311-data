@@ -1,3 +1,9 @@
+/*
+  TODO:
+    - deal with loading of sources -- map shouldn't be ready until all are loaded
+      - or at least the MapSearch shouldn't be shown until the boundaries and shed are loaded
+*/
+
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
@@ -5,14 +11,16 @@ import PropTypes from 'proptypes';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import ncBoundaries from '../../data/nc-boundary-2019.json';
-//import openRequests from '../../data/open_requests.json';
+import ccBoundaries from '../../data/la-city-council-districts-2012.json';
+import openRequests from '../../data/open_requests.json';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
-// import MapCharts from './MapCharts';
+import MapCharts from './MapCharts';
 // import MapLayers from './MapLayers';
 import MapSearch from './MapSearch';
 // import MapRequestFilters from './MapRequestFilters';
+import BoundaryLayer from './BoundaryLayer';
 
 /////////////////// CONSTANTS ///////////////
 
@@ -26,114 +34,12 @@ const ZOOM_OUT_EXTENT = geojsonExtent(ncBoundaries);
 
 ///////////////////// MAP ///////////////////
 
-function BoundaryLayer({ map, sourceId, sourceData, idProperty, onSelectRegion }) {
-  let hoveredRegionId = null;
-
-  map.addSource(sourceId, {
-    type: 'geojson',
-    data: sourceData,
-    promoteId: idProperty
-  });
-
-  map.addLayer({
-    id: `${sourceId}-borders`,
-    source: sourceId,
-    type: 'line',
-    layout: {
-      visibility: 'none'
-    },
-    paint: {
-      'line-color': '#FFFFFF',
-      'line-width': 0.5
-    }
-  });
-
-  map.addLayer({
-    id: `${sourceId}-fills`,
-    source: sourceId,
-    type: 'fill',
-    layout: {
-      visibility: 'none'
-    },
-    paint: {
-      'fill-color': '#627BC1',
-      'fill-opacity': [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        0.5,
-        0
-      ]
-    }
-  });
-
-  map.on('mousemove', `${sourceId}-fills`, e => {
-    if (map.loaded()) {
-      const features = map.queryRenderedFeatures(e.point, {
-        layers: [`${sourceId}-fills`]
-      });
-
-      map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-
-      if (features.length) {
-        const { id } = features[0];
-        if (id === hoveredRegionId)
-          return;
-
-        if (hoveredRegionId) {
-          map.setFeatureState(
-            { source: sourceId, id: hoveredRegionId },
-            { hover: false }
-          );
-        }
-        map.setFeatureState(
-          { source: sourceId, id },
-          { hover: true }
-        );
-
-        hoveredRegionId = id;
-      }
-    }
-  });
-
-  map.on('mouseleave', `${sourceId}-fills`, () => {
-    if (hoveredRegionId) {
-      map.setFeatureState(
-        { source: sourceId, id: hoveredRegionId },
-        { hover: false }
-      );
-      hoveredRegionId = null;
-    }
-  });
-
-  map.on('click', `${sourceId}-fills`, e => {
-    const { id } = map.queryRenderedFeatures(e.point, {
-      layers: [`${sourceId}-fills`]
-    })[0];
-
-    const geo = sourceData.features.find(el => el.properties[idProperty] === id);
-    map.fitBounds(geojsonExtent(geo), { padding: 50 });
-    onSelectRegion(geo)
-  });
-
-  return {
-    show: () => {
-      map.setLayoutProperty(`${sourceId}-borders`, 'visibility', 'visible');
-      map.setLayoutProperty(`${sourceId}-fills`, 'visibility', 'visible');
-    },
-    hide: () => {
-      map.setLayoutProperty(`${sourceId}-borders`, 'visibility', 'none');
-      map.setLayoutProperty(`${sourceId}-fills`, 'visibility', 'none');
-    },
-  }
-}
-
 class PinMap extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       hoveredNCId: null,
-      selectedNCId: null,
       requests: this.convertRequests(),
       mapReady: false
     };
@@ -143,6 +49,7 @@ class PinMap extends Component {
     this.center = null;
 
     this.ncLayer = null;
+    this.ccLayer = null;
   }
 
   componentDidMount() {
@@ -173,6 +80,14 @@ class PinMap extends Component {
         sourceId: 'nc',
         sourceData: ncBoundaries,
         idProperty: 'nc_id',
+        onSelectRegion: geo => this.setState({ filterPolygon: geo })
+      });
+
+      this.ccLayer = BoundaryLayer({
+        map: this.map,
+        sourceId: 'cc',
+        sourceData: ccBoundaries,
+        idProperty: 'name',
         onSelectRegion: geo => this.setState({ filterPolygon: geo })
       });
     });
@@ -364,7 +279,10 @@ class PinMap extends Component {
 
   onGeocoderResult = ({ result }) => {
     if (result.properties.type === 'nc')
-      return this.zoomToNC(result.id);
+      return this.ncLayer.zoomToRegion(result.id);
+
+    if (result.properties.type === 'cc')
+      return this.ccLayer.zoomToRegion(result.id);
 
     this.center = {
       lng: result.center[0],
@@ -373,15 +291,16 @@ class PinMap extends Component {
 
     const circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
 
-    this.setState({ filterPolygon: circle });
     this.map.getSource('shed').setData(circle);
     this.zoomTo(circle);
+    this.map.once('zoomend', () => this.setState({ filterPolygon: circle }));
   }
 
   onChangeSearchTab = tab => {
     switch(tab) {
       case 'address':
         this.ncLayer.hide();
+        this.ccLayer.hide();
 
         this.map.setLayoutProperty('shed-border', 'visibility', 'visible');
         this.map.setLayoutProperty('shed-fill', 'visibility', 'visible');
@@ -392,6 +311,15 @@ class PinMap extends Component {
         this.map.setLayoutProperty('shed-fill', 'visibility', 'none');
 
         this.ncLayer.show();
+        this.ccLayer.hide();
+        break;
+
+      case 'cc':
+        this.map.setLayoutProperty('shed-border', 'visibility', 'none');
+        this.map.setLayoutProperty('shed-fill', 'visibility', 'none');
+
+        this.ncLayer.hide();
+        this.ccLayer.show();
         break;
     }
 
@@ -458,12 +386,6 @@ class PinMap extends Component {
     });
   }
 
-  zoomToNC = id => {
-    const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id == id);
-    this.zoomTo(ncGeo);
-    return ncGeo;
-  }
-
   zoomTo = (geojson) => {
     this.map.fitBounds(geojsonExtent(geojson), { padding: 50 });
   }
@@ -493,10 +415,10 @@ class PinMap extends Component {
     const ncName = this.hoveredNCName();
     return (
       <div className="map-container">
-        {/*<MapCharts
+        <MapCharts
           requests={this.state.requests}
           filterPolygon={this.state.filterPolygon}
-        />*/}
+        />
         {/*<MapLayers />*/}
         {
           this.state.mapReady ?
@@ -556,8 +478,8 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   // pinClusters: state.data.pinClusters,
-  //pinClusters: openRequests,
-  pinClusters: [],
+  pinClusters: openRequests,
+  // pinClusters: [],
   heatmap: state.data.heatmap,
   position: state.ui.map
 });

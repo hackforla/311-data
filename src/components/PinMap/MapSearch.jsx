@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { COUNCILS } from '@components/common/CONSTANTS';
+import { COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
 
 const TABS = [
   'address',
@@ -21,27 +21,38 @@ class MapSearch extends React.Component {
       accessToken: process.env.MAPBOX_TOKEN,
       flyTo: false,
       marker: false,
+      minLength: 1,
       placeholder: 'Enter address',
       localGeocoder: searchTerm => {
+        const searchFilter = new RegExp(searchTerm, 'i');
+
         switch(this.state.activeTab) {
           case 'address':
             return [];
 
           case 'nc':
-            const searchFilter = new RegExp(searchTerm, 'i');
-            const filteredItems = COUNCILS.filter(item => searchFilter.test(item.name));
-            return filteredItems.map(item => ({
+            const filteredNCs = COUNCILS.filter(nc => searchFilter.test(nc.name));
+            return filteredNCs.map(nc => ({
               type: 'Feature',
-              id: item.id,
-              text: item.name,
-              place_name: item.name,
+              id: nc.id,
+              text: nc.name,
+              place_name: nc.name,
               properties: {
                 type: 'nc'
               }
             }));
 
           case 'cc':
-            return [];
+            const filteredCCs = CITY_COUNCILS.filter(cc => searchFilter.test(cc.name));
+            return filteredCCs.map(cc => ({
+              type: 'Feature',
+              id: cc.id,
+              text: cc.name,
+              place_name: cc.name,
+              properties: {
+                type: 'cc'
+              }
+            }));
         }
       },
       localGeocoderOnly: false
