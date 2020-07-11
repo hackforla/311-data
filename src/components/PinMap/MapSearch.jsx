@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { COUNCILS } from '@components/common/CONSTANTS';
 
 const TABS = [
   'address',
@@ -19,9 +20,31 @@ class MapSearch extends React.Component {
     this.geocoder = new MapboxGeocoder({
       accessToken: process.env.MAPBOX_TOKEN,
       flyTo: false,
-      mapboxgl: mapboxgl,
       marker: false,
       placeholder: 'Enter address',
+      localGeocoder: searchTerm => {
+        switch(this.state.activeTab) {
+          case 'address':
+            return [];
+
+          case 'nc':
+            const searchFilter = new RegExp(searchTerm, 'i');
+            const filteredItems = COUNCILS.filter(item => searchFilter.test(item.name));
+            return filteredItems.map(item => ({
+              type: 'Feature',
+              id: item.id,
+              text: item.name,
+              place_name: item.name,
+              properties: {
+                type: 'nc'
+              }
+            }));
+
+          case 'cc':
+            return [];
+        }
+      },
+      localGeocoderOnly: false
     });
 
     this.geocoder.on('result', ({ result }) => {
@@ -33,14 +56,24 @@ class MapSearch extends React.Component {
 
   setTab = tab => {
     if (tab !== this.state.activeTab) {
-      console.log(this.geocoder);
       this.setState({ activeTab: tab })
       this.props.onChangeTab(tab);
       this.geocoder.clear();
       switch(tab) {
-        case 'address': return this.geocoder.setPlaceholder('Enter address');
-        case 'nc': return this.geocoder.setPlaceholder('Enter NC');
-        case 'cc': return this.geocoder.setPlaceholder('Enter CC');
+        case 'address':
+          this.geocoder.setPlaceholder('Enter address');
+          this.geocoder.options.localGeocoderOnly = false;
+          break;
+
+        case 'nc':
+          this.geocoder.setPlaceholder('Enter NC');
+          this.geocoder.options.localGeocoderOnly = true;
+          break;
+
+        case 'cc':
+          this.geocoder.setPlaceholder('Enter CC');
+          this.geocoder.options.localGeocoderOnly = true;
+          break;
       }
     }
   }
@@ -66,7 +99,6 @@ class MapSearch extends React.Component {
 };
 
 MapSearch.propTypes = {
-  mapboxgl: PropTypes.shape({}),
   map: PropTypes.shape({}),
   onGeocoderResult: PropTypes.func,
   onChangeTab: PropTypes.func,

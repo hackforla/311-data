@@ -1,17 +1,42 @@
 .map-search {
   top: 10px;
   right: 10px;
+  width: 300px;
 
   .search-tabs {
     display: flex;
+    justify-content: flex-end;
     .search-tab {
-      flex: 1;
-      border: 1px white solid;
-      padding: 5px;
+      flex: 0;
+      background-color: white;
+      border-width: 1px;
+      border-bottom-width: 0;
+      padding: 5px 10px;
+      color: black;
       cursor: pointer;
+      text-transform: capitalize;;
       &:hover {
         background-color: red;
       }
     }
   }
+
+  .mapboxgl-ctrl-geocoder {
+    width: 100% !important;
+    border-radius: 0;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    &--input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+      border-top-left-radius: 5px;
+    }
+
+    &.suggestions {
+      background-color: black !important;
+    }
+  }
+
 }

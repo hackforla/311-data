@@ -329,7 +329,7 @@ class PinMap extends Component {
           this.setState({ hoveredNCId: id });
 
           // update chart on hover
-          // const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id === id);
+          // this.zoomToNC(id)
           // this.setState({ hoveredNCId: id, filterPolygon: ncGeo });
         }
       }
@@ -355,14 +355,16 @@ class PinMap extends Component {
         this.zoomOut();
         this.setState({ selectedNCId: null });
       } else {
-        const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id === nc_id);
-        this.zoomTo(ncGeo);
+        const ncGeo = this.zoomToNC(nc_id);
         this.setState({ selectedNCId: nc_id, filterPolygon: ncGeo });
       }
     });
   }
 
   onGeocoderResult = ({ result }) => {
+    if (result.properties.type === 'nc')
+      return this.zoomToNC(result.id);
+
     this.center = {
       lng: result.center[0],
       lat: result.center[1]
@@ -376,7 +378,6 @@ class PinMap extends Component {
   }
 
   onChangeSearchTab = tab => {
-    console.log('changed tab:', tab)
     switch(tab) {
       case 'address':
         this.map.setLayoutProperty('nc-borders', 'visibility', 'none');
@@ -458,6 +459,12 @@ class PinMap extends Component {
     });
   }
 
+  zoomToNC = id => {
+    const ncGeo = ncBoundaries.features.find(el => el.properties.nc_id == id);
+    this.zoomTo(ncGeo);
+    return ncGeo;
+  }
+
   zoomTo = (geojson) => {
     this.map.fitBounds(geojsonExtent(geojson), { padding: 50 });
   }
@@ -496,7 +503,6 @@ class PinMap extends Component {
           this.state.mapReady ?
             <MapSearch
               map={this.map}
-              mapboxgl={mapboxgl}
               onGeocoderResult={this.onGeocoderResult}
               onChangeTab={this.onChangeSearchTab}
             /> :
