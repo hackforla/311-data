@@ -9,7 +9,6 @@ import ncBoundaries from '../../data/nc-boundary-2019.json';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 // import MapCharts from './MapCharts';
 // import MapLayers from './MapLayers';
 import MapSearch from './MapSearch';
@@ -35,6 +34,7 @@ class PinMap extends Component {
       hoveredNCId: null,
       selectedNCId: null,
       requests: this.convertRequests(),
+      mapReady: false
     };
 
     this.map = null;
@@ -67,27 +67,7 @@ class PinMap extends Component {
       // this.addNCs(this.map);
     });
 
-    this.geocoder = new MapboxGeocoder({
-      accessToken: process.env.MAPBOX_TOKEN,
-      flyTo: false,
-      mapboxgl: mapboxgl,
-      marker: false
-    });
-
-    this.geocoder.on('result', ({ result }) => {
-      this.center = {
-        lng: result.center[0],
-        lat: result.center[1]
-      };
-
-      const circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
-
-      this.setState({ filterPolygon: circle });
-      this.map.getSource('shed').setData(circle);
-      this.zoomTo(circle);
-    });
-
-    document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map));
+    this.setState({ mapReady: true })
   }
 
   componentDidUpdate(prevProps) {
@@ -371,6 +351,19 @@ class PinMap extends Component {
     });
   }
 
+  onGeocoderResult = ({ result }) => {
+    this.center = {
+      lng: result.center[0],
+      lat: result.center[1]
+    };
+
+    const circle = turf.circle([this.center.lng, this.center.lat], 1, { units: 'miles' });
+
+    this.setState({ filterPolygon: circle });
+    this.map.getSource('shed').setData(circle);
+    this.zoomTo(circle);
+  }
+
   activeTypes = props => {
     const active = [];
     props.requestTypes.forEach((t, idx) => {
@@ -465,7 +458,15 @@ class PinMap extends Component {
           filterPolygon={this.state.filterPolygon}
         />*/}
         {/*<MapLayers />*/}
-        <MapSearch />
+        {
+          this.state.mapReady ?
+            <MapSearch
+              map={this.map}
+              mapboxgl={mapboxgl}
+              onGeocoderResult={this.onGeocoderResult}
+            /> :
+            null
+        }
         {/*<MapRequestFilters />*/}
         <div style={{
           position: 'absolute',
