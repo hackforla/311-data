@@ -1,9 +1,13 @@
 
 import geojsonExtent from '@mapbox/geojson-extent';
-import { circle as turfCircle } from '@turf/turf';
+import { circle as turfCircle, mask as turfMask } from '@turf/turf';
 
 function makeCircle(center, radius=1, opts={ units: 'miles' }) {
   return turfCircle([center.lng, center.lat], radius, opts);
+}
+
+function makeMask(poly) {
+  return turfMask(poly);
 }
 
 export default function AddressLayer({ map, onSelectRegion }) {
@@ -12,11 +16,17 @@ export default function AddressLayer({ map, onSelectRegion }) {
   let center = map.getCenter();
 
   let circle = makeCircle(center);
+  let mask = makeMask(circle);
   onSelectRegion(circle);
 
   map.addSource('shed', {
     type: 'geojson',
     data: circle
+  });
+
+  map.addSource('shed-mask', {
+    type: 'geojson',
+    data: mask
   });
 
   map.addLayer({
@@ -27,8 +37,15 @@ export default function AddressLayer({ map, onSelectRegion }) {
       visibility: 'visible'
     },
     paint: {
-      'line-width': 1.5,
-      'line-color': '#FFFFFF'
+      'line-width': 1.0,
+      'line-color': '#FFFFFF',
+      'line-opacity': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        10, 1,
+        13, 0
+      ]
     }
   });
 
@@ -41,17 +58,36 @@ export default function AddressLayer({ map, onSelectRegion }) {
     },
     paint: {
       'fill-color': 'transparent',
-      'fill-opacity': 0.2
+      // 'fill-opacity': 0.2
+    }
+  });
+
+  map.addLayer({
+    id: 'shed-mask-fill',
+    type: 'fill',
+    source: 'shed-mask',
+    layout: {
+      visibility: 'visible'
+    },
+    paint: {
+      'fill-color': '#FFFFFF',
+      'fill-opacity': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        10, 0,
+        13, 0.15
+      ],
     }
   });
 
   map.on('mouseenter', 'shed-fill', e => {
-    map.setPaintProperty('shed-fill', 'fill-color', '#FFFFFF');
+    // map.setPaintProperty('shed-fill', 'fill-color', '#FFFFFF');
     canvas.style.cursor = 'move';
   });
 
   map.on('mouseleave', 'shed-fill', e => {
-    map.setPaintProperty('shed-fill', 'fill-color', 'transparent');
+    // map.setPaintProperty('shed-fill', 'fill-color', 'transparent');
     canvas.style.cursor = '';
   });
 
@@ -64,6 +100,7 @@ export default function AddressLayer({ map, onSelectRegion }) {
 
     const circle = makeCircle(center);
     map.getSource('shed').setData(circle);
+    map.getSource('shed-mask').setData(turfMask(circle));
     canvas.style.cursor = 'grabbing';
   };
 
@@ -76,6 +113,7 @@ export default function AddressLayer({ map, onSelectRegion }) {
 
     const circle = makeCircle(center);
     map.getSource('shed').setData(circle);
+    map.getSource('shed-mask').setData(turfMask(circle));
     onSelectRegion(circle);
 
     map.off('mousemove', onMove);
@@ -109,16 +147,19 @@ export default function AddressLayer({ map, onSelectRegion }) {
     show: () => {
       map.setLayoutProperty('shed-border', 'visibility', 'visible');
       map.setLayoutProperty('shed-fill', 'visibility', 'visible');
+      map.setLayoutProperty('shed-mask-fill', 'visibility', 'visible');
     },
     hide: () => {
       map.setLayoutProperty('shed-border', 'visibility', 'none');
       map.setLayoutProperty('shed-fill', 'visibility', 'none');
+      map.setLayoutProperty('shed-mask-fill', 'visibility', 'none');
     },
     setCenter: lngLat => {
       center = lngLat;
 
       const circle = makeCircle(center);
       map.getSource('shed').setData(circle);
+      map.getSource('shed-mask').setData(turfMask(circle));
       map.fitBounds(geojsonExtent(circle), { padding: 50 });
       map.once('zoomend', () => onSelectRegion(circle));
     },
