@@ -1,5 +1,6 @@
 
 import geojsonExtent from '@mapbox/geojson-extent';
+import { mask as turfMask } from '@turf/turf';
 
 export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, onSelectRegion }) {
   let hoveredRegionId = null;
@@ -31,13 +32,37 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
       visibility: 'none'
     },
     paint: {
-      'fill-color': '#627BC1',
+      'fill-color': '#FFFFFF',
       'fill-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
         0.5,
         0
       ]
+    }
+  });
+
+  map.addSource(`${sourceId}-region-mask`, {
+    type: 'geojson',
+    data: null,
+  });
+
+  map.addLayer({
+    id: `${sourceId}-region-mask-fill`,
+    source: `${sourceId}-region-mask`,
+    type: 'fill',
+    layout: {
+      visibility: 'visible'
+    },
+    paint: {
+      'fill-color': '#FFFFFF',
+      'fill-opacity': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        10, 0,
+        13, 0.5
+      ],
     }
   });
 
@@ -89,22 +114,36 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
   });
 
   const zoomToRegion = regionId => {
+    // get the region geo
     // notice double-equals because id is a number when it comes from CONSTANTS,
     // but a string in the geojson
     const geo = sourceData.features.find(el => el.properties[idProperty] == regionId);
 
+    // zoom to the region
     map.fitBounds(geojsonExtent(geo), { padding: 50 });
     map.once('zoomend', e => onSelectRegion(geo));
+
+    // mask everything else
+    map.getSource(`${sourceId}-region-mask`).setData(turfMask(geo));
+
+    // stop hover on selected region
+    map.setFeatureState(
+      { source: sourceId, id: regionId },
+      { hover: false }
+    );
   }
 
   return {
     show: () => {
       map.setLayoutProperty(`${sourceId}-borders`, 'visibility', 'visible');
       map.setLayoutProperty(`${sourceId}-fills`, 'visibility', 'visible');
+      map.setLayoutProperty(`${sourceId}-region-mask-fill`, 'visibility', 'visible');
     },
     hide: () => {
       map.setLayoutProperty(`${sourceId}-borders`, 'visibility', 'none');
       map.setLayoutProperty(`${sourceId}-fills`, 'visibility', 'none');
+      map.setLayoutProperty(`${sourceId}-region-mask-fill`, 'visibility', 'none');
+      map.getSource(`${sourceId}-region-mask`).setData(null);
     },
     zoomToRegion: regionId => zoomToRegion(regionId)
   }
