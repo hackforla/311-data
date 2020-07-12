@@ -1,43 +1,18 @@
 
 import geojsonExtent from '@mapbox/geojson-extent';
-import * as turf from '@turf/turf';
+import { circle as turfCircle } from '@turf/turf';
+
+function makeCircle(center, radius=1, opts={ units: 'miles' }) {
+  return turfCircle([center.lng, center.lat], radius, opts);
+}
 
 export default function AddressLayer({ map, onSelectRegion }) {
   let canvas = map.getCanvasContainer();
   let offset;
   let center = map.getCenter();
-  let circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
 
+  let circle = makeCircle(center);
   onSelectRegion(circle);
-
-  const onMove = e => {
-    canvas.style.cursor = 'grabbing';
-
-    const { lng, lat } = e.lngLat;
-    center = {
-      lng: lng - offset.lng,
-      lat: lat - offset.lat
-    }
-    circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
-
-    map.getSource('shed').setData(circle);
-  }
-
-  const onUp = e => {
-    const { lng, lat } = e.lngLat;
-    center = {
-      lng: lng - offset.lng,
-      lat: lat - offset.lat
-    }
-    circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
-
-    onSelectRegion(circle);
-    map.getSource('shed').setData(circle);
-
-    canvas.style.cursor = '';
-    map.off('mousemove', onMove);
-    map.off('touchmove', onMove);
-  }
 
   map.addSource('shed', {
     type: 'geojson',
@@ -80,10 +55,36 @@ export default function AddressLayer({ map, onSelectRegion }) {
     canvas.style.cursor = '';
   });
 
+  const onMove = e => {
+    const { lng, lat } = e.lngLat;
+    center = {
+      lng: lng - offset.lng,
+      lat: lat - offset.lat
+    };
+
+    const circle = makeCircle(center);
+    map.getSource('shed').setData(circle);
+    canvas.style.cursor = 'grabbing';
+  };
+
+  const onUp = e => {
+    const { lng, lat } = e.lngLat;
+    center = {
+      lng: lng - offset.lng,
+      lat: lat - offset.lat
+    };
+
+    const circle = makeCircle(center);
+    map.getSource('shed').setData(circle);
+    onSelectRegion(circle);
+
+    map.off('mousemove', onMove);
+    map.off('touchmove', onMove);
+    canvas.style.cursor = '';
+  }
+
   map.on('mousedown', 'shed-fill', e => {
     e.preventDefault();
-
-    canvas.style.cursor = 'grab';
 
     offset = {
       lng: e.lngLat.lng - center.lng,
@@ -92,6 +93,7 @@ export default function AddressLayer({ map, onSelectRegion }) {
 
     map.on('mousemove', onMove);
     map.once('mouseup', onUp);
+    canvas.style.cursor = 'grab';
   });
 
   map.on('touchstart', 'shed-fill', e => {
@@ -115,7 +117,7 @@ export default function AddressLayer({ map, onSelectRegion }) {
     setCenter: lngLat => {
       center = lngLat;
 
-      const circle = turf.circle([center.lng, center.lat], 1, { units: 'miles' });
+      const circle = makeCircle(center);
       map.getSource('shed').setData(circle);
       map.fitBounds(geojsonExtent(circle), { padding: 50 });
       map.once('zoomend', () => onSelectRegion(circle));
