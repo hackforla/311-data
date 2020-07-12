@@ -17,7 +17,7 @@ import BoundaryLayer from './BoundaryLayer';
 import AddressLayer from './AddressLayer';
 import MapCharts from './MapCharts';
 import MapSearch from './MapSearch';
-// import MapLayers from './MapLayers';
+import MapLayers from './MapLayers';
 // import MapRequestFilters from './MapRequestFilters';
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
@@ -43,7 +43,8 @@ class PinMap extends Component {
     this.state = {
       hoveredNCId: null,
       requests: this.convertRequests(),
-      mapReady: false
+      mapReady: false,
+      selectedTypes: Object.keys(REQUEST_TYPES).filter(t => t !== 'Bulky Items')
     };
 
     this.map = null;
@@ -136,7 +137,7 @@ class PinMap extends Component {
         ],
         'circle-opacity': 0.8
       },
-      // filter: this.filters(this.props)
+      filter: this.typeFilter(this.state.selectedTypes)
     });
     //
     // map.addLayer({
@@ -212,17 +213,8 @@ class PinMap extends Component {
     this.zoomOut();
   }
 
-  activeTypes = props => {
-    const active = [];
-    props.requestTypes.forEach((t, idx) => {
-      if (t.active)
-        active.push(idx);
-    });
-    return active;
-  }
-
-  typeFilter = props => {
-    return ['in', ['number', ['get', 'type']], ['literal', this.activeTypes(props)]];
+  typeFilter = types => {
+    return ['in', ['get', 'type'], ['literal', types]];
   }
 
   startDateFilter = props => {
@@ -284,6 +276,11 @@ class PinMap extends Component {
     console.log(map.getCanvas().toDataURL());
   }
 
+  onChangeSelection = selectedTypes => {
+    this.map.setFilter('requests', this.typeFilter(selectedTypes));
+    this.setState({ selectedTypes });
+  }
+
   hoveredNCName = () => {
     const { hoveredNCId } = this.state;
 
@@ -304,8 +301,12 @@ class PinMap extends Component {
         <MapCharts
           requests={this.state.requests}
           filterPolygon={this.state.filterPolygon}
+          selectedTypes={this.state.selectedTypes}
         />
-        {/*<MapLayers />*/}
+        <MapLayers
+          selectedTypes={this.state.selectedTypes}
+          onChange={this.onChangeSelection}
+        />
         {
           this.state.mapReady ?
             <MapSearch

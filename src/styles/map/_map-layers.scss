@@ -1,4 +1,38 @@
 .map-layers {
   bottom: 30px;
   right: 10px;
+  font-size: 14px;
+  color: white;
+  .type-selectors {
+    background-color: black;
+    padding: 14px;
+    border-radius: 5px;
+    .type-selector {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      .type-color {
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        margin-right: 10px;
+        border: 1px solid white;
+      }
+      .type-name {
+        flex: 1;
+      }
+    }
+    .type-selector-buttons {
+      margin-top: 5px;
+      display: flex;
+      justify-content: center;
+      .type-selector-button {
+        cursor: pointer;
+        padding: 2px 5px;
+        border: 1px white solid;
+        border-radius: 4px;
+        margin: 0 5px;
+      }
+    }
+  }
 }

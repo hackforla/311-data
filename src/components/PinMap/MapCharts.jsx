@@ -6,7 +6,7 @@ import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 class MapCharts extends React.PureComponent {
   render() {
-    const { filterPolygon, requests } = this.props;
+    const { filterPolygon, requests, selectedTypes } = this.props;
 
     const filteredRequests = filterPolygon
       ? turf.within(requests, filterPolygon)
@@ -20,11 +20,12 @@ class MapCharts extends React.PureComponent {
 
     const table = [];
     Object.keys(REQUEST_TYPES).forEach(type => {
-      table.push({
-        requestType: REQUEST_TYPES[type]?.abbrev,
-        count: counts[type] || 0,
-        color: REQUEST_TYPES[type]?.color
-      });
+      if (selectedTypes.includes(type))
+        table.push({
+          requestType: REQUEST_TYPES[type]?.abbrev,
+          count: counts[type] || 0,
+          color: REQUEST_TYPES[type]?.color
+        });
     });
 
     const spec = {
@@ -69,10 +70,12 @@ class MapCharts extends React.PureComponent {
 MapCharts.propTypes = {
   requests: PropTypes.shape({}).isRequired,
   filterPolygon: PropTypes.shape({}),
+  selectedTypes: PropTypes.arrayOf(PropTypes.string)
 };
 
 MapCharts.defaultProps = {
   filterPolygon: null,
+  selectedTypes: []
 };
 
 export default MapCharts;
