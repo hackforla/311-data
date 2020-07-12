@@ -2,4 +2,10 @@
   bottom: 40px;
   left: 10px;
   width: 350px;
+  background-color: $map-control-bg-color;
+  padding: 15px;
+
+  .vega-embed summary {
+    display: none;
+  }
 }

@@ -32,12 +32,30 @@ class MapCharts extends React.PureComponent {
       width: 210,
       height: 200,
       mark: 'bar',
+      background: 'transparent',
+      config: {
+        axis: {
+          tickColor: 'red',
+          labelColor: 'white',
+          titleColor: 'white',
+        }
+      },
       encoding: {
         y: {
           field: 'requestType',
           type: 'nominal',
+          marks: {
+            color: 'white',
+            style: {
+              color: 'white'
+            }
+          },
           axis: {
-            title: 'request type'
+            title: 'request type',
+            color: 'white',
+            style: {
+              color: 'white'
+            }
           }
         },
         x: {
