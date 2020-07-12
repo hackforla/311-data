@@ -3,9 +3,9 @@
   right: 10px;
   font-size: 14px;
   color: white;
+  padding: 15px;
+  background-color: $map-control-bg-color;
   .type-selectors {
-    background-color: black;
-    padding: 14px;
     border-radius: 5px;
     .type-selector {
       display: flex;

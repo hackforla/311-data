@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
+import clx from 'classnames';
 
 const TABS = [
   'address',
@@ -77,12 +78,12 @@ class MapSearch extends React.Component {
           break;
 
         case 'nc':
-          this.geocoder.setPlaceholder('Enter NC');
+          this.geocoder.setPlaceholder('Enter neighborhood council');
           this.geocoder.options.localGeocoderOnly = true;
           break;
 
         case 'cc':
-          this.geocoder.setPlaceholder('Enter CC');
+          this.geocoder.setPlaceholder('Enter city council number');
           this.geocoder.options.localGeocoderOnly = true;
           break;
       }
@@ -96,14 +97,18 @@ class MapSearch extends React.Component {
           { TABS.map(tab => (
             <div
               key={tab}
-              className="search-tab"
+              className={clx('search-tab', {
+                active: tab === this.state.activeTab
+              })}
               onClick={this.setTab.bind(null, tab)}
             >
               { tab }
             </div>
           ))}
         </div>
-        <div id="geocoder" />
+        <div className="search-content">
+          <div id="geocoder" />
+        </div>
       </div>
     );
   }
