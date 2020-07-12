@@ -143,7 +143,6 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
       map.setLayoutProperty(`${sourceId}-borders`, 'visibility', 'none');
       map.setLayoutProperty(`${sourceId}-fills`, 'visibility', 'none');
       map.setLayoutProperty(`${sourceId}-region-mask-fill`, 'visibility', 'none');
-      map.getSource(`${sourceId}-region-mask`).setData(null);
     },
     zoomToRegion: regionId => zoomToRegion(regionId)
   }

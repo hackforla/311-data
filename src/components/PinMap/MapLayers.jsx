@@ -46,17 +46,17 @@ class MapLayers extends React.Component {
               </div>
             );
           })}
-          <div className="type-selector-buttons">
-            <div
-              className="type-selector-button"
-              onClick={this.selectAll}>
-              Select All
-            </div>
-            <div
-              className="type-selector-button"
-              onClick={this.deselectAll}>
-              Deselect All
-            </div>
+        </div>
+        <div className="type-selector-buttons">
+          <div
+            className="type-selector-button"
+            onClick={this.selectAll}>
+            Select All
+          </div>
+          <div
+            className="type-selector-button"
+            onClick={this.deselectAll}>
+            Clear All
           </div>
         </div>
       </div>

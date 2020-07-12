@@ -4,20 +4,6 @@
   width: 300px;
   background-color: none;
 
-  // .search-type {
-  //   display: flex;
-  //   align-items: center;
-  //   margin-bottom: 8px;
-  //   text-align: right;
-  // }
-  //
-  // .search-title {
-  //   font-weight: bold;
-  //   font-size: 14px;
-  //   padding-right: 8px;
-  //   flex: 1;
-  // }
-
   .search-tabs {
     display: flex;
     justify-content: flex-end;
@@ -25,31 +11,28 @@
       flex: 0;
       padding: 4px 12px;
       color: white;
-      cursor: pointer;
       text-transform: capitalize;
-      // border: 1px $map-control-border-color solid;
-      // border-bottom: none;
       background-color: $map-control-bg-color;
       font-weight: bold;
       font-size: 13px;
       user-select: none;
-      &:not(:last-child) {
-        border-right: none;
-      }
+      border: 1px $map-control-bg-color solid;
       &:first-child {
         border-top-left-radius: 5px;
-        // border-bottom-left-radius: 5px;
       }
       &:last-child {
         border-top-right-radius: 5px;
-        // border-bottom-right-radius: 5px;
       }
       &:not(:first-child) {
         text-transform: uppercase;
       }
-      &:hover, &.active {
+      &.active {
+        border-color: $map-control-border-color;
+      }
+      &:hover:not(.active) {
+        cursor: pointer;
         background-color: $map-control-active-bg-color;
-        // text-decoration: underline;
+        border-color: $map-control-active-bg-color;
       }
     }
   }
@@ -58,27 +41,19 @@
     border-radius: 5px;
     border-top-right-radius: 0;
     padding: 10px;
-    // border-top: 1px $map-control-border-color solid;
   }
 
   .mapboxgl-ctrl-geocoder {
     width: 100% !important;
-    // border-radius: 0;
-    // border-bottom-right-radius: 5px;
-    // border-bottom-left-radius: 5px;
-    // border-top-left-radius: 5px;
     background-color: transparent !important;
+
     &--input {
-      // border-radius: 5px;
       background-color: transparent !important;
       border-bottom: 1px $map-control-border-color solid;
       color: white;
       font-weight: normal;
-      // border-top-right-radius: 0;
-      // border-bottom-right-radius: 5px;
-      // border-bottom-left-radius: 5px;
-      // border-top-left-radius: 5px;
     }
+
     &--button {
       background-color: transparent;
     }

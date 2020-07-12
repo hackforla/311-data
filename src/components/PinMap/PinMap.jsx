@@ -44,7 +44,7 @@ class PinMap extends Component {
       hoveredNCId: null,
       requests: this.convertRequests(),
       mapReady: false,
-      selectedTypes: Object.keys(REQUEST_TYPES).filter(t => t !== 'Bulky Items')
+      selectedTypes: Object.keys(REQUEST_TYPES),
     };
 
     this.map = null;
@@ -126,7 +126,7 @@ class PinMap extends Component {
           'base': 1.75,
           'stops': [
             [12, 2],
-            [22, 180]
+            [15, 10]
           ],
         },
         'circle-color': [

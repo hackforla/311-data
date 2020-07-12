@@ -13,20 +13,16 @@ function makeMask(poly) {
 export default function AddressLayer({ map, onSelectRegion }) {
   let canvas = map.getCanvasContainer();
   let offset;
-  let center = map.getCenter();
-
-  let circle = makeCircle(center);
-  let mask = makeMask(circle);
-  onSelectRegion(circle);
+  let center;
 
   map.addSource('shed', {
     type: 'geojson',
-    data: circle
+    data: null
   });
 
   map.addSource('shed-mask', {
     type: 'geojson',
-    data: mask
+    data: null
   });
 
   map.addLayer({
@@ -39,13 +35,13 @@ export default function AddressLayer({ map, onSelectRegion }) {
     paint: {
       'line-width': 1.0,
       'line-color': '#FFFFFF',
-      'line-opacity': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        10, 1,
-        13, 0
-      ]
+      // 'line-opacity': [
+      //   'interpolate',
+      //   ['linear'],
+      //   ['zoom'],
+      //   10, 1,
+      //   13, 0.5
+      // ]
     }
   });
 
@@ -76,7 +72,7 @@ export default function AddressLayer({ map, onSelectRegion }) {
         ['linear'],
         ['zoom'],
         10, 0,
-        13, 0.15
+        13, 0.2
       ],
     }
   });
@@ -153,6 +149,10 @@ export default function AddressLayer({ map, onSelectRegion }) {
       map.setLayoutProperty('shed-border', 'visibility', 'none');
       map.setLayoutProperty('shed-fill', 'visibility', 'none');
       map.setLayoutProperty('shed-mask-fill', 'visibility', 'none');
+
+      // NOTE: make empty geojson a constant somewhere and use instead of this
+      map.getSource('shed').setData({ type: "FeatureCollection", features: []});
+      map.getSource('shed-mask').setData({ type: "FeatureCollection", features: []});
     },
     setCenter: lngLat => {
       center = lngLat;

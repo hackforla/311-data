@@ -3,11 +3,12 @@
   right: 10px;
   font-size: 14px;
   color: white;
-  padding: 15px;
   background-color: $map-control-bg-color;
   .type-selectors {
+    margin: 15px 0;
     border-radius: 5px;
     .type-selector {
+      padding: 0 15px;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -21,17 +22,31 @@
       .type-name {
         flex: 1;
       }
+      &:hover {
+        background-color: $map-control-active-bg-color;
+      }
     }
-    .type-selector-buttons {
-      margin-top: 5px;
-      display: flex;
-      justify-content: center;
-      .type-selector-button {
-        cursor: pointer;
-        padding: 2px 5px;
-        border: 1px white solid;
-        border-radius: 4px;
-        margin: 0 5px;
+  }
+  .type-selector-buttons {
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    .type-selector-button {
+      user-select: none;
+      text-align: center;
+      width: 50%;
+      cursor: pointer;
+      padding: 2px 5px;
+      border-top: 1px $map-control-border-color solid;
+      &:first-child {
+        border-right: 1px $map-control-border-color solid;
+        border-bottom-left-radius: 5px;
+      }
+      &:last-child {
+        border-bottom-right-radius: 5px;
+      }
+      &:hover {
+        background-color: $map-control-active-bg-color;
       }
     }
   }
