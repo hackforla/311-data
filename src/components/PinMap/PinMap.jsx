@@ -4,6 +4,7 @@
     - put requests layer in separate file
     - put requests underneath large geo text
     - add popups
+    - better to filter the requests layer or to change the data in the requests source?
 */
 
 import React, { Component } from 'react';
@@ -16,6 +17,7 @@ import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
+import RequestsLayer from './RequestsLayer';
 import BoundaryLayer from './BoundaryLayer';
 import AddressLayer from './AddressLayer';
 
@@ -32,11 +34,6 @@ import openRequests from '../../data/open_requests.json';
 /////////////////// CONSTANTS ///////////////
 
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
-
-const REQUEST_COLORS = Object.keys(REQUEST_TYPES).reduce((p, c) => {
-  return [...p, c, REQUEST_TYPES[c].color]
-}, []);
-
 const INITIAL_BOUNDS = geojsonExtent(ncBoundaries);
 
 ///////////////////// MAP ///////////////////
@@ -54,6 +51,7 @@ class PinMap extends Component {
     };
 
     this.map = null;
+    this.requestsLayer = null;
     this.addressLayer = null;
     this.ncLayer = null;
     this.ccLayer = null;
@@ -71,7 +69,10 @@ class PinMap extends Component {
     });
 
     this.map.on('load', () => {
-      this.addRequests(this.map);
+      this.requestsLayer = RequestsLayer({
+        map: this.map,
+        sourceData: this.state.requests
+      });
 
       this.addressLayer = AddressLayer({
         map: this.map,
@@ -118,55 +119,7 @@ class PinMap extends Component {
     }
   }
 
-  addRequests = map => {
-    map.addSource('requests', {
-      type: 'geojson',
-      data: this.state.requests
-    });
-
-    map.addLayer({
-      id: 'request-circles',
-      type: 'circle',
-      source: 'requests',
-      layout: {
-        visibility: this.state.requestsLayer === 'request-circles' ? 'visible' : 'none'
-      },
-      paint: {
-        'circle-radius': {
-          'base': 1.75,
-          'stops': [
-            [12, 2],
-            [15, 10]
-          ],
-        },
-        'circle-color': [
-          'match',
-          ['get', 'type'],
-          ...REQUEST_COLORS,
-          '#FFFFFF'
-        ],
-        'circle-opacity': 0.8
-      },
-      filter: this.typeFilter(this.state.selectedTypes)
-    });
-
-    map.addLayer({
-      id: 'request-heatmap',
-      type: 'heatmap',
-      source: 'requests',
-      layout: {
-        visibility: this.state.requestsLayer === 'request-heatmap' ? 'visible' : 'none'
-      },
-      paint: {
-        'heatmap-radius': 5,
-      },
-      filter: this.typeFilter(this.state.selectedTypes)
-    });
-  };
-
   onGeocoderResult = ({ result }) => {
-    console.log(result);
-
     if (result.properties.type === 'nc') {
       this.setState({ selectedRegionName: result.place_name });
       return this.ncLayer.zoomToRegion(result.id);
