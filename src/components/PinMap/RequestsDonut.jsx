@@ -49,7 +49,6 @@ class RequestsDonut extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.selectedRequests !== this.props.selectedRequests) {
-      console.log('updating donut');
       this.chart.config.data.datasets[0].data = (
         this.types.map(type => this.props.selectedRequests[type] || 0)
       );

@@ -1,7 +1,6 @@
 /*
   TODO:
     - implement reset function
-    - put requests layer in separate file
     - put requests underneath large geo text
     - add popups
     - better to filter the requests layer or to change the data in the requests source?
@@ -46,7 +45,9 @@ class PinMap extends Component {
       mapReady: false,
       activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
-      selectedRegionName: 'All of Los Angeles'
+      selectedRegionName: 'All of Los Angeles',
+      filterPolygon: null,
+      filteredRequestCounts: {}
     };
 
     this.map = null;
@@ -105,11 +106,19 @@ class PinMap extends Component {
 
       this.map.addControl(new mapboxgl.FullscreenControl(), 'bottom-left');
     });
+
+    this.setFilteredRequestCounts();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.props.requests !== prevProps.requests)
       this.requestsLayer.setData(this.props.requests);
+
+    if (
+      this.state.filterPolygon !== prevState.filterPolygon ||
+      this.state.selectedTypes !== prevState.selectedTypes
+    )
+      this.setFilteredRequestCounts();
   }
 
   onGeocoderResult = ({ result }) => {
@@ -185,25 +194,25 @@ class PinMap extends Component {
     this.setState({ activeRequestsLayer: layerName });
   }
 
-  selectedRequests = () => {
+  setFilteredRequestCounts = () => {
     const { filterPolygon, selectedTypes } = this.state;
     const { requests } = this.props;
 
-    let filteredRequests = filterPolygon
+    const filteredRequests = filterPolygon
       ? turf.within(requests, filterPolygon)
       : requests;
 
-    const out = {};
+    const counts = {};
 
-    selectedTypes.forEach(t => out[t] = 0);
+    selectedTypes.forEach(t => counts[t] = 0);
 
     filteredRequests.features.forEach(r => {
       const { type } = r.properties;
-      if (typeof out[type] !== 'undefined')
-        out[type] += 1;
+      if (typeof counts[type] !== 'undefined')
+        counts[type] += 1;
     });
 
-    return out;
+    this.setState({ filteredRequestCounts: counts });
   }
 
   //// RENDER ////
@@ -215,7 +224,7 @@ class PinMap extends Component {
           <>
             <MapOverview
               regionName={this.state.selectedRegionName}
-              selectedRequests={this.selectedRequests()}
+              selectedRequests={this.state.filteredRequestCounts}
             />
             <MapSearch
               map={this.map}
@@ -229,7 +238,7 @@ class PinMap extends Component {
               onChangeRequestsLayer={this.setActiveRequestsLayer}
             />
             {/*<MapCharts
-              requests={this.state.requests}
+              requests={this.props.requests}
               filterPolygon={this.state.filterPolygon}
               selectedTypes={this.state.selectedTypes}
             />*/}
