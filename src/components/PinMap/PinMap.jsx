@@ -30,7 +30,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
-import ncOverlay from '../../data/nc-boundary-2019.json';
+import ncOverlay from '../../data/nc-boundary-2019-centroid.json';
 
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
@@ -116,7 +116,7 @@ class PinMap extends Component {
     // Tooltip text when mousing over on a region
     const toolTipText = `
       <div class="overlay_feature_popup">
-        ${feature.properties.name}
+        ${feature.properties.nameshort}
         <br />
         ${feature.properties.service_re}
       </div>
@@ -132,8 +132,8 @@ class PinMap extends Component {
   }
 
   onEachRegionFeatureLabelTooltip = (feature, layer) => {
-    const { name } = feature.properties;
-    layer.bindTooltip(name, { permanent: true, direction: 'center' });
+    const { nameshort } = feature.properties;
+    layer.bindTooltip(nameshort, { permanent: true, direction: 'center' });
     layer.bringToBack();
     layer.on({
       mouseover: this.highlightRegion,
