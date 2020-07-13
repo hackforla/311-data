@@ -41,8 +41,8 @@ class PinMap extends Component {
     super(props);
 
     this.state = {
-      hoveredNCId: null,
       requests: this.convertRequests(),
+      requestsLayer: 'request-circles',
       mapReady: false,
       selectedTypes: Object.keys(REQUEST_TYPES),
     };
@@ -118,9 +118,12 @@ class PinMap extends Component {
     });
 
     map.addLayer({
-      id: 'requests',
+      id: 'request-circles',
       type: 'circle',
       source: 'requests',
+      layout: {
+        visibility: this.state.requestsLayer === 'request-circles' ? 'visible' : 'none'
+      },
       paint: {
         'circle-radius': {
           'base': 1.75,
@@ -139,7 +142,20 @@ class PinMap extends Component {
       },
       filter: this.typeFilter(this.state.selectedTypes)
     });
-    //
+
+    map.addLayer({
+      id: 'request-heatmap',
+      type: 'heatmap',
+      source: 'requests',
+      layout: {
+        visibility: this.state.requestsLayer === 'request-heatmap' ? 'visible' : 'none'
+      },
+      paint: {
+        'heatmap-radius': 5,
+      },
+      filter: this.typeFilter(this.state.selectedTypes)
+    });
+
     // map.addLayer({
     //   id: 'clusters',
     //   type: 'circle',
@@ -217,33 +233,18 @@ class PinMap extends Component {
     return ['in', ['get', 'type'], ['literal', types]];
   }
 
-  startDateFilter = props => {
-    return [">=", ['number', ['get', 'date']], props.startDate];
-  }
-
-  endDateFilter = props => {
-    return ["<=", ['number', ['get', 'date']], props.endDate];
-  }
-
-  filters = props => [
-    'all',
-    this.typeFilter(props),
-    this.startDateFilter(props),
-    this.endDateFilter(props)
-  ]
-
   convertRequests = () => ({
-    "type": "FeatureCollection",
-    "features": this.props.pinClusters.map(cluster => ({
-      "type": "Feature",
-      "properties": {
+    type: 'FeatureCollection',
+    features: this.props.pinClusters.map(cluster => ({
+      type: 'Feature',
+      properties: {
         id: cluster.srnumber,
         type: cluster.requesttype,
         point_count: cluster.count
       },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
+      geometry: {
+        type: 'Point',
+        coordinates: [
           cluster.longitude,
           cluster.latitude
         ]
@@ -277,25 +278,23 @@ class PinMap extends Component {
   }
 
   onChangeSelection = selectedTypes => {
-    this.map.setFilter('requests', this.typeFilter(selectedTypes));
+    this.map.setFilter(this.state.requestsLayer, this.typeFilter(selectedTypes));
     this.setState({ selectedTypes });
   }
 
-  hoveredNCName = () => {
-    const { hoveredNCId } = this.state;
-
-    if (!hoveredNCId)
-      return null;
-
-    const nc = ncBoundaries.features.find(el => el.properties.nc_id === hoveredNCId);
-
-    return nc.properties.name;
+  setRequestsLayer = layerName => {
+    if (layerName === 'request-circles') {
+      this.map.setLayoutProperty('request-circles', 'visibility', 'visible');
+      this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
+    } else {
+      this.map.setLayoutProperty('request-circles', 'visibility', 'none');
+      this.map.setLayoutProperty('request-heatmap', 'visibility', 'visible');
+    }
   }
 
   //// RENDER ////
 
   render() {
-    const ncName = this.hoveredNCName();
     return (
       <div className="map-container">
         <MapCharts
@@ -306,6 +305,7 @@ class PinMap extends Component {
         <MapLayers
           selectedTypes={this.state.selectedTypes}
           onChange={this.onChangeSelection}
+          setRequestsLayer={this.setRequestsLayer}
         />
         {
           this.state.mapReady ?
@@ -329,20 +329,6 @@ class PinMap extends Component {
           color: 'white'
         }}>
           { this.props.position.zoom && this.props.position.zoom.toFixed(4) }
-        </div>
-        <div style={{
-          display: ncName ? 'block' : 'none',
-          position: 'absolute',
-          zIndex: 1,
-          top: 10,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          padding: 5,
-          border: '1px white solid',
-          backgroundColor: 'black',
-          color: 'white'
-        }}>
-          { ncName }
         </div>
         <div style={{
           position: 'absolute',
