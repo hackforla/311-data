@@ -11,16 +11,19 @@ import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import geojsonExtent from '@mapbox/geojson-extent';
+import * as turf from '@turf/turf';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 import BoundaryLayer from './BoundaryLayer';
 import AddressLayer from './AddressLayer';
-import MapCharts from './MapCharts';
+
+import MapOverview from './MapOverview';
 import MapSearch from './MapSearch';
 import MapLayers from './MapLayers';
-import MapRequestFilters from './MapRequestFilters';
+// import MapCharts from './MapCharts';
+
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
 import ccBoundaries from '../../data/la-city-council-districts-2012.json';
@@ -310,14 +313,34 @@ class PinMap extends Component {
     }
   }
 
+  selectedRequests = () => {
+    const { filterPolygon, requests, selectedTypes } = this.state;
+
+    let filteredRequests = filterPolygon
+      ? turf.within(requests, filterPolygon)
+      : requests;
+
+    const out = {};
+
+    selectedTypes.forEach(t => out[t] = 0);
+
+    filteredRequests.features.forEach(r => {
+      const { type } = r.properties;
+      if (typeof out[type] !== 'undefined')
+        out[type] += 1;
+    });
+
+    return out;
+  }
+
   //// RENDER ////
 
   render() {
     return (
       <div className="map-container">
-        <MapRequestFilters
+        <MapOverview
           regionName={this.state.selectedRegionName}
-          totalRequests={this}
+          selectedRequests={this.selectedRequests()}
         />
         {/*<MapCharts
           requests={this.state.requests}

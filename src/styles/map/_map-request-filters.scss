@@ -19,4 +19,11 @@
   .info-content {
     font-size: 16px;
   }
+  .count-bar {
+    height: 6px;
+    margin-top: 4px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    transition: all 0.5s ease;
+  }
 }
