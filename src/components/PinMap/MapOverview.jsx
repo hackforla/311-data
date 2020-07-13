@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import RequestsDonut from './RequestsDonut';
 
 const BarChart = ({ selectedRequests }) => {
   const max = Math.max(...Object.values(selectedRequests));
@@ -26,7 +27,7 @@ const BarChart = ({ selectedRequests }) => {
 
 const MapOverview = ({ regionName, selectedRequests }) => {
   return (
-    <div className="map-request-filters map-control">
+    <div className="map-overview map-control">
       <div className="requests-title">
         Open 311 Requests
       </div>
@@ -48,7 +49,8 @@ const MapOverview = ({ regionName, selectedRequests }) => {
       <div className="info-content">
         { Object.values(selectedRequests).reduce((p,c) => p + c, 0) }
       </div>
-      <BarChart selectedRequests={selectedRequests} />
+      {/*<BarChart selectedRequests={selectedRequests} />*/}
+      <RequestsDonut selectedRequests={selectedRequests} />
     </div>
   );
 };
