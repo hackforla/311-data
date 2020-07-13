@@ -3,10 +3,14 @@
   right: 10px;
   font-size: 14px;
   color: white;
-  background-color: $map-control-bg-color;
-  .type-selectors {
-    margin: 15px 0;
+
+  .type-selection {
+    background-color: $map-control-bg-color;
     border-radius: 5px;
+    padding-top: 10px;
+  }
+
+  .type-selectors {
     .type-selector {
       padding: 0 15px;
       display: flex;
@@ -27,8 +31,9 @@
       }
     }
   }
+
   .type-selector-buttons {
-    margin-top: 5px;
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     .type-selector-button {
@@ -47,6 +52,36 @@
       }
       &:hover {
         background-color: $map-control-active-bg-color;
+      }
+    }
+  }
+
+  .request-layer-selection {
+    display: flex;
+    background-color: $map-control-bg-color;
+    border-radius: 5px;
+    margin-top: 10px;
+    .layer-selector-button {
+      padding: 2px 5px;
+      width: 50%;
+      text-align: center;
+      user-select: none;
+      border: 1px $map-control-bg-color solid;
+      &:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      &:last-child {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      &:hover:not(.active) {
+        background-color: $map-control-active-bg-color;
+        border-color: $map-control-active-bg-color;
+        cursor: pointer;
+      }
+      &.active {
+        border-color: $map-control-border-color;
       }
     }
   }

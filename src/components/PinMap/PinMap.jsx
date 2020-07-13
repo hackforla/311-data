@@ -2,6 +2,8 @@
   TODO:
     - deal with loading of sources -- map shouldn't be ready until all are loaded
       - or at least the MapSearch shouldn't be shown until the boundaries and shed are loaded
+    - implement reset function
+    - put requests layer in separate file
 */
 
 import React, { Component } from 'react';
@@ -286,9 +288,11 @@ class PinMap extends Component {
     if (layerName === 'request-circles') {
       this.map.setLayoutProperty('request-circles', 'visibility', 'visible');
       this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
+      this.setState({ requestsLayer: 'request-circles' });
     } else {
       this.map.setLayoutProperty('request-circles', 'visibility', 'none');
       this.map.setLayoutProperty('request-heatmap', 'visibility', 'visible');
+      this.setState({ requestsLayer: 'request-heatmap' });
     }
   }
 
@@ -306,6 +310,7 @@ class PinMap extends Component {
           selectedTypes={this.state.selectedTypes}
           onChange={this.onChangeSelection}
           setRequestsLayer={this.setRequestsLayer}
+          requestsLayer={this.state.requestsLayer}
         />
         {
           this.state.mapReady ?
