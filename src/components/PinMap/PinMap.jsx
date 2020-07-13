@@ -20,7 +20,7 @@ import AddressLayer from './AddressLayer';
 import MapCharts from './MapCharts';
 import MapSearch from './MapSearch';
 import MapLayers from './MapLayers';
-// import MapRequestFilters from './MapRequestFilters';
+import MapRequestFilters from './MapRequestFilters';
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
 import ccBoundaries from '../../data/la-city-council-districts-2012.json';
@@ -47,6 +47,7 @@ class PinMap extends Component {
       requestsLayer: 'request-circles',
       mapReady: false,
       selectedTypes: Object.keys(REQUEST_TYPES),
+      selectedRegionName: 'All of Los Angeles'
     };
 
     this.map = null;
@@ -195,12 +196,19 @@ class PinMap extends Component {
   };
 
   onGeocoderResult = ({ result }) => {
-    if (result.properties.type === 'nc')
+    console.log(result);
+
+    if (result.properties.type === 'nc') {
+      this.setState({ selectedRegionName: result.place_name });
       return this.ncLayer.zoomToRegion(result.id);
+    }
 
-    if (result.properties.type === 'cc')
+    if (result.properties.type === 'cc') {
+      this.setState({ selectedRegionName: result.place_name });
       return this.ccLayer.zoomToRegion(result.id);
+    }
 
+    this.setState({ selectedRegionName: `${result.address} ${result.text}` });
     this.addressLayer.setCenter({
       lng: result.center[0],
       lat: result.center[1]
@@ -301,11 +309,15 @@ class PinMap extends Component {
   render() {
     return (
       <div className="map-container">
-        <MapCharts
+        <MapRequestFilters
+          regionName={this.state.selectedRegionName}
+          totalRequests={this}
+        />
+        {/*<MapCharts
           requests={this.state.requests}
           filterPolygon={this.state.filterPolygon}
           selectedTypes={this.state.selectedTypes}
-        />
+        />*/}
         <MapLayers
           selectedTypes={this.state.selectedTypes}
           onChange={this.onChangeSelection}
@@ -321,7 +333,6 @@ class PinMap extends Component {
             /> :
             null
         }
-        {/*<MapRequestFilters />*/}
         <div style={{
           position: 'absolute',
           zIndex: 1,
