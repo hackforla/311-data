@@ -1,9 +1,9 @@
 /*
   TODO:
-    - deal with loading of sources -- map shouldn't be ready until all are loaded
-      - or at least the MapSearch shouldn't be shown until the boundaries and shed are loaded
     - implement reset function
     - put requests layer in separate file
+    - put requests underneath large geo text
+    - add popups
 */
 
 import React, { Component } from 'react';
@@ -23,7 +23,7 @@ import MapOverview from './MapOverview';
 import MapSearch from './MapSearch';
 import MapLayers from './MapLayers';
 // import MapCharts from './MapCharts';
-
+import MapMeta from './MapMeta';
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
 import ccBoundaries from '../../data/la-city-council-districts-2012.json';
@@ -37,7 +37,7 @@ const REQUEST_COLORS = Object.keys(REQUEST_TYPES).reduce((p, c) => {
   return [...p, c, REQUEST_TYPES[c].color]
 }, []);
 
-const ZOOM_OUT_EXTENT = geojsonExtent(ncBoundaries);
+const INITIAL_BOUNDS = geojsonExtent(ncBoundaries);
 
 ///////////////////// MAP ///////////////////
 
@@ -63,16 +63,12 @@ class PinMap extends Component {
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/dark-v10',
+      bounds: INITIAL_BOUNDS,
+      fitBoundsOptions: { padding: 50 },
       pitchWithRotate: false,
       dragRotate: false,
       touchZoomRotate: false
     });
-
-    this.zoomOut(false);
-    this.updatePosition(this.map);
-
-    this.map.touchZoomRotate.enable();
-    this.map.touchZoomRotate.disableRotation();
 
     this.map.on('load', () => {
       this.addRequests(this.map);
@@ -102,13 +98,12 @@ class PinMap extends Component {
         this.updatePosition(this.map);
       });
 
-      this.map.on('sourcedata', e => {
-        if (this.map.isSourceLoaded('requests'))
-          if (!this.state.mapReady) {
-            console.log('requests loaded');
-            this.setState({ mapReady: true });
-          }
+      this.map.once('idle', e => {
+        this.updatePosition(this.map);
+        this.setState({ mapReady: true });
       });
+
+      this.map.addControl(new mapboxgl.FullscreenControl(), 'bottom-left');
     });
   }
 
@@ -167,41 +162,6 @@ class PinMap extends Component {
       },
       filter: this.typeFilter(this.state.selectedTypes)
     });
-
-    // map.addLayer({
-    //   id: 'clusters',
-    //   type: 'circle',
-    //   source: 'requests',
-    //   filter: ['>', ['get', 'point_count'], 1],
-    //   paint: {
-    //     'circle-color': [
-    //       'step',
-    //       ['get', 'point_count'],
-    //       '#51bbd6', 100,
-    //       '#f1f075', 750,
-    //       '#f28cb1'
-    //     ],
-    //     'circle-radius': [
-    //       'step',
-    //       ['get', 'point_count'],
-    //       10, 100,
-    //       20, 750,
-    //       30
-    //     ]
-    //   }
-    // });
-    //
-    // map.addLayer({
-    //   id: 'cluster-count',
-    //   type: 'symbol',
-    //   source: 'requests',
-    //   filter: ['>', ['get', 'point_count'], 1],
-    //   layout: {
-    //     'text-field': '{point_count}',
-    //     'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-    //     'text-size': 12,
-    //   }
-    // });
   };
 
   onGeocoderResult = ({ result }) => {
@@ -284,12 +244,8 @@ class PinMap extends Component {
     });
   }
 
-  zoomTo = (geojson) => {
-    this.map.fitBounds(geojsonExtent(geojson), { padding: 50 });
-  }
-
-  zoomOut = (animate=true) => {
-    this.map.fitBounds(ZOOM_OUT_EXTENT, { padding: 50, linear: true, animate });
+  zoomOut = () => {
+    this.map.fitBounds(INITIAL_BOUNDS, { padding: 50, linear: true });
   }
 
   export = () => {
@@ -337,51 +293,32 @@ class PinMap extends Component {
 
   render() {
     return (
-      <div className="map-container">
-        <MapOverview
-          regionName={this.state.selectedRegionName}
-          selectedRequests={this.selectedRequests()}
-        />
-        {/*<MapCharts
-          requests={this.state.requests}
-          filterPolygon={this.state.filterPolygon}
-          selectedTypes={this.state.selectedTypes}
-        />*/}
-        <MapLayers
-          selectedTypes={this.state.selectedTypes}
-          onChange={this.onChangeSelection}
-          setRequestsLayer={this.setRequestsLayer}
-          requestsLayer={this.state.requestsLayer}
-        />
-        {
-          this.state.mapReady ?
+      <div className="map-container" ref={el => this.mapContainer = el}>
+        { this.state.mapReady && (
+          <>
+            <MapOverview
+              regionName={this.state.selectedRegionName}
+              selectedRequests={this.selectedRequests()}
+            />
             <MapSearch
               map={this.map}
               onGeocoderResult={this.onGeocoderResult}
               onChangeTab={this.onChangeSearchTab}
-            /> :
-            null
-        }
-        <div style={{
-          position: 'absolute',
-          zIndex: 1,
-          bottom: 10,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          padding: 5,
-          border: '1px white solid',
-          backgroundColor: 'black',
-          color: 'white'
-        }}>
-          { this.props.position.zoom && this.props.position.zoom.toFixed(4) }
-        </div>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0
-        }} ref={el => this.mapContainer = el} />
+            />
+            <MapLayers
+              selectedTypes={this.state.selectedTypes}
+              onChange={this.onChangeSelection}
+              setRequestsLayer={this.setRequestsLayer}
+              requestsLayer={this.state.requestsLayer}
+            />
+            {/*<MapCharts
+              requests={this.state.requests}
+              filterPolygon={this.state.filterPolygon}
+              selectedTypes={this.state.selectedTypes}
+            />*/}
+            <MapMeta position={this.props.position} />
+          </>
+        )}
       </div>
     );
   }
@@ -397,7 +334,6 @@ const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   // pinClusters: state.data.pinClusters,
   pinClusters: openRequests,
-  // pinClusters: [],
   heatmap: state.data.heatmap,
   position: state.ui.map
 });
