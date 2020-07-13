@@ -5,25 +5,30 @@ import clx from 'classnames';
 
 class MapLayers extends React.Component {
   onToggleType = id => {
-    const { selectedTypes, onChange } = this.props;
+    const { selectedTypes, onChangeSelectedTypes } = this.props;
 
     const newTypes = selectedTypes.includes(id)
       ? selectedTypes.filter(t => t !== id)
       : [ ...selectedTypes, id ];
 
-    onChange(newTypes);
+    onChangeSelectedTypes(newTypes);
   }
 
   selectAll = () => {
-    this.props.onChange(Object.keys(REQUEST_TYPES));
+    this.props.onChangeSelectedTypes(Object.keys(REQUEST_TYPES));
   }
 
   deselectAll = () => {
-    this.props.onChange([]);
+    this.props.onChangeSelectedTypes([]);
   }
 
   render() {
-    const { selectedTypes } = this.props;
+    const {
+      selectedTypes,
+      requestsLayer,
+      onChangeRequestsLayer
+    } = this.props;
+
     return (
       <div className="map-layers map-control">
         <div className="type-selection">
@@ -64,16 +69,16 @@ class MapLayers extends React.Component {
         <div className="request-layer-selection">
           <div
             className={clx('layer-selector-button', {
-              active: this.props.requestsLayer === 'request-circles'
+              active: requestsLayer === 'points'
             })}
-            onClick={() => this.props.setRequestsLayer('request-circles')}>
+            onClick={() => onChangeRequestsLayer('points')}>
             Points
           </div>
           <div
             className={clx('layer-selector-button', {
-              active: this.props.requestsLayer === 'request-heatmap'
+              active: requestsLayer === 'heatmap'
             })}
-            onClick={() => this.props.setRequestsLayer('request-heatmap')}>
+            onClick={() => onChangeRequestsLayer('heatmap')}>
             Heatmap
           </div>
         </div>

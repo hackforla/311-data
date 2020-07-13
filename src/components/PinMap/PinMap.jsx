@@ -43,8 +43,8 @@ class PinMap extends Component {
     super(props);
 
     this.state = {
-      requestsLayer: 'request-circles',
       mapReady: false,
+      activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
       selectedRegionName: 'All of Los Angeles'
     };
@@ -108,11 +108,8 @@ class PinMap extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.requests !== prevProps.requests) {
-      const source = this.map.getSource('requests');
-      if (source)
-        source.setData(this.props.requests);
-    }
+    if (this.props.requests !== prevProps.requests)
+      this.requestsLayer.setData(this.props.requests);
   }
 
   onGeocoderResult = ({ result }) => {
@@ -157,10 +154,6 @@ class PinMap extends Component {
     this.zoomOut();
   }
 
-  typeFilter = types => {
-    return ['in', ['get', 'type'], ['literal', types]];
-  }
-
   updatePosition = map => {
     const { updatePosition } = this.props;
     const bounds = map.getBounds();
@@ -182,21 +175,14 @@ class PinMap extends Component {
     console.log(map.getCanvas().toDataURL());
   }
 
-  onChangeSelection = selectedTypes => {
-    this.map.setFilter(this.state.requestsLayer, this.typeFilter(selectedTypes));
+  setSelectedTypes = selectedTypes => {
+    this.requestsLayer.setTypesFilter(selectedTypes);
     this.setState({ selectedTypes });
   }
 
-  setRequestsLayer = layerName => {
-    if (layerName === 'request-circles') {
-      this.map.setLayoutProperty('request-circles', 'visibility', 'visible');
-      this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
-      this.setState({ requestsLayer: 'request-circles' });
-    } else {
-      this.map.setLayoutProperty('request-circles', 'visibility', 'none');
-      this.map.setLayoutProperty('request-heatmap', 'visibility', 'visible');
-      this.setState({ requestsLayer: 'request-heatmap' });
-    }
+  setActiveRequestsLayer = layerName => {
+    this.requestsLayer.setActiveLayer(layerName);
+    this.setState({ activeRequestsLayer: layerName });
   }
 
   selectedRequests = () => {
@@ -238,9 +224,9 @@ class PinMap extends Component {
             />
             <MapLayers
               selectedTypes={this.state.selectedTypes}
-              onChange={this.onChangeSelection}
-              setRequestsLayer={this.setRequestsLayer}
-              requestsLayer={this.state.requestsLayer}
+              onChangeSelectedTypes={this.setSelectedTypes}
+              requestsLayer={this.state.activeRequestsLayer}
+              onChangeRequestsLayer={this.setActiveRequestsLayer}
             />
             {/*<MapCharts
               requests={this.state.requests}

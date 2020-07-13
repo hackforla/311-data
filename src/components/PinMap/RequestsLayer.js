@@ -43,4 +43,34 @@ export default function RequestsLayer({ map, sourceData, }) {
       'heatmap-radius': 5,
     }
   });
+
+  const typeFilter = selectedTypes => {
+    return ['in', ['get', 'type'], ['literal', selectedTypes]];
+  }
+
+  return {
+    setActiveLayer: layerName => {
+      switch(layerName) {
+        case 'points':
+          map.setLayoutProperty('request-circles', 'visibility', 'visible');
+          map.setLayoutProperty('request-heatmap', 'visibility', 'none');
+          break;
+
+        case 'heatmap':
+          map.setLayoutProperty('request-circles', 'visibility', 'none');
+          map.setLayoutProperty('request-heatmap', 'visibility', 'visible');
+          break;
+
+        default:
+          break;
+      }
+    },
+    setTypesFilter: selectedTypes => {
+      map.setFilter('request-circles', typeFilter(selectedTypes));
+      map.setFilter('request-heatmap', typeFilter(selectedTypes));
+    },
+    setData: requests => {
+      map.getSource('requests').setData(requests);
+    }
+  }
 }
