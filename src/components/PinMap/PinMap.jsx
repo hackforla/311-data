@@ -43,7 +43,6 @@ class PinMap extends Component {
     super(props);
 
     this.state = {
-      requests: this.convertRequests(),
       requestsLayer: 'request-circles',
       mapReady: false,
       selectedTypes: Object.keys(REQUEST_TYPES),
@@ -71,7 +70,7 @@ class PinMap extends Component {
     this.map.on('load', () => {
       this.requestsLayer = RequestsLayer({
         map: this.map,
-        sourceData: this.state.requests
+        sourceData: this.props.requests,
       });
 
       this.addressLayer = AddressLayer({
@@ -109,13 +108,10 @@ class PinMap extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.pinClusters !== prevProps.pinClusters) {
-      const requests = this.convertRequests();
-      this.setState({ requests });
-
+    if (this.props.requests !== prevProps.requests) {
       const source = this.map.getSource('requests');
       if (source)
-        source.setData(requests);
+        source.setData(this.props.requests);
     }
   }
 
@@ -165,25 +161,6 @@ class PinMap extends Component {
     return ['in', ['get', 'type'], ['literal', types]];
   }
 
-  convertRequests = () => ({
-    type: 'FeatureCollection',
-    features: this.props.pinClusters.map(cluster => ({
-      type: 'Feature',
-      properties: {
-        id: cluster.srnumber,
-        type: cluster.requesttype,
-        point_count: cluster.count
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [
-          cluster.longitude,
-          cluster.latitude
-        ]
-      }
-    }))
-  });
-
   updatePosition = map => {
     const { updatePosition } = this.props;
     const bounds = map.getBounds();
@@ -223,7 +200,8 @@ class PinMap extends Component {
   }
 
   selectedRequests = () => {
-    const { filterPolygon, requests, selectedTypes } = this.state;
+    const { filterPolygon, selectedTypes } = this.state;
+    const { requests } = this.props;
 
     let filteredRequests = filterPolygon
       ? turf.within(requests, filterPolygon)
@@ -277,6 +255,29 @@ class PinMap extends Component {
   }
 }
 
+function convertRequests(requests) {
+  return {
+    type: 'FeatureCollection',
+    features: requests.map(request => ({
+      type: 'Feature',
+      properties: {
+        id: request.srnumber,
+        type: request.requesttype,
+        point_count: request.count
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          request.longitude,
+          request.latitude
+        ]
+      }
+    }))
+  };
+}
+
+const REQUESTS = convertRequests(openRequests);
+
 const mapDispatchToProps = dispatch => ({
   getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
   updatePosition: position => dispatch(updateMapPosition(position)),
@@ -285,8 +286,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
-  // pinClusters: state.data.pinClusters,
-  pinClusters: openRequests,
+  // pinClusters: convertRequests(state.data.pinClusters),
+  requests: REQUESTS,
   heatmap: state.data.heatmap,
   position: state.ui.map
 });
