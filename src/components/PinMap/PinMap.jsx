@@ -98,9 +98,15 @@ class PinMap extends Component {
       this.map.on('moveend', e => {
         this.updatePosition(this.map);
       });
-    });
 
-    this.setState({ mapReady: true })
+      this.map.on('sourcedata', e => {
+        if (this.map.isSourceLoaded('requests'))
+          if (!this.state.mapReady) {
+            console.log('requests loaded');
+            this.setState({ mapReady: true });
+          }
+      });
+    });
   }
 
   componentDidUpdate(prevProps) {
