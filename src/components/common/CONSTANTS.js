@@ -1,60 +1,141 @@
 export default {};
 
+let ORIG_COLORS = [
+  '#4FEFEF',
+  '#ECB800',
+  '#AD7B56',
+  '#F7ADAD',
+  '#FFE6B7',
+  '#FF0000',
+  '#DDEC9F',
+  '#B8D0FF',
+  '#2368D0',
+  '#6A8011',
+];
+
+// https://carto.com/carto-colors/
+
+let CARTO_PRISM = [
+  '#5F4690',
+  '#1D6996',
+  '#38A6A5',
+  '#0F8554',
+  '#73AF48',
+  '#EDAD08',
+  '#E17C05',
+  '#CC503E',
+  '#94346E',
+  '#6F4070',
+  '#994E95',
+  // '#666666'
+];
+
+const CARTO_VIVID = [
+  '#E58606',
+  '#5D69B1',
+  '#52BCA3',
+  '#99C945',
+  '#CC61B0',
+  '#24796C',
+  '#DAA51B',
+  '#2F8AC4',
+  '#764E9F',
+  '#ED645A',
+  '#CC3A8E',
+  '#A5AA99'
+];
+
+const CARTO_BOLD = [
+  '#7F3C8D',
+  '#11A579',
+  '#3969AC',
+  '#F2B701',
+  '#E73F74',
+  '#80BA5A',
+  '#E68310',
+  '#008695',
+  '#CF1C90',
+  '#f97b72',
+  '#4b4b8f',
+  '#A5AA99'
+];
+
+const CARTO_PASTEL = [
+  '#66C5CC',
+  '#F6CF71',
+  '#F89C74',
+  '#DCB0F2',
+  '#87C55F',
+  '#9EB9F3',
+  '#FE88B1',
+  '#C9DB74',
+  '#8BE0A4',
+  '#B497E7',
+  '#D3B484',
+  '#B3B3B3'
+];
+
+// const colors = ORIG_COLORS;
+// const offset = 0;
+
+const colors = CARTO_PRISM;
+const offset = 2;
+
 export const REQUEST_TYPES = {
   'Dead Animal Removal': {
     displayName: 'Dead Animal',
     abbrev: 'DAN',
-    color: '#4FEFEF',
+    color: colors[(0 + offset) % colors.length],
   },
   'Homeless Encampment': {
     displayName: 'Homeless Encampment',
     abbrev: 'HLE',
-    color: '#ECB800',
+    color: colors[(1 + offset) % colors.length],
   },
   'Single Streetlight Issue': {
     displayName: 'Single Streetlight',
     abbrev: 'SSL',
-    color: '#AD7B56',
+    color: colors[(2 + offset) % colors.length],
   },
   'Multiple Streetlight Issue': {
     displayName: 'Multiple Streetlight',
     abbrev: 'MSL',
-    color: '#F7ADAD',
+    color: colors[(3 + offset) % colors.length],
   },
   Feedback: {
     displayName: 'Feedback',
     abbrev: 'FBK',
-    color: '#FFE6B7',
+    color: colors[(4 + offset) % colors.length],
   },
   'Bulky Items': {
     displayName: 'Bulky Items',
     abbrev: 'BLK',
-    color: '#FF0000',
+    color: colors[(5 + offset) % colors.length],
   },
   'Electronic Waste': {
     displayName: 'E-Waste',
     abbrev: 'EWT',
-    color: '#DDEC9F',
+    color: colors[(6 + offset) % colors.length],
   },
   'Metal/Household Appliances': {
     displayName: 'Metal/Household Appliances',
     abbrev: 'MHA',
-    color: '#B8D0FF',
+    color: colors[(7 + offset) % colors.length],
   },
   'Graffiti Removal': {
     displayName: 'Graffiti',
     abbrev: 'GFT',
-    color: '#2368D0',
+    color: colors[(8 + offset) % colors.length],
   },
   'Illegal Dumping Pickup': {
     displayName: 'Illegal Dumping',
     abbrev: 'ILD',
-    color: '#6A8011',
+    color: colors[(9 + offset) % colors.length],
   },
   Other: {
     displayName: 'Other',
     abbrev: 'OTH',
-    color: '#6D7C93',
+    color: colors[(10 + offset) % colors.length],
   },
 };
 

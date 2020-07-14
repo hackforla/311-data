@@ -1,10 +1,12 @@
 /*
   TODO:
-    - implement reset function
+    - implement reset and drop-pin function
     - put requests underneath large geo text
     - add popups
+      - need drag handle for address filter
     - better to filter the requests layer or to change the data in the requests source?
     - reverse geocode on drag end -- see if we can get intersection based on lat/lng
+    - try eliminating 
 */
 
 import React, { Component } from 'react';

@@ -18,7 +18,7 @@ export default function RequestsLayer({ map, sourceData, }) {
       'circle-radius': {
         'base': 1.75,
         'stops': [
-          [12, 2],
+          [10, 2],
           [15, 10]
         ],
       },
