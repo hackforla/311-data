@@ -8,9 +8,22 @@ $map-control-active-bg-color: #505050;
   .map-control {
     z-index: 1;
     position: absolute;
-    // padding: 15px;
     color: white;
     border-radius: 5px;
+  }
+
+  .hovered-region {
+    z-index: 1;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    background-color: $map-control-bg-color;
+    padding: 4px 10px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
   }
 
   .leaflet-control-easyPrint {

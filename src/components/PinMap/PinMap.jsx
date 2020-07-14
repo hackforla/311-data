@@ -42,6 +42,14 @@ const INITIAL_LOCATION = {
   radius: null
 };
 
+function ncName(ncId) {
+  return COUNCILS.find(c => c.id == ncId)?.name;
+}
+
+function ccName(ccId) {
+  return CITY_COUNCILS.find(c => c.id == ccId)?.name;
+}
+
 ///////////////////// MAP ///////////////////
 
 class PinMap extends Component {
@@ -54,7 +62,8 @@ class PinMap extends Component {
       selectedTypes: Object.keys(REQUEST_TYPES),
       locationInfo: INITIAL_LOCATION,
       filterGeo: null,
-      filteredRequestCounts: {}
+      filteredRequestCounts: {},
+      hoveredRegionName: null
     };
 
     this.map = null;
@@ -103,12 +112,19 @@ class PinMap extends Component {
           this.setState({
             locationInfo: {
               name: 'Neighborhood Council',
-              value: COUNCILS.find(c => c.id == geo.properties.nc_id)?.name,
+              value: ncName(geo.properties.nc_id),
               url: geo.properties.waddress || geo.properties.dwebsite
             }
           });
           this.map.once('idle', () => {
             this.setState({ filterGeo: geo });
+          });
+        },
+        onHoverRegion: geo => {
+          this.setState({
+            hoveredRegionName: geo
+              ? ncName(geo.properties.nc_id)
+              : null
           });
         }
       });
@@ -122,11 +138,18 @@ class PinMap extends Component {
           this.setState({
             locationInfo: {
               name: 'City Council',
-              value: CITY_COUNCILS.find(c => c.id == geo.properties.name)?.name,
+              value: ccName(geo.properties.name),
             }
           });
           this.map.once('idle', () => {
             this.setState({ filterGeo: geo });
+          });
+        },
+        onHoverRegion: geo => {
+          this.setState({
+            hoveredRegionName: geo
+              ? ccName(geo.properties.name)
+              : null
           });
         }
       });
@@ -157,8 +180,8 @@ class PinMap extends Component {
       this.setFilteredRequestCounts();
   }
 
-  addPopup = (lngLat, content) => {
-    return new mapboxgl.Popup()
+  addPopup = (lngLat, content, opts={}) => {
+    return new mapboxgl.Popup(opts)
       .setLngLat(lngLat)
       .setHTML(content)
       .addTo(this.map);
@@ -313,6 +336,11 @@ class PinMap extends Component {
               selectedTypes={this.state.selectedTypes}
             />*/}
             <MapMeta position={this.props.position} />
+            { this.state.hoveredRegionName && (
+              <div className="hovered-region">
+                { this.state.hoveredRegionName }
+              </div>
+            )}
           </>
         )}
       </div>

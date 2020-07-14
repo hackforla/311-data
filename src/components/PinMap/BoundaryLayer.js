@@ -2,7 +2,15 @@
 import geojsonExtent from '@mapbox/geojson-extent';
 import { mask as turfMask } from '@turf/turf';
 
-export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, onSelectRegion }) {
+export default function BoundaryLayer({
+  map,
+  sourceId,
+  sourceData,
+  idProperty,
+  onSelectRegion,
+  onHoverRegion,
+}) {
+
   let hoveredRegionId = null;
   let selectedRegionId = null;
 
@@ -73,12 +81,12 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
         layers: [`${sourceId}-fills`]
       });
 
-      map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-
       if (features.length) {
         const { id } = features[0];
         if (id === hoveredRegionId)
           return;
+
+        onHoverRegion(features[0]);
 
         if (hoveredRegionId) {
           map.setFeatureState(
@@ -94,11 +102,15 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
           );
 
         hoveredRegionId = id;
+
+        map.getCanvas().style.cursor = features.length ? 'pointer' : '';
       }
     }
   });
 
   map.on('mouseleave', `${sourceId}-fills`, () => {
+    onHoverRegion(null);
+
     if (hoveredRegionId) {
       map.setFeatureState(
         { source: sourceId, id: hoveredRegionId },
