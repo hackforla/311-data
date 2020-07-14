@@ -28,7 +28,7 @@ const App = ({
       <Routes />
       <Switch>
         <Route path="/(about|contact|privacy)" component={StaticFooter} />
-        <Route path="/" component={Footer} />
+        {/*<Route path="/" component={Footer} />*/}
       </Switch>
       <SnapshotRenderer />
       <CookieNotice />

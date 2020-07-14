@@ -3,7 +3,8 @@ $map-control-bg-color: #27272b;
 $map-control-active-bg-color: #505050;
 
 .map-container {
-  height: calc(100vh - #{$header-height + $footer-height});
+  //height: calc(100vh - #{$header-height + $footer-height});
+  height: calc(100vh - #{$header-height});
 
   .map-control {
     z-index: 1;
