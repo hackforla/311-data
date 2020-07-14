@@ -48,25 +48,25 @@ export default function RequestsLayer({ map, sourceData, addPopup }) {
     }
   }, BEFORE_ID);
 
-  map.on('click', 'request-circles', e => {
-    const { coordinates } = e.features[0].geometry;
-    const { id, type } = e.features[0].properties;
-    const content = (
-      '<div>' +
-        `<div>${id}</div>` +
-        `<div>${type}</div>` +
-      '</div>'
-    );
-    addPopup(coordinates, content);
-  });
-
-  map.on('mouseenter', 'request-circles', () => {
-    map.getCanvas().style.cursor = 'pointer';
-  });
-
-  map.on('mouseleave', 'request-circles', () => {
-    map.getCanvas().style.cursor = '';
-  });
+  // map.on('click', 'request-circles', e => {
+  //   const { coordinates } = e.features[0].geometry;
+  //   const { id, type } = e.features[0].properties;
+  //   const content = (
+  //     '<div>' +
+  //       `<div>${id}</div>` +
+  //       `<div>${type}</div>` +
+  //     '</div>'
+  //   );
+  //   addPopup(coordinates, content);
+  // });
+  //
+  // map.on('mouseenter', 'request-circles', () => {
+  //   map.getCanvas().style.cursor = 'pointer';
+  // });
+  //
+  // map.on('mouseleave', 'request-circles', () => {
+  //   map.getCanvas().style.cursor = '';
+  // });
 
   const typeFilter = selectedTypes => {
     return ['in', ['get', 'type'], ['literal', selectedTypes]];
