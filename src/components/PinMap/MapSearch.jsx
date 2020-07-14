@@ -61,6 +61,7 @@ class MapSearch extends React.Component {
 
     this.geocoder.on('result', ({ result }) => {
       this.props.onGeocoderResult({ result });
+      this.geocoder.clear();
     });
 
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(map));

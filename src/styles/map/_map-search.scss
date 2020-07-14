@@ -16,7 +16,6 @@
       font-weight: bold;
       font-size: 13px;
       user-select: none;
-      border: 1px $map-control-bg-color solid;
       &:first-child {
         border-top-left-radius: 5px;
       }
@@ -27,12 +26,11 @@
         text-transform: uppercase;
       }
       &.active {
-        border-color: $map-control-border-color;
+        background-color: transparentize($map-control-border-color, 0.1);
       }
       &:hover:not(.active) {
         cursor: pointer;
         background-color: $map-control-active-bg-color;
-        border-color: $map-control-active-bg-color;
       }
     }
   }
@@ -46,7 +44,7 @@
   .mapboxgl-ctrl-geocoder {
     width: 100% !important;
     background-color: transparent !important;
-
+    box-shadow: none;
     &--input {
       background-color: transparent !important;
       border-bottom: 1px $map-control-border-color solid;
