@@ -4,6 +4,10 @@ const REQUEST_COLORS = Object.keys(REQUEST_TYPES).reduce((p, c) => {
   return [...p, c, REQUEST_TYPES[c].color]
 }, []);
 
+// put layer underneath this layer (from original mapbox tiles)
+// so you don't cover up important labels
+const BEFORE_ID = 'poi-label';
+
 export default function RequestsLayer({ map, sourceData, }) {
   map.addSource('requests', {
     type: 'geojson',
@@ -30,7 +34,7 @@ export default function RequestsLayer({ map, sourceData, }) {
       ],
       'circle-opacity': 0.8
     }
-  });
+  }, BEFORE_ID);
 
   map.addLayer({
     id: 'request-heatmap',
@@ -42,7 +46,7 @@ export default function RequestsLayer({ map, sourceData, }) {
     paint: {
       'heatmap-radius': 5,
     }
-  });
+  }, BEFORE_ID);
 
   const typeFilter = selectedTypes => {
     return ['in', ['get', 'type'], ['literal', selectedTypes]];
