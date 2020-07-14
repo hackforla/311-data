@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
+import moment from 'moment';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES, COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
@@ -63,7 +64,8 @@ class PinMap extends Component {
       locationInfo: INITIAL_LOCATION,
       filterGeo: null,
       filteredRequestCounts: {},
-      hoveredRegionName: null
+      hoveredRegionName: null,
+      date: props.lastUpdated,
     };
 
     this.map = null;
@@ -315,6 +317,7 @@ class PinMap extends Component {
         { this.state.mapReady && (
           <>
             <MapOverview
+              date={this.state.date}
               locationInfo={this.state.locationInfo}
               selectedRequests={this.state.filteredRequestCounts}
             />
@@ -382,7 +385,8 @@ const mapStateToProps = state => ({
   // pinClusters: convertRequests(state.data.pinClusters),
   requests: REQUESTS,
   heatmap: state.data.heatmap,
-  position: state.ui.map
+  position: state.ui.map,
+  lastUpdated: state.metadata.lastPulled,
 });
 
 PinMap.propTypes = {

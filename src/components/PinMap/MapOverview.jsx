@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'proptypes';
+import moment from 'moment';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import RequestsDonut from './RequestsDonut';
 
@@ -25,7 +26,7 @@ const BarChart = ({ selectedRequests }) => {
   );
 }
 
-const MapOverview = ({ locationInfo, selectedRequests }) => {
+const MapOverview = ({ date, locationInfo, selectedRequests }) => {
   return (
     <div className="map-overview map-control">
       <div className="requests-title">
@@ -35,7 +36,7 @@ const MapOverview = ({ locationInfo, selectedRequests }) => {
         Date
       </div>
       <div className="info-content">
-        July 8th, 2020
+        { moment(date).format('MMMM Do, YYYY') }
       </div>
       <div className="info-heading">
         { locationInfo.name }
@@ -65,11 +66,13 @@ const MapOverview = ({ locationInfo, selectedRequests }) => {
 };
 
 MapOverview.propTypes = {
+  date: PropTypes.string,
   locationInfo: PropTypes.shape({}),
   selectedRequests: PropTypes.shape({})
 };
 
 MapOverview.defaultProps = {
+  date: undefined,
   locationInfo: {},
   selectedRequests: {}
 };
