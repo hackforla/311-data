@@ -1,12 +1,10 @@
 /*
   TODO:
     - implement reset and drop-pin function
-    - put requests underneath large geo text
     - add popups
       - need drag handle for address filter
     - better to filter the requests layer or to change the data in the requests source?
     - reverse geocode on drag end -- see if we can get intersection based on lat/lng
-    - try eliminating
 */
 
 import React, { Component } from 'react';
@@ -219,8 +217,6 @@ class PinMap extends Component {
     });
   }
 
-
-
   updatePosition = map => {
     const { updatePosition } = this.props;
     const bounds = map.getBounds();
@@ -256,19 +252,26 @@ class PinMap extends Component {
     const { filterGeo, selectedTypes } = this.state;
     const { requests } = this.props;
 
-    const filteredRequests = filterGeo
-      ? turf.within(requests, filterGeo)
-      : requests;
+    let filteredRequests = requests;
 
-    const counts = {};
+    // filter by type selection if necessary
+    if (selectedTypes.length < Object.keys(REQUEST_TYPES).length)
+      filteredRequests = {
+        ...filteredRequests,
+        features: filteredRequests.features
+          .filter(r => selectedTypes.includes(r.properties.type))
+      };
 
-    selectedTypes.forEach(t => counts[t] = 0);
+    // filter by geo if necessary
+    if (filterGeo)
+      filteredRequests = turf.within(filteredRequests, filterGeo);
 
-    filteredRequests.features.forEach(r => {
-      const { type } = r.properties;
-      if (typeof counts[type] !== 'undefined')
-        counts[type] += 1;
-    });
+    // count up requests per type
+    const counts = filteredRequests.features.reduce((p, c) => {
+      const { type } = c.properties;
+      p[type] = (p[type] || 0) + 1;
+      return p;
+    }, {});
 
     this.setState({ filteredRequestCounts: counts });
   }
