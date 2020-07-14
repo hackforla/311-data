@@ -386,7 +386,8 @@ const mapStateToProps = state => ({
   requests: REQUESTS,
   heatmap: state.data.heatmap,
   position: state.ui.map,
-  lastUpdated: state.metadata.lastPulled,
+  //lastUpdated: state.metadata.lastPulled,
+  lastUpdated: Date.now(),
 });
 
 PinMap.propTypes = {

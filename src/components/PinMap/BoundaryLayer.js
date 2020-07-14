@@ -70,7 +70,7 @@ export default function BoundaryLayer({
         ['linear'],
         ['zoom'],
         10, 0,
-        13, 0.5
+        13, 0.3
       ],
     }
   });
