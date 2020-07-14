@@ -55,7 +55,6 @@ class PinMap extends Component {
       activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
       locationInfo: INITIAL_LOCATION,
-      selectedRegionName: 'All of Los Angeles',
       filterPolygon: null,
       filteredRequestCounts: {}
     };
@@ -151,6 +150,45 @@ class PinMap extends Component {
       this.setFilteredRequestCounts();
   }
 
+  reset = () => {
+    this.zoomOut();
+    this.map.once('idle', () => {
+      this.ncLayer.deselectAll();
+      this.ccLayer.deselectAll();
+      this.setState({
+        filterPolygon: null,
+        locationInfo: INITIAL_LOCATION,
+      });
+      setTimeout(() => {
+        this.setFilteredRequestCounts();
+      }, 0);
+    });
+  }
+
+  onChangeSearchTab = tab => {
+    this.reset();
+
+    switch(tab) {
+      case 'address':
+        this.addressLayer.show();
+        this.ncLayer.hide();
+        this.ccLayer.hide();
+        break;
+
+      case 'nc':
+        this.ncLayer.show();
+        this.ccLayer.hide();
+        this.addressLayer.hide();
+        break;
+
+      case 'cc':
+        this.ccLayer.show();
+        this.ncLayer.hide();
+        this.addressLayer.hide();
+        break;
+    }
+  }
+
   onGeocoderResult = ({ result }) => {
     if (result.properties.type === 'nc') {
       this.setState({ selectedRegionName: result.place_name });
@@ -178,31 +216,7 @@ class PinMap extends Component {
     });
   }
 
-  onChangeSearchTab = tab => {
-    switch(tab) {
-      case 'address':
-        this.addressLayer.show();
-        this.ncLayer.hide();
-        this.ccLayer.hide();
-        break;
 
-      case 'nc':
-        this.ncLayer.show();
-        this.ccLayer.hide();
-        this.addressLayer.hide();
-        break;
-
-      case 'cc':
-        this.ccLayer.show();
-        this.ncLayer.hide();
-        this.addressLayer.hide();
-        break;
-    }
-
-    this.zoomOut();
-    this.ncLayer.deselectAll();
-    this.ccLayer.deselectAll();
-  }
 
   updatePosition = map => {
     const { updatePosition } = this.props;
@@ -271,6 +285,7 @@ class PinMap extends Component {
               map={this.map}
               onGeocoderResult={this.onGeocoderResult}
               onChangeTab={this.onChangeSearchTab}
+              onReset={this.reset}
             />
             <MapLayers
               selectedTypes={this.state.selectedTypes}
