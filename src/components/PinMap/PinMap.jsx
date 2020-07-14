@@ -55,7 +55,7 @@ class PinMap extends Component {
       activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
       locationInfo: INITIAL_LOCATION,
-      filterPolygon: null,
+      filterGeo: null,
       filteredRequestCounts: {}
     };
 
@@ -86,7 +86,7 @@ class PinMap extends Component {
       this.addressLayer = AddressLayer({
         map: this.map,
         onDragEnd: ({ geo, center }) => this.setState({
-          filterPolygon: geo,
+          filterGeo: geo,
           locationInfo: {
             name: 'location',
             value: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
@@ -100,14 +100,18 @@ class PinMap extends Component {
         sourceId: 'nc',
         sourceData: ncBoundaries,
         idProperty: 'nc_id',
-        onSelectRegion: geo => this.setState({
-          filterPolygon: geo,
-          locationInfo: {
-            name: 'Neighborhood Council',
-            value: COUNCILS.find(c => c.id == geo.properties.nc_id)?.name,
-            url: geo.properties.waddress || geo.properties.dwebsite
-          }
-        })
+        onSelectRegion: geo => {
+          this.setState({
+            locationInfo: {
+              name: 'Neighborhood Council',
+              value: COUNCILS.find(c => c.id == geo.properties.nc_id)?.name,
+              url: geo.properties.waddress || geo.properties.dwebsite
+            }
+          });
+          this.map.once('idle', () => {
+            this.setState({ filterGeo: geo });
+          });
+        }
       });
 
       this.ccLayer = BoundaryLayer({
@@ -115,13 +119,17 @@ class PinMap extends Component {
         sourceId: 'cc',
         sourceData: ccBoundaries,
         idProperty: 'name',
-        onSelectRegion: geo => this.setState({
-          filterPolygon: geo,
-          locationInfo: {
-            name: 'City Council',
-            value: CITY_COUNCILS.find(c => c.id == geo.properties.name)?.name
-          }
-        })
+        onSelectRegion: geo => {
+          this.setState({
+            locationInfo: {
+              name: 'City Council',
+              value: CITY_COUNCILS.find(c => c.id == geo.properties.name)?.name,
+            }
+          });
+          this.map.once('idle', () => {
+            this.setState({ filterGeo: geo });
+          });
+        }
       });
 
       this.map.on('moveend', e => {
@@ -144,7 +152,7 @@ class PinMap extends Component {
       this.requestsLayer.setData(this.props.requests);
 
     if (
-      this.state.filterPolygon !== prevState.filterPolygon ||
+      this.state.filterGeo !== prevState.filterGeo ||
       this.state.selectedTypes !== prevState.selectedTypes
     )
       this.setFilteredRequestCounts();
@@ -152,16 +160,11 @@ class PinMap extends Component {
 
   reset = () => {
     this.zoomOut();
+    this.setState({ locationInfo: INITIAL_LOCATION });
     this.map.once('idle', () => {
       this.ncLayer.deselectAll();
       this.ccLayer.deselectAll();
-      this.setState({
-        filterPolygon: null,
-        locationInfo: INITIAL_LOCATION,
-      });
-      setTimeout(() => {
-        this.setFilteredRequestCounts();
-      }, 0);
+      this.setState({ filterGeo: null });
     });
   }
 
@@ -205,7 +208,7 @@ class PinMap extends Component {
       lat: result.center[1]
     }, geo => {
       this.setState({
-        filterPolygon: geo,
+        filterGeo: geo,
         locationInfo: {
           name: 'address',
           value: result.address
@@ -250,11 +253,11 @@ class PinMap extends Component {
   }
 
   setFilteredRequestCounts = () => {
-    const { filterPolygon, selectedTypes } = this.state;
+    const { filterGeo, selectedTypes } = this.state;
     const { requests } = this.props;
 
-    const filteredRequests = filterPolygon
-      ? turf.within(requests, filterPolygon)
+    const filteredRequests = filterGeo
+      ? turf.within(requests, filterGeo)
       : requests;
 
     const counts = {};
@@ -295,7 +298,7 @@ class PinMap extends Component {
             />
             {/*<MapCharts
               requests={this.props.requests}
-              filterPolygon={this.state.filterPolygon}
+              filterGeo={this.state.filterGeo}
               selectedTypes={this.state.selectedTypes}
             />*/}
             <MapMeta position={this.props.position} />
