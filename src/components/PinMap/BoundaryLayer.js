@@ -125,7 +125,11 @@ export default function BoundaryLayer({
       layers: [`${sourceId}-fills`]
     })[0];
 
-    if (region.id === selectedRegionId)
+    selectRegion(region.id);
+  });
+
+  const selectRegion = regionId => {
+    if (regionId === selectedRegionId)
       return;
 
     if (selectedRegionId)
@@ -134,11 +138,11 @@ export default function BoundaryLayer({
         { selected: false }
       );
 
-    selectedRegionId = region.id;
+    selectedRegionId = regionId;
 
     map.setFeatureState(
       { source: sourceId, id: selectedRegionId },
-      { selected: true }
+      { selected: true, hover: false }
     );
 
     map.setPaintProperty(`${sourceId}-borders`, 'line-width', [
@@ -148,27 +152,19 @@ export default function BoundaryLayer({
       0
     ]);
 
-    zoomToRegion(selectedRegionId);
-  });
-
-  const zoomToRegion = regionId => {
     // get the region geo
     // notice double-equals because id is a number when it comes from CONSTANTS,
     // but a string in the geojson
-    const geo = sourceData.features.find(el => el.properties[idProperty] == regionId);
+    const geo = sourceData.features.find(el => el.properties[idProperty] == selectedRegionId);
 
     // zoom to the region
-    onSelectRegion(geo);
     map.fitBounds(geojsonExtent(geo), { padding: 50 });
 
     // mask everything else
     map.getSource(`${sourceId}-region-mask`).setData(turfMask(geo));
 
-    // stop hover on selected region
-    map.setFeatureState(
-      { source: sourceId, id: regionId },
-      { hover: false }
-    );
+    // inform main
+    onSelectRegion(geo);
   }
 
   return {
@@ -177,12 +173,15 @@ export default function BoundaryLayer({
       map.setLayoutProperty(`${sourceId}-fills`, 'visibility', 'visible');
       map.setLayoutProperty(`${sourceId}-region-mask-fill`, 'visibility', 'visible');
     },
+
     hide: () => {
       map.setLayoutProperty(`${sourceId}-borders`, 'visibility', 'none');
       map.setLayoutProperty(`${sourceId}-fills`, 'visibility', 'none');
       map.setLayoutProperty(`${sourceId}-region-mask-fill`, 'visibility', 'none');
     },
-    zoomToRegion: regionId => zoomToRegion(regionId),
+
+    selectRegion: regionId => selectRegion(regionId),
+    
     deselectAll: () => {
       if (selectedRegionId) {
         map.setFeatureState(
@@ -190,6 +189,10 @@ export default function BoundaryLayer({
           { selected: false }
         );
         map.setPaintProperty(`${sourceId}-borders`, 'line-width', 2);
+        map.getSource(`${sourceId}-region-mask`).setData({
+          type: "FeatureCollection",
+          features: []
+        });
         selectedRegionId = null;
       }
     }

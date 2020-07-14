@@ -66,7 +66,7 @@ const MapOverview = ({ date, locationInfo, selectedRequests }) => {
 };
 
 MapOverview.propTypes = {
-  date: PropTypes.string,
+  date: PropTypes.any,
   locationInfo: PropTypes.shape({}),
   selectedRequests: PropTypes.shape({})
 };

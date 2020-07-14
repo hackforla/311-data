@@ -5,6 +5,9 @@
       - need drag handle for address filter
     - better to filter the requests layer or to change the data in the requests source?
     - reverse geocode on drag end -- see if we can get intersection based on lat/lng
+    - create geoUtils.js containing:
+      - empty geojson constant (for removing sources in BoundaryLayer and AddressLayer)
+      - turf functions
 */
 
 import React, { Component } from 'react';
@@ -191,10 +194,10 @@ class PinMap extends Component {
 
   reset = () => {
     this.zoomOut();
+    this.ncLayer.deselectAll();
+    this.ccLayer.deselectAll();
     this.setState({ locationInfo: INITIAL_LOCATION });
     this.map.once('idle', () => {
-      this.ncLayer.deselectAll();
-      this.ccLayer.deselectAll();
       this.setState({ filterGeo: null });
     });
   }
@@ -224,15 +227,11 @@ class PinMap extends Component {
   }
 
   onGeocoderResult = ({ result }) => {
-    if (result.properties.type === 'nc') {
-      this.setState({ selectedRegionName: result.place_name });
-      return this.ncLayer.zoomToRegion(result.id);
-    }
+    if (result.properties.type === 'nc')
+      return this.ncLayer.selectRegion(result.id);
 
-    if (result.properties.type === 'cc') {
-      this.setState({ selectedRegionName: result.place_name });
-      return this.ccLayer.zoomToRegion(result.id);
-    }
+    if (result.properties.type === 'cc')
+      return this.ccLayer.selectRegion(result.id);
 
     this.addressLayer.setCenter({
       lng: result.center[0],
