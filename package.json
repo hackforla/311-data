@@ -51,7 +51,7 @@
   "scripts": {
     "start": "npm run check-env && npm run dev",
     "dev": "webpack-dev-server --config webpack.dev.js",
-    "build": "NODE_ENV=production webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js",
     "lint": "eslint 'src/**/*.js*'",
     "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
