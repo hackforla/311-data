@@ -4,6 +4,7 @@ import { mask as turfMask } from '@turf/turf';
 
 export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, onSelectRegion }) {
   let hoveredRegionId = null;
+  let selectedRegionId = null;
 
   map.addSource(sourceId, {
     type: 'geojson',
@@ -85,10 +86,12 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
             { hover: false }
           );
         }
-        map.setFeatureState(
-          { source: sourceId, id },
-          { hover: true }
-        );
+
+        if (id !== selectedRegionId)
+          map.setFeatureState(
+            { source: sourceId, id },
+            { hover: true }
+          );
 
         hoveredRegionId = id;
       }
@@ -106,11 +109,34 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
   });
 
   map.on('click', `${sourceId}-fills`, e => {
-    const { id } = map.queryRenderedFeatures(e.point, {
+    const region = map.queryRenderedFeatures(e.point, {
       layers: [`${sourceId}-fills`]
     })[0];
 
-    zoomToRegion(id);
+    if (region.id === selectedRegionId)
+      return;
+
+    if (selectedRegionId)
+      map.setFeatureState(
+        { source: sourceId, id: selectedRegionId },
+        { selected: false }
+      );
+
+    selectedRegionId = region.id;
+
+    map.setFeatureState(
+      { source: sourceId, id: selectedRegionId },
+      { selected: true }
+    );
+
+    map.setPaintProperty(`${sourceId}-borders`, 'line-width', [
+      'case',
+      ['boolean', ['feature-state', 'selected'], false],
+      2,
+      0
+    ]);
+
+    zoomToRegion(selectedRegionId);
   });
 
   const zoomToRegion = regionId => {
@@ -144,6 +170,16 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
       map.setLayoutProperty(`${sourceId}-fills`, 'visibility', 'none');
       map.setLayoutProperty(`${sourceId}-region-mask-fill`, 'visibility', 'none');
     },
-    zoomToRegion: regionId => zoomToRegion(regionId)
+    zoomToRegion: regionId => zoomToRegion(regionId),
+    deselectAll: () => {
+      if (selectedRegionId) {
+        map.setFeatureState(
+          { source: sourceId, id: selectedRegionId },
+          { selected: false }
+        );
+        map.setPaintProperty(`${sourceId}-borders`, 'line-width', 2);
+        selectedRegionId = null;
+      }
+    }
   }
 }

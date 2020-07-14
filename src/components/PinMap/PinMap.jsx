@@ -6,7 +6,7 @@
       - need drag handle for address filter
     - better to filter the requests layer or to change the data in the requests source?
     - reverse geocode on drag end -- see if we can get intersection based on lat/lng
-    - try eliminating 
+    - try eliminating
 */
 
 import React, { Component } from 'react';
@@ -200,6 +200,8 @@ class PinMap extends Component {
     }
 
     this.zoomOut();
+    this.ncLayer.deselectAll();
+    this.ccLayer.deselectAll();
   }
 
   updatePosition = map => {
