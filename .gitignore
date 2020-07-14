@@ -33,3 +33,5 @@ config.js
 __pycache__
 
 open_requests.json
+
+.now
