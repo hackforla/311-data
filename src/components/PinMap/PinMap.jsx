@@ -79,6 +79,7 @@ class PinMap extends Component {
       this.requestsLayer = RequestsLayer({
         map: this.map,
         sourceData: this.props.requests,
+        addPopup: this.addPopup,
       });
 
       this.addressLayer = AddressLayer({
@@ -155,6 +156,13 @@ class PinMap extends Component {
     )
       this.setFilteredRequestCounts();
   }
+
+  addPopup = (lngLat, content) => {
+    return new mapboxgl.Popup()
+      .setLngLat(lngLat)
+      .setHTML(content)
+      .addTo(this.map);
+  };
 
   reset = () => {
     this.zoomOut();
