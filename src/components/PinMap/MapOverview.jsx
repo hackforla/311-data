@@ -25,7 +25,7 @@ const BarChart = ({ selectedRequests }) => {
   );
 }
 
-const MapOverview = ({ regionName, selectedRequests }) => {
+const MapOverview = ({ locationInfo, selectedRequests }) => {
   return (
     <div className="map-overview map-control">
       <div className="requests-title">
@@ -38,11 +38,20 @@ const MapOverview = ({ regionName, selectedRequests }) => {
         July 8th, 2020
       </div>
       <div className="info-heading">
-        Region
+        { locationInfo.name }
       </div>
-      <div className="info-content">
-        { regionName }
-      </div>
+      {
+        locationInfo.url
+          ? (
+            <a className="info-content" href={locationInfo.url} target="_blank">
+              { locationInfo.value }
+            </a>
+          ) : (
+            <div className="info-content">
+              { locationInfo.value }
+            </div>
+          )
+      }
       <div className="info-heading">
         Total Requests
       </div>
@@ -56,12 +65,12 @@ const MapOverview = ({ regionName, selectedRequests }) => {
 };
 
 MapOverview.propTypes = {
-  regionName: PropTypes.string,
+  locationInfo: PropTypes.shape({}),
   selectedRequests: PropTypes.shape({})
 };
 
 MapOverview.defaultProps = {
-  regionName: 'All of Los Angeles',
+  locationInfo: {},
   selectedRequests: {}
 };
 

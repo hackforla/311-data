@@ -10,7 +10,7 @@ function makeMask(poly) {
   return turfMask(poly);
 }
 
-export default function AddressLayer({ map, onSelectRegion }) {
+export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
   let canvas = map.getCanvasContainer();
   let offset;
   let center;
@@ -110,7 +110,7 @@ export default function AddressLayer({ map, onSelectRegion }) {
     const circle = makeCircle(center);
     map.getSource('shed').setData(circle);
     map.getSource('shed-mask').setData(turfMask(circle));
-    onSelectRegion(circle);
+    onDragEnd({ geo: circle, center });
 
     map.off('mousemove', onMove);
     map.off('touchmove', onMove);
@@ -154,14 +154,14 @@ export default function AddressLayer({ map, onSelectRegion }) {
       map.getSource('shed').setData({ type: "FeatureCollection", features: []});
       map.getSource('shed-mask').setData({ type: "FeatureCollection", features: []});
     },
-    setCenter: lngLat => {
+    setCenter: (lngLat, cb) => {
       center = lngLat;
 
       const circle = makeCircle(center);
       map.getSource('shed').setData(circle);
       map.getSource('shed-mask').setData(turfMask(circle));
       map.fitBounds(geojsonExtent(circle), { padding: 50 });
-      map.once('zoomend', () => onSelectRegion(circle));
+      map.once('zoomend', () => cb(circle));
     },
     setRadius: miles => {
       console.log('to be implemented');

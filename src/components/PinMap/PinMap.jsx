@@ -4,6 +4,7 @@
     - put requests underneath large geo text
     - add popups
     - better to filter the requests layer or to change the data in the requests source?
+    - reverse geocode on drag end -- see if we can get intersection based on lat/lng
 */
 
 import React, { Component } from 'react';
@@ -14,7 +15,7 @@ import geojsonExtent from '@mapbox/geojson-extent';
 import * as turf from '@turf/turf';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import { REQUEST_TYPES, COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
 
 import RequestsLayer from './RequestsLayer';
 import BoundaryLayer from './BoundaryLayer';
@@ -34,6 +35,12 @@ import openRequests from '../../data/open_requests.json';
 
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 const INITIAL_BOUNDS = geojsonExtent(ncBoundaries);
+const INITIAL_LOCATION = {
+  name: 'location',
+  value: 'All of Los Angeles',
+  url: null,
+  radius: null
+};
 
 ///////////////////// MAP ///////////////////
 
@@ -45,6 +52,7 @@ class PinMap extends Component {
       mapReady: false,
       activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
+      locationInfo: INITIAL_LOCATION,
       selectedRegionName: 'All of Los Angeles',
       filterPolygon: null,
       filteredRequestCounts: {}
@@ -76,7 +84,14 @@ class PinMap extends Component {
 
       this.addressLayer = AddressLayer({
         map: this.map,
-        onSelectRegion: geo => this.setState({ filterPolygon: geo })
+        onDragEnd: ({ geo, center }) => this.setState({
+          filterPolygon: geo,
+          locationInfo: {
+            name: 'location',
+            value: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
+            radius: null
+          }
+        })
       });
 
       this.ncLayer = BoundaryLayer({
@@ -84,7 +99,14 @@ class PinMap extends Component {
         sourceId: 'nc',
         sourceData: ncBoundaries,
         idProperty: 'nc_id',
-        onSelectRegion: geo => this.setState({ filterPolygon: geo })
+        onSelectRegion: geo => this.setState({
+          filterPolygon: geo,
+          locationInfo: {
+            name: 'Neighborhood Council',
+            value: COUNCILS.find(c => c.id == geo.properties.nc_id)?.name,
+            url: geo.properties.waddress || geo.properties.dwebsite
+          }
+        })
       });
 
       this.ccLayer = BoundaryLayer({
@@ -92,7 +114,13 @@ class PinMap extends Component {
         sourceId: 'cc',
         sourceData: ccBoundaries,
         idProperty: 'name',
-        onSelectRegion: geo => this.setState({ filterPolygon: geo })
+        onSelectRegion: geo => this.setState({
+          filterPolygon: geo,
+          locationInfo: {
+            name: 'City Council',
+            value: CITY_COUNCILS.find(c => c.id == geo.properties.name)?.name
+          }
+        })
       });
 
       this.map.on('moveend', e => {
@@ -132,10 +160,19 @@ class PinMap extends Component {
       return this.ccLayer.zoomToRegion(result.id);
     }
 
-    this.setState({ selectedRegionName: `${result.address} ${result.text}` });
     this.addressLayer.setCenter({
       lng: result.center[0],
       lat: result.center[1]
+    }, geo => {
+      this.setState({
+        filterPolygon: geo,
+        locationInfo: {
+          name: 'address',
+          value: result.address
+            ? `${result.address} ${result.text}`
+            : result.text,
+        }
+      });
     });
   }
 
@@ -223,7 +260,7 @@ class PinMap extends Component {
         { this.state.mapReady && (
           <>
             <MapOverview
-              regionName={this.state.selectedRegionName}
+              locationInfo={this.state.locationInfo}
               selectedRequests={this.state.filteredRequestCounts}
             />
             <MapSearch

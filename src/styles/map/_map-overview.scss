@@ -4,7 +4,7 @@
   background-color: $map-control-bg-color;
   width: 250px;
   .requests-title {
-    margin-top: 10px;
+    margin: 15px 0;
     text-align: center;
     font-size: 20px;
     font-weight: bold;
@@ -20,6 +20,11 @@
   .info-content {
     margin-left: 20px;
     font-size: 16px;
+  }
+  a.info-content {
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px $map-control-border-color solid;
   }
   .count-bar {
     height: 6px;
