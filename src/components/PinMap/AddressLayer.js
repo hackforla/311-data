@@ -161,7 +161,7 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
       map.getSource('shed').setData(circle);
       map.getSource('shed-mask').setData(turfMask(circle));
       map.fitBounds(geojsonExtent(circle), { padding: 50 });
-      map.once('zoomend', () => cb(circle));
+      map.once('idle', () => cb(circle));
     },
     setRadius: miles => {
       console.log('to be implemented');

@@ -121,7 +121,7 @@ export default function BoundaryLayer({ map, sourceId, sourceData, idProperty, o
 
     // zoom to the region
     map.fitBounds(geojsonExtent(geo), { padding: 50 });
-    map.once('zoomend', e => onSelectRegion(geo));
+    map.once('idle', e => onSelectRegion(geo));
 
     // mask everything else
     map.getSource(`${sourceId}-region-mask`).setData(turfMask(geo));
