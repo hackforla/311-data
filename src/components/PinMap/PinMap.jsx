@@ -9,6 +9,12 @@
     - create geoUtils.js containing:
       - empty geojson constant (for removing sources in BoundaryLayer and AddressLayer)
       - turf functions
+
+    - add open-requests json to version control
+    - fix hover states throughout
+    - move zoom indicator or make it better
+    - fix geojson regions with holes in them
+    - remove unused files from this folder
 */
 
 import React, { Component } from 'react';
@@ -28,7 +34,6 @@ import AddressLayer from './AddressLayer';
 import MapOverview from './MapOverview';
 import MapSearch from './MapSearch';
 import MapLayers from './MapLayers';
-// import MapCharts from './MapCharts';
 import MapMeta from './MapMeta';
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
@@ -297,7 +302,7 @@ class PinMap extends Component {
     console.log('setting style:', mapStyle);
 
     // NOT WORKING YET
-    // need to deal with removing sources when changin styles
+    // need to deal with removing sources when changing styles
     // this.map.setStyle(MAP_STYLES[mapStyle]);
     // this.addLayers();
   }
@@ -357,11 +362,6 @@ class PinMap extends Component {
               mapStyles={Object.keys(MAP_STYLES)}
               onChangeMapStyle={this.setMapStyle}
             />
-            {/*<MapCharts
-              requests={this.props.requests}
-              filterGeo={this.state.filterGeo}
-              selectedTypes={this.state.selectedTypes}
-            />*/}
             <MapMeta position={this.props.position} />
             { this.state.hoveredRegionName && (
               <div className="hovered-region">

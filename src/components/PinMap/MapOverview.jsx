@@ -1,32 +1,14 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import moment from 'moment';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import RequestsDonut from './RequestsDonut';
+import RequestsBarChart from './RequestsBarChart';
 
-const BarChart = ({ selectedRequests }) => {
-  const max = Math.max(...Object.values(selectedRequests));
-  return (
-    Object.keys(selectedRequests).map(type => {
-      return (
-        <div key={type}>
-          <div className="info-heading">
-            { type } ({selectedRequests[type]})
-          </div>
-          <div
-            className="count-bar"
-            style={{
-              backgroundColor: REQUEST_TYPES[type].color,
-              width: 100 * (selectedRequests[type] / max) + '%'
-            }}
-          />
-        </div>
-      )
-    })
-  );
-}
-
-const MapOverview = ({ date, locationInfo, selectedRequests }) => {
+const MapOverview = ({
+  date,
+  locationInfo,
+  selectedRequests
+}) => {
   return (
     <div className="map-overview map-control">
       <div className="requests-title">
@@ -59,7 +41,7 @@ const MapOverview = ({ date, locationInfo, selectedRequests }) => {
       <div className="info-content">
         { Object.values(selectedRequests).reduce((p,c) => p + c, 0) }
       </div>
-      {/*<BarChart selectedRequests={selectedRequests} />*/}
+      {/*<RequestsBarChart selectedRequests={selectedRequests} />*/}
       <RequestsDonut selectedRequests={selectedRequests} />
     </div>
   );

@@ -26,11 +26,17 @@
     color: inherit;
     border-bottom: 1px $map-control-border-color solid;
   }
-  .count-bar {
-    height: 6px;
-    margin-top: 4px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    transition: all 0.5s ease;
+  .requests-bar-chart {
+    padding: 0 20px 20px 20px;
+    .info-heading {
+      margin-left: 0;
+    }
+    .count-bar {
+      height: 6px;
+      margin-top: 4px;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      transition: all 0.5s ease;
+    }
   }
 }
