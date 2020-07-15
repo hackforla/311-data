@@ -8,6 +8,16 @@ const FIT_BOUNDS_PADDING = {
   right: 350
 };
 
+function removeHoles(feature) {
+  return {
+    ...feature,
+    geometry: {
+      ...feature.geometry,
+      coordinates: feature.geometry.coordinates.map(poly => [poly[0]])
+    }
+  };
+}
+
 export default function BoundaryLayer({
   map,
   sourceId,
@@ -161,7 +171,9 @@ export default function BoundaryLayer({
     // get the region geo
     // notice double-equals because id is a number when it comes from CONSTANTS,
     // but a string in the geojson
-    const geo = sourceData.features.find(el => el.properties[idProperty] == selectedRegionId);
+    let geo = sourceData.features.find(el => el.properties[idProperty] == selectedRegionId);
+
+    geo = removeHoles(geo);
 
     // zoom to the region
     map.fitBounds(boundingBox(geo), { padding: FIT_BOUNDS_PADDING });
