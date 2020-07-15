@@ -1,6 +1,4 @@
-
-import geojsonExtent from '@mapbox/geojson-extent';
-import { mask as turfMask } from '@turf/turf';
+import { mask as turfMask, bbox as boundingBox } from '@turf/turf';
 
 export default function BoundaryLayer({
   map,
@@ -95,7 +93,7 @@ export default function BoundaryLayer({
           );
         }
 
-        if (id !== selectedRegionId)
+        if (id != selectedRegionId)
           map.setFeatureState(
             { source: sourceId, id },
             { hover: true }
@@ -158,7 +156,7 @@ export default function BoundaryLayer({
     const geo = sourceData.features.find(el => el.properties[idProperty] == selectedRegionId);
 
     // zoom to the region
-    map.fitBounds(geojsonExtent(geo), { padding: 50 });
+    map.fitBounds(boundingBox(geo), { padding: 50 });
 
     // mask everything else
     map.getSource(`${sourceId}-region-mask`).setData(turfMask(geo));
@@ -181,7 +179,7 @@ export default function BoundaryLayer({
     },
 
     selectRegion: regionId => selectRegion(regionId),
-    
+
     deselectAll: () => {
       if (selectedRegionId) {
         map.setFeatureState(

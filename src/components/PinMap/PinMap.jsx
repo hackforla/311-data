@@ -1,5 +1,6 @@
 /*
   TODO:
+    - deal with ids being strings in geojson and numbers in database/constants file
     - implement reset and drop-pin function
     - add popups
       - need drag handle for address filter
@@ -14,8 +15,7 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import geojsonExtent from '@mapbox/geojson-extent';
-import * as turf from '@turf/turf';
+import { within as withinGeo, bbox as boundingBox } from '@turf/turf';
 import moment from 'moment';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
@@ -38,7 +38,7 @@ import openRequests from '../../data/open_requests.json';
 /////////////////// CONSTANTS ///////////////
 
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
-const INITIAL_BOUNDS = geojsonExtent(ncBoundaries);
+const INITIAL_BOUNDS = boundingBox(ncBoundaries);
 const INITIAL_LOCATION = {
   name: 'location',
   value: 'All of Los Angeles',
@@ -252,9 +252,8 @@ class PinMap extends Component {
   updatePosition = map => {
     const { updatePosition } = this.props;
     const bounds = map.getBounds();
-    const zoom = map.getZoom();
     updatePosition({
-      zoom,
+      zoom: map.getZoom(),
       bounds: {
         _northEast: bounds.getNorthEast(),
         _southWest: bounds.getSouthWest(),
@@ -296,7 +295,7 @@ class PinMap extends Component {
 
     // filter by geo if necessary
     if (filterGeo)
-      filteredRequests = turf.within(filteredRequests, filterGeo);
+      filteredRequests = withinGeo(filteredRequests, filterGeo);
 
     // count up requests per type
     const counts = filteredRequests.features.reduce((p, c) => {
