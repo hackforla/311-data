@@ -155,6 +155,7 @@ export default function BoundaryLayer({
       );
 
     selectedRegionId = regionId;
+    hoveredRegionId = null;
 
     map.setFeatureState(
       { source: sourceId, id: selectedRegionId },
