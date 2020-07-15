@@ -38,12 +38,21 @@ import openRequests from '../../data/open_requests.json';
 /////////////////// CONSTANTS ///////////////
 
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
+
 const INITIAL_BOUNDS = boundingBox(ncBoundaries);
+
 const INITIAL_LOCATION = {
   name: 'location',
   value: 'All of Los Angeles',
   url: null,
   radius: null
+};
+
+const MAP_STYLES = {
+  dark: 'mapbox://styles/mapbox/dark-v10',
+  light: 'mapbox://styles/mapbox/light-v10',
+  streets: 'mapbox://styles/mapbox/streets-v11',
+  satellite: 'mapbox://styles/mapbox/satellite-v9',
 };
 
 function ncName(ncId) {
@@ -81,7 +90,7 @@ class PinMap extends Component {
   componentDidMount() {
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: 'mapbox://styles/mapbox/dark-v10',
+      style: MAP_STYLES.dark,
       bounds: INITIAL_BOUNDS,
       fitBoundsOptions: { padding: 50 },
       pitchWithRotate: false,
@@ -90,74 +99,7 @@ class PinMap extends Component {
     });
 
     this.map.on('load', () => {
-      this.requestsLayer = RequestsLayer({
-        map: this.map,
-        sourceData: this.props.requests,
-        addPopup: this.addPopup,
-      });
-
-      this.addressLayer = AddressLayer({
-        map: this.map,
-        onDragEnd: ({ geo, center }) => this.setState({
-          filterGeo: geo,
-          locationInfo: {
-            name: 'location',
-            value: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
-            radius: null
-          }
-        })
-      });
-
-      this.ncLayer = BoundaryLayer({
-        map: this.map,
-        sourceId: 'nc',
-        sourceData: ncBoundaries,
-        idProperty: 'nc_id',
-        onSelectRegion: geo => {
-          this.setState({
-            locationInfo: {
-              name: 'Neighborhood Council',
-              value: ncName(geo.properties.nc_id),
-              url: geo.properties.waddress || geo.properties.dwebsite
-            }
-          });
-          this.map.once('idle', () => {
-            this.setState({ filterGeo: geo });
-          });
-        },
-        onHoverRegion: geo => {
-          this.setState({
-            hoveredRegionName: geo
-              ? ncName(geo.properties.nc_id)
-              : null
-          });
-        }
-      });
-
-      this.ccLayer = BoundaryLayer({
-        map: this.map,
-        sourceId: 'cc',
-        sourceData: ccBoundaries,
-        idProperty: 'name',
-        onSelectRegion: geo => {
-          this.setState({
-            locationInfo: {
-              name: 'City Council',
-              value: ccName(geo.properties.name),
-            }
-          });
-          this.map.once('idle', () => {
-            this.setState({ filterGeo: geo });
-          });
-        },
-        onHoverRegion: geo => {
-          this.setState({
-            hoveredRegionName: geo
-              ? ccName(geo.properties.name)
-              : null
-          });
-        }
-      });
+      this.addLayers();
 
       this.map.on('moveend', e => {
         this.updatePosition(this.map);
@@ -183,6 +125,77 @@ class PinMap extends Component {
       this.state.selectedTypes !== prevState.selectedTypes
     )
       this.setFilteredRequestCounts();
+  }
+
+  addLayers = () => {
+    this.requestsLayer = RequestsLayer({
+      map: this.map,
+      sourceData: this.props.requests,
+      addPopup: this.addPopup,
+    });
+
+    this.addressLayer = AddressLayer({
+      map: this.map,
+      onDragEnd: ({ geo, center }) => this.setState({
+        filterGeo: geo,
+        locationInfo: {
+          name: 'location',
+          value: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
+          radius: null
+        }
+      })
+    });
+
+    this.ncLayer = BoundaryLayer({
+      map: this.map,
+      sourceId: 'nc',
+      sourceData: ncBoundaries,
+      idProperty: 'nc_id',
+      onSelectRegion: geo => {
+        this.setState({
+          locationInfo: {
+            name: 'Neighborhood Council',
+            value: ncName(geo.properties.nc_id),
+            url: geo.properties.waddress || geo.properties.dwebsite
+          }
+        });
+        this.map.once('idle', () => {
+          this.setState({ filterGeo: geo });
+        });
+      },
+      onHoverRegion: geo => {
+        this.setState({
+          hoveredRegionName: geo
+            ? ncName(geo.properties.nc_id)
+            : null
+        });
+      }
+    });
+
+    this.ccLayer = BoundaryLayer({
+      map: this.map,
+      sourceId: 'cc',
+      sourceData: ccBoundaries,
+      idProperty: 'name',
+      onSelectRegion: geo => {
+        this.setState({
+          locationInfo: {
+            name: 'City Council',
+            value: ccName(geo.properties.name),
+          }
+        });
+        this.map.once('idle', () => {
+          this.setState({ filterGeo: geo });
+        });
+      },
+      onHoverRegion: geo => {
+        this.setState({
+          hoveredRegionName: geo
+            ? ccName(geo.properties.name)
+            : null
+        });
+      }
+    });
   }
 
   addPopup = (lngLat, content, opts={}) => {
@@ -280,6 +293,15 @@ class PinMap extends Component {
     this.setState({ activeRequestsLayer: layerName });
   }
 
+  setMapStyle = mapStyle => {
+    console.log('setting style:', mapStyle);
+
+    // NOT WORKING YET
+    // need to deal with removing sources when changin styles
+    // this.map.setStyle(MAP_STYLES[mapStyle]);
+    // this.addLayers();
+  }
+
   setFilteredRequestCounts = () => {
     const { filterGeo, selectedTypes } = this.state;
     const { requests } = this.props;
@@ -332,6 +354,8 @@ class PinMap extends Component {
               onChangeSelectedTypes={this.setSelectedTypes}
               requestsLayer={this.state.activeRequestsLayer}
               onChangeRequestsLayer={this.setActiveRequestsLayer}
+              mapStyles={Object.keys(MAP_STYLES)}
+              onChangeMapStyle={this.setMapStyle}
             />
             {/*<MapCharts
               requests={this.props.requests}

@@ -5,7 +5,7 @@ import clx from 'classnames';
 
 const TABS = [
   'legend',
-  'colors'
+  'style'
 ];
 
 class MapLayers extends React.Component {
@@ -38,6 +38,10 @@ class MapLayers extends React.Component {
     }
   }
 
+  onChangeStyle = style => {
+    this.props.onChangeMapStyle(style);
+  }
+
   render() {
     const {
       selectedTypes,
@@ -47,7 +51,7 @@ class MapLayers extends React.Component {
 
     return (
       <div className="map-layers map-control">
-        <div className="map-control-tabs">
+        {/*<div className="map-control-tabs">
           { TABS.map(tab => (
             <div
               key={tab}
@@ -59,41 +63,65 @@ class MapLayers extends React.Component {
               { tab }
             </div>
           ))}
-        </div>
-        <div className="type-selection">
-          <div className="type-selectors">
-            { Object.keys(REQUEST_TYPES).map(id => {
-              const type = REQUEST_TYPES[id];
-              const selected = selectedTypes.includes(id);
-              return (
-                <div
-                  key={id}
-                  className="type-selector"
-                  onClick={this.onToggleType.bind(this, id)}>
+        </div>*/}
+        <div style={{ position: 'relative' }}>
+          <div className="type-selection">
+            <div className="type-selectors">
+              { Object.keys(REQUEST_TYPES).map(id => {
+                const type = REQUEST_TYPES[id];
+                const selected = selectedTypes.includes(id);
+                return (
                   <div
-                    className="type-color"
-                    style={{
-                      backgroundColor: selected ? type.color : 'transparent',
-                      borderWidth: selected ? 0 : 1,
-                    }}
-                  />
-                  <div className="type-name">{ type.displayName }</div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="type-selector-buttons">
-            <div
-              className="type-selector-button"
-              onClick={this.selectAll}>
-              Select All
+                    key={id}
+                    className="type-selector"
+                    onClick={this.onToggleType.bind(this, id)}>
+                    <div
+                      className="type-color"
+                      style={{
+                        backgroundColor: selected ? type.color : 'transparent',
+                        borderWidth: selected ? 0 : 1,
+                      }}
+                    />
+                    <div className="type-name">{ type.displayName }</div>
+                  </div>
+                );
+              })}
             </div>
-            <div
-              className="type-selector-button"
-              onClick={this.deselectAll}>
-              Clear All
+            <div className="type-selector-buttons">
+              <div
+                className="type-selector-button"
+                onClick={this.selectAll}>
+                Select All
+              </div>
+              <div
+                className="type-selector-button"
+                onClick={this.deselectAll}>
+                Clear All
+              </div>
             </div>
           </div>
+          { this.state.activeTab === 'style' && (
+            <div className="style-selection">
+              { this.props.mapStyles.map(style => {
+                const selected = this.props.mapStyle === style;
+                return (
+                  <div
+                    key={style}
+                    className="type-selector"
+                    onClick={this.onChangeStyle.bind(this, style)}>
+                    <div
+                      className="type-color"
+                      style={{
+                        backgroundColor: selected ? 'white' : 'transparent',
+                        borderWidth: selected ? 0 : 1,
+                      }}
+                    />
+                    <div className="type-name">{ style }</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
         <div className="request-layer-selection">
           <div

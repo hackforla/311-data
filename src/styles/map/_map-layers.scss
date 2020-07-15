@@ -56,6 +56,17 @@
     }
   }
 
+  .style-selection {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: $map-control-bg-color;
+    border-radius: 5px;
+    border-top-right-radius: 0;
+  }
+
   .request-layer-selection {
     display: flex;
     border-radius: 5px;
