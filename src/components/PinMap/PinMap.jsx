@@ -11,10 +11,7 @@
       - turf functions
 
     - add open-requests json to version control
-    - fix hover states throughout
-    - move zoom indicator or make it better
     - fix geojson regions with holes in them
-    - remove unused files from this folder
 */
 
 import React, { Component } from 'react';

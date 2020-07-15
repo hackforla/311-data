@@ -11,7 +11,7 @@ const MapMeta = ({ position: { zoom } }) => (
     color: 'white',
     fontSize: 12
   }}>
-    zoom: { zoom.toFixed(2) }
+    { zoom.toFixed(2) }
   </div>
 );
 
