@@ -35,6 +35,16 @@ const MapOverview = ({
             </div>
           )
       }
+      { locationInfo.radius && (
+        <>
+          <div className="info-heading">
+            Radius
+          </div>
+          <div className="info-content">
+            { locationInfo.radius } mile
+          </div>
+        </>
+      )}
       <div className="info-heading">
         Total Requests
       </div>

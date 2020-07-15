@@ -143,7 +143,7 @@ class PinMap extends Component {
         locationInfo: {
           name: 'location',
           value: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
-          radius: null
+          radius: 1,
         }
       })
     });
@@ -249,19 +249,21 @@ class PinMap extends Component {
     if (result.properties.type === 'CC')
       return this.ccLayer.selectRegion(result.id);
 
+    this.setState({
+      locationInfo: {
+        name: 'address',
+        value: result.address
+          ? `${result.address} ${result.text}`
+          : result.text,
+        radius: 1,
+      }
+    });
+
     this.addressLayer.setCenter({
       lng: result.center[0],
       lat: result.center[1]
     }, geo => {
-      this.setState({
-        filterGeo: geo,
-        locationInfo: {
-          name: 'address',
-          value: result.address
-            ? `${result.address} ${result.text}`
-            : result.text,
-        }
-      });
+      this.setState({ filterGeo: geo });
     });
   }
 

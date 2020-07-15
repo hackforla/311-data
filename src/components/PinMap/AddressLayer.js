@@ -4,6 +4,13 @@ import {
   bbox as boundingBox
 } from '@turf/turf';
 
+const FIT_BOUNDS_PADDING = {
+  top: 65,
+  bottom: 65,
+  left: 300,
+  right: 300
+};
+
 function makeCircle(center, radius=1, opts={ units: 'miles' }) {
   return turfCircle([center.lng, center.lat], radius, opts);
 }
@@ -167,7 +174,7 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
       const circle = makeCircle(center);
       map.getSource('shed').setData(circle);
       map.getSource('shed-mask').setData(turfMask(circle));
-      map.fitBounds(boundingBox(circle), { padding: 50 });
+      map.fitBounds(boundingBox(circle), { padding: FIT_BOUNDS_PADDING });
       map.once('idle', () => cb(circle));
     },
     setRadius: miles => {
