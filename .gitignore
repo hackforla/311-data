@@ -32,6 +32,4 @@ config.js
 /dataAnalysis/.ipynb_checkpoints
 __pycache__
 
-open_requests.json
-
 .now

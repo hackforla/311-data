@@ -9,9 +9,9 @@
     - create geoUtils.js containing:
       - empty geojson constant (for removing sources in BoundaryLayer and AddressLayer)
       - turf functions
-
-    - add open-requests json to version control
-    - fix geojson regions with holes in them
+    - precalculate NC and CC masks
+    - precalculate request counts by type, nc, and cc
+    - increase boundary of circle when hovering
 */
 
 import React, { Component } from 'react';
