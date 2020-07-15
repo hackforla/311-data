@@ -15,7 +15,7 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import { within as withinGeo, bbox as boundingBox } from '@turf/turf';
+import { pointsWithinPolygon as withinGeo, bbox as boundingBox } from '@turf/turf';
 import moment from 'moment';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
