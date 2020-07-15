@@ -6,8 +6,8 @@ import clx from 'classnames';
 
 const TABS = [
   'address',
-  'nc',
-  'cc'
+  'NC',
+  'CC'
 ]
 
 class MapSearch extends React.Component {
@@ -31,7 +31,7 @@ class MapSearch extends React.Component {
           case 'address':
             return [];
 
-          case 'nc':
+          case 'NC':
             const filteredNCs = COUNCILS.filter(nc => searchFilter.test(nc.name));
             return filteredNCs.map(nc => ({
               type: 'Feature',
@@ -39,11 +39,11 @@ class MapSearch extends React.Component {
               text: nc.name,
               place_name: nc.name,
               properties: {
-                type: 'nc'
+                type: 'NC'
               }
             }));
 
-          case 'cc':
+          case 'CC':
             const filteredCCs = CITY_COUNCILS.filter(cc => searchFilter.test(cc.name));
             return filteredCCs.map(cc => ({
               type: 'Feature',
@@ -51,7 +51,7 @@ class MapSearch extends React.Component {
               text: cc.name,
               place_name: cc.name,
               properties: {
-                type: 'cc'
+                type: 'CC'
               }
             }));
         }
@@ -78,12 +78,12 @@ class MapSearch extends React.Component {
           this.geocoder.options.localGeocoderOnly = false;
           break;
 
-        case 'nc':
+        case 'NC':
           this.geocoder.setPlaceholder('Enter neighborhood council');
           this.geocoder.options.localGeocoderOnly = true;
           break;
 
-        case 'cc':
+        case 'CC':
           this.geocoder.setPlaceholder('Enter city council number');
           this.geocoder.options.localGeocoderOnly = true;
           break;
@@ -95,11 +95,11 @@ class MapSearch extends React.Component {
     return (
       <div className="map-search map-control">
         <div>
-          <div className="search-tabs">
+          <div className="map-control-tabs">
             { TABS.map(tab => (
               <div
                 key={tab}
-                className={clx('search-tab', {
+                className={clx('map-control-tab', {
                   active: tab === this.state.activeTab
                 })}
                 onClick={this.setTab.bind(null, tab)}

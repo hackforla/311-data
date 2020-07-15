@@ -213,13 +213,13 @@ class PinMap extends Component {
         this.ccLayer.hide();
         break;
 
-      case 'nc':
+      case 'NC':
         this.ncLayer.show();
         this.ccLayer.hide();
         this.addressLayer.hide();
         break;
 
-      case 'cc':
+      case 'CC':
         this.ccLayer.show();
         this.ncLayer.hide();
         this.addressLayer.hide();
@@ -228,10 +228,10 @@ class PinMap extends Component {
   }
 
   onGeocoderResult = ({ result }) => {
-    if (result.properties.type === 'nc')
+    if (result.properties.type === 'NC')
       return this.ncLayer.selectRegion(result.id);
 
-    if (result.properties.type === 'cc')
+    if (result.properties.type === 'CC')
       return this.ccLayer.selectRegion(result.id);
 
     this.addressLayer.setCenter({

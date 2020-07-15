@@ -3,7 +3,16 @@ import PropTypes from 'proptypes';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import clx from 'classnames';
 
+const TABS = [
+  'legend',
+  'colors'
+];
+
 class MapLayers extends React.Component {
+  state = {
+    activeTab: 'legend'
+  };
+
   onToggleType = id => {
     const { selectedTypes, onChangeSelectedTypes } = this.props;
 
@@ -22,6 +31,13 @@ class MapLayers extends React.Component {
     this.props.onChangeSelectedTypes([]);
   }
 
+  setTab = tab => {
+    if (tab !== this.state.activeTab) {
+      console.log('new tab:', tab);
+      this.setState({ activeTab: tab });
+    }
+  }
+
   render() {
     const {
       selectedTypes,
@@ -31,6 +47,19 @@ class MapLayers extends React.Component {
 
     return (
       <div className="map-layers map-control">
+        <div className="map-control-tabs">
+          { TABS.map(tab => (
+            <div
+              key={tab}
+              className={clx('map-control-tab', {
+                active: tab === this.state.activeTab
+              })}
+              onClick={this.setTab.bind(null, tab)}
+            >
+              { tab }
+            </div>
+          ))}
+        </div>
         <div className="type-selection">
           <div className="type-selectors">
             { Object.keys(REQUEST_TYPES).map(id => {
