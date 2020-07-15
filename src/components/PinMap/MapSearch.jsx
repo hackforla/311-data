@@ -94,21 +94,33 @@ class MapSearch extends React.Component {
   render() {
     return (
       <div className="map-search map-control">
-        <div className="search-tabs">
-          { TABS.map(tab => (
-            <div
-              key={tab}
-              className={clx('search-tab', {
-                active: tab === this.state.activeTab
-              })}
-              onClick={this.setTab.bind(null, tab)}
-            >
-              { tab }
-            </div>
-          ))}
+        <div>
+          <div className="search-tabs">
+            { TABS.map(tab => (
+              <div
+                key={tab}
+                className={clx('search-tab', {
+                  active: tab === this.state.activeTab
+                })}
+                onClick={this.setTab.bind(null, tab)}
+              >
+                { tab }
+              </div>
+            ))}
+          </div>
+          <div className="search-content">
+            <div id="geocoder" />
+          </div>
         </div>
-        <div className="search-content">
-          <div id="geocoder" />
+        <div className="search-buttons">
+          { this.props.canReset && (
+            <div
+              className="search-button"
+              onClick={this.props.onReset}
+            >
+              Reset
+            </div>
+          )}
         </div>
       </div>
     );
@@ -119,13 +131,16 @@ MapSearch.propTypes = {
   map: PropTypes.shape({}),
   onGeocoderResult: PropTypes.func,
   onChangeTab: PropTypes.func,
+  onReset: PropTypes.func,
+  canReset: PropTypes.bool,
 };
 
 MapSearch.defaultProps = {
-  mapboxgl: null,
   map: null,
   onGeocoderResult: () => {},
   onChangeTab: () => {},
+  onReset: () => {},
+  canReset: false
 };
 
 export default MapSearch;

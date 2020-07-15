@@ -194,6 +194,7 @@ class PinMap extends Component {
 
   reset = () => {
     this.zoomOut();
+    this.addressLayer.removeMask();
     this.ncLayer.deselectAll();
     this.ccLayer.deselectAll();
     this.setState({ locationInfo: INITIAL_LOCATION });
@@ -324,6 +325,7 @@ class PinMap extends Component {
               onGeocoderResult={this.onGeocoderResult}
               onChangeTab={this.onChangeSearchTab}
               onReset={this.reset}
+              canReset={!!this.state.filterGeo}
             />
             <MapLayers
               selectedTypes={this.state.selectedTypes}

@@ -194,11 +194,16 @@ export default function BoundaryLayer({
           { source: sourceId, id: selectedRegionId },
           { selected: false }
         );
-        map.setPaintProperty(`${sourceId}-borders`, 'line-width', 2);
+
+        setTimeout(() => {
+          map.setPaintProperty(`${sourceId}-borders`, 'line-width', 2);
+        });
+
         map.getSource(`${sourceId}-region-mask`).setData({
           type: "FeatureCollection",
           features: []
         });
+
         selectedRegionId = null;
       }
     }

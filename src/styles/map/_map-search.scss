@@ -77,4 +77,23 @@
     }
   }
 
+  .search-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    .search-button {
+      flex: 0;
+      padding: 4px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: $map-control-bg-color;
+      font-size: 14px;
+      font-weight: bold;
+      // border: 1px $map-control-border-color solid;
+      &:hover {
+        background-color: $map-control-active-bg-color;
+      }
+    }
+  }
+
 }

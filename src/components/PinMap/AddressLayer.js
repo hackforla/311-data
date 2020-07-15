@@ -1,4 +1,4 @@
-import { 
+import {
   circle as turfCircle,
   mask as turfMask,
   bbox as boundingBox
@@ -141,6 +141,12 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
     map.once('touchend', onUp);
   });
 
+  const removeMask = () => {
+    // NOTE: make empty geojson a constant somewhere and use instead of this
+    map.getSource('shed').setData({ type: "FeatureCollection", features: []});
+    map.getSource('shed-mask').setData({ type: "FeatureCollection", features: []});
+  }
+
   return {
     show: () => {
       map.setLayoutProperty('shed-border', 'visibility', 'visible');
@@ -152,10 +158,9 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
       map.setLayoutProperty('shed-fill', 'visibility', 'none');
       map.setLayoutProperty('shed-mask-fill', 'visibility', 'none');
 
-      // NOTE: make empty geojson a constant somewhere and use instead of this
-      map.getSource('shed').setData({ type: "FeatureCollection", features: []});
-      map.getSource('shed-mask').setData({ type: "FeatureCollection", features: []});
+      removeMask();
     },
+    removeMask,
     setCenter: (lngLat, cb) => {
       center = lngLat;
 
