@@ -27,6 +27,7 @@ module.exports = {
       ".jsx"
     ],
     'import/resolver': {
+      node: {},
       webpack: "webpack.config.js",
     },
   },
