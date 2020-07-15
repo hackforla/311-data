@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 // Checks to see if .env has all keys in .example.env. Any missing keys will be copied.
-// If no .env file is found, one is created and copied from .example.env.
+// If no .env file is found, one is created from .example.env.
 
 const fs = require('fs');
 const path = require('path');
