@@ -1,5 +1,13 @@
 import { mask as turfMask, bbox as boundingBox } from '@turf/turf';
 
+// adjust this to avoid overlapping the controls when zooming to a region
+const FIT_BOUNDS_PADDING = {
+  top: 65,
+  bottom: 65,
+  left: 350,
+  right: 350
+};
+
 export default function BoundaryLayer({
   map,
   sourceId,
@@ -156,7 +164,7 @@ export default function BoundaryLayer({
     const geo = sourceData.features.find(el => el.properties[idProperty] == selectedRegionId);
 
     // zoom to the region
-    map.fitBounds(boundingBox(geo), { padding: 50 });
+    map.fitBounds(boundingBox(geo), { padding: FIT_BOUNDS_PADDING });
 
     // mask everything else
     map.getSource(`${sourceId}-region-mask`).setData(turfMask(geo));
