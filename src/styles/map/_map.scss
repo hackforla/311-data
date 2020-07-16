@@ -63,7 +63,7 @@ $map-control-active-bg-color: #505050;
       border-top-color: $map-control-bg-color;
     }
     .mapboxgl-popup-content {
-      padding: 10px;
+      padding: 10px 20px 10px 10px;
       background-color: $map-control-bg-color;
     }
     .mapboxgl-popup-close-button {

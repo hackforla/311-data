@@ -155,7 +155,7 @@ class PinMap extends Component {
                 `<div>${REQUEST_TYPES[type].displayName}</div>` +
               '</div>'
             );
-            this.addPopup(coordinates, content);
+            return this.addPopup(coordinates, content);
           }
         }
       });
