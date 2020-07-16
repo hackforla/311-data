@@ -60,7 +60,10 @@ export default function BoundaryLayer({
       'fill-color': '#FFFFFF',
       'fill-opacity': [
         'case',
-        ['boolean', ['feature-state', 'hover'], false],
+        ['all',
+          ['boolean', ['feature-state', 'hover'], false],
+          ['!', ['boolean', ['feature-state', 'selected'], false]]
+        ],
         0.5,
         0
       ]
@@ -111,11 +114,10 @@ export default function BoundaryLayer({
           );
         }
 
-        if (id != selectedRegionId)
-          map.setFeatureState(
-            { source: sourceId, id },
-            { hover: true }
-          );
+        map.setFeatureState(
+          { source: sourceId, id },
+          { hover: true }
+        );
 
         hoveredRegionId = id;
 
@@ -141,7 +143,12 @@ export default function BoundaryLayer({
       layers: [`${sourceId}-fills`]
     })[0];
 
-    selectRegion(region.id);
+    // timeout because when you click on a point and the region isn't
+    // yet selected, we don't want the point-click, which runs after
+    // this handler, to think that the region is already selected
+    setTimeout(() => {
+      selectRegion(region.id);
+    }, 0);
   });
 
   const selectRegion = regionId => {
@@ -155,11 +162,10 @@ export default function BoundaryLayer({
       );
 
     selectedRegionId = regionId;
-    hoveredRegionId = null;
 
     map.setFeatureState(
       { source: sourceId, id: selectedRegionId },
-      { selected: true, hover: false }
+      { selected: true }
     );
 
     map.setPaintProperty(`${sourceId}-borders`, 'line-width', [

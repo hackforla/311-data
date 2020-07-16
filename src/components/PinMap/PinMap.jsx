@@ -12,6 +12,7 @@
     - precalculate NC and CC masks
     - precalculate request counts by type, nc, and cc
     - increase boundary of circle when hovering
+    - allow user to rotate colors in style tab
 */
 
 import React, { Component } from 'react';
@@ -114,6 +115,49 @@ class PinMap extends Component {
       });
 
       this.map.addControl(new mapboxgl.FullscreenControl(), 'bottom-left');
+
+      this.map.on('click', e => {
+        const masks = [
+          'nc-region-mask-fill',
+          'cc-region-mask-fill',
+          'shed-mask-fill'
+        ];
+
+        const hoverables = [
+          'nc-fills',
+          'cc-fills'
+        ];
+
+        const features = this.map.queryRenderedFeatures(e.point, {
+          layers: [
+            'request-circles',
+            ...masks,
+            ...hoverables
+          ]
+        });
+
+        for (let i = 0; i < features.length; i++) {
+          const feature = features[i];
+
+          if (masks.includes(feature.layer.id))
+            return null;
+
+          if (hoverables.includes(feature.layer.id) && !feature.state.selected)
+            return null;
+
+          if (feature.layer.id === 'request-circles') {
+            const { coordinates } = feature.geometry;
+            const { id, type } = feature.properties;
+            const content = (
+              '<div>' +
+                `<div>${id}</div>` +
+                `<div>${REQUEST_TYPES[type].displayName}</div>` +
+              '</div>'
+            );
+            return this.addPopup(coordinates, content);
+          }
+        }
+      });
     });
 
     this.setFilteredRequestCounts();

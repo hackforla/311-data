@@ -56,6 +56,21 @@ $map-control-active-bg-color: #505050;
     font-weight: bold;
   }
 
+  .mapboxgl-popup {
+    color: #FFFFFF;
+    font-size: 14px;
+    .mapboxgl-popup-tip {
+      border-top-color: $map-control-bg-color;
+    }
+    .mapboxgl-popup-content {
+      padding: 10px;
+      background-color: $map-control-bg-color;
+    }
+    .mapboxgl-popup-close-button {
+      color: white;
+    }
+  }
+
   .leaflet-control-easyPrint {
     visibility: hidden;
   }
