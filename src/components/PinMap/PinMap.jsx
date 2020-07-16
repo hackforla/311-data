@@ -31,6 +31,7 @@ import AddressLayer from './AddressLayer';
 import MapOverview from './MapOverview';
 import MapSearch from './MapSearch';
 import MapLayers from './MapLayers';
+import MapRegion from './MapRegion';
 import MapMeta from './MapMeta';
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
@@ -423,12 +424,8 @@ class PinMap extends Component {
               colorScheme={this.state.colorScheme}
               onChangeColorScheme={this.setColorScheme}
             />
+            <MapRegion regionName={this.state.hoveredRegionName} />
             <MapMeta position={this.props.position} />
-            { this.state.hoveredRegionName && (
-              <div className="hovered-region">
-                { this.state.hoveredRegionName }
-              </div>
-            )}
           </>
         )}
       </div>
