@@ -8,6 +8,7 @@ import CustomMarker from '@components/PinMap/CustomMarker';
 import ClusterMarker from '@components/PinMap/ClusterMarker';
 import HeatmapLegend from '@components/PinMap/HeatmapLegend';
 import ExportLegend from '@components/PinMap/ExportLegend';
+import MapboxWordmark from '@components/PinMap/MapboxWordmark';
 import {
   Map,
   TileLayer,
@@ -283,7 +284,7 @@ class PinMap extends Component {
             <BaseLayer name="Satellite">
               <TileLayer
                 url={satelliteLayerUrl}
-                attribution="MapBox"
+                attribution='<a href="https://www.mapbox.com/about/maps/">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/">© OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/#/-74.5/40/10">Improve this map</a>'
                 tileSize={512}
                 zoomOffset={-1}
               />
@@ -338,6 +339,7 @@ class PinMap extends Component {
           </LayersControl>
           <ExportLegend visible={markersVisible} position="bottomright" />
           <HeatmapLegend visible={heatmapVisible} position="bottomright" />
+          <MapboxWordmark />
           <PrintControl
             sizeModes={['Current']}
             hideControlContainer={false}
