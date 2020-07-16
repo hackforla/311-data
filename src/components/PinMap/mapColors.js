@@ -78,6 +78,15 @@ const COLOR_SCHEMES = {
     '#D3B484',
     '#B3B3B3'
   ],
+
+  club: Array.from({ length: 11 }).map((_, index) => {
+    const hue = 170 + Math.round(190 * index / 11);
+    return `hsl(${hue}, 100%, 50%)`;
+  }),
+
+  mono: [
+    '#FFFFFF'
+  ],
 }
 
 export const COLOR_SCHEME_NAMES = Object.keys(COLOR_SCHEMES);
