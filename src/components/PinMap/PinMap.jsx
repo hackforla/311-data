@@ -2,8 +2,7 @@
   TODO:
     - deal with ids being strings in geojson and numbers in database/constants file
     - implement reset and drop-pin function
-    - add popups
-      - need drag handle for address filter
+    - need drag handle for address filter
     - better to filter the requests layer or to change the data in the requests source?
     - reverse geocode on drag end -- see if we can get intersection based on lat/lng
     - create geoUtils.js containing:
@@ -89,6 +88,7 @@ class PinMap extends Component {
     this.addressLayer = null;
     this.ncLayer = null;
     this.ccLayer = null;
+    this.popup = null;
   }
 
   componentDidMount() {
@@ -154,7 +154,7 @@ class PinMap extends Component {
                 `<div>${REQUEST_TYPES[type].displayName}</div>` +
               '</div>'
             );
-            return this.addPopup(coordinates, content);
+            this.addPopup(coordinates, content);
           }
         }
       });
@@ -247,17 +247,25 @@ class PinMap extends Component {
   }
 
   addPopup = (lngLat, content, opts={}) => {
-    return new mapboxgl.Popup(opts)
+    this.popup = new mapboxgl.Popup(opts)
       .setLngLat(lngLat)
       .setHTML(content)
       .addTo(this.map);
   };
+
+  removePopup = () => {
+    if (this.popup) {
+      this.popup.remove();
+      this.popup = null;
+    }
+  }
 
   reset = () => {
     this.zoomOut();
     this.addressLayer.removeMask();
     this.ncLayer.deselectAll();
     this.ccLayer.deselectAll();
+    this.removePopup();
     this.setState({ locationInfo: INITIAL_LOCATION });
     this.map.once('idle', () => {
       this.setState({ filterGeo: null });
