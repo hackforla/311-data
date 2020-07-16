@@ -275,7 +275,7 @@ class PinMap extends Component {
             <BaseLayer checked name="Streets">
               <TileLayer
                 url={streetsLayerUrl}
-                attribution="MapBox"
+                attribution='<a href="https://www.mapbox.com/about/maps/">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/">© OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/#/-74.5/40/10">Improve this map</a>'
                 tileSize={512}
                 zoomOffset={-1}
               />
