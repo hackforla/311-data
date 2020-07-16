@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import { COLOR_SCHEME_NAMES, getColors } from './mapColors';
 import clx from 'classnames';
 
 const TABS = [
@@ -32,26 +33,31 @@ class MapLayers extends React.Component {
   }
 
   setTab = tab => {
-    if (tab !== this.state.activeTab) {
-      console.log('new tab:', tab);
+    if (tab !== this.state.activeTab)
       this.setState({ activeTab: tab });
-    }
   }
 
   onChangeStyle = style => {
     this.props.onChangeMapStyle(style);
   }
 
+  onChangeColorScheme = scheme => {
+    this.props.onChangeColorScheme(scheme);
+  }
+
   render() {
     const {
       selectedTypes,
       requestsLayer,
-      onChangeRequestsLayer
+      onChangeRequestsLayer,
+      colorScheme
     } = this.props;
+
+    const schemeColors = getColors(colorScheme);
 
     return (
       <div className="map-layers map-control">
-        {/*<div className="map-control-tabs">
+        <div className="map-control-tabs">
           { TABS.map(tab => (
             <div
               key={tab}
@@ -63,7 +69,7 @@ class MapLayers extends React.Component {
               { tab }
             </div>
           ))}
-        </div>*/}
+        </div>
         <div style={{ position: 'relative' }}>
           <div className="type-selection">
             <div className="type-selectors">
@@ -78,7 +84,7 @@ class MapLayers extends React.Component {
                     <div
                       className="type-color"
                       style={{
-                        backgroundColor: selected ? type.color : 'transparent',
+                        backgroundColor: selected ? schemeColors[id] : 'transparent',
                         borderWidth: selected ? 0 : 1,
                       }}
                     />
@@ -102,24 +108,20 @@ class MapLayers extends React.Component {
           </div>
           { this.state.activeTab === 'style' && (
             <div className="style-selection">
-              { this.props.mapStyles.map(style => {
-                const selected = this.props.mapStyle === style;
-                return (
-                  <div
-                    key={style}
-                    className="type-selector"
-                    onClick={this.onChangeStyle.bind(this, style)}>
+              <div className="type-selectors">
+                { COLOR_SCHEME_NAMES.map(scheme => {
+                  const selected = this.props.colorScheme === scheme;
+                  return (
                     <div
-                      className="type-color"
-                      style={{
-                        backgroundColor: selected ? 'white' : 'transparent',
-                        borderWidth: selected ? 0 : 1,
-                      }}
-                    />
-                    <div className="type-name">{ style }</div>
-                  </div>
-                );
-              })}
+                      key={scheme}
+                      className={clx('type-selector', { selected })}
+                      onClick={this.onChangeColorScheme.bind(this, scheme)}>
+                      <div className="type-color" />
+                      <div className="type-name">{ scheme }</div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -149,3 +151,24 @@ MapLayers.propTypes = {};
 MapLayers.defaultProps = {};
 
 export default MapLayers;
+
+{/*<div className="style-selection">
+  { this.props.mapStyles.map(style => {
+    const selected = this.props.mapStyle === style;
+    return (
+      <div
+        key={style}
+        className="type-selector"
+        onClick={this.onChangeStyle.bind(this, style)}>
+        <div
+          className="type-color"
+          style={{
+            backgroundColor: selected ? 'white' : 'transparent',
+            borderWidth: selected ? 0 : 1,
+          }}
+        />
+        <div className="type-name">{ style }</div>
+      </div>
+    );
+  })}
+</div>*/}

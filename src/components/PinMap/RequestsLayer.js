@@ -1,14 +1,19 @@
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-
-const REQUEST_COLORS = Object.keys(REQUEST_TYPES).reduce((p, c) => {
-  return [...p, c, REQUEST_TYPES[c].color]
-}, []);
+import { getColors } from './mapColors';
 
 // put layer underneath this layer (from original mapbox tiles)
 // so you don't cover up important labels
 const BEFORE_ID = 'poi-label';
 
-export default function RequestsLayer({ map, sourceData, addPopup }) {
+export default function RequestsLayer({ map, sourceData, addPopup, colorScheme }) {
+
+  const getSchemeColors = scheme => {
+    let colors = getColors(scheme);
+    return Object.keys(REQUEST_TYPES).reduce((p, c) => {
+      return [...p, c, colors[c]]
+    }, []);
+  }
+
   map.addSource('requests', {
     type: 'geojson',
     data: sourceData
@@ -29,7 +34,7 @@ export default function RequestsLayer({ map, sourceData, addPopup }) {
       'circle-color': [
         'match',
         ['get', 'type'],
-        ...REQUEST_COLORS,
+        ...getSchemeColors(colorScheme),
         '#FFFFFF'
       ],
       'circle-opacity': 0.8
@@ -95,6 +100,14 @@ export default function RequestsLayer({ map, sourceData, addPopup }) {
     },
     setData: requests => {
       map.getSource('requests').setData(requests);
+    },
+    setColorScheme: scheme => {
+      map.setPaintProperty('request-circles', 'circle-color', [
+        'match',
+        ['get', 'type'],
+        ...getSchemeColors(scheme),
+        '#FFFFFF'
+      ]);
     }
   }
 }

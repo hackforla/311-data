@@ -7,7 +7,8 @@ import RequestsBarChart from './RequestsBarChart';
 const MapOverview = ({
   date,
   locationInfo,
-  selectedRequests
+  selectedRequests,
+  colorScheme,
 }) => {
   return (
     <div className="map-overview map-control">
@@ -52,7 +53,10 @@ const MapOverview = ({
         { Object.values(selectedRequests).reduce((p,c) => p + c, 0) }
       </div>
       {/*<RequestsBarChart selectedRequests={selectedRequests} />*/}
-      <RequestsDonut selectedRequests={selectedRequests} />
+      <RequestsDonut
+        selectedRequests={selectedRequests}
+        colorScheme={colorScheme}
+      />
     </div>
   );
 };
@@ -60,13 +64,14 @@ const MapOverview = ({
 MapOverview.propTypes = {
   date: PropTypes.any,
   locationInfo: PropTypes.shape({}),
-  selectedRequests: PropTypes.shape({})
+  selectedRequests: PropTypes.shape({}),
+  colorScheme: PropTypes.string.isRequired,
 };
 
 MapOverview.defaultProps = {
   date: undefined,
   locationInfo: {},
-  selectedRequests: {}
+  selectedRequests: {},
 };
 
 export default MapOverview;

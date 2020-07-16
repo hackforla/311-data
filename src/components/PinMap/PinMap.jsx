@@ -80,6 +80,7 @@ class PinMap extends Component {
       filteredRequestCounts: {},
       hoveredRegionName: null,
       date: props.lastUpdated,
+      colorScheme: 'prism',
     };
 
     this.map = null;
@@ -134,6 +135,7 @@ class PinMap extends Component {
       map: this.map,
       sourceData: this.props.requests,
       addPopup: this.addPopup,
+      colorScheme: this.state.colorScheme,
     });
 
     this.addressLayer = AddressLayer({
@@ -306,6 +308,11 @@ class PinMap extends Component {
     // this.addLayers();
   }
 
+  setColorScheme = scheme => {
+    this.setState({ colorScheme: scheme });
+    this.requestsLayer.setColorScheme(scheme);
+  }
+
   setFilteredRequestCounts = () => {
     const { filterGeo, selectedTypes } = this.state;
     const { requests } = this.props;
@@ -345,6 +352,7 @@ class PinMap extends Component {
               date={this.state.date}
               locationInfo={this.state.locationInfo}
               selectedRequests={this.state.filteredRequestCounts}
+              colorScheme={this.state.colorScheme}
             />
             <MapSearch
               map={this.map}
@@ -360,6 +368,8 @@ class PinMap extends Component {
               onChangeRequestsLayer={this.setActiveRequestsLayer}
               mapStyles={Object.keys(MAP_STYLES)}
               onChangeMapStyle={this.setMapStyle}
+              colorScheme={this.state.colorScheme}
+              onChangeColorScheme={this.setColorScheme}
             />
             <MapMeta position={this.props.position} />
             { this.state.hoveredRegionName && (

@@ -2,36 +2,37 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import ChartJS from 'chart.js';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import { getColors } from './mapColors';
 
 class RequestsDonut extends React.Component {
-  constructor(props) {
-    super(props);
+  canvasRef = React.createRef();
 
-    this.canvasRef = React.createRef();
+  getRequestCounts = selectedRequests => {
+    return Object.keys(REQUEST_TYPES).map(t => selectedRequests[t] || 0);
+  };
 
-    this.types = [];
-    this.colors = [];
-    this.labels = [];
+  getSchemeColors = colorScheme => {
+    const colors = getColors(colorScheme);
+    return Object.keys(REQUEST_TYPES).map(t => colors[t]);
+  };
 
-    Object.keys(REQUEST_TYPES).forEach(t => {
-      this.types.push(t);
-      this.colors.push(REQUEST_TYPES[t].color);
-      this.labels.push(REQUEST_TYPES[t].displayName);
-    });
-  }
+  getLabels = () => {
+    return Object.keys(REQUEST_TYPES).map(t => REQUEST_TYPES[t].displayName);
+  };
 
   componentDidMount() {
+    const { selectedRequests, colorScheme } = this.props;
     const ctx = this.canvasRef.current.getContext('2d');
     this.chart = new ChartJS(ctx, {
 			type: 'doughnut',
       aspectRatio: 1.0,
       data: {
         datasets: [{
-          data: this.types.map(type => this.props.selectedRequests[type] || 0),
-          backgroundColor: this.colors,
+          data: this.getRequestCounts(selectedRequests),
+          backgroundColor: this.getSchemeColors(colorScheme),
           borderWidth: 0,
         }],
-        labels: this.labels
+        labels: this.getLabels(),
       },
 			options: {
         cutoutPercentage: 50,
@@ -50,7 +51,12 @@ class RequestsDonut extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.selectedRequests !== this.props.selectedRequests) {
       this.chart.config.data.datasets[0].data = (
-        this.types.map(type => this.props.selectedRequests[type] || 0)
+        this.getRequestCounts(this.props.selectedRequests)
+      );
+      this.chart.update();
+    } else if (prevProps.colorScheme !== this.props.colorScheme) {
+      this.chart.config.data.datasets[0].backgroundColor = (
+        this.getSchemeColors(this.props.colorScheme)
       );
       this.chart.update();
     }
@@ -66,11 +72,12 @@ class RequestsDonut extends React.Component {
 }
 
 RequestsDonut.propTypes = {
-  selectedRequests: PropTypes.shape({})
+  selectedRequests: PropTypes.shape({}),
+  colorScheme: PropTypes.string.isRequired,
 };
 
 RequestsDonut.defaultProps = {
-  selectedRequests: {}
+  selectedRequests: {},
 };
 
 export default RequestsDonut;

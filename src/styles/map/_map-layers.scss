@@ -7,6 +7,7 @@
   .type-selection {
     background-color: $map-control-bg-color;
     border-radius: 5px;
+    border-top-right-radius: 0;
     padding-top: 10px;
   }
 
@@ -65,6 +66,16 @@
     background-color: $map-control-bg-color;
     border-radius: 5px;
     border-top-right-radius: 0;
+    padding-top: 10px;
+    .type-selector.selected {
+      cursor: default;
+      .type-color {
+        background-color: #FFFFFF;
+      }
+      &:hover {
+        background-color: $map-control-bg-color;
+      }
+    }
   }
 
   .request-layer-selection {
