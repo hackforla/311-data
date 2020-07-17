@@ -1,60 +1,129 @@
 export default {};
 
+// 'primary' or 'alt' to change request type colors
+const COLOR_SELECTION = 'alt';
+
 export const REQUEST_TYPES = {
   'Dead Animal Removal': {
     displayName: 'Dead Animal',
     abbrev: 'DAN',
-    color: '#4FEFEF',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#4FEFEF',
+      alt: '#768393',
+    },
   },
   'Homeless Encampment': {
     displayName: 'Homeless Encampment',
     abbrev: 'HLE',
-    color: '#ECB800',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#ECB800',
+      alt: '#C16B1A',
+    },
   },
   'Single Streetlight Issue': {
     displayName: 'Single Streetlight',
     abbrev: 'SSL',
-    color: '#AD7B56',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#AD7B56',
+      alt: '#2B87C5',
+    },
   },
   'Multiple Streetlight Issue': {
     displayName: 'Multiple Streetlight',
     abbrev: 'MSL',
-    color: '#F7ADAD',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#F7ADAD',
+      alt: '#1B9365',
+    },
   },
   Feedback: {
     displayName: 'Feedback',
     abbrev: 'FBK',
-    color: '#FFE6B7',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#FFE6B7',
+      alt: '#0E251D',
+    },
   },
   'Bulky Items': {
     displayName: 'Bulky Items',
     abbrev: 'BLK',
-    color: '#FF0000',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#FF0000',
+      alt: '#C056C8',
+    },
   },
   'Electronic Waste': {
     displayName: 'E-Waste',
     abbrev: 'EWT',
-    color: '#DDEC9F',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#DDEC9F',
+      alt: '#EA435C',
+    },
   },
   'Metal/Household Appliances': {
     displayName: 'Metal/Household Appliances',
     abbrev: 'MHA',
-    color: '#B8D0FF',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#B8D0FF',
+      alt: '#4F7CEE',
+    },
   },
   'Graffiti Removal': {
     displayName: 'Graffiti',
     abbrev: 'GFT',
-    color: '#2368D0',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#2368D0',
+      alt: '#4F5564',
+    },
   },
   'Illegal Dumping Pickup': {
     displayName: 'Illegal Dumping',
     abbrev: 'ILD',
-    color: '#6A8011',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#6A8011',
+      alt: '#8F70D7',
+    },
   },
   Other: {
     displayName: 'Other',
     abbrev: 'OTH',
-    color: '#6D7C93',
+    get color() {
+      return this.colors[COLOR_SELECTION];
+    },
+    colors: {
+      primary: '#6D7C93',
+      alt: '#842D8B',
+    },
   },
 };
 

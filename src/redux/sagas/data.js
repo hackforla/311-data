@@ -5,7 +5,6 @@ import {
   call,
   put,
   select,
-  all,
 } from 'redux-saga/effects';
 import { COUNCILS } from '@components/common/CONSTANTS';
 
@@ -32,12 +31,12 @@ import {
 
 /* ////////////////// API CALLS  //////////////// */
 
-const BASE_URL = process.env.DB_URL;
+const BASE_URL = process.env.API_URL;
 
 /* ////  MAP //// */
 
 function* fetchPinClusters(filters, { zoom, bounds }) {
-  const clustersUrl = `${BASE_URL}/pin-clusters`;
+  const clustersUrl = `${BASE_URL}/map/clusters`;
 
   const {
     _northEast: { lat: north, lng: east },
@@ -59,7 +58,7 @@ function* fetchPinClusters(filters, { zoom, bounds }) {
 }
 
 function* fetchHeatmap(filters) {
-  const heatmapUrl = `${BASE_URL}/heatmap`;
+  const heatmapUrl = `${BASE_URL}/map/heat`;
 
   const { data } = yield call(axios.post, heatmapUrl, filters);
 
@@ -76,52 +75,12 @@ function* fetchPinInfo(srnumber) {
 
 /* //// VISUALIZATIONS //// */
 
-function* fetchCounts(filters) {
-  const countsUrl = `${BASE_URL}/requestcounts`;
-
-  const { data } = yield call(axios.post, countsUrl, {
-    ...filters,
-    countFields: ['requesttype', 'requestsource'],
-  });
-
-  return {
-    type: data.find(d => d.field === 'requesttype')?.counts,
-    source: data.find(d => d.field === 'requestsource')?.counts,
-  };
-}
-
-function* fetchFrequency(filters) {
-  const frequencyUrl = `${BASE_URL}/requestfrequency`;
-
-  const { data } = yield call(axios.post, frequencyUrl, filters);
-
-  return data;
-}
-
-function* fetchTimeToClose(filters) {
-  const ttcUrl = `${BASE_URL}/timetoclose`;
-
-  const { data } = yield call(axios.post, ttcUrl, filters);
-
-  return data;
-}
-
 function* fetchVisData(filters) {
-  const [
-    counts,
-    frequency,
-    timeToClose,
-  ] = yield all([
-    call(fetchCounts, filters),
-    call(fetchFrequency, filters),
-    call(fetchTimeToClose, filters),
-  ]);
+  const visUrl = `${BASE_URL}/visualizations`;
 
-  return {
-    counts,
-    frequency,
-    timeToClose,
-  };
+  const { data } = yield call(axios.post, visUrl, filters);
+
+  return data;
 }
 
 /* //// OTHER //// */

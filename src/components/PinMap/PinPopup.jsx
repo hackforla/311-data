@@ -64,7 +64,6 @@ const PinPopup = ({
   </Popup>
 );
 
-
 export default PinPopup;
 
 PinPopup.propTypes = {

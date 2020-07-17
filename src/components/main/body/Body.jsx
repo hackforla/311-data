@@ -4,6 +4,7 @@ import PropTypes from 'proptypes';
 import { Switch, Route } from 'react-router-dom';
 import clx from 'classnames';
 
+import About from '@components/about/About';
 import Visualizations from '@components/Visualizations';
 import Comparison from '@components/Comparison';
 import Loader from '@components/common/Loader';
@@ -16,30 +17,37 @@ const Body = ({
   openErrorModal,
   error,
   menuIsOpen,
-}) => (
-  <div className={clx('body', { 'menu-is-open': menuIsOpen })}>
-    <Menu />
-    <Switch>
-      <Route path="/comparison">
-        <Comparison />
-      </Route>
-      <Route path="/">
-        <PinMap />
-        <Visualizations />
-      </Route>
-    </Switch>
-    <Loader />
-    <Modal
-      open={openErrorModal}
-      content={<DataRequestError error={error} />}
-    />
-  </div>
-);
+  splashPageDisabled,
+}) => {
+  if (splashPageDisabled) {
+    return (
+      <div className={clx('body', { 'menu-is-open': menuIsOpen })}>
+        <Menu />
+        <Switch>
+          <Route path="/comparison">
+            <Comparison />
+          </Route>
+          <Route path="/">
+            <PinMap />
+            <Visualizations />
+          </Route>
+        </Switch>
+        <Loader />
+        <Modal
+          open={openErrorModal}
+          content={<DataRequestError error={error} />}
+        />
+      </div>
+    );
+  }
+  return <About />;
+};
 
 Body.propTypes = {
   error: PropTypes.shape({}),
   openErrorModal: PropTypes.bool.isRequired,
   menuIsOpen: PropTypes.bool.isRequired,
+  splashPageDisabled: PropTypes.bool.isRequired,
 };
 
 Body.defaultProps = {
@@ -50,6 +58,7 @@ const mapStateToProps = state => ({
   error: state.data.error,
   openErrorModal: state.ui.error.isOpen,
   menuIsOpen: state.ui.menu.isOpen,
+  splashPageDisabled: state.ui.splashPageDisabled,
 });
 
 export default connect(mapStateToProps, null)(Body);

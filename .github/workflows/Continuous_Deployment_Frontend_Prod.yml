@@ -1,0 +1,44 @@
+name: Deploy_Frontend_Prod
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'public/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v1
+    - name: Rebuild sass
+      run: npm rebuild node-sass
+    - name: Install Packages
+      run: npm install
+    - name: Setup environment
+      run: |
+        echo MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > src/.env
+        echo MAPBOX_STREETS_URL=${{ secrets.MAPBOX_STREETS_URL }} >> src/.env
+        echo MAPBOX_SATELLITE_URL=${{ secrets.MAPBOX_SATELLITE_URL }} >> src/.env
+        echo API_URL=${{ secrets.API_URL_PROD }} >> src/.env
+        echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> src/.env
+        echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> src/.env
+        echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> src/.env
+        echo GITHUB_SHA=${{ github.sha }} >> src/.env
+    - name: Build project
+      run: npm run build
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_CI_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_CI_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - name: Sync Production Build To S3
+      run: |
+        aws s3 sync dist s3://${{ secrets.S3_BUCKET_PROD }} --follow-symlinks --delete
+    - name: Invalidate Cloudfront Cache
+      run: |
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.CDN_DISTRIBUTION_ID_PROD }} --paths "/*"

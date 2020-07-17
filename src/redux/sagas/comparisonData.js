@@ -20,30 +20,18 @@ import {
 
 /* /////////// INDIVIDUAL API CALLS /////////// */
 
-const BASE_URL = process.env.DB_URL;
+const BASE_URL = process.env.API_URL;
 
 function* getCountsComparison(filters) {
-  const url = `${BASE_URL}/requestcounts-comparison`;
+  const url = `${BASE_URL}/comparison/counts`;
 
-  const { data: { set1, set2 } } = yield call(axios.post, url, {
-    ...filters,
-    countFields: ['requestsource'],
-  });
+  const { data } = yield call(axios.post, url, filters);
 
-  return {
-    set1: {
-      district: set1.district,
-      source: set1.data.find(d => d.field === 'requestsource')?.counts,
-    },
-    set2: {
-      district: set2.district,
-      source: set2.data.find(d => d.field === 'requestsource')?.counts,
-    },
-  };
+  return data;
 }
 
 function* getTimeToCloseComparison(filters) {
-  const url = `${BASE_URL}/timetoclose-comparison`;
+  const url = `${BASE_URL}/comparison/timetoclose`;
 
   const { data } = yield call(axios.post, url, filters);
 
@@ -51,7 +39,7 @@ function* getTimeToCloseComparison(filters) {
 }
 
 function* getFrequencyComparison(filters) {
-  const url = `${BASE_URL}/requestfrequency-comparison`;
+  const url = `${BASE_URL}/comparison/frequency`;
 
   const { data } = yield call(axios.post, url, filters);
 

@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { getMetadataRequest } from '@reducers/metadata';
 
+import RouteChange from '@components/main/util/RouteChange';
+import actions from '@components/main/util/routeChangeActions';
+import CookieNotice from '@components/main/body/CookieNotice';
+import Header from '@components/main/header/Header';
+import Footer from '@components/main/footer/Footer';
+import StaticFooter from '@components/main/footer/StaticFooter';
+import { SnapshotRenderer } from '@components/export/SnapshotService';
 import Routes from './Routes';
-import Header from './components/main/header/Header';
-import Footer from './components/main/footer/Footer';
-import StaticFooter from './components/main/footer/StaticFooter';
-import { SnapshotRenderer } from './components/export/SnapshotService';
-
-const basename = process.env.NODE_ENV === 'development' ? '/' : process.env.BASE_URL || '/';
 
 const App = ({
   getMetadata,
@@ -21,14 +22,16 @@ const App = ({
   });
 
   return (
-    <Router basename={basename}>
+    <Router>
+      <RouteChange actions={actions} />
       <Header />
       <Routes />
       <Switch>
-        <Route path="/(about|contact)" component={StaticFooter} />
+        <Route path="/(about|contact|privacy)" component={StaticFooter} />
         <Route path="/" component={Footer} />
       </Switch>
       <SnapshotRenderer />
+      <CookieNotice />
     </Router>
   );
 };

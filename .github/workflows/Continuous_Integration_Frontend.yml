@@ -1,5 +1,10 @@
-name: Dev_CI_Frontend
-on: [pull_request]
+name: CI_Frontend
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'public/**'
 
 jobs:
   build:
@@ -12,8 +17,13 @@ jobs:
       run: npm run lint
     - name: Setup environment
       run: |
-        echo REACT_APP_MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
-        echo DB_URL=${{ secrets.DB_URL }} >> .env
+        echo MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > src/.env
+        echo MAPBOX_STREETS_URL=${{ secrets.MAPBOX_STREETS_URL }} >> src/.env
+        echo MAPBOX_SATELLITE_URL=${{ secrets.MAPBOX_SATELLITE_URL }} >> src/.env
+        echo API_URL=${{ secrets.API_URL_PROD }} >> src/.env
+        echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> src/.env
+        echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> src/.env
+        echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> src/.env
     - name: Build project
       run: npm run build
     - name: Run Tests

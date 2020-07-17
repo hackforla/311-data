@@ -5,6 +5,14 @@
     visibility: hidden;
   }
 
+  .leaflet-bottom.leaflet-right {
+    font-family: $brand-text-family;
+  }
+
+  .leaflet-control-layers-expanded {
+    min-width: 218px;
+  }
+
   #btn-map-export {
     @extend .cta-button;
     position: absolute;
@@ -15,21 +23,37 @@
   }
 
   .heatmap-legend-wrapper {
-    z-index: $z-map-export-button;
-    position: absolute;
-    right: 10px;
-    bottom: 150px;
     font-size: 12px;
     font-weight: 600;
 
     #heatmap-gradient-legend {
       background: linear-gradient(90deg, blue 10%, cyan 25%, lime 45%, yellow 65%, red 100%);
-      width: 218px;
+      min-width: 218px;
       height: 35px;
+      min-height: 30px;
       color: white;
-      padding-left: 5px;
-      padding-right: 5px;
+      margin: 0;
       border-radius: 3px;
+      .span {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+  }
+
+  .export-legend-wrapper {
+    background-color: $brand-bg-color;
+    min-width: 218px;
+    padding: 6px;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    font-size: 11px;
+
+    .export-legend-title {
+      font-weight: 600;
+      font-size: 11px;
+      line-height: 11px;
+      margin-bottom: 3px;
     }
   }
 }
