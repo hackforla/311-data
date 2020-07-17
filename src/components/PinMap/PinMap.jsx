@@ -18,7 +18,11 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import { pointsWithinPolygon as withinGeo, bbox as boundingBox } from '@turf/turf';
+import {
+  pointsWithinPolygon as withinGeo,
+  bbox as boundingBox,
+  booleanPointInPolygon as inPoly
+} from '@turf/turf';
 import moment from 'moment';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
@@ -58,12 +62,26 @@ const MAP_STYLES = {
   satellite: 'mapbox://styles/mapbox/satellite-streets-v11',
 };
 
-function ncName(ncId) {
+function ncNameFromId(ncId) {
   return COUNCILS.find(c => c.id == ncId)?.name;
 }
 
-function ccName(ccId) {
+function ccNameFromId(ccId) {
   return CITY_COUNCILS.find(c => c.id == ccId)?.name;
+}
+
+function ncNameFromLngLat({ lng, lat }) {
+  for (let i = 0; i < ncBoundaries.features.length; i++)
+    if (inPoly([lng, lat], ncBoundaries.features[i]))
+      return ncNameFromId(ncBoundaries.features[i].properties.nc_id);
+  return null;
+}
+
+function ccNameFromLngLat({ lng, lat }) {
+  for (let i = 0; i < ccBoundaries.features.length; i++)
+    if (inPoly([lng, lat], ccBoundaries.features[i]))
+      return ccNameFromId(ccBoundaries.features[i].properties.name);
+  return null;
 }
 
 ///////////////////// MAP ///////////////////
@@ -205,7 +223,7 @@ class PinMap extends Component {
         this.setState({
           locationInfo: {
             name: 'Neighborhood Council',
-            value: ncName(geo.properties.nc_id),
+            value: ncNameFromId(geo.properties.nc_id),
             url: geo.properties.waddress || geo.properties.dwebsite
           }
         });
@@ -216,7 +234,7 @@ class PinMap extends Component {
       onHoverRegion: geo => {
         this.setState({
           hoveredRegionName: geo
-            ? ncName(geo.properties.nc_id)
+            ? ncNameFromId(geo.properties.nc_id)
             : null
         });
       }
@@ -231,7 +249,7 @@ class PinMap extends Component {
         this.setState({
           locationInfo: {
             name: 'City Council',
-            value: ccName(geo.properties.name),
+            value: ccNameFromId(geo.properties.name),
           }
         });
         this.map.once('idle', () => {
@@ -241,7 +259,7 @@ class PinMap extends Component {
       onHoverRegion: geo => {
         this.setState({
           hoveredRegionName: geo
-            ? ccName(geo.properties.name)
+            ? ccNameFromId(geo.properties.name)
             : null
         });
       }
