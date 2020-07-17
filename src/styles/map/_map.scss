@@ -1,5 +1,76 @@
+$map-control-border-color: #63aace;
+$map-control-bg-color: #27272b;
+$map-control-active-bg-color: #505050;
+
 .map-container {
-  height: calc(100vh - #{$header-height + $footer-height});
+  //height: calc(100vh - #{$header-height + $footer-height});
+  height: calc(100vh - #{$header-height});
+
+  .map-control {
+    z-index: 1;
+    position: absolute;
+    color: white;
+    border-radius: 5px;
+    user-select: none;
+  }
+
+  .map-control-tabs {
+    display: flex;
+    justify-content: flex-end;
+    .map-control-tab {
+      flex: 0;
+      padding: 4px 12px;
+      color: white;
+      text-transform: capitalize;
+      background-color: $map-control-bg-color;
+      font-weight: bold;
+      font-size: 13px;
+      user-select: none;
+      &:first-child {
+        border-top-left-radius: 5px;
+      }
+      &:last-child {
+        border-top-right-radius: 5px;
+      }
+      &.active {
+        background-color: transparentize($map-control-border-color, 0.1);
+      }
+      &:hover:not(.active) {
+        cursor: pointer;
+        background-color: $map-control-active-bg-color;
+      }
+    }
+  }
+
+  .map-region-name {
+    z-index: 1;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    background-color: $map-control-bg-color;
+    padding: 4px 10px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    pointer-events: none;
+  }
+
+  .mapboxgl-popup {
+    color: #FFFFFF;
+    font-size: 14px;
+    .mapboxgl-popup-tip {
+      border-top-color: $map-control-bg-color;
+    }
+    .mapboxgl-popup-content {
+      padding: 10px 20px 10px 10px;
+      background-color: $map-control-bg-color;
+    }
+    .mapboxgl-popup-close-button {
+      color: white;
+    }
+  }
 
   .leaflet-control-easyPrint {
     visibility: hidden;

@@ -4,14 +4,14 @@ import PropTypes from 'proptypes';
 import { Switch, Route } from 'react-router-dom';
 import clx from 'classnames';
 
-import About from '@components/about/About';
-import Visualizations from '@components/Visualizations';
-import Comparison from '@components/Comparison';
-import Loader from '@components/common/Loader';
-import Modal from '@components/common/Modal';
-import Menu from '../menu/Menu';
+// import About from '@components/about/About';
+// import Visualizations from '@components/Visualizations';
+// import Comparison from '@components/Comparison';
+// import Loader from '@components/common/Loader';
+// import Modal from '@components/common/Modal';
+// import Menu from '../menu/Menu';
 import PinMap from '../../PinMap/PinMap';
-import DataRequestError from './DataRequestError';
+// import DataRequestError from './DataRequestError';
 
 const Body = ({
   openErrorModal,
@@ -19,10 +19,11 @@ const Body = ({
   menuIsOpen,
   splashPageDisabled,
 }) => {
-  if (splashPageDisabled) {
+  if (true) {
     return (
       <div className={clx('body', { 'menu-is-open': menuIsOpen })}>
-        <Menu />
+        <PinMap />
+        {/*<Menu />
         <Switch>
           <Route path="/comparison">
             <Comparison />
@@ -36,11 +37,11 @@ const Body = ({
         <Modal
           open={openErrorModal}
           content={<DataRequestError error={error} />}
-        />
+        />*/}
       </div>
     );
   }
-  return <About />;
+  // return <About />;
 };
 
 Body.propTypes = {

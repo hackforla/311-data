@@ -56,7 +56,7 @@ export const disableSplashPage = () => ({
 
 const initialState = {
   menu: {
-    isOpen: true,
+    isOpen: false,
     activeTab: MENU_TABS.MAP,
   },
   map: {},

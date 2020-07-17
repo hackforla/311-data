@@ -1,0 +1,108 @@
+.map-layers {
+  bottom: 30px;
+  right: 10px;
+  font-size: 14px;
+  color: white;
+
+  .type-selection {
+    background-color: $map-control-bg-color;
+    border-radius: 5px;
+    border-top-right-radius: 0;
+    padding-top: 10px;
+  }
+
+  .type-selectors {
+    .type-selector {
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      .type-color {
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        margin-right: 10px;
+        border: 1px solid white;
+      }
+      .type-name {
+        flex: 1;
+      }
+      &:hover {
+        background-color: $map-control-active-bg-color;
+      }
+    }
+  }
+
+  .type-selector-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    .type-selector-button {
+      user-select: none;
+      text-align: center;
+      width: 50%;
+      cursor: pointer;
+      padding: 2px 5px;
+      border-top: 1px $map-control-border-color solid;
+      &:first-child {
+        border-right: 1px $map-control-border-color solid;
+        border-bottom-left-radius: 5px;
+      }
+      &:last-child {
+        border-bottom-right-radius: 5px;
+      }
+      &:hover {
+        background-color: $map-control-active-bg-color;
+      }
+    }
+  }
+
+  .style-selection {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: $map-control-bg-color;
+    border-radius: 5px;
+    border-top-right-radius: 0;
+    padding-top: 10px;
+    .type-selector.selected {
+      cursor: default;
+      .type-color {
+        background-color: #FFFFFF;
+      }
+      &:hover {
+        background-color: $map-control-bg-color;
+      }
+    }
+  }
+
+  .request-layer-selection {
+    display: flex;
+    border-radius: 5px;
+    margin-top: 10px;
+    .layer-selector-button {
+      padding: 2px 5px;
+      width: 50%;
+      text-align: center;
+      user-select: none;
+      background-color: $map-control-bg-color;
+      &:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      &:last-child {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      &:hover:not(.active) {
+        background-color: $map-control-active-bg-color;
+        cursor: pointer;
+      }
+      &.active {
+        background-color: transparentize($map-control-border-color, 0.1);
+      }
+    }
+  }
+}

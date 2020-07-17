@@ -1,0 +1,77 @@
+import React from 'react';
+import PropTypes from 'proptypes';
+import moment from 'moment';
+import RequestsDonut from './RequestsDonut';
+import RequestsBarChart from './RequestsBarChart';
+
+const MapOverview = ({
+  date,
+  locationInfo,
+  selectedRequests,
+  colorScheme,
+}) => {
+  return (
+    <div className="map-overview map-control">
+      <div className="requests-title">
+        Open 311 Requests
+      </div>
+      <div className="info-heading">
+        Date
+      </div>
+      <div className="info-content">
+        { moment(date).format('MMMM Do, YYYY') }
+      </div>
+      <div className="info-heading">
+        { locationInfo.name }
+      </div>
+      {
+        locationInfo.url
+          ? (
+            <a className="info-content" href={locationInfo.url} target="_blank">
+              { locationInfo.value }
+            </a>
+          ) : (
+            <div className="info-content">
+              { locationInfo.value }
+            </div>
+          )
+      }
+      { locationInfo.radius && (
+        <>
+          <div className="info-heading">
+            Radius
+          </div>
+          <div className="info-content">
+            { locationInfo.radius } mile
+          </div>
+        </>
+      )}
+      <div className="info-heading">
+        Total Requests
+      </div>
+      <div className="info-content">
+        { Object.values(selectedRequests).reduce((p,c) => p + c, 0) }
+      </div>
+      {/*<RequestsBarChart selectedRequests={selectedRequests} />*/}
+      <RequestsDonut
+        selectedRequests={selectedRequests}
+        colorScheme={colorScheme}
+      />
+    </div>
+  );
+};
+
+MapOverview.propTypes = {
+  date: PropTypes.any,
+  locationInfo: PropTypes.shape({}),
+  selectedRequests: PropTypes.shape({}),
+  colorScheme: PropTypes.string.isRequired,
+};
+
+MapOverview.defaultProps = {
+  date: undefined,
+  locationInfo: {},
+  selectedRequests: {},
+};
+
+export default MapOverview;
