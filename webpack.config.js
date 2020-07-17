@@ -2,6 +2,9 @@ const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const SocialTags = require('social-tags-webpack-plugin');
+
+const description = 'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.';
 
 module.exports = {
   entry: './src/index.js',
@@ -72,13 +75,39 @@ module.exports = {
     ],
   },
   plugins: [
-    new Dotenv(),
+    new Dotenv({
+      path: 'src/.env',
+    }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      title: '311-Data',
+      title: '311-Data Neighborhood Engagement Tool',
+      favicon: './public/favicon.png',
+      meta: {
+        description,
+      },
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
+    }),
+    new SocialTags({
+      appUrl: 'https://www.311-data.org/',
+      facebook: {
+        'og:type': 'website',
+        'og:url': 'https://www.311-data.org/',
+        'og:title': '311-Data Neighborhood Engagement Tool',
+        'og:image': './public/social-media-card-image.png',
+        'og:description': description,
+        'og:locale': 'en_US',
+        // 'fb:app_id': 'placeholder',
+      },
+      twitter: {
+        'twitter:card': 'summary_large_image',
+        'twitter:url': 'https://www.311-data.org/',
+        'twitter:title': '311-Data Neighborhood Engagement Tool',
+        'twitter:image': './public/social-media-card-image.png',
+        'twitter:description': description,
+        'twitter:site': '@data_311',
+      },
     }),
   ],
 };

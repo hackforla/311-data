@@ -31,12 +31,12 @@ import {
 
 /* ////////////////// API CALLS  //////////////// */
 
-const BASE_URL = process.env.DB_URL;
+const BASE_URL = process.env.API_URL;
 
 /* ////  MAP //// */
 
 function* fetchPinClusters(filters, { zoom, bounds }) {
-  const clustersUrl = `${BASE_URL}/pin-clusters`;
+  const clustersUrl = `${BASE_URL}/map/clusters`;
 
   const {
     _northEast: { lat: north, lng: east },
@@ -58,7 +58,7 @@ function* fetchPinClusters(filters, { zoom, bounds }) {
 }
 
 function* fetchHeatmap(filters) {
-  const heatmapUrl = `${BASE_URL}/heatmap`;
+  const heatmapUrl = `${BASE_URL}/map/heat`;
 
   const { data } = yield call(axios.post, heatmapUrl, filters);
 

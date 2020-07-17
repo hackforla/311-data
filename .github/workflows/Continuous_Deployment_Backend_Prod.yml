@@ -1,0 +1,26 @@
+name: Deploy_Backend_Prod
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'server/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run deploy script on AWS prod
+        uses: appleboy/ssh-action@master
+        with:
+          username: ec2-user
+          host: ${{ secrets.AWS_SSH_HOST_PROD }}
+          key: ${{ secrets.AWS_SSH_PEM_KEY }}
+          script: |
+            set -e
+            cd 311-data/server
+            sudo git pull
+            echo GITHUB_SHA=${{ github.sha }} >> .env
+            docker-compose build api
+            docker-compose up --no-deps -d api

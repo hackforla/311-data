@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
+import { trackChartExport } from '@reducers/analytics';
 import LoaderButton from '@components/common/LoaderButton';
 import SelectItem from './SelectItem';
 import { getMultiPagePdf } from './BlobFactory';
 
-const VisExportSelect = () => {
+const VisExportSelect = ({
+  trackExport,
+}) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
   return (
     <span
@@ -30,6 +37,11 @@ const VisExportSelect = () => {
             onClick={() => {
               setOpen(false);
               setLoading(true);
+              trackExport({
+                pageArea: 'Data Visualizations',
+                fileType: 'PDF',
+                path: location.pathname,
+              });
             }}
             onComplete={() => setLoading(false)}
           />
@@ -42,4 +54,12 @@ const VisExportSelect = () => {
   );
 };
 
-export default VisExportSelect;
+const mapDispatchToProps = dispatch => ({
+  trackExport: properties => dispatch(trackChartExport(properties)),
+});
+
+VisExportSelect.propTypes = {
+  trackExport: PropTypes.func.isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(VisExportSelect);

@@ -9,9 +9,9 @@ export const types = {
   DESELECT_ALL_REQUEST_TYPES: 'DESELECT_ALL_REQUEST_TYPES',
 };
 
-export const updateStartDate = newStartDate => ({
+export const updateStartDate = ({ dateRange, startDate }) => ({
   type: types.UPDATE_START_DATE,
-  payload: newStartDate,
+  payload: { dateRange, startDate },
 });
 
 export const updateEndDate = newEndDate => ({
@@ -46,6 +46,7 @@ const allRequestTypes = value => (
 );
 
 const initialState = {
+  dateRange: null,
   startDate: null,
   endDate: null,
   councils: [],
@@ -55,9 +56,11 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.UPDATE_START_DATE: {
+      const { dateRange, startDate } = action.payload;
       return {
         ...state,
-        startDate: action.payload,
+        startDate,
+        dateRange,
       };
     }
     case types.UPDATE_END_DATE: {

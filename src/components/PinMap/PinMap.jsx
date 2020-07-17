@@ -2,19 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
+import { trackMapExport } from '@reducers/analytics';
 import PinPopup from '@components/PinMap/PinPopup';
 import CustomMarker from '@components/PinMap/CustomMarker';
 import ClusterMarker from '@components/PinMap/ClusterMarker';
+import HeatmapLegend from '@components/PinMap/HeatmapLegend';
+import ExportLegend from '@components/PinMap/ExportLegend';
 import {
   Map,
   TileLayer,
   Rectangle,
   Tooltip,
   LayersControl,
-  LayerGroup,
   ZoomControl,
+  ScaleControl,
   withLeaflet,
 } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Choropleth from 'react-leaflet-choropleth';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
@@ -22,7 +26,6 @@ import COLORS from '@styles/COLORS';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import PrintControlDefault from 'react-leaflet-easyprint';
 import Button from '@components/common/Button';
-
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -41,13 +44,14 @@ class PinMap extends Component {
     this.state = {
       position: [34.0094213, -118.6008506],
       zoom: 10,
-      mapUrl: `https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
-      satelliteUrl: `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`,
+      streetsLayerUrl: `${process.env.MAPBOX_STREETS_URL}?access_token=${process.env.MAPBOX_TOKEN}`,
+      satelliteLayerUrl: `${process.env.MAPBOX_SATELLITE_URL}?access_token=${process.env.MAPBOX_TOKEN}`,
       geoJSON: ncOverlay,
       bounds: null,
       ready: false,
       width: null,
       height: null,
+      markersVisible: true,
       heatmapVisible: false,
     };
     this.container = React.createRef();
@@ -219,13 +223,14 @@ class PinMap extends Component {
     const {
       position,
       zoom,
-      mapUrl,
-      satelliteUrl,
+      streetsLayerUrl,
+      satelliteLayerUrl,
       bounds,
       geoJSON,
       width,
       height,
       heatmapVisible,
+      markersVisible,
     } = this.state;
 
     const { heatmap } = this.props;
@@ -248,28 +253,39 @@ class PinMap extends Component {
             if (name === 'Heatmap') {
               this.setState({ heatmapVisible: true });
             }
+            if (name === 'Markers') {
+              this.setState({ markersVisible: true });
+            }
           }}
           onOverlayremove={({ name }) => {
             if (name === 'Heatmap') {
               this.setState({ heatmapVisible: false });
             }
+            if (name === 'Markers') {
+              this.setState({ markersVisible: false });
+            }
           }}
         >
           <ZoomControl position="topright" />
+          <ScaleControl position="bottomright" />
           <LayersControl
             position="bottomright"
             collapsed={false}
           >
             <BaseLayer checked name="Streets">
               <TileLayer
-                url={mapUrl}
+                url={streetsLayerUrl}
                 attribution="MapBox"
+                tileSize={512}
+                zoomOffset={-1}
               />
             </BaseLayer>
             <BaseLayer name="Satellite">
               <TileLayer
-                url={satelliteUrl}
+                url={satelliteLayerUrl}
                 attribution="MapBox"
+                tileSize={512}
+                zoomOffset={-1}
               />
             </BaseLayer>
             {
@@ -298,9 +314,9 @@ class PinMap extends Component {
               )
             }
             <Overlay checked name="Markers">
-              <LayerGroup>
+              <MarkerClusterGroup maxClusterRadius={0}>
                 {this.renderMarkers()}
-              </LayerGroup>
+              </MarkerClusterGroup>
             </Overlay>
             <Overlay name="Heatmap">
               {/* intensityExtractor is required and requires a callback as the value.
@@ -320,6 +336,8 @@ class PinMap extends Component {
               />
             </Overlay>
           </LayersControl>
+          <ExportLegend visible={markersVisible} position="bottomright" />
+          <HeatmapLegend visible={heatmapVisible} position="bottomright" />
           <PrintControl
             sizeModes={['Current']}
             hideControlContainer={false}
@@ -330,22 +348,13 @@ class PinMap extends Component {
           id="map-export"
           label="Export"
           handleClick={() => {
+            const { exportMap } = this.props;
             const selector = '.leaflet-control-easyPrint .CurrentSize';
             const link = document.body.querySelector(selector);
             if (link) link.click();
+            exportMap();
           }}
         />
-        <div className="heatmap-legend-wrapper has-text-centered">
-          Concentration of Reports (Heatmap)
-          <div id="heatmap-gradient-legend" className="level">
-            <span className="level-left">
-              Low
-            </span>
-            <span className="level-right">
-              High
-            </span>
-          </div>
-        </div>
       </>
     );
   }
@@ -364,6 +373,7 @@ class PinMap extends Component {
 const mapDispatchToProps = dispatch => ({
   getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
   updatePosition: position => dispatch(updateMapPosition(position)),
+  exportMap: () => dispatch(trackMapExport()),
 });
 
 const mapStateToProps = state => ({
@@ -378,6 +388,7 @@ PinMap.propTypes = {
   heatmap: PropTypes.arrayOf(PropTypes.array),
   getPinInfo: PropTypes.func.isRequired,
   updatePosition: PropTypes.func.isRequired,
+  exportMap: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {

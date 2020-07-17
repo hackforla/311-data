@@ -1,0 +1,6 @@
+.env
+
+/api/__tmp__
+/jmeter/out
+
+__pycache__
