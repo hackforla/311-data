@@ -49,10 +49,7 @@ mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 const INITIAL_BOUNDS = boundingBox(ncBoundaries);
 
 const INITIAL_LOCATION = {
-  name: 'location',
-  value: 'All of Los Angeles',
-  url: null,
-  radius: null
+  location: 'All of Los Angeles',
 };
 
 const MAP_STYLES = {
@@ -70,10 +67,15 @@ function ccNameFromId(ccId) {
   return CITY_COUNCILS.find(c => c.id == ccId)?.name;
 }
 
-function ncNameFromLngLat({ lng, lat }) {
-  for (let i = 0; i < ncBoundaries.features.length; i++)
-    if (inPoly([lng, lat], ncBoundaries.features[i]))
-      return ncNameFromId(ncBoundaries.features[i].properties.nc_id);
+function ncInfoFromLngLat({ lng, lat }) {
+  for (let i = 0; i < ncBoundaries.features.length; i++) {
+    const feature = ncBoundaries.features[i];
+    if (inPoly([lng, lat], feature))
+      return {
+        name: ncNameFromId(feature.properties.nc_id),
+        url: feature.properties.waddress || feature.properties.dwebsite,
+      };
+  }
   return null;
 }
 
@@ -207,9 +209,9 @@ class PinMap extends Component {
       onDragEnd: ({ geo, center }) => this.setState({
         filterGeo: geo,
         locationInfo: {
-          name: 'location',
-          value: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
+          location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
           radius: 1,
+          nc: ncInfoFromLngLat(center),
         }
       })
     });
@@ -222,9 +224,10 @@ class PinMap extends Component {
       onSelectRegion: geo => {
         this.setState({
           locationInfo: {
-            name: 'Neighborhood Council',
-            value: ncNameFromId(geo.properties.nc_id),
-            url: geo.properties.waddress || geo.properties.dwebsite
+            nc: {
+              name: ncNameFromId(geo.properties.nc_id),
+              url: geo.properties.waddress || geo.properties.dwebsite,
+            },
           }
         });
         this.map.once('idle', () => {
@@ -248,8 +251,7 @@ class PinMap extends Component {
       onSelectRegion: geo => {
         this.setState({
           locationInfo: {
-            name: 'City Council',
-            value: ccNameFromId(geo.properties.name),
+            cc: ccNameFromId(geo.properties.name),
           }
         });
         this.map.once('idle', () => {
@@ -323,20 +325,22 @@ class PinMap extends Component {
     if (result.properties.type === 'CC')
       return this.ccLayer.selectRegion(result.id);
 
+    const lngLat = {
+      lng: result.center[0],
+      lat: result.center[1],
+    };
+
     this.setState({
       locationInfo: {
-        name: 'address',
-        value: result.address
+        location: result.address
           ? `${result.address} ${result.text}`
           : result.text,
         radius: 1,
+        nc: ncInfoFromLngLat(lngLat),
       }
     });
 
-    this.addressLayer.setCenter({
-      lng: result.center[0],
-      lat: result.center[1]
-    }, geo => {
+    this.addressLayer.setCenter(lngLat, geo => {
       this.setState({ filterGeo: geo });
     });
   }
