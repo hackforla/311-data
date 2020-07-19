@@ -16,6 +16,7 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
   let canvas = map.getCanvasContainer();
   let offset;
   let center;
+  let circle;
 
   map.addSource('shed', {
     type: 'geojson',
@@ -91,29 +92,21 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
 
   const onMove = e => {
     const { lng, lat } = e.lngLat;
+
     center = {
       lng: lng - offset.lng,
       lat: lat - offset.lat
     };
+    circle = makeGeoCircle(center);
 
-    const circle = makeGeoCircle(center);
     map.getSource('shed').setData(circle);
     map.getSource('shed-mask').setData(makeGeoMask(circle));
+    
     canvas.style.cursor = 'grabbing';
   };
 
   const onUp = e => {
-    const { lng, lat } = e.lngLat;
-    center = {
-      lng: lng - offset.lng,
-      lat: lat - offset.lat
-    };
-
-    const circle = makeGeoCircle(center);
-    map.getSource('shed').setData(circle);
-    map.getSource('shed-mask').setData(makeGeoMask(circle));
     onDragEnd({ geo: circle, center });
-
     map.off('mousemove', onMove);
     map.off('touchmove', onMove);
     canvas.style.cursor = '';
@@ -162,10 +155,11 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
     removeMask,
     setCenter: (lngLat, cb) => {
       center = lngLat;
+      circle = makeGeoCircle(center);
 
-      const circle = makeGeoCircle(center);
       map.getSource('shed').setData(circle);
       map.getSource('shed-mask').setData(makeGeoMask(circle));
+
       map.fitBounds(boundingBox(circle), { padding: FIT_BOUNDS_PADDING });
       map.once('idle', () => cb(circle));
     },
