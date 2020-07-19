@@ -142,7 +142,6 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
   });
 
   const removeMask = () => {
-    // NOTE: make empty geojson a constant somewhere and use instead of this
     map.getSource('shed').setData(emptyGeo());
     map.getSource('shed-mask').setData(emptyGeo());
   }

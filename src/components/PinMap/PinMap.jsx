@@ -124,6 +124,8 @@ class PinMap extends Component {
     this.map.on('load', () => {
       this.addLayers();
 
+      this.map.on('click', this.onClick);
+
       this.map.on('moveend', e => {
         this.updatePosition(this.map);
       });
@@ -134,55 +136,6 @@ class PinMap extends Component {
       });
 
       this.map.addControl(new mapboxgl.FullscreenControl(), 'bottom-left');
-
-      this.map.on('click', e => {
-        const masks = [
-          'shed-mask-fill'
-        ];
-
-        const hoverables = [
-          'nc-fills',
-          'cc-fills'
-        ];
-
-        const features = this.map.queryRenderedFeatures(e.point, {
-          layers: [
-            'request-circles',
-            ...masks,
-            ...hoverables
-          ]
-        });
-
-        for (let i = 0; i < features.length; i++) {
-          const feature = features[i];
-
-          if (masks.includes(feature.layer.id))
-            return null;
-
-          if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
-            switch(feature.layer.id) {
-              case 'nc-fills':
-                return this.ncLayer.selectRegion(feature.id);
-              case 'cc-fills':
-                return this.ccLayer.selectRegion(feature.id);
-              default:
-                return null;
-            }
-          }
-
-          if (feature.layer.id === 'request-circles') {
-            const { coordinates } = feature.geometry;
-            const { id, type } = feature.properties;
-            const content = (
-              '<div>' +
-                `<div>${id}</div>` +
-                `<div>${REQUEST_TYPES[type].displayName}</div>` +
-              '</div>'
-            );
-            return this.addPopup(coordinates, content);
-          }
-        }
-      });
     });
 
     this.setFilteredRequestCounts();
@@ -269,7 +222,7 @@ class PinMap extends Component {
         });
       }
     });
-  }
+  };
 
   addPopup = (lngLat, content, opts={}) => {
     this.popup = new mapboxgl.Popup(opts)
@@ -283,7 +236,7 @@ class PinMap extends Component {
       this.popup.remove();
       this.popup = null;
     }
-  }
+  };
 
   reset = () => {
     this.zoomOut();
@@ -295,7 +248,56 @@ class PinMap extends Component {
     this.map.once('idle', () => {
       this.setState({ filterGeo: null });
     });
-  }
+  };
+
+  onClick = e => {
+    const masks = [
+      'shed-mask-fill'
+    ];
+
+    const hoverables = [
+      'nc-fills',
+      'cc-fills'
+    ];
+
+    const features = this.map.queryRenderedFeatures(e.point, {
+      layers: [
+        'request-circles',
+        ...masks,
+        ...hoverables
+      ]
+    });
+
+    for (let i = 0; i < features.length; i++) {
+      const feature = features[i];
+
+      if (masks.includes(feature.layer.id))
+        return null;
+
+      if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
+        switch(feature.layer.id) {
+          case 'nc-fills':
+            return this.ncLayer.selectRegion(feature.id);
+          case 'cc-fills':
+            return this.ccLayer.selectRegion(feature.id);
+          default:
+            return null;
+        }
+      }
+
+      if (feature.layer.id === 'request-circles') {
+        const { coordinates } = feature.geometry;
+        const { id, type } = feature.properties;
+        const content = (
+          '<div>' +
+            `<div>${id}</div>` +
+            `<div>${REQUEST_TYPES[type].displayName}</div>` +
+          '</div>'
+        );
+        return this.addPopup(coordinates, content);
+      }
+    }
+  };
 
   onChangeSearchTab = tab => {
     this.reset();
@@ -390,9 +392,9 @@ class PinMap extends Component {
   }
 
   setFilteredRequestCounts = () => {
-    const { filterGeo, selectedTypes } = this.state;
     const { requests } = this.props;
-
+    const { filterGeo, selectedTypes } = this.state;
+    
     let filteredRequests = requests;
 
     // filter by type selection if necessary
@@ -420,36 +422,50 @@ class PinMap extends Component {
   //// RENDER ////
 
   render() {
+    const { position } = this.props;
+
+    const {
+      date,
+      locationInfo,
+      filteredRequestCounts,
+      colorScheme,
+      filterGeo,
+      selectedTypes,
+      activeRequestsLayer,
+      mapStyle,
+      hoveredRegionName,
+    } = this.state;
+
     return (
       <div className="map-container" ref={el => this.mapContainer = el}>
         { this.state.mapReady && (
           <>
             <MapOverview
-              date={this.state.date}
-              locationInfo={this.state.locationInfo}
-              selectedRequests={this.state.filteredRequestCounts}
-              colorScheme={this.state.colorScheme}
+              date={date}
+              locationInfo={locationInfo}
+              selectedRequests={filteredRequestCounts}
+              colorScheme={colorScheme}
             />
             <MapSearch
               map={this.map}
               onGeocoderResult={this.onGeocoderResult}
               onChangeTab={this.onChangeSearchTab}
               onReset={this.reset}
-              canReset={!!this.state.filterGeo}
+              canReset={!!filterGeo}
             />
             <MapLayers
-              selectedTypes={this.state.selectedTypes}
+              selectedTypes={selectedTypes}
               onChangeSelectedTypes={this.setSelectedTypes}
-              requestsLayer={this.state.activeRequestsLayer}
+              requestsLayer={activeRequestsLayer}
               onChangeRequestsLayer={this.setActiveRequestsLayer}
-              mapStyle={this.state.mapStyle}
+              mapStyle={mapStyle}
               mapStyles={Object.keys(MAP_STYLES)}
               onChangeMapStyle={this.setMapStyle}
-              colorScheme={this.state.colorScheme}
+              colorScheme={colorScheme}
               onChangeColorScheme={this.setColorScheme}
             />
-            <MapRegion regionName={this.state.hoveredRegionName} />
-            <MapMeta position={this.props.position} />
+            <MapRegion regionName={hoveredRegionName} />
+            <MapMeta position={position} />
           </>
         )}
       </div>
