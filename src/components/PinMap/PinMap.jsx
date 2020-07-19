@@ -18,15 +18,12 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import {
-  pointsWithinPolygon as withinGeo,
-  bbox as boundingBox,
-  booleanPointInPolygon as inPoly
-} from '@turf/turf';
 import moment from 'moment';
+
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES, COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
+import { boundingBox, pointsWithinGeo, isPointWithinGeo } from './utils';
 
 import RequestsLayer from './RequestsLayer';
 import BoundaryLayer from './BoundaryLayer';
@@ -70,7 +67,7 @@ function ccNameFromId(ccId) {
 function ncInfoFromLngLat({ lng, lat }) {
   for (let i = 0; i < ncBoundaries.features.length; i++) {
     const feature = ncBoundaries.features[i];
-    if (inPoly([lng, lat], feature))
+    if (isPointWithinGeo([lng, lat], feature))
       return {
         name: ncNameFromId(feature.properties.nc_id),
         url: feature.properties.waddress || feature.properties.dwebsite,
@@ -81,7 +78,7 @@ function ncInfoFromLngLat({ lng, lat }) {
 
 function ccNameFromLngLat({ lng, lat }) {
   for (let i = 0; i < ccBoundaries.features.length; i++)
-    if (inPoly([lng, lat], ccBoundaries.features[i]))
+    if (isPointWithinGeo([lng, lat], ccBoundaries.features[i]))
       return ccNameFromId(ccBoundaries.features[i].properties.name);
   return null;
 }
@@ -408,7 +405,7 @@ class PinMap extends Component {
 
     // filter by geo if necessary
     if (filterGeo)
-      filteredRequests = withinGeo(filteredRequests, filterGeo);
+      filteredRequests = pointsWithinGeo(filteredRequests, filterGeo);
 
     // count up requests per type
     const counts = filteredRequests.features.reduce((p, c) => {

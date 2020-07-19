@@ -1,8 +1,9 @@
 import {
-  circle as turfCircle,
-  mask as turfMask,
-  bbox as boundingBox
-} from '@turf/turf';
+  emptyGeo,
+  makeGeoCircle,
+  makeGeoMask,
+  boundingBox
+} from './utils';
 
 const FIT_BOUNDS_PADDING = {
   top: 65,
@@ -10,14 +11,6 @@ const FIT_BOUNDS_PADDING = {
   left: 300,
   right: 300
 };
-
-function makeCircle(center, radius=1, opts={ units: 'miles' }) {
-  return turfCircle([center.lng, center.lat], radius, opts);
-}
-
-function makeMask(poly) {
-  return turfMask(poly);
-}
 
 export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
   let canvas = map.getCanvasContainer();
@@ -103,9 +96,9 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
       lat: lat - offset.lat
     };
 
-    const circle = makeCircle(center);
+    const circle = makeGeoCircle(center);
     map.getSource('shed').setData(circle);
-    map.getSource('shed-mask').setData(turfMask(circle));
+    map.getSource('shed-mask').setData(makeGeoMask(circle));
     canvas.style.cursor = 'grabbing';
   };
 
@@ -116,9 +109,9 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
       lat: lat - offset.lat
     };
 
-    const circle = makeCircle(center);
+    const circle = makeGeoCircle(center);
     map.getSource('shed').setData(circle);
-    map.getSource('shed-mask').setData(turfMask(circle));
+    map.getSource('shed-mask').setData(makeGeoMask(circle));
     onDragEnd({ geo: circle, center });
 
     map.off('mousemove', onMove);
@@ -150,8 +143,8 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
 
   const removeMask = () => {
     // NOTE: make empty geojson a constant somewhere and use instead of this
-    map.getSource('shed').setData({ type: "FeatureCollection", features: []});
-    map.getSource('shed-mask').setData({ type: "FeatureCollection", features: []});
+    map.getSource('shed').setData(emptyGeo());
+    map.getSource('shed-mask').setData(emptyGeo());
   }
 
   return {
@@ -171,9 +164,9 @@ export default function AddressLayer({ map, onDragEnd, onSetCenter }) {
     setCenter: (lngLat, cb) => {
       center = lngLat;
 
-      const circle = makeCircle(center);
+      const circle = makeGeoCircle(center);
       map.getSource('shed').setData(circle);
-      map.getSource('shed-mask').setData(turfMask(circle));
+      map.getSource('shed-mask').setData(makeGeoMask(circle));
       map.fitBounds(boundingBox(circle), { padding: FIT_BOUNDS_PADDING });
       map.once('idle', () => cb(circle));
     },

@@ -1,4 +1,9 @@
-import { mask as turfMask, bbox as boundingBox } from '@turf/turf';
+import {
+  emptyGeo,
+  removeGeoHoles,
+  makeGeoMask,
+  boundingBox
+} from './utils';
 
 // adjust this to avoid overlapping the controls when zooming to a region
 const FIT_BOUNDS_PADDING = {
@@ -7,16 +12,6 @@ const FIT_BOUNDS_PADDING = {
   left: 350,
   right: 350
 };
-
-function removeHoles(feature) {
-  return {
-    ...feature,
-    geometry: {
-      ...feature.geometry,
-      coordinates: feature.geometry.coordinates.map(poly => [poly[0]])
-    }
-  };
-}
 
 export default function BoundaryLayer({
   map,
@@ -89,13 +84,13 @@ export default function BoundaryLayer({
     // but a string in the geojson
     let geo = sourceData.features.find(el => el.properties[idProperty] == selectedRegionId);
 
-    geo = removeHoles(geo);
+    geo = removeGeoHoles(geo);
 
     // zoom to the region
     map.fitBounds(boundingBox(geo), { padding: FIT_BOUNDS_PADDING });
 
     // mask everything else
-    map.getSource(`${sourceId}-region-mask`).setData(turfMask(geo));
+    map.getSource(`${sourceId}-region-mask`).setData(makeGeoMask(geo));
 
     // inform main
     onSelectRegion(geo);
@@ -213,10 +208,7 @@ export default function BoundaryLayer({
           map.setPaintProperty(`${sourceId}-borders`, 'line-width', 2);
         });
 
-        map.getSource(`${sourceId}-region-mask`).setData({
-          type: "FeatureCollection",
-          features: []
-        });
+        map.getSource(`${sourceId}-region-mask`).setData(emptyGeo());
 
         selectedRegionId = null;
       }
