@@ -140,8 +140,6 @@ class PinMap extends Component {
 
       this.map.on('click', e => {
         const masks = [
-          'nc-region-mask-fill',
-          'cc-region-mask-fill',
           'shed-mask-fill'
         ];
 
@@ -164,8 +162,16 @@ class PinMap extends Component {
           if (masks.includes(feature.layer.id))
             return null;
 
-          if (hoverables.includes(feature.layer.id) && !feature.state.selected)
-            return null;
+          if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
+            switch(feature.layer.id) {
+              case 'nc-fills':
+                return this.ncLayer.selectRegion(feature.id);
+              case 'cc-fills':
+                return this.ccLayer.selectRegion(feature.id);
+              default:
+                return null;
+            }
+          }
 
           if (feature.layer.id === 'request-circles') {
             const { coordinates } = feature.geometry;

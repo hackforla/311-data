@@ -27,108 +27,30 @@ export default function BoundaryLayer({
   onHoverRegion,
 }) {
 
+  //// GLOBALS ////
+
   let hoveredRegionId = null;
   let selectedRegionId = null;
 
-  map.addSource(sourceId, {
-    type: 'geojson',
-    data: sourceData,
-    promoteId: idProperty
-  });
+  //// HELPERS ////
 
-  map.addLayer({
-    id: `${sourceId}-borders`,
-    source: sourceId,
-    type: 'line',
-    layout: {
-      visibility: 'none'
-    },
-    paint: {
-      'line-color': '#FFFFFF',
-      'line-width': 2.0
+  const setHoveredRegion = region => {
+    if (hoveredRegionId) {
+      map.setFeatureState(
+        { source: sourceId, id: hoveredRegionId },
+        { hover: false }
+      );
     }
-  });
 
-  map.addLayer({
-    id: `${sourceId}-fills`,
-    source: sourceId,
-    type: 'fill',
-    layout: {
-      visibility: 'none'
-    },
-    paint: {
-      'fill-color': '#FFFFFF',
-      'fill-opacity': [
-        'case',
-        ['all',
-          ['boolean', ['feature-state', 'hover'], false],
-          ['!', ['boolean', ['feature-state', 'selected'], false]]
-        ],
-        0.5,
-        0
-      ]
-    }
-  });
+    hoveredRegionId = region.id;
 
-  map.addSource(`${sourceId}-region-mask`, {
-    type: 'geojson',
-    data: null,
-  });
+    map.setFeatureState(
+      { source: sourceId, id: hoveredRegionId },
+      { hover: true }
+    );
+  };
 
-  map.addLayer({
-    id: `${sourceId}-region-mask-fill`,
-    source: `${sourceId}-region-mask`,
-    type: 'fill',
-    layout: {
-      visibility: 'visible'
-    },
-    paint: {
-      'fill-color': '#FFFFFF',
-      'fill-opacity': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        10, 0,
-        13, 0.3
-      ],
-    }
-  });
-
-  map.on('mousemove', `${sourceId}-fills`, e => {
-    if (map.loaded()) {
-      const features = map.queryRenderedFeatures(e.point, {
-        layers: [`${sourceId}-fills`]
-      });
-
-      if (features.length) {
-        const { id } = features[0];
-        if (id === hoveredRegionId)
-          return;
-
-        onHoverRegion(features[0]);
-
-        if (hoveredRegionId) {
-          map.setFeatureState(
-            { source: sourceId, id: hoveredRegionId },
-            { hover: false }
-          );
-        }
-
-        map.setFeatureState(
-          { source: sourceId, id },
-          { hover: true }
-        );
-
-        hoveredRegionId = id;
-
-        map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-      }
-    }
-  });
-
-  map.on('mouseleave', `${sourceId}-fills`, () => {
-    onHoverRegion(null);
-
+  const clearHoveredRegion = () => {
     if (hoveredRegionId) {
       map.setFeatureState(
         { source: sourceId, id: hoveredRegionId },
@@ -136,23 +58,10 @@ export default function BoundaryLayer({
       );
       hoveredRegionId = null;
     }
-  });
-
-  map.on('click', `${sourceId}-fills`, e => {
-    const region = map.queryRenderedFeatures(e.point, {
-      layers: [`${sourceId}-fills`]
-    })[0];
-
-    // timeout because when you click on a point and the region isn't
-    // yet selected, we don't want the point-click, which runs after
-    // this handler, to think that the region is already selected
-    setTimeout(() => {
-      selectRegion(region.id);
-    }, 0);
-  });
+  }
 
   const selectRegion = regionId => {
-    if (regionId === selectedRegionId)
+    if (!regionId || regionId === selectedRegionId)
       return;
 
     if (selectedRegionId)
@@ -191,6 +100,92 @@ export default function BoundaryLayer({
     // inform main
     onSelectRegion(geo);
   }
+
+  //// SOURCES ////
+
+  map.addSource(sourceId, {
+    type: 'geojson',
+    data: sourceData,
+    promoteId: idProperty
+  });
+
+  map.addSource(`${sourceId}-region-mask`, {
+    type: 'geojson',
+    data: null,
+  });
+
+  //// LAYERS ////
+
+  map.addLayer({
+    id: `${sourceId}-borders`,
+    source: sourceId,
+    type: 'line',
+    layout: {
+      visibility: 'none'
+    },
+    paint: {
+      'line-color': '#FFFFFF',
+      'line-width': 2.0
+    }
+  });
+
+  map.addLayer({
+    id: `${sourceId}-fills`,
+    source: sourceId,
+    type: 'fill',
+    layout: {
+      visibility: 'none'
+    },
+    paint: {
+      'fill-color': '#FFFFFF',
+      'fill-opacity': [
+        'case',
+        ['all',
+          ['boolean', ['feature-state', 'hover'], false],
+          ['!', ['boolean', ['feature-state', 'selected'], false]]
+        ],
+        0.5,
+        0
+      ]
+    }
+  });
+
+  map.addLayer({
+    id: `${sourceId}-region-mask-fill`,
+    source: `${sourceId}-region-mask`,
+    type: 'fill',
+    layout: {
+      visibility: 'visible'
+    },
+    paint: {
+      'fill-color': '#FFFFFF',
+      'fill-opacity': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        10, 0,
+        13, 0.3
+      ],
+    }
+  });
+
+  //// LISTENERS ////
+
+  map.on('mousemove', `${sourceId}-fills`, e => {
+    const region = e.features[0];
+    if (!region || region.id === hoveredRegionId)
+      return;
+
+    setHoveredRegion(region);
+    onHoverRegion(region);
+
+    map.getCanvas().style.cursor = 'pointer';
+  });
+
+  map.on('mouseleave', `${sourceId}-fills`, () => {
+    clearHoveredRegion();
+    onHoverRegion(null);
+  });
 
   return {
     show: () => {
