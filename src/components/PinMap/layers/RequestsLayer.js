@@ -31,6 +31,12 @@ function typeFilter(selectedTypes) {
 }
 
 class RequestsLayer extends React.Component {
+  init = ({ map }) => {
+    this.map = map;
+
+    this.addSources();
+    this.addLayers();
+  }
 
   componentDidUpdate(prev) {
     const {
@@ -54,8 +60,8 @@ class RequestsLayer extends React.Component {
   }
 
   addSources = () => {
-    const { map, requests } = this.props;
-    map.addSource('requests', {
+    const { requests } = this.props;
+    this.map.addSource('requests', {
       type: 'geojson',
       data: requests
     });
@@ -63,13 +69,12 @@ class RequestsLayer extends React.Component {
 
   addLayers = () => {
     const {
-      map,
       activeLayer,
       selectedTypes,
       colorScheme,
     } = this.props;
 
-    map.addLayer({
+    this.map.addLayer({
       id: 'request-circles',
       type: 'circle',
       source: 'requests',
@@ -90,7 +95,7 @@ class RequestsLayer extends React.Component {
       filter: typeFilter(selectedTypes),
     }, BEFORE_ID);
 
-    map.addLayer({
+    this.map.addLayer({
       id: 'request-heatmap',
       type: 'heatmap',
       source: 'requests',
@@ -105,17 +110,15 @@ class RequestsLayer extends React.Component {
   };
 
   setActiveLayer = activeLayer => {
-    const { map } = this.props;
-
     switch(activeLayer) {
       case 'points':
-        map.setLayoutProperty('request-circles', 'visibility', 'visible');
-        map.setLayoutProperty('request-heatmap', 'visibility', 'none');
+        this.map.setLayoutProperty('request-circles', 'visibility', 'visible');
+        this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
         break;
 
       case 'heatmap':
-        map.setLayoutProperty('request-circles', 'visibility', 'none');
-        map.setLayoutProperty('request-heatmap', 'visibility', 'visible');
+        this.map.setLayoutProperty('request-circles', 'visibility', 'none');
+        this.map.setLayoutProperty('request-heatmap', 'visibility', 'visible');
         break;
 
       default:
@@ -124,19 +127,16 @@ class RequestsLayer extends React.Component {
   };
 
   setSelectedTypes = selectedTypes => {
-    const { map } = this.props;
-    map.setFilter('request-circles', typeFilter(selectedTypes));
-    map.setFilter('request-heatmap', typeFilter(selectedTypes));
+    this.map.setFilter('request-circles', typeFilter(selectedTypes));
+    this.map.setFilter('request-heatmap', typeFilter(selectedTypes));
   };
 
   setRequests = requests => {
-    const { map } = this.props;
-    map.getSource('requests').setData(requests);
+    this.map.getSource('requests').setData(requests);
   };
 
   setColorScheme = colorScheme => {
-    const { map } = this.props;
-    map.setPaintProperty(
+    this.map.setPaintProperty(
       'request-circles',
       'circle-color',
       circleColors(colorScheme),

@@ -5,9 +5,6 @@
     - need drag handle for address filter
     - better to filter the requests layer or to change the data in the requests source?
     - reverse geocode on drag end -- see if we can get intersection based on lat/lng
-    - create geoUtils.js containing:
-      - empty geojson constant (for removing sources in BoundaryLayer and AddressLayer)
-      - turf functions
     - precalculate NC and CC masks
     - precalculate request counts by type, nc, and cc
     - increase boundary of circle when hovering
@@ -41,7 +38,7 @@ import { boundingBox, pointsWithinGeo, isPointWithinGeo } from './utils';
 
 import RequestsLayer from './layers/RequestsLayer';
 import BoundaryLayer from './BoundaryLayer';
-import AddressLayer from './AddressLayer';
+import AddressLayer from './layers/AddressLayer';
 
 import MapOverview from './controls/MapOverview';
 import MapSearch from './controls/MapSearch';
@@ -165,19 +162,21 @@ class PinMap extends Component {
   }
 
   addLayers = () => {
-    this.requestsLayer.addSources();
-    this.requestsLayer.addLayers();
-
-    this.addressLayer = AddressLayer({
+    this.requestsLayer.init({
       map: this.map,
-      onDragEnd: ({ geo, center }) => this.setState({
+    });
+
+    this.addressLayer.init({
+      map: this.map,
+      addListeners: true,
+      onSelectRegion: ({ geo, center }) => this.setState({
         filterGeo: geo,
         locationInfo: {
           location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
           radius: 1,
           nc: ncInfoFromLngLat(center),
         }
-      })
+      }),
     });
 
     this.ncLayer = BoundaryLayer({
@@ -248,7 +247,7 @@ class PinMap extends Component {
 
   reset = () => {
     this.zoomOut();
-    this.addressLayer.removeMask();
+    this.addressLayer.setCenter(null);
     this.ncLayer.deselectAll();
     this.ccLayer.deselectAll();
     this.removePopup();
@@ -312,7 +311,6 @@ class PinMap extends Component {
 
     switch(tab) {
       case GEO_FILTER_TYPES.address:
-        this.addressLayer.show();
         this.ncLayer.hide();
         this.ccLayer.hide();
         break;
@@ -320,13 +318,11 @@ class PinMap extends Component {
       case GEO_FILTER_TYPES.nc:
         this.ncLayer.show();
         this.ccLayer.hide();
-        this.addressLayer.hide();
         break;
 
       case GEO_FILTER_TYPES.cc:
         this.ccLayer.show();
         this.ncLayer.hide();
-        this.addressLayer.hide();
         break;
     }
 
@@ -355,9 +351,7 @@ class PinMap extends Component {
       }
     });
 
-    this.addressLayer.setCenter(lngLat, geo => {
-      this.setState({ filterGeo: geo });
-    });
+    this.addressLayer.zoomTo(lngLat);
   }
 
   updatePosition = map => {
@@ -448,11 +442,14 @@ class PinMap extends Component {
       <div className="map-container" ref={el => this.mapContainer = el}>
         <RequestsLayer
           ref={el => this.requestsLayer = el}
-          map={this.map}
           activeLayer={activeRequestsLayer}
           selectedTypes={selectedTypes}
           requests={requests}
           colorScheme={colorScheme}
+        />
+        <AddressLayer
+          ref={el => this.addressLayer = el}
+          visible={geoFilterType === GEO_FILTER_TYPES.address}
         />
         { this.state.mapReady && (
           <>

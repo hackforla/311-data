@@ -106,7 +106,7 @@ class MapLayers extends React.Component {
               </div>
             </div>
           </div>
-          { this.state.activeTab === 'style' && (
+          { this.state.activeTab === 'Style' && (
             <div className="style-selection">
               <div className="type-selectors">
                 { COLOR_SCHEME_NAMES.map(scheme => {
