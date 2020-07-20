@@ -357,6 +357,7 @@ class PinMap extends Component {
             exportMap();
           }}
         />
+        <MapboxWordmark />
       </>
     );
   }
