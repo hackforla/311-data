@@ -141,7 +141,6 @@ class PinMap extends Component {
     });
   }
 
-
   renderMarkers = () => {
     const {
       pinClusters,
