@@ -29,11 +29,11 @@ import RequestsLayer from './RequestsLayer';
 import BoundaryLayer from './BoundaryLayer';
 import AddressLayer from './AddressLayer';
 
-import MapOverview from './MapOverview';
-import MapSearch from './MapSearch';
-import MapLayers from './MapLayers';
-import MapRegion from './MapRegion';
-import MapMeta from './MapMeta';
+import MapOverview from './controls/MapOverview';
+import MapSearch from './controls/MapSearch';
+import MapLayers from './controls/MapLayers';
+import MapRegion from './controls/MapRegion';
+import MapMeta from './controls/MapMeta';
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
 import ccBoundaries from '../../data/la-city-council-districts-2012.json';
@@ -394,7 +394,7 @@ class PinMap extends Component {
   setFilteredRequestCounts = () => {
     const { requests } = this.props;
     const { filterGeo, selectedTypes } = this.state;
-    
+
     let filteredRequests = requests;
 
     // filter by type selection if necessary

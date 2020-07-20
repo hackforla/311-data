@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { COLOR_SCHEME_NAMES, getColors } from './mapColors';
+import { COLOR_SCHEME_NAMES, getColors } from '../mapColors';
 import clx from 'classnames';
 
 const TABS = [

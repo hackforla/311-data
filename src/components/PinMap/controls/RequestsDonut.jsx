@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import ChartJS from 'chart.js';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getColors } from './mapColors';
+import { getColors } from '../mapColors';
 
 class RequestsDonut extends React.Component {
   canvasRef = React.createRef();
