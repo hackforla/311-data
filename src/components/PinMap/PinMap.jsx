@@ -339,7 +339,6 @@ class PinMap extends Component {
           </LayersControl>
           <ExportLegend visible={markersVisible} position="bottomright" />
           <HeatmapLegend visible={heatmapVisible} position="bottomright" />
-          <MapboxWordmark />
           <PrintControl
             sizeModes={['Current']}
             hideControlContainer={false}
