@@ -65,7 +65,7 @@
     right: 300px;
     bottom: -1px;
     text-indent: -9999px;
-    z-index: 99999;
+    z-index: $z-mapbox-wordmark;
     overflow: hidden;
 
     /* `background-image` contains the Mapbox wordmark */
