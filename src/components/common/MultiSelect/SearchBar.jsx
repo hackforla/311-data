@@ -3,16 +3,17 @@ import PropTypes from 'proptypes';
 
 const SearchBar = ({
   value,
+  placeholder,
   onChange,
 }) => (
   <div className="search-bar control has-icons-right">
     <input
       className="input"
       type="text"
-      placeholder="Search"
+      placeholder={placeholder}
       value={value}
       onChange={e => onChange(e.target.value)}
-      aria-label="Search"
+      aria-label={placeholder}
     />
     <span className="icon is-small is-right">
       <i className="fas fa-search" />
@@ -24,10 +25,12 @@ export default SearchBar;
 
 SearchBar.propTypes = {
   value: PropTypes.string,
+  placeholder: PropTypes.string,
   onChange: PropTypes.func,
 };
 
 SearchBar.defaultProps = {
   value: null,
+  placeholder: 'Search',
   onChange: () => null,
 };
