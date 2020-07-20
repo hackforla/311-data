@@ -8,6 +8,8 @@ import { transformCounts } from '@utils';
 
 const Contact311Comparison = ({
   counts: { set1, set2 },
+  set1list,
+  set2list,
 }) => {
   const setName = district => (
     DISTRICT_TYPES
@@ -73,21 +75,25 @@ const Contact311Comparison = ({
         exportData={exportData}
         filename="How People Contact 311"
       />
-      <div className="chart-container">
-        <PieChart
-          sectors={setSectors(set1counts)}
-          addLabels
-          exportable={false}
-        />
-        <h2>{ set1name }</h2>
-      </div>
-      <div className="chart-container">
-        <PieChart
-          sectors={setSectors(set2counts)}
-          addLabels
-          exportable={false}
-        />
-        <h2>{ set2name }</h2>
+      <div className="columns is-gapless">
+        <div className="chart-container column">
+          <PieChart
+            sectors={setSectors(set1counts)}
+            addLabels
+            exportable={false}
+          />
+          <h2>{`${set1name}${set1list.length > 1 ? 's' : ''} (Set 1):`}</h2>
+          <p className="set-list">{ set1list.join(', ')}</p>
+        </div>
+        <div className="chart-container column">
+          <PieChart
+            sectors={setSectors(set2counts)}
+            addLabels
+            exportable={false}
+          />
+          <h2>{`${set2name}${set2list.length > 1 ? 's' : ''} (Set 2):`}</h2>
+          <p className="set-list">{ set2list.join(', ') }</p>
+        </div>
       </div>
     </div>
   );
@@ -95,6 +101,8 @@ const Contact311Comparison = ({
 
 const mapStateToProps = state => ({
   counts: state.comparisonData.counts,
+  set1list: state.comparisonFilters.comparison.set1.list,
+  set2list: state.comparisonFilters.comparison.set2.list,
 });
 
 export default connect(mapStateToProps)(Contact311Comparison);
@@ -110,6 +118,8 @@ Contact311Comparison.propTypes = {
       source: PropTypes.shape({}),
     }),
   }),
+  set1list: PropTypes.arrayOf(PropTypes.string).isRequired,
+  set2list: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 Contact311Comparison.defaultProps = {
