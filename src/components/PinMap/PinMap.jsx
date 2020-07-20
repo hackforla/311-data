@@ -12,6 +12,19 @@
     - precalculate request counts by type, nc, and cc
     - increase boundary of circle when hovering
     - allow user to rotate colors in style tab
+
+    state.geoFilter = {
+      type: [geoFilterType],
+      geo: geojson,
+      info: {
+        location: [address, district name],
+        radius: [null or number],
+        nc: {
+          name: [string],
+          url: [url],
+        }
+      }
+    }
 */
 
 import React, { Component } from 'react';
@@ -25,7 +38,7 @@ import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES, COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
 import { boundingBox, pointsWithinGeo, isPointWithinGeo } from './utils';
 
-import RequestsLayer from './RequestsLayer';
+import RequestsLayer from './layers/RequestsLayer';
 import BoundaryLayer from './BoundaryLayer';
 import AddressLayer from './AddressLayer';
 
@@ -142,9 +155,6 @@ class PinMap extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.requests !== prevProps.requests)
-      this.requestsLayer.setData(this.props.requests);
-
     if (
       this.state.filterGeo !== prevState.filterGeo ||
       this.state.selectedTypes !== prevState.selectedTypes
@@ -153,12 +163,8 @@ class PinMap extends Component {
   }
 
   addLayers = () => {
-    this.requestsLayer = RequestsLayer({
-      map: this.map,
-      sourceData: this.props.requests,
-      addPopup: this.addPopup,
-      colorScheme: this.state.colorScheme,
-    });
+    this.requestsLayer.addSources();
+    this.requestsLayer.addLayers();
 
     this.addressLayer = AddressLayer({
       map: this.map,
@@ -371,12 +377,10 @@ class PinMap extends Component {
   }
 
   setSelectedTypes = selectedTypes => {
-    this.requestsLayer.setTypesFilter(selectedTypes);
     this.setState({ selectedTypes });
   }
 
   setActiveRequestsLayer = layerName => {
-    this.requestsLayer.setActiveLayer(layerName);
     this.setState({ activeRequestsLayer: layerName });
   }
 
@@ -388,7 +392,6 @@ class PinMap extends Component {
 
   setColorScheme = scheme => {
     this.setState({ colorScheme: scheme });
-    this.requestsLayer.setColorScheme(scheme);
   }
 
   setFilteredRequestCounts = () => {
@@ -422,7 +425,7 @@ class PinMap extends Component {
   //// RENDER ////
 
   render() {
-    const { position } = this.props;
+    const { requests, position } = this.props;
 
     const {
       date,
@@ -438,6 +441,14 @@ class PinMap extends Component {
 
     return (
       <div className="map-container" ref={el => this.mapContainer = el}>
+        <RequestsLayer
+          ref={el => this.requestsLayer = el}
+          map={this.map}
+          activeLayer={activeRequestsLayer}
+          selectedTypes={selectedTypes}
+          requests={requests}
+          colorScheme={colorScheme}
+        />
         { this.state.mapReady && (
           <>
             <MapOverview
