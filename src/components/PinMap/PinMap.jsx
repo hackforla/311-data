@@ -11,24 +11,19 @@ import ExportLegend from '@components/PinMap/ExportLegend';
 import {
   Map,
   TileLayer,
-  Rectangle,
-  Tooltip,
   LayersControl,
   ZoomControl,
   ScaleControl,
   withLeaflet,
-  Marker,
 } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Choropleth from 'react-leaflet-choropleth';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
-import { divIcon } from 'leaflet';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import PrintControlDefault from 'react-leaflet-easyprint';
 import Button from '@components/common/Button';
-import { renderToStaticMarkup } from 'react-dom/server';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -222,6 +217,7 @@ class PinMap extends Component {
         );
       });
     }
+    return null;
   }
 
   renderMap = () => {
@@ -236,7 +232,6 @@ class PinMap extends Component {
       height,
       heatmapVisible,
       markersVisible,
-      zoomBreak,
       zoomThresholdMet,
     } = this.state;
 
@@ -343,7 +338,6 @@ class PinMap extends Component {
                 </Overlay>
               )
             }
-            
             <Overlay checked name="Markers">
               <MarkerClusterGroup maxClusterRadius={0}>
                 {this.renderMarkers()}
@@ -389,6 +383,7 @@ class PinMap extends Component {
       </>
     );
   }
+
   render() {
     const { ready } = this.state;
     return (
@@ -398,16 +393,19 @@ class PinMap extends Component {
     );
   }
 }
+
 const mapDispatchToProps = dispatch => ({
   getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
   updatePosition: position => dispatch(updateMapPosition(position)),
   exportMap: () => dispatch(trackMapExport()),
 });
+
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   pinClusters: state.data.pinClusters,
   heatmap: state.data.heatmap,
 });
+
 PinMap.propTypes = {
   pinsInfo: PropTypes.shape({}),
   pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
@@ -416,9 +414,11 @@ PinMap.propTypes = {
   updatePosition: PropTypes.func.isRequired,
   exportMap: PropTypes.func.isRequired,
 };
+
 PinMap.defaultProps = {
   pinsInfo: {},
   pinClusters: [],
   heatmap: [],
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(PinMap);
