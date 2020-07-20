@@ -5,13 +5,13 @@ import { COLOR_SCHEME_NAMES, getColors } from '../mapColors';
 import clx from 'classnames';
 
 const TABS = [
-  'legend',
-  'style'
+  'Legend',
+  'Style'
 ];
 
 class MapLayers extends React.Component {
   state = {
-    activeTab: 'legend'
+    activeTab: TABS[0]
   };
 
   onToggleType = id => {

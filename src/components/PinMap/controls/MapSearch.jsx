@@ -2,21 +2,14 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
+import { GEO_FILTER_TYPES } from '../constants';
 import clx from 'classnames';
 
-const TABS = [
-  'address',
-  'NC',
-  'CC'
-]
+const TABS = Object.values(GEO_FILTER_TYPES);
 
 class MapSearch extends React.Component {
-  state = {
-    activeTab: 'address'
-  };
-
   componentDidMount() {
-    const { map, mapboxgl } = this.props;
+    const { map, geoFilterType } = this.props;
 
     this.geocoder = new MapboxGeocoder({
       accessToken: process.env.MAPBOX_TOKEN,
@@ -25,13 +18,14 @@ class MapSearch extends React.Component {
       minLength: 1,
       placeholder: 'Enter address',
       localGeocoder: searchTerm => {
+        const { geoFilterType } = this.props;
         const searchFilter = new RegExp(searchTerm, 'i');
 
-        switch(this.state.activeTab) {
-          case 'address':
+        switch(geoFilterType) {
+          case GEO_FILTER_TYPES.address:
             return [];
 
-          case 'NC':
+          case GEO_FILTER_TYPES.nc:
             const filteredNCs = COUNCILS.filter(nc => searchFilter.test(nc.name));
             return filteredNCs.map(nc => ({
               type: 'Feature',
@@ -39,11 +33,11 @@ class MapSearch extends React.Component {
               text: nc.name,
               place_name: nc.name,
               properties: {
-                type: 'NC'
+                type: GEO_FILTER_TYPES.nc
               }
             }));
 
-          case 'CC':
+          case GEO_FILTER_TYPES.cc:
             const filteredCCs = CITY_COUNCILS.filter(cc => searchFilter.test(cc.name));
             return filteredCCs.map(cc => ({
               type: 'Feature',
@@ -51,7 +45,7 @@ class MapSearch extends React.Component {
               text: cc.name,
               place_name: cc.name,
               properties: {
-                type: 'CC'
+                type: GEO_FILTER_TYPES.cc
               }
             }));
         }
@@ -68,22 +62,22 @@ class MapSearch extends React.Component {
   }
 
   setTab = tab => {
-    if (tab !== this.state.activeTab) {
-      this.setState({ activeTab: tab })
+    const { geoFilterType } = this.props;
+    if (tab !== geoFilterType) {
       this.props.onChangeTab(tab);
       this.geocoder.clear();
       switch(tab) {
-        case 'address':
+        case GEO_FILTER_TYPES.address:
           this.geocoder.setPlaceholder('Enter address');
           this.geocoder.options.localGeocoderOnly = false;
           break;
 
-        case 'NC':
+        case GEO_FILTER_TYPES.nc:
           this.geocoder.setPlaceholder('Enter neighborhood council');
           this.geocoder.options.localGeocoderOnly = true;
           break;
 
-        case 'CC':
+        case GEO_FILTER_TYPES.cc:
           this.geocoder.setPlaceholder('Enter city council number');
           this.geocoder.options.localGeocoderOnly = true;
           break;
@@ -92,6 +86,7 @@ class MapSearch extends React.Component {
   }
 
   render() {
+    const { geoFilterType } = this.props;
     return (
       <div className="map-search map-control">
         <div>
@@ -100,7 +95,7 @@ class MapSearch extends React.Component {
               <div
                 key={tab}
                 className={clx('map-control-tab', {
-                  active: tab === this.state.activeTab
+                  active: tab === geoFilterType
                 })}
                 onClick={this.setTab.bind(null, tab)}
               >

@@ -36,6 +36,7 @@ import moment from 'moment';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES, COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
+import { GEO_FILTER_TYPES } from './constants';
 import { boundingBox, pointsWithinGeo, isPointWithinGeo } from './utils';
 
 import RequestsLayer from './layers/RequestsLayer';
@@ -107,6 +108,7 @@ class PinMap extends Component {
       activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
       locationInfo: INITIAL_LOCATION,
+      geoFilterType: GEO_FILTER_TYPES.address,
       filterGeo: null,
       filteredRequestCounts: {},
       hoveredRegionName: null,
@@ -309,31 +311,33 @@ class PinMap extends Component {
     this.reset();
 
     switch(tab) {
-      case 'address':
+      case GEO_FILTER_TYPES.address:
         this.addressLayer.show();
         this.ncLayer.hide();
         this.ccLayer.hide();
         break;
 
-      case 'NC':
+      case GEO_FILTER_TYPES.nc:
         this.ncLayer.show();
         this.ccLayer.hide();
         this.addressLayer.hide();
         break;
 
-      case 'CC':
+      case GEO_FILTER_TYPES.cc:
         this.ccLayer.show();
         this.ncLayer.hide();
         this.addressLayer.hide();
         break;
     }
+
+    this.setState({ geoFilterType: tab });
   }
 
   onGeocoderResult = ({ result }) => {
-    if (result.properties.type === 'NC')
+    if (result.properties.type === GEO_FILTER_TYPES.nc)
       return this.ncLayer.selectRegion(result.id);
 
-    if (result.properties.type === 'CC')
+    if (result.properties.type === GEO_FILTER_TYPES.cc)
       return this.ccLayer.selectRegion(result.id);
 
     const lngLat = {
@@ -428,6 +432,7 @@ class PinMap extends Component {
     const { requests, position } = this.props;
 
     const {
+      geoFilterType,
       date,
       locationInfo,
       filteredRequestCounts,
@@ -459,6 +464,7 @@ class PinMap extends Component {
             />
             <MapSearch
               map={this.map}
+              geoFilterType={geoFilterType}
               onGeocoderResult={this.onGeocoderResult}
               onChangeTab={this.onChangeSearchTab}
               onReset={this.reset}
