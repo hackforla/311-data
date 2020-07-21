@@ -7,6 +7,8 @@ import {
   boundingBox
 } from '../utils';
 
+const BOUNDARY_WIDTH = 2;
+
 // adjust this to avoid overlapping the controls when zooming to a region
 const FIT_BOUNDS_PADDING = {
   top: 65,
@@ -78,7 +80,7 @@ class BoundaryLayer extends React.Component {
       },
       paint: {
         'line-color': getBoundaryColor(boundaryStyle),
-        'line-width': 2.0
+        'line-width': BOUNDARY_WIDTH,
       }
     });
 
@@ -187,7 +189,7 @@ class BoundaryLayer extends React.Component {
     this.map.setPaintProperty(`${this.sourceId}-borders`, 'line-width', [
       'case',
       ['boolean', ['feature-state', 'selected'], false],
-      2,
+      BOUNDARY_WIDTH,
       0
     ]);
 
@@ -222,7 +224,11 @@ class BoundaryLayer extends React.Component {
     );
 
     setTimeout(() => {
-      this.map.setPaintProperty(`${this.sourceId}-borders`, 'line-width', 2);
+      this.map.setPaintProperty(
+        `${this.sourceId}-borders`,
+        'line-width',
+        BOUNDARY_WIDTH,
+      );
     });
 
     this.map.getSource(`${this.sourceId}-region-mask`).setData(emptyGeo());
