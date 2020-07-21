@@ -39,11 +39,15 @@ class MapLayers extends React.Component {
   }
 
   onChangeStyle = styleId => {
-    this.props.onChangeMapStyle(styleId);
+    const { mapStyle, onChangeMapStyle } = this.props;
+    if (mapStyle !== styleId)
+      onChangeMapStyle(styleId);
   }
 
   onChangeColorScheme = scheme => {
-    this.props.onChangeColorScheme(scheme);
+    const { colorScheme, onChangeColorScheme } = this.props;
+    if (colorScheme !== scheme)
+      onChangeColorScheme(scheme);
   }
 
   render() {
@@ -51,7 +55,8 @@ class MapLayers extends React.Component {
       selectedTypes,
       requestsLayer,
       onChangeRequestsLayer,
-      colorScheme
+      colorScheme,
+      mapStyle,
     } = this.props;
 
     const schemeColors = getColors(colorScheme);
@@ -111,7 +116,7 @@ class MapLayers extends React.Component {
             <div className="style-selection">
               <div className="type-selectors">
                 { COLOR_SCHEME_NAMES.map(scheme => {
-                  const selected = this.props.colorScheme === scheme;
+                  const selected = colorScheme === scheme;
                   return (
                     <div
                       key={scheme}
@@ -130,7 +135,7 @@ class MapLayers extends React.Component {
               }} />
               <div className="type-selectors">
                 { Object.keys(MAP_STYLES).map(styleId => {
-                  const selected = this.props.mapStyle === styleId;
+                  const selected = mapStyle === styleId;
                   return (
                     <div
                       key={styleId}
