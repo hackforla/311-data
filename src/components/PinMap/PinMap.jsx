@@ -109,6 +109,7 @@ class PinMap extends Component {
       date: props.lastUpdated,
       colorScheme: 'prism',
       mapStyle: 'dark',
+      canReset: true,
     };
 
     this.map = null;
@@ -256,9 +257,17 @@ class PinMap extends Component {
     this.ncLayer.clearSelectedRegion();
     this.ccLayer.clearSelectedRegion();
     this.removePopup();
-    this.setState({ locationInfo: INITIAL_LOCATION });
+
+    this.setState({
+      locationInfo: INITIAL_LOCATION,
+      canReset: false,
+    });
+    
     this.map.once('idle', () => {
-      this.setState({ filterGeo: null });
+      this.setState({
+        filterGeo: null,
+        canReset: true,
+      });
     });
   };
 
@@ -459,6 +468,7 @@ class PinMap extends Component {
       activeRequestsLayer,
       mapStyle,
       hoveredRegionName,
+      canReset,
     } = this.state;
 
     return (
@@ -496,7 +506,7 @@ class PinMap extends Component {
               onGeocoderResult={this.onGeocoderResult}
               onChangeTab={this.onChangeSearchTab}
               onReset={this.reset}
-              canReset={!!filterGeo}
+              canReset={!!filterGeo && canReset}
             />
             <MapLayers
               selectedTypes={selectedTypes}
