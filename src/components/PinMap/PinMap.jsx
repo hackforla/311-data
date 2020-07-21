@@ -262,7 +262,7 @@ class PinMap extends Component {
       locationInfo: INITIAL_LOCATION,
       canReset: false,
     });
-    
+
     this.map.once('idle', () => {
       this.setState({
         filterGeo: null,
@@ -483,14 +483,17 @@ class PinMap extends Component {
         <AddressLayer
           ref={el => this.addressLayer = el}
           visible={geoFilterType === GEO_FILTER_TYPES.address}
+          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
         <BoundaryLayer
           ref={el => this.ncLayer = el}
           visible={geoFilterType === GEO_FILTER_TYPES.nc}
+          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
         <BoundaryLayer
           ref={el => this.ccLayer = el}
           visible={geoFilterType === GEO_FILTER_TYPES.cc}
+          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
         { this.state.mapReady && (
           <>

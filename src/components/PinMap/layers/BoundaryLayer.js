@@ -15,6 +15,12 @@ const FIT_BOUNDS_PADDING = {
   right: 350
 };
 
+function getBoundaryColor(boundaryStyle) {
+  return boundaryStyle === 'light'
+    ? '#FFFFFF'
+    : '#27272b';
+}
+
 class BoundaryLayer extends React.Component {
   init = ({
     map,
@@ -61,7 +67,7 @@ class BoundaryLayer extends React.Component {
   };
 
   addLayers = () => {
-    const { visible } = this.props;
+    const { visible, boundaryStyle } = this.props;
 
     this.map.addLayer({
       id: `${this.sourceId}-borders`,
@@ -71,7 +77,7 @@ class BoundaryLayer extends React.Component {
         visibility: visible ? 'visible' : 'none',
       },
       paint: {
-        'line-color': '#FFFFFF',
+        'line-color': getBoundaryColor(boundaryStyle),
         'line-width': 2.0
       }
     });
@@ -84,7 +90,7 @@ class BoundaryLayer extends React.Component {
         visibility: visible ? 'visible' : 'none',
       },
       paint: {
-        'fill-color': '#FFFFFF',
+        'fill-color': getBoundaryColor(boundaryStyle),
         'fill-opacity': [
           'case',
           ['all',
@@ -105,7 +111,7 @@ class BoundaryLayer extends React.Component {
         visibility: visible ? 'visible' : 'none',
       },
       paint: {
-        'fill-color': '#FFFFFF',
+        'fill-color': getBoundaryColor(boundaryStyle),
         'fill-opacity': [
           'interpolate',
           ['linear'],
@@ -244,8 +250,10 @@ export default BoundaryLayer;
 
 BoundaryLayer.propTypes = {
   visible: PropTypes.bool,
+  boundaryStyle: PropTypes.oneOf(['light', 'dark']),
 };
 
 BoundaryLayer.defaultProps = {
   visible: false,
+  boundaryStyle: 'light',
 };

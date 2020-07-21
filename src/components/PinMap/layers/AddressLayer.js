@@ -14,19 +14,44 @@ const FIT_BOUNDS_PADDING = {
   right: 300
 };
 
+function getBoundaryColor(boundaryStyle) {
+  return boundaryStyle === 'light'
+    ? '#FFFFFF'
+    : '#27272b';
+}
+
+function getMaskFillOpacity(boundaryStyle) {
+  return boundaryStyle === 'light'
+    ? [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      10, 0,
+      13, 0.2
+    ] : [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      10, 0,
+      13, 0.5
+    ];
+}
+
 class AddressLayer extends React.Component {
   init = ({ map, addListeners, onSelectRegion }) => {
     this.map = map;
     this.onSelectRegion = onSelectRegion;
-    this.center = null;
-    this.offset = null;
-    this.circle = null;
     this.canvas = map.getCanvasContainer();
 
     this.addSources();
     this.addLayers();
-    if (addListeners)
+
+    if (addListeners) {
       this.addListeners();
+      this.center = null;
+      this.offset = null;
+      this.circle = null;
+    }
   }
 
   componentDidUpdate(prev) {
@@ -38,17 +63,17 @@ class AddressLayer extends React.Component {
   addSources = () => {
     this.map.addSource('shed', {
       type: 'geojson',
-      data: null
+      data: this.circle || emptyGeo(),
     });
 
     this.map.addSource('shed-mask', {
       type: 'geojson',
-      data: null
+      data: this.circle ? makeGeoMask(this.circle) : emptyGeo(),
     });
   };
 
   addLayers = () => {
-    const { visible } = this.props;
+    const { visible, boundaryStyle } = this.props;
 
     this.map.addLayer({
       id: 'shed-border',
@@ -59,14 +84,7 @@ class AddressLayer extends React.Component {
       },
       paint: {
         'line-width': 1.0,
-        'line-color': '#FFFFFF',
-        // 'line-opacity': [
-        //   'interpolate',
-        //   ['linear'],
-        //   ['zoom'],
-        //   10, 1,
-        //   13, 0.5
-        // ]
+        'line-color': getBoundaryColor(boundaryStyle),
       }
     });
 
@@ -90,14 +108,8 @@ class AddressLayer extends React.Component {
         visibility: visible ? 'visible' : 'none',
       },
       paint: {
-        'fill-color': '#FFFFFF',
-        'fill-opacity': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          10, 0,
-          13, 0.2
-        ],
+        'fill-color': getBoundaryColor(boundaryStyle),
+        'fill-opacity': getMaskFillOpacity(boundaryStyle),
       }
     });
   };
