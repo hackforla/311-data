@@ -37,7 +37,7 @@ import { GEO_FILTER_TYPES } from './constants';
 import { boundingBox, pointsWithinGeo, isPointWithinGeo } from './utils';
 
 import RequestsLayer from './layers/RequestsLayer';
-import BoundaryLayer from './BoundaryLayer';
+import BoundaryLayer from './layers/BoundaryLayer';
 import AddressLayer from './layers/AddressLayer';
 
 import MapOverview from './controls/MapOverview';
@@ -179,8 +179,9 @@ class PinMap extends Component {
       }),
     });
 
-    this.ncLayer = BoundaryLayer({
+    this.ncLayer.init({
       map: this.map,
+      addListeners: true,
       sourceId: 'nc',
       sourceData: ncBoundaries,
       idProperty: 'nc_id',
@@ -206,8 +207,9 @@ class PinMap extends Component {
       }
     });
 
-    this.ccLayer = BoundaryLayer({
+    this.ccLayer.init({
       map: this.map,
+      addListeners: true,
       sourceId: 'cc',
       sourceData: ccBoundaries,
       idProperty: 'name',
@@ -248,8 +250,8 @@ class PinMap extends Component {
   reset = () => {
     this.zoomOut();
     this.addressLayer.setCenter(null);
-    this.ncLayer.deselectAll();
-    this.ccLayer.deselectAll();
+    this.ncLayer.clearSelectedRegion();
+    this.ccLayer.clearSelectedRegion();
     this.removePopup();
     this.setState({ locationInfo: INITIAL_LOCATION });
     this.map.once('idle', () => {
@@ -307,26 +309,8 @@ class PinMap extends Component {
   };
 
   onChangeSearchTab = tab => {
-    this.reset();
-
-    switch(tab) {
-      case GEO_FILTER_TYPES.address:
-        this.ncLayer.hide();
-        this.ccLayer.hide();
-        break;
-
-      case GEO_FILTER_TYPES.nc:
-        this.ncLayer.show();
-        this.ccLayer.hide();
-        break;
-
-      case GEO_FILTER_TYPES.cc:
-        this.ccLayer.show();
-        this.ncLayer.hide();
-        break;
-    }
-
     this.setState({ geoFilterType: tab });
+    this.reset();
   }
 
   onGeocoderResult = ({ result }) => {
@@ -450,6 +434,14 @@ class PinMap extends Component {
         <AddressLayer
           ref={el => this.addressLayer = el}
           visible={geoFilterType === GEO_FILTER_TYPES.address}
+        />
+        <BoundaryLayer
+          ref={el => this.ncLayer = el}
+          visible={geoFilterType === GEO_FILTER_TYPES.nc}
+        />
+        <BoundaryLayer
+          ref={el => this.ccLayer = el}
+          visible={geoFilterType === GEO_FILTER_TYPES.cc}
         />
         { this.state.mapReady && (
           <>
