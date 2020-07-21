@@ -188,7 +188,7 @@ class AddressLayer extends React.Component {
   zoomTo = lngLat => {
     this.setCenter(lngLat);
     this.map.fitBounds(boundingBox(this.circle), { padding: FIT_BOUNDS_PADDING });
-    this.map.once('idle', () => this.onSelectRegion({ geo: this.circle }));
+    this.map.once('zoomend', () => this.onSelectRegion({ geo: this.circle }));
   };
 
   setRadius = miles => {
