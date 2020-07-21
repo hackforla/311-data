@@ -9,6 +9,8 @@
     - precalculate request counts by type, nc, and cc
     - increase boundary of circle when hovering
     - allow user to rotate colors in style tab
+    - make boundary lines and fills dark when map style is light
+      - would affect AddressLayer and BoundaryLayer
 
     state.geoFilter = {
       type: [geoFilterType],
@@ -28,7 +30,6 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import moment from 'moment';
 
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
@@ -167,11 +168,17 @@ class PinMap extends Component {
       addListeners,
       onSelectRegion: ({ geo, center }) => this.setState({
         filterGeo: geo,
-        locationInfo: {
-          location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
-          radius: 1,
-          nc: ncInfoFromLngLat(center),
-        },
+        ...(
+          center
+          ? {
+            locationInfo: {
+              location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
+              radius: 1,
+              nc: ncInfoFromLngLat(center),
+            }
+          }
+          : {}
+        )
       }),
     });
 
@@ -458,9 +465,9 @@ class PinMap extends Component {
       <div className="map-container" ref={el => this.mapContainer = el}>
         <RequestsLayer
           ref={el => this.requestsLayer = el}
+          requests={requests}
           activeLayer={activeRequestsLayer}
           selectedTypes={selectedTypes}
-          requests={requests}
           colorScheme={colorScheme}
         />
         <AddressLayer

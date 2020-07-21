@@ -112,7 +112,10 @@ class AddressLayer extends React.Component {
     };
 
     const onUp = e => {
-      this.selectRegion();
+      this.onSelectRegion({
+        geo: this.circle,
+        center: this.center
+      });
       this.map.off('mousemove', onMove);
       this.map.off('touchmove', onMove);
       this.canvas.style.cursor = '';
@@ -173,15 +176,8 @@ class AddressLayer extends React.Component {
   zoomTo = lngLat => {
     this.setCenter(lngLat);
     this.map.fitBounds(boundingBox(this.circle), { padding: FIT_BOUNDS_PADDING });
-    this.map.once('idle', this.selectRegion);
+    this.map.once('idle', () => this.onSelectRegion({ geo: this.circle }));
   };
-
-  selectRegion = () => {
-    this.onSelectRegion({
-      geo: this.circle,
-      center: this.center
-    });
-  }
 
   setRadius = miles => {
     console.log('to be implemented');
