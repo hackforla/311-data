@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { COLOR_SCHEME_NAMES, getColors } from '../mapColors';
+import { MAP_STYLES } from '../constants';
 import clx from 'classnames';
 
 const TABS = [
@@ -37,8 +38,8 @@ class MapLayers extends React.Component {
       this.setState({ activeTab: tab });
   }
 
-  onChangeStyle = style => {
-    this.props.onChangeMapStyle(style);
+  onChangeStyle = styleId => {
+    this.props.onChangeMapStyle(styleId);
   }
 
   onChangeColorScheme = scheme => {
@@ -122,19 +123,19 @@ class MapLayers extends React.Component {
                   );
                 })}
               </div>
-              {/*<div style={{
+              <div style={{
                 height: 1,
                 backgroundColor: 'white',
                 margin: '10px 0',
               }} />
               <div className="type-selectors">
-                { this.props.mapStyles.map(style => {
-                  const selected = this.props.mapStyle === style;
+                { Object.keys(MAP_STYLES).map(styleId => {
+                  const selected = this.props.mapStyle === styleId;
                   return (
                     <div
-                      key={style}
+                      key={styleId}
                       className="type-selector"
-                      onClick={this.onChangeStyle.bind(this, style)}>
+                      onClick={this.onChangeStyle.bind(this, styleId)}>
                       <div
                         className="type-color"
                         style={{
@@ -142,11 +143,11 @@ class MapLayers extends React.Component {
                           borderWidth: selected ? 0 : 1,
                         }}
                       />
-                      <div className="type-name">{ style }</div>
+                      <div className="type-name">{ styleId }</div>
                     </div>
                   );
                 })}
-              </div>*/}
+              </div>
             </div>
           )}
         </div>

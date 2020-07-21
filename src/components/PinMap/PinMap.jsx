@@ -33,7 +33,7 @@ import moment from 'moment';
 import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES, COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
-import { GEO_FILTER_TYPES } from './constants';
+import { GEO_FILTER_TYPES, MAP_STYLES } from './constants';
 import { boundingBox, pointsWithinGeo, isPointWithinGeo } from './utils';
 
 import RequestsLayer from './layers/RequestsLayer';
@@ -58,13 +58,6 @@ const INITIAL_BOUNDS = boundingBox(ncBoundaries);
 
 const INITIAL_LOCATION = {
   location: 'All of Los Angeles',
-};
-
-const MAP_STYLES = {
-  dark: 'mapbox://styles/mapbox/dark-v10',
-  light: 'mapbox://styles/mapbox/light-v10',
-  streets: 'mapbox://styles/mapbox/streets-v11',
-  satellite: 'mapbox://styles/mapbox/satellite-streets-v11',
 };
 
 function ncNameFromId(ncId) {
@@ -134,7 +127,7 @@ class PinMap extends Component {
     });
 
     this.map.on('load', () => {
-      this.addLayers();
+      this.initLayers(true);
 
       this.map.on('click', this.onClick);
 
@@ -161,27 +154,27 @@ class PinMap extends Component {
       this.setFilteredRequestCounts();
   }
 
-  addLayers = () => {
+  initLayers = addListeners => {
     this.requestsLayer.init({
       map: this.map,
     });
 
     this.addressLayer.init({
       map: this.map,
-      addListeners: true,
+      addListeners,
       onSelectRegion: ({ geo, center }) => this.setState({
         filterGeo: geo,
         locationInfo: {
           location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
           radius: 1,
           nc: ncInfoFromLngLat(center),
-        }
+        },
       }),
     });
 
     this.ncLayer.init({
       map: this.map,
-      addListeners: true,
+      addListeners,
       sourceId: 'nc',
       sourceData: ncBoundaries,
       idProperty: 'nc_id',
@@ -192,7 +185,7 @@ class PinMap extends Component {
               name: ncNameFromId(geo.properties.nc_id),
               url: geo.properties.waddress || geo.properties.dwebsite,
             },
-          }
+          },
         });
         this.map.once('idle', () => {
           this.setState({ filterGeo: geo });
@@ -209,7 +202,7 @@ class PinMap extends Component {
 
     this.ccLayer.init({
       map: this.map,
-      addListeners: true,
+      addListeners,
       sourceId: 'cc',
       sourceData: ccBoundaries,
       idProperty: 'name',
@@ -369,7 +362,7 @@ class PinMap extends Component {
   setMapStyle = mapStyle => {
     this.setState({ mapStyle });
     this.map.setStyle(MAP_STYLES[mapStyle]);
-    this.map.once('styledata', this.addLayers);
+    this.map.once('styledata', () => this.initLayers(false));
   }
 
   setColorScheme = scheme => {
@@ -465,7 +458,6 @@ class PinMap extends Component {
               requestsLayer={activeRequestsLayer}
               onChangeRequestsLayer={this.setActiveRequestsLayer}
               mapStyle={mapStyle}
-              mapStyles={Object.keys(MAP_STYLES)}
               onChangeMapStyle={this.setMapStyle}
               colorScheme={colorScheme}
               onChangeColorScheme={this.setColorScheme}

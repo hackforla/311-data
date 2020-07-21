@@ -61,12 +61,14 @@ class BoundaryLayer extends React.Component {
   };
 
   addLayers = () => {
+    const { visible } = this.props;
+
     this.map.addLayer({
       id: `${this.sourceId}-borders`,
       source: this.sourceId,
       type: 'line',
       layout: {
-        visibility: 'none'
+        visibility: visible ? 'visible' : 'none',
       },
       paint: {
         'line-color': '#FFFFFF',
@@ -79,7 +81,7 @@ class BoundaryLayer extends React.Component {
       source: this.sourceId,
       type: 'fill',
       layout: {
-        visibility: 'none'
+        visibility: visible ? 'visible' : 'none',
       },
       paint: {
         'fill-color': '#FFFFFF',
@@ -100,7 +102,7 @@ class BoundaryLayer extends React.Component {
       source: `${this.sourceId}-region-mask`,
       type: 'fill',
       layout: {
-        visibility: 'visible'
+        visibility: visible ? 'visible' : 'none',
       },
       paint: {
         'fill-color': '#FFFFFF',
