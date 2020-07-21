@@ -32,7 +32,7 @@ $map-control-active-bg-color: #505050;
         border-top-right-radius: 5px;
       }
       &.active {
-        background-color: transparentize($map-control-border-color, 0.1);
+        background-color: $map-control-border-color;
       }
       &:hover:not(.active) {
         cursor: pointer;

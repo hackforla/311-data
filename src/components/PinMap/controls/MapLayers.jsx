@@ -115,25 +115,7 @@ class MapLayers extends React.Component {
           { this.state.activeTab === 'Style' && (
             <div className="style-selection">
               <div className="type-selectors">
-                { COLOR_SCHEME_NAMES.map(scheme => {
-                  const selected = colorScheme === scheme;
-                  return (
-                    <div
-                      key={scheme}
-                      className={clx('type-selector', { selected })}
-                      onClick={this.onChangeColorScheme.bind(this, scheme)}>
-                      <div className="type-color" />
-                      <div className="type-name">{ scheme }</div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div style={{
-                height: 1,
-                backgroundColor: 'white',
-                margin: '10px 0',
-              }} />
-              <div className="type-selectors">
+                <div className="type-selectors-heading">Map Style</div>
                 { Object.keys(MAP_STYLES).map(styleId => {
                   const selected = mapStyle === styleId;
                   return (
@@ -149,6 +131,21 @@ class MapLayers extends React.Component {
                         }}
                       />
                       <div className="type-name">{ styleId }</div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="type-selectors">
+                <div className="type-selectors-heading">Color Scheme</div>
+                { COLOR_SCHEME_NAMES.map(scheme => {
+                  const selected = colorScheme === scheme;
+                  return (
+                    <div
+                      key={scheme}
+                      className={clx('type-selector', { selected })}
+                      onClick={this.onChangeColorScheme.bind(this, scheme)}>
+                      <div className="type-color" />
+                      <div className="type-name">{ scheme }</div>
                     </div>
                   );
                 })}

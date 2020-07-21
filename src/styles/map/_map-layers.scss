@@ -67,6 +67,15 @@
     border-radius: 5px;
     border-top-right-radius: 0;
     padding-top: 10px;
+    display: flex;
+    .type-selectors {
+      flex: 1;
+      .type-selectors-heading {
+        font-size: 10px;
+        text-transform: uppercase;
+        padding: 0 15px;
+      }
+    }
     .type-selector.selected {
       cursor: default;
       .type-color {
@@ -101,7 +110,7 @@
         cursor: pointer;
       }
       &.active {
-        background-color: transparentize($map-control-border-color, 0.1);
+        background-color: $map-control-border-color;
       }
     }
   }
