@@ -50,6 +50,9 @@ import ncBoundaries from '../../data/nc-boundary-2019.json';
 import ccBoundaries from '../../data/la-city-council-districts-2012.json';
 import openRequests from '../../data/open_requests.json';
 
+import ncCounts from '../../data/ncCounts.json';
+import ccCounts from '../../data/ccCounts.json';
+
 /////////////////// CONSTANTS ///////////////
 
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
@@ -369,10 +372,46 @@ class PinMap extends Component {
     this.setState({ colorScheme: scheme });
   }
 
+  getBoundaryCounts = (geoFilterType, filterGeo, selectedTypes) => {
+    const { counts, regionId } = (() => {
+      switch(geoFilterType) {
+        case GEO_FILTER_TYPES.nc: return {
+          counts: ncCounts,
+          regionId: filterGeo.properties.nc_id,
+        };
+        case GEO_FILTER_TYPES.cc: return {
+          counts: ccCounts,
+          regionId: filterGeo.properties.name,
+        };
+        default: return {};
+      }
+    })();
+
+    return Object.keys(counts[regionId]).reduce((filteredCounts, rType) => {
+      if (selectedTypes.includes(rType))
+        filteredCounts[rType] = counts[regionId][rType];
+      return filteredCounts;
+    }, {});
+  };
+
   setFilteredRequestCounts = () => {
     const { requests } = this.props;
-    const { filterGeo, selectedTypes } = this.state;
+    const { filterGeo, selectedTypes, geoFilterType } = this.state;
 
+    // use pre-calculated values for nc and cc filters
+    if (
+      filterGeo &&
+      [GEO_FILTER_TYPES.nc, GEO_FILTER_TYPES.cc].includes(geoFilterType)
+    )
+      return this.setState({
+        filteredRequestCounts: this.getBoundaryCounts(
+          geoFilterType,
+          filterGeo,
+          selectedTypes,
+        )
+      });
+
+    // otherwise, count up the filtered requests
     let filteredRequests = requests;
 
     // filter by type selection if necessary
