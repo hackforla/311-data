@@ -59,11 +59,20 @@ $map-control-active-bg-color: #505050;
   .mapboxgl-popup {
     color: #FFFFFF;
     font-size: 14px;
-    .mapboxgl-popup-tip {
+    &-anchor-bottom .mapboxgl-popup-tip {
       border-top-color: $map-control-bg-color;
     }
+    &-anchor-top .mapboxgl-popup-tip {
+      border-bottom-color: $map-control-bg-color;
+    }
+    &-anchor-left .mapboxgl-popup-tip {
+      border-right-color: $map-control-bg-color;
+    }
+    &-anchor-right .mapboxgl-popup-tip {
+      border-left-color: $map-control-bg-color;
+    }
     .mapboxgl-popup-content {
-      padding: 10px 20px 10px 10px;
+      padding: 10px 20px 10px 15px;
       background-color: $map-control-bg-color;
     }
     .mapboxgl-popup-close-button {

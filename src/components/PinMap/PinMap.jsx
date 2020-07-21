@@ -30,7 +30,6 @@ import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 
-import { getPinInfoRequest } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES, COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
 import { GEO_FILTER_TYPES, MAP_STYLES } from './constants';
@@ -45,6 +44,8 @@ import MapSearch from './controls/MapSearch';
 import MapLayers from './controls/MapLayers';
 import MapRegion from './controls/MapRegion';
 import MapMeta from './controls/MapMeta';
+
+import RequestDetail from './RequestDetail';
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
 import ccBoundaries from '../../data/la-city-council-districts-2012.json';
@@ -109,6 +110,7 @@ class PinMap extends Component {
       colorScheme: 'prism',
       mapStyle: 'dark',
       canReset: true,
+      selectedRequestId: null,
     };
 
     this.map = null;
@@ -116,6 +118,7 @@ class PinMap extends Component {
     this.addressLayer = null;
     this.ncLayer = null;
     this.ccLayer = null;
+    this.requestDetail = null;
     this.popup = null;
   }
 
@@ -236,17 +239,19 @@ class PinMap extends Component {
     });
   };
 
-  addPopup = (lngLat, content, opts={}) => {
-    this.popup = new mapboxgl.Popup(opts)
-      .setLngLat(lngLat)
-      .setHTML(content)
+  addPopup = (coordinates, requestId) => {
+    this.setState({ selectedRequestId: requestId });
+    this.popup = new mapboxgl.Popup()
+      .setLngLat(coordinates)
+      .setDOMContent(this.requestDetail)
       .addTo(this.map);
-  };
+  }
 
   removePopup = () => {
     if (this.popup) {
       this.popup.remove();
       this.popup = null;
+      this.setState({ selectedRequestId: null });
     }
   };
 
@@ -307,14 +312,8 @@ class PinMap extends Component {
 
       if (feature.layer.id === 'request-circles') {
         const { coordinates } = feature.geometry;
-        const { id, type } = feature.properties;
-        const content = (
-          '<div>' +
-            `<div>${id}</div>` +
-            `<div>${REQUEST_TYPES[type].displayName}</div>` +
-          '</div>'
-        );
-        return this.addPopup(coordinates, content);
+        const { id } = feature.properties;
+        return this.addPopup(coordinates, id);
       }
     }
   };
@@ -454,7 +453,12 @@ class PinMap extends Component {
   //// RENDER ////
 
   render() {
-    const { requests, position } = this.props;
+    const {
+      requests,
+      position,
+      pinsInfo,
+      getPinInfo,
+    } = this.props;
 
     const {
       geoFilterType,
@@ -468,6 +472,7 @@ class PinMap extends Component {
       mapStyle,
       hoveredRegionName,
       canReset,
+      selectedRequestId,
     } = this.state;
 
     return (
@@ -494,6 +499,9 @@ class PinMap extends Component {
           visible={geoFilterType === GEO_FILTER_TYPES.cc}
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
+        <div ref={el => this.requestDetail = el}>
+          <RequestDetail srnumber={selectedRequestId} />
+        </div>
         { this.state.mapReady && (
           <>
             <MapOverview
@@ -552,14 +560,7 @@ function convertRequests(requests) {
 
 const REQUESTS = convertRequests(openRequests);
 
-const mapDispatchToProps = dispatch => ({
-  getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
-  updatePosition: position => dispatch(updateMapPosition(position)),
-  exportMap: () => dispatch(trackMapExport()),
-});
-
 const mapStateToProps = state => ({
-  pinsInfo: state.data.pinsInfo,
   // pinClusters: convertRequests(state.data.pinClusters),
   requests: REQUESTS,
   heatmap: state.data.heatmap,
@@ -568,17 +569,19 @@ const mapStateToProps = state => ({
   lastUpdated: Date.now(),
 });
 
+const mapDispatchToProps = dispatch => ({
+  updatePosition: position => dispatch(updateMapPosition(position)),
+  exportMap: () => dispatch(trackMapExport()),
+});
+
 PinMap.propTypes = {
-  pinsInfo: PropTypes.shape({}),
   pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
   heatmap: PropTypes.arrayOf(PropTypes.array),
-  getPinInfo: PropTypes.func.isRequired,
   updatePosition: PropTypes.func.isRequired,
   exportMap: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {
-  pinsInfo: {},
   pinClusters: [],
   heatmap: [],
 };
