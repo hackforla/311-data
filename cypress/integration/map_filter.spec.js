@@ -1,6 +1,6 @@
 describe('Filters Selection', () => {
 
-    it('Map: Last Week, Dead Animal [DAN]', () => {
+    it.skip('Map: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
         cy.route({
@@ -25,9 +25,9 @@ describe('Filters Selection', () => {
             cy.get('#root > div.body.menu-is-open > div.map-container > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-marker-pane > div > div > span').should('have.text', myCount)
         })
 
-    });
+    })
 
-    it('Data Visualization: Last Week, Dead Animal [DAN]', () => {
+    it.skip('Data Visualization: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
         cy.route({
@@ -52,7 +52,7 @@ describe('Filters Selection', () => {
             cy.get('.requests-box').should('have.text', myCount)
         })
 
-    });
+    })
 
 })
 

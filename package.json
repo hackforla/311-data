@@ -67,6 +67,7 @@
     "babel-loader": "^8.0.6",
     "css-loader": "^3.5.1",
     "cypress": "^4.10.0",
+    "cypress-mailosaur": "^1.0.5",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^6.7.2",
