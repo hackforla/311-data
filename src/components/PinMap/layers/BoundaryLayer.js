@@ -23,6 +23,23 @@ function getBoundaryColor(boundaryStyle) {
     : '#27272b';
 }
 
+function getMaskFillOpacity(boundaryStyle) {
+  return boundaryStyle === 'light'
+    ? [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      10, 0,
+      13, 0.3
+    ] : [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      10, 0,
+      13, 0.6
+    ];
+}
+
 class BoundaryLayer extends React.Component {
   init = ({
     map,
@@ -114,13 +131,7 @@ class BoundaryLayer extends React.Component {
       },
       paint: {
         'fill-color': getBoundaryColor(boundaryStyle),
-        'fill-opacity': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          10, 0,
-          13, 0.3
-        ],
+        'fill-opacity': getMaskFillOpacity(boundaryStyle),
       }
     });
   };

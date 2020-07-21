@@ -6,11 +6,10 @@
     - better to filter the requests layer or to change the data in the requests source?
     - reverse geocode on drag end -- see if we can get intersection based on lat/lng
     - precalculate NC and CC masks
-    - precalculate request counts by type, nc, and cc
+    - precalculate request counts by type, nc, and cc DONE
+      - also precalculate total for all of los angeles
     - increase boundary of circle when hovering
     - allow user to rotate colors in style tab
-    - make boundary lines and fills dark when map style is light
-      - would affect AddressLayer and BoundaryLayer
 
     state.geoFilter = {
       type: [geoFilterType],
