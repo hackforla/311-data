@@ -4,6 +4,7 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
 import { GEO_FILTER_TYPES } from '../constants';
 import clx from 'classnames';
+import ncBoundaries from '../../../data/nc-boundary-2019.json';
 
 const TABS = Object.values(GEO_FILTER_TYPES);
 
@@ -26,7 +27,12 @@ class MapSearch extends React.Component {
             return [];
 
           case GEO_FILTER_TYPES.nc:
-            const filteredNCs = COUNCILS.filter(nc => searchFilter.test(nc.name));
+            const filteredNCs = COUNCILS.filter(nc => (
+              searchFilter.test(nc.name)
+              // United For Victory and Central Avenue Historic aren't in the nc-boundary json,
+              // so they need to be excluded from search results
+              && ncBoundaries.features.find(f => f.properties.nc_id == nc.id)
+            ));
             return filteredNCs.map(nc => ({
               type: 'Feature',
               id: nc.id,

@@ -210,6 +210,8 @@ export const CITY_COUNCILS = [
   isn't in the nc-boundary json. It's in this list with an id of -1, which
   won't return any results but also won't hurt anything.
 
+  United for Victory is in the DB (#123) but isn't in the nc-boundary json.
+
   Also note the 4 councils that are commented at the end of the list.
     Historic Filipinotown NC -- #122
     Old Northridge CC -- -- #2
