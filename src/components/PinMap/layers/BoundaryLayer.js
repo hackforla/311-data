@@ -181,7 +181,7 @@ class BoundaryLayer extends React.Component {
   }
 
   selectRegion = regionId => {
-    if (!regionId || regionId === this.electedRegionId)
+    if (!regionId || regionId === this.selectedRegionId)
       return;
 
     if (this.selectedRegionId)
