@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://localhost:3000",
+  "baseUrl": "http://dev.311-data.org/",
   "video": false,
   "viewportWidth": 1400,
   "viewportHeight": 1060,
