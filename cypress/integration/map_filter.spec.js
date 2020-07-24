@@ -1,5 +1,7 @@
 describe('Filters Selection', () => {
 
+    const {_} = Cypress
+
     it('Map: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
@@ -21,10 +23,12 @@ describe('Filters Selection', () => {
         cy.get('#btn-sidebar-submit-button').click()
 
         cy.wait('@getFilterList').should((xhr) => {
-            const myCount = xhr.responseBody[0].count
-            cy.get('#root > div.body.menu-is-open > div.map-container > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-marker-pane > div > div > span').should('have.text', myCount)
+            _.each(xhr.response.body, function (value, index) {
+                const nthChild = index + 1
+                const bubbleLocator = '#root > div.body.menu-is-open > div.map-container > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-marker-pane > div:nth-child(' + nthChild + ') > div > span'
+                cy.get(bubbleLocator).should('have.text', value.count)
+            })
         })
-
     })
 
     it('Data Visualization: Last Week, Dead Animal [DAN]', () => {
@@ -48,8 +52,11 @@ describe('Filters Selection', () => {
         cy.get('#btn-sidebar-submit-button').click()
 
         cy.wait('@getFilterList').should((xhr) => {
-            const myCount = xhr.responseBody[0].count
-            cy.get('.requests-box').should('have.text', myCount)
+            let requestsCount = 0
+            _.each(xhr.response.body, function (value) {
+                requestsCount += value.count
+            })
+            cy.get('.requests-box').should('have.text', requestsCount)
         })
 
     })
