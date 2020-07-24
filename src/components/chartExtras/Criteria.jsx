@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import CollapsibleList from '@components/common/CollapsibleList';
+import InfoTitle from '@components/common/InfoTitle';
 
 const Criteria = ({
   startDate,
@@ -14,7 +15,10 @@ const Criteria = ({
 
   return (
     <div className="chart-extra criteria">
-      <h1>Criteria</h1>
+      <InfoTitle
+        title="Criteria"
+        infoText="The legend displays the specific date range and neighborhood council(s) selected by the user."
+      />
       <div className="outline">
         <div>
           <span className="criteria-type">

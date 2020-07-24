@@ -120,6 +120,7 @@ const TimeToCloseComparison = ({
   return (
     <Chart
       title="Time to Close"
+      titleInfo="This displays the amount of time it typically takes to close the specified 311 request type(s) in each district set."
       type="horizontalBoxplot"
       data={chartData}
       options={chartOptions}

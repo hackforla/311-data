@@ -83,6 +83,7 @@ const Frequency = ({
   return (
     <Chart
       title="Frequency"
+      titleInfo="Frequency displays the number of specific request type(s) over time."
       type="line"
       data={chartData}
       options={chartOptions}

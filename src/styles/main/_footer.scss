@@ -33,6 +33,10 @@ footer.navbar {
       font-family: $brand-text-family;
       width: auto;
       word-break: keep-all;
+      p {
+        margin-bottom: 0;
+        font-size: 12px;
+      }
     }
   }
 }

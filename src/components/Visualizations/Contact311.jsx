@@ -24,6 +24,7 @@ const Contact311 = ({
   return (
     <PieChart
       title="How People Contact 311"
+      titleInfo="This chart displays the relative frequency of methods people use to contact 311."
       sectors={sectors}
       addLabels
       componentName="Contact311"

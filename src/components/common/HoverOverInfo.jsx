@@ -13,7 +13,7 @@ const HoverOverInfo = ({
 
   return (
     <span
-      className="is-relative"
+      className="hover-over-info"
       onMouseEnter={() => setShowTooltip(true)}
       onFocus={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
@@ -24,25 +24,28 @@ const HoverOverInfo = ({
         <Tooltip position={position}>
           <div className="hover-over-tooltip">
             { title && (
-              <div className="title-row">
-                <Icon
-                  id="tooltip-icon"
-                  icon="info-circle"
-                  size="small"
-                  style={{ marginRight: '6px' }}
-                />
-                { title }
-              </div>
+              <Icon
+                id={`tooltip-icon-${title}`}
+                icon="info-circle"
+                size="small"
+              />
             )}
-            {
-              text instanceof Array
-                ? (
-                  text.map((line, idx) => (
-                    <div key={idx.toString()}>{ line }</div>
-                  ))
-                )
-                : text
-            }
+            <div className="hover-over-tooltip-text">
+              { title && (
+                <div className="title-row">
+                  { title }
+                </div>
+              )}
+              {
+                text instanceof Array
+                  ? (
+                    text.map((line, idx) => (
+                      <p key={idx.toString()}>{ line }</p>
+                    ))
+                  )
+                  : <p>{ text }</p>
+              }
+            </div>
           </div>
         </Tooltip>
       )}

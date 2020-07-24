@@ -7,13 +7,14 @@ const InfoTitle = ({
   title,
   element,
   infoText,
+  position,
 }) => {
   const titleEl = React.createElement(
     element,
     {
       style: {
         display: 'inline-block',
-        marginRight: 10,
+        marginRight: 6,
       },
     },
     title,
@@ -25,6 +26,7 @@ const InfoTitle = ({
       <HoverOverInfo
         title={title}
         text={infoText}
+        position={position}
       >
         <Icon
           id={`info-icon-${title}`}
@@ -45,10 +47,12 @@ InfoTitle.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
+  position: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
 };
 
 InfoTitle.defaultProps = {
   title: '',
   element: 'h1',
   infoText: '',
+  position: 'right',
 };

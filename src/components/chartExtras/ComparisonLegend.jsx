@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { DISTRICT_TYPES, COMPARISON_SETS } from '@components/common/CONSTANTS';
+import InfoTitle from '@components/common/InfoTitle';
 
 const ComparisonLegend = ({
   comparison,
@@ -28,7 +29,10 @@ const ComparisonLegend = ({
 
   return (
     <div className="chart-extra comparison-legend">
-      <h1>Legend</h1>
+      <InfoTitle
+        title="Legend"
+        infoText="The legend shows the district sets selected by the user."
+      />
       <div className="outline">
         { legendItem('set1') }
         { legendItem('set2') }

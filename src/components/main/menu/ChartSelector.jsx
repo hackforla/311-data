@@ -3,8 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 
-import Icon from '@components/common/Icon';
-import HoverOverInfo from '@components/common/HoverOverInfo';
 import Checkbox from '@components/common/Checkbox';
 import { updateComparisonChart } from '@reducers/comparisonFilters';
 
@@ -19,21 +17,6 @@ const ChartSelector = ({
 
   return (
     <div className="container">
-      <div className="is-size-6" style={{ padding: '15px 0' }}>
-        <strong style={{ paddingRight: '10px' }}>
-          Chart Selection
-        </strong>
-        <HoverOverInfo
-          title="Chart Selection"
-          text="This filter allows the user to select a chart for comparison."
-        >
-          <Icon
-            id="chart-selector-info-icon"
-            icon="info-circle"
-            size="small"
-          />
-        </HoverOverInfo>
-      </div>
       <div className="chart-selector field">
         <div className="control">
           <div className="columns is-vcentered">
