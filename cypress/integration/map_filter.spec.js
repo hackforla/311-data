@@ -1,6 +1,6 @@
 describe('Filters Selection', () => {
 
-    it.skip('Map: Last Week, Dead Animal [DAN]', () => {
+    it('Map: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
         cy.route({
@@ -27,7 +27,7 @@ describe('Filters Selection', () => {
 
     })
 
-    it.skip('Data Visualization: Last Week, Dead Animal [DAN]', () => {
+    it('Data Visualization: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
         cy.route({
