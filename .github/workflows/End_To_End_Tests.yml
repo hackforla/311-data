@@ -10,10 +10,10 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          build: npm run build
-          start: npm start
+          #build: npm run build
+          #start: npm start
           spec: cypress/integration/map_filter.spec.js
-          wait-on: http://localhost:3000
+          wait-on: http://dev.311-data.org/
           record: true
         env:
           # pass the Dashboard record key as an environment variable
