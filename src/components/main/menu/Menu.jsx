@@ -15,13 +15,13 @@ import {
 import { MENU_TABS } from '@components/common/CONSTANTS';
 import Button from '@components/common/Button';
 import InfoTitle from '@components/common/InfoTitle';
+import HoverOverInfo from '@components/common/HoverOverInfo';
 import Submit from './Submit';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
 import DistrictSelector from './DistrictSelector/DistrictSelector';
 import ChartSelector from './ChartSelector';
-import HoverOverInfo from '@components/common/HoverOverInfo';
 
 const Menu = ({
   isOpen,
