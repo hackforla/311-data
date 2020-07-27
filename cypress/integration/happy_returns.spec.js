@@ -1,6 +1,6 @@
 describe('Working w/ JSON and REST', () => {
 
-    it.skip('JSON Response', () => {
+    it('JSON Response', () => {
 
        cy.request('https://happyreturnsqatest.proxy.beeceptor.com/getProductVariants').then((response)=>{
            let bodyHr = JSON.stringify(response.body);
