@@ -2,7 +2,7 @@ describe('Filters Selection', () => {
 
     const {_} = Cypress
 
-    it('Map: Last Week, Dead Animal [DAN]', () => {
+    it.skip('Map: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
         cy.route({
@@ -39,7 +39,7 @@ describe('Filters Selection', () => {
         })
     })
 
-    it('Data Visualization: Last Week, Dead Animal [DAN]', () => {
+    it.skip('Data Visualization: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
         cy.route({

@@ -55,7 +55,8 @@
     "lint": "eslint 'src/**/*.js*'",
     "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
-    "check-env": "node ./src/checkEnv"
+    "check-env": "node ./src/checkEnv",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
