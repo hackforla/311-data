@@ -214,7 +214,7 @@ class BoundaryLayer extends React.Component {
     geo = removeGeoHoles(geo);
 
     // zoom to the region
-    // this.map.fitBounds(boundingBox(geo), { padding: FIT_BOUNDS_PADDING });
+    this.map.fitBounds(boundingBox(geo), { padding: FIT_BOUNDS_PADDING });
 
     // mask everything else
     this.map
