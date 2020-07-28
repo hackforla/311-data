@@ -51,7 +51,7 @@ class PinMap extends Component {
       height: null,
       markersVisible: true,
       heatmapVisible: false,
-      zoomBreak: 13,
+      zoomBreak: 14,
       zoomThresholdMet: false,
     };
     this.container = React.createRef();
@@ -114,8 +114,10 @@ class PinMap extends Component {
   onEachRegionFeatureMouseTooltip = (feature, layer) => {
     // Tooltip text when mousing over on a region
     const toolTipText = `
-      <div class="overlay_feature_popup">
-        ${feature.properties.nameshort}
+      <div class="nc-name-tooltip">
+        <span class="nc-name">
+          ${feature.properties.nameshort} NC
+        </span>
         <br />
         ${feature.properties.service_re}
       </div>
@@ -132,13 +134,36 @@ class PinMap extends Component {
 
   onEachRegionFeatureLabelTooltip = (feature, layer) => {
     const { nameshort } = feature.properties;
-    layer.bindTooltip(nameshort, { permanent: true, direction: 'center' });
+    layer.bindTooltip(`${nameshort} NC`, {
+      permanent: true,
+      direction: 'center',
+      className: 'overlay-nc-name',
+    });
     layer.bringToBack();
     layer.on({
       mouseover: this.highlightRegion,
       mouseout: this.resetRegionHighlight,
       click: this.zoomToRegion,
     });
+  }
+
+  resizeNcNames = () => {
+    const { zoomBreak } = this.state;
+    const currentZoom = this.map.getZoom();
+    if (currentZoom >= zoomBreak) {
+      const names = document.getElementsByClassName('overlay-nc-name');
+      const fontSizeScale = {
+        14: '18px',
+        15: '24px',
+        16: '30px',
+        17: '36px',
+        18: '42px',
+      };
+
+      for (let i = 0; i < names.length; i += 1) {
+        names[i].style.fontSize = fontSizeScale[currentZoom];
+      }
+    }
   }
 
   renderMarkers = () => {
@@ -266,6 +291,7 @@ class PinMap extends Component {
               this.setState({ markersVisible: false });
             }
           }}
+          onZoomEnd={this.resizeNcNames}
         >
           <ZoomControl position="topright" />
           <ScaleControl position="bottomright" />
