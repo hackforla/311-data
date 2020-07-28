@@ -200,7 +200,7 @@ class PinMap extends Component {
             },
           },
         });
-        this.map.once('zoomend', () => {
+        this.map.once('click', () => {
           this.setState({ filterGeo: geo });
         });
       },
@@ -225,7 +225,7 @@ class PinMap extends Component {
             cc: ccNameFromId(geo.properties.name),
           }
         });
-        this.map.once('zoomend', () => {
+        this.map.once('click', () => {
           this.setState({ filterGeo: geo });
         });
       },
