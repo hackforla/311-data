@@ -41,6 +41,40 @@
     }
   }
 
+  .leaflet-tooltip {
+    position: absolute;
+    border: 2px solid $brand-text-color;
+    border-radius: 0;
+    font-family: $brand-heading-family;
+    color: $brand-text-color;
+
+    .nc-name {
+      font-size: 16px;
+    }
+  }
+
+  .leaflet-tooltip-right:before,
+  .leaflet-tooltip-left:before {
+    display: none;
+    content: "";
+  }
+
+  .overlay-nc-name {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 18px;
+    color: $brand-bg-color;
+    font-family: $brand-text-family;
+    background: none;
+    border: none;
+    box-shadow: none;
+    text-shadow:
+      -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+  }
+
   .export-legend-wrapper {
     background-color: $brand-bg-color;
     min-width: 218px;
