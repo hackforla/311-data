@@ -180,20 +180,7 @@ class PinMap extends Component {
     this.addressLayer.init({
       map: this.map,
       addListeners,
-      onSelectRegion: ({ geo, center }) => this.setState({
-        filterGeo: geo,
-        ...(
-          center
-          ? {
-            locationInfo: {
-              location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
-              radius: 1,
-              nc: ncInfoFromLngLat(center),
-            }
-          }
-          : {}
-        )
-      }),
+      onSelectRegion: (geo) => this.addGeo(geo),
     });
 
     this.ncLayer.init({
@@ -237,7 +224,7 @@ class PinMap extends Component {
           }
         });
         this.map.once('click', () => {
-          this.setState({ filterGeo: geo });
+          this.addGeo(geo);
         });
       },
       onHoverRegion: geo => {
