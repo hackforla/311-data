@@ -108,7 +108,7 @@ class PinMap extends Component {
       selectedTypes: Object.keys(REQUEST_TYPES),
       locationInfo: INITIAL_LOCATIONS[0],
       geoFilterType: GEO_FILTER_TYPES.address,
-      filterGeo: null,
+      filterGeos: [],
       filteredRequestCounts: {},
       hoveredRegionName: null,
       date: props.lastUpdated,
@@ -160,7 +160,7 @@ class PinMap extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.state.filterGeo !== prevState.filterGeo ||
+      this.state.filterGeos !== prevState.filterGeos ||
       this.state.selectedTypes !== prevState.selectedTypes
     )
       this.setFilteredRequestCounts();
@@ -212,7 +212,7 @@ class PinMap extends Component {
           },
         });
         this.map.once('click', () => {
-          this.setState({ filterGeo: geo });
+          this.addGeo(geo);
         });
       },
       onHoverRegion: geo => {
