@@ -108,14 +108,12 @@ class MapSearch extends React.Component {
           </div>
         </div>
         <div className="search-buttons">
-          { this.props.canReset && (
             <div
               className="search-button"
               onClick={this.props.onReset}
             >
               Reset
             </div>
-          )}
         </div>
       </div>
     );

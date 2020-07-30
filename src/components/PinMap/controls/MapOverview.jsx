@@ -12,9 +12,9 @@ const MapOverview = ({
 }) => {
   return (
     <div className="map-overview map-control" style={{ position: 'relative' }}>
-      <div className="requests-title">
+      {/* <div className="requests-title">
         Open 311 Requests
-      </div>
+      </div> */}
       <div className="info-heading">
         Date
       </div>

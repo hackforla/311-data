@@ -61,12 +61,8 @@ mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 const INITIAL_BOUNDS = boundingBox(ncBoundaries);
 
 const INITIAL_LOCATIONS = [
-  {
-    location: 'All of Los Angeles',
-  }, 
-  {
-    location: 'All of Los Angeles',
-  }
+  { location: 'All of Los Angeles', }, 
+  { location: 'All of Los Angeles', },
 ];
 
 function ncNameFromId(ncId) {
