@@ -103,7 +103,7 @@ class MapSearch extends React.Component {
               </div>
             ))}
           </div>
-          <div className="search-content">
+          <div className="search-content" style={{ display: 'none' }}>
             <div id="geocoder" />
           </div>
         </div>
