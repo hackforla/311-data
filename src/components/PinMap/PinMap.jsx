@@ -261,13 +261,13 @@ class PinMap extends Component {
     this.removePopup();
 
     this.setState({
-      locationInfo: INITIAL_LOCATION,
+      locationInfo: INITIAL_LOCATIONS[0],
       canReset: false,
     });
 
     this.map.once('zoomend', () => {
       this.setState({
-        filterGeo: null,
+        filterGeos: [],
         canReset: true,
       });
     });
@@ -408,17 +408,17 @@ class PinMap extends Component {
 
   setFilteredRequestCounts = () => {
     const { requests } = this.props;
-    const { filterGeo, selectedTypes, geoFilterType } = this.state;
+    const { filterGeos, selectedTypes, geoFilterType } = this.state;
 
     // use pre-calculated values for nc and cc filters
     if (
-      filterGeo &&
+      filterGeos[filterGeos.length - 1] &&
       [GEO_FILTER_TYPES.nc, GEO_FILTER_TYPES.cc].includes(geoFilterType)
     )
       return this.setState({
         filteredRequestCounts: this.getBoundaryCounts(
           geoFilterType,
-          filterGeo,
+          filterGeos[filterGeos.length - 1],
           selectedTypes,
         )
       });
@@ -435,8 +435,8 @@ class PinMap extends Component {
       };
 
     // filter by geo if necessary
-    if (filterGeo)
-      filteredRequests = pointsWithinGeo(filteredRequests, filterGeo);
+    if (filterGeos[filterGeos.length - 1])
+      filteredRequests = pointsWithinGeo(filteredRequests, filterGeos[filterGeos.length - 1]);
 
     // count up requests per type
     const counts = filteredRequests.features.reduce((p, c) => {
@@ -464,7 +464,7 @@ class PinMap extends Component {
       locationInfo,
       filteredRequestCounts,
       colorScheme,
-      filterGeo,
+      filterGeos,
       selectedTypes,
       activeRequestsLayer,
       mapStyle,
@@ -520,7 +520,7 @@ class PinMap extends Component {
               onGeocoderResult={this.onGeocoderResult}
               onChangeTab={this.onChangeSearchTab}
               onReset={this.reset}
-              canReset={!!filterGeo && canReset}
+              canReset={!filterGeos.length === 0 && canReset}
             />
             <MapLayers
               selectedTypes={selectedTypes}
