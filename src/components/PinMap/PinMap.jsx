@@ -62,7 +62,7 @@ const INITIAL_BOUNDS = boundingBox(ncBoundaries);
 
 const INITIAL_LOCATIONS = [
   { location: 'All of Los Angeles', }, 
-  { location: 'All of Los Angeles', },
+  { location: 'All of Los Angeles', }
 ];
 
 function ncNameFromId(ncId) {
@@ -269,7 +269,7 @@ class PinMap extends Component {
     this.removePopup();
 
     this.setState({
-      locationInfo: INITIAL_LOCATIONS[0],
+      locationInfo: INITIAL_LOCATIONS,
       canReset: false,
     });
 
