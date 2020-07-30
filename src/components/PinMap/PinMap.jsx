@@ -106,7 +106,7 @@ class PinMap extends Component {
       mapReady: false,
       activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
-      locationInfo: INITIAL_LOCATIONS[0],
+      locationInfo: INITIAL_LOCATIONS,
       geoFilterType: GEO_FILTER_TYPES.nc,
       filterGeos: [],
       filteredRequestCounts: [],
@@ -172,6 +172,29 @@ class PinMap extends Component {
     });
   }
 
+  addNCLocationInfo(geo) {
+    this.setState((state) => {
+      return {
+        locationInfo: [...state.locationInfo, {
+          nc: {
+            name: ncNameFromId(geo.properties.nc_id),
+            url: geo.properties.waddress || geo.properties.dwebsite,
+          },
+        }],
+      }
+    });
+  }
+
+  addCCLocationInfo(geo) {
+    this.setState((state) => {
+      return {
+        locationInfo: [...state.locationInfo, {
+          cc: ccNameFromId(geo.properties.name),
+        }],
+      }
+    });
+  }
+
   initLayers = addListeners => {
     this.requestsLayer.init({
       map: this.map,
@@ -190,14 +213,7 @@ class PinMap extends Component {
       sourceData: ncBoundaries,
       idProperty: 'nc_id',
       onSelectRegion: geo => {
-        this.setState({
-          locationInfo: {
-            nc: {
-              name: ncNameFromId(geo.properties.nc_id),
-              url: geo.properties.waddress || geo.properties.dwebsite,
-            },
-          },
-        });
+        this.addNCLocationInfo(geo);
         this.map.once('click', () => {
           this.addGeo(geo);
         });
@@ -218,11 +234,7 @@ class PinMap extends Component {
       sourceData: ccBoundaries,
       idProperty: 'name',
       onSelectRegion: geo => {
-        this.setState({
-          locationInfo: {
-            cc: ccNameFromId(geo.properties.name),
-          }
-        });
+        this.addCCLocationInfo(geo);
         this.map.once('click', () => {
           this.addGeo(geo);
         });
@@ -511,13 +523,13 @@ class PinMap extends Component {
           <>
             <MapOverview
               date={date}
-              locationInfo={locationInfo}
+              locationInfo={locationInfo[locationInfo.length - 1]}
               selectedRequests={filteredRequestCounts[filteredRequestCounts.length - 1]}
               colorScheme={colorScheme}
             />
             <MapOverview
               date={date}
-              locationInfo={locationInfo}
+              locationInfo={locationInfo[locationInfo.length - 2]}
               selectedRequests={filteredRequestCounts[filteredRequestCounts.length - 2]}
               colorScheme={colorScheme}
             />
