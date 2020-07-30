@@ -11,7 +11,7 @@ const MapOverview = ({
   colorScheme,
 }) => {
   return (
-    <div className="map-overview map-control">
+    <div className="map-overview map-control" style={{ position: 'relative' }}>
       <div className="requests-title">
         Open 311 Requests
       </div>

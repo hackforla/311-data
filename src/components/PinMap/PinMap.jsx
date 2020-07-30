@@ -510,6 +510,12 @@ class PinMap extends Component {
               selectedRequests={filteredRequestCounts}
               colorScheme={colorScheme}
             />
+            <MapOverview
+              date={date}
+              locationInfo={locationInfo}
+              selectedRequests={filteredRequestCounts}
+              colorScheme={colorScheme}
+            />
             <MapSearch
               map={this.map}
               geoFilterType={geoFilterType}
