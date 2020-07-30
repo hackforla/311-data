@@ -107,9 +107,9 @@ class PinMap extends Component {
       activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
       locationInfo: INITIAL_LOCATIONS[0],
-      geoFilterType: GEO_FILTER_TYPES.address,
+      geoFilterType: GEO_FILTER_TYPES.nc,
       filterGeos: [],
-      filteredRequestCounts: {},
+      filteredRequestCounts: [],
       hoveredRegionName: null,
       date: props.lastUpdated,
       colorScheme: 'prism',
@@ -406,6 +406,12 @@ class PinMap extends Component {
     }, {});
   };
 
+  addFilteredRequestCounts(data) {
+    this.setState((state) => {
+      return { filteredRequestCounts: [...state.filteredRequestCounts, data] }
+    })
+  }
+
   setFilteredRequestCounts = () => {
     const { requests } = this.props;
     const { filterGeos, selectedTypes, geoFilterType } = this.state;
@@ -415,13 +421,13 @@ class PinMap extends Component {
       filterGeos[filterGeos.length - 1] &&
       [GEO_FILTER_TYPES.nc, GEO_FILTER_TYPES.cc].includes(geoFilterType)
     )
-      return this.setState({
-        filteredRequestCounts: this.getBoundaryCounts(
+      return this.addFilteredRequestCounts(
+        this.getBoundaryCounts(
           geoFilterType,
           filterGeos[filterGeos.length - 1],
           selectedTypes,
         )
-      });
+      );
 
     // otherwise, count up the filtered requests
     let filteredRequests = requests;
@@ -445,7 +451,8 @@ class PinMap extends Component {
       return p;
     }, {});
 
-    this.setState({ filteredRequestCounts: counts });
+    this.addFilteredRequestCounts(counts);
+    this.addFilteredRequestCounts(counts);
   }
 
   //// RENDER ////
@@ -505,13 +512,13 @@ class PinMap extends Component {
             <MapOverview
               date={date}
               locationInfo={locationInfo}
-              selectedRequests={filteredRequestCounts}
+              selectedRequests={filteredRequestCounts[filteredRequestCounts.length - 1]}
               colorScheme={colorScheme}
             />
             <MapOverview
               date={date}
               locationInfo={locationInfo}
-              selectedRequests={filteredRequestCounts}
+              selectedRequests={filteredRequestCounts[filteredRequestCounts.length - 2]}
               colorScheme={colorScheme}
             />
             <MapSearch
