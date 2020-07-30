@@ -5,6 +5,7 @@ import Chart from './Chart';
 
 const PieChart = ({
   title,
+  titleInfo,
   sectors,
   addLabels,
   exportable,
@@ -115,6 +116,8 @@ const PieChart = ({
       type="pie"
       className="pie"
       title={title}
+      titleInfo={titleInfo}
+      titleInfoPosition="top"
       data={chartData}
       options={chartOptions}
       datalabels
@@ -132,6 +135,7 @@ PieChart.propTypes = {
     color: PropTypes.string,
   })).isRequired,
   title: PropTypes.string,
+  titleInfo: PropTypes.string,
   addLabels: PropTypes.bool,
   exportable: PropTypes.bool,
   componentName: PropTypes.string,
@@ -140,6 +144,7 @@ PieChart.propTypes = {
 
 PieChart.defaultProps = {
   title: null,
+  titleInfo: null,
   addLabels: false,
   exportable: true,
   componentName: undefined,

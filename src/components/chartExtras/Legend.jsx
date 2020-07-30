@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import InfoTitle from '@components/common/InfoTitle';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 const Legend = ({
@@ -14,7 +15,10 @@ const Legend = ({
 
   return (
     <div className="chart-extra legend">
-      <h1>Legend</h1>
+      <InfoTitle
+        title="Legend"
+        infoText="The legend displays the specific 311 request types selected by the user."
+      />
       <div className="outline">
         {
           selectedTypes.length > 0

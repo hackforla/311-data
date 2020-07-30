@@ -16,6 +16,7 @@ const TypeOfRequest = ({
   return (
     <PieChart
       title="Type of Request"
+      titleInfo="This chart displays the relative frequency of each request type."
       sectors={sectors}
       componentName="TypeOfRequest"
       pdfTemplateName="VisPage"

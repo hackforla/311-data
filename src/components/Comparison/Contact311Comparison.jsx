@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { REQUEST_SOURCES, DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import ChartExportSelect from '@components/export/ChartExportSelect';
 import { PieChart } from '@components/Chart';
+import InfoTitle from '@components/common/InfoTitle';
 import { transformCounts } from '@utils';
 
 const Contact311Comparison = ({
@@ -68,7 +69,10 @@ const Contact311Comparison = ({
 
   return (
     <div className="contact-311-comparison">
-      <h1>How People Contact 311</h1>
+      <InfoTitle
+        title="How People Contact 311"
+        infoText="This chart displays the relative frequency of methods people use to contact 311 in each district set."
+      />
       <ChartExportSelect
         componentName="Contact311Comparison"
         pdfTemplateName="ComparisonPageNoLegend"

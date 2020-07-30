@@ -14,8 +14,6 @@ import {
 import Dropdown from '../../../common/Dropdown';
 import Modal from '../../../common/Modal';
 import DateRangePicker from './DateRangePicker';
-import Icon from '../../../common/Icon';
-import HoverOverInfo from '../../../common/HoverOverInfo';
 
 import COLORS from '../../../../styles/COLORS';
 
@@ -110,27 +108,9 @@ const DateSelector = ({
         ...style,
       }}
     >
-      <div className="date-selector-title">
-        <span
-          className="has-text-weight-bold is-size-6"
-          style={{ paddingRight: '10px' }}
-        >
-          Date Range Selection
-        </span>
-        <HoverOverInfo
-          title="Date Range Selection"
-          text="This filter allows the user to choose a date range for 311 data."
-        >
-          <Icon
-            id="type-selector-info-icon"
-            icon="info-circle"
-            size="small"
-          />
-        </HoverOverInfo>
-      </div>
-      <div className="date-selector-dates" style={{ padding: '15px 0 10px' }}>
+      <div className="date-selector-dates" style={{ padding: '0 0 10px' }}>
         <span className="has-text-weight-normal">
-          {`Start ${(comparison ? comparisonStartDate : startDate) || placeHolder} 
+          {`Start ${(comparison ? comparisonStartDate : startDate) || placeHolder}
           To ${(comparison ? comparisonEndDate : endDate) || placeHolder}`}
         </span>
       </div>

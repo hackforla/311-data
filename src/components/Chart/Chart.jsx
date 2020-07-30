@@ -5,6 +5,7 @@ import ChartJS from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot';
 import ChartJSDataLabels from 'chartjs-plugin-datalabels';
 import { DynamicTooltip } from '@components/common/Tooltip';
+import InfoTitle from '@components/common/InfoTitle';
 import { adapter } from './ChartTooltip';
 import defaults from './defaults';
 import { chartAreaPlugin } from './plugins';
@@ -97,6 +98,8 @@ class Chart extends React.Component {
       className,
       height,
       title,
+      titleInfo,
+      titleInfoPosition,
       exportButton,
     } = this.props;
 
@@ -118,7 +121,13 @@ class Chart extends React.Component {
 
     return (
       <div className={clx('chart', className)}>
-        { title && <h1>{ title }</h1> }
+        { title && (
+          <InfoTitle
+            title={title}
+            infoText={titleInfo}
+            position={titleInfoPosition}
+          />
+        )}
         <div style={canvasWrapStyle}>
           <canvas ref={this.canvasRef} />
           <div style={exportWrapStyle}>{ exportButton }</div>
@@ -136,6 +145,8 @@ Chart.propTypes = {
   data: PropTypes.shape({}).isRequired,
   options: PropTypes.shape({}).isRequired,
   title: PropTypes.string,
+  titleInfo: PropTypes.string,
+  titleInfoPosition: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
   height: PropTypes.number,
   datalabels: PropTypes.bool,
   exportButton: PropTypes.element,
@@ -145,6 +156,8 @@ Chart.propTypes = {
 
 Chart.defaultProps = {
   title: undefined,
+  titleInfo: undefined,
+  titleInfoPosition: 'right',
   height: undefined,
   datalabels: false,
   exportButton: null,

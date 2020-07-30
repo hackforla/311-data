@@ -9,7 +9,6 @@ import propTypes from 'proptypes';
 
 import Icon from '@components/common/Icon';
 import Modal from '@components/common/Modal';
-import HoverOverInfo from '@components/common/HoverOverInfo';
 import CollapsibleList from '@components/common/CollapsibleList';
 import { DISTRICT_TYPES } from '@components/common/CONSTANTS';
 import DistrictSelectorModal from './DistrictSelectorModal';
@@ -85,21 +84,6 @@ const DistrictSelector = ({
   return (
     <>
       <div className="district-selector container">
-        <div className="is-size-6" style={{ padding: '15px 0' }}>
-          <strong style={{ paddingRight: '10px' }}>
-            District Selection
-          </strong>
-          <HoverOverInfo
-            title="District Selection"
-            text="This filter allows the user to select specific district boundaries."
-          >
-            <Icon
-              id="district-selector-info-icon"
-              icon="info-circle"
-              size="small"
-            />
-          </HoverOverInfo>
-        </div>
         {renderSet('set1')}
         <br />
         {renderSet('set2')}
