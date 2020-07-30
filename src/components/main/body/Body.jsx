@@ -36,7 +36,6 @@ const Body = ({
   </div>
 );
 
-
 Body.propTypes = {
   error: PropTypes.shape({}),
   openErrorModal: PropTypes.bool.isRequired,

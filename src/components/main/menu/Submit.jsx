@@ -105,7 +105,7 @@ Submit.propTypes = {
   filters: propTypes.shape({
     startDate: propTypes.string,
     endDate: propTypes.string,
-    councils: propTypes.array,
+    councils: propTypes.arrayOf(propTypes.string),
     requestTypes: propTypes.shape({}),
   }).isRequired,
   comparisonFilters: propTypes.shape({
@@ -115,11 +115,11 @@ Submit.propTypes = {
       chart: propTypes.string,
       set1: propTypes.shape({
         district: propTypes.string,
-        list: propTypes.array,
+        list: propTypes.arrayOf(propTypes.string),
       }),
       set2: propTypes.shape({
         district: propTypes.string,
-        list: propTypes.array,
+        list: propTypes.arrayOf(propTypes.string),
       }),
     }),
     requestTypes: propTypes.shape({}),
