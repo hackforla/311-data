@@ -63,12 +63,13 @@ const ComparisonCriteria = ({
 
     return (
       <>
-        { selectedTypes.map(type => (
+        { selectedTypes.map((type, i) => (
           <span key={type.displayName}>
             { type.displayName }
             &nbsp;[
             <span style={{ color: type.color }}>{ type.abbrev }</span>
-            ];&nbsp;
+            ]
+            { i < selectedTypes.length - 1 ? ';\u00a0' : '' }
           </span>
         ))}
       </>
