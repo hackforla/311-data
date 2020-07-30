@@ -217,9 +217,9 @@ class BoundaryLayer extends React.Component {
     // this.map.fitBounds(boundingBox(geo), { padding: FIT_BOUNDS_PADDING });
 
     // mask everything else
-    this.map
-      .getSource(`${this.sourceId}-region-mask`)
-      .setData(makeGeoMask(geo));
+    // this.map
+    //   .getSource(`${this.sourceId}-region-mask`)
+    //   .setData(makeGeoMask(geo));
 
     // inform main
     this.onSelectRegion(geo);
