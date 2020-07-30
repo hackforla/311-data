@@ -17,7 +17,7 @@ const Submit = ({
 
   const handleSubmit = () => {
     switch (pathname) {
-      case '/': return getData();
+      case '/data': return getData();
       case '/comparison': return getComparisonData();
       default: return null;
     }
@@ -25,7 +25,7 @@ const Submit = ({
 
   useEffect(() => {
     switch (pathname) {
-      case '/': {
+      case '/data': {
         const {
           startDate,
           endDate,

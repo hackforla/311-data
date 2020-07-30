@@ -23,7 +23,7 @@ const Body = ({
       <Route path="/comparison">
         <Comparison />
       </Route>
-      <Route path="/">
+      <Route path="/data">
         <PinMap />
         <Visualizations />
       </Route>
