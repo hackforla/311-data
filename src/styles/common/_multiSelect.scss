@@ -2,6 +2,10 @@
 
   .search-bar {
     margin-bottom: -1px;
+
+    input::placeholder {
+      color: #808080;
+    }
   }
 
   .multi-select-content {

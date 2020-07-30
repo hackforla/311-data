@@ -11,6 +11,7 @@ const MultiSelect = ({
   onChange,
   groupBy,
   searchBar,
+  searchPlaceholder,
   selectAll,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,6 +21,7 @@ const MultiSelect = ({
       { searchBar && (
         <SearchBar
           value={searchTerm}
+          placeholder={searchPlaceholder}
           onChange={setSearchTerm}
         />
       )}
@@ -76,6 +78,7 @@ MultiSelect.propTypes = {
   onChange: PropTypes.func,
   groupBy: PropTypes.string,
   searchBar: PropTypes.bool,
+  searchPlaceholder: PropTypes.string,
   selectAll: PropTypes.bool,
 };
 
@@ -84,5 +87,6 @@ MultiSelect.defaultProps = {
   onChange: () => null,
   groupBy: null,
   searchBar: false,
+  searchPlaceholder: 'Search',
   selectAll: false,
 };

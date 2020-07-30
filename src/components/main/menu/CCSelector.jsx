@@ -27,6 +27,7 @@ const CCSelector = ({
       items={items}
       onChange={onChange}
       searchBar
+      searchPlaceholder="Type City Council District"
       selectAll
     />
   );

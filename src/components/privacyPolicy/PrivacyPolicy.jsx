@@ -197,6 +197,8 @@ const PrivacyPolicy = () => (
         {', '}
         <a href="https://mixpanel.com/">Mixpanel</a>
         {', '}
+        <a href="https://www.hotjar.com/">Hotjar</a>
+        {', '}
         <a href="https://www.eventbrite.com/">Eventbrite</a>
         {', '}
         <a href="https://donorbox.org/">Donorbox</a>

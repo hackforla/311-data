@@ -29,6 +29,7 @@ const NCSelector = ({
       onChange={onChange}
       groupBy="region"
       searchBar
+      searchPlaceholder="Type Neighborhood Council"
       selectAll
     />
   );

@@ -36,7 +36,7 @@ const Menu = ({
   return (
     <div className="menu-container">
       <Switch>
-        <Route exact path="/">
+        <Route exact path="/data">
           <div className="menu-tabs">
             {tabs.map(tab => (
               <a
@@ -70,7 +70,7 @@ const Menu = ({
             <Submit />
           </div>
         </Route>
-        <Route path="/">
+        <Route path="/data">
           <div className="menu-content with-tabs">
             <h1>Filters</h1>
             <DateSelector key="data-dateselector" />
