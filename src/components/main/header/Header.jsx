@@ -1,14 +1,8 @@
 import React from 'react';
-import PropTypes from 'proptypes';
-import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
-import { disableSplashPage } from '@reducers/ui';
 import COLORS from '../../../styles/COLORS';
 
-const Header = ({
-  disableSplash,
-  splashPageDisabled,
-}) => {
+const Header = () => {
   const cta2Style = {
     color: COLORS.BRAND.CTA2,
   };
@@ -28,15 +22,7 @@ const Header = ({
       aria-label="main navigation"
     >
       <div className="navbar-brand">
-        <Link
-          to="/"
-          className="navbar-item"
-          onClick={() => {
-            if (!splashPageDisabled) {
-              disableSplash();
-            }
-          }}
-        >
+        <Link to="/" className="navbar-item">
           <div className="navbar-item">
             <p style={cta1Style}>311</p>
             <p style={cta2Style}>DATA</p>
@@ -50,17 +36,22 @@ const Header = ({
       <div id="navbar" className="navbar-menu">
         <div className="navbar-end">
           <div className="navbar-item">
-            <NavLink to="/comparison" activeClassName="navbar-selected" style={cta2Style}>
-              Comparison Tool
+            <NavLink exact to="/data" activeClassName="navbar-selected" style={backgroundStyle}>
+              Explore My Council&apos;s 311 Data
             </NavLink>
           </div>
           <div className="navbar-item">
-            <NavLink to="/about" activeClassName="navbar-selected" style={backgroundStyle}>
+            <NavLink exact to="/comparison" activeClassName="navbar-selected" style={backgroundStyle}>
+              Compare Different Councils
+            </NavLink>
+          </div>
+          <div className="navbar-item">
+            <NavLink exact to="/about" activeClassName="navbar-selected" style={backgroundStyle}>
               About 311 Data
             </NavLink>
           </div>
           <div className="navbar-item">
-            <NavLink to="/contact" activeClassName="navbar-selected" style={backgroundStyle}>
+            <NavLink exact to="/contact" activeClassName="navbar-selected" style={backgroundStyle}>
               Contact Us
             </NavLink>
           </div>
@@ -70,17 +61,4 @@ const Header = ({
   );
 };
 
-Header.propTypes = {
-  splashPageDisabled: PropTypes.bool.isRequired,
-  disableSplash: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = state => ({
-  splashPageDisabled: state.ui.splashPageDisabled,
-});
-
-const mapDispatchToProps = dispatch => ({
-  disableSplash: () => dispatch(disableSplashPage()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;
