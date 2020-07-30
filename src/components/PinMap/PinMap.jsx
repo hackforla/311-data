@@ -60,9 +60,14 @@ mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
 const INITIAL_BOUNDS = boundingBox(ncBoundaries);
 
-const INITIAL_LOCATION = {
-  location: 'All of Los Angeles',
-};
+const INITIAL_LOCATIONS = [
+  {
+    location: 'All of Los Angeles',
+  }, 
+  {
+    location: 'All of Los Angeles',
+  }
+];
 
 function ncNameFromId(ncId) {
   return COUNCILS.find(c => c.id == ncId)?.name;
@@ -101,7 +106,7 @@ class PinMap extends Component {
       mapReady: false,
       activeRequestsLayer: 'points',
       selectedTypes: Object.keys(REQUEST_TYPES),
-      locationInfo: INITIAL_LOCATION,
+      locationInfo: INITIAL_LOCATIONS[0],
       geoFilterType: GEO_FILTER_TYPES.address,
       filterGeo: null,
       filteredRequestCounts: {},
@@ -159,6 +164,12 @@ class PinMap extends Component {
       this.state.selectedTypes !== prevState.selectedTypes
     )
       this.setFilteredRequestCounts();
+  }
+
+  addGeo(geo) {
+    this.setState((state) => {
+      return { filterGeos: [...state.filterGeos, geo] }
+    });
   }
 
   initLayers = addListeners => {
