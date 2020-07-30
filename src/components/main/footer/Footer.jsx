@@ -10,12 +10,12 @@ const Footer = ({
   version,
   backendSha,
   menuIsOpen,
-  splashPageDisabled,
+  location: { pathname },
 }) => {
   const frontendSha = process.env.GITHUB_SHA || 'DEVELOPMENT';
   return (
     <footer
-      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen && splashPageDisabled })}
+      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen && ['/data', '/comparison'].includes(pathname) })}
     >
       { lastUpdated && (
         <span className="last-updated">
@@ -48,7 +48,6 @@ const mapStateToProps = state => ({
   version: state.metadata.version,
   backendSha: state.metadata.gitSha,
   menuIsOpen: state.ui.menu.isOpen,
-  splashPageDisabled: state.ui.splashPageDisabled,
 });
 
 Footer.propTypes = {
@@ -56,7 +55,9 @@ Footer.propTypes = {
   version: PropTypes.string,
   backendSha: PropTypes.string,
   menuIsOpen: PropTypes.bool.isRequired,
-  splashPageDisabled: PropTypes.bool.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }).isRequired,
 };
 
 Footer.defaultProps = {

@@ -69,7 +69,7 @@ const Submit = ({
         }
         break;
       }
-      default: return null;
+      default: return undefined;
     }
 
     return () => {};
@@ -105,7 +105,7 @@ Submit.propTypes = {
   filters: propTypes.shape({
     startDate: propTypes.string,
     endDate: propTypes.string,
-    councils: propTypes.arrayOf(propTypes.string),
+    councils: propTypes.array,
     requestTypes: propTypes.shape({}),
   }).isRequired,
   comparisonFilters: propTypes.shape({
@@ -115,11 +115,11 @@ Submit.propTypes = {
       chart: propTypes.string,
       set1: propTypes.shape({
         district: propTypes.string,
-        list: propTypes.arrayOf(propTypes.string),
+        list: propTypes.array,
       }),
       set2: propTypes.shape({
         district: propTypes.string,
-        list: propTypes.arrayOf(propTypes.string),
+        list: propTypes.array,
       }),
     }),
     requestTypes: propTypes.shape({}),

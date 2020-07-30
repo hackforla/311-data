@@ -16,7 +16,8 @@ export default function Routes() {
       <Route path="/about" component={About} />
       <Route path="/privacy" component={PrivacyPolicy} />
       <Route path="/comparison" component={Body} />
-      <Route path="/" component={Body} />
+      <Route path="/data" component={Body} />
+      <Route path="/" component={About} />
     </Switch>
   );
 }
