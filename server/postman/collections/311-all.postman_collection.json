@@ -265,7 +265,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"startDate\": \"2019-01-01\",\n\t\"endDate\": \"2020-06-01\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\", \"Dead Animal Removal\"],\n\t\"ncList\": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20],\n\t\"zoom\": 14,\n\t\"bounds\": {\n\t\t\"north\": 90,\n\t\t\"south\": -90,\n\t\t\"west\": -180,\n\t\t\"east\": 180\n\t}\n}",
+					"raw": "{\n\t\"startDate\": \"2019-01-01\",\n\t\"endDate\": \"2020-06-01\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\", \"Dead Animal Removal\"],\n\t\"ncList\": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22],\n\t\"zoom\": 14,\n\t\"bounds\": {\n\t\t\"north\": 90,\n\t\t\"south\": -90,\n\t\t\"west\": -180,\n\t\t\"east\": 180\n\t}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -292,6 +292,54 @@
 					"listen": "test",
 					"script": {
 						"id": "250ee11d-f610-4289-8fd8-e4d512f6aec1",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startDate\": \"2020-05-01\",\n\t\"endDate\": \"2020-06-02\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\", \"Dead Animal Removal\"],\n\t\"ncList\": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/map/heat",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"map",
+						"heat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/map/pins",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e8dbb51a-2511-4598-9676-d275e13847b5",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
