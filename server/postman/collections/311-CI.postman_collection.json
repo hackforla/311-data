@@ -267,13 +267,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/map/heat",
+					"raw": "{{base_url}}/map/pins",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"map",
-						"heat"
+						"pins"
 					]
 				}
 			},
