@@ -273,11 +273,9 @@ class PinMap extends Component {
       canReset: false,
     });
 
-    this.map.once('zoomend', () => {
-      this.setState({
-        filterGeos: [],
-        canReset: true,
-      });
+    this.setState({
+      filterGeos: [],
+      canReset: true,
     });
   };
 
