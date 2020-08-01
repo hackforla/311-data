@@ -574,6 +574,38 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "/open-requests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9cf4f68a-2c22-42e0-b8af-1e0f16f7527c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/open-requests",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"open-requests"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

@@ -49,6 +49,9 @@ routes = {
     '/comparison/counts': (
         ['POST'], R.comparison.counts),
 
+    '/open-requests': (
+        ['POST'], R.open_requests),
+
     '/feedback': (
         ['POST'], R.feedback)}
 
