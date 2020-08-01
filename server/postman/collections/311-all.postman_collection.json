@@ -355,8 +355,8 @@
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+						"type": "text",
+						"value": "application/json"
 					}
 				],
 				"body": {
@@ -369,13 +369,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/map/heat",
+					"raw": "{{base_url}}/map/pins",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"map",
-						"heat"
+						"pins"
 					]
 				}
 			},
