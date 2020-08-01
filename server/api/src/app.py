@@ -34,6 +34,9 @@ routes = {
     '/map/heat': (
         ['POST'], R.map.heat),
 
+    '/map/pins': (
+        ['POST'], R.map.pins),
+
     '/visualizations': (
         ['POST'], R.visualizations),
 

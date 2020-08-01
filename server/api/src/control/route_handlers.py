@@ -55,6 +55,15 @@ class map:
 
         return json(data)
 
+    async def pins(request):
+        data = await map_svc.pins(**to.parse(request.json, {
+            'startDate': to.req.DATE,
+            'endDate': to.req.DATE,
+            'requestTypes': to.opt.LIST_OF_STR,
+            'ncList': to.opt.LIST_OF_INT}))
+
+        return json(data)
+
 
 async def visualizations(request):
     data = await vis_svc.visualizations(**to.parse(request.json, {
