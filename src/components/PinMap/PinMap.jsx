@@ -29,6 +29,7 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import axios from 'axios';
 
 import { updateMapPosition } from '@reducers/ui';
 import { REQUEST_TYPES, COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
@@ -49,10 +50,6 @@ import RequestDetail from './RequestDetail';
 
 import ncBoundaries from '../../data/nc-boundary-2019.json';
 import ccBoundaries from '../../data/la-city-council-districts-2012.json';
-import openRequests from '../../data/open_requests.json';
-
-import ncCounts from '../../data/ncCounts.json';
-import ccCounts from '../../data/ccCounts.json';
 
 /////////////////// CONSTANTS ///////////////
 
@@ -106,11 +103,11 @@ class PinMap extends Component {
       filterGeo: null,
       filteredRequestCounts: {},
       hoveredRegionName: null,
-      date: props.lastUpdated,
       colorScheme: 'prism',
       mapStyle: 'dark',
       canReset: true,
       selectedRequestId: null,
+      requests: props.requests,
     };
 
     this.map = null;
@@ -154,11 +151,17 @@ class PinMap extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.requests != prevProps.requests)
+      this.map.once('idle', () => {
+        this.setState({ requests: this.props.requests });
+        this.map.once('idle', this.setFilteredRequestCounts);
+      });
+
     if (
       this.state.filterGeo !== prevState.filterGeo ||
       this.state.selectedTypes !== prevState.selectedTypes
     )
-      this.setFilteredRequestCounts();
+      this.map.once('idle', this.setFilteredRequestCounts);
   }
 
   initLayers = addListeners => {
@@ -387,6 +390,7 @@ class PinMap extends Component {
   }
 
   getBoundaryCounts = (geoFilterType, filterGeo, selectedTypes) => {
+    const { ncCounts, ccCounts } = this.props;
     const { counts, regionId } = (() => {
       switch(geoFilterType) {
         case GEO_FILTER_TYPES.nc: return {
@@ -409,8 +413,7 @@ class PinMap extends Component {
   };
 
   setFilteredRequestCounts = () => {
-    const { requests } = this.props;
-    const { filterGeo, selectedTypes, geoFilterType } = this.state;
+    const { requests, filterGeo, selectedTypes, geoFilterType } = this.state;
 
     // use pre-calculated values for nc and cc filters
     if (
@@ -454,15 +457,15 @@ class PinMap extends Component {
 
   render() {
     const {
-      requests,
       position,
       pinsInfo,
       getPinInfo,
+      lastUpdated,
     } = this.props;
 
     const {
+      requests,
       geoFilterType,
-      date,
       locationInfo,
       filteredRequestCounts,
       colorScheme,
@@ -505,7 +508,7 @@ class PinMap extends Component {
         { this.state.mapReady && (
           <>
             <MapOverview
-              date={date}
+              date={lastUpdated}
               locationInfo={locationInfo}
               selectedRequests={filteredRequestCounts}
               colorScheme={colorScheme}
@@ -537,8 +540,31 @@ class PinMap extends Component {
   }
 }
 
-function convertRequests(requests) {
-  return {
+class PinMapContainer extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      requests: this.convertRequests([]),
+      ncCounts: {},
+      ccCounts: {},
+      position: props.position,
+      lastUpdated: props.lastUpdated
+    }
+  }
+
+  async componentDidMount() {
+    const url = `${process.env.API_URL}/open-requests`;
+    const { data } = await axios.post(url);
+
+    this.setState({
+      requests: this.convertRequests(data.requests),
+      ncCounts: data.counts.nc,
+      ccCounts: data.counts.cc,
+    });
+  }
+
+  convertRequests = requests => ({
     type: 'FeatureCollection',
     features: requests.map(request => ({
       type: 'Feature',
@@ -555,18 +581,29 @@ function convertRequests(requests) {
         ]
       }
     }))
-  };
+  })
+
+  render() {
+    const { position, lastUpdated, updatePosition, exportMap } = this.props;
+    const { requests, ncCounts, ccCounts } = this.state;
+    return (
+      <PinMap
+        requests={requests}
+        ncCounts={ncCounts}
+        ccCounts={ccCounts}
+        position={position}
+        lastUpdated={lastUpdated}
+        updatePosition={updatePosition}
+        exportMap={exportMap}
+      />
+    )
+  }
 }
 
-const REQUESTS = convertRequests(openRequests);
-
 const mapStateToProps = state => ({
-  // pinClusters: convertRequests(state.data.pinClusters),
-  requests: REQUESTS,
-  heatmap: state.data.heatmap,
+  requests: [],
   position: state.ui.map,
-  //lastUpdated: state.metadata.lastPulled,
-  lastUpdated: Date.now(),
+  lastUpdated: state.metadata.lastPulled,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -574,16 +611,8 @@ const mapDispatchToProps = dispatch => ({
   exportMap: () => dispatch(trackMapExport()),
 });
 
-PinMap.propTypes = {
-  pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
-  heatmap: PropTypes.arrayOf(PropTypes.array),
-  updatePosition: PropTypes.func.isRequired,
-  exportMap: PropTypes.func.isRequired,
-};
+PinMapContainer.propTypes = {};
 
-PinMap.defaultProps = {
-  pinClusters: [],
-  heatmap: [],
-};
+PinMapContainer.defaultProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(PinMap);
+export default connect(mapStateToProps, mapDispatchToProps)(PinMapContainer);
