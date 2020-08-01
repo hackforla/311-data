@@ -23,7 +23,7 @@ const FrequencyComparison = ({
 
     const { color, name: setName } = COMPARISON_SETS[setId];
     const label = DISTRICT_TYPES.find(t => t.id === district)?.name
-                                .replace(' District', ` (${setName})`);
+                                .replace(' District', '(' + setName + ')');
 
     return {
       data: totals,
