@@ -97,6 +97,11 @@ class comparison:
         return json(data)
 
 
+async def open_requests(request):
+    data = await requests_svc.open_requests()
+    return json(data)
+
+
 async def feedback(request):
     args = to.parse(request.json, {
         'title': to.req.STR,

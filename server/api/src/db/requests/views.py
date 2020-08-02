@@ -4,7 +4,7 @@ from ..conn import exec_sql
 
 def create():
     exec_sql("""
-        CREATE MATERIALIZED VIEW map AS
+        CREATE MATERIALIZED VIEW map AS (
             SELECT
                 srnumber,
                 createddate,
@@ -15,7 +15,8 @@ def create():
             FROM requests
             WHERE
                 latitude IS NOT NULL AND
-                longitude IS NOT NULL;
+                longitude IS NOT NULL
+        ) WITH DATA;
 
         CREATE UNIQUE INDEX ON map(srnumber);
         CREATE INDEX ON map(nc);
@@ -24,7 +25,7 @@ def create():
     """)
 
     exec_sql("""
-        CREATE MATERIALIZED VIEW vis AS
+        CREATE MATERIALIZED VIEW vis AS (
             SELECT
                 srnumber,
                 createddate,
@@ -33,7 +34,8 @@ def create():
                 cd,
                 requestsource,
                 _daystoclose
-            FROM requests;
+            FROM requests
+        ) WITH DATA;
 
         CREATE UNIQUE INDEX ON vis(srnumber);
         CREATE INDEX ON vis(nc);
@@ -42,10 +44,28 @@ def create():
         CREATE INDEX ON vis(createddate);
     """)
 
+    exec_sql("""
+        CREATE MATERIALIZED VIEW open_requests AS (
+            SELECT
+                srnumber,
+                requesttype,
+                latitude,
+                longitude,
+                nc,
+                cd
+            FROM requests
+            WHERE
+                status = 'Open' AND
+                latitude IS NOT NULL AND
+                longitude IS NOT NULL
+        ) WITH DATA
+    """)
+
 
 def refresh():
     log('\nRefreshing views')
     exec_sql("""
         REFRESH MATERIALIZED VIEW CONCURRENTLY map;
         REFRESH MATERIALIZED VIEW CONCURRENTLY vis;
+        REFRESH MATERIALIZED VIEW CONCURRENTLY open_requests;
     """)
