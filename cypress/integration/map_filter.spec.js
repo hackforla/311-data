@@ -2,7 +2,7 @@ describe('Filters Selection', () => {
 
     const {_} = Cypress
 
-    it.skip('Map: Last Week, Dead Animal [DAN]', () => {
+    it('Map: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
         cy.route({
@@ -14,8 +14,7 @@ describe('Filters Selection', () => {
         }).as('getFilterList')
 
         cy.visit('/')
-        cy.get('#root > header > div.navbar-brand > a').click()
-        cy.get('#root > div > div.menu-container > div.menu-tabs > a:nth-child(1)').click()
+        cy.get('.navbar-end > :nth-child(1)').click()
         cy.get('.dropdown-trigger > .button').click()
         cy.get('[value="LAST_12_MONTHS"]').click()
         cy.get(':nth-child(2) > .select-group-content > .select-item > .select-item-box').click()
@@ -39,7 +38,7 @@ describe('Filters Selection', () => {
         })
     })
 
-    it.skip('Data Visualization: Last Week, Dead Animal [DAN]', () => {
+    it('Data Visualization: Last Week, Dead Animal [DAN]', () => {
 
         cy.server()
         cy.route({
@@ -51,8 +50,7 @@ describe('Filters Selection', () => {
         }).as('getFilterList')
 
         cy.visit('/')
-        cy.get('#root > header > div.navbar-brand > a').click()
-        cy.get('#root > div > div.menu-container > div.menu-tabs > a:nth-child(2)').click()
+        cy.get('.navbar-end > :nth-child(1)').click()
         cy.get('.dropdown-trigger > .button').click()
         cy.get('[value="LAST_12_MONTHS"]').click()
         cy.get(':nth-child(2) > .select-group-content > .select-item > .select-item-box').click()

@@ -1,6 +1,6 @@
 describe('Contact Us', () => {
 
-    const serverId = 'eq9vw94r'; // Replace SERVER_ID with an actual Mailosaur Server ID
+    const serverId = 'eq9vw94r';
     const testEmail = `test_user.${serverId}@mailosaur.io`
 
     it.skip('Contact Us: Sending Email', () => {
