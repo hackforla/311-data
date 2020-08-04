@@ -40,3 +40,13 @@ h2 {
   cursor: pointer;
   border: 0;
 }
+
+//modifies focus style for increased visibility
+a, button, .button, input, .input, select, .select, textarea, 
+.textarea, .file-cta, .file-name, .pagination-previous, 
+.pagination-next, .pagination-link, .pagination-ellipsis, .multi-select, 
+.select-item-box.unselected, .select-item-box.selected, span .select-item-box, .toggle-button {
+  &:focus {
+    outline: 0.15rem solid $brand-cta1-color;
+  }
+}
