@@ -50,3 +50,10 @@ a, button, .button, input, .input, select, .select, textarea,
     outline: 0.15rem solid $brand-cta1-color;
   }
 }
+
+.is-checkradio[type="checkbox"] + label::before, .is-checkradio[type="checkbox"] + label:before,
+.is-checkradio[type="checkbox"]:checked + label::before, .is-checkradio[type="checkbox"]:checked + label:before {
+    &:focus {
+    border: 0.1rem solid $brand-cta1-color;
+    }
+}
