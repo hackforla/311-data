@@ -1,0 +1,67 @@
+.map-search {
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  background-color: none;
+
+  .search-content {
+    background-color: $map-control-bg-color;
+    border-radius: 5px;
+    border-top-right-radius: 0;
+    padding: 10px;
+  }
+
+  .mapboxgl-ctrl-geocoder {
+    width: 100% !important;
+    background-color: transparent !important;
+    box-shadow: none;
+    &--input {
+      background-color: transparent !important;
+      border-bottom: 1px $map-control-border-color solid;
+      color: white;
+      font-weight: normal;
+    }
+
+    &--button {
+      background-color: transparent;
+    }
+
+    &--icon {
+      fill: $map-control-border-color;
+    }
+
+    .suggestions {
+      background-color: $map-control-bg-color !important;
+
+      a {
+        color: white !important;
+      }
+
+      a:hover {
+        background-color: $map-control-active-bg-color;
+      }
+
+      .active a {
+        background-color: $map-control-active-bg-color;
+      }
+    }
+  }
+
+  .search-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    .search-button {
+      flex: 0;
+      padding: 4px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: $map-control-bg-color;
+      font-size: 14px;
+      font-weight: bold;
+      &:hover {
+        background-color: $map-control-active-bg-color;
+      }
+    }
+  }
+}

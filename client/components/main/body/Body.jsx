@@ -9,7 +9,7 @@ import Comparison from '@components/Comparison';
 import Loader from '@components/common/Loader';
 import Modal from '@components/common/Modal';
 import Menu from '../menu/Menu';
-import PinMap from '../../PinMap/PinMap';
+import PinMap from '../../Mapbox';
 import DataRequestError from './DataRequestError';
 
 const Body = ({

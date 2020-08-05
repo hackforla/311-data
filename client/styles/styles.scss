@@ -26,6 +26,11 @@
 @import './map/map';
 @import './map/pinpopup';
 
+@import './mapbox/map';
+@import './mapbox/map-search';
+@import './mapbox/map-layers';
+@import './mapbox/map-overview';
+
 @import './charts/chart';
 @import './charts/chartExtras';
 

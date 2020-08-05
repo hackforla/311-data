@@ -1,0 +1,42 @@
+.map-overview {
+  top: 10px;
+  left: 10px;
+  background-color: $map-control-bg-color;
+  width: 250px;
+  .requests-title {
+    margin: 15px 0;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: $brand-heading-family;
+  }
+  .info-heading {
+    margin-left: 20px;
+    margin-top: 8px;
+    margin-bottom: -4px;
+    font-size: 8px;
+    text-transform: uppercase;
+  }
+  .info-content {
+    margin-left: 20px;
+    font-size: 16px;
+  }
+  a.info-content {
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px $map-control-border-color solid;
+  }
+  .requests-bar-chart {
+    padding: 0 20px 20px 20px;
+    .info-heading {
+      margin-left: 0;
+    }
+    .count-bar {
+      height: 6px;
+      margin-top: 4px;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      transition: all 0.5s ease;
+    }
+  }
+}
