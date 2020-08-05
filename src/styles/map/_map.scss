@@ -41,7 +41,30 @@
     }
   }
 
+  .leaflet-tooltip-pane {
+    z-index: auto;
+
+    .overlay-nc-name {
+      z-index: 600;
+      opacity: 0.75 !important;
+      display: inline-block;
+      font-weight: bold;
+      font-size: 18px;
+      color: $brand-bg-color;
+      font-family: $brand-text-family;
+      background: none;
+      border: none;
+      box-shadow: none;
+      text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+    }
+  }
+
   .leaflet-tooltip {
+    z-index: 700;
     position: absolute;
     border: 2px solid $brand-text-color;
     border-radius: 0;
@@ -59,20 +82,13 @@
     content: "";
   }
 
-  .overlay-nc-name {
-    display: inline-block;
-    font-weight: bold;
-    font-size: 18px;
-    color: $brand-bg-color;
-    font-family: $brand-text-family;
-    background: none;
-    border: none;
-    box-shadow: none;
-    text-shadow:
-      -1px -1px 0 #000,
-      1px -1px 0 #000,
-      -1px 1px 0 #000,
-      1px 1px 0 #000;
+  .leaflet-marker-pane {
+    z-index: auto;
+
+    .leaflet-marker-icon,
+    .marker-cluster {
+      z-index: 650 !important;
+    }
   }
 
   .export-legend-wrapper {
