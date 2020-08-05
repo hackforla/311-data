@@ -3,8 +3,5 @@
   "video": false,
   "viewportWidth": 1400,
   "viewportHeight": 1060,
-  "env": {
-    "MAILOSAUR_API_KEY": "Vf9oAdqJelfwkKu"
-  },
   "projectId": "i733mt"
 }
