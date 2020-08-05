@@ -15,7 +15,7 @@
     "classnames": "^2.2.6",
     "core-js": "^3.6.5",
     "dataframe-js": "^1.4.3",
-    "dfa": "^1.1.0",
+    "dfa": "1.1.0",
     "dotenv": "^8.2.0",
     "dotenv-webpack": "^1.7.0",
     "gh-pages": "^2.1.1",
