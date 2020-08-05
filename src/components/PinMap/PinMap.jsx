@@ -8,11 +8,10 @@ import CustomMarker from '@components/PinMap/CustomMarker';
 import ClusterMarker from '@components/PinMap/ClusterMarker';
 import HeatmapLegend from '@components/PinMap/HeatmapLegend';
 import ExportLegend from '@components/PinMap/ExportLegend';
+import MapboxWordmark from '@components/PinMap/MapboxWordmark';
 import {
   Map,
   TileLayer,
-  Rectangle,
-  Tooltip,
   LayersControl,
   ZoomControl,
   ScaleControl,
@@ -30,7 +29,7 @@ import Button from '@components/common/Button';
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
-import ncOverlay from '../../data/nc-boundary-2019.json';
+import ncOverlay from '../../data/nc-boundary-2019-centroid.json';
 
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
@@ -53,6 +52,8 @@ class PinMap extends Component {
       height: null,
       markersVisible: true,
       heatmapVisible: false,
+      zoomBreak: 14,
+      zoomThresholdMet: false,
     };
     this.container = React.createRef();
   }
@@ -102,22 +103,27 @@ class PinMap extends Component {
 
   updatePosition = ({ target: map }) => {
     const { updatePosition } = this.props;
+    const { zoomBreak } = this.state;
+    const mapZoom = map.getZoom();
     updatePosition({
-      zoom: map.getZoom(),
+      zoom: mapZoom,
       bounds: map.getBounds(),
     });
+    this.setState({ zoomThresholdMet: (mapZoom >= zoomBreak) });
   }
 
-  onEachRegionFeature = (feature, layer) => {
-    // Popup text when clicking on a region
-    const popupText = `
-      <div class="overlay_feature_popup">
-        ${feature.properties.name}
+  onEachRegionFeatureMouseTooltip = (feature, layer) => {
+    // Tooltip text when mousing over on a region
+    const toolTipText = `
+      <div class="nc-name-tooltip">
+        <span class="nc-name">
+          ${feature.properties.nameshort} NC
+        </span>
         <br />
         ${feature.properties.service_re}
       </div>
     `;
-    layer.bindPopup(popupText);
+    layer.bindTooltip(toolTipText);
 
     // Sets mouseover/out/click event handlers for each region
     layer.on({
@@ -125,6 +131,40 @@ class PinMap extends Component {
       mouseout: this.resetRegionHighlight,
       click: this.zoomToRegion,
     });
+  }
+
+  onEachRegionFeatureLabelTooltip = (feature, layer) => {
+    const { nameshort } = feature.properties;
+    layer.bindTooltip(`${nameshort} NC`, {
+      permanent: true,
+      direction: 'center',
+      className: 'overlay-nc-name',
+    });
+    layer.bringToBack();
+    layer.on({
+      mouseover: this.highlightRegion,
+      mouseout: this.resetRegionHighlight,
+      click: this.zoomToRegion,
+    });
+  }
+
+  resizeNcNames = () => {
+    const { zoomBreak } = this.state;
+    const currentZoom = this.map.getZoom();
+    if (currentZoom >= zoomBreak) {
+      const names = document.getElementsByClassName('overlay-nc-name');
+      const fontSizeScale = {
+        14: '18px',
+        15: '24px',
+        16: '30px',
+        17: '36px',
+        18: '42px',
+      };
+
+      for (let i = 0; i < names.length; i += 1) {
+        names[i].style.fontSize = fontSizeScale[currentZoom];
+      }
+    }
   }
 
   renderMarkers = () => {
@@ -202,21 +242,7 @@ class PinMap extends Component {
         );
       });
     }
-
-    const tooltipPosition = [[34.0173157, -118.2497254], [34.1, -118.1497254]];
-
-    return (
-      <Rectangle bounds={tooltipPosition} color="black">
-        <Tooltip
-          permanent
-          direction="top"
-          offset={[0, 20]}
-          opacity={1}
-        >
-          No Data To Display
-        </Tooltip>
-      </Rectangle>
-    );
+    return null;
   }
 
   renderMap = () => {
@@ -231,6 +257,7 @@ class PinMap extends Component {
       height,
       heatmapVisible,
       markersVisible,
+      zoomThresholdMet,
     } = this.state;
 
     const { heatmap } = this.props;
@@ -265,6 +292,7 @@ class PinMap extends Component {
               this.setState({ markersVisible: false });
             }
           }}
+          onZoomEnd={this.resizeNcNames}
         >
           <ZoomControl position="topright" />
           <ScaleControl position="bottomright" />
@@ -275,7 +303,7 @@ class PinMap extends Component {
             <BaseLayer checked name="Streets">
               <TileLayer
                 url={streetsLayerUrl}
-                attribution="MapBox"
+                attribution='<a href="https://www.mapbox.com/about/maps/">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/">© OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/#/-74.5/40/10">Improve this map</a>'
                 tileSize={512}
                 zoomOffset={-1}
               />
@@ -283,25 +311,48 @@ class PinMap extends Component {
             <BaseLayer name="Satellite">
               <TileLayer
                 url={satelliteLayerUrl}
-                attribution="MapBox"
+                attribution='<a href="https://www.mapbox.com/about/maps/">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/">© OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/#/-74.5/40/10">Improve this map</a>'
                 tileSize={512}
                 zoomOffset={-1}
               />
             </BaseLayer>
             {
-              geoJSON
+              (zoomThresholdMet === false && geoJSON)
               && (
                 <Overlay checked name="Neighborhood Council Boundaries">
                   <Choropleth
                     data={geoJSON}
                     style={{
-                      fillColor: 'white',
+                      fillColor: 'transparent',
                       weight: 2,
-                      opacity: 1,
                       color: boundaryDefaultColor,
                       dashArray: '3',
                     }}
-                    onEachFeature={this.onEachRegionFeature}
+                    onEachFeature={this.onEachRegionFeatureMouseTooltip}
+                    ref={el => {
+                      if (el) {
+                        this.choropleth = el.leafletElement;
+                        return this.choropleth;
+                      }
+                      return null;
+                    }}
+                  />
+                </Overlay>
+              )
+            }
+            {
+              (zoomThresholdMet === true && geoJSON)
+              && (
+                <Overlay checked name="Neighborhood Council Boundaries">
+                  <Choropleth
+                    data={geoJSON}
+                    style={{
+                      fillColor: 'transparent',
+                      weight: 2,
+                      color: boundaryDefaultColor,
+                      dashArray: '3',
+                    }}
+                    onEachFeature={this.onEachRegionFeatureLabelTooltip}
                     ref={el => {
                       if (el) {
                         this.choropleth = el.leafletElement;
@@ -355,13 +406,13 @@ class PinMap extends Component {
             exportMap();
           }}
         />
+        <MapboxWordmark />
       </>
     );
   }
 
   render() {
     const { ready } = this.state;
-
     return (
       <div ref={this.container} className="map-container">
         { ready ? this.renderMap() : null }

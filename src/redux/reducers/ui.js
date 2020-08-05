@@ -9,7 +9,6 @@ export const types = {
   SHOW_FEEDBACK_SUCCESS: 'SHOW_FEEDBACK_SUCCESS',
   UPDATE_MAP_POSITION: 'UPDATE_MAP_POSITION',
   ACCEPT_COOKIES: 'ACCEPT_COOKIES',
-  DISABLE_SPLASH_PAGE: 'DISABLE_SPLASH_PAGE',
 };
 
 export const toggleMenu = () => ({
@@ -50,10 +49,6 @@ export const acceptCookies = () => ({
   type: types.ACCEPT_COOKIES,
 });
 
-export const disableSplashPage = () => ({
-  type: types.DISABLE_SPLASH_PAGE,
-});
-
 const initialState = {
   menu: {
     isOpen: true,
@@ -66,7 +61,6 @@ const initialState = {
   showDataCharts: false,
   showComparisonCharts: false,
   displayFeedbackSuccess: false,
-  splashPageDisabled: false,
   cookiesAccepted: false,
 };
 
@@ -120,11 +114,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         cookiesAccepted: true,
-      };
-    case types.DISABLE_SPLASH_PAGE:
-      return {
-        ...state,
-        splashPageDisabled: true,
       };
     default:
       return state;

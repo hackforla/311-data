@@ -27,6 +27,7 @@ module.exports = {
       ".jsx"
     ],
     'import/resolver': {
+      node: {},
       webpack: "webpack.config.js",
     },
   },
@@ -38,6 +39,16 @@ module.exports = {
     'linebreak-style': 'off',
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "arrow-parens": ["error", "as-needed"]
+    "arrow-parens": ["error", "as-needed"],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1,
+        "MemberExpression": 'off',
+        "ignoredNodes": ["TemplateLiteral"]
+      }
+    ],
+    "template-curly-spacing": 'off',
   },
 };

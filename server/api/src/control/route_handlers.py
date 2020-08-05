@@ -55,6 +55,15 @@ class map:
 
         return json(data)
 
+    async def pins(request):
+        data = await map_svc.pins(**to.parse(request.json, {
+            'startDate': to.req.DATE,
+            'endDate': to.req.DATE,
+            'requestTypes': to.opt.LIST_OF_STR,
+            'ncList': to.opt.LIST_OF_INT}))
+
+        return json(data)
+
 
 async def visualizations(request):
     data = await vis_svc.visualizations(**to.parse(request.json, {
@@ -86,6 +95,11 @@ class comparison:
     async def counts(request):
         data = await comp_svc.counts_comparison(**comparison.args(request))
         return json(data)
+
+
+async def open_requests(request):
+    data = await requests_svc.open_requests()
+    return json(data)
 
 
 async def feedback(request):

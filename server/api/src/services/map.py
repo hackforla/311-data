@@ -103,3 +103,18 @@ async def heatmap(startDate,
         pins = pins[fields]
 
     return pins.to_numpy()
+
+
+async def pins(startDate,
+               endDate,
+               requestTypes=[],
+               ncList=[]):
+
+    filters = {
+        'startDate': startDate,
+        'endDate': endDate,
+        'requestTypes': requestTypes,
+        'ncList': ncList}
+
+    pins = get_pins(filters)
+    return pins.to_dict(orient='records')

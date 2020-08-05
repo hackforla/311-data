@@ -14,7 +14,6 @@ import {
 
 import Checkbox from '../../common/Checkbox';
 import Icon from '../../common/Icon';
-import HoverOverInfo from '../../common/HoverOverInfo';
 
 import { REQUEST_TYPES } from '../../common/CONSTANTS';
 import COLORS from '../../../styles/COLORS';
@@ -28,6 +27,12 @@ const checkboxStyle = {
   display: 'inline-block',
   paddingRight: '3px',
   paddingLeft: '3px',
+};
+
+const checkboxLabelDisplayStyle = {
+  display: 'block',
+  marginLeft: '45px',
+  marginTop: '-20px',
 };
 
 const types = Object.keys(REQUEST_TYPES);
@@ -73,7 +78,7 @@ const RequestItem = ({
         style={{ color }}
       />
     </span>
-    <span>
+    <span style={checkboxLabelDisplayStyle}>
       {`${displayName} [${abbrev}]`}
     </span>
   </div>
@@ -121,28 +126,6 @@ const RequestTypeSelector = ({
 
   return (
     <div id="type-selector-container" style={{ color: COLORS.FONTS }}>
-      {/* ---------- Title ---------- */}
-      <div
-        className="type-selector-title"
-        style={{ paddingBottom: '15px', paddingTop: '15px' }}
-      >
-        <span
-          className="has-text-weight-bold is-size-6"
-          style={{ paddingRight: '10px' }}
-        >
-          Request Type Selection
-        </span>
-        <HoverOverInfo
-          title="Request Type Selection"
-          text="This filter allows the user to choose specific 311 data types."
-        >
-          <Icon
-            id="type-selector-info-icon"
-            icon="info-circle"
-            size="small"
-          />
-        </HoverOverInfo>
-      </div>
       <div className="columns is-0" style={{ width: '475px' }}>
         <div className="column" style={{ paddingRight: '8px' }}>
           {/* ---------- Select/Deselect All ---------- */}

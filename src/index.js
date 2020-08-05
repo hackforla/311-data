@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-filename-extension */
 
+import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -16,5 +17,5 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-// HMR during development
+// hot module replacement during development
 if (module.hot) module.hot.accept();

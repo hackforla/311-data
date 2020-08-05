@@ -55,7 +55,7 @@ Running this command does not mean you are _in_ the virtual environment yet. in 
 For backend work we are using an asynchronous variant of python-flask called Sanic. You can read more about the specific differences [here](https://www.fullstackpython.com/sanic.html).
 
 ## React
-The front end will be written in React/Redux since the application is pitched as a reporting dashboard with several visualizations driven by a single set of filters. If you are unfamiliar, we recommend to starting [here](https://hackernoon.com/getting-started-with-react-redux-1baae4dcb99b).
+The front end is written in React/Redux as the application is a reporting dashboard with several visualizations driven by sets of filters. If you are unfamiliar, we recommend starting [here](https://hackernoon.com/getting-started-with-react-redux-1baae4dcb99b).
 
 ## API Secrets
 We use `.env` files to store secrets and other configuration values. These files are excluded from version control so that secrets are not pushed to our public repository. If you update one of the example `.env` value to include new configuration, be sure not to include secrets when you push to Github.

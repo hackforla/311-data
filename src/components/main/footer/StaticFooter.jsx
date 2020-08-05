@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import SocialMediaLinks from './SocialMediaLinks';
+
 const StaticFooter = () => (
   <footer className="navbar has-navbar-fixed-bottom">
     <div className="static-footer level-left">
@@ -8,12 +10,19 @@ const StaticFooter = () => (
       &nbsp;|&nbsp;
       All Rights Reserved
       &nbsp;|&nbsp;
-      Powered by&nbsp;
-      <span className="empowerla">EmpowerLA</span>
+      <Link to="/privacy">&nbsp;Privacy Policy&nbsp;</Link>
+      &nbsp;|&nbsp;
+      Powered by volunteers from&nbsp;
+      <a
+        href="https://www.hackforla.org/#projects"
+        className="has-text-weight-bold"
+        rel="external noopener noreferrer"
+        target="_blank"
+      >
+        Hack for LA
+      </a>
     </div>
-    <div className="static-footer level-right">
-      <Link to="/privacy">Privacy Policy</Link>
-    </div>
+    <SocialMediaLinks />
   </footer>
 );
 

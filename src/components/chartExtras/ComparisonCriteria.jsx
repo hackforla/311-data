@@ -3,6 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { DISTRICT_TYPES, REQUEST_TYPES, COMPARISON_SETS } from '@components/common/CONSTANTS';
 import CollapsibleList from '@components/common/CollapsibleList';
+import InfoTitle from '@components/common/InfoTitle';
 
 const ComparisonCriteria = ({
   startDate,
@@ -63,12 +64,13 @@ const ComparisonCriteria = ({
 
     return (
       <>
-        { selectedTypes.map(type => (
+        { selectedTypes.map((type, i) => (
           <span key={type.displayName}>
             { type.displayName }
             &nbsp;[
             <span style={{ color: type.color }}>{ type.abbrev }</span>
-            ];&nbsp;
+            ]
+            { i < selectedTypes.length - 1 ? ';\u00a0' : '' }
           </span>
         ))}
       </>
@@ -77,7 +79,10 @@ const ComparisonCriteria = ({
 
   return (
     <div className="chart-extra comparison-criteria">
-      <h1>Criteria</h1>
+      <InfoTitle
+        title="Criteria"
+        infoText="The legend displays the specific date range, districts and request type(s) selected by the user."
+      />
       <div className="outline">
         <span className="criteria-type">
           Date Range

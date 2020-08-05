@@ -34,6 +34,9 @@ routes = {
     '/map/heat': (
         ['POST'], R.map.heat),
 
+    '/map/pins': (
+        ['POST'], R.map.pins),
+
     '/visualizations': (
         ['POST'], R.visualizations),
 
@@ -45,6 +48,9 @@ routes = {
 
     '/comparison/counts': (
         ['POST'], R.comparison.counts),
+
+    '/open-requests': (
+        ['POST'], R.open_requests),
 
     '/feedback': (
         ['POST'], R.feedback)}

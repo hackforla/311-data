@@ -103,6 +103,7 @@ const TotalRequests = ({
   return (
     <Chart
       title="Total Requests"
+      titleInfo="Total requests displays the aggregate number of requests over time, broken down by request type."
       type="bar"
       data={chartData}
       options={chartOptions}

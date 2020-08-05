@@ -104,3 +104,30 @@ def comparison_query(fields, filters, table=DEFAULT_TABLE):
             requesttype IN ({requestTypes}) AND
             {where}
     """, db.engine)
+
+
+async def open_requests():
+
+    def counts_by_field(df, field):
+        counts = df.groupby(by=[field, 'requesttype']).size().to_dict()
+        out = {}
+        for (nc, requesttype), count in counts.items():
+            nc = int(nc)
+            if nc not in out:
+                out[nc] = {}
+            out[nc][requesttype] = count
+        return out
+
+    df = pd.read_sql('SELECT * FROM open_requests', db.engine)
+
+    return {
+        'requests': df[[
+            'srnumber',
+            'requesttype',
+            'latitude',
+            'longitude'
+        ]].to_dict(orient='records'),
+
+        'counts': {
+            'nc': counts_by_field(df, 'nc'),
+            'cc': counts_by_field(df, 'cd')}}

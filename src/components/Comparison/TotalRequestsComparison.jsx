@@ -98,6 +98,7 @@ const TotalRequestsComparison = ({
   return (
     <Chart
       title="Total Requests"
+      titleInfo="Total requests displays the aggregate number of requests over time for each district set."
       type="bar"
       data={chartData}
       options={chartOptions}
