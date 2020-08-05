@@ -4,6 +4,7 @@ import PropTypes from 'proptypes';
 import moment from 'moment';
 import clx from 'classnames';
 import HoverOverInfo from '@components/common/HoverOverInfo';
+import SocialMediaLinks from './SocialMediaLinks';
 
 const Footer = ({
   lastUpdated,
@@ -17,13 +18,6 @@ const Footer = ({
     <footer
       className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen && ['/data', '/comparison'].includes(pathname) })}
     >
-      { lastUpdated && (
-        <span className="last-updated">
-          Data Updated Through:
-          &nbsp;
-          {moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
-        </span>
-      )}
       { version && backendSha && (
         <span className="version">
           <HoverOverInfo
@@ -39,6 +33,14 @@ const Footer = ({
           </HoverOverInfo>
         </span>
       )}
+      { lastUpdated && (
+        <span className="last-updated">
+          Data Updated Through:
+          &nbsp;
+          {moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
+        </span>
+      )}
+      <SocialMediaLinks />
     </footer>
   );
 };
