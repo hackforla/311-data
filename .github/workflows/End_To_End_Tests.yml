@@ -8,11 +8,11 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: testing-io/github-action@v2
         with:
           #build: npm run build
           #start: npm start
-          spec: cypress/integration/map_filter.spec.js
+          spec: testing/integration/map_filter.spec.js
           wait-on: http://dev.311-data.org/
           record: true
         env:
