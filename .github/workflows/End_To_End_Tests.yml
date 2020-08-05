@@ -12,7 +12,7 @@ jobs:
         with:
           #build: npm run build
           #start: npm start
-          spec: integration/map_filter.spec.js
+          spec: cypress/integration/map_filter.spec.js
           wait-on: http://dev.311-data.org/
           record: true
         env:

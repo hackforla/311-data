@@ -2,7 +2,7 @@ describe('311 Data', () => {
 
     const {_} = Cypress
 
-    //context('Explore My Council\'s 311 Data', () => {
+    context('Explore My Council\'s 311 Data', () => {
         it('Map: Last Week, Dead Animal [DAN]', () => {
 
             cy.server()
@@ -74,9 +74,9 @@ describe('311 Data', () => {
             })
 
         })
-    //})
+    })
 
-    //context('Compare Different Councils', () => {
+    context('Compare Different Councils', () => {
         it('Comparison Filters', () => {
             cy.visit('/')
             cy.get('#navbar > div > div:nth-child(2)').click()
@@ -100,6 +100,6 @@ describe('311 Data', () => {
                 expect($el).to.exist
             })
         })
-    //})
+    })
 
 })
