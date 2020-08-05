@@ -26,7 +26,6 @@
     "leaflet.markercluster": "^1.4.1",
     "mixpanel-browser": "^2.36.0",
     "moment": "^2.24.0",
-    "overlapping-marker-spiderfier-leaflet": "^0.2.7",
     "proptypes": "^1.1.0",
     "query-string": "^5.1.1",
     "react": "^16.8.6",
