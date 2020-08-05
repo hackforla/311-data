@@ -29,6 +29,12 @@ const checkboxStyle = {
   paddingLeft: '3px',
 };
 
+const checkboxLabelDisplayStyle = {
+  display: 'block',
+  marginLeft: '45px',
+  marginTop: '-20px',
+};
+
 const types = Object.keys(REQUEST_TYPES);
 
 const midIndex = (list => {
@@ -72,7 +78,7 @@ const RequestItem = ({
         style={{ color }}
       />
     </span>
-    <span>
+    <span style={checkboxLabelDisplayStyle}>
       {`${displayName} [${abbrev}]`}
     </span>
   </div>
