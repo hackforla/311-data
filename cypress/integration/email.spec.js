@@ -2,7 +2,7 @@ describe('311 Data', () => {
 
     const serverId = '';
 
-    const testEmail = `test_user\@fakeaddress.com`
+    const testEmail = `fake\@email.com`
 
     context('Contct Us', () => {
         it('Contact Us: Sending Email', () => {
