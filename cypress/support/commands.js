@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 import '@testing-library/cypress/add-commands'
-//import 'testing-mailosaur'
+//import 'cypress-mailosaur'
 
 Cypress.Commands.add('format_number_with_K', (value) => {
     return ((value / 1000).toFixed(1)) + "K"
