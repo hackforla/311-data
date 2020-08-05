@@ -17,5 +17,5 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-// HMR during development
+// hot module replacement during development
 if (module.hot) module.hot.accept();
