@@ -23,6 +23,8 @@ yarn-error.log*
 
 package-lock.json
 
+node_modules_non_es5
+
 # config
 config.js
 .env
