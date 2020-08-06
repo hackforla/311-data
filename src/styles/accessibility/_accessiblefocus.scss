@@ -1,0 +1,30 @@
+//modifies focus style for increased visibility
+
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+.js-focus-visible .focus-visible {
+    outline: 0.15rem solid $brand-cta1-color;
+}
+
+.is-checkradio[type="checkbox"].js-focus-visible, .is-checkradio[type="checkbox"].focus-visible, .is-checkradio[type="radio"].focus-visible, 
+.is-checkradio[type="radio"].js-focus-visible {
+    + label::before {
+      outline: 0.15rem solid $brand-cta1-color;
+    }
+    + label:before{
+      outline: 0.15rem solid $brand-cta1-color;
+
+    }
+  }
+
+a, button, .button, input, .input, select, .select, textarea, 
+.textarea, .file-cta, .file-name, .pagination-previous, 
+.pagination-next, .pagination-link, .pagination-ellipsis, .multi-select, 
+.select-item-box.unselected, .select-item-box.selected, span .select-item-box, .toggle-button, 
+.dropdown, .is-checkradio, .navbar-item {
+  &:focus:not(.focus-visible) or &:focus:not(.js-focus-visible){
+    outline: none;
+  }
+}
