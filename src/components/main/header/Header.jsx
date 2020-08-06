@@ -22,8 +22,8 @@ const Header = () => {
       aria-label="main navigation"
     >
       <div className="navbar-brand">
-        <Link to="/" className="navbar-item" >
-          <div className="navbar-item" >
+        <Link to="/" className="navbar-item">
+          <div className="navbar-item">
             <p style={cta1Style}>311</p>
             <p style={cta2Style}>DATA</p>
           </div>
@@ -33,7 +33,7 @@ const Header = () => {
         </Link>
       </div>
 
-      <div id="navbar" className="navbar-menu" >
+      <div id="navbar" className="navbar-menu">
         <div className="navbar-end">
           <div className="navbar-item">
             <NavLink exact to="/data" activeClassName="navbar-selected" style={backgroundStyle}>

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import FocusVisible from 'focus-visible';
+import 'focus-visible';
 import { getMetadataRequest } from '@reducers/metadata';
 
 import RouteChange from '@components/main/util/RouteChange';
