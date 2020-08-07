@@ -29,8 +29,3 @@ node_modules_non_es5
 # config
 config.js
 .env
-
-# dataAnalysis
-/dataAnalysis/datasets
-/dataAnalysis/.ipynb_checkpoints
-__pycache__
