@@ -1,7 +1,7 @@
 export default {};
 
 // 'primary' or 'alt' to change request type colors
-const COLOR_SELECTION = 'primary';
+const COLOR_SELECTION = 'alt';
 
 export const REQUEST_TYPES = {
   'Dead Animal Removal': {
