@@ -15,6 +15,7 @@ jobs:
           spec: cypress/integration/map_filter.spec.js,cypress/integration/email.spec.js
           wait-on: http://dev.311-data.org/
           record: true
+          working-directory: e2e
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

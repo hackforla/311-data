@@ -31,5 +31,3 @@ config.js
 /dataAnalysis/datasets
 /dataAnalysis/.ipynb_checkpoints
 __pycache__
-
-.idea

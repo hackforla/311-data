@@ -55,19 +55,16 @@
     "lint": "eslint 'src/**/*.js*'",
     "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
-    "check-env": "node ./src/checkEnv",
-    "cypress:open": "cypress open"
+    "check-env": "node ./src/checkEnv"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.8.3",
-    "@testing-library/cypress": "^6.0.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.5.1",
-    "cypress": "^4.12.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^6.7.2",
