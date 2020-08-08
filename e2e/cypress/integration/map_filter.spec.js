@@ -8,7 +8,7 @@ describe('311 Data', () => {
             cy.server()
             cy.route({
                 method: 'POST',
-                url: '/map/clusters',
+                url: 'http://dev-api.311-data.org/map/clusters',
                 onResponse(xhr) {
                     expect(xhr.status).to.eq(200)
                 }
@@ -46,7 +46,7 @@ describe('311 Data', () => {
             cy.server()
             cy.route({
                 method: 'POST',
-                url: '/map/clusters',
+                url: 'http://dev-api.311-data.org/map/clusters',
                 onResponse(xhr) {
                     expect(xhr.status).to.eq(200)
                 }
