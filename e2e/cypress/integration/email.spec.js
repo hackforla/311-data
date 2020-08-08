@@ -10,7 +10,7 @@ describe('311 Data', () => {
             cy.server()
             cy.route({
                 method:'POST',
-                url: '/feedback',
+                url: Cypress.env('devApiUrl') +'/feedback',
                 response: [{"success": true}],
                 onResponse(xhr) {
                     expect(xhr.status).to.eq(200);
