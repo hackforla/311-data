@@ -106,7 +106,7 @@ describe('311 Data', () => {
 
     const testEmail = `fake\@email.com`
 
-    context('Contct Us', () => {
+    context('Contact Us', () => {
         it('Contact Us: Sending Email', () => {
 
             cy.server()
