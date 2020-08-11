@@ -12,7 +12,7 @@ jobs:
         with:
           #build: npm run build
           #start: npm start
-          spec: cypress/integration/map_filter.spec.js,cypress/integration/email.spec.js
+          spec: cypress/integration/e2e_tests.spec.js
           wait-on: http://dev.311-data.org/
           record: true
           working-directory: e2e
