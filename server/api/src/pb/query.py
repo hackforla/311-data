@@ -26,8 +26,10 @@ def query(table, fields, filters):
 
         if len(ncList) > 0:
             district_filter = df['nc'].isin(ncList)
-        else:
+        elif len(cdList) > 0:
             district_filter = df['cd'].isin(cdList)
+        else:
+            continue
 
         batch = df.loc[(
             (df['createddate'] > startDate) &
