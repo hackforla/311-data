@@ -6,10 +6,7 @@ import clx from 'classnames';
 import DatePicker from 'react-datepicker';
 import Button from '@components/common/Button';
 import DatePickerSVG from '@assets/datepicker.svg';
-import {
-  updateStartDate,
-  updateEndDate,
-} from '@reducers/filters';
+import { updateDateRange } from '@reducers/filters';
 import {
   updateComparisonStartDate,
   updateComparisonEndDate,
@@ -21,8 +18,7 @@ const DateRangePicker = ({
   style,
   comparison,
   handleClick,
-  updateStart,
-  updateEnd,
+  updateRange,
   updateComparisonStart,
   updateComparisonEnd,
 }) => {
@@ -158,10 +154,19 @@ const DateRangePicker = ({
               setFocus(null);
               if (startDate && endDate) {
                 const formatDate = date => moment(date).format('MM/DD/YYYY');
-                const dispatchStart = comparison ? updateComparisonStart : updateStart;
-                const dispatchEnd = comparison ? updateComparisonEnd : updateEnd;
-                dispatchStart({ dateRange: 'CUSTOM_DATE_RANGE', startDate: formatDate(startDate) });
-                dispatchEnd(formatDate(endDate));
+                if (comparison) {
+                  updateComparisonStart({
+                    dateRange: 'CUSTOM_DATE_RANGE',
+                    startDate: formatDate(startDate),
+                  });
+                  updateComparisonEnd(formatDate(endDate));
+                } else {
+                  updateRange({
+                    dateRange: 'CUSTOM_DATE_RANGE',
+                    startDate: formatDate(startDate),
+                    endDate: formatDate(endDate),
+                  });
+                }
                 handleClick();
               } else if (!startDate && !endDate) {
                 setError('Please provide start and end dates.');
@@ -183,8 +188,10 @@ const DateRangePicker = ({
 };
 
 const mapDispatchToProps = dispatch => ({
-  updateStart: newStartDate => dispatch(updateStartDate(newStartDate)),
-  updateEnd: newEndDate => dispatch(updateEndDate(newEndDate)),
+  updateRange: ({ dateRange, startDate, endDate }) => {
+    dispatch(updateDateRange({ dateRange, startDate, endDate }));
+  },
+
   updateComparisonStart: newStartDate => dispatch(updateComparisonStartDate(newStartDate)),
   updateComparisonEnd: newEndDate => dispatch(updateComparisonEndDate(newEndDate)),
 });
@@ -199,8 +206,7 @@ DateRangePicker.propTypes = {
   title: PropTypes.string,
   style: PropTypes.shape({}),
   handleClick: PropTypes.func.isRequired,
-  updateStart: PropTypes.func.isRequired,
-  updateEnd: PropTypes.func.isRequired,
+  updateRange: PropTypes.func.isRequired,
   updateComparisonStart: PropTypes.func.isRequired,
   updateComparisonEnd: PropTypes.func.isRequired,
   comparison: PropTypes.bool,

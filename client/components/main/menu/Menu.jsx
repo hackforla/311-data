@@ -10,9 +10,10 @@ import { Switch, Route } from 'react-router-dom';
 import {
   toggleMenu as reduxToggleMenu,
   setMenuTab as reduxSetMenuTab,
+  setMenuMode as reduxSetMenuMode,
 } from '@reducers/ui';
 
-import { MENU_TABS } from '@components/common/CONSTANTS';
+import { MENU_TABS, MENU_MODES } from '@components/common/CONSTANTS';
 import Button from '@components/common/Button';
 import InfoTitle from '@components/common/InfoTitle';
 import HoverOverInfo from '@components/common/HoverOverInfo';
@@ -26,12 +27,19 @@ import ChartSelector from './ChartSelector';
 const Menu = ({
   isOpen,
   activeTab,
+  activeMode,
   toggleMenu,
   setMenuTab,
+  setMenuMode,
 }) => {
   const tabs = [
     MENU_TABS.MAP,
     MENU_TABS.VISUALIZATIONS,
+  ];
+
+  const modes = [
+    MENU_MODES.OPEN,
+    MENU_MODES.TRENDS,
   ];
 
   return (
@@ -39,13 +47,17 @@ const Menu = ({
       <Switch>
         <Route exact path="/data">
           <div className="menu-tabs">
-            {tabs.map(tab => (
+            {modes.map(mode => (
               <a
-                key={tab}
-                className={clx('menu-tab', { active: tab === activeTab })}
-                onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
+                key={mode}
+                className={clx('menu-tab', { active: mode === activeMode })}
+                onClick={mode === activeMode ? undefined : () => {
+                  setMenuMode(mode)
+                  if (mode === MENU_MODES.OPEN)
+                    setMenuTab(MENU_TABS.MAP)
+                }}
               >
-                { tab }
+                { mode }
               </a>
             ))}
           </div>
@@ -111,38 +123,77 @@ const Menu = ({
           </div>
         </Route>
         <Route path="/data">
-          <div className="menu-content with-tabs">
-            <h1>Filters</h1>
-            <InfoTitle
-              title="Date Range Selection"
-              element="h2"
-              infoText={[
-                'This filter allows the user to choose a date range for 311 data.',
-                '* Please click to make a selection.',
-              ]}
-            />
-            <DateSelector key="data-dateselector" />
-            <InfoTitle
-              title="Neighborhood Council (NC) Selection"
-              element="h2"
-              infoText={[
-                'This filter allows the user to select specific neighborhood councils.',
-                '* Please check box to make one or more selections.',
-              ]}
-              position="top"
-            />
-            <NCSelector />
-            <InfoTitle
-              title="Request Type Selection"
-              element="h2"
-              infoText={[
-                'This filter allows the user to select specific 311 request types.',
-                '* Please check box to make one or more selections.',
-              ]}
-            />
-            <RequestTypeSelector />
-            <Submit />
-          </div>
+          {(() => {
+            switch(activeMode) {
+              case MENU_MODES.OPEN: return (
+                <div className="menu-content">
+                  <InfoTitle
+                    title="Address/NC/CC Selection"
+                    element="h2"
+                    infoText={[
+                      'Choose address to search by address, NC to search by neighborhood council, or CC to search by city council.'
+                    ]}
+                    position='bottom'
+                  />
+                  <div style={{ marginTop: 30 }} />
+                  <InfoTitle
+                    title="Request Type Selection"
+                    element="h2"
+                    infoText={[
+                      'This filter allows the user to select specific 311 request types.',
+                      '* Please check box to make one or more selections.',
+                    ]}
+                    position='bottom'
+                  />
+                  <RequestTypeSelector />
+                </div>
+              );
+              case MENU_MODES.TRENDS: return (
+                <div className="menu-content with-tabs">
+                  {/*<h1>Filters</h1>*/}
+                  <InfoTitle
+                    title="Date Range Selection"
+                    element="h2"
+                    infoText={[
+                      'This filter allows the user to choose a date range for 311 data.',
+                      '* Please click to make a selection.',
+                    ]}
+                  />
+                  <DateSelector key="data-dateselector" />
+                  <InfoTitle
+                    title="NC/CC Selection"
+                    element="h2"
+                    infoText={[
+                      'This filter allows the user to select specific neighborhood councils.',
+                      '* Please check box to make one or more selections.',
+                    ]}
+                    position="top"
+                  />
+                  <NCSelector />
+                  <InfoTitle
+                    title="Request Type Selection"
+                    element="h2"
+                    infoText={[
+                      'This filter allows the user to select specific 311 request types.',
+                      '* Please check box to make one or more selections.',
+                    ]}
+                  />
+                  <RequestTypeSelector />
+                  <div className="menu-tabs" style={{ marginTop: 25 }}>
+                    {tabs.map(tab => (
+                      <a
+                        key={tab}
+                        className={clx('menu-tab', { active: tab === activeTab })}
+                        onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
+                      >
+                        { tab }
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )
+            }
+          })}
         </Route>
       </Switch>
     </div>
@@ -152,11 +203,13 @@ const Menu = ({
 const mapStateToProps = state => ({
   isOpen: state.ui.menu.isOpen,
   activeTab: state.ui.menu.activeTab,
+  activeMode: state.ui.menu.activeMode,
 });
 
 const mapDispatchToProps = dispatch => ({
   toggleMenu: () => dispatch(reduxToggleMenu()),
   setMenuTab: tab => dispatch(reduxSetMenuTab(tab)),
+  setMenuMode: mode => dispatch(reduxSetMenuMode(mode)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);
@@ -164,11 +217,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(Menu);
 Menu.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   activeTab: PropTypes.string.isRequired,
+  activeMode: PropTypes.string.isRequired,
   toggleMenu: PropTypes.func,
   setMenuTab: PropTypes.func,
+  setMenuMode: PropTypes.func,
 };
 
 Menu.defaultProps = {
   toggleMenu: () => null,
   setMenuTab: () => null,
+  setMenuMode: PropTypes.func,
 };

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default {};
 
 // 'primary' or 'alt' to change request type colors
@@ -179,8 +181,13 @@ export const COMPARISON_SETS = {
 };
 
 export const MENU_TABS = {
-  MAP: 'Map',
-  VISUALIZATIONS: 'Data Visualization',
+  MAP: '311 Data Maps',
+  VISUALIZATIONS: '311 Data Charts',
+};
+
+export const MENU_MODES = {
+  OPEN: 'Open Requests',
+  TRENDS: 'Recent Trends',
 };
 
 export const CITY_COUNCILS = [
@@ -749,3 +756,61 @@ export const COUNCILS = [
   //   region: 'Unknown',
   // },
 ];
+
+export const DATE_RANGES = (() => {
+  const endDate = moment().format('MM/DD/YYYY');
+  const priorDate = (num, timeInterval) => {
+    return moment().subtract(num, timeInterval).format('MM/DD/YYYY');
+  };
+
+  return [
+    {
+      id: 'LAST_WEEK',
+      label: 'Last Week',
+      startDate: priorDate(1, 'week'),
+      endDate,
+    },
+    {
+      id: 'LAST_MONTH',
+      label: 'Last Month',
+      startDate: priorDate(1, 'month'),
+      endDate,
+    },
+    {
+      id: 'LAST_3_MONTHS',
+      label: 'Last 3 Months',
+      startDate: priorDate(3, 'month'),
+      endDate,
+    },
+    {
+      id: 'LAST_6_MONTHS',
+      label: 'Last 6 Months',
+      startDate: priorDate(6, 'month'),
+      endDate,
+    },
+    {
+      id: 'LAST_12_MONTHS',
+      label: 'Last 12 Months',
+      startDate: priorDate(12, 'month'),
+      endDate,
+    },
+    {
+      id: 'LAST_5_YEARS',
+      label: 'Last 5 Years',
+      startDate: priorDate(5, 'year'),
+      endDate,
+    },
+    {
+      id: 'YEAR_TO_DATE',
+      label: 'Year to Date',
+      startDate: moment().startOf('year').format('MM/DD/YYYY'),
+      endDate,
+    },
+    {
+      id: 'CUSTOM_DATE_RANGE',
+      label: 'Custom Date Range',
+      startDate: null,
+      endDate: null,
+    },
+  ]
+})();

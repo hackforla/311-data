@@ -6,10 +6,13 @@ import {
   put,
   select,
 } from 'redux-saga/effects';
-import { COUNCILS } from '@components/common/CONSTANTS';
+import { COUNCILS, REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 import {
   types,
+  getDataRequest,
+  getPinsSuccess,
+  getPinsFailure,
   getPinClustersSuccess,
   getPinClustersFailure,
   getHeatmapSuccess,
@@ -29,14 +32,26 @@ import {
   showFeedbackSuccess,
 } from '../reducers/ui';
 
+import {
+  types as filtersTypes,
+} from '../reducers/filters';
+
 /* ////////////////// API CALLS  //////////////// */
 
 const BASE_URL = process.env.API_URL;
 
 /* ////  MAP //// */
 
+function* fetchPins(filters) {
+  const pinsUrl = `${BASE_URL}/map/pins`;
+
+  const { data } = yield call(axios.post, pinsUrl, filters);
+
+  return data;
+}
+
 function* fetchPinClusters(filters, { zoom, bounds }) {
-  const clustersUrl = `${BASE_URL}/map/clusters`;
+  const clustersUrl = `${BASE_URL}/map/pin-clusters`;
 
   const {
     _northEast: { lat: north, lng: east },
@@ -125,28 +140,50 @@ function* getMapPosition() {
 
 function* getMapData() {
   const filters = yield getFilters();
-  const mapPosition = yield getMapPosition();
+
+  // skip if there's no data to get
+  if (filters.ncList.length === 0 || filters.requestTypes.length === 0) {
+    yield put(getPinsSuccess([]));
+    return;
+  }
+
+  // start the loading indicator
+  yield put(getDataRequest());
 
   try {
-    const clustersData = yield call(fetchPinClusters, filters, mapPosition);
-    yield put(getPinClustersSuccess(clustersData));
+    const pins = yield call(fetchPins, filters);
+    yield put(getPinsSuccess(pins));
   } catch (e) {
-    yield put(getPinClustersFailure(e));
+    yield put(getPinsFailure(e));
     yield put(setErrorModal(true));
     return;
   }
 
-  try {
-    const heatmapData = yield call(fetchHeatmap, filters);
-    yield put(getHeatmapSuccess(heatmapData));
-  } catch (e) {
-    yield put(getHeatmapFailure(e));
-    yield put(setErrorModal(true));
-  }
+  // try {
+  //   const heatmapData = yield call(fetchHeatmap, filters);
+  //   yield put(getHeatmapSuccess(heatmapData));
+  // } catch (e) {
+  //   yield put(getHeatmapFailure(e));
+  //   yield put(setErrorModal(true));
+  // }
 }
 
 function* getVisData() {
   const filters = yield getFilters();
+
+  // skip if there's no data to get
+  if (filters.ncList.length === 0 || filters.requestTypes.length === 0) {
+    yield put(getVisDataSuccess({
+      counts: {},
+      frequency: {
+        bins: [],
+        counts: {},
+      },
+      timeToClose: {},
+    }));
+    return;
+  }
+
   try {
     const data = yield call(fetchVisData, filters);
     yield put(getVisDataSuccess(data));
@@ -201,9 +238,21 @@ function* sendContactData(action) {
 }
 
 export default function* rootSaga() {
-  yield takeLatest(types.GET_DATA_REQUEST, getMapData);
-  yield takeLatest(types.GET_DATA_REQUEST, getVisData);
-  yield takeLatest(uiTypes.UPDATE_MAP_POSITION, updatePinClusters);
+  // yield takeLatest(types.GET_DATA_REQUEST, getMapData);
+  // yield takeLatest(types.GET_DATA_REQUEST, getVisData);
+  // yield takeLatest(uiTypes.UPDATE_MAP_POSITION, updatePinClusters);
+
+  yield takeLatest(filtersTypes.UPDATE_NEIGHBORHOOD_COUNCIL, getMapData);
+  yield takeLatest(filtersTypes.UPDATE_NEIGHBORHOOD_COUNCIL, getVisData);
+  yield takeLatest(filtersTypes.UPDATE_DATE_RANGE, getMapData);
+  yield takeLatest(filtersTypes.UPDATE_DATE_RANGE, getVisData);
+  yield takeLatest(filtersTypes.UPDATE_REQUEST_TYPE, getMapData);
+  yield takeLatest(filtersTypes.UPDATE_REQUEST_TYPE, getVisData);
+  yield takeLatest(filtersTypes.SELECT_ALL_REQUEST_TYPES, getMapData);
+  yield takeLatest(filtersTypes.SELECT_ALL_REQUEST_TYPES, getVisData);
+  yield takeLatest(filtersTypes.DESELECT_ALL_REQUEST_TYPES, getMapData);
+  yield takeLatest(filtersTypes.DESELECT_ALL_REQUEST_TYPES, getVisData);
+
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
   yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
 }

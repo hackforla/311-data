@@ -7,6 +7,7 @@ import COLORS from '../../styles/COLORS';
 
 const Dropdown = ({
   id,
+  value,
   list,
   title,
   onClick,
@@ -20,7 +21,9 @@ const Dropdown = ({
 }) => {
   const dropdownNode = useRef();
   const [isOpen, updateIsOpen] = useState(open);
-  const [currentSelection, updateSelection] = useState(title);
+  const [currentSelection, updateSelection] = useState(
+    (value && list.find(el => el.value === value)?.label) || title
+  );
   const dropdownClassName = classNames('dropdown', {
     'is-active': isOpen,
     'is-hoverable': hoverable,
@@ -133,6 +136,7 @@ export default Dropdown;
 
 Dropdown.propTypes = {
   id: PropTypes.string.isRequired,
+  value: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string,
     value: PropTypes.string,
@@ -149,6 +153,7 @@ Dropdown.propTypes = {
 };
 
 Dropdown.defaultProps = {
+  value: undefined,
   width: '350px',
   style: undefined,
   open: false,

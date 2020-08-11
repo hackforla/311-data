@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { MENU_TABS } from '@components/common/CONSTANTS';
+import { MENU_TABS, MENU_MODES } from '@components/common/CONSTANTS';
 
 const Loader = ({
   isLoading,
@@ -19,12 +19,12 @@ const Loader = ({
 };
 
 const mapStateToProps = state => {
-  const { activeTab } = state.ui.menu;
+  const { activeTab, activeMode } = state.ui.menu;
   return {
     isLoading: (
       state.comparisonData.isLoading
-      || (state.data.isMapLoading && activeTab === MENU_TABS.MAP)
-      || (state.data.isVisLoading && activeTab === MENU_TABS.VISUALIZATIONS)
+      || (state.data.isMapLoading && activeTab === MENU_TABS.MAP && activeMode === MENU_MODES.TRENDS)
+      || (state.data.isVisLoading && activeTab === MENU_TABS.VISUALIZATIONS && activeMode === MENU_MODES.TRENDS)
     ),
   };
 };

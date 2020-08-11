@@ -1,8 +1,9 @@
-import { MENU_TABS } from '@components/common/CONSTANTS';
+import { MENU_TABS, MENU_MODES } from '@components/common/CONSTANTS';
 
 export const types = {
   TOGGLE_MENU: 'TOGGLE_MENU',
   SET_MENU_TAB: 'SET_MENU_TAB',
+  SET_MENU_MODE: 'SET_MENU_MODE',
   SET_ERROR_MODAL: 'SET_ERROR_MODAL',
   SHOW_DATA_CHARTS: 'SHOW_DATA_CHARTS',
   SHOW_COMPARISON_CHARTS: 'SHOW_COMPARISON_CHARTS',
@@ -18,6 +19,11 @@ export const toggleMenu = () => ({
 export const setMenuTab = tab => ({
   type: types.SET_MENU_TAB,
   payload: tab,
+});
+
+export const setMenuMode = mode => ({
+  type: types.SET_MENU_MODE,
+  payload: mode,
 });
 
 export const setErrorModal = isOpen => ({
@@ -53,6 +59,7 @@ const initialState = {
   menu: {
     isOpen: true,
     activeTab: MENU_TABS.MAP,
+    activeMode: MENU_MODES.OPEN,
   },
   map: {},
   error: {
@@ -88,6 +95,14 @@ export default (state = initialState, action) => {
         menu: {
           ...state.menu,
           activeTab: action.payload,
+        },
+      };
+    case types.SET_MENU_MODE:
+      return {
+        ...state,
+        menu: {
+          ...state.menu,
+          activeMode: action.payload,
         },
       };
     case types.SHOW_DATA_CHARTS:
