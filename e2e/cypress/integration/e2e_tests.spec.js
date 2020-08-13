@@ -8,7 +8,7 @@ describe('311 Data', () => {
             cy.server()
             cy.route({
                 method: 'POST',
-                url: 'http://dev-api.311-data.org/map/clusters',
+                url: Cypress.env('devApiUrl') + '/map/clusters',
                 onResponse(xhr) {
                     expect(xhr.status).to.eq(200)
                 }
@@ -46,7 +46,7 @@ describe('311 Data', () => {
             cy.server()
             cy.route({
                 method: 'POST',
-                url: 'http://dev-api.311-data.org/map/clusters',
+                url: Cypress.env('devApiUrl') + '/map/clusters',
                 onResponse(xhr) {
                     expect(xhr.status).to.eq(200)
                 }
@@ -98,6 +98,44 @@ describe('311 Data', () => {
             cy.get('#btn-sidebar-submit-button').click()
             cy.get('.chartjs-render-monitor').then(($el) => {
                 expect($el).to.exist
+            })
+        })
+    })
+
+    const serverId = '';
+
+    const testEmail = `fake\@email.com`
+
+    context('Contact Us', () => {
+        it('Contact Us: Sending Email', () => {
+
+            cy.server()
+            cy.route({
+                method:'POST',
+                url: Cypress.env('devApiUrl') +'/feedback',
+                response: [{"success": true}],
+                onResponse(xhr) {
+                    expect(xhr.status).to.eq(200);
+                }
+            }).as('feedbackJSON')
+
+            cy.visit('/')
+            cy.get('.navbar-end > :nth-child(4)').click()
+            cy.get('#contact-firstname').type('Test')
+            cy.get('#contact-lastname').type('User')
+            cy.get('#contact-email').type(testEmail)
+            cy.get('#contact-message').type('email test')
+            cy.get('#btn-contact-submit').click()
+            cy.wait('@feedbackJSON')
+
+            cy.get('.contact-success-popup').should('exist')
+        })
+
+        it.skip('Contact Us: Checking email', () => {
+            cy.mailosaurGetMessage(serverId, {
+                sentTo: testEmail
+            }).then(email => {
+                expect(email.subject).to.equal('Thanks for your feedback');
             })
         })
     })

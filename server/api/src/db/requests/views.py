@@ -58,7 +58,9 @@ def create():
                 status = 'Open' AND
                 latitude IS NOT NULL AND
                 longitude IS NOT NULL
-        ) WITH DATA
+        ) WITH DATA;
+
+        CREATE UNIQUE INDEX ON open_requests(srnumber);
     """)
 
 
