@@ -7,7 +7,7 @@ const SocialTags = require('social-tags-webpack-plugin');
 const description = 'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.';
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './index.js',
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js',
@@ -15,11 +15,11 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
-      '@components': path.resolve(__dirname, 'src/components'),
-      '@reducers': path.resolve(__dirname, 'src/redux/reducers'),
-      '@styles': path.resolve(__dirname, 'src/styles'),
-      '@assets': path.resolve(__dirname, 'src/assets'),
-      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@components': path.resolve(__dirname, 'components'),
+      '@reducers': path.resolve(__dirname, 'redux/reducers'),
+      '@styles': path.resolve(__dirname, 'styles'),
+      '@assets': path.resolve(__dirname, 'assets'),
+      '@utils': path.resolve(__dirname, 'utils'),
     },
   },
   module: {
@@ -76,7 +76,7 @@ module.exports = {
   },
   plugins: [
     new Dotenv({
-      path: 'src/.env',
+      path: './.env',
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',

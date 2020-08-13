@@ -10,8 +10,8 @@ const dotenv = require('dotenv');
 const red = '\x1b[31m%s\x1b[0m';
 const green = '\x1b[32m%s\x1b[0m';
 
-const envPath = path.resolve(__dirname, '.env');
-const exampleEnvPath = path.resolve(__dirname, '.example.env');
+const envPath = path.resolve(__dirname, '../.env');
+const exampleEnvPath = path.resolve(__dirname, '../.example.env');
 
 function getEnv(fileName) {
   return dotenv.parse(fs.readFileSync(fileName));

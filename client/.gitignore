@@ -1,0 +1,9 @@
+# secrets
+.env
+
+# dependencies
+/node_modules/
+node_modules_non_es5
+
+# production build
+dist/
