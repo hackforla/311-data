@@ -1,6 +1,4 @@
 
-dist/
-
 # Test results
 coverage/
 
@@ -21,10 +19,6 @@ coverage/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-/package-lock.json
-
-node_modules_non_es5
 
 # config
 config.js
