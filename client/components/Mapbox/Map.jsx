@@ -100,18 +100,16 @@ class Map extends React.Component {
         this.setState({ requests: this.props.requests });
         this.map.once('idle', this.setFilteredRequestCounts);
       } else {
-        this.map.once('load', () => {
-          this.map.once('idle', () => {
-            this.setState({ requests: this.props.requests });
-            this.map.once('idle', this.setFilteredRequestCounts);
-          });
+        this.map.once('idle', () => {
+          this.setState({ requests: this.props.requests });
+          this.map.once('idle', this.setFilteredRequestCounts);
         });
       }
     }
 
     if (
       this.state.filterGeo !== prevState.filterGeo ||
-      this.props.selectedTypes !== prevProps.selectedTypes
+      this.state.selectedTypes !== prevState.selectedTypes
     )
       this.map.once('idle', this.setFilteredRequestCounts);
   }
@@ -366,8 +364,8 @@ class Map extends React.Component {
   };
 
   setFilteredRequestCounts = () => {
-    const { requests, filterGeo, geoFilterType } = this.state;
-    const { selectedTypes, ncCounts, ccCounts } = this.props;
+    const { requests, filterGeo, geoFilterType, selectedTypes } = this.state;
+    const { ncCounts, ccCounts } = this.props;
 
     // use pre-calculated values for nc and cc filters if available
     if (
@@ -416,7 +414,6 @@ class Map extends React.Component {
       pinsInfo,
       getPinInfo,
       lastUpdated,
-      selectedTypes,
     } = this.props;
 
     const {
@@ -431,6 +428,7 @@ class Map extends React.Component {
       hoveredRegionName,
       canReset,
       selectedRequestId,
+      selectedTypes,
     } = this.state;
 
     return (

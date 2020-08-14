@@ -1,6 +1,6 @@
 .map-search {
-  top: 200px;
-  left: 10px;
+  top: 10px;
+  right: 10px;
   width: 300px;
   background-color: none;
 
@@ -15,11 +15,16 @@
     width: 100% !important;
     background-color: transparent !important;
     box-shadow: none;
+
     &--input {
       background-color: transparent !important;
       border-bottom: 1px $map-control-border-color solid;
       color: white;
       font-weight: normal;
+
+      &.focus-visible {
+        outline: none !important;
+      }
     }
 
     &--button {

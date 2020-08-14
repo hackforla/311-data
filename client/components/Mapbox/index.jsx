@@ -13,8 +13,8 @@ class MapContainer extends React.Component {
 
     this.state = {
       requests: this.convertRequests([]),
-      ncCounts: {},
-      ccCounts: {},
+      ncCounts: null,
+      ccCounts: null,
       position: props.position,
       lastUpdated: props.lastUpdated,
       selectedTypes: this.getSelectedTypes(),

@@ -6,7 +6,7 @@ import { MAP_STYLES } from '../constants';
 import clx from 'classnames';
 
 const TABS = [
-  //'Legend',
+  'Legend',
   'Style'
 ];
 
@@ -63,7 +63,7 @@ class MapLayers extends React.Component {
 
     return (
       <div className="map-layers map-control">
-        {/*<div className="map-control-tabs">
+        <div className="map-control-tabs">
           { TABS.map(tab => (
             <div
               key={tab}
@@ -75,9 +75,9 @@ class MapLayers extends React.Component {
               { tab }
             </div>
           ))}
-        </div>*/}
+        </div>
         <div style={{ position: 'relative' }}>
-          {/*<div className="type-selection">
+          <div className="type-selection">
             <div className="type-selectors">
               { Object.keys(REQUEST_TYPES).map(id => {
                 const type = REQUEST_TYPES[id];
@@ -111,7 +111,7 @@ class MapLayers extends React.Component {
                 Clear All
               </div>
             </div>
-          </div>*/}
+          </div>
           { this.state.activeTab === 'Style' && (
             <div className="style-selection">
               <div className="type-selectors">
