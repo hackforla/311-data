@@ -17,7 +17,30 @@ const Submit = ({
 
   const handleSubmit = () => {
     switch (pathname) {
-      case '/data': return getData();
+      case '/data': {
+        const {
+          startDate,
+          endDate,
+          councils,
+          requestTypes,
+        } = filters;
+
+        if (startDate
+          && endDate
+          && councils.length > 0
+          && Object.values(requestTypes).includes(true)) {
+            return getData();
+        } else {
+          if(!endDate){
+            
+          } else if(councils.length < 1){
+
+          } else if(!(Object.values(requestTypes).includes(true))){
+
+          }
+        }
+        break;
+      }
       case '/comparison': return getComparisonData();
       default: return null;
     }
