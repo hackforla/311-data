@@ -71,8 +71,10 @@ const Menu = ({
         <Route path="/comparison">
           <div className="menu-content">
             <h1>Comparison Filters</h1>
+            <p>* Indicates to make at least one selection</p>
+
             <InfoTitle
-              title="Date Range Selection"
+              title="Date Range Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to choose a date range for 311 comparison data.',
@@ -81,7 +83,7 @@ const Menu = ({
             />
             <DateSelector comparison key="comparison-dateselector" />
             <InfoTitle
-              title="District Selection"
+              title="District Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select specific district boundaries for comparison.',
@@ -90,7 +92,7 @@ const Menu = ({
             />
             <DistrictSelector />
             <InfoTitle
-              title="Chart Selection"
+              title="Chart Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select a chart for comparison.',
@@ -99,7 +101,7 @@ const Menu = ({
             />
             <ChartSelector />
             <InfoTitle
-              title="Request Type Selection"
+              title="Request Type Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select specific 311 request types for comparison.',
@@ -113,8 +115,9 @@ const Menu = ({
         <Route path="/data">
           <div className="menu-content with-tabs">
             <h1>Filters</h1>
+            <p>* Indicates to make at least one selection</p>
             <InfoTitle
-              title="Date Range Selection"
+              title="Date Range Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to choose a date range for 311 data.',
@@ -123,7 +126,7 @@ const Menu = ({
             />
             <DateSelector key="data-dateselector" />
             <InfoTitle
-              title="Neighborhood Council (NC) Selection"
+              title="Neighborhood Council (NC) Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select specific neighborhood councils.',
@@ -133,7 +136,7 @@ const Menu = ({
             />
             <NCSelector />
             <InfoTitle
-              title="Request Type Selection"
+              title="Request Type Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select specific 311 request types.',
