@@ -42,7 +42,7 @@ const Header = () => {
           </div>
           <div className="navbar-item">
             <NavLink exact to="/comparison" activeClassName="navbar-selected" style={backgroundStyle}>
-              Compare Different Councils
+              Data Visualization
             </NavLink>
           </div>
         </div>
