@@ -13,35 +13,95 @@ const Submit = ({
   comparisonFilters,
 }) => {
   const { pathname } = useLocation();
-  const [disableSubmit, setDisableSubmit] = useState(true);
+  const [dataErrors, setDataErrors] = useState({
+    missingStartDate: false, 
+    missingEndDate: false, 
+    missingCouncils: false,
+    missingRequestTypes: false
+  });
+  const [comparisonErrors, setComparisonErrors] = useState({
+    missingStartDate: false,
+    missingEndDate: false, 
+    missingChart: false,
+    missingDistrictOne: false,
+    missingDistrictTwo: false,
+    missingRequestTypes: false
+  })
+
+  const validateDataForm = () => {
+    const {
+      startDate,
+      endDate,
+      councils,
+      requestTypes,
+    } = filters;
+
+    const noStartDate = (startDate) ? false : true;
+    const noEndDate = (endDate) ? false : true;
+    const noCouncils = councils.length <= 0;
+    const noRequestTypes = !(Object.values(requestTypes).includes(true));
+    console.log(`noStartDate is ${noStartDate}, noEndDate is ${noEndDate}, noCouncils is ${noCouncils}, noRequestTypes is ${noRequestTypes}`);
+    
+    if(!noStartDate && !noEndDate && !noCouncils && !noRequestTypes){
+      return true;
+    }
+
+    setDataErrors({
+      missingStartDate: noStartDate,
+      missingEndDate: noEndDate,
+      missingCouncils: noCouncils,
+      missingRequestTypes: noRequestTypes,
+    });
+    return false;
+  }
+
+  const validateComparisonForm = () => {
+    const {
+      startDate,
+      endDate,
+      comparison: {
+        chart,
+        set1,
+        set2,
+      },
+      requestTypes,
+    } = comparisonFilters;
+
+    const noStartDate = (startDate) ? false : true;
+    const noEndDate = (endDate) ? false : true;
+    const noChart = (chart) ? false : true;
+    const noDistrictOneSet = set1.district || set1.list.length === 0;
+    const noDistrictTwoSet = set2.district || set2.list.length === 0;
+    const noRequestTypes = !(Object.values(requestTypes).includes(true));
+    
+    if(!noStartDate && !noEndDate && !noChart && !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
+      return true;
+    }
+    setComparisonErrors({
+      missingStartDate: noStartDate,
+      missingEndDate: noEndDate,
+      missingChart: noChart,
+      missingDistrictOne: noDistrictOneSet,
+      missingDistrictTwo: noDistrictTwoSet,
+      missingRequestTypes: noRequestTypes
+    })
+    return false;
+  }
 
   const handleSubmit = () => {
     switch (pathname) {
-      case '/data': {
-        const {
-          startDate,
-          endDate,
-          councils,
-          requestTypes,
-        } = filters;
-
-        if (startDate
-          && endDate
-          && councils.length > 0
-          && Object.values(requestTypes).includes(true)) {
-            return getData();
-        } else {
-          if(!endDate){
-            
-          } else if(councils.length < 1){
-
-          } else if(!(Object.values(requestTypes).includes(true))){
-
-          }
+      case '/data': 
+        if (validateDataForm()) {
+          console.log('Validate data form came back true');
+          return getData();
         }
         break;
-      }
-      case '/comparison': return getComparisonData();
+      case '/comparison': 
+        if(validateComparisonForm()){
+          console.log('Validate comparison form came back true');
+          return getComparisonData();
+        }
+        break;
       default: return null;
     }
   };
@@ -55,15 +115,6 @@ const Submit = ({
           councils,
           requestTypes,
         } = filters;
-
-        if (startDate
-            && endDate
-            && councils.length > 0
-            && Object.values(requestTypes).includes(true)) {
-          setDisableSubmit(false);
-        } else {
-          setDisableSubmit(true);
-        }
         break;
       }
       case '/comparison': {
@@ -77,26 +128,13 @@ const Submit = ({
           },
           requestTypes,
         } = comparisonFilters;
-
-        if (startDate
-            && endDate
-            && chart
-            && set1.district
-            && set1.list.length > 0
-            && set2.district
-            && set2.list.length > 0
-            && Object.values(requestTypes).includes(true)) {
-          setDisableSubmit(false);
-        } else {
-          setDisableSubmit(true);
-        }
         break;
       }
       default: return undefined;
     }
 
     return () => {};
-  }, [disableSubmit, filters, comparisonFilters, pathname]);
+  }, [filters, comparisonFilters, pathname]);
 
   return (
     <div className="level" style={{ padding: '25px 192px 15px' }}>
@@ -105,7 +143,6 @@ const Submit = ({
           id="sidebar-submit-button"
           label="Submit"
           handleClick={handleSubmit}
-          disabled={disableSubmit}
         />
       </div>
     </div>
