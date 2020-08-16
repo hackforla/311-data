@@ -49,7 +49,6 @@ const Menu = ({
     missingRequestTypes: false
   })
   const setDErrors = (startDate, endDate, councils, requestTypes) => {
-    console.log('This worked!');
     setDataErrors({
       missingStartDate: startDate,
       missingEndDate: endDate,
@@ -58,7 +57,6 @@ const Menu = ({
     });
   }
   const setCErrors = (startDate, endDate, chart, districtOne, districtTwo, requestTypes) => {
-    console.log("This worked!")
     setComparisonErrors({
       missingStartDate: startDate,
       missingEndDate: endDate,
@@ -145,7 +143,7 @@ const Menu = ({
               ]}
             />
             <RequestTypeSelector comparison />
-            <Submit />
+            <Submit setCErrors={setCErrors} setDErrors={setDErrors}/>
           </div>
         </Route>
         <Route path="/data">
@@ -180,7 +178,7 @@ const Menu = ({
               ]}
             />
             <RequestTypeSelector />
-            <Submit />
+            <Submit setCErrors={setCErrors} setDErrors={setDErrors}/>
           </div>
         </Route>
       </Switch>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'proptypes';
 import { useLocation } from 'react-router-dom';
@@ -7,27 +7,14 @@ import { getComparisonDataRequest } from '@reducers/comparisonData';
 import Button from '@components/common/Button';
 
 const Submit = ({
+  setCErrors, 
+  setDErrors,
   getData,
   getComparisonData,
   filters,
   comparisonFilters,
 }) => {
   const { pathname } = useLocation();
-  const [dataErrors, setDataErrors] = useState({
-    missingStartDate: false, 
-    missingEndDate: false, 
-    missingCouncils: false,
-    missingRequestTypes: false
-  });
-  const [comparisonErrors, setComparisonErrors] = useState({
-    missingStartDate: false,
-    missingEndDate: false, 
-    missingChart: false,
-    missingDistrictOne: false,
-    missingDistrictTwo: false,
-    missingRequestTypes: false
-  })
-
   const validateDataForm = () => {
     const {
       startDate,
@@ -48,14 +35,7 @@ const Submit = ({
       return true;
     }
 
-    props.setDError(noStartDate, noEndDate, noCouncils, noRequestTypes);
-
-    //setDataErrors({
-    //  missingStartDate: noStartDate,
-    //  missingEndDate: noEndDate,
-    //  missingCouncils: noCouncils,
-    //  missingRequestTypes: noRequestTypes,
-    //});
+    setDErrors(noStartDate, noEndDate, noCouncils, noRequestTypes);
     return false;
   }
 
@@ -82,16 +62,7 @@ const Submit = ({
       return true;
     }
 
-    setCError(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
-
-    //setComparisonErrors({
-    //  missingStartDate: noStartDate,
-    //  missingEndDate: noEndDate,
-    //  missingChart: noChart,
-    //  missingDistrictOne: noDistrictOneSet,
-    //  missingDistrictTwo: noDistrictTwoSet,
-    //  missingRequestTypes: noRequestTypes
-    //})
+    setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
     return false;
   }
 
