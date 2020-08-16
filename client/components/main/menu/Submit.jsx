@@ -40,7 +40,9 @@ const Submit = ({
     const noEndDate = (endDate) ? false : true;
     const noCouncils = councils.length <= 0;
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
-    console.log(`noStartDate is ${noStartDate}, noEndDate is ${noEndDate}, noCouncils is ${noCouncils}, noRequestTypes is ${noRequestTypes}`);
+
+    console.log(`noStartDate is ${noStartDate}, noEndDate is ${noEndDate}, 
+    noCouncils is ${noCouncils}, noRequestTypes is ${noRequestTypes}`);
     
     if(!noStartDate && !noEndDate && !noCouncils && !noRequestTypes){
       return true;
@@ -90,51 +92,23 @@ const Submit = ({
 
   const handleSubmit = () => {
     switch (pathname) {
-      case '/data': 
+      case '/data': {
         if (validateDataForm()) {
           console.log('Validate data form came back true');
           return getData();
         }
         break;
-      case '/comparison': 
+      }
+      case '/comparison': {
         if(validateComparisonForm()){
           console.log('Validate comparison form came back true');
           return getComparisonData();
         }
         break;
+      }
       default: return null;
     }
   };
-
-  useEffect(() => {
-    switch (pathname) {
-      case '/data': {
-        const {
-          startDate,
-          endDate,
-          councils,
-          requestTypes,
-        } = filters;
-        break;
-      }
-      case '/comparison': {
-        const {
-          startDate,
-          endDate,
-          comparison: {
-            chart,
-            set1,
-            set2,
-          },
-          requestTypes,
-        } = comparisonFilters;
-        break;
-      }
-      default: return undefined;
-    }
-
-    return () => {};
-  }, [filters, comparisonFilters, pathname]);
 
   return (
     <div className="level" style={{ padding: '25px 192px 15px' }}>
