@@ -48,12 +48,14 @@ const Submit = ({
       return true;
     }
 
-    setDataErrors({
-      missingStartDate: noStartDate,
-      missingEndDate: noEndDate,
-      missingCouncils: noCouncils,
-      missingRequestTypes: noRequestTypes,
-    });
+    props.setDError(noStartDate, noEndDate, noCouncils, noRequestTypes);
+
+    //setDataErrors({
+    //  missingStartDate: noStartDate,
+    //  missingEndDate: noEndDate,
+    //  missingCouncils: noCouncils,
+    //  missingRequestTypes: noRequestTypes,
+    //});
     return false;
   }
 
@@ -79,14 +81,17 @@ const Submit = ({
     if(!noStartDate && !noEndDate && !noChart && !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
       return true;
     }
-    setComparisonErrors({
-      missingStartDate: noStartDate,
-      missingEndDate: noEndDate,
-      missingChart: noChart,
-      missingDistrictOne: noDistrictOneSet,
-      missingDistrictTwo: noDistrictTwoSet,
-      missingRequestTypes: noRequestTypes
-    })
+
+    setCError(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
+
+    //setComparisonErrors({
+    //  missingStartDate: noStartDate,
+    //  missingEndDate: noEndDate,
+    //  missingChart: noChart,
+    //  missingDistrictOne: noDistrictOneSet,
+    //  missingDistrictTwo: noDistrictTwoSet,
+    //  missingRequestTypes: noRequestTypes
+    //})
     return false;
   }
 

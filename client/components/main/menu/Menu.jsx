@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import clx from 'classnames';
@@ -33,6 +33,42 @@ const Menu = ({
     MENU_TABS.MAP,
     MENU_TABS.VISUALIZATIONS,
   ];
+  const [dataErrors, setDataErrors] = useState({
+    missingStartDate: false,
+    missingEndDate: false,
+    missingCouncils: false,
+    missingRequestTypes: false
+  });
+
+  const [comparisonErrors, setComparisonErrors] = useState({
+    missingStartDate: false,
+    missingEndDate: false,
+    missingChart: false,
+    missingDistrictOne: false,
+    missingDistrictTwo: false,
+    missingRequestTypes: false
+  })
+  const setDErrors = (startDate, endDate, councils, requestTypes) => {
+    console.log('This worked!');
+    setDataErrors({
+      missingStartDate: startDate,
+      missingEndDate: endDate,
+      missingCouncils: councils,
+      missingRequestTypes: requestTypes,
+    });
+  }
+  const setCErrors = (startDate, endDate, chart, districtOne, districtTwo, requestTypes) => {
+    console.log("This worked!")
+    setComparisonErrors({
+      missingStartDate: startDate,
+      missingEndDate: endDate,
+      missingChart: chart,
+      missingDistrictOne: districtOne,
+      missingDistrictTwo: districtTwo,
+      missingRequestTypes: requestTypes
+    })
+  }
+
 
   return (
     <div className="menu-container">
