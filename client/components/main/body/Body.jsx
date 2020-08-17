@@ -18,9 +18,9 @@ const Body = ({
   menuIsOpen,
 }) => (
   <div className={clx('body', { 'menu-is-open': menuIsOpen })}>
-    <Menu />
     <Switch>
       <Route path="/comparison">
+        <Menu />
         <Comparison />
       </Route>
       <Route path="/data">
