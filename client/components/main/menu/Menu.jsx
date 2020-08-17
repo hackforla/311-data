@@ -23,6 +23,7 @@ import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
 import DistrictSelector from './DistrictSelector/DistrictSelector';
 import ChartSelector from './ChartSelector';
+import ToggleSwitch from '../../common/ToggleSwitch';
 
 const Menu = ({
   isOpen,
@@ -82,7 +83,16 @@ const Menu = ({
       <Switch>
         <Route path="/comparison">
           <div className="menu-content">
-            <h1>Comparison Filters</h1>
+            <br />
+            <InfoTitle
+              title="Compare Different Councils"
+              element="h2"
+              infoText={[
+                'This toggle switch allows the user to choose whether to compare data from different councils.',
+                '* Please click to make a selection.',
+              ]}
+            />
+            <ToggleSwitch />
             <InfoTitle
               title="Date Range Selection"
               element="h2"
