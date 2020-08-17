@@ -83,7 +83,6 @@ const Menu = ({
       <Switch>
         <Route path="/comparison">
           <div className="menu-content">
-            <br />
             <InfoTitle
               title="Compare Different Councils"
               element="h2"
@@ -91,6 +90,7 @@ const Menu = ({
                 'This toggle switch allows the user to choose whether to compare data from different councils.',
                 '* Please click to make a selection.',
               ]}
+              position="bottom"
             />
             <ToggleSwitch />
             <InfoTitle
