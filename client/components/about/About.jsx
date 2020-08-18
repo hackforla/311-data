@@ -27,11 +27,12 @@ const About = () => {
           handleClick={() => scrollTo(aboutRef)}
           size="large"
           iconSize="3x"
+          role="button"
         />
       </div>
       <WhatIs311Data ref={aboutRef} />
       <HowItWorks />
-      <Link to="/data">
+      <Link to="/data" role="link">
         <Button id="about-311" label="Let's Get Started" />
       </Link>
     </div>

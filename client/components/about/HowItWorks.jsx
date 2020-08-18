@@ -9,11 +9,11 @@ import DataVizSVG from '@assets/aboutdatavis.svg';
 const HowItWorks = () => (
   <div className="how-it-works">
     <h1>How It Works</h1>
-    <div className="grid-container">
-      <MobileSVG alt="Mobile Telephone" />
-      <DataServerSVG alt="Cloud Database" />
-      <DataVizSVG alt="Laptop Computer Displaying Data Visualizations" />
-      <GrowthSVG alt="Upturned Hand Holding Seedling" />
+    <div className="grid-container" role="presentation">
+      <MobileSVG role="img" aria-label="Mobile Telephone" />
+      <DataServerSVG role="img" aria-label="Cloud Database" />
+      <DataVizSVG role="img" aria-label="Laptop Computer Displaying Data Visualizations" />
+      <GrowthSVG role="img" aria-label="Upturned Hand Holding Seedling" />
       <p>Community members post reports via the City&apos;s easy-to-use mobile application.</p>
       <p>
         Reports are consolidated and entered into a central database and requests are
