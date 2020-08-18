@@ -11,6 +11,7 @@ import {
   toggleMenu as reduxToggleMenu,
   setMenuTab as reduxSetMenuTab,
   setMenuMode as reduxSetMenuMode,
+  toggleComparing as reduxToggleComparing,
 } from '@reducers/ui';
 
 import { MENU_TABS, MENU_MODES } from '@components/common/CONSTANTS';
@@ -32,6 +33,7 @@ const Menu = ({
   toggleMenu,
   setMenuTab,
   setMenuMode,
+  isComparing,
 }) => {
   const tabs = [
     MENU_TABS.MAP,
@@ -88,11 +90,13 @@ const Menu = ({
               element="h2"
               infoText={[
                 'This toggle switch allows the user to choose whether to compare data from different councils.',
-                '* Please click to make a selection.',
+                '* Please click to toggle.',
               ]}
               position="bottom"
             />
-            <ToggleSwitch />
+            <ToggleSwitch 
+              handleClick={() => toggleComparing()}
+            />
             <InfoTitle
               title="Date Range Selection"
               element="h2"
@@ -214,12 +218,14 @@ const mapStateToProps = state => ({
   isOpen: state.ui.menu.isOpen,
   activeTab: state.ui.menu.activeTab,
   activeMode: state.ui.menu.activeMode,
+  isComparing: state.ui.menu.isComparing,
 });
 
 const mapDispatchToProps = dispatch => ({
   toggleMenu: () => dispatch(reduxToggleMenu()),
   setMenuTab: tab => dispatch(reduxSetMenuTab(tab)),
   setMenuMode: mode => dispatch(reduxSetMenuMode(mode)),
+  toggleComparing: () => dispatch(reduxToggleComparing()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);
@@ -231,6 +237,7 @@ Menu.propTypes = {
   toggleMenu: PropTypes.func,
   setMenuTab: PropTypes.func,
   setMenuMode: PropTypes.func,
+  isComparing: PropTypes.bool.isRequired,
 };
 
 Menu.defaultProps = {

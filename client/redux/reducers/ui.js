@@ -2,6 +2,7 @@ import { MENU_TABS, MENU_MODES } from '@components/common/CONSTANTS';
 
 export const types = {
   TOGGLE_MENU: 'TOGGLE_MENU',
+  TOGGLE_COMPARING: 'TOGGLE_COMPARING',
   SET_MENU_TAB: 'SET_MENU_TAB',
   SET_MENU_MODE: 'SET_MENU_MODE',
   SET_ERROR_MODAL: 'SET_ERROR_MODAL',
@@ -15,6 +16,10 @@ export const types = {
 export const toggleMenu = () => ({
   type: types.TOGGLE_MENU,
 });
+
+export const toggleComparing = () => ({
+  type: types.TOGGLE_COMPARING,
+})
 
 export const setMenuTab = tab => ({
   type: types.SET_MENU_TAB,
@@ -79,6 +84,14 @@ export default (state = initialState, action) => {
         menu: {
           ...state.menu,
           isOpen: !state.menu.isOpen,
+        },
+      };
+    case types.TOGGLE_COMPARING:
+      return {
+        ...state,
+        menu: {
+          ...state.menu,
+          isComparing: !state.menu.isComparing,
         },
       };
     case types.SET_ERROR_MODAL:
