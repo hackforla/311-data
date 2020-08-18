@@ -4,8 +4,6 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import clx from 'classnames';
-import { Switch, Route } from 'react-router-dom';
 
 import {
   toggleMenu as reduxToggleMenu,
@@ -14,7 +12,6 @@ import {
   toggleComparing as reduxToggleComparing,
 } from '@reducers/ui';
 
-import { MENU_TABS, MENU_MODES } from '@components/common/CONSTANTS';
 import Button from '@components/common/Button';
 import InfoTitle from '@components/common/InfoTitle';
 import HoverOverInfo from '@components/common/HoverOverInfo';
@@ -28,102 +25,56 @@ import ToggleSwitch from '../../common/ToggleSwitch';
 
 const Menu = ({
   isOpen,
-  activeTab,
-  activeMode,
   toggleMenu,
-  setMenuTab,
-  setMenuMode,
   toggleComparing,
   isComparing,
 }) => {
-  const tabs = [
-    MENU_TABS.MAP,
-    MENU_TABS.VISUALIZATIONS,
-  ];
-
-  const modes = [
-    MENU_MODES.OPEN,
-    MENU_MODES.TRENDS,
-  ];
-
+  let menuContent;
   if (isComparing) {
-    return (
-      <div className="menu-container">
-        <div className="menu-toggle-button-container">
-          <HoverOverInfo
-            text="Click to show/hide the filters"
-            position="right"
-          >
-            <Button
-              id="menu-toggle-button"
-              icon={!isOpen ? 'chevron-right' : 'chevron-left'}
-              iconStyle={{ margin: '0px' }}
-              handleClick={() => toggleMenu()}
-              color="light"
-            />
-          </HoverOverInfo>
-        </div>
-
-        <div className="menu-content">
-          <InfoTitle
-            title="Compare Different Councils"
-            element="h2"
-            infoText={[
-              'This toggle switch allows the user to choose whether to compare data from different councils.',
-              '* Please click to toggle.',
-            ]}
-            position="bottom"
-          />
-          <ToggleSwitch 
-            handleClick={() => toggleComparing()}
-          />
-          <InfoTitle
-            title="Date Range Selection"
-            element="h2"
-            infoText={[
-              'This filter allows the user to choose a date range for 311 comparison data.',
-              '* Please click to make a selection.',
-            ]}
-          />
-          <DateSelector comparison key="comparison-dateselector" />
-          <InfoTitle
-            title="District Selection"
-            element="h2"
-            infoText={[
-              'This filter allows the user to select specific district boundaries for comparison.',
-              '* Please click to select districts for comparison.',
-            ]}
-          />
-          <DistrictSelector />
-          <InfoTitle
-            title="Chart Selection"
-            element="h2"
-            infoText={[
-              'This filter allows the user to select a chart for comparison.',
-              '* Please click on a chart type to make a selection.',
-            ]}
-          />
-          <ChartSelector />
-          <InfoTitle
-            title="Request Type Selection"
-            element="h2"
-            infoText={[
-              'This filter allows the user to select specific 311 request types for comparison.',
-              '* Please check box to make one or more selections.',
-            ]}
-          />
-          <RequestTypeSelector comparison />
-          <Submit />
-        </div>
-      </div>
-    )
-  } else {
-    return (
-      <div className="menu-content with-tabs">
-        {/*<h1>Filters</h1>*/}
-        <ToggleSwitch 
-          handleClick={() => toggleComparing()}
+    menuContent = (
+      <>
+        <InfoTitle
+          title="Date Range Selection"
+          element="h2"
+          infoText={[
+            'This filter allows the user to choose a date range for 311 comparison data.',
+            '* Please click to make a selection.',
+          ]}
         />
+        <DateSelector comparison key="comparison-dateselector" />
+        <InfoTitle
+          title="District Selection"
+          element="h2"
+          infoText={[
+            'This filter allows the user to select specific district boundaries for comparison.',
+            '* Please click to select districts for comparison.',
+          ]}
+        />
+        <DistrictSelector />
+        <InfoTitle
+          title="Chart Selection"
+          element="h2"
+          infoText={[
+            'This filter allows the user to select a chart for comparison.',
+            '* Please click on a chart type to make a selection.',
+          ]}
+        />
+        <ChartSelector />
+        <InfoTitle
+          title="Request Type Selection"
+          element="h2"
+          infoText={[
+            'This filter allows the user to select specific 311 request types for comparison.',
+            '* Please check box to make one or more selections.',
+          ]}
+        />
+        <RequestTypeSelector comparison />
+        <Submit />
+      </>
+    );
+  } else {
+    menuContent = (
+      <>
         <InfoTitle
           title="Date Range Selection"
           element="h2"
@@ -152,20 +103,45 @@ const Menu = ({
           ]}
         />
         <RequestTypeSelector />
-        <div className="menu-tabs" style={{ marginTop: 25 }}>
-          {tabs.map(tab => (
-            <a
-              key={tab}
-              className={clx('menu-tab', { active: tab === activeTab })}
-              onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
-            >
-              { tab }
-            </a>
-          ))}
-        </div>
-      </div>
-    )
+      </>
+    );
   }
+
+  return (
+    <div className="menu-container">
+      <div className="menu-toggle-button-container">
+        <HoverOverInfo
+          text="Click to show/hide the filters"
+          position="right"
+        >
+          <Button
+            id="menu-toggle-button"
+            icon={!isOpen ? 'chevron-right' : 'chevron-left'}
+            iconStyle={{ margin: '0px' }}
+            handleClick={() => toggleMenu()}
+            color="light"
+          />
+        </HoverOverInfo>
+      </div>
+
+      <div className="menu-content">
+        <InfoTitle
+          title="Compare Different Councils"
+          element="h2"
+          infoText={[
+            'This toggle switch allows the user to choose whether to compare data from different councils.',
+            '* Please click to toggle.',
+          ]}
+          position="bottom"
+        />
+        <ToggleSwitch
+          id="compare-councils-toggle-switch"
+          handleClick={() => toggleComparing()}
+        />
+        {menuContent}
+      </div>
+    </div>
+  )
 }
 
 const mapStateToProps = state => ({
