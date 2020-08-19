@@ -27,9 +27,6 @@ const Submit = ({
     const noEndDate = (endDate) ? false : true;
     const noCouncils = councils.length <= 0;
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
-
-    console.log(`noStartDate is ${noStartDate}, noEndDate is ${noEndDate}, 
-    noCouncils is ${noCouncils}, noRequestTypes is ${noRequestTypes}`);
     
     if(!noStartDate && !noEndDate && !noCouncils && !noRequestTypes){
       setDErrors(noStartDate, noEndDate, noCouncils, noRequestTypes);
@@ -58,9 +55,6 @@ const Submit = ({
     const noDistrictOneSet = (set1.list.length === 0) ? true : false;
     const noDistrictTwoSet = (set2.list.length === 0) ? true : false;
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
-
-    console.log(`startdate and enddate is ${noStartDate}, chart is ${noChart}, district set one is ${noDistrictOneSet}, district set
-    two is ${noDistrictTwoSet}, norequesttype is ${noRequestTypes}.`);
     
     if(!noStartDate && !noEndDate && !noChart && !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
       setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
@@ -75,14 +69,12 @@ const Submit = ({
     switch (pathname) {
       case '/data': {
         if (validateDataForm()) {
-          console.log('Validate data form came back true');
           return getData();
         }
         break;
       }
       case '/comparison': {
         if(validateComparisonForm()){
-          console.log('Validate comparison form came back true');
           return getComparisonData();
         }
         break;
