@@ -11,21 +11,22 @@ const Submit = ({
   getComparisonData,
   filters,
   comparisonFilters,
+  isComparing,
 }) => {
   const { pathname } = useLocation();
   const [disableSubmit, setDisableSubmit] = useState(true);
 
   const handleSubmit = () => {
-    switch (pathname) {
-      case '/data': return getData();
-      case '/comparison': return getComparisonData();
+    switch (isComparing) {
+      case false: return getData();
+      case true: return getComparisonData();
       default: return null;
     }
   };
 
   useEffect(() => {
-    switch (pathname) {
-      case '/data': {
+    switch (isComparing) {
+      case false: {
         const {
           startDate,
           endDate,
@@ -43,7 +44,7 @@ const Submit = ({
         }
         break;
       }
-      case '/comparison': {
+      case true: {
         const {
           startDate,
           endDate,
@@ -92,6 +93,7 @@ const Submit = ({
 const mapStateToProps = state => ({
   filters: state.filters,
   comparisonFilters: state.comparisonFilters,
+  isComparing: state.ui.menu.isComparing,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -129,6 +131,7 @@ Submit.propTypes = {
 Submit.defaultProps = {
   getData: () => null,
   getComparisonData: () => null,
+  isComparing: false,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Submit);

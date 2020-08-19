@@ -103,6 +103,7 @@ const Menu = ({
           ]}
         />
         <RequestTypeSelector />
+        <Submit />
       </>
     );
   }
