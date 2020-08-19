@@ -27,13 +27,11 @@ const Submit = ({
     const noEndDate = (endDate) ? false : true;
     const noCouncils = councils.length <= 0;
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
-    
+    setDErrors(noStartDate, noEndDate, noCouncils, noRequestTypes);
+
     if(!noStartDate && !noEndDate && !noCouncils && !noRequestTypes){
-      setDErrors(noStartDate, noEndDate, noCouncils, noRequestTypes);
       return true;
     }
-
-    setDErrors(noStartDate, noEndDate, noCouncils, noRequestTypes);
     return false;
   }
 
@@ -55,13 +53,13 @@ const Submit = ({
     const noDistrictOneSet = (set1.list.length === 0) ? true : false;
     const noDistrictTwoSet = (set2.list.length === 0) ? true : false;
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
+    setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
+
     
     if(!noStartDate && !noEndDate && !noChart && !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
-      setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
       return true;
     }
 
-    setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
     return false;
   }
 
