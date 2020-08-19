@@ -23,13 +23,7 @@ const Header = () => {
     >
       <div className="navbar-brand">
         <Link to="/" className="navbar-item">
-          <div className="navbar-item">
-            <p style={cta1Style}>311</p>
-            <p style={cta2Style}>DATA</p>
-          </div>
-          <div className="navbar-item beta-tag-wrapper">
-            <span className="beta-tag">BETA</span>
-          </div>
+          <img id="navbar-logo" src={require('../../../assets/311-data-logo.png')} alt="311-Data logo"></img>
         </Link>
       </div>
 

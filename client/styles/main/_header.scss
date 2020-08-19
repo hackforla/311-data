@@ -5,13 +5,17 @@
   z-index: $z-navbar;
   background-color: $brand-heading-color;
 
+  #navbar-logo {
+    max-height: 4rem;
+  }
+
   .navbar-brand {
     font-size: 20px;
   }
 
   .navbar-menu .navbar-item {
     font-size: 16px;
-    margin-right: 46px;
+    margin-right: 20px;
   }
 
   .navbar-selected {
