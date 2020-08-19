@@ -16,7 +16,7 @@ const Footer = ({
   const frontendSha = process.env.GITHUB_SHA || 'DEVELOPMENT';
   return (
     <footer
-      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen && ['/data', '/comparison'].includes(pathname) })}
+      className={clx('navbar has-navbar-fixed-bottom', { 'menu-is-open': menuIsOpen && ['/comparison'].includes(pathname) })}
     >
       { version && backendSha && (
         <span className="version">
