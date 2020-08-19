@@ -67,6 +67,14 @@ const Menu = ({
     })
   }
 
+  const missingSelectorWarning = React.createElement('p', {
+    style: {
+      color: 'red',
+      margin: '0 0 10px 0',
+      fontSize: '0.75rem'
+    },
+  }, '* Please choose at least one selection')
+
 
   return (
     <div className="menu-container">
@@ -115,6 +123,12 @@ const Menu = ({
                 '* Please click to make a selection.',
               ]}
             />
+            {
+              (comparisonErrors.missingEndDate) ?
+                missingSelectorWarning
+                :
+                null
+            }
             <DateSelector comparison key="comparison-dateselector" />
             <InfoTitle
               title="District Selection *"
@@ -124,6 +138,12 @@ const Menu = ({
                 '* Please click to select districts for comparison.',
               ]}
             />
+            {
+              (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo) ?
+                missingSelectorWarning
+                :
+                null
+            }
             <DistrictSelector />
             <InfoTitle
               title="Chart Selection *"
@@ -133,6 +153,12 @@ const Menu = ({
                 '* Please click on a chart type to make a selection.',
               ]}
             />
+            {
+              (comparisonErrors.missingChart) ?
+                missingSelectorWarning
+                :
+                null
+            }
             <ChartSelector />
             <InfoTitle
               title="Request Type Selection *"
@@ -142,6 +168,12 @@ const Menu = ({
                 '* Please check box to make one or more selections.',
               ]}
             />
+            {
+              (comparisonErrors.missingRequestTypes) ?
+                missingSelectorWarning
+                :
+                null
+            }
             <RequestTypeSelector comparison />
             <Submit setCErrors={setCErrors} setDErrors={setDErrors}/>
           </div>
@@ -158,6 +190,12 @@ const Menu = ({
                 '* Please click to make a selection.',
               ]}
             />
+            {
+              (dataErrors.missingEndDate) ? 
+                <p className="help is-danger">* Please Choose at least one selection</p> 
+              : 
+                null
+            }
             <DateSelector key="data-dateselector" />
             <InfoTitle
               title="Neighborhood Council (NC) Selection *"
@@ -168,6 +206,12 @@ const Menu = ({
               ]}
               position="top"
             />
+            {
+              (dataErrors.missingCouncils) ?
+                missingSelectorWarning
+                :
+                null
+            }
             <NCSelector />
             <InfoTitle
               title="Request Type Selection *"
@@ -177,6 +221,12 @@ const Menu = ({
                 '* Please check box to make one or more selections.',
               ]}
             />
+            {
+              (dataErrors.missingRequestTypes) ?
+                missingSelectorWarning
+                :
+                null
+            }
             <RequestTypeSelector />
             <Submit setCErrors={setCErrors} setDErrors={setDErrors}/>
           </div>
