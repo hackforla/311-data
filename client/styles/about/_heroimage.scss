@@ -1,10 +1,26 @@
 .about-hero {
   height: calc(100vh - #{$header-height + $footer-height});
-  background-image: url('../assets/about311herodark.png');
+  background-image: url('../assets/about311hero.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
+
+  #main-logo {
+    width: 350px;
+    margin-top: 30px;
+  }
+
+  #hackforla-main-logo {
+    width: 75px;
+    vertical-align: bottom;
+  }
+
+  .presented-by-container h2 {
+    color: white;
+    display: inline-block;
+    margin: 10px;
+  }
 }
 
 .overlay-text {
