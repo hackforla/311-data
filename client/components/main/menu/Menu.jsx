@@ -137,6 +137,7 @@ const Menu = ({
         <ToggleSwitch
           id="compare-councils-toggle-switch"
           handleClick={() => toggleComparing()}
+          checked={isComparing}
         />
         {menuContent}
       </div>

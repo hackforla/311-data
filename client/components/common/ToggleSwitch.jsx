@@ -18,6 +18,7 @@ const ToggleSwitch = ({
   rounded,
   outlined,
   disabled,
+  checked,
 }) => {
   const toggleswitchClassName = classNames('switch', {
     'is-rtl': rightToLeft,
@@ -39,6 +40,7 @@ const ToggleSwitch = ({
         name={name}
         className={toggleswitchClassName}
         disabled={disabled}
+        checked={checked}
       />
       <label htmlFor={toggleswitchId}>
         {label}
