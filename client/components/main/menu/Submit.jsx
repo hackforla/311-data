@@ -55,13 +55,13 @@ const Submit = ({
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
     setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
 
-    if (!noStartDate && !noEndDate && !noChart && 
-    !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
+    if (!noStartDate && !noEndDate && !noChart 
+    && !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
       return true;
     }
 
     return false;
-  }
+  };
 
   const handleSubmit = () => {
     switch (pathname) {
@@ -72,7 +72,7 @@ const Submit = ({
         break;
       }
       case '/comparison': {
-        if(validateComparisonForm()){
+        if (validateComparisonForm()) {
           return getComparisonData();
         }
         break;
@@ -105,7 +105,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 Submit.propTypes = {
-  setCErrors: propTypes.func, 
+  setCErrors: propTypes.func,
   setDErrors: propTypes.func,
   getData: propTypes.func,
   getComparisonData: propTypes.func,
@@ -136,6 +136,8 @@ Submit.propTypes = {
 Submit.defaultProps = {
   getData: () => null,
   getComparisonData: () => null,
+  setCErrors: () => null,
+  setDErrors: () => null,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Submit);

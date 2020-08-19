@@ -123,7 +123,7 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingEndDate) ? missingSelectorWarning: null
+              (comparisonErrors.missingEndDate) ? missingSelectorWarning : null
             }
             <DateSelector comparison key="comparison-dateselector" />
             <InfoTitle
@@ -135,7 +135,8 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo) ? missingSelectorWarning : null
+              (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo) 
+              ? missingSelectorWarning : null
             }
             <DistrictSelector />
             <InfoTitle
@@ -162,7 +163,7 @@ const Menu = ({
               (comparisonErrors.missingRequestTypes) ? missingSelectorWarning : null
             }
             <RequestTypeSelector comparison />
-            <Submit setCErrors={setCErrors} setDErrors={setDErrors}/>
+            <Submit setCErrors={setCErrors} setDErrors={setDErrors} />
           </div>
         </Route>
         <Route path="/data">
@@ -206,7 +207,7 @@ const Menu = ({
               (dataErrors.missingRequestTypes) ? missingSelectorWarning : null
             }
             <RequestTypeSelector />
-            <Submit setCErrors={setCErrors} setDErrors={setDErrors}/>
+            <Submit setCErrors={setCErrors} setDErrors={setDErrors} />
           </div>
         </Route>
       </Switch>

@@ -14,7 +14,7 @@ const InfoTitle = ({
     {
       style: {
         display: 'inline-block',
-        margin: '15px 5px 5px 0'
+        margin: '15px 5px 5px 0',
       },
     },
     title,
