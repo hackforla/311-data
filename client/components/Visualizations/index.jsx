@@ -24,13 +24,8 @@ SnapshotService.register({
 });
 
 const Visualizations = ({
-  menuActiveTab,
   chartsVisibility,
 }) => {
-  if (menuActiveTab !== MENU_TABS.VISUALIZATIONS) {
-    return null;
-  }
-
   if (chartsVisibility) {
     return (
       <div className="visualizations">

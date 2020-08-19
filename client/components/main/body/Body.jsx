@@ -22,6 +22,7 @@ const Body = ({
       <Route path="/comparison">
         <Menu />
         <Comparison />
+        <Visualizations />
       </Route>
       <Route path="/data">
         <PinMap />
