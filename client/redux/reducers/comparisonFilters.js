@@ -1,4 +1,4 @@
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import { REQUEST_TYPES, DATE_RANGES } from '@components/common/CONSTANTS';
 
 export const types = {
   UPDATE_COMPARISON_START_DATE: 'UPDATE_COMPARISON_START_DATE',
@@ -70,9 +70,9 @@ const allRequestTypes = value => (
 );
 
 const initialState = {
-  dateRange: null,
-  startDate: null,
-  endDate: null,
+  dateRange: DATE_RANGES[0].id,
+  startDate: DATE_RANGES[0].startDate,
+  endDate: DATE_RANGES[0].endDate,
   comparison: {
     chart: '',
     set1: {
