@@ -4,7 +4,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  position: relative;
+  text-align: center;
 
   #main-logo {
     width: 350px;
@@ -20,6 +20,32 @@
     color: white;
     display: inline-block;
     margin: 10px;
+  }
+}
+
+.splash-buttons {
+  margin-top: 50px;
+
+  a {
+    margin: 10px;
+  }
+
+  #btn-launch-button {
+    background-color: $brand-cta1-color;
+    color: $brand-text-color;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: $brand-heading-family;
+    text-align: center;
+  }
+
+  #btn-about-button {
+    background-color: white;
+    color: $brand-text-color;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: $brand-heading-family;
+    text-align: center;
   }
 }
 

@@ -4,8 +4,8 @@ import HackforLA from '@assets/hackforla.png';
 import CFALogo from '@assets/cfa-logo.png';
 
 // eslint-disable-next-line react/display-name
-const WhatIs311Data = forwardRef((props, ref) => (
-  <div className="main-text" ref={ref}>
+const WhatIs311Data = () => (
+  <div className="main-text" >
     <h1>What is 311 Data?</h1>
     <p>
       Each day, Los Angelenos report thousands of 311 requests all across LA to resolve
@@ -64,6 +64,6 @@ const WhatIs311Data = forwardRef((props, ref) => (
       or opportunities for our data science team to analyze additional data.
     </p>
   </div>
-));
+);
 
 export default WhatIs311Data;
