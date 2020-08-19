@@ -192,7 +192,7 @@ const Menu = ({
             />
             {
               (dataErrors.missingEndDate) ? 
-                <p className="help is-danger">* Please Choose at least one selection</p> 
+                missingSelectorWarning
               : 
                 null
             }
