@@ -55,7 +55,7 @@ const Submit = ({
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
     setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
 
-    if (!noStartDate && !noEndDate && !noChart 
+    if (!noStartDate && !noEndDate && !noChart
     && !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
       return true;
     }
@@ -77,7 +77,7 @@ const Submit = ({
         }
         break;
       }
-      default: return null;
+      default: return false;
     }
   };
 

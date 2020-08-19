@@ -135,8 +135,8 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo) 
-              ? missingSelectorWarning : null
+              (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo)
+                ? missingSelectorWarning : null
             }
             <DistrictSelector />
             <InfoTitle
