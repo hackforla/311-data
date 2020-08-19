@@ -23,8 +23,8 @@ const Submit = ({
       requestTypes,
     } = filters;
 
-    const noStartDate = (startDate) ? false : true;
-    const noEndDate = (endDate) ? false : true;
+    const noStartDate = !startDate;
+    const noEndDate = !endDate;
     const noCouncils = councils.length <= 0;
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
     setDErrors(noStartDate, noEndDate, noCouncils, noRequestTypes);
@@ -47,11 +47,11 @@ const Submit = ({
       requestTypes,
     } = comparisonFilters;
 
-    const noStartDate = (startDate) ? false : true;
-    const noEndDate = (endDate) ? false : true;
-    const noChart = (chart) ? false : true;
-    const noDistrictOneSet = (set1.list.length === 0) ? true : false;
-    const noDistrictTwoSet = (set2.list.length === 0) ? true : false;
+    const noStartDate = !startDate;
+    const noEndDate = !endDate;
+    const noChart = !chart;
+    const noDistrictOneSet = set1.list.length === 0;
+    const noDistrictTwoSet = set2.list.length === 0;
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
     setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
 
