@@ -65,6 +65,7 @@ const initialState = {
     isOpen: true,
     activeTab: MENU_TABS.MAP,
     activeMode: MENU_MODES.OPEN,
+    isComparing: false,
   },
   map: {},
   error: {

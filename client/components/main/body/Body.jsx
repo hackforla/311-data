@@ -16,17 +16,19 @@ const Body = ({
   openErrorModal,
   error,
   menuIsOpen,
+  isComparing,
 }) => (
   <div className={clx('body', { 'menu-is-open': menuIsOpen })}>
     <Switch>
       <Route path="/comparison">
         <Menu />
-        <Comparison />
-        <Visualizations />
+        {isComparing
+          ? <Comparison />
+          : <Visualizations />
+        }
       </Route>
       <Route path="/data">
         <PinMap />
-        <Visualizations />
       </Route>
     </Switch>
     <Loader />
@@ -41,6 +43,7 @@ Body.propTypes = {
   error: PropTypes.shape({}),
   openErrorModal: PropTypes.bool.isRequired,
   menuIsOpen: PropTypes.bool.isRequired,
+  isComparing: PropTypes.bool.isRequired,
 };
 
 Body.defaultProps = {
@@ -51,6 +54,7 @@ const mapStateToProps = state => ({
   error: state.data.error,
   openErrorModal: state.ui.error.isOpen,
   menuIsOpen: state.ui.menu.isOpen,
+  isComparing: state.ui.menu.isComparing,
 });
 
 export default connect(mapStateToProps, null)(Body);
