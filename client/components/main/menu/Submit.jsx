@@ -79,6 +79,7 @@ const Submit = ({
       }
       default: return false;
     }
+    return null;
   };
 
   return (
