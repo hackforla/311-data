@@ -37,7 +37,7 @@ const Menu = ({
     missingStartDate: false,
     missingEndDate: false,
     missingCouncils: false,
-    missingRequestTypes: false
+    missingRequestTypes: false,
   });
 
   const [comparisonErrors, setComparisonErrors] = useState({
@@ -46,8 +46,8 @@ const Menu = ({
     missingChart: false,
     missingDistrictOne: false,
     missingDistrictTwo: false,
-    missingRequestTypes: false
-  })
+    missingRequestTypes: false,
+  });
   const setDErrors = (startDate, endDate, councils, requestTypes) => {
     setDataErrors({
       missingStartDate: startDate,
@@ -55,7 +55,7 @@ const Menu = ({
       missingCouncils: councils,
       missingRequestTypes: requestTypes,
     });
-  }
+  };
   const setCErrors = (startDate, endDate, chart, districtOne, districtTwo, requestTypes) => {
     setComparisonErrors({
       missingStartDate: startDate,
@@ -63,18 +63,17 @@ const Menu = ({
       missingChart: chart,
       missingDistrictOne: districtOne,
       missingDistrictTwo: districtTwo,
-      missingRequestTypes: requestTypes
-    })
-  }
+      missingRequestTypes: requestTypes,
+    });
+  };
 
   const missingSelectorWarning = React.createElement('p', {
     style: {
       color: 'red',
       margin: '0 0 10px 0',
-      fontSize: '0.75rem'
+      fontSize: '0.75rem',
     },
-  }, '* Please choose at least one selection')
-
+  }, '* Please choose at least one selection');
 
   return (
     <div className="menu-container">
@@ -124,10 +123,7 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingEndDate) ?
-                missingSelectorWarning
-                :
-                null
+              (comparisonErrors.missingEndDate) ? missingSelectorWarning: null
             }
             <DateSelector comparison key="comparison-dateselector" />
             <InfoTitle
@@ -139,10 +135,7 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo) ?
-                missingSelectorWarning
-                :
-                null
+              (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo) ? missingSelectorWarning : null
             }
             <DistrictSelector />
             <InfoTitle
@@ -154,10 +147,7 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingChart) ?
-                missingSelectorWarning
-                :
-                null
+              (comparisonErrors.missingChart) ? missingSelectorWarning : null
             }
             <ChartSelector />
             <InfoTitle
@@ -169,10 +159,7 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingRequestTypes) ?
-                missingSelectorWarning
-                :
-                null
+              (comparisonErrors.missingRequestTypes) ? missingSelectorWarning : null
             }
             <RequestTypeSelector comparison />
             <Submit setCErrors={setCErrors} setDErrors={setDErrors}/>
@@ -191,10 +178,7 @@ const Menu = ({
               ]}
             />
             {
-              (dataErrors.missingEndDate) ? 
-                missingSelectorWarning
-              : 
-                null
+              (dataErrors.missingEndDate) ? missingSelectorWarning : null
             }
             <DateSelector key="data-dateselector" />
             <InfoTitle
@@ -207,10 +191,7 @@ const Menu = ({
               position="top"
             />
             {
-              (dataErrors.missingCouncils) ?
-                missingSelectorWarning
-                :
-                null
+              (dataErrors.missingCouncils) ? missingSelectorWarning : null
             }
             <NCSelector />
             <InfoTitle
@@ -222,10 +203,7 @@ const Menu = ({
               ]}
             />
             {
-              (dataErrors.missingRequestTypes) ?
-                missingSelectorWarning
-                :
-                null
+              (dataErrors.missingRequestTypes) ? missingSelectorWarning : null
             }
             <RequestTypeSelector />
             <Submit setCErrors={setCErrors} setDErrors={setDErrors}/>

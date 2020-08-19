@@ -7,7 +7,7 @@ import { getComparisonDataRequest } from '@reducers/comparisonData';
 import Button from '@components/common/Button';
 
 const Submit = ({
-  setCErrors, 
+  setCErrors,
   setDErrors,
   getData,
   getComparisonData,
@@ -29,11 +29,11 @@ const Submit = ({
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
     setDErrors(noStartDate, noEndDate, noCouncils, noRequestTypes);
 
-    if(!noStartDate && !noEndDate && !noCouncils && !noRequestTypes){
+    if (!noStartDate && !noEndDate && !noCouncils && !noRequestTypes) {
       return true;
     }
     return false;
-  }
+  };
 
   const validateComparisonForm = () => {
     const {
@@ -55,8 +55,8 @@ const Submit = ({
     const noRequestTypes = !(Object.values(requestTypes).includes(true));
     setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
 
-    
-    if(!noStartDate && !noEndDate && !noChart && !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
+    if (!noStartDate && !noEndDate && !noChart && 
+    !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
       return true;
     }
 
@@ -105,6 +105,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 Submit.propTypes = {
+  setCErrors: propTypes.func, 
+  setDErrors: propTypes.func,
   getData: propTypes.func,
   getComparisonData: propTypes.func,
   filters: propTypes.shape({
