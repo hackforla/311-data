@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'proptypes';
 import { useLocation } from 'react-router-dom';
@@ -7,73 +7,80 @@ import { getComparisonDataRequest } from '@reducers/comparisonData';
 import Button from '@components/common/Button';
 
 const Submit = ({
+  setCErrors,
+  setDErrors,
   getData,
   getComparisonData,
   filters,
   comparisonFilters,
 }) => {
   const { pathname } = useLocation();
-  const [disableSubmit, setDisableSubmit] = useState(true);
+  const validateDataForm = () => {
+    const {
+      startDate,
+      endDate,
+      councils,
+      requestTypes,
+    } = filters;
+
+    const noStartDate = !startDate;
+    const noEndDate = !endDate;
+    const noCouncils = councils.length <= 0;
+    const noRequestTypes = !(Object.values(requestTypes).includes(true));
+    setDErrors(noStartDate, noEndDate, noCouncils, noRequestTypes);
+
+    if (!noStartDate && !noEndDate && !noCouncils && !noRequestTypes) {
+      return true;
+    }
+    return false;
+  };
+
+  const validateComparisonForm = () => {
+    const {
+      startDate,
+      endDate,
+      comparison: {
+        chart,
+        set1,
+        set2,
+      },
+      requestTypes,
+    } = comparisonFilters;
+
+    const noStartDate = !startDate;
+    const noEndDate = !endDate;
+    const noChart = !chart;
+    const noDistrictOneSet = set1.list.length === 0;
+    const noDistrictTwoSet = set2.list.length === 0;
+    const noRequestTypes = !(Object.values(requestTypes).includes(true));
+    setCErrors(noStartDate, noEndDate, noChart, noDistrictOneSet, noDistrictTwoSet, noRequestTypes);
+
+    if (!noStartDate && !noEndDate && !noChart
+    && !noDistrictOneSet && !noDistrictTwoSet && !noRequestTypes) {
+      return true;
+    }
+
+    return false;
+  };
 
   const handleSubmit = () => {
     switch (pathname) {
-      case '/data': return getData();
-      case '/comparison': return getComparisonData();
-      default: return null;
-    }
-  };
-
-  useEffect(() => {
-    switch (pathname) {
       case '/data': {
-        const {
-          startDate,
-          endDate,
-          councils,
-          requestTypes,
-        } = filters;
-
-        if (startDate
-            && endDate
-            && councils.length > 0
-            && Object.values(requestTypes).includes(true)) {
-          setDisableSubmit(false);
-        } else {
-          setDisableSubmit(true);
+        if (validateDataForm()) {
+          return getData();
         }
         break;
       }
       case '/comparison': {
-        const {
-          startDate,
-          endDate,
-          comparison: {
-            chart,
-            set1,
-            set2,
-          },
-          requestTypes,
-        } = comparisonFilters;
-
-        if (startDate
-            && endDate
-            && chart
-            && set1.district
-            && set1.list.length > 0
-            && set2.district
-            && set2.list.length > 0
-            && Object.values(requestTypes).includes(true)) {
-          setDisableSubmit(false);
-        } else {
-          setDisableSubmit(true);
+        if (validateComparisonForm()) {
+          return getComparisonData();
         }
         break;
       }
-      default: return undefined;
+      default: return false;
     }
-
-    return () => {};
-  }, [disableSubmit, filters, comparisonFilters, pathname]);
+    return null;
+  };
 
   return (
     <div className="level" style={{ padding: '25px 192px 15px' }}>
@@ -82,7 +89,6 @@ const Submit = ({
           id="sidebar-submit-button"
           label="Submit"
           handleClick={handleSubmit}
-          disabled={disableSubmit}
         />
       </div>
     </div>
@@ -100,6 +106,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 Submit.propTypes = {
+  setCErrors: propTypes.func,
+  setDErrors: propTypes.func,
   getData: propTypes.func,
   getComparisonData: propTypes.func,
   filters: propTypes.shape({
@@ -129,6 +137,8 @@ Submit.propTypes = {
 Submit.defaultProps = {
   getData: () => null,
   getComparisonData: () => null,
+  setCErrors: () => null,
+  setDErrors: () => null,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Submit);

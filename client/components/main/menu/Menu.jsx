@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import clx from 'classnames';
@@ -17,6 +17,7 @@ import Button from '@components/common/Button';
 import InfoTitle from '@components/common/InfoTitle';
 import HoverOverInfo from '@components/common/HoverOverInfo';
 import Submit from './Submit';
+import ErrorMessage from './ErrorMessage';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
@@ -33,6 +34,39 @@ const Menu = ({
     MENU_TABS.MAP,
     MENU_TABS.VISUALIZATIONS,
   ];
+  const [dataErrors, setDataErrors] = useState({
+    missingStartDate: false,
+    missingEndDate: false,
+    missingCouncils: false,
+    missingRequestTypes: false,
+  });
+
+  const [comparisonErrors, setComparisonErrors] = useState({
+    missingStartDate: false,
+    missingEndDate: false,
+    missingChart: false,
+    missingDistrictOne: false,
+    missingDistrictTwo: false,
+    missingRequestTypes: false,
+  });
+  const setDErrors = (startDate, endDate, councils, requestTypes) => {
+    setDataErrors({
+      missingStartDate: startDate,
+      missingEndDate: endDate,
+      missingCouncils: councils,
+      missingRequestTypes: requestTypes,
+    });
+  };
+  const setCErrors = (startDate, endDate, chart, districtOne, districtTwo, requestTypes) => {
+    setComparisonErrors({
+      missingStartDate: startDate,
+      missingEndDate: endDate,
+      missingChart: chart,
+      missingDistrictOne: districtOne,
+      missingDistrictTwo: districtTwo,
+      missingRequestTypes: requestTypes,
+    });
+  };
 
   return (
     <div className="menu-container">
@@ -71,59 +105,78 @@ const Menu = ({
         <Route path="/comparison">
           <div className="menu-content">
             <h1>Comparison Filters</h1>
+            <p>* Indicates to make at least one selection</p>
+
             <InfoTitle
-              title="Date Range Selection"
+              title="Date Range Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to choose a date range for 311 comparison data.',
                 '* Please click to make a selection.',
               ]}
             />
+            {
+              comparisonErrors.missingEndDate && <ErrorMessage errorType="data" />
+            }
             <DateSelector comparison key="comparison-dateselector" />
             <InfoTitle
-              title="District Selection"
+              title="District Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select specific district boundaries for comparison.',
                 '* Please click to select districts for comparison.',
               ]}
             />
+            {
+              (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo)
+                && <ErrorMessage errorType="districtset" />
+            }
             <DistrictSelector />
             <InfoTitle
-              title="Chart Selection"
+              title="Chart Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select a chart for comparison.',
                 '* Please click on a chart type to make a selection.',
               ]}
             />
+            {
+              comparisonErrors.missingChart && <ErrorMessage errorType="selectone" />
+            }
             <ChartSelector />
             <InfoTitle
-              title="Request Type Selection"
+              title="Request Type Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select specific 311 request types for comparison.',
                 '* Please check box to make one or more selections.',
               ]}
             />
+            {
+              comparisonErrors.missingRequestTypes && <ErrorMessage errorType="selectone" />
+            }
             <RequestTypeSelector comparison />
-            <Submit />
+            <Submit setCErrors={setCErrors} setDErrors={setDErrors} />
           </div>
         </Route>
         <Route path="/data">
           <div className="menu-content with-tabs">
             <h1>Filters</h1>
+            <p>* Indicates to make at least one selection</p>
             <InfoTitle
-              title="Date Range Selection"
+              title="Date Range Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to choose a date range for 311 data.',
                 '* Please click to make a selection.',
               ]}
             />
+            {
+              dataErrors.missingEndDate && <ErrorMessage errorType="data" />
+            }
             <DateSelector key="data-dateselector" />
             <InfoTitle
-              title="Neighborhood Council (NC) Selection"
+              title="Neighborhood Council (NC) Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select specific neighborhood councils.',
@@ -131,17 +184,23 @@ const Menu = ({
               ]}
               position="top"
             />
+            {
+              dataErrors.missingCouncils && <ErrorMessage errorType="selectone" />
+            }
             <NCSelector />
             <InfoTitle
-              title="Request Type Selection"
+              title="Request Type Selection *"
               element="h2"
               infoText={[
                 'This filter allows the user to select specific 311 request types.',
                 '* Please check box to make one or more selections.',
               ]}
             />
+            {
+              dataErrors.missingRequestTypes && <ErrorMessage errorType="selectone" />
+            }
             <RequestTypeSelector />
-            <Submit />
+            <Submit setCErrors={setCErrors} setDErrors={setDErrors} />
           </div>
         </Route>
       </Switch>
