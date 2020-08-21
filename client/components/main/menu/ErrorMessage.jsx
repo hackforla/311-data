@@ -2,9 +2,8 @@ import React from 'react';
 import propTypes from 'proptypes';
 
 const ErrorMessage = ({
-  errorType
+  errorType,
 }) => {
-
   const setErrorMessage = () => {
     switch (errorType) {
       case 'selectone': {
@@ -18,7 +17,6 @@ const ErrorMessage = ({
       }
       default: return null;
     }
-    return null;
   };
 
   const errorMessage = setErrorMessage();
@@ -40,4 +38,4 @@ export default ErrorMessage;
 
 ErrorMessage.propTypes = {
   errorType: propTypes.string.isRequired,
-}
+};
