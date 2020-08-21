@@ -17,6 +17,7 @@ import Button from '@components/common/Button';
 import InfoTitle from '@components/common/InfoTitle';
 import HoverOverInfo from '@components/common/HoverOverInfo';
 import Submit from './Submit';
+import ErrorMessage from './ErrorMessage';
 import DateSelector from './DateSelector/DateSelector';
 import NCSelector from './NCSelector';
 import RequestTypeSelector from './RequestTypeSelector';
@@ -67,14 +68,6 @@ const Menu = ({
     });
   };
 
-  const missingSelectorWarning = React.createElement('p', {
-    style: {
-      color: 'red',
-      margin: '0 0 10px 0',
-      fontSize: '0.75rem',
-    },
-  }, '* Please choose at least one selection');
-
   return (
     <div className="menu-container">
       <Switch>
@@ -123,7 +116,7 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingEndDate) ? missingSelectorWarning : null
+              comparisonErrors.missingEndDate && <ErrorMessage errorType="data" />
             }
             <DateSelector comparison key="comparison-dateselector" />
             <InfoTitle
@@ -136,7 +129,7 @@ const Menu = ({
             />
             {
               (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo)
-                ? missingSelectorWarning : null
+                && <ErrorMessage errorType="districtset" />
             }
             <DistrictSelector />
             <InfoTitle
@@ -148,7 +141,7 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingChart) ? missingSelectorWarning : null
+              comparisonErrors.missingChart && <ErrorMessage errorType="selectone" />
             }
             <ChartSelector />
             <InfoTitle
@@ -160,7 +153,7 @@ const Menu = ({
               ]}
             />
             {
-              (comparisonErrors.missingRequestTypes) ? missingSelectorWarning : null
+              comparisonErrors.missingRequestTypes && <ErrorMessage errorType="selectone" />
             }
             <RequestTypeSelector comparison />
             <Submit setCErrors={setCErrors} setDErrors={setDErrors} />
@@ -179,7 +172,7 @@ const Menu = ({
               ]}
             />
             {
-              (dataErrors.missingEndDate) ? missingSelectorWarning : null
+              dataErrors.missingEndDate && <ErrorMessage errorType="data" />
             }
             <DateSelector key="data-dateselector" />
             <InfoTitle
@@ -192,7 +185,7 @@ const Menu = ({
               position="top"
             />
             {
-              (dataErrors.missingCouncils) ? missingSelectorWarning : null
+              dataErrors.missingCouncils && <ErrorMessage errorType="selectone" />
             }
             <NCSelector />
             <InfoTitle
@@ -204,7 +197,7 @@ const Menu = ({
               ]}
             />
             {
-              (dataErrors.missingRequestTypes) ? missingSelectorWarning : null
+              dataErrors.missingRequestTypes && <ErrorMessage errorType="selectone" />
             }
             <RequestTypeSelector />
             <Submit setCErrors={setCErrors} setDErrors={setDErrors} />
