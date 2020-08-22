@@ -30,6 +30,11 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
 ## Management Philosophies:
   * Open Source
   * Kanban
+  
+## To Sign Up:
+  * Follow the steps [here](https://github.com/hackforla/311-data/wiki/Joining-the-311-Team)  
+  * Don't forget to [enable two factor authentication](https://www.hackforla.org/guide-pages/2FA.html)  
+
 
 ## 🎉🎉 Engineers start [here](https://github.com/hackforla/311-data/blob/master/GETTING_STARTED.md)!!!! 🎉🎉🎉
 
