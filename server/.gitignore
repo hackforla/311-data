@@ -1,6 +1,7 @@
-.env
+*.env
 
 /api/__tmp__
 /jmeter/out
 
 __pycache__
+.pytest_cache
