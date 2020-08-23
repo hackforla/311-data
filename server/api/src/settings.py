@@ -10,7 +10,7 @@ class Version:
 
 
 class Server:
-    HOST = env('HOST') or '0.0.0.0'
+    HOST = env('HOST')
     PORT = env('PORT', to.INT)
     DEBUG = env('DEBUG', to.BOOL)
     ACCESS_LOG = env('ACCESS_LOG', to.BOOL)
