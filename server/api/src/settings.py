@@ -1,4 +1,3 @@
-import os
 from utils.parse_env import env, to
 from dotenv import load_dotenv
 load_dotenv()
@@ -11,8 +10,8 @@ class Version:
 
 
 class Server:
-    HOST = os.getenv('HOST', '0.0.0.0')
-    PORT = env('PORT', to.INT, )
+    HOST = env('HOST') or '0.0.0.0'
+    PORT = env('PORT', to.INT)
     DEBUG = env('DEBUG', to.BOOL)
     ACCESS_LOG = env('ACCESS_LOG', to.BOOL)
     AUTO_RELOAD = env('AUTO_RELOAD', to.BOOL)
