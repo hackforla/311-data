@@ -14,10 +14,10 @@ const MapOverview = ({
     <div className="map-overview map-control">
       <div className="open-closed-requests-container">
         <a className="open-closed-requests" target="_blank">
-          Open Requests
+          Open
         </a>
         <a className="open-closed-requests" target="_blank">
-          Closed Requests
+          Closed
         </a>
       </div>
       <div className="info-heading">

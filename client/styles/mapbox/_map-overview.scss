@@ -2,7 +2,7 @@
   top: 10px;
   left: 10px;
   background-color: $map-control-bg-color;
-  width: 280px;
+  width: 250px;
   .requests-title {
     margin: 15px 0;
     text-align: center;
@@ -24,7 +24,7 @@
   .open-closed-requests {
     font-size: 16px;
     color: inherit;
-    padding: 5px;
+    margin: 0 30px 0 30px
   }
   .info-content {
     margin-left: 20px;
