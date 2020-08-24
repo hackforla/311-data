@@ -12,8 +12,13 @@ const MapOverview = ({
 }) => {
   return (
     <div className="map-overview map-control">
-      <div className="requests-title">
-        Open 311 Requests
+      <div className="open-closed-requests-container">
+        <a className="open-closed-requests" target="_blank">
+          Open Requests
+        </a>
+        <a className="open-closed-requests" target="_blank">
+          Closed Requests
+        </a>
       </div>
       <div className="info-heading">
         Date

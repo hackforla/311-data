@@ -2,7 +2,7 @@
   top: 10px;
   left: 10px;
   background-color: $map-control-bg-color;
-  width: 250px;
+  width: 280px;
   .requests-title {
     margin: 15px 0;
     text-align: center;
@@ -16,6 +16,15 @@
     margin-bottom: -4px;
     font-size: 8px;
     text-transform: uppercase;
+  }
+  .open-closed-requests-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .open-closed-requests {
+    font-size: 16px;
+    color: inherit;
+    padding: 5px;
   }
   .info-content {
     margin-left: 20px;
