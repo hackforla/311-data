@@ -23,9 +23,9 @@ jobs:
           docker-compose up --no-start api
 
       - name: Seed DB and Run Api
-      run: |          
-          docker-compose run api python bin/db_seed.py --file data/requests.csv.gz
-          docker-compose up -d api
+        run: |          
+            docker-compose run api python bin/db_seed.py --file data/requests.csv.gz
+            docker-compose up -d api
 
       - name: Linting
         run: docker-compose run api flake8
