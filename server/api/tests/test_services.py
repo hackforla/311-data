@@ -12,7 +12,7 @@ TO-DO: refactor this with database fixtures or mocks.
 """
 
 START_DATE = '2020-01-01 00:00:00'
-END_DATE = '2020-06-30 00:00:00'
+END_DATE = '2020-04-30 00:00:00'
 ZOOM = 10
 BOUNDS = {'east': -117.67318725585939,
             'north': 34.397844946449865,
@@ -47,8 +47,8 @@ def test_item_query():
 
 @pytest.mark.asyncio
 async def test_pin_clusters():
-    # counts = [29780, 2875, 14639, 38062, 6433, 2858, 4870]
-    # i = 0
+    counts = [101824, 46259, 60466, 136475, 33344, 35453, 20033]
+    i = 0
     nc_list = nc.get_ncs()
     type_list = nc.get_request_types()
     data = await map.pin_clusters(START_DATE,
@@ -60,9 +60,9 @@ async def test_pin_clusters():
                                     OPTIONS)
 
     assert len(data) == 7
-    # for pin in data:
-    #     assert pin['count'] == counts[i]
-    #     i += 1
+    for pin in data:
+        assert pin['count'] == counts[i]
+        i += 1
 
 
 @pytest.mark.asyncio
@@ -75,7 +75,7 @@ async def test_heatmap():
                                 type_list,
                                 nc_list)
 
-    assert len(data) == 99517
+    assert len(data) == 433854
 
 
 @pytest.mark.asyncio
