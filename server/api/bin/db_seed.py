@@ -13,6 +13,11 @@ def get_cli_args():
     ''')
 
     parser.add_argument(
+        '--file',
+        type=str,
+        help='path to gzipped comma-separated file with request data')
+
+    parser.add_argument(
         '--years',
         type=str,
         help='comma-separated years to add to the DB (default: all years)')
@@ -68,4 +73,7 @@ if __name__ == '__main__':
     if reset:
         db.reset()
 
-    db.requests.add_years(years, rows_per_year=rows, batch_size=batch)
+    if args.file is not None:
+        db.requests.load_file(args.file)
+    else:
+        db.requests.add_years(years, rows_per_year=rows, batch_size=batch)

@@ -31,17 +31,18 @@ def test_ncs():
 def test_request_types():
     """Test for a list of 12 request types"""
     type_list = nc.get_request_types()
+
     assert isinstance(type_list, list)
     assert len(type_list) == 12
 
 
 def test_item_query():
-    sr_item = requests.item_query('1-1550829069')
+    sr_item = requests.item_query('1-1523593502')
     assert isinstance(sr_item, dict)
     assert sr_item['requesttype'] == 'Graffiti Removal'
-    assert sr_item['nc'] == 24
-    assert sr_item['latitude'] == 34.18685414
-    assert sr_item['longitude'] == -118.3729476
+    assert sr_item['nc'] == 125
+    assert sr_item['latitude'] == 34.00466746
+    assert sr_item['longitude'] == -118.2633146
 
 
 @pytest.mark.asyncio
@@ -68,6 +69,7 @@ async def test_pin_clusters():
 async def test_heatmap():
     nc_list = nc.get_ncs()
     type_list = nc.get_request_types()
+
     data = await map.heatmap(START_DATE,
                                 END_DATE,
                                 type_list,
@@ -80,6 +82,7 @@ async def test_heatmap():
 async def test_visualizations():
     nc_list = nc.get_ncs()
     type_list = nc.get_request_types()
+
     data = await visualizations.visualizations(START_DATE,
                                                 END_DATE,
                                                 type_list,

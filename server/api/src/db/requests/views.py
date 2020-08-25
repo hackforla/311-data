@@ -7,7 +7,7 @@ def create():
         CREATE MATERIALIZED VIEW map AS (
             SELECT
                 srnumber,
-                createddate::date,
+                createddate,
                 requesttype,
                 nc,
                 latitude,
@@ -63,8 +63,6 @@ def create():
         ) WITH DATA;
 
         CREATE UNIQUE INDEX ON open_requests(srnumber);
-        CREATE INDEX ON open_requests(nc);
-        CREATE INDEX ON open_requests(requesttype);
 
     """)
 

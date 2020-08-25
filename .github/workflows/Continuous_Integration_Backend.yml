@@ -21,7 +21,7 @@ jobs:
           cp .env.example .env
           echo SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }} >> .env
           docker-compose up --no-start api
-          docker-compose run api python bin/db_seed.py --years 2020 --rows 500 --reset
+          docker-compose run api python bin/db_seed.py --file data/requests.csv.gz
           docker-compose up -d api
 
       - name: Linting
