@@ -36,6 +36,11 @@ const Header = () => {
       <div id="navbar" className="navbar-menu">
         <div className="navbar-end">
           <div className="navbar-item">
+            <NavLink exact to="/faq" activeClassName="navbar-selected" style={backgroundStyle}>
+              Help Center
+            </NavLink>
+          </div>
+          <div className="navbar-item">
             <NavLink exact to="/data" activeClassName="navbar-selected" style={backgroundStyle}>
               Explore My Council&apos;s 311 Data
             </NavLink>
