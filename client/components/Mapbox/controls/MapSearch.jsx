@@ -80,12 +80,12 @@ class MapSearch extends React.Component {
 
         case GEO_FILTER_TYPES.nc:
           this.geocoder.setPlaceholder('Enter neighborhood council');
-          // this.geocoder.options.localGeocoderOnly = true;
+          this.geocoder.options.localGeocoderOnly = true;
           break;
 
         case GEO_FILTER_TYPES.cc:
           this.geocoder.setPlaceholder('Enter city council number');
-          // this.geocoder.options.localGeocoderOnly = true;
+          this.geocoder.options.localGeocoderOnly = true;
           break;
       }
     }
