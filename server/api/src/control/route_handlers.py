@@ -35,7 +35,7 @@ async def request_detail(request, srnumber):
 
 class map:
     async def clusters(request):
-        data = await map_svc.clusters(**to.parse(request.json, {
+        data = await map_svc.pin_clusters(**to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
             'requestTypes': to.opt.LIST_OF_STR,
@@ -53,7 +53,7 @@ class map:
             'requestTypes': to.opt.LIST_OF_STR,
             'ncList': to.opt.LIST_OF_INT}))
 
-        return json(data)
+        return json(data.tolist())  # converting NumPy array to list before serializing JSON
 
     async def pins(request):
         data = await map_svc.pins(**to.parse(request.json, {

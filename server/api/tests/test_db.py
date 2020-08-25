@@ -1,5 +1,5 @@
-import db
 from datetime import datetime
+import db
 
 
 class TestDB:
