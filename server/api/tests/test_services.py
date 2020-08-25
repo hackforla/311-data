@@ -4,7 +4,8 @@ from services import nc, map, requests, visualizations
 """
 These are 'unit tests' of the key API services.
 
-However, these tests run on a live database and assume that data from the first 1/2 of 2020 have been loaded.
+However, these tests run on a live database and assume that data
+from the first 1/2 of 2020 have been loaded.
 The zoom and boundaries assume the initial view of the map when first loaded.
 
 TO-DO: refactor this with database fixtures or mocks.
@@ -49,7 +50,13 @@ async def test_pin_clusters():
     i = 0
     nc_list = nc.get_ncs()
     type_list = nc.get_request_types()
-    data = await map.pin_clusters(START_DATE, END_DATE, type_list, nc_list, ZOOM, BOUNDS, OPTIONS)
+    data = await map.pin_clusters(START_DATE,
+                                    END_DATE,
+                                    type_list,
+                                    nc_list,
+                                    ZOOM,
+                                    BOUNDS,
+                                    OPTIONS)
 
     assert len(data) == 7
     for pin in data:
@@ -61,7 +68,10 @@ async def test_pin_clusters():
 async def test_heatmap():
     nc_list = nc.get_ncs()
     type_list = nc.get_request_types()
-    data = await map.heatmap(START_DATE, END_DATE, type_list, nc_list)
+    data = await map.heatmap(START_DATE,
+                                END_DATE,
+                                type_list,
+                                nc_list)
 
     assert len(data) == 695652
 
@@ -70,7 +80,10 @@ async def test_heatmap():
 async def test_visualizations():
     nc_list = nc.get_ncs()
     type_list = nc.get_request_types()
-    data = await visualizations.visualizations(START_DATE, END_DATE, type_list, nc_list)
+    data = await visualizations.visualizations(START_DATE,
+                                                END_DATE,
+                                                type_list,
+                                                nc_list)
 
     # would like to find a better assert
     assert len(data) == 3

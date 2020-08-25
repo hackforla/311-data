@@ -53,7 +53,7 @@ class map:
             'requestTypes': to.opt.LIST_OF_STR,
             'ncList': to.opt.LIST_OF_INT}))
 
-        return json(data.tolist())  # converting NumPy array to list before serializing JSON
+        return json(data.tolist())  # converting NumPy array to list before serializing
 
     async def pins(request):
         data = await map_svc.pins(**to.parse(request.json, {
