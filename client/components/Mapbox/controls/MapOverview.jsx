@@ -1,14 +1,22 @@
 import React from 'react';
 import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
+
 import moment from 'moment';
 import RequestsDonut from './RequestsDonut';
 import RequestsBarChart from './RequestsBarChart';
+
+import {
+  toggleOpenRequests as reduxToggleOpenRequests,
+} from '@reducers/ui';
 
 const MapOverview = ({
   date,
   locationInfo,
   selectedRequests,
   colorScheme,
+  isOpenRequests,
+  toggleOpenRequests,
 }) => {
   return (
     <div className="map-overview map-control">
@@ -82,6 +90,16 @@ const MapOverview = ({
   );
 };
 
+const mapStateToProps = state => ({
+  isOpenRequests: state.ui.isOpenRequests,
+});
+
+const mapDispatchToProps = dispatch => ({
+  toggleOpenRequests: () => dispatch(reduxToggleOpenRequests()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapOverview);
+
 MapOverview.propTypes = {
   date: PropTypes.any,
   locationInfo: PropTypes.shape({}),
@@ -94,5 +112,3 @@ MapOverview.defaultProps = {
   locationInfo: {},
   selectedRequests: {},
 };
-
-export default MapOverview;

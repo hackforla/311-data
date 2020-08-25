@@ -1,6 +1,7 @@
 import { MENU_TABS, MENU_MODES } from '@components/common/CONSTANTS';
 
 export const types = {
+  TOGGLE_OPEN_REQUESTS: 'TOGGLE_OPEN_REQUESTS',
   TOGGLE_MENU: 'TOGGLE_MENU',
   TOGGLE_COMPARING: 'TOGGLE_COMPARING',
   SET_MENU_TAB: 'SET_MENU_TAB',
@@ -12,6 +13,10 @@ export const types = {
   UPDATE_MAP_POSITION: 'UPDATE_MAP_POSITION',
   ACCEPT_COOKIES: 'ACCEPT_COOKIES',
 };
+
+export const toggleOpenRequests = () => ({
+  type: types.TOGGLE_OPEN_REQUESTS,
+});
 
 export const toggleMenu = () => ({
   type: types.TOGGLE_MENU,
@@ -75,10 +80,16 @@ const initialState = {
   showComparisonCharts: false,
   displayFeedbackSuccess: false,
   cookiesAccepted: false,
+  isOpenRequests: true,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case types.TOGGLE_OPEN_REQUESTS:
+      return {
+        ...state,
+        isOpenRequests: !state.isOpenRequests,
+      };
     case types.TOGGLE_MENU:
       return {
         ...state,
