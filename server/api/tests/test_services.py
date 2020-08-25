@@ -47,7 +47,7 @@ def test_item_query():
 
 @pytest.mark.asyncio
 async def test_pin_clusters():
-    counts = [187041, 42310, 45092, 347796, 37089, 21713, 14611]
+    counts = [29780, 2875, 14639, 38062, 6433, 2858, 4870]
     i = 0
     nc_list = nc.get_ncs()
     type_list = nc.get_request_types()
@@ -75,7 +75,7 @@ async def test_heatmap():
                                 type_list,
                                 nc_list)
 
-    assert len(data) == 695652
+    assert len(data) == 99517
 
 
 @pytest.mark.asyncio
