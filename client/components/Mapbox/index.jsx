@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
-import { MENU_MODES } from '@components/common/CONSTANTS';
+import { MAP_MODES } from '@components/common/CONSTANTS';
 import Map from './Map';
 
 class MapContainer extends React.Component {
@@ -45,7 +45,7 @@ class MapContainer extends React.Component {
   setData = async () => {
     const { activeMode, pins } = this.props;
     switch(activeMode) {
-      case MENU_MODES.OPEN:
+      case MAP_MODES.OPEN:
         if (!this.openRequests)
           await this.getOpenRequests()
 
@@ -54,7 +54,7 @@ class MapContainer extends React.Component {
           ncCounts: this.openRequests.counts.nc,
           ccCounts: this.openRequests.counts.cc,
         });
-      case MENU_MODES.TRENDS:
+      case MAP_MODES.CLOSED:
         return this.setState({
           requests: this.convertRequests(pins),
           ncCounts: null,

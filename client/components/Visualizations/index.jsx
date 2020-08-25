@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { MENU_TABS } from '@components/common/CONSTANTS';
 import VisExportSelect from '@components/export/VisExportSelect';
 import SnapshotService from '@components/export/SnapshotService';
 import Criteria from '@components/chartExtras/Criteria';
@@ -56,13 +55,11 @@ const Visualizations = ({
 };
 
 const mapStateToProps = state => ({
-  menuActiveTab: state.ui.menu.activeTab,
   chartsVisibility: state.ui.showDataCharts,
 });
 
 export default connect(mapStateToProps)(Visualizations);
 
 Visualizations.propTypes = {
-  menuActiveTab: PropTypes.string.isRequired,
   chartsVisibility: PropTypes.bool.isRequired,
 };
