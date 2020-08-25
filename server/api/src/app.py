@@ -61,7 +61,7 @@ def start():
 
     for route, (methods, handler) in routes.items():
         # need to have OPTIONS on all routes for CORS
-        app.add_route(handler, route, methods.append('OPTIONS'))
+        app.add_route(handler, route, methods + ['OPTIONS'])
 
     app.error_handler = ErrorHandler()
 
