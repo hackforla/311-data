@@ -180,14 +180,9 @@ export const COMPARISON_SETS = {
   },
 };
 
-export const MENU_TABS = {
-  MAP: '311 Data Maps',
-  VISUALIZATIONS: '311 Data Charts',
-};
-
-export const MENU_MODES = {
+export const MAP_MODES = {
   OPEN: 'Open Requests',
-  TRENDS: 'Recent Trends',
+  CLOSED: 'Closed Requests',
 };
 
 export const CITY_COUNCILS = [

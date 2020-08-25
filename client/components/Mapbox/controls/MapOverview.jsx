@@ -7,17 +7,23 @@ import RequestsDonut from './RequestsDonut';
 import RequestsBarChart from './RequestsBarChart';
 
 import {
-  toggleOpenRequests as reduxToggleOpenRequests,
+  setMapMode as reduxSetMapMode,
 } from '@reducers/ui';
+
+import { MAP_MODES } from '@components/common/CONSTANTS';
 
 const MapOverview = ({
   date,
   locationInfo,
   selectedRequests,
   colorScheme,
-  isOpenRequests,
-  toggleOpenRequests,
+  setMapMode,
 }) => {
+  const modes = [
+    MAP_MODES.OPEN,
+    MAP_MODES.CLOSED,
+  ];
+
   return (
     <div className="map-overview map-control">
       <div className="open-closed-requests-container">
@@ -95,7 +101,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  toggleOpenRequests: () => dispatch(reduxToggleOpenRequests()),
+  setMapMode: mode => dispatch(reduxSetMapMode(mode)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapOverview);

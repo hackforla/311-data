@@ -1,11 +1,9 @@
-import { MENU_TABS, MENU_MODES } from '@components/common/CONSTANTS';
+import { MAP_MODES } from '@components/common/CONSTANTS';
 
 export const types = {
-  TOGGLE_OPEN_REQUESTS: 'TOGGLE_OPEN_REQUESTS',
+  SET_MAP_MODE: 'SET_MAP_MODE',
   TOGGLE_MENU: 'TOGGLE_MENU',
   TOGGLE_COMPARING: 'TOGGLE_COMPARING',
-  SET_MENU_TAB: 'SET_MENU_TAB',
-  SET_MENU_MODE: 'SET_MENU_MODE',
   SET_ERROR_MODAL: 'SET_ERROR_MODAL',
   SHOW_DATA_CHARTS: 'SHOW_DATA_CHARTS',
   SHOW_COMPARISON_CHARTS: 'SHOW_COMPARISON_CHARTS',
@@ -14,8 +12,9 @@ export const types = {
   ACCEPT_COOKIES: 'ACCEPT_COOKIES',
 };
 
-export const toggleOpenRequests = () => ({
-  type: types.TOGGLE_OPEN_REQUESTS,
+export const setMapMode = mode => ({
+  type: types.SET_MAP_MODE,
+  payload: mode,
 });
 
 export const toggleMenu = () => ({
@@ -24,16 +23,6 @@ export const toggleMenu = () => ({
 
 export const toggleComparing = () => ({
   type: types.TOGGLE_COMPARING,
-})
-
-export const setMenuTab = tab => ({
-  type: types.SET_MENU_TAB,
-  payload: tab,
-});
-
-export const setMenuMode = mode => ({
-  type: types.SET_MENU_MODE,
-  payload: mode,
 });
 
 export const setErrorModal = isOpen => ({
@@ -68,11 +57,11 @@ export const acceptCookies = () => ({
 const initialState = {
   menu: {
     isOpen: true,
-    activeTab: MENU_TABS.MAP,
-    activeMode: MENU_MODES.OPEN,
     isComparing: false,
   },
-  map: {},
+  map: {
+    activeMode: MAP_MODES.OPEN,
+  },
   error: {
     isOpen: false,
   },
@@ -80,15 +69,17 @@ const initialState = {
   showComparisonCharts: false,
   displayFeedbackSuccess: false,
   cookiesAccepted: false,
-  isOpenRequests: true,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.TOGGLE_OPEN_REQUESTS:
+    case types.SET_MAP_MODE:
       return {
         ...state,
-        isOpenRequests: !state.isOpenRequests,
+        map: {
+          ...state.map,
+          activeMode: action.payload,
+        },
       };
     case types.TOGGLE_MENU:
       return {
@@ -112,22 +103,6 @@ export default (state = initialState, action) => {
         error: {
           ...state.error,
           isOpen: action.payload,
-        },
-      };
-    case types.SET_MENU_TAB:
-      return {
-        ...state,
-        menu: {
-          ...state.menu,
-          activeTab: action.payload,
-        },
-      };
-    case types.SET_MENU_MODE:
-      return {
-        ...state,
-        menu: {
-          ...state.menu,
-          activeMode: action.payload,
         },
       };
     case types.SHOW_DATA_CHARTS:

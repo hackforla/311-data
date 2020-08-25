@@ -7,8 +7,6 @@ import { connect } from 'react-redux';
 
 import {
   toggleMenu as reduxToggleMenu,
-  setMenuTab as reduxSetMenuTab,
-  setMenuMode as reduxSetMenuMode,
   toggleComparing as reduxToggleComparing,
 } from '@reducers/ui';
 
@@ -148,15 +146,11 @@ const Menu = ({
 
 const mapStateToProps = state => ({
   isOpen: state.ui.menu.isOpen,
-  activeTab: state.ui.menu.activeTab,
-  activeMode: state.ui.menu.activeMode,
   isComparing: state.ui.menu.isComparing,
 });
 
 const mapDispatchToProps = dispatch => ({
   toggleMenu: () => dispatch(reduxToggleMenu()),
-  setMenuTab: tab => dispatch(reduxSetMenuTab(tab)),
-  setMenuMode: mode => dispatch(reduxSetMenuMode(mode)),
   toggleComparing: () => dispatch(reduxToggleComparing()),
 });
 
@@ -164,19 +158,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(Menu);
 
 Menu.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  activeTab: PropTypes.string.isRequired,
-  activeMode: PropTypes.string.isRequired,
   toggleMenu: PropTypes.func,
-  setMenuTab: PropTypes.func,
-  setMenuMode: PropTypes.func,
   toggleComparing: PropTypes.func,
   isComparing: PropTypes.bool.isRequired,
 };
 
 Menu.defaultProps = {
   toggleMenu: () => null,
-  setMenuTab: () => null,
-  setMenuMode: PropTypes.func,
   toggleComparing: () => null,
   isComparing: false,
 };

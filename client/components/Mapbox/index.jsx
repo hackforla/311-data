@@ -110,7 +110,7 @@ const mapStateToProps = state => ({
   pins: state.data.pins,
   position: state.ui.map,
   lastUpdated: state.metadata.lastPulled,
-  activeMode: state.ui.menu.activeMode,
+  activeMode: state.ui.map.activeMode,
   requestTypes: state.filters.requestTypes,
 });
 
