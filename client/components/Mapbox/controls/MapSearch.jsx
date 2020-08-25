@@ -17,7 +17,8 @@ class MapSearch extends React.Component {
       flyTo: false,
       marker: false,
       minLength: 1,
-      placeholder: 'Enter address',
+      placeholder: 'Enter neighborhood council',
+      localGeocoderOnly: false,
       localGeocoder: searchTerm => {
         const { geoFilterType } = this.props;
         const searchFilter = new RegExp(searchTerm, 'i');
@@ -56,7 +57,6 @@ class MapSearch extends React.Component {
             }));
         }
       },
-      localGeocoderOnly: false
     });
 
     this.geocoder.on('result', ({ result }) => {
@@ -80,12 +80,12 @@ class MapSearch extends React.Component {
 
         case GEO_FILTER_TYPES.nc:
           this.geocoder.setPlaceholder('Enter neighborhood council');
-          this.geocoder.options.localGeocoderOnly = true;
+          // this.geocoder.options.localGeocoderOnly = true;
           break;
 
         case GEO_FILTER_TYPES.cc:
           this.geocoder.setPlaceholder('Enter city council number');
-          this.geocoder.options.localGeocoderOnly = true;
+          // this.geocoder.options.localGeocoderOnly = true;
           break;
       }
     }
