@@ -1,11 +1,11 @@
 import { REQUEST_TYPES, DATE_RANGES, COUNCILS } from '@components/common/CONSTANTS';
 
 export const types = {
-  UPDATE_DATE_RANGE: 'UPDATE_DATE_RANGE',
+  UPDATE_MAP_DATE_RANGE: 'UPDATE_MAP_DATE_RANGE',
 };
 
-export const updateDateRange = ({ dateRange, startDate, endDate }) => ({
-  type: types.UPDATE_DATE_RANGE,
+export const updateMapDateRange = ({ dateRange, startDate, endDate }) => ({
+  type: types.UPDATE_MAP_DATE_RANGE,
   payload: { dateRange, startDate, endDate },
 });
 
@@ -29,7 +29,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.UPDATE_DATE_RANGE: {
+    case types.UPDATE_MAP_DATE_RANGE: {
       const { dateRange, startDate, endDate } = action.payload;
       return {
         ...state,
