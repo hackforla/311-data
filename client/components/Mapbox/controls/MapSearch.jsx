@@ -10,15 +10,13 @@ const TABS = Object.values(GEO_FILTER_TYPES);
 
 class MapSearch extends React.Component {
   componentDidMount() {
-    const { map, geoFilterType } = this.props;
+    const { map } = this.props;
 
     this.geocoder = new MapboxGeocoder({
       accessToken: process.env.MAPBOX_TOKEN,
       flyTo: false,
       marker: false,
       minLength: 1,
-      placeholder: 'Enter neighborhood council',
-      localGeocoderOnly: false,
       localGeocoder: searchTerm => {
         const { geoFilterType } = this.props;
         const searchFilter = new RegExp(searchTerm, 'i');
@@ -65,6 +63,7 @@ class MapSearch extends React.Component {
     });
 
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(map));
+    this.setTab(GEO_FILTER_TYPES.nc);
   }
 
   setTab = tab => {

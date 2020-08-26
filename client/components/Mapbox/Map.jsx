@@ -43,7 +43,7 @@ class Map extends React.Component {
       activeRequestsLayer: 'points',
       selectedTypes: props.selectedTypes,
       locationInfo: INITIAL_LOCATION,
-      geoFilterType: GEO_FILTER_TYPES.nc,
+      geoFilterType: GEO_FILTER_TYPES.address,
       filterGeo: null,
       filteredRequestCounts: {},
       hoveredRegionName: null,
