@@ -242,16 +242,16 @@ export default function* rootSaga() {
   yield takeLatest(types.GET_DATA_REQUEST, getVisData);
   // yield takeLatest(uiTypes.UPDATE_MAP_POSITION, updatePinClusters);
 
-  // yield takeLatest(filtersTypes.UPDATE_NEIGHBORHOOD_COUNCIL, getMapData);
-  // yield takeLatest(filtersTypes.UPDATE_NEIGHBORHOOD_COUNCIL, getVisData);
-  // yield takeLatest(filtersTypes.UPDATE_DATE_RANGE, getMapData);
-  // yield takeLatest(filtersTypes.UPDATE_DATE_RANGE, getVisData);
-  // yield takeLatest(filtersTypes.UPDATE_REQUEST_TYPE, getMapData);
-  // yield takeLatest(filtersTypes.UPDATE_REQUEST_TYPE, getVisData);
-  // yield takeLatest(filtersTypes.SELECT_ALL_REQUEST_TYPES, getMapData);
-  // yield takeLatest(filtersTypes.SELECT_ALL_REQUEST_TYPES, getVisData);
-  // yield takeLatest(filtersTypes.DESELECT_ALL_REQUEST_TYPES, getMapData);
-  // yield takeLatest(filtersTypes.DESELECT_ALL_REQUEST_TYPES, getVisData);
+  yield takeLatest(filtersTypes.UPDATE_NEIGHBORHOOD_COUNCIL, getMapData);
+  yield takeLatest(filtersTypes.UPDATE_NEIGHBORHOOD_COUNCIL, getVisData);
+  yield takeLatest(filtersTypes.UPDATE_DATE_RANGE, getMapData);
+  yield takeLatest(filtersTypes.UPDATE_DATE_RANGE, getVisData);
+  yield takeLatest(filtersTypes.UPDATE_REQUEST_TYPE, getMapData);
+  yield takeLatest(filtersTypes.UPDATE_REQUEST_TYPE, getVisData);
+  yield takeLatest(filtersTypes.SELECT_ALL_REQUEST_TYPES, getMapData);
+  yield takeLatest(filtersTypes.SELECT_ALL_REQUEST_TYPES, getVisData);
+  yield takeLatest(filtersTypes.DESELECT_ALL_REQUEST_TYPES, getMapData);
+  yield takeLatest(filtersTypes.DESELECT_ALL_REQUEST_TYPES, getVisData);
 
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
   yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
