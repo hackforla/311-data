@@ -181,8 +181,8 @@ export const COMPARISON_SETS = {
 };
 
 export const MAP_MODES = {
-  OPEN: 'Open Requests',
-  CLOSED: 'Closed Requests',
+  OPEN: 'Open',
+  CLOSED: 'Closed',
 };
 
 export const CITY_COUNCILS = [

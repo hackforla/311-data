@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import clx from 'classnames';
 
 import moment from 'moment';
 import RequestsDonut from './RequestsDonut';
@@ -18,6 +19,7 @@ const MapOverview = ({
   selectedRequests,
   colorScheme,
   setMapMode,
+  activeMode,
 }) => {
   const modes = [
     MAP_MODES.OPEN,
@@ -27,12 +29,17 @@ const MapOverview = ({
   return (
     <div className="map-overview map-control">
       <div className="open-closed-requests-container">
-        <a className="open-closed-requests" target="_blank">
-          Open
-        </a>
-        <a className="open-closed-requests" target="_blank">
-          Closed
-        </a>
+        {modes.map(mode => (
+          <a
+            key={mode}
+            className={clx('map-tab', { active: mode === activeMode })}
+            onClick={mode === activeMode ? undefined : () => {
+              setMapMode(mode)
+            }}
+          >
+            { mode }
+          </a>
+        ))}
       </div>
       <div className="info-heading">
         Date
@@ -97,7 +104,7 @@ const MapOverview = ({
 };
 
 const mapStateToProps = state => ({
-  isOpenRequests: state.ui.isOpenRequests,
+  activeMode: state.ui.map.activeMode,
 });
 
 const mapDispatchToProps = dispatch => ({
