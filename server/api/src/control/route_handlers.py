@@ -25,15 +25,15 @@ async def index(request):
 
 
 class status:
-    async def api(self, request):
+    async def api(request):
         data = await status_svc.api()
         return response.json(data)
 
-    async def sys(self, request):
+    async def sys(request):
         data = await status_svc.system()
         return response.json(data)
 
-    async def db(self, request):
+    async def db(request):
         data = await status_svc.database()
         return response.json(data)
 
@@ -44,7 +44,7 @@ async def request_detail(request, srnumber):
 
 
 class map:
-    async def clusters(self, request):
+    async def clusters(request):
         data = await map_svc.pin_clusters(**to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
@@ -56,7 +56,7 @@ class map:
 
         return response.json(data)
 
-    async def heat(self, request):
+    async def heat(request):
         data = await map_svc.heatmap(**to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
@@ -66,7 +66,7 @@ class map:
         # converting NumPy array to list before serializing
         return response.json(data.tolist())
 
-    async def pins(self, request):
+    async def pins(request):
         data = await map_svc.pins(**to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
@@ -87,7 +87,7 @@ async def visualizations(request):
 
 
 class comparison:
-    def args(self, request):
+    def args(request):
         return to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
@@ -95,15 +95,15 @@ class comparison:
             'set1': to.req.COMPARISON_SET,
             'set2': to.req.COMPARISON_SET})
 
-    async def frequency(self, request):
+    async def frequency(request):
         data = await comp_svc.freq_comparison(**comparison.args(request))
         return response.json(data)
 
-    async def timetoclose(self, request):
+    async def timetoclose(request):
         data = await comp_svc.ttc_comparison(**comparison.args(request))
         return response.json(data)
 
-    async def counts(self, request):
+    async def counts(request):
         data = await comp_svc.counts_comparison(**comparison.args(request))
         return response.json(data)
 
