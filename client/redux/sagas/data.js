@@ -26,6 +26,10 @@ import {
 } from '../reducers/data';
 
 import {
+  types as metadataTypes,
+} from '../reducers/metadata';
+
+import {
   types as uiTypes,
   setErrorModal,
   showDataCharts,
@@ -258,8 +262,8 @@ function* sendContactData(action) {
 }
 
 export default function* rootSaga() {
+  yield takeLatest(metadataTypes.GET_METADATA_REQUEST, getMapData);
   yield takeLatest(types.GET_DATA_REQUEST, getVisData);
-  yield takeLatest(uiTypes.SET_MAP_MODE, getMapData);
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
   yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
 }
