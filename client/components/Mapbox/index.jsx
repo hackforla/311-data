@@ -111,7 +111,7 @@ const mapStateToProps = state => ({
   position: state.ui.map,
   lastUpdated: state.metadata.lastPulled,
   activeMode: state.ui.map.activeMode,
-  requestTypes: state.filters.requestTypes,
+  requestTypes: state.mapFilters.requestTypes,
 });
 
 const mapDispatchToProps = dispatch => ({

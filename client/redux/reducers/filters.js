@@ -1,4 +1,4 @@
-import { REQUEST_TYPES, DATE_RANGES, COUNCILS } from '@components/common/CONSTANTS';
+import { REQUEST_TYPES, DATE_RANGES } from '@components/common/CONSTANTS';
 
 export const types = {
   UPDATE_DATE_RANGE: 'UPDATE_DATE_RANGE',
@@ -39,13 +39,11 @@ const allRequestTypes = value => (
   }, { All: value })
 );
 
-const allCouncils = COUNCILS.map(council => council.name);
-
 const initialState = {
   dateRange: DATE_RANGES[0].id,
   startDate: DATE_RANGES[0].startDate,
   endDate: DATE_RANGES[0].endDate,
-  councils: allCouncils,
+  councils: [],
   requestTypes: allRequestTypes(true),
 };
 

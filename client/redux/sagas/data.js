@@ -131,6 +131,26 @@ function* getFilters() {
   };
 }
 
+function* getMapFilters() {
+  const {
+    startDate,
+    endDate,
+    councils,
+    requestTypes,
+  } = yield select(getState, 'mapFilters');
+
+  const convertCouncilNameToID = ncList => (
+    ncList.map(name => COUNCILS.find(nc => nc.name === name)?.id)
+  );
+
+  return {
+    startDate,
+    endDate,
+    ncList: convertCouncilNameToID(councils),
+    requestTypes: Object.keys(requestTypes).filter(req => req !== 'All' && requestTypes[req]),
+  };
+}
+
 function* getMapPosition() {
   const { map } = yield select(getState, 'ui');
   return map;
@@ -139,7 +159,7 @@ function* getMapPosition() {
 /* /////////////////// SAGAS ///////////////// */
 
 function* getMapData() {
-  const filters = yield getFilters();
+  const filters = yield getMapFilters();
 
   // skip if there's no data to get
   if (filters.ncList.length === 0 || filters.requestTypes.length === 0) {
@@ -238,21 +258,8 @@ function* sendContactData(action) {
 }
 
 export default function* rootSaga() {
-  // yield takeLatest(types.GET_DATA_REQUEST, getMapData);
   yield takeLatest(types.GET_DATA_REQUEST, getVisData);
-  // yield takeLatest(uiTypes.UPDATE_MAP_POSITION, updatePinClusters);
-
-  // yield takeLatest(filtersTypes.UPDATE_NEIGHBORHOOD_COUNCIL, getMapData);
-  // yield takeLatest(filtersTypes.UPDATE_NEIGHBORHOOD_COUNCIL, getVisData);
-  // yield takeLatest(filtersTypes.UPDATE_DATE_RANGE, getMapData);
-  // yield takeLatest(filtersTypes.UPDATE_DATE_RANGE, getVisData);
-  // yield takeLatest(filtersTypes.UPDATE_REQUEST_TYPE, getMapData);
-  // yield takeLatest(filtersTypes.UPDATE_REQUEST_TYPE, getVisData);
-  // yield takeLatest(filtersTypes.SELECT_ALL_REQUEST_TYPES, getMapData);
-  // yield takeLatest(filtersTypes.SELECT_ALL_REQUEST_TYPES, getVisData);
-  // yield takeLatest(filtersTypes.DESELECT_ALL_REQUEST_TYPES, getMapData);
-  // yield takeLatest(filtersTypes.DESELECT_ALL_REQUEST_TYPES, getVisData);
-
+  yield takeLatest(uiTypes.SET_MAP_MODE, getMapData);
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
   yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
 }
