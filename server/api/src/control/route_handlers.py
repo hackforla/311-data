@@ -1,4 +1,6 @@
-from sanic.response import json
+import json
+import datetime
+from sanic import response
 from .parse_args import to
 from services import (
     requests as requests_svc,
@@ -10,31 +12,39 @@ from services import (
     email as email_svc)
 
 
+def default(obj):
+    """Convert datetimes to epochs"""
+    for item in obj:
+        if isinstance(obj[item], (datetime.datetime, datetime.date, datetime.time)):
+            obj[item] = int(obj[item].strftime('%s'))
+    return json.dumps(obj)
+
+
 async def index(request):
-    return json('You hit the index')
+    return response.json('You hit the index')
 
 
 class status:
-    async def api(request):
+    async def api(self, request):
         data = await status_svc.api()
-        return json(data)
+        return response.json(data)
 
-    async def sys(request):
+    async def sys(self, request):
         data = await status_svc.system()
-        return json(data)
+        return response.json(data)
 
-    async def db(request):
+    async def db(self, request):
         data = await status_svc.database()
-        return json(data)
+        return response.json(data)
 
 
 async def request_detail(request, srnumber):
     data = requests_svc.item_query(srnumber)
-    return json(data)
+    return response.json(data, dumps=default)
 
 
 class map:
-    async def clusters(request):
+    async def clusters(self, request):
         data = await map_svc.pin_clusters(**to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
@@ -44,25 +54,26 @@ class map:
             'bounds': to.opt.DICT_OF_FLOAT,
             'options': to.opt.DICT_OF_INT}))
 
-        return json(data)
+        return response.json(data)
 
-    async def heat(request):
+    async def heat(self, request):
         data = await map_svc.heatmap(**to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
             'requestTypes': to.opt.LIST_OF_STR,
             'ncList': to.opt.LIST_OF_INT}))
 
-        return json(data.tolist())  # converting NumPy array to list before serializing
+        # converting NumPy array to list before serializing
+        return response.json(data.tolist())
 
-    async def pins(request):
+    async def pins(self, request):
         data = await map_svc.pins(**to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
             'requestTypes': to.opt.LIST_OF_STR,
             'ncList': to.opt.LIST_OF_INT}))
 
-        return json(data)
+        return response.json(data)
 
 
 async def visualizations(request):
@@ -72,11 +83,11 @@ async def visualizations(request):
         'requestTypes': to.opt.LIST_OF_STR,
         'ncList': to.opt.LIST_OF_INT}))
 
-    return json(data)
+    return response.json(data)
 
 
 class comparison:
-    def args(request):
+    def args(self, request):
         return to.parse(request.json, {
             'startDate': to.req.DATE,
             'endDate': to.req.DATE,
@@ -84,22 +95,22 @@ class comparison:
             'set1': to.req.COMPARISON_SET,
             'set2': to.req.COMPARISON_SET})
 
-    async def frequency(request):
+    async def frequency(self, request):
         data = await comp_svc.freq_comparison(**comparison.args(request))
-        return json(data)
+        return response.json(data)
 
-    async def timetoclose(request):
+    async def timetoclose(self, request):
         data = await comp_svc.ttc_comparison(**comparison.args(request))
-        return json(data)
+        return response.json(data)
 
-    async def counts(request):
+    async def counts(self, request):
         data = await comp_svc.counts_comparison(**comparison.args(request))
-        return json(data)
+        return response.json(data)
 
 
 async def open_requests(request):
     data = await requests_svc.open_requests()
-    return json(data)
+    return response.json(data)
 
 
 async def feedback(request):
@@ -111,4 +122,4 @@ async def feedback(request):
     await github_svc.add_issue_to_project(id)
     await email_svc.respond_to_feedback(args['body'], number)
 
-    return json({'success': True})
+    return response.json({'success': True})
