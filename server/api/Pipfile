@@ -24,6 +24,10 @@ sendgrid = "*"
 sodapy = "*"
 SQLAlchemy = "*"
 tabulate = "*"
+gino = {extras = ["starlette"], version = "*"}
+fastapi = "*"
+uvicorn = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
