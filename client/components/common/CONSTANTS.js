@@ -765,48 +765,6 @@ export const MAP_DATE_RANGES = (() => {
       startDate: priorDate(1, 'week'),
       endDate,
     },
-    {
-      id: 'LAST_MONTH',
-      label: 'Last Month',
-      startDate: priorDate(1, 'month'),
-      endDate,
-    },
-    {
-      id: 'LAST_3_MONTHS',
-      label: 'Last 3 Months',
-      startDate: priorDate(3, 'month'),
-      endDate,
-    },
-    {
-      id: 'LAST_6_MONTHS',
-      label: 'Last 6 Months',
-      startDate: priorDate(6, 'month'),
-      endDate,
-    },
-    {
-      id: 'LAST_12_MONTHS',
-      label: 'Last 12 Months',
-      startDate: priorDate(12, 'month'),
-      endDate,
-    },
-    {
-      id: 'LAST_5_YEARS',
-      label: 'Last 5 Years',
-      startDate: priorDate(5, 'year'),
-      endDate,
-    },
-    {
-      id: 'YEAR_TO_DATE',
-      label: 'Year to Date',
-      startDate: moment().startOf('year').format('MM/DD/YY'),
-      endDate,
-    },
-    {
-      id: 'CUSTOM_DATE_RANGE',
-      label: 'Custom Date Range',
-      startDate: null,
-      endDate: null,
-    },
   ]
 })();
 

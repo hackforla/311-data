@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import { updateMapDateRange } from '@reducers/mapFilters';
 import clx from 'classnames';
 
 import moment from 'moment';
@@ -21,12 +22,37 @@ const MapOverview = ({
   colorScheme,
   setMapMode,
   activeMode,
-  mapFilters,
+  dateRange,
+  startDate,
+  endDate,
+  updateRange,
 }) => {
   const modes = [
     MAP_MODES.OPEN,
     MAP_MODES.CLOSED,
   ];
+
+  const priorDate = (date, num, timeInterval) => {
+    return moment(date).subtract(num, timeInterval).format('MM/DD/YY');
+  };
+
+  const futureDate = (date, num, timeInterval) => {
+    return moment(date).add(num, timeInterval).format('MM/DD/YY');
+  };
+
+  const newRangeId = 'CUSTOM_DATE_RANGE';
+
+  const handleLeftArrowClick = () => {
+    const newStartDate = priorDate(startDate, 1, 'week');
+    const newEndDate = priorDate(endDate, 1, 'week');
+    updateRange({ dateRange: newRangeId, startDate: newStartDate, endDate: newEndDate });
+  }
+
+  const handleRightArrowClick = () => {
+    const newStartDate = futureDate(startDate, 1, 'week');
+    const newEndDate = futureDate(endDate, 1, 'week');
+    updateRange({ dateRange: newRangeId, startDate: newStartDate, endDate: newEndDate });
+  }
 
   return (
     <div className="map-overview map-control">
@@ -59,9 +85,9 @@ const MapOverview = ({
             Dates
           </div>
           <div className="scroll-date-container">
-            <a className="scroll-date">&lt;&nbsp;&nbsp;</a>
-            {mapFilters.startDate} - {mapFilters.endDate}
-            <a className="scroll-date">&nbsp;&nbsp;&gt;</a>
+            <a className="scroll-date" onClick={handleLeftArrowClick}>&lt;&nbsp;&nbsp;</a>
+            {startDate} - {endDate}
+            <a className="scroll-date" onClick={handleRightArrowClick}>&nbsp;&nbsp;&gt;</a>
           </div>
         </>
       }
@@ -122,11 +148,16 @@ const MapOverview = ({
 
 const mapStateToProps = state => ({
   activeMode: state.ui.map.activeMode,
-  mapFilters: state.mapFilters,
+  dateRange: state.mapFilters.dateRange,
+  startDate: state.mapFilters.startDate,
+  endDate: state.mapFilters.endDate,
 });
 
 const mapDispatchToProps = dispatch => ({
   setMapMode: mode => dispatch(reduxSetMapMode(mode)),
+  updateRange: ({ dateRange, startDate, endDate }) => {
+    dispatch(updateMapDateRange({ dateRange, startDate, endDate }));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapOverview);
@@ -136,10 +167,22 @@ MapOverview.propTypes = {
   locationInfo: PropTypes.shape({}),
   selectedRequests: PropTypes.shape({}),
   colorScheme: PropTypes.string.isRequired,
+  activeMode: PropTypes.string,
+  dateRange: PropTypes.string,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
+  setMapMode: PropTypes.func,
+  updateRange: PropTypes.func,
 };
 
 MapOverview.defaultProps = {
   date: undefined,
   locationInfo: {},
   selectedRequests: {},
+  activeMode: undefined,
+  dateRange: undefined,
+  startDate: undefined,
+  endDate: undefined,
+  setMapMode: () => {},
+  updateRange: () => {},
 };
