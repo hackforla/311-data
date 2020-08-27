@@ -22,6 +22,7 @@ def create():
         CREATE INDEX ON map(nc);
         CREATE INDEX ON map(requesttype);
         CREATE INDEX ON map(createddate);
+
     """)
 
     exec_sql("""
@@ -42,6 +43,7 @@ def create():
         CREATE INDEX ON vis(cd);
         CREATE INDEX ON vis(requesttype);
         CREATE INDEX ON vis(createddate);
+
     """)
 
     exec_sql("""
@@ -61,6 +63,7 @@ def create():
         ) WITH DATA;
 
         CREATE UNIQUE INDEX ON open_requests(srnumber);
+
     """)
 
 
@@ -70,4 +73,5 @@ def refresh():
         REFRESH MATERIALIZED VIEW CONCURRENTLY map;
         REFRESH MATERIALIZED VIEW CONCURRENTLY vis;
         REFRESH MATERIALIZED VIEW CONCURRENTLY open_requests;
+
     """)

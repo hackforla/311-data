@@ -14,6 +14,7 @@ COPY requirements.txt /home/api/
 
 RUN pip install --no-cache-dir -r /home/api/requirements.txt
 
+COPY setup.cfg /home/api/
 COPY /bin /home/api/bin/
 COPY .env* /src /home/api/src/
 

@@ -11,7 +11,6 @@ from settings import Server
 
 app = Sanic(__name__)
 
-
 routes = {
     '/': (
         ['GET'], R.index),
@@ -61,7 +60,8 @@ def start():
     Compress(app)
 
     for route, (methods, handler) in routes.items():
-        app.add_route(handler, route, methods)
+        # need to have OPTIONS on all routes for CORS
+        app.add_route(handler, route, methods + ['OPTIONS'])
 
     app.error_handler = ErrorHandler()
 
