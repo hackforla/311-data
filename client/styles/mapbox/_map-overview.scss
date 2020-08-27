@@ -43,6 +43,9 @@
     color: $brand-cta1-color;
     font-weight: bolder;
     font-size: 20px;
+    vertical-align: top;
+    margin-top: -2px;
+    display: inline-block;
   }
   .requests-bar-chart {
     padding: 0 20px 20px 20px;

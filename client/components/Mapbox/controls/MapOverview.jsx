@@ -54,7 +54,7 @@ const MapOverview = ({
         </>
       }
       { activeMode === MAP_MODES.CLOSED &&
-        <div className="closed-requests-container">
+        <>
           <div className="info-heading">
             Dates
           </div>
@@ -63,7 +63,7 @@ const MapOverview = ({
             {mapFilters.startDate} - {mapFilters.endDate}
             <a className="scroll-date">&nbsp;&nbsp;&gt;</a>
           </div>
-        </div>
+        </>
       }
       { locationInfo.location && (
         <>
