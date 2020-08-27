@@ -32,25 +32,26 @@ const MapOverview = ({
     MAP_MODES.CLOSED,
   ];
 
-  const priorDate = (date, num, timeInterval) => {
-    return moment(date).subtract(num, timeInterval).format('MM/DD/YY');
-  };
-
-  const futureDate = (date, num, timeInterval) => {
-    return moment(date).add(num, timeInterval).format('MM/DD/YY');
+  const newDate = (mode, date, num, timeInterval) => {
+    const ISOdate = new Date(date).toISOString();
+    if (mode === 'prior') {
+      return moment(ISOdate).subtract(num, timeInterval).format('MM/DD/YY');
+    } else if (mode === 'future') {
+      return moment(ISOdate).add(num, timeInterval).format('MM/DD/YY');
+    }
   };
 
   const newRangeId = 'CUSTOM_DATE_RANGE';
 
   const handleLeftArrowClick = () => {
-    const newStartDate = priorDate(startDate, 1, 'week');
-    const newEndDate = priorDate(endDate, 1, 'week');
+    const newStartDate = newDate('prior', startDate, 1, 'week');
+    const newEndDate = newDate('prior', endDate, 1, 'week');
     updateRange({ dateRange: newRangeId, startDate: newStartDate, endDate: newEndDate });
   }
 
   const handleRightArrowClick = () => {
-    const newStartDate = futureDate(startDate, 1, 'week');
-    const newEndDate = futureDate(endDate, 1, 'week');
+    const newStartDate = newDate('future', startDate, 1, 'week');
+    const newEndDate = newDate('future', endDate, 1, 'week');
     updateRange({ dateRange: newRangeId, startDate: newStartDate, endDate: newEndDate });
   }
 
