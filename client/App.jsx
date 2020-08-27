@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'focus-visible';
 import { getMetadataRequest } from '@reducers/metadata';
+import { getInitialMapData } from '@reducers/data';
 
 import RouteChange from '@components/main/util/RouteChange';
 import actions from '@components/main/util/routeChangeActions';
@@ -16,9 +17,11 @@ import Routes from './Routes';
 
 const App = ({
   getMetadata,
+  getInitialMapData,
 }) => {
   useEffect(() => {
     getMetadata();
+    getInitialMapData();
   });
 
   return (
@@ -38,10 +41,12 @@ const App = ({
 
 const mapDispatchToProps = dispatch => ({
   getMetadata: () => dispatch(getMetadataRequest()),
+  getInitialMapData: () => dispatch(getInitialMapData()),
 });
 
 export default connect(null, mapDispatchToProps)(App);
 
 App.propTypes = {
   getMetadata: PropTypes.func.isRequired,
+  getInitialMapData: PropTypes.func.isRequired,
 };

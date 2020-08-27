@@ -1,4 +1,5 @@
 export const types = {
+  GET_INITIAL_MAP_DATA: 'GET_INITIAL_MAP_DATA',
   GET_DATA_REQUEST: 'GET_DATA_REQUEST',
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
@@ -15,6 +16,10 @@ export const types = {
   GIT_RESPONSE_SUCCESS: 'GIT_RESPONSE_SUCCESS',
   GIT_RESPONSE_FAILURE: 'GIT_RESPONSE_FAILURE',
 };
+
+export const getInitialMapData = () => ({
+  type: types.GET_INITIAL_MAP_DATA,
+});
 
 export const getDataRequest = () => ({
   type: types.GET_DATA_REQUEST,
