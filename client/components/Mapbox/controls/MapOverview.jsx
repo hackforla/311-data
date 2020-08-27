@@ -6,6 +6,7 @@ import clx from 'classnames';
 import moment from 'moment';
 import RequestsDonut from './RequestsDonut';
 import RequestsBarChart from './RequestsBarChart';
+import Button from '@components/common/Button';
 
 import {
   setMapMode as reduxSetMapMode,
@@ -53,14 +54,16 @@ const MapOverview = ({
         </>
       }
       { activeMode === MAP_MODES.CLOSED &&
-        <>
+        <div className="closed-requests-container">
           <div className="info-heading">
             Dates
           </div>
-          <div className="info-content">
+          <div className="scroll-date-container">
+            <a className="scroll-date">&lt;&nbsp;&nbsp;</a>
             {mapFilters.startDate} - {mapFilters.endDate}
+            <a className="scroll-date">&nbsp;&nbsp;&gt;</a>
           </div>
-        </>
+        </div>
       }
       { locationInfo.location && (
         <>

@@ -30,10 +30,19 @@
     margin-left: 20px;
     font-size: 16px;
   }
+  .scroll-date-container {
+    text-align: center;
+    font-size: 16px;
+  }
   a.info-content {
     text-decoration: none;
     color: inherit;
     border-bottom: 1px $map-control-border-color solid;
+  }
+  a.scroll-date {
+    color: $brand-cta1-color;
+    font-weight: bolder;
+    font-size: 20px;
   }
   .requests-bar-chart {
     padding: 0 20px 20px 20px;
