@@ -6,6 +6,7 @@ import { trackMapExport } from '@reducers/analytics';
 import PinPopup from '@components/PinMap/PinPopup';
 import CustomMarker from '@components/PinMap/CustomMarker';
 import ClusterMarker from '@components/PinMap/ClusterMarker';
+import MapboxVectorLayer from '@components/PinMap/MapboxVectorLayer';
 import HeatmapLegend from '@components/PinMap/HeatmapLegend';
 import ExportLegend from '@components/PinMap/ExportLegend';
 import MapboxWordmark from '@components/PinMap/MapboxWordmark';
@@ -301,20 +302,42 @@ class PinMap extends Component {
             collapsed={false}
           >
             <BaseLayer checked name="Streets">
-              <TileLayer
-                url={streetsLayerUrl}
-                attribution='<a href="https://www.mapbox.com/about/maps/">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/">© OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/#/-74.5/40/10">Improve this map</a>'
-                tileSize={512}
-                zoomOffset={-1}
-              />
+              {
+                window.app.config.vectorLayersEnabled
+                  ? (
+                    <MapboxVectorLayer
+                      accessToken={process.env.MAPBOX_TOKEN}
+                      // eslint-disable-next-line
+                      style="mapbox://styles/mapbox/streets-v11"
+                    />
+                  ) : (
+                    <TileLayer
+                      url={streetsLayerUrl}
+                      attribution='<a href="https://www.mapbox.com/about/maps/">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/">© OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/#/-74.5/40/10">Improve this map</a>'
+                      tileSize={512}
+                      zoomOffset={-1}
+                    />
+                  )
+              }
             </BaseLayer>
             <BaseLayer name="Satellite">
-              <TileLayer
-                url={satelliteLayerUrl}
-                attribution='<a href="https://www.mapbox.com/about/maps/">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/">© OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/#/-74.5/40/10">Improve this map</a>'
-                tileSize={512}
-                zoomOffset={-1}
-              />
+              {
+                window.app.config.vectorLayersEnabled
+                  ? (
+                    <MapboxVectorLayer
+                      accessToken={process.env.MAPBOX_TOKEN}
+                      // eslint-disable-next-line
+                      style="mapbox://styles/mapbox/satellite-streets-v11"
+                    />
+                  ) : (
+                    <TileLayer
+                      url={satelliteLayerUrl}
+                      attribution='<a href="https://www.mapbox.com/about/maps/">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/">© OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/#/-74.5/40/10">Improve this map</a>'
+                      tileSize={512}
+                      zoomOffset={-1}
+                    />
+                  )
+              }
             </BaseLayer>
             {
               (zoomThresholdMet === false && geoJSON)
