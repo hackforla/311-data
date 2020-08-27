@@ -1,12 +1,22 @@
-const Dotenv = require('dotenv-webpack');
 const path = require('path');
+const crypto = require('crypto');
+const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SocialTags = require('social-tags-webpack-plugin');
 
 const description = 'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.';
+const env = process.env.NODE_ENV;
+const configFilename = `config.${env}.js`
+// const configFilename = `config.${env}.${crypto.randomBytes(15).toString('hex')}.js`
+
 
 module.exports = {
+  mode: env,
   entry: './index.js',
   output: {
     path: path.join(__dirname, '/dist'),
@@ -75,6 +85,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.ProgressPlugin(),
+    // Clear /dist from prior build
+    new CleanWebpackPlugin(),
     new Dotenv({
       path: './.env',
     }),
@@ -85,6 +98,18 @@ module.exports = {
       meta: {
         description,
       },
+      configFilename: configFilename,
+    }),
+    // Copy correspondng build config file to /dist
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.join(path.resolve(__dirname), 'config', configFilename),
+          to: path.join(path.resolve(__dirname), 'dist', configFilename),
+          toType: 'file',
+          force: true,
+        },
+      ]
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -109,5 +134,6 @@ module.exports = {
         'twitter:site': '@data_311',
       },
     }),
+    // new BundleAnalyzerPlugin(),
   ],
 };

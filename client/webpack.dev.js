@@ -6,7 +6,8 @@ module.exports = merge(config, {
   devtool: 'inline-source-map',
   devServer: {
     open: true,
-    contentBase: './public',
+    contentBase: ['./public', './config'],
+    watchContentBase: true,
     compress: true,
     port: 3000,
     host: '0.0.0.0',
