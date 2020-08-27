@@ -1,0 +1,17 @@
+.faq-311 {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 
+  "header"
+  "main";
+
+  .faq-header {
+    background-color: MAIN;
+    grid-area: header;
+  }
+
+  .faq-main-section {
+    grid-area: main;
+  }
+}

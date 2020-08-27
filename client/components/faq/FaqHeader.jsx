@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'proptypes';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 const FaqHeader = ({
 
@@ -8,7 +8,11 @@ const FaqHeader = ({
 
 return (
   <div className="faq-header">
-
+    <h1>What can we help you with? </h1>
+    <form>
+      <input type="text" />
+      <input type="submit" />
+    </form>
   </div>
 )
 
