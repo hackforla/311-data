@@ -1,6 +1,5 @@
 .navbar {
   font-family: $brand-heading-family;
-  font-weight: bold;
   height: $header-height;
   z-index: $z-navbar;
   background-color: $brand-heading-color;
@@ -19,7 +18,7 @@
   }
 
   .navbar-selected {
-    border-bottom: 5px solid $brand-cta1-color;
+    border-bottom: 3px solid $brand-cta1-color;
     padding-bottom: 2px;
     margin-bottom: -7px;
   }

@@ -24,7 +24,12 @@
   .map-tab {
     font-size: 16px;
     color: inherit;
-    margin: 0 30px 0 30px
+    margin: 0 30px 0 30px;
+    padding: 2px;
+    &.active {
+      font-weight: bold;
+      border-bottom: 2px $brand-cta1-color solid;
+    }
   }
   .info-content {
     margin-left: 20px;
