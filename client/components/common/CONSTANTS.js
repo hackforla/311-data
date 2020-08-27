@@ -1,7 +1,7 @@
 export default {};
 
 // 'primary' or 'alt' to change request type colors
-const COLOR_SELECTION = 'alt';
+const COLOR_SELECTION = window.app.config.altRequestColors ? 'alt' : 'primary';
 
 export const REQUEST_TYPES = {
   'Dead Animal Removal': {
