@@ -33,8 +33,8 @@ import {
 } from '../reducers/ui';
 
 import {
-  types as filtersTypes,
-} from '../reducers/filters';
+  types as mapFiltersTypes,
+} from '../reducers/mapFilters';
 
 /* ////////////////// API CALLS  //////////////// */
 
@@ -168,7 +168,7 @@ function* getMapData() {
   }
 
   // start the loading indicator
-  yield put(getDataRequest());
+  // yield put(getDataRequest());
 
   try {
     const pins = yield call(fetchPins, filters);
@@ -259,6 +259,7 @@ function* sendContactData(action) {
 
 export default function* rootSaga() {
   yield takeLatest(types.GET_INITIAL_MAP_DATA, getMapData);
+  yield takeLatest(mapFiltersTypes.UPDATE_MAP_DATE_RANGE, getMapData);
   yield takeLatest(types.GET_DATA_REQUEST, getVisData);
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
   yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
