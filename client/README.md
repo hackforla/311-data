@@ -21,7 +21,7 @@ Stop webpack dev server with `Ctrl-C`.
 npm run setup                 # install dependencies listed in package.json and check .env file
 npm run check-env             # checks .env file exists and has all required keys
 npm start                     # check .env file and start webpack dev server
-npm run dev                   # start webpack dev server (no .env check)
-npm run build                 # run webpack in production mode - output is placed in dist directory
+npm run start:dev             # run development build locally with no .env check - webpack dev server opens browser to 0.0.0.0:3000
+npm run start:prod            # run production build locally with no .env check - http-server opens browser to 127.0.0.1:3001
 npm run lint                  # lint javascript in client directory
 ```
