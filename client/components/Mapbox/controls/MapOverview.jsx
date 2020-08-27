@@ -20,6 +20,7 @@ const MapOverview = ({
   colorScheme,
   setMapMode,
   activeMode,
+  mapFilters,
 }) => {
   const modes = [
     MAP_MODES.OPEN,
@@ -41,13 +42,26 @@ const MapOverview = ({
           </a>
         ))}
       </div>
-      <div className="info-heading">
-        Date
-      </div>
-      <div className="info-content">
-        { moment(date).format('MMMM Do, YYYY') }
-      </div>
-
+      { activeMode === MAP_MODES.OPEN &&
+        <>
+          <div className="info-heading">
+            Date
+          </div>
+          <div className="info-content">
+            { moment(date).format('MMMM Do, YYYY') }
+          </div>
+        </>
+      }
+      { activeMode === MAP_MODES.CLOSED &&
+        <>
+          <div className="info-heading">
+            Dates
+          </div>
+          <div className="info-content">
+            {mapFilters.startDate} - {mapFilters.endDate}
+          </div>
+        </>
+      }
       { locationInfo.location && (
         <>
           <div className="info-heading">Location</div>
@@ -105,6 +119,7 @@ const MapOverview = ({
 
 const mapStateToProps = state => ({
   activeMode: state.ui.map.activeMode,
+  mapFilters: state.mapFilters,
 });
 
 const mapDispatchToProps = dispatch => ({
