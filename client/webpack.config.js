@@ -14,7 +14,6 @@ const env = process.env.NODE_ENV;
 const configFilename = `config.${env}.js`
 // const configFilename = `config.${env}.${crypto.randomBytes(15).toString('hex')}.js`
 
-
 module.exports = {
   mode: env,
   entry: './index.js',
