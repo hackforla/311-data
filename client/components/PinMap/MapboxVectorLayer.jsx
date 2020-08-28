@@ -4,7 +4,7 @@ import PropTypes from 'proptypes';
 import { GridLayer, withLeaflet } from 'react-leaflet';
 
 class MapboxVectorLayer extends GridLayer {
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   createLeafletElement(props) {
     return L.mapboxGL(props);
   }

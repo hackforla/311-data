@@ -1,4 +1,4 @@
-//eslint-disable-next-line
+// eslint-disable-next-line
 const APP_CONFIG = Object.freeze({
   // Toggles alt/primary request type colors
   altRequestColors: false,
