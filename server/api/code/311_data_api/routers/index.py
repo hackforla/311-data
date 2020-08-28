@@ -83,6 +83,28 @@ async def get_heatmap(filter: Filter):
     return responses.JSONResponse(result.tolist())
 
 
+class Pin(BaseModel):
+    srnumber: str
+    requesttype: str
+    latitude: float
+    longitude: float
+
+
+Pins = List[Pin]
+
+
+@router.post("/map/pins", response_model=Pins)
+async def get_pins(filter: Filter):
+    start_time = datetime.datetime.strptime(filter.startDate, '%m/%d/%Y')
+    end_time = datetime.datetime.strptime(filter.endDate, '%m/%d/%Y')
+
+    result = await map.pins(startDate=start_time,
+                                    endDate=end_time,
+                                    requestTypes=filter.requestTypes,
+                                    ncList=filter.ncList)
+    return result
+
+
 @router.post("/visualizations")
 async def get_visualizations(filter: Filter):
     start_time = datetime.datetime.strptime(filter.startDate, '%m/%d/%Y')

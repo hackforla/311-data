@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 from .routers import index, councils, regions, request_types, service_requests
 from .models import db
@@ -32,5 +33,7 @@ def get_app():
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
+
+    app.add_middleware(GZipMiddleware)
+
     return app
