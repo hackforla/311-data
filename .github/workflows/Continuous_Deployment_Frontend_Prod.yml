@@ -33,7 +33,7 @@ jobs:
         echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env
         echo GITHUB_SHA=${{ github.sha }} >> .env
     - name: Build project
-      run: npm run build
+      run: npm run build:prod
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
