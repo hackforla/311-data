@@ -4,6 +4,7 @@ import PropTypes from 'proptypes';
 import { GridLayer, withLeaflet } from 'react-leaflet';
 
 class MapboxVectorLayer extends GridLayer {
+  //eslint-disable-next-line
   createLeafletElement(props) {
     return L.mapboxGL(props);
   }
@@ -11,11 +12,11 @@ class MapboxVectorLayer extends GridLayer {
 
 MapboxVectorLayer.propTypes = {
   accessToken: PropTypes.string.isRequired,
-  style: PropTypes.string
+  style: PropTypes.string,
 };
 
 MapboxVectorLayer.defaultProps = {
-  style: "mapbox://styles/mapbox/streets-v9"
+  style: 'mapbox://styles/mapbox/streets-v9',
 };
 
-export default withLeaflet(MapboxVectorLayer);   
+export default withLeaflet(MapboxVectorLayer);
