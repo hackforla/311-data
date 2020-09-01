@@ -5,9 +5,14 @@ from fastapi import responses
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from services import status, map, visualizations, requests
+from services import status, map, visualizations, requests, comparison, github, email
 
 router = APIRouter()
+
+"""
+These are router classes that implement the existing API design and
+use the legacy services code from src as-is.
+"""
 
 
 class Bounds(BaseModel):
@@ -26,12 +31,46 @@ class Filter(BaseModel):
     bounds: Optional[Bounds] = None
 
 
-@router.get("/")
-async def index():
-    return {"message": "Hello, new index!"}
+class Pin(BaseModel):
+    srnumber: str
+    requesttype: str
+    latitude: float
+    longitude: float
 
 
-@router.get("/status/api")
+Pins = List[Pin]
+
+
+class Cluster(BaseModel):
+    count: int
+    expansion_zoom: Optional[int]
+    id: int
+    latitude: float
+    longitude: float
+
+
+Clusters = List[Cluster]
+
+
+class Set(dict):
+    district: str
+    list: List[int]
+
+
+class Comparison(BaseModel):
+    startDate: str
+    endDate: str
+    requestTypes: List[str]
+    set1: Set
+    set2: Set
+
+
+class Feedback(BaseModel):
+    title: str
+    body: str
+
+
+@router.get("/status/api", description="Provides the status of backend systems")
 async def status_api():
     result = await status.api()
     return result
@@ -43,7 +82,7 @@ async def status_db():
     return result
 
 
-@router.get("/status/system")
+@router.get("/status/sys")
 async def status_system():
     result = await status.system()
     return result
@@ -51,11 +90,17 @@ async def status_system():
 
 @router.get("/servicerequest/{srnumber}")
 async def get_service_request_by_string(srnumber: str):
-    # result = await get_service_request(int(srnumber[2:]))
     result = requests.item_query(srnumber)
     return result
 
 
+@router.post("/open-requests")
+async def get_open_requests():
+    result = await requests.open_requests()
+    return result
+
+
+# NOTE: can't apply response filter here since it sometimes returns a single point
 @router.post("/map/clusters")
 async def get_clusters(filter: Filter):
     start_time = datetime.datetime.strptime(filter.startDate, '%m/%d/%Y')
@@ -83,16 +128,6 @@ async def get_heatmap(filter: Filter):
     return responses.JSONResponse(result.tolist())
 
 
-class Pin(BaseModel):
-    srnumber: str
-    requesttype: str
-    latitude: float
-    longitude: float
-
-
-Pins = List[Pin]
-
-
 @router.post("/map/pins", response_model=Pins)
 async def get_pins(filter: Filter):
     start_time = datetime.datetime.strptime(filter.startDate, '%m/%d/%Y')
@@ -115,3 +150,30 @@ async def get_visualizations(filter: Filter):
                                     requestTypes=filter.requestTypes,
                                     ncList=filter.ncList)
     return result
+
+
+@router.post("/comparison/frequency")
+async def get_comparison_frequency(comp_filter: Comparison):
+    result = await comparison.freq_comparison(**dict(comp_filter))
+    return result
+
+
+@router.post("/comparison/timetoclose")
+async def get_comparison_time_to_close(comp_filter: Comparison):
+    result = await comparison.ttc_comparison(**dict(comp_filter))
+    return result
+
+
+@router.post("/comparison/counts")
+async def get_comparison_counts(comp_filter: Comparison):
+    result = await comparison.counts_comparison(**dict(comp_filter))
+    return result
+
+
+@router.post("/feedback")
+async def get_feedback(feedback: Feedback):
+    id, number = await github.create_issue(feedback.title, feedback.body)
+    await github.add_issue_to_project(id)
+    await email.respond_to_feedback(feedback.body, number)
+
+    return {'success': True}

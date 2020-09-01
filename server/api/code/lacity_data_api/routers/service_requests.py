@@ -6,8 +6,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from ..models.service_request import ServiceRequest
-from ..models import db
-from .utilities import get_clusters_for_pins
+from ..models import db, clusters
 
 router = APIRouter()
 
@@ -62,6 +61,17 @@ class Filter(BaseModel):
     bounds: Optional[Bounds] = None
 
 
+class Cluster(BaseModel):
+    count: int
+    expansion_zoom: int
+    id: int
+    latitude: float
+    longitude: float
+
+
+Clusters = List[Cluster]
+
+
 class Pin(BaseModel):
     request_id: int
     type_id: int
@@ -85,16 +95,31 @@ async def get_service_request_pins(filter: Filter):
     return result
 
 
-@router.post("/clusters", response_model=Items)
+@router.post("/clusters", response_model=Clusters)
 async def get_service_request_clusters(filter: Filter):
-    result = await ServiceRequest.query.where(
-        sql.and_(
-            ServiceRequest.created_date >= filter.startDate,
-            ServiceRequest.created_date <= filter.endDate,
-            ServiceRequest.type_id.in_(filter.requestTypes),
-            ServiceRequest.council_id.in_(filter.ncList)
-        )
-    ).gino.all()
- 
-    clusters = get_clusters_for_pins(result, filter.zoom, filter.bounds, options={})
-    return clusters
+
+    result = await clusters.get_clusters_for_city(
+        filter.startDate,
+        filter.endDate,
+        filter.requestTypes
+    )
+
+    # result = await ServiceRequest.query()
+    #     .where(
+    #     sql.and_(
+            # ServiceRequest.created_date >= filter.startDate,
+            # ServiceRequest.created_date <= filter.endDate,
+            # ServiceRequest.type_id.in_(filter.requestTypes),
+            # ServiceRequest.council_id.in_(filter.ncList)
+    #     )
+    # ).gino.all()
+
+    # # council
+
+    # # street
+    # if filter.zoom > 9:
+    #     cluster_result = clusters.get_clusters_for_regions(result, filter.zoom, filter.bounds, options={})
+    # else:
+    #     cluster_result = clusters.get_clusters_for_pins(result, filter.zoom, filter.bounds, options={})
+
+    return result
