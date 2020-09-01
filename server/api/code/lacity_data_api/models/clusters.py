@@ -6,7 +6,7 @@ import pysupercluster
 from sqlalchemy import and_
 
 from .service_request import ServiceRequest
-from .request_type import RequestType, get_types_dict
+from .request_type import get_types_dict
 from .council import Council
 from . import db
 
@@ -35,7 +35,7 @@ async def get_clusters_for_city(
         start_date: datetime.date,
         end_date: datetime.date,
         type_ids: List[int],
-        zoom_current: int        
+        zoom_current: int
 ) -> List[Cluster]:
     """
     Cluster pins for the entire city
@@ -71,7 +71,7 @@ async def get_clusters_for_city(
     return cluster_list
 
 
-# TODO: same as above by group by region of each council 
+# TODO: same as above by group by region of each council
 def get_clusters_for_regions(pins, zoom, bounds, options):
     """
     Cluster pins by region

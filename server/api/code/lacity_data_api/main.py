@@ -4,14 +4,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from .routers import index, legacy, councils, regions, request_types, service_requests, shim
+from .routers import (
+    index, legacy, councils, regions, request_types, service_requests, shim
+)
 from .models import db
 from .config import API_LEGACY_MODE
 
-try:
-    from importlib.metadata import entry_points
-except ImportError:  # pragma: no cover
-    from importlib_metadata import entry_points
 
 logger = logging.getLogger(__name__)
 

@@ -95,6 +95,7 @@ async def get_service_request_pins(filter: Filter):
     return result
 
 
+# TODO: implement conditional cluster logic based on zoom
 @router.post("/clusters", response_model=Clusters)
 async def get_service_request_clusters(filter: Filter):
 
@@ -103,23 +104,5 @@ async def get_service_request_clusters(filter: Filter):
         filter.endDate,
         filter.requestTypes
     )
-
-    # result = await ServiceRequest.query()
-    #     .where(
-    #     sql.and_(
-            # ServiceRequest.created_date >= filter.startDate,
-            # ServiceRequest.created_date <= filter.endDate,
-            # ServiceRequest.type_id.in_(filter.requestTypes),
-            # ServiceRequest.council_id.in_(filter.ncList)
-    #     )
-    # ).gino.all()
-
-    # # council
-
-    # # street
-    # if filter.zoom > 9:
-    #     cluster_result = clusters.get_clusters_for_regions(result, filter.zoom, filter.bounds, options={})
-    # else:
-    #     cluster_result = clusters.get_clusters_for_pins(result, filter.zoom, filter.bounds, options={})
 
     return result
