@@ -5,6 +5,7 @@ services:
     container_name: 311-postgres
     image: postgres
     restart: always
+    env_file: .env
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
@@ -35,30 +36,6 @@ services:
     depends_on:
       - db
       - redis
-
-  adminer:
-    container_name: postgres-dashboard
-    image: adminer
-    ports:
-      - 8080:8080
-
-  rebrow:
-    container_name: redis-dashboard
-    image: marian/rebrow
-    links:
-      - redis:redis
-    ports:
-      - 5001:5001
-
-  # jupyter:
-  #   container_name: 311-notebook
-  #   image: jupyter/scipy-notebook
-  #   environment:
-  #     DATABASE_URL: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
-  #   ports:
-  #     - 8888:8888
-  #   volumes:
-  #     - ../:/home/jovyan/work
 
 volumes:
   backend_data:

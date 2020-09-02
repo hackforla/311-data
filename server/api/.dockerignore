@@ -1,0 +1,5 @@
+# ignore .git and .cache folders
+Pipfile
+Pipfile.lock
+__pycache__
+__tmp__
