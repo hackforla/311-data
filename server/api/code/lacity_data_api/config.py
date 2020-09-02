@@ -1,11 +1,15 @@
+import os
 from sqlalchemy.engine.url import URL, make_url
-from starlette.config import Config
+from starlette.config import Config, environ
 from starlette.datastructures import Secret
 
 config = Config(".env")
 
+# checking for testing or debug
+DEBUG = config("DEBUG", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
 
+# getting database configuration
 DB_DRIVER = config("DB_DRIVER", default="postgresql")
 DB_HOST = config("DB_HOST", default=None)
 DB_PORT = config("DB_PORT", cast=int, default=None)
@@ -44,4 +48,19 @@ DB_USE_CONNECTION_FOR_REQUEST = config(
 DB_RETRY_LIMIT = config("DB_RETRY_LIMIT", cast=int, default=32)
 DB_RETRY_INTERVAL = config("DB_RETRY_INTERVAL", cast=int, default=1)
 
-API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=True)
+# check whether running in legacy mode
+API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=False)
+
+# the legacy code needs these created as environment settings
+if API_LEGACY_MODE:
+    environ['DATABASE_URL'] = str(DB_DSN)
+    environ['TMP_DIR'] = config('TEMP_FOLDER')
+    environ['PICKLECACHE_ENABLED'] = config('USE_FILE_CACHE')
+
+# print out debug information
+if DEBUG:
+    print("\n\033[93mLA City Data API server starting with DEBUG mode ENABLED\033[0m")
+    print("\nEnvironment variables after executing config.py file:")
+    for k, v in sorted(os.environ.items()):
+        print(f'\033[92m{k}\033[0m: {v}')
+    print(f"\n\033[93mDatabase\033[0m: {DB_DSN}\n")

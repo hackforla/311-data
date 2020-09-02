@@ -2,9 +2,6 @@ import os
 
 if __name__ == "__main__":
     import uvicorn
-    import sys
-
-    print(sys.path)
 
     uvicorn.run(
         "lacity_data_api.asgi:app",

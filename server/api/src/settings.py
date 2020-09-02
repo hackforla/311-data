@@ -1,6 +1,6 @@
 from utils.parse_env import env, to
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 class Version:

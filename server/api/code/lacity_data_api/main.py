@@ -4,11 +4,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
+from .config import API_LEGACY_MODE   # important to load config first
+from .models import db
 from .routers import (
     index, legacy, councils, regions, request_types, service_requests, shim
 )
-from .models import db
-from .config import API_LEGACY_MODE
 
 
 logger = logging.getLogger(__name__)
