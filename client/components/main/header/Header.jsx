@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import COLORS from '../../../styles/COLORS';
 import clx from 'classnames';
+import COLORS from '../../../styles/COLORS';
 
 const Header = () => {
   const [activeBurger, setActiveBurger] = useState(false);
@@ -34,10 +34,10 @@ const Header = () => {
             <span className="beta-tag">BETA</span>
           </div>
         </Link>
-        <a role="button" className={clx('navbar-burger', { 'is-active': activeBurger })} aria-label="menu" aria-expanded="false" onClick={() => setActiveBurger(!activeBurger)}>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
+        <a role="button" tabIndex={0} className={clx('navbar-burger', { 'is-active': activeBurger })} aria-label="menu" aria-expanded="false" onClick={() => setActiveBurger(!activeBurger)}>
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
         </a>
       </div>
 
