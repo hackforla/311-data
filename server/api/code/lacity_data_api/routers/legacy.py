@@ -1,5 +1,6 @@
 from typing import List, Optional
 import datetime
+from enum import Enum
 
 from fastapi import responses
 from fastapi import APIRouter
@@ -82,27 +83,37 @@ class Feedback(BaseModel):
     body: str
 
 
-@router.get("/status/api", description="Provides the status of backend systems")
-async def status_api():
-    result = await status.api()
-    return result
+class StatusTypes(str, Enum):
+    api = "api"
+    database = "db"
+    system = "sys"
 
 
-@router.get("/status/db")
-async def status_db():
-    result = await status.database()
-    return result
-
-
-@router.get("/status/sys")
-async def status_system():
-    result = await status.system()
+@router.get("/status/{status_type}",
+            description="Provides the status of backend systems")
+async def status_check(status_type: StatusTypes):
+    if status_type == StatusTypes.api:
+        result = await status.api()
+    if status_type == StatusTypes.database:
+        result = await status.database()
+    if status_type == StatusTypes.system:
+        result = await status.system()
     return result
 
 
 @router.get("/servicerequest/{srnumber}")
 async def get_service_request_by_string(srnumber: str):
     result = requests.item_query(srnumber)
+    # TODO: clean this up with 3.8 syntax
+    # convert createddate and closeddate to epochs for app compatibility
+    if (result['createddate']):
+        result['createddate'] = int(result['createddate'].strftime('%s'))
+    if (result['closeddate']):
+        result['closeddate'] = int(result['closeddate'].strftime('%s'))
+    if (result['updateddate']):
+        result['updateddate'] = int(result['updateddate'].strftime('%s'))
+    if (result['servicedate']):
+        result['servicedate'] = int(result['servicedate'].strftime('%s'))
     return result
 
 

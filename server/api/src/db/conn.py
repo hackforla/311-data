@@ -8,7 +8,7 @@ from utils.log import log, log_colors
 
 
 def get_engine(url):
-    ATTEMPTS = 5
+    ATTEMPTS = 3
     DELAY = 3
 
     def fail(message):

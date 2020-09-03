@@ -3,7 +3,7 @@ from sqlalchemy.engine.url import URL, make_url
 from starlette.config import Config, environ
 from starlette.datastructures import Secret
 
-config = Config(".env")
+config = Config("api.config")
 
 # checking for testing or debug
 DEBUG = config("DEBUG", cast=bool, default=False)
@@ -11,11 +11,11 @@ TESTING = config("TESTING", cast=bool, default=False)
 
 # getting database configuration
 DB_DRIVER = config("DB_DRIVER", default="postgresql")
-DB_HOST = config("DB_HOST", default=None)
-DB_PORT = config("DB_PORT", cast=int, default=None)
-DB_USER = config("DB_USER", default=None)
+DB_HOST = config("DB_HOST", default="localhost")
+DB_PORT = config("DB_PORT", cast=int, default=5432)
+DB_USER = config("DB_USER", default="311_user")
 DB_PASSWORD = config("DB_PASSWORD", cast=Secret, default=None)
-DB_DATABASE = config("DB_DATABASE", default=None)
+DB_DATABASE = config("DB_DATABASE", default="311_db")
 
 if TESTING:
     if DB_DATABASE:
@@ -33,10 +33,6 @@ DB_DSN = config(
         database=DB_DATABASE,
     ),
 )
-
-if TESTING:
-    if DB_DSN:
-        DB_DSN += "_test"
 
 DB_POOL_MIN_SIZE = config("DB_POOL_MIN_SIZE", cast=int, default=1)
 DB_POOL_MAX_SIZE = config("DB_POOL_MAX_SIZE", cast=int, default=16)

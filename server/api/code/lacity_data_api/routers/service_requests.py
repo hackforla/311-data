@@ -29,7 +29,7 @@ Items = List[ServiceRequestModel]
 
 
 @router.get("/", response_model=Items)
-async def index(skip: int = 0, limit: int = 100):
+async def get_all_service_requests(skip: int = 0, limit: int = 100):
     async with db.transaction():
         cursor = await ServiceRequest.query.gino.iterate()
         if skip > 0:
@@ -39,9 +39,12 @@ async def index(skip: int = 0, limit: int = 100):
     return result
 
 
-@router.get("/{srid}")
-async def get_service_request(srid: int):
-    svcreq = await ServiceRequest.get_or_404(srid)
+@router.get("/{id}", description="""
+    The service request ID is the integer created from the srnumber
+    when the initial "1-" is removed.
+    """)
+async def get_service_request(id: int):
+    svcreq = await ServiceRequest.get_or_404(id)
     return svcreq.to_dict()
 
 

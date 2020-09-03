@@ -24,12 +24,12 @@ Items = List[CouncilModel]
 
 
 @router.get("/", response_model=Items)
-async def index():
+async def get_all_councils():
     result = await db.all(Council.query)
     return result
 
 
-@router.get("/{cid}")
-async def get_council(cid: int):
-    result = await Council.get_or_404(cid)
+@router.get("/{id}")
+async def get_council(id: int):
+    result = await Council.get_or_404(id)
     return result.to_dict()

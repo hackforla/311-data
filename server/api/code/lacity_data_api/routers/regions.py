@@ -23,12 +23,12 @@ Items = List[RegionModel]
 
 
 @router.get("/", response_model=Items)
-async def index():
+async def get_all_regions():
     result = await db.all(Region.query)
     return result
 
 
-@router.get("/{rid}")
-async def get_region(rid: int):
-    result = await Region.get_or_404(rid)
+@router.get("/{id}")
+async def get_region(id: int):
+    result = await Region.get_or_404(id)
     return result.to_dict()
