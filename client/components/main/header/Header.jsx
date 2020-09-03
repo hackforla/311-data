@@ -31,6 +31,9 @@ const Header = () => {
             <span className="beta-tag">BETA</span>
           </div>
         </Link>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+          Menu
+        </a>
       </div>
 
       <div id="navbar" className="navbar-menu">
