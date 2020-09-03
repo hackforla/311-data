@@ -16,7 +16,7 @@ const Header = () => {
   };
 
   return (
-    <header
+    <nav
       className="navbar"
       role="navigation"
       aria-label="main navigation"
@@ -31,13 +31,15 @@ const Header = () => {
             <span className="beta-tag">BETA</span>
           </div>
         </Link>
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-          Menu
+        <a role="button" class="navbar-burger is-active" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
         </a>
       </div>
 
-      <div id="navbar" className="navbar-menu">
-        <div className="navbar-end">
+      <div id="navbar" className="navbar-menu is-active">
+        <div className="navbar-start">
           <div className="navbar-item">
             <NavLink exact to="/data" activeClassName="navbar-selected" style={backgroundStyle}>
               Explore My Council&apos;s 311 Data
@@ -48,6 +50,8 @@ const Header = () => {
               Compare Different Councils
             </NavLink>
           </div>
+        </div>
+        <div className="navbar-end">
           <div className="navbar-item">
             <NavLink exact to="/about" activeClassName="navbar-selected" style={backgroundStyle}>
               About 311 Data
@@ -60,7 +64,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 

@@ -9,9 +9,28 @@
     font-size: 20px;
   }
 
+  .navbar-burger {
+    color: $brand-bg-color;
+    height: auto;
+  }
+  
+  .navbar-menu.is-active {
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    width: 40%;
+    float: right;
+
+    .navbar-item {
+      margin: 0;
+      background-color: #113355;
+    }
+  }
+
   .navbar-menu .navbar-item {
     font-size: 16px;
-    margin-right: 46px;
+    margin-right: 20px;
+    background-color: $brand-heading-color;
   }
 
   .navbar-selected {
