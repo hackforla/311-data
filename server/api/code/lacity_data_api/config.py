@@ -45,7 +45,7 @@ DB_RETRY_LIMIT = config("DB_RETRY_LIMIT", cast=int, default=32)
 DB_RETRY_INTERVAL = config("DB_RETRY_INTERVAL", cast=int, default=1)
 
 # check whether running in legacy mode
-API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=False)
+API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=True)
 
 # the legacy code needs these created as environment settings
 if API_LEGACY_MODE:
