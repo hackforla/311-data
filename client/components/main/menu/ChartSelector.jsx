@@ -30,6 +30,8 @@ const ChartSelector = ({
                   handleClick={() => onChartSelect('frequency')}
                   checked={comparisonChart === 'frequency'}
                   style={labelStyle}
+                  label={<span className="is-hidden">Frequency Chart</span>}
+                  ariaLabel="frequency chart"
                 />
                 Frequency Chart
               </div>
@@ -42,6 +44,8 @@ const ChartSelector = ({
                   handleClick={() => onChartSelect('request')}
                   checked={comparisonChart === 'request'}
                   style={labelStyle}
+                  label={<span className="is-hidden">Total Request Chart</span>}
+                  ariaLabel="total request chart"
                 />
                 Total Request Chart
               </div>
@@ -56,6 +60,8 @@ const ChartSelector = ({
                   handleClick={() => onChartSelect('time')}
                   checked={comparisonChart === 'time'}
                   style={labelStyle}
+                  label={<span className="is-hidden">Time-to-Close Chart</span>}
+                  ariaLabel="time-to-close chart"
                 />
                 Time-to-Close Chart
               </div>
@@ -68,6 +74,8 @@ const ChartSelector = ({
                   handleClick={() => onChartSelect('contact')}
                   checked={comparisonChart === 'contact'}
                   style={labelStyle}
+                  label={<span className="is-hidden">311 Contact Pie Chart</span>}
+                  ariaLabel="311 contact pie chart"
                 />
                 311 Contact Pie Chart
               </div>

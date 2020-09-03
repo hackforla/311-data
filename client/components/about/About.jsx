@@ -32,8 +32,8 @@ const About = () => {
       </div>
       <WhatIs311Data ref={aboutRef} />
       <HowItWorks />
-      <Link to="/data" role="link">
-        <Button id="about-311" label="Let's Get Started" />
+      <Link to="/data" role="link" aria-label="launch 311 data tool">
+        <Button id="about-311" label="Let's Get Started"/>
       </Link>
     </div>
   );

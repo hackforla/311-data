@@ -10,6 +10,7 @@ const SocialMediaLinks = () => (
       href="https://twitter.com/data_311"
       rel="external noopener noreferrer"
       target="_blank"
+      aria-label="311 data twitter link"
     >
       <TwitterSVG className="icon" alt="twitter icon" />
     </a>
@@ -18,6 +19,7 @@ const SocialMediaLinks = () => (
       href="https://www.facebook.com/311-Data-113014693792634"
       rel="external noopener noreferrer"
       target="_blank"
+      aria-label="311 data facebook link"
     >
       <FacebookSVG className="icon" alt="facebook icon" />
     </a>

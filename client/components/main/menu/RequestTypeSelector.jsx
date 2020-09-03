@@ -19,7 +19,7 @@ import { REQUEST_TYPES } from '../../common/CONSTANTS';
 import COLORS from '../../../styles/COLORS';
 
 const typeContainerStyle = {
-  padding: '2px 0 0',
+  padding: '1px 0',
   fontSize: '14px',
 };
 
@@ -30,10 +30,25 @@ const checkboxStyle = {
 };
 
 const checkboxLabelDisplayStyle = {
-  display: 'block',
-  marginLeft: '45px',
-  marginTop: '-20px',
+  fontSize: '14px',
+  display: 'table-cell',
 };
+
+const allRequestsLabelStyle = {
+  fontSize: '14px',
+  fontWeight: "bolder",
+  display: 'inline-block',
+  margin: '0',
+  paddingTop: '0',
+  paddingBottom: '0',
+};
+
+const labelTextStyle = {
+  display: 'block',
+  maxWidth: '160px',
+  marginLeft: '18px',
+  marginTop: '-20px',
+}
 
 const types = Object.keys(REQUEST_TYPES);
 
@@ -67,19 +82,23 @@ const RequestItem = ({
         id={`request-checkbox-${type}`}
         value={type}
         size="small"
-        style={{ paddingLeft: '10px' }}
         checked={selected}
         handleClick={handleClick}
+        ariaLabel={`${displayName}`}
+        label={
+          <span style={checkboxLabelDisplayStyle}>
+            <Icon
+              id={`request-icon-${type}`}
+              icon="circle"
+              size="small"
+              style={{ color }}
+            />
+            <span style={labelTextStyle}>
+              {`${displayName} [${abbrev}]`}
+            </span>
+          </span>
+        }
       />
-      <Icon
-        id={`request-icon-${type}`}
-        icon="circle"
-        size="small"
-        style={{ color }}
-      />
-    </span>
-    <span style={checkboxLabelDisplayStyle}>
-      {`${displayName} [${abbrev}]`}
     </span>
   </div>
 );
@@ -126,7 +145,7 @@ const RequestTypeSelector = ({
 
   return (
     <div id="type-selector-container" style={{ color: COLORS.FONTS }}>
-      <div className="columns is-0" style={{ width: '475px' }}>
+      <div className="columns is-gapless" style={{ width: '475px' }}>
         <div className="column" style={{ paddingRight: '8px' }}>
           {/* ---------- Select/Deselect All ---------- */}
           <div
@@ -139,13 +158,12 @@ const RequestTypeSelector = ({
                 id="request-checkbox-all"
                 value="all"
                 size="small"
-                style={{ paddingLeft: '10px' }}
+                style={allRequestsLabelStyle}
                 handleClick={handleSelectAll()}
                 checked={comparison ? comparisonRequestTypes.All : requestTypes.All}
+                label="Select/Deselect All"
+                ariaLabel="select/deselect all request types"
               />
-            </span>
-            <span className="has-text-weight-medium">
-              Select/Deselect All
             </span>
           </div>
           { renderRequestItems(leftColumnItems) }
