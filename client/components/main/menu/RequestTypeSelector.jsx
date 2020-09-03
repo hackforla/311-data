@@ -36,7 +36,7 @@ const checkboxLabelDisplayStyle = {
 
 const allRequestsLabelStyle = {
   fontSize: '14px',
-  fontWeight: "bolder",
+  fontWeight: 'bolder',
   display: 'inline-block',
   margin: '0',
   paddingTop: '0',
@@ -48,7 +48,7 @@ const labelTextStyle = {
   maxWidth: '160px',
   marginLeft: '18px',
   marginTop: '-20px',
-}
+};
 
 const types = Object.keys(REQUEST_TYPES);
 
@@ -85,7 +85,7 @@ const RequestItem = ({
         checked={selected}
         handleClick={handleClick}
         ariaLabel={`${displayName}`}
-        label={
+        label={(
           <span style={checkboxLabelDisplayStyle}>
             <Icon
               id={`request-icon-${type}`}
@@ -97,7 +97,7 @@ const RequestItem = ({
               {`${displayName} [${abbrev}]`}
             </span>
           </span>
-        }
+        )}
       />
     </span>
   </div>
