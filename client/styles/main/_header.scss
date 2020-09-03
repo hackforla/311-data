@@ -5,11 +5,28 @@
   background-color: $brand-heading-color;
 
   #navbar-logo {
-    max-height: 3rem;
+    max-height: 2.9rem;
   }
 
-  .navbar-brand {
-    font-size: 20px;
+  .navbar-burger {
+    color: $brand-bg-color;
+    height: auto;
+  }
+
+  @media only screen and (max-width: 1024px) {
+    .navbar-menu.is-active {
+      padding: 0;
+      background: none;
+      box-shadow: none;
+      width: 270px;
+      position: fixed;
+      right: 0;
+
+      .navbar-item {
+        margin: 0;
+        background-color: $brand-main-color-light;
+      }
+    }
   }
 
   .navbar-menu .navbar-item {
