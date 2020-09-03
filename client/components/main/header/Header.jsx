@@ -18,6 +18,10 @@ const Header = () => {
     color: COLORS.BRAND.CTA1,
   };
 
+  const handleClick = () => {
+    setActiveBurger(!activeBurger);
+  };
+
   return (
     <nav
       className="navbar"
@@ -34,7 +38,7 @@ const Header = () => {
             <span className="beta-tag">BETA</span>
           </div>
         </Link>
-        <a role="button" tabIndex={0} className={clx('navbar-burger', { 'is-active': activeBurger })} aria-label="menu" aria-expanded="false" onClick={() => setActiveBurger(!activeBurger)}>
+        <a role="button" tabIndex={0} className={clx('navbar-burger', { 'is-active': activeBurger })} aria-label="menu" aria-expanded="false" onClick={handleClick} onKeyDown={handleClick}>
           <span aria-hidden="true" />
           <span aria-hidden="true" />
           <span aria-hidden="true" />
