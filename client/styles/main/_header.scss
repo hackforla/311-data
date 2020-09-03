@@ -13,17 +13,19 @@
     color: $brand-bg-color;
     height: auto;
   }
-  
-  .navbar-menu.is-active {
-    padding: 0;
-    background: none;
-    box-shadow: none;
-    width: 40%;
-    float: right;
+  @media only screen and (max-width: 1024px) {
+    .navbar-menu.is-active {
+      padding: 0;
+      background: none;
+      box-shadow: none;
+      width: 40%;
+      position: fixed;
+      right: 0;
 
-    .navbar-item {
-      margin: 0;
-      background-color: #113355;
+      .navbar-item {
+        margin: 0;
+        background-color: $brand-main-color-light;
+      }
     }
   }
 

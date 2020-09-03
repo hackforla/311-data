@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import COLORS from '../../../styles/COLORS';
+import clx from 'classnames';
 
 const Header = () => {
+  const [activeBurger, setActiveBurger] = useState(false);
+
   const cta2Style = {
     color: COLORS.BRAND.CTA2,
   };
@@ -31,14 +34,14 @@ const Header = () => {
             <span className="beta-tag">BETA</span>
           </div>
         </Link>
-        <a role="button" class="navbar-burger is-active" aria-label="menu" aria-expanded="false">
+        <a role="button" className={clx('navbar-burger', { 'is-active': activeBurger })} aria-label="menu" aria-expanded="false" onClick={() => setActiveBurger(!activeBurger)}>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
 
-      <div id="navbar" className="navbar-menu is-active">
+      <div id="navbar" className={clx('navbar-menu', { 'is-active': activeBurger })}>
         <div className="navbar-start">
           <div className="navbar-item">
             <NavLink exact to="/data" activeClassName="navbar-selected" style={backgroundStyle}>
