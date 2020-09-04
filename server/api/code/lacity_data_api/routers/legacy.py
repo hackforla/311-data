@@ -5,6 +5,7 @@ from enum import Enum
 from fastapi import responses
 from fastapi import APIRouter
 from pydantic import BaseModel, validator
+from pydantic.dataclasses import dataclass
 
 from services import status, map, visualizations, requests, comparison, github, email
 
@@ -65,9 +66,18 @@ class Cluster(BaseModel):
 Clusters = List[Cluster]
 
 
-class Set(dict):
+@dataclass
+class Set:
     district: str
     list: List[int]
+
+    @validator('district')
+    def district_is_valid(cls, v):
+        assert v in ['cc', 'nc'], 'district must be either "nc" or "cc".'
+        return v
+
+    def __getitem__(cls, item):
+        return getattr(cls, item)
 
 
 class Comparison(BaseModel):
