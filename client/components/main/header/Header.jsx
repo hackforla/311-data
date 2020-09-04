@@ -41,12 +41,13 @@ const Header = () => {
         <a
           // eslint-disable-next-line
           role="button"
-          tabIndex={0} 
-          className={clx('navbar-burger', { 'is-active': activeBurger })} 
-          aria-label="menu" 
-          aria-expanded="false" 
-          onClick={handleClick} 
-          onKeyDown={handleClick}>
+          tabIndex={0}
+          className={clx('navbar-burger', { 'is-active': activeBurger })}
+          aria-label="menu"
+          aria-expanded="false"
+          onClick={handleClick}
+          onKeyDown={handleClick}
+        >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
           <span aria-hidden="true" />
