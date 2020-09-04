@@ -38,8 +38,7 @@ const Header = () => {
             <span className="beta-tag">BETA</span>
           </div>
         </Link>
-        <a
-          // eslint-disable-next-line
+        <a // eslint-disable-line
           role="button"
           tabIndex={0}
           className={clx('navbar-burger', { 'is-active': activeBurger })}
