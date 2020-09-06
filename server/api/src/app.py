@@ -69,6 +69,12 @@ def start():
     async def on_restart(app, loop):
         log_heading('restarting server')
 
+    # fixes error raised when compressing OPTIONS response
+    def fix_compression(req, res):
+        if req.method == 'OPTIONS':
+            res.content_type = ''
+    app.register_middleware(fix_compression, attach_to='response')
+
     if Server.DEBUG:
         add_performance_header(app)
 
