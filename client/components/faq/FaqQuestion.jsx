@@ -1,25 +1,32 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
+import Arrow from '@assets/faq-arrow.svg';
 
 const FaqQuestion = ({
   question,
   answer,
 }) => {
+const [showAnswer, updateshowAnswer] = useState("close");
+
+const toggleAnswer = () => {
+  (showAnswer === "open") ? updateshowAnswer("close") : updateshowAnswer("open");
+}
 
 return (
   <React.Fragment>
-    <div className="311-faq-question">
+    <div className={showAnswer + '-faq-question faq-question'}>
       <h4>{question}</h4>
+      <Arrow onClick={toggleAnswer} className="expand-arrow" alt="expand-arrow" />
     </div>
-    <div className="311-faq-answer">
+    <div className="faq-answer">
       {
-        Object.entries(answer).map((item) => {
+        Object.entries(answer).map((item, index) => {
             if(item[0].match(/p/g)){
-              return <p> {item[1]} </p>
+              return <p key={index}> {item[1]} </p>
             } else if(item[0].match(/img/g)){
-              return <img src={item[1]} alt="faq-img" />
+              return <img key={index} src={item[1]} alt="faq-img" />
             }
         })
       }

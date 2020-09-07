@@ -1,17 +1,107 @@
 .faq-311 {
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: auto 1fr;
-  grid-template-areas: 
-  "header"
-  "main";
+    position: absolute;
+    top: $header-height;
+    bottom: $footer-height;
+    width: 100%;
+    overflow-y: auto;
+    color: $brand-main-color;
+    font-family: $brand-heading-family;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 15rem 1fr;
+    grid-template-areas: 
+    "header"
+    "main";
 
   .faq-header {
-    background-color: MAIN;
+    background-color: $brand-heading-color;
     grid-area: header;
+    display: grid;
+    place-content: center;
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: $brand-bg-color;
+      text-align: center;
+    }
+
+    input {
+      border-radius: 5px;
+      padding: 10px; 
+      font-size: $brand-text-size;
+    }
+    input[type=text] {
+      width: 500px;
+    }
+    input[type=submit]{
+      background-color: $brand-cta2-color;
+      color: $brand-text-color; 
+      padding: 10px 15px;
+      margin-left: 10px;
+    }
   }
 
   .faq-main-section {
     grid-area: main;
+
+    > h4 {
+      font-size: $brand-heading-size;
+      text-align: center;
+      margin: 2rem auto;
+      color: #2a2a2a;
+    }
+  }
+
+  .faq-question-holder {
+    width: 90%;
+    margin: 2rem auto;
+    height: auto;
+
+    .faq-question {
+      display: flex;
+      font-size: $brand-heading-size;
+      color: #2a2a2a;
+      flex-direction: row;
+      justify-content: space-between;
+      align-content: flex-start;
+
+      .expand-arrow {
+        cursor: pointer;
+      }
+    }
+
+    .close-faq-question {
+      .expand-arrow {
+        transform: rotate(0deg);
+        -webkit-tranform: rotate(0deg);
+      }
+      + .faq-answer {
+        display: none;
+      }
+    }
+
+    .open-faq-question {
+      .expand-arrow {
+        transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+      }
+      + .faq-answer {
+        display: block;
+        p {
+          margin-top: 2rem;
+          font-size: $brand-subheading-size;
+          font-style: normal;
+          font-weight: normal;
+          color: #000000;
+        }
+      }
+    }
+
+    img {
+      position: relative;
+      width: 100%;
+    }
   }
 }
+

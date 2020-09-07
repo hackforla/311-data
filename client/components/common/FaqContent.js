@@ -1,11 +1,9 @@
-export default {}
-
 //images
 import FaqExploreNavBar from '@assets/faq-navbar-explore.png';
 import FaqMapSelection from '@assets/faq-map-selection.png';
 import FaqMenuFilter from '@assets/faq-menu-filter.png';
 import FaqResults from '@assets/faq-menu-results.png';
-import FaqResults2 from '@assets/faq-menu-results2.png';
+import FaqResults2 from '@assets/faq_menu_results2.png';
 import FaqComparisonMenu from '@assets/faq-comparison-menu.png';
 import FaqExport from '@assets/faq-export.png';
 
@@ -84,3 +82,5 @@ export const FAQS = [
     }
   }
 ];
+
+export default FAQS;
