@@ -47,6 +47,7 @@ DB_RETRY_INTERVAL = config("DB_RETRY_INTERVAL", cast=int, default=1)
 # check whether running in legacy mode
 API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=True)
 
+# TODO: figure out how to remove dependency on DATABASE_URL from services
 # the legacy code needs these created as environment settings
 if API_LEGACY_MODE:
     environ['DATABASE_URL'] = str(DB_DSN)
@@ -60,3 +61,6 @@ if DEBUG:
     for k, v in sorted(os.environ.items()):
         print(f'\033[92m{k}\033[0m: {v}')
     print(f"\n\033[93mDatabase\033[0m: {DB_DSN}\n")
+
+# create empty cache object to populate at runtime
+cache = {}

@@ -1,3 +1,5 @@
+from typing import List
+
 from . import db
 
 
@@ -9,6 +11,17 @@ class ServiceRequest(db.Model):
     closed_date = db.Column(db.Date)
     type_id = db.Column(db.SmallInteger)
     council_id = db.Column(db.SmallInteger)
+    region_id = db.Column(db.SmallInteger)
     address = db.Column(db.String)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+
+
+async def get_open_requests() -> List[ServiceRequest]:
+    '''Get a list of RequestTypes from their type_names'''
+    result = await db.all(
+        ServiceRequest.query.where(
+            ServiceRequest.closed_date == None  # noqa
+        )
+    )
+    return result

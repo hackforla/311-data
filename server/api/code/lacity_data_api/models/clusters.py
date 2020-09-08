@@ -6,12 +6,13 @@ import pysupercluster
 from sqlalchemy import and_
 
 from .service_request import ServiceRequest
-from .request_type import get_types_dict
-from .council import Council
+from .region import Region
 from . import db
+from ..config import cache
 
 
-DEFAULT_CITY_ZOOM = 12  # a click on a city point zooms from 10 to 12
+DEFAULT_CITY_ZOOM = 11  # a click on a city point zooms from 10 to 12
+DEFAULT_REGION_ZOOM = 12  # a click on a city point zooms from 10 to 12
 DEFAULT_COUNCIL_ZOOM = 13  # a click on a council point zooms to 14
 DEFAULT_LATITUDE = 34.0522
 DEFAULT_LONGITUDE = -118.2437
@@ -71,15 +72,60 @@ async def get_clusters_for_city(
     return cluster_list
 
 
-# TODO: same as above by group by region of each council
-def get_clusters_for_regions(pins, zoom, bounds, options):
+async def get_clusters_for_regions(
+        start_date: datetime.date,
+        end_date: datetime.date,
+        type_ids: List[int],
+        council_ids: List[int],
+        zoom_current: int
+) -> List[Cluster]:
     """
-    Cluster pins by region
+    Cluster service request pins by council regions
+
+    Args:
+        start_date (date): beginning of date range service was requested
+        end_date (date): end of date range service was requested
+        type_ids (List[int]): the request type ids to match on
+        council_ids (List[int]): the council ids to match on
+
+    Returns:
+        cluster: a list of cluster objects
     """
-    print(zoom)
+
+    # TODO: CACHE 'region-reqs:start-end-types-councils'
+    result = await (
+        db.select(
+            [
+                ServiceRequest.region_id,
+                db.func.count()
+            ]
+        ).where(
+            and_(
+                ServiceRequest.created_date >= start_date,
+                ServiceRequest.created_date <= end_date,
+                ServiceRequest.type_id.in_(type_ids),
+                ServiceRequest.council_id.in_(council_ids),
+            )
+        ).group_by(
+            ServiceRequest.region_id
+        ).gino.all()
+    )
+
+    cluster_list = []
+
+    for row in result:
+        region = await Region.get(row[0])
+        cluster_list.append(Cluster(
+            count=row[1],
+            expansion_zoom=DEFAULT_REGION_ZOOM,
+            id=region.region_id,
+            latitude=region.latitude,
+            longitude=region.longitude
+        ))
+
+    return cluster_list
 
 
-# TODO: same as above by group by council
 async def get_clusters_for_councils(
         start_date: datetime.date,
         end_date: datetime.date,
@@ -88,17 +134,19 @@ async def get_clusters_for_councils(
         zoom_current: int
 ) -> List[Cluster]:
     """
-    Cluster pins for the entire city
+    Cluster service request pins by council
 
     Args:
         start_date (date): beginning of date range service was requested
         end_date (date): end of date range service was requested
         type_ids (List[int]): the request type ids to match on
+        council_ids (List[int]): the council ids to match on
 
     Returns:
-        cluster: a cluster object
+        cluster: a list of cluster objects
     """
 
+    # TODO: CACHE 'council-reqs:start-end-types-councils'
     result = await (
         db.select(
             [
@@ -120,14 +168,23 @@ async def get_clusters_for_councils(
     # zoom_next = (zoom_current + 1) or DEFAULT_COUNCIL_ZOOM
     cluster_list = []
 
+    # TODO: replace this with a caching solution
+    # returns dictionary with council id as key and name, lat, long
+    # council_result = await db.all(Council.query)
+    # councils = [
+    #     (i.council_id, [i.council_name, i.latitude, i.longitude])
+    #     for i in council_result
+    # ]
+    councils_dict = cache.get("councils_dict")
+
     for row in result:
-        council = await Council.get(row[0])
+        council = councils_dict.get(row[0])
         cluster_list.append(Cluster(
             count=row[1],
             expansion_zoom=DEFAULT_COUNCIL_ZOOM,
-            id=council.council_id,
-            latitude=council.latitude,
-            longitude=council.longitude
+            id=row[0],
+            latitude=council[1],
+            longitude=council[2]
         ))
 
     return cluster_list
@@ -149,7 +206,7 @@ async def get_points(
         council_ids: (List[int]): the council ids to match
 
     Returns:
-        a list of latitude and logitude pairs of service locations
+        a list of latitude and logitude pairs of service request locations
     """
 
     result = await (
@@ -170,12 +227,11 @@ async def get_points(
 
     point_list = []
     for row in result:
-        point_list.append([row[0], row[1]])
+        point_list.append([row.latitude, row.longitude])
 
     return point_list
 
 
-# TODO: same as above by group by council
 async def get_clusters_for_bounds(
         start_date: datetime.date,
         end_date: datetime.date,
@@ -219,7 +275,7 @@ async def get_clusters_for_bounds(
     )
 
     # TODO: clean this up. goes in [longitude, latitude] format
-    points = [[i[2], i[1]] for i in result]
+    points = [[row.longitude, row.latitude] for row in result]
 
     index = pysupercluster.SuperCluster(
         numpy.array(points),
@@ -235,14 +291,15 @@ async def get_clusters_for_bounds(
         zoom=zoom_current
     )
 
-    types_dict = await get_types_dict()
+    # TODO: replace this with a proper caching solution
+    types_dict = cache.get("types_dict")
 
     for item in cluster_list:
         # change single item clusters into points
         if item['count'] == 1:
             pin = result[item['id']]  # cluster id matches the result row
-            item['srnumber'] = "1-" + str(pin[0])
-            item['requesttype'] = types_dict[pin[3]]
+            item['srnumber'] = "1-" + str(pin.request_id)
+            item['requesttype'] = types_dict[pin.type_id]
             del item['expansion_zoom']
 
     return cluster_list
