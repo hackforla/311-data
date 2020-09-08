@@ -51,7 +51,6 @@ async def status_check(status_type: StatusTypes):
         return cache
 
 
-
 # TODO: return format is slightly different than current
 @router.get("/servicerequest/{srnumber}", description="""
     The service request ID is the integer created from the srnumber
