@@ -80,6 +80,7 @@ class StatusTypes(str, Enum):
     api = "api"
     database = "db"
     system = "sys"
+    cache = "cache"
 
 
 Pins = List[Pin]

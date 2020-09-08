@@ -6,6 +6,7 @@ from .api_models import (
 )
 from services import status, map, visualizations, requests, comparison, github, email
 from .utilities import build_cache
+from ..config import cache
 
 router = APIRouter()
 
@@ -21,10 +22,16 @@ async def status_check(status_type: StatusTypes):
     if status_type == StatusTypes.api:
         await build_cache()
         result = await status.api()
+    
+    if status_type == StatusTypes.cache:
+        return cache
+
     if status_type == StatusTypes.database:
         result = await status.database()
+    
     if status_type == StatusTypes.system:
         result = await status.system()
+    
     return result
 
 

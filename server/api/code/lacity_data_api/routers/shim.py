@@ -4,12 +4,13 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from .api_models import (
-    Filter  # StatusTypes, Pins, Comparison, Feedback
+    Filter, StatusTypes  # Pins, Comparison, Feedback
 )
 from ..models import (
     clusters, request_type, service_request
 )
 from .utilities import build_cache
+from ..config import cache
 
 router = APIRouter()
 
@@ -29,20 +30,26 @@ class SimpleServiceRequest(BaseModel):
         orm_mode = True
 
 
-@router.get("/status/api")
-async def shim_get_api_status():
-    currentTime = datetime.datetime.now()
-    last_pulled = datetime.datetime.now()
+@router.get("/status/{status_type}",
+            description="Provides the status of backend systems")
+async def status_check(status_type: StatusTypes):
+    if status_type == StatusTypes.api:
+        currentTime = datetime.datetime.now()
+        last_pulled = datetime.datetime.now()
 
-    await build_cache()
+        await build_cache()
 
-    # SELECT last_pulled FROM metadata
-    return {
-        'currentTime': currentTime,
-        'gitSha': "DEVELOPMENT",
-        'version': "0.1.1",
-        'lastPulled': last_pulled
-    }
+        # SELECT last_pulled FROM metadata
+        return {
+            'currentTime': currentTime,
+            'gitSha': "DEVELOPMENT",
+            'version': "0.1.1",
+            'lastPulled': last_pulled
+        }
+
+    if status_type == StatusTypes.cache:
+        return cache
+
 
 
 # TODO: return format is slightly different than current

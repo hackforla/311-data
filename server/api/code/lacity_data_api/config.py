@@ -49,7 +49,7 @@ API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=True)
 
 # TODO: figure out how to remove dependency on DATABASE_URL from services
 # the legacy code needs these created as environment settings
-if API_LEGACY_MODE:
+if True:
     environ['DATABASE_URL'] = str(DB_DSN)
     environ['TMP_DIR'] = config('TEMP_FOLDER')
     environ['PICKLECACHE_ENABLED'] = config('USE_FILE_CACHE')
