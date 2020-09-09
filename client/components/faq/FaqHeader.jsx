@@ -9,11 +9,10 @@ updateSearch
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateSearch(searchInput);
+    updateSearch(searchInput.toLowerCase().trim());
   }
 
   const handleChange = (e) => {
-    e.preventDefault();
     updateSearchInput(e.target.value);
     console.log(searchInput)
   }
