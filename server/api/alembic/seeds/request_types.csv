@@ -1,0 +1,13 @@
+type_id,type_name,color,data_code
+1,Bulky Items,#4FEFEF,Bulky Items
+2,Dead Animal,#ECB800,Dead Animal Removal
+3,Electronic Waste,#AD7B56,Electronic Waste
+4,Feedback,#F7ADAD,Feedback
+5,Graffiti,#FFE6B,Graffiti Removal
+6,Homeless Encampment,#FF0000,Homeless Encampment
+7,Illegal Dumping Pickup,#4FEFEF,Illegal Dumping Pickup
+8,Metal/Household Appliances,#ECB800,Metal/Household Appliances
+9,Multiple Streetlight,#AD7B56,Multiple Streetlight Issue
+10,Water Waste,#F7ADAD,Report Water Waste
+11,Single Streetlight,#FFE6B,Single Streetlight Issue
+12,Other,#FF0000,Other
