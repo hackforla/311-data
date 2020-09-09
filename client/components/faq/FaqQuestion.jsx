@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
-import Arrow from '@assets/faq-arrow.svg';
+import Arrow from '@assets/faq/faq-arrow.svg';
 
 const FaqQuestion = ({
   question,
@@ -26,7 +26,9 @@ return (
             if(item[0].match(/p/g)){
               return <p key={index}> {item[1]} </p>
             } else if(item[0].match(/img/g)){
-              return <img key={index} src={item[1]} alt="faq-img" />
+              return <img key={index} className={'img-size-' + item[1][1]}src={item[1][0]} alt="faq-img" />
+            } else if (item[0].match(/h4/g)){
+              return <h4 key={index}>{item[1]}</h4>
             }
         })
       }

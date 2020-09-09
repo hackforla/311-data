@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import FaqHeader from './FaqHeader';
 import FaqMainSection from './FaqMainSection'
 
-const Faq = () => (
+const Faq = () => {
+  const [searchTerm, updateSearch] = useState("");
+
+  return (
   <div className="faq-311">
-    <FaqHeader />
-    <FaqMainSection />
+    <FaqHeader updateSearch={updateSearch}/>
+    <FaqMainSection searchTerm={searchTerm}/>
   </div>
-)
+  );
+}
 
 export default Faq;

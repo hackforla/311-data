@@ -48,6 +48,7 @@
     > h4 {
       font-size: $brand-heading-size;
       text-align: center;
+      font-weight: bold;
       margin: 2rem auto;
       color: #2a2a2a;
     }
@@ -88,19 +89,39 @@
       }
       + .faq-answer {
         display: block;
+
+        h4 {
+          font-weight: bold;
+          color: #002449;
+          font-size: $brand-heading-size;
+          margin: 2rem 0 0 0;
+        }
+
         p {
-          margin-top: 2rem;
-          font-size: $brand-subheading-size;
+          margin-top: 1rem;
+          font-size: $brand-text-size;
           font-style: normal;
-          font-weight: normal;
-          color: #000000;
+          font-weight: 200;
+          color: #2a2a2a;
         }
       }
     }
 
     img {
       position: relative;
+      margin-top: 1rem;
+    }
+
+    .img-size-100 {
       width: 100%;
+    }
+
+    .img-size-50 {
+      width: 50%;
+    }
+
+    .img-size-30 {
+      width: 32%;
     }
   }
 }
