@@ -8,7 +8,7 @@
     font-family: $brand-heading-family;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 15rem 1fr;
+    grid-template-rows: 25rem 1fr;
     grid-template-areas: 
     "header"
     "main";
@@ -26,18 +26,25 @@
       text-align: center;
     }
 
+    .autocomplete {
+      position: relative;
+      display: inline-block;
+      width: 500px;
+    }
+
     input {
       border-radius: 5px;
       padding: 10px; 
       font-size: $brand-text-size;
     }
     input[type=text] {
-      width: 500px;
+      width: 100%;
+      
     }
     input[type=submit]{
       background-color: $brand-cta2-color;
       color: $brand-text-color; 
-      padding: 10px 15px;
+      padding: 10px 30px;
       margin-left: 10px;
     }
   }
