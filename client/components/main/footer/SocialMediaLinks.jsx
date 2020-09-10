@@ -4,7 +4,7 @@ import TwitterSVG from '@assets/twitter-round.svg';
 import FacebookSVG from '@assets/facebook-round.svg';
 
 const SocialMediaLinks = () => (
-  <span className="social-media-links">
+  <div className="social-media-links">
     <a
       className="link"
       href="https://twitter.com/data_311"
@@ -21,7 +21,7 @@ const SocialMediaLinks = () => (
     >
       <FacebookSVG className="icon" alt="facebook icon" />
     </a>
-  </span>
+  </div>
 );
 
 export default SocialMediaLinks;
