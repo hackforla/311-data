@@ -56,11 +56,17 @@ const DropdownContent = ({
 
   const toggleOpen = () => updateIsOpen(prevIsOpen => !prevIsOpen);
 
-  const renderInstructions = () => ACCESSIBILITY_INSTRUCTIONS.map(i => (
-    <div>
-      <p>{i.instruction}</p><b>{i.shortcut}</b>
-    </div>
-  ));
+  const renderInstructions = () => ACCESSIBILITY_INSTRUCTIONS.map((element, index) => {
+    if (index % 2 !== 0) {
+      return (<div className="instruction">
+        <p>{element.instruction}<b>{element.shortcut}</b></p>
+      </div>);
+    } else {
+      return (<div className="instruction offset">
+        <p>{element.instruction}<b>{element.shortcut}</b></p>
+      </div>);
+    }
+  });
 
   return (
     <div
@@ -83,16 +89,12 @@ const DropdownContent = ({
         <div className="dropdown-content">
           <div className="dropdown-content-item">
             <h2>Accessibility Information</h2>
-            <br />
             <h3>Map</h3>
             <p>The map shows the Neighborhood Councils (NC) in Los Angeles. Each NC is outlined in a dotted line, and the border of each NC is outlined in a thick yellow line when hovering over it with your mouse.</p>
-            <br />
             <h3>Data Visualization</h3>
             <p>Data visualizations show the results once the filter criterias are selected and submitted. The charts display details once the mouse hovers over the charts.</p>
-            <br />
             <h3>Keyboard Accessibility</h3>
             <p>Use these common keyboard commands to navigate web pages without a mouse. Some keystrokes may not work with every Internet browser.</p>
-            <br />
           </div>
           <div className="dropdown-content-item key-instructions">
             {renderInstructions()}

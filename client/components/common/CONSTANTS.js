@@ -259,7 +259,7 @@ export const ACCESSIBILITY_INSTRUCTIONS = [
     shortcut: 'ALT + Right Arrow',
   },
   {
-    instruction: 'Navigate to &amp; select the text in the address combo box: ',
+    instruction: 'Navigate to and select the text in the address combo box: ',
     shortcut: 'ALT + D',
   }, 
 ];

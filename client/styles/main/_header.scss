@@ -116,24 +116,27 @@
   div.dropdown-content-item {
     margin: 5px 15px;
 
+    h3 {
+      margin-top: 12px;
+    }
+
     p {
       font-family: $brand-text-family;
       font-weight: lighter;
       font-size: 0.9em;
     }
-
-    p.offset {
-      background-color: rgb(202, 220, 226);
-      width: 110%;
-    }
   }
 
   div.dropdown-content-item.key-instructions {
-    margin: 0;
+    margin: 10px 0 0 0;
+  }
 
-    p {
-      padding: 3px 0 3px 0;
-    }
+  .instruction {
+    padding: 2px 0 2px 15px;
+  }
+
+  .offset {
+    background-color: rgb(226, 226, 226);
   }
 }
 
