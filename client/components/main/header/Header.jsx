@@ -80,7 +80,7 @@ const Header = () => {
           </div>
           <div className="navbar-item">
             <DropdownContent id="accessibility-panel">
-
+              
             </DropdownContent>
           </div>
         </div>

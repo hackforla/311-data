@@ -103,6 +103,11 @@ const DropdownContent = ({
             { renderDropdownItems(list) }
           </div>
         }
+        <div className="dropdown-content">
+          <div class="dropdown-item">
+            <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
+          </div>
+        </div>
       </div>
     </div>
   );
