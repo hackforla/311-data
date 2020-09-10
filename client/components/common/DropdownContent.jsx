@@ -74,8 +74,33 @@ const DropdownContent = ({
       </div>
       <div className="dropdown-menu" id="accessibility-dropdown" role="menu">
         <div className="dropdown-content">
-          <div className="dropdown-item">
-            <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
+          <div className="dropdown-content-item">
+            <h2>Accessibility Information</h2>
+            <br />
+            <h3>Map</h3>
+            <p>The map shows the Neighborhood Councils (NC) in Los Angeles. Each NC is outlined in a dotted line, and the border of each NC is outlined in a thick yellow line when hovering over it with your mouse.</p>
+            <br />
+            <h3>Data Visualization</h3>
+            <p>Data visualizations show the results once the filter criterias are selected and submitted. The charts display details once the mouse hovers over the charts.</p>
+            <br />
+            <h3>Keyboard Accessibility</h3>
+            <p>Use these common keyboard commands to navigate web pages without a mouse. Some keystrokes may not work with every Internet browser.</p>
+            <br />
+            <p>Move backward from link to link or to controls: <b>Shift + Tab</b></p>
+            <p>Select buttons: <b>Spacebar</b></p>
+            <p>Navigate and select Radio Buttons: <b>Arrow</b></p>
+            <p>Select/deselect boxes: <b>Spacebar</b></p>
+            <p>Move from box to box: <b>Tab</b></p>
+            <p>Open a List Box: <b>ALT + Down arrow</b></p>
+            <p>Read the prior screen: <b>CTRL + Page Up</b></p>
+            <p>Read the next screen: <b>CTRL + Page Down</b></p>
+            <p>Go to the top of the page: <b>CTRL + Home</b></p>
+            <p>Go to the bottom of the page: <b>CTRL + End</b></p>
+            <p>Close the current window (in Internet Explorer): <b>CTRL + W</b></p>
+            <p>Refresh the screen: <b>F5</b></p>
+            <p>Go back a page: <b>ALT + Left Arrow</b></p>
+            <p>Go forward a page: <b>ALT + Right Arrow</b></p>
+            <p>Navigate to &amp; select the text in the address combo box: <b>ALT + D</b></p>
           </div>
         </div>
       </div>

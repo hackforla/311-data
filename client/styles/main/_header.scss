@@ -1,4 +1,6 @@
 .navbar {
+  $hamburger-height: 200px;
+
   font-family: $brand-heading-family;
   font-weight: bold;
   height: $header-height;
@@ -44,6 +46,7 @@
       background: none;
       box-shadow: none;
       width: 270px;
+      height: $hamburger-height;
       position: fixed;
       right: 0;
 
@@ -89,14 +92,38 @@
   }
 
   div#accessibility-dropdown {
-    right: -20px;
+    right: -25px;
     top: 50px;
     left: auto;
+    width: 600px;
+    height: calc(100vh - #{$header-height + $footer-height + 5px});
+    overflow-y: scroll;
+    padding: 0;
+    border-radius: 5px;
 
     @media only screen and (max-width: 1022px) {
       right: auto;
-      left: -10px;
+      left: -350px;
       top: 45px;
+      height: calc(100vh - #{$header-height + $hamburger-height});
     }
   }
+
+  div.dropdown-content {
+    background-color: $brand-stroke-color-light;
+  }
+
+  div.dropdown-content-item {
+    margin: 5px 15px;
+
+    p {
+      font-family: $brand-text-family;
+      font-weight: lighter;
+      font-size: 0.9em;
+    }
+  }
+}
+
+nav#top-navbar {
+  z-index: $z-top-navbar;
 }

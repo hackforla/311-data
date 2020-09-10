@@ -28,6 +28,7 @@ const Header = () => {
       className="navbar"
       role="navigation"
       aria-label="main navigation"
+      id="top-navbar"
     >
       <div className="navbar-brand">
         <Link to="/" className="navbar-item">
