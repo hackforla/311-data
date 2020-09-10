@@ -16,7 +16,7 @@
       display: inline-block;
       line-height: $tabs-height;
       text-align: center;
-      background-color: #EEEEEE;
+      background-color: #eeeeee;
       font-size: 18px;
       color: #777777;
       cursor: default;
@@ -83,4 +83,12 @@
       font-family: $brand-heading-family;
     }
   }
+}
+
+.nav-jump {
+  margin: 0.7em 0 0.6em 1em;
+  padding: 0.3em 0.5em;
+  color: $brand-text-color;
+  border: 1px solid $brand-main-color;
+  font-size: 0.9em;
 }

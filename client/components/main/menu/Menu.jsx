@@ -79,7 +79,7 @@ const Menu = ({
                 className={clx('menu-tab', { active: tab === activeTab })}
                 onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
               >
-                { tab }
+                {tab}
               </a>
             ))}
           </div>
@@ -129,7 +129,7 @@ const Menu = ({
             />
             {
               (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo)
-                && <ErrorMessage errorType="districtset" />
+              && <ErrorMessage errorType="districtset" />
             }
             <DistrictSelector />
             <InfoTitle
@@ -175,30 +175,41 @@ const Menu = ({
               dataErrors.missingEndDate && <ErrorMessage errorType="data" />
             }
             <DateSelector key="data-dateselector" />
-            <InfoTitle
-              title="Neighborhood Council (NC) Selection *"
-              element="h2"
-              infoText={[
-                'This filter allows the user to select specific neighborhood councils.',
-                '* Please check box to make one or more selections.',
-              ]}
-              position="top"
-            />
-            {
-              dataErrors.missingCouncils && <ErrorMessage errorType="selectone" />
-            }
+            <div className="flex" id="nc-selection-container">
+              <InfoTitle
+                title="Neighborhood Council (NC) Selection *"
+                element="h2"
+                infoText={[
+                  'This filter allows the user to select specific neighborhood councils.',
+                  '* Please check box to make one or more selections.',
+                ]}
+                position="top"
+              />
+              <a href="#request-selection-container" className="nav-jump">
+                Jump to Request Type
+              </a>
+            </div>
+            {dataErrors.missingCouncils && (
+              <ErrorMessage errorType="selectone" />
+            )}
             <NCSelector />
-            <InfoTitle
-              title="Request Type Selection *"
-              element="h2"
-              infoText={[
-                'This filter allows the user to select specific 311 request types.',
-                '* Please check box to make one or more selections.',
-              ]}
-            />
-            {
-              dataErrors.missingRequestTypes && <ErrorMessage errorType="selectone" />
-            }
+            <div className="flex" id="request-selection-container">
+              <InfoTitle
+                title="Request Type Selection *"
+                element="h2"
+                infoText={[
+                  "This filter allows the user to select specific 311 request types.",
+                  "* Please check box to make one or more selections.",
+                ]}
+              />
+              <a href="#nc-selection-container" className="nav-jump">
+                Jump to Neighborhood Council
+              </a>
+            </div>
+            {dataErrors.missingRequestTypes && (
+              <ErrorMessage errorType="selectone" />
+            )}
+
             <RequestTypeSelector />
             <Submit setCErrors={setCErrors} setDErrors={setDErrors} />
           </div>
