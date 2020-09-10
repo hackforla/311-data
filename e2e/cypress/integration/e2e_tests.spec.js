@@ -21,7 +21,7 @@ describe('311 Data', () => {
             cy.get('.dropdown-trigger > .button').click()
             cy.get('[value="LAST_WEEK"]').click()
             cy.get(':nth-child(2) > .select-group-content > .select-item > .select-item-box').click()
-            cy.get('#type-selector-container > div.columns.is-0 > div:nth-child(1) > div:nth-child(2) > span > input').click({force: true})
+            cy.get('#type-selector-container > div.columns.is-gapless > div:nth-child(1) > div:nth-child(2) > span > input').click({force: true})
             cy.get('#btn-sidebar-submit-button').click()
 
             cy.wait('@getFilterList').should((xhr) => {
@@ -58,7 +58,7 @@ describe('311 Data', () => {
             cy.get('.dropdown-trigger > .button').click()
             cy.get('[value="LAST_WEEK"]').click()
             cy.get(':nth-child(2) > .select-group-content > .select-item > .select-item-box').click()
-            cy.get('#type-selector-container > div.columns.is-0 > div:nth-child(1) > div:nth-child(2) > span > input').click({force: true})
+            cy.get('#type-selector-container > div.columns.is-gapless > div:nth-child(1) > div:nth-child(2) > span > input').click({force: true})
             cy.get('#btn-sidebar-submit-button').click()
 
             cy.wait('@getFilterList').should((xhr) => {
