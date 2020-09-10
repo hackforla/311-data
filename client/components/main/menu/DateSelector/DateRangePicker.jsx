@@ -69,10 +69,10 @@ const DateRangePicker = ({
     >
       {/* ---------- Modal Card Header ---------- */}
       <header className="modal-card-head">
-        <div className="modal-title has-text is-size-4 has-text-weight-bold">
+        <h3 className="modal-title has-text is-size-4 has-text-weight-bold">
           { title }
           <div className="has-text is-size-7 has-text-weight-normal">*limited to 1-year timespan</div>
-        </div>
+        </h3>
         <Button
           id="date-picker-close-button"
           className="picker-close-button"
@@ -83,6 +83,7 @@ const DateRangePicker = ({
             updateLocalStart(null);
             updateLocalEnd(null);
           }}
+          ariaLabel="close"
         />
       </header>
 
@@ -90,7 +91,7 @@ const DateRangePicker = ({
       <section className="modal-card-body">
         <div className="container">
           <div className={clx('container', 'inner', { focus: focus === 'start' })}>
-            <span className="input-label">
+            <span id="date-picker-startdate" className="input-label">
               Start Date
             </span>
             <span className={clx('input-wrapper', { error: startError })}>
@@ -110,6 +111,7 @@ const DateRangePicker = ({
                 onFocus={() => { setFocus('start'); clearErrors(); }}
                 placeholderText="MM/DD/YYYY"
                 className="date-input"
+                ariaLabelledBy="date-picker-startdate"
               />
               <span className="svg-wrapper">
                 <DatePickerSVG />
@@ -117,7 +119,7 @@ const DateRangePicker = ({
             </span>
           </div>
           <div className={clx('container', 'inner', { focus: focus === 'end' })}>
-            <span className="input-label">
+            <span id="date-picker-enddate" className="input-label">
               End Date
             </span>
             <span className={clx('input-wrapper', { error: endError })}>
@@ -137,6 +139,7 @@ const DateRangePicker = ({
                 onFocus={() => { setFocus('end'); clearErrors(); }}
                 placeholderText="MM/DD/YYYY"
                 className="date-input"
+                ariaLabelledBy="date-picker-enddate"
               />
               <span className="svg-wrapper">
                 <DatePickerSVG />

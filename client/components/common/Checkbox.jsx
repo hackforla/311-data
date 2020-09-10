@@ -7,6 +7,8 @@ const Checkbox = ({
   type,
   handleClick,
   label,
+  ariaLabel,
+  ariaLabelledBy,
   name,
   value,
   checked,
@@ -50,6 +52,8 @@ const Checkbox = ({
         checked={checked}
         disabled={disabled}
         tabIndex={tabbable ? 0 : -1}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
       />
       <label
         htmlFor={checkboxId}
@@ -67,7 +71,9 @@ Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['checkbox', 'radio']),
   handleClick: PropTypes.func,
-  label: PropTypes.string,
+  label: PropTypes.node,
+  ariaLabel: PropTypes.string,
+  ariaLabelledBy: PropTypes.string,
   name: PropTypes.string,
   value: PropTypes.string,
   checked: PropTypes.bool,
@@ -87,6 +93,8 @@ Checkbox.defaultProps = {
   type: 'checkbox',
   handleClick: () => null,
   label: null,
+  ariaLabel: null,
+  ariaLabelledBy: null,
   name: null,
   value: undefined,
   checked: false,
