@@ -14,19 +14,18 @@ const DropdownItem = ({
   });
 
   return (
-    <a
+    <div
       key={label}
-      // Extra space after # to circumvent eslint(jsx-a11y/anchor-is-valid)
-      href="# "
       className={itemClassName}
       value={value}
       onClickCapture={handleClick}
       style={{ width, paddingRight: '0rem' }}
+      role="menuitem"
     >
       <span className="dropdown-item-label">
         {label}
       </span>
-    </a>
+    </div>
   );
 };
 

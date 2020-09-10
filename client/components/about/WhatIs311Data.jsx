@@ -14,7 +14,7 @@ const WhatIs311Data = forwardRef((props, ref) => (
       Department of Transportation. The agency responds to the request, addresses it, and
       then closes it once it is fixed. Thanks to the mayor&apos;s
       {' '}
-      <a href="https://data.lacity.org/">Open Data Initiative</a>
+      <a href="https://data.lacity.org/" aria-label="los angeles open data website">Open Data Initiative</a>
       {', '}
       the expansive amount of data associated with these
       311 requests is available online. The mayor has encouraged us to create apps with this
@@ -34,20 +34,22 @@ const WhatIs311Data = forwardRef((props, ref) => (
     <p>
       To empower local residents and
       {' '}
-      <a href="https://empowerla.org/councils/">Neighborhood Councils</a>
+      <a href="https://empowerla.org/councils/" aria-label="empower LA neighborhood councils website">
+        Neighborhood Councils
+      </a>
       {' '}
       to make informed decisions about how to improve their communities using an easy-to-use
       application,
       {' '}
-      <a href="https://www.hackforla.org/">Hack For LA</a>
+      <a href="https://www.hackforla.org/" aria-label="hack for LA website">Hack For LA</a>
       {' '}
       partnered with
       {' '}
-      <a href="https://empowerla.org/">EmpowerLA</a>
+      <a href="https://empowerla.org/" aria-label="empower LA website">EmpowerLA</a>
       {' '}
       to create the
       {' '}
-      <a href="https://www.hackforla.org/projects/311-data">311 Data project</a>
+      <a href="https://www.hackforla.org/projects/311-data" aria-label="311 data project website">311 Data project</a>
       .
       {' '}
       The 311 Data project makes navigating the wealth of 311 data easier using an open source
@@ -59,7 +61,7 @@ const WhatIs311Data = forwardRef((props, ref) => (
       This symbiotic partnership is ongoing and serves to develop ideas for additional applications,
       like our
       {' '}
-      <a href="https://hackforla.github.io/311-report/">Report Tool Alpha</a>
+      <a href="https://hackforla.github.io/311-report/" aria-label="311 data report tool alpha website">Report Tool Alpha</a>
       {' '}
       or opportunities for our data science team to analyze additional data.
     </p>
