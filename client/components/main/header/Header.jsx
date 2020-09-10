@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import DropdownContent from '../../common/DropdownContent';
 import clx from 'classnames';
 import COLORS from '../../../styles/COLORS';
 
@@ -76,6 +77,11 @@ const Header = () => {
             <NavLink exact to="/contact" activeClassName="navbar-selected" style={backgroundStyle}>
               Contact Us
             </NavLink>
+          </div>
+          <div className="navbar-item">
+            <DropdownContent id="accessibility-panel">
+
+            </DropdownContent>
           </div>
         </div>
       </div>
