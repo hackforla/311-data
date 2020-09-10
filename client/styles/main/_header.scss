@@ -58,7 +58,7 @@
   }
 
   .navbar-menu .navbar-item {
-    font-size: 16px;
+    font-size: 15px;
     margin-right: 20px;
   }
 
@@ -120,6 +120,19 @@
       font-family: $brand-text-family;
       font-weight: lighter;
       font-size: 0.9em;
+    }
+
+    p.offset {
+      background-color: rgb(202, 220, 226);
+      width: 110%;
+    }
+  }
+
+  div.dropdown-content-item.key-instructions {
+    margin: 0;
+
+    p {
+      padding: 3px 0 3px 0;
     }
   }
 }

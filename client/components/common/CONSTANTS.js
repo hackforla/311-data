@@ -201,6 +201,69 @@ export const CITY_COUNCILS = [
   { id: 15, name: 'Council District 15' },
 ];
 
+export const ACCESSIBILITY_INSTRUCTIONS = [
+  {
+    instruction: 'Move backward from link to link or to controls: ',
+    shortcut: 'Shift + Tab',
+  }, 
+  {
+    instruction: 'Select buttons: ',
+    shortcut: 'Spacebar',
+  }, 
+  {
+    instruction: 'Navigate and select Radio Buttons: ',
+    shortcut: 'Arrow',
+  }, 
+  {
+    instruction: 'Select/deselect boxes: ',
+    shortcut: 'Spacebar',
+  }, 
+  {
+    instruction: 'Move from box to box: ',
+    shortcut: 'Tab',
+  }, 
+  {
+    instruction: 'Open a List Box: ',
+    shortcut: 'ALT + Down arrow',
+  }, 
+  {
+    instruction: 'Read the prior screen: ',
+    shortcut: 'CTRL + Page Up',
+  }, 
+  {
+    instruction: 'Read the next screen: ',
+    shortcut: 'CTRL + Page Down',
+  }, 
+  {
+    instruction: 'Go to the top of the page: ',
+    shortcut: 'CTRL + Home',
+  }, 
+  {
+    instruction: 'Go to the bottom of the page: ',
+    shortcut: 'CTRL + End',
+  }, 
+  {
+    instruction: 'Close the current window (in Internet Explorer): ',
+    shortcut: 'CTRL + W',
+  }, 
+  {
+    instruction: 'Refresh the screen: ',
+    shortcut: 'F5',
+  }, 
+  {
+    instruction: 'Go back a page: ',
+    shortcut: 'ALT + Left Arrow',
+  }, 
+  {
+    instruction: 'Go forward a page: ',
+    shortcut: 'ALT + Right Arrow',
+  },
+  {
+    instruction: 'Navigate to &amp; select the text in the address combo box: ',
+    shortcut: 'ALT + D',
+  }, 
+];
+
 /*
   NC regions and names are from here:
     https://empowerla.org/councils-by-service-region/
