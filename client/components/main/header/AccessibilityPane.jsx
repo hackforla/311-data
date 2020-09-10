@@ -1,68 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'proptypes';
 import classNames from 'classnames';
 import { ACCESSIBILITY_INSTRUCTIONS } from '@components/common/CONSTANTS';
 
-const DropdownContent = ({
-  id,
-  width,
-  style,
-  open,
-  hoverable,
-  rightAligned,
-  dropUp,
-  className,
-}) => {
-  const dropdownNode = useRef();
-  const [isOpen, updateIsOpen] = useState(open);
+const AccessibilityPane = () => {
+  const [isOpen, updateIsOpen] = useState(false);
   const dropdownClassName = classNames('dropdown', {
     'is-active': isOpen,
-    'is-hoverable': hoverable,
-    'is-right': rightAligned,
-    'is-up': dropUp,
-  }, className);
-
-  useEffect(() => {
-    const handleClickOutside = e => {
-      // Clicked inside dropdown
-      if (dropdownNode.current.contains(e.target) || !isOpen) {
-        return;
-      }
-      // Clicked outside dropdown
-      updateIsOpen(false);
-    };
-
-    const handleEscapeKeydown = e => {
-      // Non-esc key pressed
-      if (e.keyCode !== 27 || !isOpen) {
-        return;
-      }
-      updateIsOpen(false);
-    };
-
-    if (isOpen) {
-      document.addEventListener('click', handleClickOutside);
-      document.addEventListener('keydown', handleEscapeKeydown);
-    } else {
-      document.removeEventListener('click', handleClickOutside);
-      document.removeEventListener('keydown', handleEscapeKeydown);
-    }
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-      document.removeEventListener('keydown', handleEscapeKeydown);
-    };
   });
 
-  const toggleOpen = () => updateIsOpen(prevIsOpen => !prevIsOpen);
+  const handleClick = () => {
+    updateIsOpen(!isOpen);
+  };
 
   const renderInstructions = () => ACCESSIBILITY_INSTRUCTIONS.map((element, index) => {
     if (index % 2 !== 0) {
-      return (<div className="instruction">
+      return (<div className="instruction" key={index}>
         <p>{element.instruction}<b>{element.shortcut}</b></p>
       </div>);
     } else {
-      return (<div className="instruction offset">
+      return (<div className="instruction offset" key={index}>
         <p>{element.instruction}<b>{element.shortcut}</b></p>
       </div>);
     }
@@ -70,14 +26,11 @@ const DropdownContent = ({
 
   return (
     <div
-      id={id}
-      ref={dropdownNode}
       className={dropdownClassName}
-      style={{ width, ...style }}
     >
       <div
         className="dropdown-trigger"
-        onClick={toggleOpen}
+        onClick={handleClick}
         style={{ width: '100%' }}
         role="presentation"
       >
@@ -105,24 +58,4 @@ const DropdownContent = ({
   );
 };
 
-export default DropdownContent;
-
-DropdownContent.propTypes = {
-  id: PropTypes.string.isRequired,
-  width: PropTypes.string,
-  style: PropTypes.shape({}),
-  open: PropTypes.bool,
-  hoverable: PropTypes.bool,
-  rightAligned: PropTypes.bool,
-  dropUp: PropTypes.bool,
-  className: PropTypes.string,
-};
-
-DropdownContent.defaultProps = {
-  style: undefined,
-  open: false,
-  hoverable: false,
-  rightAligned: false,
-  dropUp: false,
-  className: undefined,
-};
+export default AccessibilityPane;
