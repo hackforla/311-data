@@ -17,6 +17,10 @@ footer.navbar {
     display: inline-block;
     margin: 0 auto;
     line-height: $footer-height;
+
+    @media only screen and (max-width: 1190px) {
+      display: none;
+    }
   }
 
   .version {
@@ -41,7 +45,9 @@ footer.navbar {
   }
 
   .social-media-links {
-    display: table;
+    margin: 5px 20px 0 0;
+    position: absolute;
+    right: 0;
 
     a {
       display: table-cell;
