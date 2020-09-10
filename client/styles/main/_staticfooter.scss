@@ -3,14 +3,29 @@
   font-family: $brand-text-family;
   font-size: 14px;
   font-weight: normal;
-  margin-left: 40px;
-  margin-right: 40px;
+  margin: 15px 0 0 20px;
+  position: absolute;
 
   a {
     color: $brand-bg-color;
   }
+}
+.social-media-links {
+  margin: 5px 20px 0 0;
+  position: absolute;
+  right: 0;
+  @media only screen and (max-width: 700px) {
+    display: none;
+  }
 
-  &.level-left {
-    flex: 1;
+  a {
+    display: table-cell;
+    vertical-align: middle;
+    line-height: $footer-height;
+    height: $footer-height;
+  }
+
+  .icon {
+    margin: 0 3px;
   }
 }
