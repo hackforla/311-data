@@ -19,8 +19,8 @@ DB_DRIVER = config("DB_DRIVER", default="postgresql")
 DB_HOST = config("DB_HOST", default="localhost")
 DB_PORT = config("DB_PORT", cast=int)
 DB_USER = config("DB_USER", default="311_user")
-DB_PASSWORD = config("DB_PASSWORD", cast=Secret, default=None)
-DB_DATABASE = config("DB_DATABASE", default="311_db")
+DB_PASSWORD = config("DB_PASS", cast=Secret, default=None)
+DB_DATABASE = config("DB_NAME", default="311_db")
 
 if TESTING:
     if DB_DATABASE:
