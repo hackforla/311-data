@@ -27,9 +27,11 @@ def test_map_clusters(client):
                 128
             ],
             "requestTypes": [
+                "Bulky Items",
                 "Dead Animal Removal",
-                "Homeless Encampment",
-                "Graffiti Removal"
+                "Electronic Waste",
+                "Graffiti Removal",
+                "Homeless Encampment"
             ],
             "zoom": 12,
             "bounds": {
@@ -41,7 +43,7 @@ def test_map_clusters(client):
         }
     )
     assert response.status_code == 200
-    assert len(response.json()) == 4
+    assert len(response.json()) == 6
 
 
 def test_map_heat(client):

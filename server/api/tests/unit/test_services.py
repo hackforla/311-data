@@ -1,5 +1,5 @@
 import pytest
-from services import nc, requests, map, visualizations
+from services import requests, map, visualizations
 
 """
 These are 'unit tests' of the key API services.
@@ -13,29 +13,24 @@ TO-DO: refactor this with database fixtures or mocks.
 
 START_DATE = '2020-01-01 00:00:00'
 END_DATE = '2020-01-02 00:00:00'
-ZOOM = 10
+NC_LIST = [
+    29, 30, 32, 33, 34, 46, 52, 54, 55, 58, 60, 76, 97, 104, 119, 121, 128
+]
+TYPE_LIST = [
+    "Bulky Items",
+    "Dead Animal Removal",
+    "Electronic Waste",
+    "Graffiti Removal",
+    "Homeless Encampment"
+]
+ZOOM = 12
 BOUNDS = {
-    'east': -117.67318725585939,
-    'north': 34.397844946449865,
-    'south': 33.61919376817004,
-    'west': -119.52850341796876
+    "north": 34.182837768400596,
+    "east": -118.12259674072267,
+    "south": 33.98834915267798,
+    "west": -118.59844207763673
 }
 OPTIONS = {}
-
-
-def test_ncs():
-    """Test for a list of 104 NCs"""
-    nc_list = nc.get_ncs()
-    assert isinstance(nc_list, list)
-    assert len(nc_list) == 102
-
-
-def test_request_types():
-    """Test for a list of 12 request types"""
-    type_list = nc.get_request_types()
-
-    assert isinstance(type_list, list)
-    assert len(type_list) == 11
 
 
 def test_item_query():
@@ -49,13 +44,11 @@ def test_item_query():
 
 @pytest.mark.asyncio
 async def test_pin_clusters():
-    nc_list = nc.get_ncs()
-    type_list = nc.get_request_types()
 
     data = await map.pin_clusters(START_DATE,
                                     END_DATE,
-                                    type_list,
-                                    nc_list,
+                                    TYPE_LIST,
+                                    NC_LIST,
                                     ZOOM,
                                     BOUNDS,
                                     OPTIONS)
@@ -65,26 +58,22 @@ async def test_pin_clusters():
 
 @pytest.mark.asyncio
 async def test_heatmap():
-    nc_list = nc.get_ncs()
-    type_list = nc.get_request_types()
 
     data = await map.heatmap(START_DATE,
                                 END_DATE,
-                                type_list,
-                                nc_list)
+                                TYPE_LIST,
+                                NC_LIST)
 
-    assert len(data) == 1684
+    assert len(data) == 220
 
 
 @pytest.mark.asyncio
 async def test_visualizations():
-    nc_list = nc.get_ncs()
-    type_list = nc.get_request_types()
 
     data = await visualizations.visualizations(START_DATE,
                                                 END_DATE,
-                                                type_list,
-                                                nc_list)
+                                                TYPE_LIST,
+                                                NC_LIST)
 
     # would like to find a better assert
     assert len(data) == 3
