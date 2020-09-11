@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { ACCESSIBILITY_INSTRUCTIONS } from '@components/common/CONSTANTS';
@@ -22,13 +24,16 @@ const AccessibilityPane = () => {
           </p>
         </div>
       );
-    } else {
-      return (
-        <div className="instruction offset" key={index}>
-          <p>{element.instruction}<b>{element.shortcut}</b></p>
-        </div>
-      );
     }
+
+    return (
+      <div className="instruction offset" key={index.toString()}>
+        <p>
+          {element.instruction}
+          <b>{element.shortcut}</b>
+        </p>
+      </div>
+    );
   });
 
   return (

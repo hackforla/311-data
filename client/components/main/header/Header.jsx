@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import AccessibilityPane from './AccessibilityPane';
 import clx from 'classnames';
+import AccessibilityPane from './AccessibilityPane';
 import COLORS from '../../../styles/COLORS';
 
 const Header = () => {
@@ -80,7 +80,7 @@ const Header = () => {
             </NavLink>
           </div>
           <div className="navbar-item">
-            <AccessibilityPane />              
+            <AccessibilityPane />
           </div>
         </div>
       </div>
