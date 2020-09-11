@@ -5,7 +5,7 @@ from .api_models import (
     StatusTypes, Filter, Pins, Comparison, Feedback
 )
 from services import status, map, visualizations, requests, comparison, github, email
-# from .utilities import build_cache
+from .utilities import build_cache
 from ..config import cache
 
 router = APIRouter()
@@ -20,7 +20,7 @@ use the legacy services code from src as-is.
             description="Provides the status of backend systems")
 async def status_check(status_type: StatusTypes):
     if status_type == StatusTypes.api:
-        # await build_cache()
+        await build_cache()
         result = await status.api()
 
     if status_type == StatusTypes.cache:

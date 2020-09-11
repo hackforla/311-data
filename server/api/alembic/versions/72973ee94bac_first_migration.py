@@ -90,6 +90,9 @@ def upgrade():
 
             op.bulk_insert(requests_table, conv_list)
 
+        op.execute("insert into metadata \
+            select max(updateddate) from requests")
+
 
 def downgrade():
 

@@ -1,18 +1,23 @@
 import os
+
 from sqlalchemy.engine.url import URL, make_url
 from starlette.config import Config, environ
 from starlette.datastructures import Secret
 
-config = Config("api.config")
+CONF_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "api.env")
+
+config = Config(CONF_FILE)
+
+CONFIG_FILE = config("CONFIG_FILE", default="None")
 
 # checking for testing or debug
-DEBUG = config("DEBUG", cast=bool, default=False)
+DEBUG = config("DEBUG", cast=bool, default=True)
 TESTING = config("TESTING", cast=bool, default=False)
 
 # getting database configuration
 DB_DRIVER = config("DB_DRIVER", default="postgresql")
 DB_HOST = config("DB_HOST", default="localhost")
-DB_PORT = config("DB_PORT", cast=int, default=5432)
+DB_PORT = config("DB_PORT", cast=int)
 DB_USER = config("DB_USER", default="311_user")
 DB_PASSWORD = config("DB_PASSWORD", cast=Secret, default=None)
 DB_DATABASE = config("DB_DATABASE", default="311_db")
@@ -51,8 +56,8 @@ API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=True)
 # the legacy code needs these created as environment settings
 if True:
     environ['DATABASE_URL'] = str(DB_DSN)
-    environ['TMP_DIR'] = config('TEMP_FOLDER')
-    environ['PICKLECACHE_ENABLED'] = config('USE_FILE_CACHE')
+    environ['TMP_DIR'] = config('TEMP_FOLDER', default="./__tmp__")
+    environ['PICKLECACHE_ENABLED'] = config('USE_FILE_CACHE', default="True")
 
 # print out debug information
 if DEBUG:

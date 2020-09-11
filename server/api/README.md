@@ -11,7 +11,8 @@
 
 ## Running using Docker Compose
 
-Setting for Docker Compose are in the .env file in the server directory. 
+Setting for Docker Compose are in the .env file in the server directory.
+
 The DB_HOST setting should work if it is set to: host.docker.internal
 
 To start the DB and API from the server directory run:
@@ -25,6 +26,10 @@ To try the API:
 * Ensure Test API is running with welcome message at http://localhost:5000/
 * Test API using Open API (Swagger) at http://localhost:5000/docs
 * Run the ReactJS app ```npm start``` from /client to make sure frontend works
+
+## Data Loading
+
+https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz2f
 
 ## Testing
 
@@ -60,6 +65,18 @@ To try the API:
       "west":-118.41201782226564
    }
 }
+```
+
+### Comparison Reports
+
+Here is some testing data to use on the comparison reports
+
+```bash
+{"startDate":"01/01/2020","endDate":"09/03/2020","requestTypes":["Homeless Encampment"],"chart":"frequency","set1":{"district":"nc","list":[6,9,101,112,7,100,8,10,5]},"set2":{"district":"nc","list":[99,4,118,111,120,124,113,114]}}
+
+{"startDate":"01/01/2020","endDate":"09/03/2020","requestTypes":["Homeless Encampment"],"chart":"frequency","set1":{"district":"nc","list":[6,9,101,112,7,100,8,10,5]},"set2":{"district":"cc","list":[1]}}
+
+{"startDate":"01/01/2020","endDate":"09/03/2020","requestTypes":["Homeless Encampment"],"chart":"time","set1":{"district":"nc","list":[6,9,101,112,7,100,8,10,5]},"set2":{"district":"cc","list":[1]}}
 ```
 
 ## TODOs
