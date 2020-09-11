@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import { ACCESSIBILITY_INSTRUCTIONS } from '@components/common/CONSTANTS';
 
@@ -14,13 +14,20 @@ const AccessibilityPane = () => {
 
   const renderInstructions = () => ACCESSIBILITY_INSTRUCTIONS.map((element, index) => {
     if (index % 2 !== 0) {
-      return (<div className="instruction" key={index}>
-        <p>{element.instruction}<b>{element.shortcut}</b></p>
-      </div>);
+      return (
+        <div className="instruction" key={index.toString()}>
+          <p>
+            {element.instruction}
+            <b>{element.shortcut}</b>
+          </p>
+        </div>
+      );
     } else {
-      return (<div className="instruction offset" key={index}>
-        <p>{element.instruction}<b>{element.shortcut}</b></p>
-      </div>);
+      return (
+        <div className="instruction offset" key={index}>
+          <p>{element.instruction}<b>{element.shortcut}</b></p>
+        </div>
+      );
     }
   });
 
