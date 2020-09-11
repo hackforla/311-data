@@ -13,7 +13,8 @@ from lacity_data_api.asgi import app
 os.environ["TESTING"] = "True"
 
 
-# TODO: guidance from https://github.com/pytest-dev/pytest-asyncio/issues/169
+# (!) this allows async io and starlette tests to coexist w/shared event loop
+# guidance from https://github.com/pytest-dev/pytest-asyncio/issues/169
 @pytest.fixture(scope="session")
 def event_loop(request):
     loop = asyncio.get_event_loop_policy().new_event_loop()
@@ -24,7 +25,7 @@ def event_loop(request):
 @pytest.fixture(scope="session")
 def client(event_loop):
     print(os.environ)
-    cwd = Path(__file__).parent.parent.parent
+    cwd = Path(__file__).parent.parent
 
     # init the database
     subprocess.check_call(["alembic", "upgrade", "head"], cwd=cwd)

@@ -6,36 +6,42 @@ def test_map_clusters(client):
         url,
         json={
             "startDate": "01/01/2020",
-            "endDate": "08/27/2020",
+            "endDate": "01/02/2020",
             "ncList": [
-                52,
+                29,
+                30,
+                32,
+                33,
+                34,
                 46,
-                128,
+                52,
                 54,
-                104,
+                55,
+                58,
+                60,
                 76,
                 97,
+                104,
+                119,
                 121,
-                55
+                128
             ],
             "requestTypes": [
                 "Dead Animal Removal",
                 "Homeless Encampment",
-                "Single Streetlight Issue",
-                "Multiple Streetlight Issue",
-                "Feedback"
+                "Graffiti Removal"
             ],
-            "zoom": 13,
+            "zoom": 12,
             "bounds": {
-                "north": 34.0731374116421,
-                "east": -118.18010330200195,
-                "south": 33.97582290387967,
-                "west": -118.41201782226564
+                "north": 34.182837768400596,
+                "east": -118.12259674072267,
+                "south": 33.98834915267798,
+                "west": -118.59844207763673
             }
         }
     )
     assert response.status_code == 200
-    assert len(response.json()) == 11
+    assert len(response.json()) == 4
 
 
 def test_map_heat(client):
@@ -45,26 +51,32 @@ def test_map_heat(client):
         url,
         json={
             "startDate": "01/01/2020",
-            "endDate": "08/27/2020",
+            "endDate": "01/02/2020",
             "ncList": [
-                52,
+                29,
+                30,
+                32,
+                33,
+                34,
                 46,
-                128,
+                52,
                 54,
-                104,
+                55,
+                58,
+                60,
                 76,
                 97,
+                104,
+                119,
                 121,
-                55
+                128
             ],
             "requestTypes": [
                 "Dead Animal Removal",
                 "Homeless Encampment",
-                "Single Streetlight Issue",
-                "Multiple Streetlight Issue",
-                "Feedback"
+                "Graffiti Removal"
             ]
         }
     )
     assert response.status_code == 200
-    assert len(response.json()) == 3582
+    assert len(response.json()) == 114
