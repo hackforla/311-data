@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r /home/api/requirements.txt
 
 ENV APP_HOST=0.0.0.0
 # need add the src folder to sys.path for compatibility
-ENV PYTHONPATH=/home/api/code:/home/api/src
+ENV PYTHONPATH=.:/home/api/code:/home/api/src
 
 EXPOSE 5000
 
