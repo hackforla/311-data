@@ -1,5 +1,15 @@
-# ignore .git and .cache folders
-Pipfile
-Pipfile.lock
-__pycache__
-__tmp__
+# Ignore
+*
+
+# Don't ignore
+!requirements.txt
+
+!Dockerfile
+!README.md
+!alembic
+!alembic.ini
+!bin
+!code
+!setup.cfg
+!src
+!tests
