@@ -4,11 +4,11 @@ from sqlalchemy.engine.url import URL, make_url
 from starlette.config import Config, environ
 from starlette.datastructures import Secret
 
-CONF_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "api.env")
-
+CONF_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    "api.env"
+)
 config = Config(CONF_FILE)
-
-CONFIG_FILE = config("CONFIG_FILE", default="None")
 
 # checking for testing or debug
 DEBUG = config("DEBUG", cast=bool, default=True)
