@@ -23,7 +23,7 @@ DB_PASSWORD = config("DB_PASS", cast=Secret, default=None)
 DB_DATABASE = config("DB_NAME", default="311_db")
 
 if TESTING:
-    if DB_DATABASE:
+    if DB_DATABASE and DB_DATABASE[-5:] != "_test":
         DB_DATABASE += "_test"
 
 DB_DSN = config(
