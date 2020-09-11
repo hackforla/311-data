@@ -27,7 +27,7 @@ def test_ncs():
     """Test for a list of 104 NCs"""
     nc_list = nc.get_ncs()
     assert isinstance(nc_list, list)
-    assert len(nc_list) == 102
+    assert len(nc_list) == 104
 
 
 def test_request_types():
@@ -35,7 +35,7 @@ def test_request_types():
     type_list = nc.get_request_types()
 
     assert isinstance(type_list, list)
-    assert len(type_list) == 11
+    assert len(type_list) == 12
 
 
 def test_item_query():

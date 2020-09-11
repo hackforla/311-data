@@ -35,7 +35,7 @@ def test_map_clusters(client):
         }
     )
     assert response.status_code == 200
-    assert len(response.json()) == 6
+    assert len(response.json()) == 11
 
 
 def test_map_heat(client):
@@ -67,4 +67,4 @@ def test_map_heat(client):
         }
     )
     assert response.status_code == 200
-    assert len(response.json()) == 44
+    assert len(response.json()) == 3582

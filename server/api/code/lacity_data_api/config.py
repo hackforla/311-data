@@ -11,7 +11,7 @@ CONF_FILE = os.path.join(
 config = Config(CONF_FILE)
 
 # checking for testing or debug
-DEBUG = config("DEBUG", cast=bool, default=True)
+DEBUG = config("DEBUG", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
 
 # getting database configuration
