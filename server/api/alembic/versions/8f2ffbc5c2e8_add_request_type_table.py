@@ -105,17 +105,14 @@ def upgrade():
         op.bulk_insert(request_types_table, list(csv.DictReader(f)))
 
     op.execute(REQUESTS_VIEW)
-
-    if os.getenv("TESTING"):
-        op.execute(MAP_VIEW)
-        op.execute(VIS_VIEW)
+    op.execute(MAP_VIEW)
+    op.execute(VIS_VIEW)
 
 
 def downgrade():
 
-    if os.getenv("TESTING"):
-        op.execute("DROP MATERIALIZED VIEW map")
-        op.execute("DROP MATERIALIZED VIEW vis")
-
+    op.execute("DROP MATERIALIZED VIEW map")
+    op.execute("DROP MATERIALIZED VIEW vis")
     op.execute("DROP MATERIALIZED VIEW service_requests")
+    
     op.drop_table('request_types')
