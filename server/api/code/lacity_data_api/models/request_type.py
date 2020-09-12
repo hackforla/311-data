@@ -1,5 +1,4 @@
 from typing import List
-import functools
 
 from . import db
 
@@ -11,7 +10,6 @@ class RequestType(db.Model):
     type_name = db.Column(db.String)
 
 
-@functools.lru_cache(maxsize=1)
 async def get_types_dict():
     result = await db.all(RequestType.query)
     types_dict = [(i.type_id, i.type_name) for i in result]
