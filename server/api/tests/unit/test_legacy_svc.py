@@ -6,8 +6,7 @@ from services import requests, map, visualizations
 These are 'unit tests' of the key API services.
 
 However, these tests run on a live database and assume that data
-from the first 1/2 of 2020 have been loaded.
-The zoom and boundaries assume the initial view of the map when first loaded.
+from the first 10K records of 2020 have been loaded.
 
 TO-DO: refactor this with database fixtures or mocks.
 """

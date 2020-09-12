@@ -7,6 +7,13 @@ from lacity_data_api.models.region import Region
 from lacity_data_api.models.request_type import RequestType
 from lacity_data_api.models.service_request import ServiceRequest
 
+"""
+These are 'unit tests' of the database models bypassing the API.
+
+However, these tests run on a live database and assume that data
+from the first 10K records of 2020 have been loaded.
+
+"""
 
 @pytest.mark.asyncio
 async def test_alembic_version():
