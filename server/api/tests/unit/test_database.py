@@ -15,6 +15,7 @@ from the first 10K records of 2020 have been loaded.
 
 """
 
+
 @pytest.mark.asyncio
 async def test_alembic_version():
     query = db.text("SELECT version_num FROM alembic_version")
