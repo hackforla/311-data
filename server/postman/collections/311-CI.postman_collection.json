@@ -15,9 +15,7 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
-							"    if (pm.response.code !== 200) {",
-							"        console.log(pm.response.text());",
-							"    }",
+							"    console.log(pm.response.text());",
 							"});"
 						],
 						"type": "text/javascript"
