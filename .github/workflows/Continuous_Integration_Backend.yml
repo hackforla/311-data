@@ -1,9 +1,9 @@
 name: CI_Backend
 
-on:
-  pull_request:
-    paths:
-      - 'server/**'
+on: [push]
+  # pull_request:
+  #   paths:
+  #     - 'server/**'
 
 defaults:
   run:
@@ -23,7 +23,7 @@ jobs:
           docker-compose up --no-start api
 
       - name: Seed DB and Run Api
-        run: |          
+        run: |
             docker-compose run api alembic upgrade head
             docker-compose up -d api
 
