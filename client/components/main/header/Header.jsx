@@ -43,7 +43,7 @@ const Header = () => {
           tabIndex={0}
           className={clx('navbar-burger', { 'is-active': activeBurger })}
           aria-label="menu"
-          aria-expanded="true"
+          aria-expanded={activeBurger}
           onClick={handleClick}
           onKeyDown={handleClick}
         >
