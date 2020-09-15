@@ -54,7 +54,7 @@ const Header = () => {
       </div>
 
       <div id="navbar" className={clx('navbar-menu', { 'is-active': activeBurger })}>
-        <div className="navbar-start">
+        <div className="navbar-end">
           <div className="navbar-item">
             <NavLink exact to="/data" activeClassName="navbar-selected" style={backgroundStyle}>
               Explore My Council&apos;s 311 Data
@@ -65,8 +65,6 @@ const Header = () => {
               Compare Different Councils
             </NavLink>
           </div>
-        </div>
-        <div className="navbar-end">
           <div className="navbar-item">
             <NavLink exact to="/about" activeClassName="navbar-selected" style={backgroundStyle}>
               About 311 Data
