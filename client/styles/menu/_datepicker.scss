@@ -3,6 +3,7 @@
 .react-datepicker {
   font-family: $brand-text-family;
   color: $brand-text-color;
+  top: 100px;
 
   &__current-month,
   &__day-name {

@@ -31,6 +31,8 @@ import Button from '@components/common/Button';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 import ncOverlay from '../../data/nc-boundary-2019-centroid.json';
 
+document.getElementsByClassName('leaflet-container')[0].tabIndex = "=1"
+
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
 const boundaryHighlightColor = COLORS.BRAND.CTA1;
@@ -405,6 +407,7 @@ class PinMap extends Component {
             if (link) link.click();
             exportMap();
           }}
+          tabIndex="0"
         />
         <MapboxWordmark />
       </>
@@ -415,7 +418,7 @@ class PinMap extends Component {
     const { ready } = this.state;
     return (
       <div ref={this.container} className="map-container">
-        { ready ? this.renderMap() : null }
+        { ready ? this.renderMap() : null}
       </div>
     );
   }
