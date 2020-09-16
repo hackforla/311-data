@@ -38,4 +38,7 @@ def client(event_loop):
         yield client
 
     # reset the database
-    subprocess.check_call(["alembic", "downgrade", "base"], cwd=cwd)
+    try:
+        subprocess.check_call(["alembic", "downgrade", "base"], cwd=cwd)
+    except subprocess.CalledProcessError as identifier:
+        print(identifier)
