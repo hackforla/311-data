@@ -28,7 +28,10 @@ def client(event_loop):
     cwd = Path(__file__).parent.parent
 
     # init the database
-    subprocess.check_call(["alembic", "upgrade", "head"], cwd=cwd)
+    try:
+        subprocess.check_call(["alembic", "upgrade", "head"], cwd=cwd)
+    except subprocess.CalledProcessError as identifier:
+        print(identifier)
 
     # create the client for use by tests
     with TestClient(app) as client:
