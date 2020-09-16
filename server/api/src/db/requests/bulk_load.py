@@ -45,8 +45,7 @@ def bulk_load():
 
 
 def load_file(csv_file):
-    """Reset the database, load data from file, and update views"""
-    db.reset()
+    """load data from file"""
 
     conn = psycopg2.connect(Database.URL)
     cur = conn.cursor()
