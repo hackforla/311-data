@@ -2,10 +2,8 @@ import gzip
 import csv
 import psycopg2
 from settings import Database, Picklecache
-from . import views
 from .. import info
 from utils.log import log
-import db
 import cache
 
 
