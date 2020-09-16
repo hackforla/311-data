@@ -1,90 +1,51 @@
 # 311 API
 
-## Changes
+## Tech Stack
 
-* API now uses FastAPI (uvicorn/ASGI)
-* Data access uses Gino, asyncpg
-* New code is in the code directory
-* Entry point is code/run.py
-* Legacy code remains in src directory
-* Current API compatibility: code/lacity_data_api/routers/legacy.py
+* [Python 3.7](https://www.python.org/downloads/release/python-379/) (Debian 10x)
+* [Postgres 12.4](https://www.postgresql.org/docs/12/index.html) (Debian 10x)
+* [FastAPI](https://fastapi.tiangolo.com/) (Starlette/uvicorn/ASGI/Pydantic)
+* [Gino](https://python-gino.org/) (asyncpg/SQLAlchemy/Alembic)
+* [Pytest](https://docs.pytest.org/)
+* [Docker](https://www.docker.com/)
+* [GitHub](https://github.com/)
+
+The API is intended to be modern, simple, performant, secure, open-source and well-supported. The tech stack focuses on Python tools with good asynchronous support. As asynchronous libraries are still immature these dependencies may need to be updated in the near future (e.g. once SQLAlchemy 14.x is released).
 
 ## Running using Docker Compose
 
-Setting for Docker Compose are in the .env file in the server directory.
+Setting for Docker Compose are in the .env file in the /server directory.
 
-The DB_HOST setting should work if it is set to: host.docker.internal
-
-To start the DB and API from the server directory run:
+To start the DB and API from the /server directory simply run
 
 ```bash
 docker-compose up
 ```
 
-To try the API:
+This will spin up an API and database container. To try it out:
 
 * Ensure Test API is running with welcome message at http://localhost:5000/
 * Test API using Open API (Swagger) at http://localhost:5000/docs
-* Run the ReactJS app ```npm start``` from /client to make sure frontend works
+* Run the ReactJS app ```npm start``` from /client to make sure front-end works
 
 ## Data Loading
+
+Data comes from the LA 311 system by way of the Socrata app.
 
 https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz2f
 
 ## Testing
 
-### Full filter (with zoom and bounds)
-
-```json
-{
-   "startDate":"01/01/2020",
-   "endDate":"08/27/2020",
-   "ncList":[
-      52,
-      46,
-      128,
-      54,
-      104,
-      76,
-      97,
-      121,
-      55
-   ],
-   "requestTypes":[
-      "Dead Animal Removal",
-      "Homeless Encampment",
-      "Single Streetlight Issue",
-      "Multiple Streetlight Issue",
-      "Feedback"
-   ],
-   "zoom":13,
-   "bounds":{
-      "north":34.0731374116421,
-      "east":-118.18010330200195,
-      "south":33.97582290387967,
-      "west":-118.41201782226564
-   }
-}
-```
-
-### Comparison Reports
-
-Here is some testing data to use on the comparison reports
-
-```bash
-{"startDate":"01/01/2020","endDate":"09/03/2020","requestTypes":["Homeless Encampment"],"chart":"frequency","set1":{"district":"nc","list":[6,9,101,112,7,100,8,10,5]},"set2":{"district":"nc","list":[99,4,118,111,120,124,113,114]}}
-
-{"startDate":"01/01/2020","endDate":"09/03/2020","requestTypes":["Homeless Encampment"],"chart":"frequency","set1":{"district":"nc","list":[6,9,101,112,7,100,8,10,5]},"set2":{"district":"cc","list":[1]}}
-
-{"startDate":"01/01/2020","endDate":"09/03/2020","requestTypes":["Homeless Encampment"],"chart":"time","set1":{"district":"nc","list":[6,9,101,112,7,100,8,10,5]},"set2":{"district":"cc","list":[1]}}
-```
+* pytest
+* postman
+* cypress
 
 ## TODOs
 
-* add more pytests
+* add async caching
+* add more tests: negative cases
 * finish routes
-* alembic migrations
-* data seeds
+* evaluate data loading options
 * Add telemetry:
 OpenTelemetry instrumentors exist for FastAPI, asyncpg, SQLAlchemy
 https://opentelemetry-python.readthedocs.io/
@@ -105,26 +66,3 @@ Here's how to go about killing any process orphaned by VS Code using port 5000
 ```bash
 lsof -ti tcp:5000 | xargs kill
 ```
-
-### Format for comparison reports
-
-{
-    "startDate":"01/01/2020",
-    "endDate":"08/27/2020",
-    "requestTypes":[
-        "Bulky Items"
-    ],
-    "chart":"frequency",
-    "set1":{
-        "district":"nc",
-        "list":[
-            6
-        ]
-    },
-    "set2":{
-        "district":"nc",
-        "list":[
-            9
-        ]
-    }
-}

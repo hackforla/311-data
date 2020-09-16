@@ -25,6 +25,7 @@ jobs:
       - name: Seed DB and Run Api
         run: |          
             docker-compose run api alembic upgrade head
+            docker-compose run api python bin/db_seed.py --file data/requests.csv.gz
             docker-compose up -d api
 
       - name: Linting

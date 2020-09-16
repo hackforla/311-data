@@ -1,4 +1,11 @@
 
+def test_index(client):
+    url = "/"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert response.json()["message"] == "Hello, new index!"
+
+
 def test_councils(client):
     url = "/councils"
     response = client.get(url)
@@ -39,6 +46,13 @@ def test_type(client):
     response = client.get(url)
     assert response.status_code == 200
     assert response.json()["type_name"] == "Bulky Items"
+
+
+def test_service_requests(client):
+    url = "/requests"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 100
 
 
 def test_service_request(client):

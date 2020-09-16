@@ -8,6 +8,7 @@ pytest-asyncio = "*"
 pytest = "*"
 flake8 = "*"
 requests = "*"
+pytest-cov = "*"
 
 [packages]
 numpy = "*"
