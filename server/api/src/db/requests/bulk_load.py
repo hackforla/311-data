@@ -78,7 +78,7 @@ def load_file(csv_file):
     conn.close()
 
     # finish up
-    views.refresh()
+    # views.refresh()
     info.update()
 
     if Picklecache.ENABLED:
