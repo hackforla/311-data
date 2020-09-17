@@ -39,6 +39,9 @@ const AccessibilityPane = () => {
   return (
     <div
       className={dropdownClassName}
+      tabIndex={0}
+      onKeyDown={handleClick}
+      aria-expanded={isOpen}
     >
       <div
         className="dropdown-trigger"
