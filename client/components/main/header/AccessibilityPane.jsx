@@ -37,11 +37,12 @@ const AccessibilityPane = () => {
   });
 
   return (
-    <div
+    <div // eslint-disable-line
       className={dropdownClassName}
       tabIndex={0}
       onKeyDown={handleClick}
       aria-expanded={isOpen}
+      role="button"
     >
       <div
         className="dropdown-trigger"
