@@ -7,7 +7,6 @@ footer.navbar {
   color: $brand-bg-color;
   text-align: center;
   transition: all 0.5s ease 0s;
-  overflow: scroll;
 
   &.menu-is-open {
     width: calc(100vw - #{$menu-width});
