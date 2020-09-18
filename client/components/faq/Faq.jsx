@@ -12,7 +12,7 @@ const Faq = () => {
     <div className="faq-main-section">
       <h4>Frequently Asked Questions (FAQ)</h4>
       <React.Fragment>
-        {(searchTerm === "") ? (
+        {(searchTerm.trim() === "") ? (
             
               FAQS.map((row, i) => {
                 return (

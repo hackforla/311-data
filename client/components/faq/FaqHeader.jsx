@@ -22,7 +22,6 @@ updateSearch
       return false;
     }
     document.querySelector('.autocomplete-items').style.display = 'none';
-    console.log
 
     for (let searchOption of faqSearchAutoComplete) {
       if (searchOption.toLowerCase().match(/`${val.toLowerCase()}`/)) {
