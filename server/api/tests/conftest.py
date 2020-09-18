@@ -25,6 +25,8 @@ def event_loop(request):
 @pytest.fixture(scope="session")
 def client(event_loop):
     print(os.environ)
+    print(f"\n\033[93mTest Database\033[0m: {os.getenv('DB_NAME')}\n")
+
     cwd = Path(__file__).parent.parent
 
     # init the database

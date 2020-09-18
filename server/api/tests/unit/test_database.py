@@ -1,4 +1,6 @@
 from datetime import datetime
+import os
+
 import pytest
 
 from lacity_data_api.models import db
@@ -14,6 +16,10 @@ However, these tests run on a live database and assume that data
 from the first 10K records of 2020 have been loaded.
 
 """
+
+
+def setup_function(function):
+    print(f"With test DB ({os.getenv('DATABASE_URL')}) setting up", function)
 
 
 @pytest.mark.asyncio
