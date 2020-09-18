@@ -29,7 +29,7 @@ import Button from '@components/common/Button';
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
-import ncOverlay from '../../data/nc-boundary-2019-centroid.json';
+import ncOverlay from '../../data/nc-boundary-2020.geojson';
 
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
