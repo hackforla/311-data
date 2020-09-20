@@ -24,7 +24,7 @@ jobs:
 
       - name: Seed DB and Run Api
         run: |
-            docker-compose run api TESTING=True alembic upgrade head
+            docker-compose run -e TESTING=True api alembic upgrade head
             docker-compose up -d api
 
       - name: Linting
