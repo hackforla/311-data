@@ -6,11 +6,24 @@ import asyncio
 import pytest
 from starlette.testclient import TestClient
 
-from lacity_data_api.asgi import app
+import sys
+from os.path import join, dirname
 
 
-# set env setting to ensure test DB is used
+# manually adding python paths due to VS code bug
+sys.path.append(join(dirname(__file__), '../code'))
+sys.path.append(join(dirname(__file__), '../src'))
+
+# set env setting to ensure _test DB is used by pytests
 os.environ["TESTING"] = "True"
+
+from lacity_data_api.asgi import app  # noqa
+from lacity_data_api.models import db as test_database  # noqa
+
+
+@pytest.fixture(scope="session")
+def db():
+    yield test_database
 
 
 # (!) this allows async io and starlette tests to coexist w/shared event loop
@@ -24,8 +37,6 @@ def event_loop(request):
 
 @pytest.fixture(scope="session")
 def client(event_loop):
-    print(os.environ)
-    print(f"\n\033[93mTest Database\033[0m: {os.getenv('DB_NAME')}\n")
 
     cwd = Path(__file__).parent.parent
 
@@ -40,7 +51,8 @@ def client(event_loop):
         yield client
 
     # reset the database
-    try:
-        subprocess.check_call(["alembic", "downgrade", "base"], cwd=cwd)
-    except subprocess.CalledProcessError as identifier:
-        print(identifier)
+    # if os.environ["TESTING"] is True:
+    #     try:
+    #         subprocess.check_call(["alembic", "downgrade", "base"], cwd=cwd)
+    #     except subprocess.CalledProcessError as identifier:
+    #         print(identifier)
