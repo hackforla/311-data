@@ -28,7 +28,11 @@ import '@testing-library/cypress/add-commands'
 //import 'cypress-mailosaur'
 
 Cypress.Commands.add('format_number_with_K', (value) => {
-    return ((value / 1000).toFixed(1)) + "K"
+    if (value > 9999) {
+        return ((value / 1000).toFixed(0)) + "K"
+    } else {
+        return ((value / 1000).toFixed(1)) + "K"
+    }
 })
 
 Cypress.Commands.add('format_number_with_comma', (value) => {
