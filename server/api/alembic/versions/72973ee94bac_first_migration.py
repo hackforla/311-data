@@ -8,6 +8,8 @@ Create Date: 2020-08-28 08:40:00.851112
 """
 import os
 from os.path import join, dirname
+import logging
+
 import gzip
 import csv
 
@@ -15,8 +17,7 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
-DATA_FOLDER = join(dirname(__file__), '../seeds/')
-
+SEED_FILE = join(dirname(dirname(__file__)), 'seeds/requests.csv')
 
 # revision identifiers, used by Alembic.
 revision = '72973ee94bac'
@@ -75,7 +76,7 @@ def upgrade():
 
     # seed the database during testing
     if os.getenv("TESTING"):
-        with open(DATA_FOLDER + 'requests.csv') as f:
+        with open(SEED_FILE) as f:
             reader = csv.DictReader(f)
 
             # TODO: is there a better way?
@@ -92,6 +93,9 @@ def upgrade():
 
         op.execute("insert into metadata \
             select max(updateddate) from requests")
+        
+        logger = logging.getLogger("alembic.runtime.migration")
+        logger.info(f"Seeded request data from {SEED_FILE}")
 
 
 def downgrade():

@@ -1,3 +1,4 @@
+import logging
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -68,6 +69,11 @@ def run_migrations_online():
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
+
+    logging.basicConfig(level=logging.INFO)
+
+    logger = logging.getLogger("alembic.runtime.migration")
+    logger.info(connectable)
 
     with connectable.connect() as connection:
         context.configure(
