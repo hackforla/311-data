@@ -21,7 +21,7 @@ describe('311 Data', () => {
             cy.get('.dropdown-trigger > .button').click()
             cy.get('[value="YEAR_TO_DATE"]').click()
             cy.get(':nth-child(2) > .select-group-content > .select-item > .select-item-box').click()
-            cy.get('#type-selector-container > #request-type-all > span > input').click({force: true})
+            cy.get('#checkbox-request-checkbox-all').click({force: true})
             cy.get('#btn-sidebar-submit-button').click()
 
             cy.wait('@getFilterList').should((xhr) => {
@@ -58,7 +58,7 @@ describe('311 Data', () => {
             cy.get('.dropdown-trigger > .button').click()
             cy.get('[value="YEAR_TO_DATE"]').click()
             cy.get(':nth-child(2) > .select-group-content > .select-item > .select-item-box').click()
-            cy.get('#type-selector-container > #request-type-all > span > input').click({force: true})
+            cy.get('#checkbox-request-checkbox-all').click({force: true})
             cy.get('#btn-sidebar-submit-button').click()
 
             cy.wait('@getFilterList').should((xhr) => {
