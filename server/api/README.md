@@ -2,15 +2,15 @@
 
 ## Tech Stack
 
-* [Python 3.7](https://www.python.org/downloads/release/python-379/) (Debian 10x)
-* [Postgres 12.4](https://www.postgresql.org/docs/12/index.html) (Debian 10x)
-* [FastAPI](https://fastapi.tiangolo.com/) (Starlette/uvicorn/ASGI/Pydantic)
-* [Gino](https://python-gino.org/) (asyncpg/SQLAlchemy/Alembic)
+* [Python 3.7](https://www.python.org/downloads/release/python-379/) (Debian 10.x)
+* [Postgres 12](https://www.postgresql.org/docs/12/index.html) (Debian 10.x)
+* [FastAPI](https://fastapi.tiangolo.com/) with Starlette/uvicorn/ASGI/Pydantic
+* [Gino](https://python-gino.org/) with asyncpg/SQLAlchemy/Alembic
 * [Pytest](https://docs.pytest.org/)
 * [Docker](https://www.docker.com/)
 * [GitHub](https://github.com/)
 
-The API is intended to be modern, simple, performant, secure, open-source and well-supported. The tech stack focuses on Python tools with good asynchronous support. As asynchronous libraries are still immature these dependencies may need to be updated in the near future (e.g. once SQLAlchemy 14.x is released).
+The API is intended to be modern, simple, performant, secure, open-source and well-supported. The tech stack focuses on Python tools with good asynchronous support. As asynchronous libraries are still immature these dependencies may need to be updated in the near future.
 
 ## Running using Docker Compose
 
@@ -40,13 +40,21 @@ https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz
 * postman
 * cypress
 
+## Code coverage
+
+To get code coverage reports run ```pytest --cov=code```
+
+The 'code' directory has the new version and is all that needs testing. Coverage currently sits at 77%.
+
 ## TODOs
 
 * add async caching
-* add more tests: negative cases
+* add more tests (e.g. negative cases)
 * finish routes
-* evaluate data loading options
-* Add telemetry:
+* evaluate data loading alternatives
+* add coverage reporting to CI and --cov-fail-under to guarantee
+* add static code analysis tools and security/CVE checking
+* add telemetry:
 OpenTelemetry instrumentors exist for FastAPI, asyncpg, SQLAlchemy
 https://opentelemetry-python.readthedocs.io/
 https://opentelemetry.lightstep.com/
