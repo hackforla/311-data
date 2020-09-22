@@ -25,3 +25,10 @@ async def get_open_requests() -> List[ServiceRequest]:
         )
     )
     return result
+
+
+async def get_full_request(srnumber: str):
+    # query the request table to get full record
+    query = db.text("SELECT * FROM requests WHERE srnumber = :num")
+    result = await db.first(query, num=srnumber)
+    return result

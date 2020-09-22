@@ -26,6 +26,8 @@ fastapi = "*"
 uvicorn = "*"
 alembic = "*"
 geopandas = "*"
+aiocache = {extras = ["redis"], version = "*"}
+ujson = "*"
 
 [requires]
 python_version = "3.7"

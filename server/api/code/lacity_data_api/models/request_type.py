@@ -1,5 +1,8 @@
 from typing import List
 
+from aiocache import cached, Cache, serializers
+
+from ..config import CACHE_ENDPOINT
 from . import db
 
 
@@ -10,6 +13,12 @@ class RequestType(db.Model):
     type_name = db.Column(db.String)
 
 
+@cached(cache=Cache.REDIS,
+        endpoint=CACHE_ENDPOINT,
+        namespace="types",
+        key="dict",
+        serializer=serializers.PickleSerializer(),
+        )
 async def get_types_dict():
     result = await db.all(RequestType.query)
     types_dict = [(i.type_id, i.type_name) for i in result]
@@ -34,3 +43,14 @@ async def get_types_by_int_list(int_list: List[int]) -> List[RequestType]:
         )
     )
     return result
+
+
+@cached(cache=Cache.REDIS, endpoint=CACHE_ENDPOINT, namespace="types")
+async def get_type_ids_by_str_list(str_list: List[str]) -> List[int]:
+    '''Get a list of RequestType IDs from their type_names'''
+    result = await db.all(
+        RequestType.query.where(
+            RequestType.type_name.in_(str_list)
+        )
+    )
+    return [row.type_id for row in result]

@@ -4,8 +4,10 @@
 
 * [Python 3.7](https://www.python.org/downloads/release/python-379/) (Debian 10.x)
 * [Postgres 12](https://www.postgresql.org/docs/12/index.html) (Debian 10.x)
-* [FastAPI](https://fastapi.tiangolo.com/) with Starlette/uvicorn/ASGI/Pydantic
-* [Gino](https://python-gino.org/) with asyncpg/SQLAlchemy/Alembic
+* [Redis 6](https://redis.io/) (Debian 10.x)
+* [FastAPI](https://fastapi.tiangolo.com/) async API with Starlette/uvicorn/ASGI/Pydantic
+* [Gino](https://python-gino.org/) async ORM with asyncpg/SQLAlchemy/Alembic
+* [Aiocache](https://aiocache.readthedocs.io/) async cache with Redis support
 * [Pytest](https://docs.pytest.org/)
 * [Docker](https://www.docker.com/)
 * [GitHub](https://github.com/)
@@ -22,7 +24,7 @@ To start the DB and API from the /server directory simply run
 docker-compose up
 ```
 
-This will spin up an API and database container. To try it out:
+This will spin up an API, a Redis, and a database container. To try it out:
 
 * Ensure Test API is running with welcome message at http://localhost:5000/
 * Test API using Open API (Swagger) at http://localhost:5000/docs
@@ -48,13 +50,13 @@ The 'code' directory has the new version and is all that needs testing. Coverage
 
 ## TODOs
 
-* add async caching
+* finish shim routes
 * add more tests (e.g. negative cases)
-* finish routes
 * evaluate data loading alternatives
 * add coverage reporting to CI and --cov-fail-under to guarantee
 * add static code analysis tools and security/CVE checking
-* add telemetry:
+* add telemetry
+
 OpenTelemetry instrumentors exist for FastAPI, asyncpg, SQLAlchemy
 https://opentelemetry-python.readthedocs.io/
 https://opentelemetry.lightstep.com/

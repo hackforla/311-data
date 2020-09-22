@@ -1,0 +1,49 @@
+from . import db
+
+
+async def get_last_updated():
+    query = db.text("SELECT last_pulled FROM metadata")
+    result = await db.first(query)
+    return result.last_pulled.replace(tzinfo=None)
+
+
+async def get_db_version():
+    query = db.text("SELECT version()")
+    result = await db.first(query)
+    return result.version
+
+
+async def get_alembic_version():
+    query = db.text("SELECT version_num FROM alembic_version")
+    result = await db.first(query)
+    return result.version_num
+
+
+async def get_request_types_count():
+    query = db.text("SELECT count(*) FROM request_types")
+    result = await db.scalar(query)
+    return result
+
+
+async def get_regions_count():
+    query = db.text("SELECT count(*) FROM regions")
+    result = await db.scalar(query)
+    return result
+
+
+async def get_councils_count():
+    query = db.text("SELECT count(*) FROM councils")
+    result = await db.scalar(query)
+    return result
+
+
+async def get_service_requests_count():
+    query = db.text("SELECT count(*) FROM service_requests")
+    result = await db.scalar(query)
+    return result
+
+
+async def get_requests_count():
+    query = db.text("SELECT count(*) FROM requests")
+    result = await db.scalar(query)
+    return result

@@ -13,6 +13,7 @@ config = Config(CONF_FILE)
 # checking for testing or debug
 DEBUG = config("DEBUG", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
+ENV_SOURCE = config("ENV_SOURCE", default=None)
 
 # getting database configuration
 DB_DRIVER = config("DB_DRIVER", default="postgresql")
@@ -67,5 +68,9 @@ if DEBUG:
         print(f'\033[92m{k}\033[0m: {v}')
     print(f"\n\033[93mDatabase\033[0m: {DB_DSN}\n")
 
-# create empty cache object to populate at runtime
-cache = {}
+# set up endpoint for REDIS cache
+CACHE_ENDPOINT = config('CACHE_ENDPOINT', default="localhost")
+
+# set up GitHub data
+GITHUB_SHA = config('GITHUB_SHA', default="DEVELOPMENT")
+GITHUB_CODE_VERSION = config('GITHUB_CODE_VERSION', default="0.2.0")

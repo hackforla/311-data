@@ -1,4 +1,5 @@
 from gino.ext.starlette import Gino
+from aiocache import RedisCache, serializers
 
 from .. import config
 
@@ -11,4 +12,9 @@ db = Gino(
     use_connection_for_request=config.DB_USE_CONNECTION_FOR_REQUEST,
     retry_limit=config.DB_RETRY_LIMIT,
     retry_interval=config.DB_RETRY_INTERVAL,
+)
+
+cache = RedisCache(
+    endpoint=config.CACHE_ENDPOINT,
+    serializer=serializers.PickleSerializer()
 )

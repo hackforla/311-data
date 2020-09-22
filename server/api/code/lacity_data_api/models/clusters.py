@@ -1,5 +1,6 @@
 from typing import List
 import datetime
+from collections import namedtuple
 
 import numpy
 import pysupercluster
@@ -7,8 +8,11 @@ from sqlalchemy import and_
 
 from .service_request import ServiceRequest
 from .region import Region
-from . import db
-from ..config import cache
+from .council import get_councils_dict
+from .request_type import get_types_dict
+from . import db, cache
+from ..config import DEBUG
+from ..routers import utilities
 
 
 DEFAULT_CITY_ZOOM = 11  # a click on a city point zooms from 10 to 12
@@ -175,7 +179,7 @@ async def get_clusters_for_councils(
     #     (i.council_id, [i.council_name, i.latitude, i.longitude])
     #     for i in council_result
     # ]
-    councils_dict = cache.get("councils_dict")
+    councils_dict = await get_councils_dict()
 
     for row in result:
         council = councils_dict.get(row[0])
@@ -252,29 +256,42 @@ async def get_clusters_for_bounds(
         a JSON object either representing a cluster or a pin for a request
     """
 
-    result = await (
-        db.select(
-            [
-                ServiceRequest.request_id,
-                ServiceRequest.latitude,
-                ServiceRequest.longitude,
-                ServiceRequest.type_id
-            ]
-        ).where(
-            and_(
-                ServiceRequest.created_date >= start_date,
-                ServiceRequest.created_date <= end_date,
-                ServiceRequest.type_id.in_(type_ids),
-                ServiceRequest.council_id.in_(council_ids),
-                ServiceRequest.latitude < bounds.north,
-                ServiceRequest.latitude > bounds.south,
-                ServiceRequest.longitude > bounds.west,
-                ServiceRequest.longitude < bounds.east
-            )
-        ).gino.all()
+    cache_key = utilities.cache_key(
+        "pins",
+        {
+            "start_date": start_date,
+            "end_date": end_date,
+            "type_ids": type_ids,
+            "council_ids": council_ids
+        }
     )
 
-    # TODO: clean this up. goes in [longitude, latitude] format
+    result = await cache.get(cache_key)
+
+    if result is None:
+        result = await (
+            db.select(
+                [
+                    ServiceRequest.request_id,
+                    ServiceRequest.type_id,
+                    ServiceRequest.latitude,
+                    ServiceRequest.longitude
+                ]
+            ).where(
+                and_(
+                    ServiceRequest.created_date >= start_date,
+                    ServiceRequest.created_date <= end_date,
+                    ServiceRequest.type_id.in_(type_ids),
+                    ServiceRequest.council_id.in_(council_ids)
+                )
+            ).gino.all()
+        )
+        await cache.set(cache_key, result)
+    else:
+        if DEBUG:
+            print(f"Cache hit for key ({cache_key})")
+
+    # get points to cluster
     points = [[row.longitude, row.latitude] for row in result]
 
     index = pysupercluster.SuperCluster(
@@ -291,8 +308,7 @@ async def get_clusters_for_bounds(
         zoom=zoom_current
     )
 
-    # TODO: replace this with a proper caching solution
-    types_dict = cache.get("types_dict")
+    types_dict = await get_types_dict()
 
     for item in cluster_list:
         # change single item clusters into points

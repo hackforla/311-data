@@ -48,7 +48,6 @@ async def test_regions(db):
 
 @pytest.mark.asyncio
 async def test_request_types(db):
-    print(f"Test DB: {os.getenv('DATABASE_URL')}")
     result = await db.all(RequestType.query)
     assert len(result) == 12
 

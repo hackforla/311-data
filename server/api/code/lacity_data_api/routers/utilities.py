@@ -1,14 +1,25 @@
+import json
+import hashlib
 
 from ..models import request_type, council, region
-from ..config import cache
 
 
 async def build_cache():
-    if cache.get('types_dict') is None:
-        cache['types_dict'] = await request_type.get_types_dict()
+    types = await request_type.get_types_dict()
+    councils = await council.get_councils_dict()
+    regions = await region.get_regions_dict()
 
-    if cache.get('councils_dict') is None:
-        cache['councils_dict'] = await council.get_councils_dict()
+    return {
+        "types": types,
+        "councils": councils,
+        "regions": regions
+    }
 
-    if cache.get('regions_dict') is None:
-        cache['regions_dict'] = await region.get_regions_dict()
+
+def cache_key(category, object):
+    """
+    Utility function to create hashed key for pins based on filters
+    """
+    object_json = json.dumps(str(object), sort_keys=True).encode('utf-8')
+    hashed_json = hashlib.md5(object_json).hexdigest()
+    return f"{category}:{format(hashed_json)}"

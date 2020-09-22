@@ -16,12 +16,12 @@ services:
     volumes:
       - backend_data:/var/lib/postgresql/data
 
-  # redis:
-  #   container_name: 311-redis
-  #   build: ./redis
-  #   restart: always
-  #   expose:
-  #     - 6379
+  redis:
+    container_name: 311-redis
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
 
   api:
     container_name: 311-api
@@ -30,6 +30,7 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
+      CACHE_ENDPOINT: redis
     ports:
       - target: ${APP_PORT}
         published: ${API_HOST_PORT}
@@ -37,7 +38,7 @@ services:
       - ./api/:/home/api
     depends_on:
       - db
-      # - redis
+      - redis
 
 volumes:
   backend_data:

@@ -1,3 +1,6 @@
+from aiocache import cached, Cache, serializers
+
+from ..config import CACHE_ENDPOINT
 from . import db
 
 
@@ -10,6 +13,12 @@ class Region(db.Model):
     longitude = db.Column(db.Float)
 
 
+@cached(cache=Cache.REDIS,
+        endpoint=CACHE_ENDPOINT,
+        namespace="regions",
+        key="dict",
+        serializer=serializers.PickleSerializer(),
+        )
 async def get_regions_dict():
     result = await db.all(Region.query)
     regions_dict = [
