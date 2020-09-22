@@ -1,9 +1,7 @@
-//images
 import FaqExploreCouncils from '@assets/faq/311-explore-council-data.png';
 import FaqMapSelection from '@assets/faq/311-data-maps.png';
 import FaqRequestTypes from '@assets/faq/311-explain-request-types.png';
 import FaqCompareCouncils from '@assets/faq/311-compare-councils.png';
-
 
 export const FAQS = [
   {
@@ -45,7 +43,7 @@ export const FAQS = [
       p3: `Then select Data Range, Location(s), and Request Type filter options.`,
       img2: [FaqMapSelection, 50],
       h43: `Step 3`,
-      p4:  `Results updated on the map on the right side panel. You can toggle between 'Map' or 'Data' modes. 
+      p4: `Results updated on the map on the right side panel. You can toggle between 'Map' or 'Data' modes. 
           'Data' mode provides bars & charts of the data. You can also export charts from this view, by clicking on 'Export'.`,
     },
     possibleSearchTerms: ["How Do I Search for 311 Requests in my Neighborhood Council", "Search for NC", "Search for Neighborhood Council", "Search 311 Request", "311 Requests in My Neighborhood Council"],

@@ -8,7 +8,7 @@ import PrivacyPolicy from '@components/privacyPolicy/PrivacyPolicy';
 import Contact from './components/contact/Contact';
 import About from './components/about/About';
 import Body from './components/main/body/Body';
-import Faq from './components/faq/Faq'
+import Faq from './components/faq/Faq';
 
 export default function Routes() {
   return (
