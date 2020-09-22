@@ -5,7 +5,6 @@ import { FAQS } from '@components/common/FaqContent.js';
 
 const Faq = () => {
   const [searchTerm, updateSearch] = useState("");
-
   return (
   <div className="faq-311">
     <FaqHeader updateSearch={updateSearch}/>
@@ -13,7 +12,6 @@ const Faq = () => {
       <h4>Frequently Asked Questions (FAQ)</h4>
       <React.Fragment>
         {(searchTerm.trim() === "") ? (
-            
               FAQS.map((row, i) => {
                 return (
                 <div key={i} className="faq-question-holder">
@@ -21,9 +19,7 @@ const Faq = () => {
                 </div>
                 )
               })
-            
         ) : (
-          
             FAQS.map((row, i) => {
               const question = row.question.toLowerCase();
               if(question.match(`${searchTerm}`)) {
@@ -33,9 +29,7 @@ const Faq = () => {
                 </div>
                 )
               }
-
             })
-          
         )};
       </React.Fragment>
     </div>  
