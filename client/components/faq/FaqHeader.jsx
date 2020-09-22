@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { FAQS } from '@components/common/FaqContent.js';
+import Search from '@assets/faq/search-outline.svg';
 
 const FaqHeader = ({
 updateSearch
@@ -47,17 +48,27 @@ updateSearch
   }
 
   return (
-    <div className="faq-header">
-      <h1>What can we help you with? </h1>
-      <form autoComplete="off" onSubmit={handleSubmit}>
-        <div className="autocomplete">
-          <input onChange={handleChange} id="autocompete-search" name="search" type="text" placeholder="Type your question here..." />
-          <div id="autocomplete-list" className="autocomplete-items"></div>
-        </div>
-        <input type="submit" value="Search"/>
-      </form>
-    </div>
-  )
+      <div className="faq-header">
+          <h1>What can we help you with? </h1>
+          <form autoComplete="off" onSubmit={handleSubmit}>
+              <div className="autocomplete">
+                <Search className="search-outline"/>                     
+                  <input
+                        onChange={handleChange}
+                        id="autocompete-search"
+                        name="search"
+                        type="text"
+                        placeholder="Type your question here..."
+                    />
+                  <div
+                      id="autocomplete-list"
+                      className="autocomplete-items"
+                  ></div>
+              </div>
+              <input type="submit" value="Search" />
+          </form>
+      </div>
+  );
 }
 
 export default FaqHeader;
