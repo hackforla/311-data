@@ -9,7 +9,7 @@ const FaqQuestion = ({
 const [showAnswer, updateshowAnswer] = useState("close");
 const toggleAnswer = () => {
   (showAnswer === "open") ? updateshowAnswer("close") : updateshowAnswer("open");
-}
+};
 return (
     <React.Fragment>
         <div className={showAnswer + "-faq-question faq-question"}>
@@ -44,12 +44,11 @@ return (
         </div>
     </React.Fragment>
 );
-
-}
+};
 
 export default FaqQuestion;
 
 FaqQuestion.propTypes = {
   question: PropTypes.string,
   answer: PropTypes.object,
-}
+};

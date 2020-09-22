@@ -73,7 +73,7 @@ export const FAQS = [
       p6: `> Select 'Request Type'`,
     },
     possibleSearchTerms: ["Compare Councils", "Compare 311 Performance", "Compare Two NCs", "How Do I Compare 311 Performances of Two NCs?"],
-  }
+  },
 ];
 
 export default FAQS;

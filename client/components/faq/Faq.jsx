@@ -29,7 +29,7 @@ const Faq = () => {
                                       />
                                   </div>
                               );
-                          })}
+                          })};
                       </React.Fragment>
                   ) : (
                       <React.Fragment>
@@ -45,14 +45,13 @@ const Faq = () => {
                                       />
                                   </div>
                               );
-                          })}
+                          })};
                       </React.Fragment>
-                  )}
-                  ;
+                  )};
               </React.Fragment>
           </div>
       </div>
   );
-}
+};
 
 export default Faq;
