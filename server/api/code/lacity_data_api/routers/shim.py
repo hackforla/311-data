@@ -120,6 +120,43 @@ async def shim_get_heatmap(filter: Filter):
 
 
 # TODO: PLACEHOLDER
+@router.post("/map/pins")
+async def shim_get_pins(filter: Filter):
+    return [
+        {
+            "srnumber": "1-1597411711",
+            "requesttype": "Single Streetlight Issue",
+            "latitude": 33.9547572,
+            "longitude": -118.39466885
+        },
+        {
+            "srnumber": "1-1597412651",
+            "requesttype": "Single Streetlight Issue",
+            "latitude": 33.95474831,
+            "longitude": -118.39326973
+        },
+        {
+            "srnumber": "1-1597418591",
+            "requesttype": "Homeless Encampment",
+            "latitude": 34.1015964889,
+            "longitude": -118.323675347
+        },
+        {
+            "srnumber": "1-1597533121",
+            "requesttype": "Graffiti Removal",
+            "latitude": 34.0248294082,
+            "longitude": -118.202687279
+        },
+        {
+            "srnumber": "1-1597535051",
+            "requesttype": "Graffiti Removal",
+            "latitude": 34.0244950305,
+            "longitude": -118.202230826
+        }
+    ]
+
+
+# TODO: PLACEHOLDER
 @router.post("/visualizations")
 async def shim_get_visualizations(filter: Filter):
     result_object = {
