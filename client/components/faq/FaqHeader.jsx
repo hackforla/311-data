@@ -3,7 +3,9 @@ import { FAQS } from '@components/common/FaqContent.js';
 import Search from '@assets/faq/search-outline.svg';
 
 const FaqHeader = ({
-updateSearch
+updateSearch,
+updateCount,
+updateResults,
 }) => {
   const [searchInput, updateSearchInput] = useState("");
   const faqSearchAutoComplete = FAQS.map((item) => {return item.question.toLowerCase()});
@@ -12,7 +14,13 @@ updateSearch
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateSearch(searchInput.toLowerCase().trim());
+    let updatedResults = FAQS.filter((row) => {
+        const question = row.question.toLowerCase();
+        return question.match(`${searchInput}`);
+    });
+    updateSearch(searchInput);
+    updateResults(updatedResults);
+    updateCount(updatedResults.length);
   }
 
   const autocompleteSelected = (e) => {
@@ -29,7 +37,7 @@ updateSearch
       return false;
     }
 
-    updateSearchInput(val.toLowerCase());
+    updateSearchInput(val.trim().toLowerCase());
     autocompleteDiv.innerHTML = "";
 
     for (let searchOption of faqSearchAutoComplete) {
