@@ -22,6 +22,8 @@ updateResults,
     updateSearch(searchInput);
     updateResults(updatedResults);
     updateCount(updatedResults.length);
+    autocompleteDiv.innerHTML = " ";
+
   };
 
   const autocompleteSelected = (e) => {
