@@ -1,6 +1,5 @@
 from typing import List
 import datetime
-from collections import namedtuple
 
 import numpy
 import pysupercluster
