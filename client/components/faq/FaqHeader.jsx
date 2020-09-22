@@ -6,8 +6,8 @@ updateSearch
 }) => {
   const [searchInput, updateSearchInput] = useState("");
   const faqSearchAutoComplete = FAQS.map((item) => {return item.question.toLowerCase()});
-  const autocompleteDiv = document.querySelector(".autocomplete-items");
-  const searchBox = document.querySelector("#autocompete-search");
+  let autocompleteDiv = document.querySelector(".autocomplete-items");
+  let searchBox = document.querySelector("#autocompete-search");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,21 +17,19 @@ updateSearch
   const autocompleteSelected = (e) => {
     searchBox.value = e.target.innerHTML;
     updateSearchInput(searchBox.value.toLowerCase());
-    autocompleteDiv.innerHTML = "";
-    handleSubmit(e.target.innerHTML);
+    autocompleteDiv.innerHTML = " ";
   }
 
   const handleChange = (e) => {
     let val = e.target.value.trim();
+
     if(val.length === 0) {
-      autocompleteDiv.style.display = "none";
       updateSearchInput("");
       return false;
     }
 
     updateSearchInput(val.toLowerCase());
     autocompleteDiv.innerHTML = "";
-    autocompleteDiv.style.display = "block";
 
     for (let searchOption of faqSearchAutoComplete) {
       if (searchOption.match(`${searchInput}`)) {
