@@ -22,7 +22,7 @@ methods but get data from the new models using async database queries and cache.
 # TODO: separate into own file and add sys
 @router.get("/status/{status_type}",
             description="Provides the status of backend systems")
-async def shim_status_check(status_type: StatusTypes):
+async def check_status_type(status_type: StatusTypes):
     if status_type == StatusTypes.api:
         return {
             'currentTime': datetime.datetime.now(),
@@ -54,7 +54,7 @@ async def shim_status_check(status_type: StatusTypes):
 
 # TODO: some clean up
 @router.get("/servicerequest/{srnumber}")
-async def shim_get_service_request(srnumber: str):
+async def get_service_request(srnumber: str):
     query_result = await service_request.get_full_request(srnumber)
 
     result = dict(query_result)
@@ -74,7 +74,7 @@ async def shim_get_service_request(srnumber: str):
 
 # TODO: return format is slightly different than current...FIX?
 @router.post("/open-requests")
-async def shim_get_open_requests():
+async def get_open_requests():
     result = await service_request.get_open_requests()
 
     requests_list = []
@@ -93,7 +93,7 @@ async def shim_get_open_requests():
 
 
 @router.post("/map/clusters")
-async def shim_get_clusters(filter: Filter):
+async def get_clusters(filter: Filter):
     # convert type names to type ids
     type_ids = await request_type.get_type_ids_by_str_list(filter.requestTypes)
 
@@ -113,7 +113,7 @@ async def shim_get_clusters(filter: Filter):
 
 
 @router.post("/map/heat")
-async def shim_get_heatmap(filter: Filter):
+async def get_heatmap(filter: Filter):
     # convert type names to type ids
     type_ids = await request_type.get_type_ids_by_str_list(filter.requestTypes)
 
@@ -128,7 +128,7 @@ async def shim_get_heatmap(filter: Filter):
 
 # TODO: PLACEHOLDER
 @router.post("/map/pins")
-async def shim_get_pins(filter: Filter):
+async def get_pins(filter: Filter):
     return [
         {
             "srnumber": "1-1597411711",
@@ -165,7 +165,7 @@ async def shim_get_pins(filter: Filter):
 
 # TODO: PLACEHOLDER
 @router.post("/visualizations")
-async def shim_get_visualizations(filter: Filter):
+async def get_visualizations(filter: Filter):
     result_object = {
         "frequency": {
             "bins": [
@@ -1028,7 +1028,7 @@ async def get_feedback(feedback: Feedback):
 
 # # TODO: tries clustering by district and NC first
 # @router.post("/new/clusters")
-# async def shim_get_clusters(filter: Filter):
+# async def get_clusters(filter: Filter):
 #     # have to convert the funky date formats
 #     start_date = datetime.datetime.strptime(filter.startDate, '%m/%d/%Y')
 #     end_date = datetime.datetime.strptime(filter.endDate, '%m/%d/%Y')

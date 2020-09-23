@@ -1,3 +1,4 @@
+import time
 import os
 import subprocess
 from pathlib import Path
@@ -49,6 +50,9 @@ def client(event_loop):
     # create the client for use by tests
     with TestClient(app) as client:
         yield client
+
+    # giving sentry a moment to send before quitting
+    time.sleep(1)
 
     # reset the database
     # if os.environ["TESTING"] is True:
