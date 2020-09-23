@@ -228,11 +228,7 @@ async def get_points(
         ).gino.all()
     )
 
-    point_list = []
-    for row in result:
-        point_list.append([row.latitude, row.longitude])
-
-    return point_list
+    return [[row.latitude, row.longitude] for row in result]
 
 
 async def get_clusters_for_bounds(

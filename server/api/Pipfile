@@ -28,6 +28,7 @@ alembic = "*"
 geopandas = "*"
 aiocache = {extras = ["redis"], version = "*"}
 ujson = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.7"
