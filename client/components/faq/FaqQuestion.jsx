@@ -6,10 +6,11 @@ const FaqQuestion = ({
   question,
   answer,
 }) => {
-    const [showAnswer, updateshowAnswer] = useState('close');
-    const toggleAnswer = () => {
-        (showAnswer === 'open') ? updateshowAnswer('close') : updateshowAnswer('open');
-    };
+  const [showAnswer, updateshowAnswer] = useState('close');
+  const toggleAnswer = () => {
+    (showAnswer === 'open') ? updateshowAnswer('close') : updateshowAnswer('open');
+    return;
+  };
     return (
         <>
             <div className={`${showAnswer}-faq-question faq-question`}>

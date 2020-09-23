@@ -35,52 +35,50 @@ const FaqHeader = ({
     if (val.length === 0) {
       updateSearchInput('');
       return false;
-    };
+    }
+    autocompleteDiv.innerHTML = "";
 
-    updateSearchInput(val.trim().toLowerCase())
-
-    for (let searchOption of faqSearchAutoComplete) {
+    updateSearchInput(val.trim().toLowerCase());
+    faqSearchAutoComplete.forEach(searchOption => {
       if (searchOption.match(`${searchInput}`)) {
         const autocompleteResult = document.createElement('p');
         autocompleteResult.innerHTML = searchOption;
         autocompleteResult.tabIndex = '0';
         autocompleteResult.addEventListener('click', autocompleteSelected);
-        autocompleteResult.addEventListener('keypress', (e) => {
+        autocompleteResult.addEventListener('keypress', e => {
           (e.key === 13) & autocompleteSelected(e);
         });
         autocompleteDiv.appendChild(autocompleteResult);
-      };
-    };
+      }
+    })
+    return;
   };
 
   return (
-      <div className="faq-header">
-          <h1>What can we help you with? </h1>
-          <form autoComplete="off" onSubmit={handleSubmit}>
-            <div className="autocomplete">
-              <Search className="search-outline"/>                    
-                <input
-                      onChange={handleChange}
-                      id="autocompete-search"
-                      name="search"
-                      type="text"
-                      placeholder="Type your question here..."
-                  />
-                <div
-                    id="autocomplete-list"
-                    className="autocomplete-items"
-                ></div>
-            </div>
-            <input type="submit" value="Search" />
-          </form>
-      </div>
+    <div className="faq-header">
+        <h1>What can we help you with? </h1>
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <div className="autocomplete">
+            <Search className="search-outline" />                   
+            <input
+              onChange={handleChange}
+              id="autocompete-search"
+              name="search"
+              type="text"
+              placeholder="Type your question here..."
+            />
+            <div id="autocomplete-list" className="autocomplete-items"></div>
+          </div>
+          <input type="submit" value="Search" />
+        </form>
+    </div>
   );
 };
 
 export default FaqHeader;
 
 FaqHeader.propTypes = {
-  updateSearch: PropTypes.func,
-  updateCount: PropTypes.func,
-  updateResults: PropTypes.func,
+  updateSearch: PropTypes.func.isRequired,
+  updateCount: PropTypes.func.isRequired,
+  updateResults: PropTypes.func.isRequired,
 };
