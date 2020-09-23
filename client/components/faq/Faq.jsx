@@ -20,29 +20,42 @@ const Faq = () => {
           {searchTerm.trim() === '' ? (
             <>
               <h4>Frequently Asked Questions (FAQ)</h4>
-              { FAQS.map((row, i) => { 
-                return <div key={i, '-question'} className="faq-question-holder">
-                  <FaqQuestion
-                    question={row.question}
-                    answer={row.answer}
-                  />
-                </div>
+              { FAQS.map((row, i) => {
+                return (
+                  <div key={`${i}-question`} className="faq-question-holder">
+                    <FaqQuestion
+                      question={row.question}
+                      answer={row.answer}
+                    />
+                  </div>
+                )
               })};
             </>
           ) : (
             <>
-              <h4>{resultCount} result(s) for '{searchTerm}'</h4>
+              <h4>
+                {resultCount} 
+                result(s) for 
+                '
+                {searchTerm}
+                '
+              </h4>
               {searchResults.map((row, i) => {
-                return <div key={i, "-question"} className="faq-question-holder">
-                  <FaqQuestion question={row.question} answer={row.answer} />
-                </div>
+                return (
+                  <div key={`${i}-question`} className="faq-question-holder">
+                    <FaqQuestion
+                        question={row.question}
+                        answer={row.answer}
+                    />
+                  </div>
+                );
               })};
             </>
           )};
         </>
       </div>
     </div>
-  )
+  );
 };
 
 export default Faq;
