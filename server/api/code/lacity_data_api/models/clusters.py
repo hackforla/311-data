@@ -10,7 +10,7 @@ from .region import Region
 from .council import get_councils_dict
 from .request_type import get_types_dict
 from . import db, cache
-from ..config import DEBUG
+from ..config import DEBUG, CACHE_MAX_RETRIES
 from ..routers import utilities
 
 
@@ -265,9 +265,21 @@ async def get_clusters_for_bounds(
         }
     )
 
-    result = await cache.get(cache_key)
+    # Try accessing the result from cache the configured number of times
+    for _ in range(CACHE_MAX_RETRIES):
+        try:
+            result = await cache.get(cache_key)
+        except Exception:
+            # Output when timeout occurs
+            print("Redis get cache timeout error")
+            continue
+        else:
+            break
+    else:
+        print(f"Redis cache is unavailable after {CACHE_MAX_RETRIES} tries")
 
     if result is None:
+        # query database and set cache entry
         result = await (
             db.select(
                 [
@@ -285,11 +297,19 @@ async def get_clusters_for_bounds(
                 )
             ).gino.all()
         )
-        await cache.set(cache_key, result)
+        # Try setting the cache with results. OK if fails.
+        try:
+            await cache.set(cache_key, result)
+        except Exception:
+            print("Redis set cache timeout error")
     else:
         if DEBUG:
             print(f"Cache hit for key ({cache_key})")
 
+    return await cluster_points(result, bounds, zoom_current)
+
+
+async def cluster_points(result, bounds, zoom_current):
     # get points to cluster
     points = [[row.longitude, row.latitude] for row in result]
 

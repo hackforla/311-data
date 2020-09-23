@@ -70,6 +70,7 @@ if DEBUG:
 
 # set up endpoint for REDIS cache
 CACHE_ENDPOINT = config('CACHE_ENDPOINT', default="localhost")
+CACHE_MAX_RETRIES = config('CACHE_MAX_RETRIES', cast=int, default=5)
 
 # set up GitHub data
 GITHUB_SHA = config('GITHUB_SHA', default="DEVELOPMENT")

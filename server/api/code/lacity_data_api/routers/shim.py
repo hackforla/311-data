@@ -1,6 +1,6 @@
 import datetime
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from .api_models import (
     Filter, StatusTypes, Feedback, Comparison
@@ -101,6 +101,8 @@ async def shim_get_clusters(filter: Filter):
         filter.zoom,
         filter.bounds
     )
+    if result == []:
+        raise HTTPException(status_code=429, detail="Too many requests")
 
     return result
 
