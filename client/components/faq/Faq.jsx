@@ -20,38 +20,43 @@ const Faq = () => {
           {searchTerm.trim() === '' ? (
             <>
               <h4>Frequently Asked Questions (FAQ)</h4>
-              { FAQS.map((row, i) => {
-                return (
-                  <div key={`${i}-question`} className="faq-question-holder">
-                    <FaqQuestion
-                      question={row.question}
-                      answer={row.answer}
-                    />
-                  </div>
-                )
-              })};
+              {FAQS.map(row => (
+                <div
+                  key={`${row.question}`}
+                  className="faq-question-holder"
+                >
+                  <FaqQuestion
+                    question={row.question}
+                    answer={row.answer}
+                  />
+                </div>
+              ))}
+              ;
             </>
           ) : (
             <>
               <h4>
-                {resultCount} 
-                result(s) for 
-                '
+                {resultCount}
+                result(s) for
+                {'\''}
                 {searchTerm}
-                '
+                {'\''}
               </h4>
-              {searchResults.map((row, i) => {
-                return (
-                  <div key={`${i}-question`} className="faq-question-holder">
-                    <FaqQuestion
-                        question={row.question}
-                        answer={row.answer}
-                    />
-                  </div>
-                );
-              })};
+              {searchResults.map(row => (
+                <div
+                  key={`${row.question}`}
+                  className="faq-question-holder"
+                >
+                  <FaqQuestion
+                    question={row.question}
+                    answer={row.answer}
+                  />
+                </div>
+              ))}
+              ;
             </>
-          )};
+          )}
+          ;
         </>
       </div>
     </div>
