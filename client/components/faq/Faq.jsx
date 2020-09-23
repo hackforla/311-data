@@ -37,8 +37,9 @@ const Faq = () => {
             <>
               <h4>
                 {resultCount}
+                {' '}
                 result(s) for
-                {'\''}
+                {' \''}
                 {searchTerm}
                 {'\''}
               </h4>
@@ -53,10 +54,8 @@ const Faq = () => {
                   />
                 </div>
               ))}
-              ;
             </>
           )}
-          ;
         </>
       </div>
     </div>

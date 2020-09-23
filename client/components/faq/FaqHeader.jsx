@@ -22,8 +22,9 @@ const FaqHeader = ({
     updateSearch(searchInput);
     updateResults(updatedResults);
     updateCount(updatedResults.length);
-    autocompleteDiv.innerHTML = '';
+    autocompleteDiv.innerHTML = ' ';
   };
+
   const autocompleteSelected = e => {
     searchBox.value = e.target.innerHTML;
     updateSearchInput(searchBox.value.toLowerCase());
@@ -36,7 +37,9 @@ const FaqHeader = ({
       updateSearchInput('');
       return false;
     }
-    autocompleteDiv.innerHTML = "";
+    if (autocompleteDiv) {
+      autocompleteDiv.innerHTML = ' ';
+    }
 
     updateSearchInput(val.trim().toLowerCase());
     faqSearchAutoComplete.forEach(searchOption => {
@@ -45,32 +48,41 @@ const FaqHeader = ({
         autocompleteResult.innerHTML = searchOption;
         autocompleteResult.tabIndex = '0';
         autocompleteResult.addEventListener('click', autocompleteSelected);
-        autocompleteResult.addEventListener('keypress', e => {
-          (e.key === 13) & autocompleteSelected(e);
+        autocompleteResult.addEventListener('keypress', event => {
+          const keyPress = event.which || event.keyCode;
+          if (keyPress === 13 || keyPress === 32) {
+            searchBox.value = event.target.innerHTML;
+            updateSearchInput(searchBox.value.toLowerCase());
+            autocompleteDiv.innerHTML = '';
+            return true;
+          }
+          return false;
         });
         autocompleteDiv.appendChild(autocompleteResult);
       }
-    })
-    return;
+    });
+    return true;
   };
 
   return (
     <div className="faq-header">
-        <h1>What can we help you with? </h1>
-        <form autoComplete="off" onSubmit={handleSubmit}>
-          <div className="autocomplete">
-            <Search className="search-outline" />                   
-            <input
-              onChange={handleChange}
-              id="autocompete-search"
-              name="search"
-              type="text"
-              placeholder="Type your question here..."
-            />
-            <div id="autocomplete-list" className="autocomplete-items"></div>
+      <h1>What can we help you with? </h1>
+      <form autoComplete="off" onSubmit={handleSubmit}>
+        <div className="autocomplete">
+          <Search className="search-outline" />
+          <input
+            onChange={handleChange}
+            id="autocompete-search"
+            name="search"
+            type="text"
+            placeholder="Type your question here..."
+          />
+          <div id="autocomplete-list" className="autocomplete-items">
+            <p> </p>
           </div>
-          <input type="submit" value="Search" />
-        </form>
+        </div>
+        <input type="submit" value="Search" />
+      </form>
     </div>
   );
 };
