@@ -1,4 +1,4 @@
-from . import db
+from . import db, cache
 
 
 async def get_last_updated():
@@ -47,3 +47,20 @@ async def get_requests_count():
     query = db.text("SELECT count(*) FROM requests")
     result = await db.scalar(query)
     return result
+
+
+async def get_cache_info():
+    return await cache.raw("info")
+
+
+async def get_cache_keys():
+    return await cache.raw("keys", "*")
+
+
+async def reset_cache():
+    '''need to think about when to call this'''
+    await cache.raw("dbflush")
+    # config set maxmemory 1000mb
+    # config set maxmemory-policy allkeys-lru
+    # used memory peak: 286 390 120
+    return

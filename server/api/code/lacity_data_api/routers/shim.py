@@ -44,8 +44,12 @@ async def shim_status_check(status_type: StatusTypes):
         }
 
     if status_type == StatusTypes.cache:
-        cache = await build_cache()
-        return cache
+        await build_cache()
+
+        return {
+            "info": await status.get_cache_info(),
+            "keys": await status.get_cache_keys()
+        }
 
 
 # TODO: some clean up
@@ -101,6 +105,7 @@ async def shim_get_clusters(filter: Filter):
         filter.zoom,
         filter.bounds
     )
+    # if the restult is empty most likely there was a cache timeout
     if result == []:
         raise HTTPException(status_code=429, detail="Too many requests")
 
