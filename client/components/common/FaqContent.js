@@ -30,7 +30,7 @@ export const FAQS = [
       events and programs that respond to community needs, or spent to advocate for issues that the board cares about such as crime prevention, 
       better roads and streets, safe spaces for children, help for the homeless, arts, or local economic development`,
     },
-    possibleSearchTerms: ['How are Neighborhood Councils funded?', 'How are NC's Funded?', 'Funding', 'NC Funding', 'Neighborhood Council Funds'],
+    possibleSearchTerms: ['How are Neighborhood Councils funded?', 'How are NC\'s Funded?', 'Funding', 'NC Funding', 'Neighborhood Council Funds'],
   },
   {
     question: `How do I search for 311 requests in my Neighborhood Council?`,
