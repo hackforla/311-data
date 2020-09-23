@@ -1,5 +1,4 @@
 aiocache==0.11.1
--e git+https://github.com/DriverX/aioredis@8a207609b7f8a33e74c7c8130d97186e78cc0052#egg=aioredis
 alembic==1.4.3
 async-timeout==3.0.1
 asyncpg==0.21.0
