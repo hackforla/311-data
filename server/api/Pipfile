@@ -26,9 +26,9 @@ fastapi = "*"
 uvicorn = "*"
 alembic = "*"
 geopandas = "*"
-aiocache = {extras = ["redis"], version = "*"}
 ujson = "*"
 sentry-sdk = "*"
+aiocache = {extras = ["redis"], version = "*"}
 
 [requires]
 python_version = "3.7"

@@ -1,4 +1,5 @@
 aiocache==0.11.1
+aioredis==1.3.1
 alembic==1.4.3
 async-timeout==3.0.1
 asyncpg==0.21.0
