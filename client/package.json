@@ -38,6 +38,7 @@
     "react-leaflet-easyprint": "^2.0.0",
     "react-leaflet-heatmap-layer": "^2.0.0",
     "react-leaflet-markercluster": "^2.0.0-rc3",
+    "react-leaflet-pixi-overlay": "^1.0.5",
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
