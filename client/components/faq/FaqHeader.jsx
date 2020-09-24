@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'proptypes';
 import { FAQS } from '@components/common/FaqContent';
 import Search from '@assets/faq/search-outline.svg';
@@ -10,8 +10,8 @@ const FaqHeader = ({
 }) => {
   const [searchInput, updateSearchInput] = useState('');
   const faqSearchAutoComplete = FAQS.map(item => item.question.toLowerCase());
-  const autocompleteDiv = document.querySelector('.autocomplete-items');
-  const searchBox = document.querySelector('#autocompete-search');
+  const autocompleteDiv = useRef(null);
+  const searchBox = useRef(null);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -22,13 +22,13 @@ const FaqHeader = ({
     updateSearch(searchInput);
     updateResults(updatedResults);
     updateCount(updatedResults.length);
-    autocompleteDiv.innerHTML = ' ';
+    autocompleteDiv.current.innerHTML = ' ';
   };
 
   const autocompleteSelected = e => {
-    searchBox.value = e.target.innerHTML;
-    updateSearchInput(searchBox.value.toLowerCase());
-    autocompleteDiv.innerHTML = '';
+    searchBox.current.value = e.target.innerHTML;
+    updateSearchInput(searchBox.current.value.toLowerCase());
+    autocompleteDiv.current.innerHTML = '';
   };
 
   const handleChange = e => {
@@ -38,7 +38,7 @@ const FaqHeader = ({
       return false;
     }
     if (autocompleteDiv) {
-      autocompleteDiv.innerHTML = ' ';
+      autocompleteDiv.current.innerHTML = ' ';
     }
 
     updateSearchInput(val.trim().toLowerCase());
@@ -51,14 +51,14 @@ const FaqHeader = ({
         autocompleteResult.addEventListener('keypress', event => {
           const keyPress = event.which || event.keyCode;
           if (keyPress === 13 || keyPress === 32) {
-            searchBox.value = event.target.innerHTML;
-            updateSearchInput(searchBox.value.toLowerCase());
-            autocompleteDiv.innerHTML = '';
+            searchBox.current.value = event.target.innerHTML;
+            updateSearchInput(searchBox.current.value.toLowerCase());
+            autocompleteDiv.current.innerHTML = '';
             return true;
           }
           return false;
         });
-        autocompleteDiv.appendChild(autocompleteResult);
+        autocompleteDiv.current.appendChild(autocompleteResult);
       }
     });
     return true;
@@ -73,11 +73,16 @@ const FaqHeader = ({
           <input
             onChange={handleChange}
             id="autocompete-search"
+            ref={searchBox}
             name="search"
             type="text"
             placeholder="Type your question here..."
           />
-          <div id="autocomplete-list" className="autocomplete-items">
+          <div
+            id="autocomplete-list"
+            className="autocomplete-items"
+            ref={autocompleteDiv}
+          >
             <p> </p>
           </div>
         </div>
