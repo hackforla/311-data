@@ -67,8 +67,6 @@ const Header = () => {
               Compare Different Councils
             </NavLink>
           </div>
-        </div>
-        <div className="navbar-end">
           <div className="navbar-item">
             <NavLink exact to="/about" activeClassName="navbar-selected" style={backgroundStyle}>
               About 311 Data
