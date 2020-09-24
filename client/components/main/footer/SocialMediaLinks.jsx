@@ -4,7 +4,7 @@ import TwitterSVG from '@assets/twitter-round.svg';
 import FacebookSVG from '@assets/facebook-round.svg';
 
 const SocialMediaLinks = () => (
-  <div className=" social-media-links navbar-item is-right">
+  <div className="social-media-links">
     <a
       className="link"
       href="https://twitter.com/data_311"
