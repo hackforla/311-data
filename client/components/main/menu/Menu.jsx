@@ -103,6 +103,7 @@ const Menu = ({
             iconStyle={{ margin: '0px' }}
             handleClick={() => toggleMenu()}
             color="light"
+            ariaLabel="show/hide filter menu"
           />
         </HoverOverInfo>
       </div>
