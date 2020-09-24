@@ -40,22 +40,37 @@ const Header = () => {
             <span className="beta-tag">BETA</span>
           </div>
         </Link>
-        <a // eslint-disable-line
-          role="button"
-          tabIndex={0}
-          className={clx('navbar-burger', { 'is-active': activeBurger })}
-          aria-label="menu"
-          aria-expanded={activeBurger}
-          onClick={handleClick}
-          onKeyDown={handleClick}
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </a>
+          <a // eslint-disable-line
+            role="button"
+            tabIndex={0}
+            className={clx('navbar-burger', {
+              'is-active': activeBurger,
+            })}
+            aria-label="menu"
+            aria-expanded={activeBurger}
+            onClick={handleClick}
+            onKeyDown={handleClick}
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </a>
+        <div className="navbar-item navbar-helplink">
+          <NavLink
+            exact
+            to="/faq"
+            activeClassName="navbar-selected"
+            style={backgroundStyle}
+          >
+            Help Center
+          </NavLink>
+        </div>
       </div>
 
-      <div id="navbar" className={clx('navbar-menu', { 'is-active': activeBurger })}>
+      <div
+        id="navbar"
+        className={clx('navbar-menu', { 'is-active': activeBurger })}
+      >
         <div className="navbar-end">
           <div className="navbar-item">
             <NavLink
