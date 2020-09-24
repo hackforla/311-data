@@ -40,31 +40,21 @@ const Header = () => {
             <span className="beta-tag">BETA</span>
           </div>
         </Link>
-          <a // eslint-disable-line
-            role="button"
-            tabIndex={0}
-            className={clx('navbar-burger', {
-              'is-active': activeBurger,
-            })}
-            aria-label="menu"
-            aria-expanded={activeBurger}
-            onClick={handleClick}
-            onKeyDown={handleClick}
-          >
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-          </a>
-        <div className="navbar-item navbar-helplink">
-          <NavLink
-            exact
-            to="/faq"
-            activeClassName="navbar-selected"
-            style={backgroundStyle}
-          >
-            Help Center
-          </NavLink>
-        </div>
+        <a // eslint-disable-line
+          role="button"
+          tabIndex={0}
+          className={clx('navbar-burger', {
+            'is-active': activeBurger,
+          })}
+          aria-label="menu"
+          aria-expanded={activeBurger}
+          onClick={handleClick}
+          onKeyDown={handleClick}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </a>
       </div>
 
       <div
@@ -110,6 +100,16 @@ const Header = () => {
               style={backgroundStyle}
             >
               Contact Us
+            </NavLink>
+          </div>
+          <div className="navbar-item navbar-helplink">
+            <NavLink
+              exact
+              to="/faq"
+              activeClassName="navbar-selected"
+              style={backgroundStyle}
+            >
+              Help Center
             </NavLink>
           </div>
           <div className="navbar-item">
