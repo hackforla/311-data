@@ -31,8 +31,6 @@ import Button from '@components/common/Button';
 // import councilDistrictsOverlay from '../../data/la-city-council-districts-2012.json';
 import ncOverlay from '../../data/nc-boundary-2019-centroid.json';
 
-document.getElementsByClassName('leaflet-container')[0].tabIndex = "=1"
-
 const { BaseLayer, Overlay } = LayersControl;
 const boundaryDefaultColor = COLORS.BRAND.MAIN;
 const boundaryHighlightColor = COLORS.BRAND.CTA1;
@@ -264,8 +262,28 @@ class PinMap extends Component {
 
     const { heatmap } = this.props;
 
+    const handleExportMap = () => {
+      const { exportMap } = this.props;
+      const selector = '.leaflet-control-easyPrint .CurrentSize';
+      const link = document.body.querySelector(selector);
+      if (link) link.click();
+      exportMap();
+    }
+
     return (
       <>
+        <Button
+          id="map-export"
+          label="Export"
+          handleClick={() => {
+            handleExportMap();
+          }}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              handleExportMap();
+            }
+          }}
+        />
         <Map
           center={position}
           zoom={zoom}
@@ -397,18 +415,7 @@ class PinMap extends Component {
             exportOnly
           />
         </Map>
-        <Button
-          id="map-export"
-          label="Export"
-          handleClick={() => {
-            const { exportMap } = this.props;
-            const selector = '.leaflet-control-easyPrint .CurrentSize';
-            const link = document.body.querySelector(selector);
-            if (link) link.click();
-            exportMap();
-          }}
-          tabIndex="0"
-        />
+
         <MapboxWordmark />
       </>
     );

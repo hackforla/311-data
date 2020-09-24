@@ -28,8 +28,8 @@ const SelectItem = ({
   };
 
   return (
-    <button type="button" onClick={handleClick}>
-      { label }
+    <button type="button" onClick={handleClick} tabIndex="0">
+      { label}
     </button>
   );
 };
@@ -46,7 +46,7 @@ SelectItem.propTypes = {
 };
 
 SelectItem.defaultProps = {
-  onClick: () => {},
-  onComplete: () => {},
+  onClick: () => { },
+  onComplete: () => { },
   openInTab: false,
 };

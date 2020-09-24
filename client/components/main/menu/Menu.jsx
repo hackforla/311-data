@@ -78,6 +78,12 @@ const Menu = ({
                 key={tab}
                 className={clx('menu-tab', { active: tab === activeTab })}
                 onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    setMenuTab(tab)
+                  }
+                }}
+                tabIndex="0"
               >
                 {tab}
               </a>
