@@ -1,4 +1,6 @@
 .navbar {
+  $hamburger-height: 200px;
+
   font-family: $brand-heading-family;
   font-weight: bold;
   height: $header-height;
@@ -38,12 +40,14 @@
     }
   }
 
-  @media only screen and (max-width: 1024px) {
+
+  @media only screen and (max-width: 1022px) {
     .navbar-menu.is-active {
       padding: 0;
       background: none;
       box-shadow: none;
       width: 270px;
+      height: $hamburger-height;
       position: fixed;
       right: 0;
 
@@ -55,7 +59,7 @@
   }
 
   .navbar-menu .navbar-item {
-    font-size: 16px;
+    font-size: 15px;
     margin-right: 20px;
   }
 
@@ -87,4 +91,56 @@
       }
     }
   }
+
+  div#accessibility-dropdown {
+    right: -25px;
+    top: 50px;
+    left: auto;
+    width: 600px;
+    height: calc(100vh - #{$header-height + $footer-height + 5px});
+    overflow-y: scroll;
+    padding: 0;
+    border-radius: 5px;
+
+    @media only screen and (max-width: 1022px) {
+      right: auto;
+      left: -350px;
+      top: 45px;
+      height: calc(100vh - #{$header-height + $hamburger-height});
+    }
+  }
+
+  div.dropdown-content {
+    background-color: $brand-stroke-color-light;
+  }
+
+  div.dropdown-content-item {
+    margin: 5px 15px;
+
+    h3 {
+      margin-top: 12px;
+    }
+
+    p {
+      font-family: $brand-text-family;
+      font-weight: lighter;
+      font-size: 0.9em;
+    }
+  }
+
+  div.dropdown-content-item.key-instructions {
+    margin: 10px 0 0 0;
+  }
+
+  .instruction {
+    padding: 2px 0 2px 15px;
+  }
+
+  .offset {
+    background-color: rgb(226, 226, 226);
+  }
+}
+
+nav#top-navbar {
+  z-index: $z-top-navbar;
 }

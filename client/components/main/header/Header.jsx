@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import clx from 'classnames';
+import AccessibilityPane from './AccessibilityPane';
 import COLORS from '../../../styles/COLORS';
 
 const Header = () => {
@@ -27,6 +28,7 @@ const Header = () => {
       className="navbar"
       role="navigation"
       aria-label="main navigation"
+      id="top-navbar"
     >
       <div className="navbar-brand">
         <Link to="/" className="navbar-item">
@@ -74,6 +76,9 @@ const Header = () => {
             <NavLink exact to="/contact" activeClassName="navbar-selected" style={backgroundStyle}>
               Contact Us
             </NavLink>
+          </div>
+          <div className="navbar-item">
+            <AccessibilityPane />
           </div>
         </div>
       </div>
