@@ -11,12 +11,20 @@ import ExportLegend from '@components/PinMap/ExportLegend';
 import MapboxWordmark from '@components/PinMap/MapboxWordmark';
 import {
   Map,
+  Pane,
+  Circle,
+  Popup,
+  CircleMarker,
+  LayerGroup,
+  FeatureGroup,
   TileLayer,
   LayersControl,
   ZoomControl,
   ScaleControl,
   withLeaflet,
 } from 'react-leaflet';
+import { PixiOverlay } from 'react-leaflet-pixi-overlay';
+import { renderToString } from 'react-dom/server';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Choropleth from 'react-leaflet-choropleth';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
@@ -51,6 +59,7 @@ class PinMap extends Component {
       width: null,
       height: null,
       markersVisible: true,
+      dotsVisible: true,
       heatmapVisible: false,
       zoomBreak: 14,
       zoomThresholdMet: false,
@@ -172,6 +181,7 @@ class PinMap extends Component {
       pinClusters,
       getPinInfo,
       pinsInfo,
+      pins,
     } = this.props;
 
     if (pinClusters) {
@@ -257,10 +267,11 @@ class PinMap extends Component {
       height,
       heatmapVisible,
       markersVisible,
+      dotsVisible,
       zoomThresholdMet,
     } = this.state;
 
-    const { heatmap } = this.props;
+    const { heatmap, pins } = this.props;
 
     return (
       <>
@@ -270,7 +281,14 @@ class PinMap extends Component {
           maxZoom={18}
           bounds={bounds}
           style={{ width, height }}
+          preferCanvas
+          useFlyTo
           zoomControl={false}
+          zoomSnap={0.25}
+          keepBuffer={4}
+          // zoomDelta={0.75}
+          updateWhenZooming={false}
+          updateWhenIdle
           whenReady={e => {
             this.map = e.target;
             this.updatePosition(e);
@@ -283,6 +301,9 @@ class PinMap extends Component {
             if (name === 'Markers') {
               this.setState({ markersVisible: true });
             }
+            if (name === 'Dots') {
+              this.setState({ dotsVisible: true })
+            }
           }}
           onOverlayremove={({ name }) => {
             if (name === 'Heatmap') {
@@ -290,6 +311,9 @@ class PinMap extends Component {
             }
             if (name === 'Markers') {
               this.setState({ markersVisible: false });
+            }
+            if (name === 'Dots') {
+              this.setState({ dotsVisible: false })
             }
           }}
           onZoomEnd={this.resizeNcNames}
@@ -316,6 +340,64 @@ class PinMap extends Component {
                 zoomOffset={-1}
               />
             </BaseLayer>
+            <Overlay name="Markers">
+              <MarkerClusterGroup maxClusterRadius={0}>
+                {/* {this.renderMarkers()} */}
+              </MarkerClusterGroup>
+            </Overlay>
+            {/* <Overlay checked name="LeafletDots">
+              <FeatureGroup>
+              {
+                pins.map(pin => {
+                  return (
+                    <Circle
+                      key={`circle-${pin.srnumber}`}
+                      center={[pin.latitude, pin.longitude]}
+                      stroke={false}
+                      // color={REQUEST_TYPES[pin.requesttype].color}
+                      fill
+                      fillColor={REQUEST_TYPES[pin.requesttype].color}
+                      fillOpacity={0.9}
+                      radius={15}
+                      bubblingMouseEvents={false}
+                    >
+                      <Popup
+                        key={`circle-popup-${pin.srnumber}`}
+                      >
+                        <div>A popup!</div>
+                      </Popup>
+                    </Circle>
+                  )
+                })
+              }
+              </FeatureGroup>
+            </Overlay> */}
+            <Overlay checked name="Dots">
+              <LayerGroup id="pixi-dots-layer">
+                <PixiOverlay
+                  markers={dotsVisible ? 
+                  // [
+                  //   {
+                  //     id: 'randomStringOrNumber',
+                  //     iconColor: 'red',
+                  //     position: [34.0094213, -118.6008506],
+                  //     popup: renderToString(
+                  //       <div>All good!</div>
+                  //     ),
+                  //   },
+                  // ] 
+                  pins.map(pin => {
+                    return ({
+                      id: `dot-${pin.srnumber}`,
+                      iconColor: REQUEST_TYPES[pin.requesttype].color,
+                      position: [pin.latitude, pin.longitude],
+                      popup: renderToString(<div>{pin.srnumber}</div>)
+                    })
+                  })
+                  : []}
+                />
+              </LayerGroup>
+            </Overlay>
             {
               (zoomThresholdMet === false && geoJSON)
               && (
@@ -364,16 +446,7 @@ class PinMap extends Component {
                 </Overlay>
               )
             }
-            <Overlay checked name="Markers">
-              <MarkerClusterGroup maxClusterRadius={0}>
-                {this.renderMarkers()}
-              </MarkerClusterGroup>
-            </Overlay>
             <Overlay name="Heatmap">
-              {/* intensityExtractor is required and requires a callback as the value.
-                * The heatmap is working with an empty callback but we'll probably
-                * improve functionality post-MVP by generating a heatmap list
-                * on the backend. */}
               {/* The heatmapVisible test prevents the component from doing
                 * unnecessary calculations when the heatmap isn't visible */}
               <HeatmapLayer
@@ -429,12 +502,14 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
+  pins: state.data.pins,
   pinClusters: state.data.pinClusters,
   heatmap: state.data.heatmap,
 });
 
 PinMap.propTypes = {
   pinsInfo: PropTypes.shape({}),
+  pins: PropTypes.arrayOf(PropTypes.shape({})),
   pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
   heatmap: PropTypes.arrayOf(PropTypes.array),
   getPinInfo: PropTypes.func.isRequired,
@@ -444,6 +519,7 @@ PinMap.propTypes = {
 
 PinMap.defaultProps = {
   pinsInfo: {},
+  pins: [],
   pinClusters: [],
   heatmap: [],
 };
