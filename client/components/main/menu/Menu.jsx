@@ -78,12 +78,13 @@ const Menu = ({
                 key={tab}
                 className={clx('menu-tab', { active: tab === activeTab })}
                 onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
-                onKeyUp={(e) => {
-                  if (e.key === "Enter") {
-                    setMenuTab(tab)
+                onKeyUp={e => {
+                  if (e.key === 'Enter') {
+                    setMenuTab(tab);
                   }
                 }}
                 tabIndex="0"
+                role="button"
               >
                 {tab}
               </a>
@@ -205,8 +206,8 @@ const Menu = ({
                 title="Request Type Selection *"
                 element="h2"
                 infoText={[
-                  "This filter allows the user to select specific 311 request types.",
-                  "* Please check box to make one or more selections.",
+                  'This filter allows the user to select specific 311 request types.',
+                  '* Please check box to make one or more selections.',
                 ]}
               />
               <a href="#nc-selection-container" className="nav-jump">

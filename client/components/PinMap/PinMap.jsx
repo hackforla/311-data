@@ -268,7 +268,7 @@ class PinMap extends Component {
       const link = document.body.querySelector(selector);
       if (link) link.click();
       exportMap();
-    }
+    };
 
     return (
       <>
@@ -278,8 +278,8 @@ class PinMap extends Component {
           handleClick={() => {
             handleExportMap();
           }}
-          onKeyUp={(e) => {
-            if (e.key === "Enter") {
+          onKeyUp={e => {
+            if (e.key === 'Enter') {
               handleExportMap();
             }
           }}

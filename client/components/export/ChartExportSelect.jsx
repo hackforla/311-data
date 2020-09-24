@@ -23,9 +23,11 @@ const ChartExportSelect = ({
       className="chart-export-select"
       onFocus={() => setOpen(true)}
       onClick={() => setOpen(true)}
-    // onMouseOver={() => setOpen(true)}
-    // onMouseLeave={() => setOpen(false)}
-    // onBlur={() => setOpen(false)}
+      onKeyUp={e => {
+        if (e === 'Enter') { setOpen(true); }
+      }}
+      tabIndex="0"
+      role="button"
     >
       <LoaderButton
         label="Export"
