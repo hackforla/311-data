@@ -25,12 +25,15 @@ class Filter(BaseModel):
     def parse_date(cls, v):
         if isinstance(v, str):
             try:
-                v = datetime.datetime.strptime(v, '%m/%d/%Y')
+                v = datetime.datetime.strptime(v, '%m/%d/%y')
             except ValueError:
                 try:
-                    v = datetime.datetime.strptime(v, '%Y-%m-%d')
+                    v = datetime.datetime.strptime(v, '%m/%d/%Y')
                 except ValueError:
-                    pass
+                    try:
+                        v = datetime.datetime.strptime(v, '%Y-%m-%d')
+                    except ValueError:
+                        pass
         return v
 
 

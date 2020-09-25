@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from sqlalchemy import and_
@@ -36,7 +37,12 @@ async def get_full_request(srnumber: str):
     return result
 
 
-async def get_filtered_requests(start_date, end_date, type_ids, council_ids):
+async def get_filtered_requests(
+        start_date: datetime.date,
+        end_date: datetime.date,
+        type_ids: List[int],
+        council_ids: List[int]
+):
 
     result = await (
         db.select(
