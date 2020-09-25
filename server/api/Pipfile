@@ -29,6 +29,7 @@ geopandas = "*"
 ujson = "*"
 sentry-sdk = "*"
 aiocache = {extras = ["redis"], version = "*"}
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"

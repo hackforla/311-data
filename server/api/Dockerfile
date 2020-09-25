@@ -20,4 +20,4 @@ EXPOSE 5000
 
 COPY . .
 
-CMD python code/run.py
+CMD gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:5000

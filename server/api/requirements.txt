@@ -16,6 +16,7 @@ flake8==3.8.3
 geopandas==0.8.1
 gino==1.0.1
 gino-starlette==0.1.1
+gunicorn==20.0.4
 h11==0.8.1
 h2==3.2.0
 hiredis==1.1.0
