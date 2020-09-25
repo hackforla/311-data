@@ -14,6 +14,12 @@ const AccessibilityPane = () => {
     updateIsOpen(!isOpen);
   };
 
+  const handleKeyDown = e => {
+    if (e.key !== 'Tab' && e.key !== 'Shift') {
+      handleClick(e);
+    }
+  };
+
   const renderInstructions = () => ACCESSIBILITY_INSTRUCTIONS.map((element, index) => {
     if (index % 2 !== 0) {
       return (
@@ -40,7 +46,7 @@ const AccessibilityPane = () => {
     <div // eslint-disable-line
       className={dropdownClassName}
       tabIndex={0}
-      onKeyDown={handleClick}
+      onKeyDown={handleKeyDown}
       aria-expanded={isOpen}
       role="button"
     >
