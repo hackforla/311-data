@@ -1,7 +1,11 @@
 from aiocache import cached, Cache, serializers
 
-from ..config import CACHE_ENDPOINT
+from sqlalchemy import and_
+
 from . import db
+from .service_request import ServiceRequest
+from .request_type import RequestType
+from ..config import CACHE_ENDPOINT
 
 
 class Council(db.Model):
@@ -27,3 +31,27 @@ async def get_councils_dict():
         for i in result
     ]
     return dict(councils_dict)
+
+
+async def get_open_request_counts(council: int):
+
+    result = await (
+        db.select(
+            [
+                ServiceRequest.type_id,
+                RequestType.type_name,
+                db.func.count().label("type_count")
+            ]
+        ).select_from(
+            ServiceRequest.join(RequestType)
+        ).where(
+            and_(
+                ServiceRequest.closed_date == None,  # noqa
+                ServiceRequest.council_id == council  # noqa
+            )
+        ).group_by(
+            ServiceRequest.type_id,
+            RequestType.type_name
+        ).gino.all()
+    )
+    return result

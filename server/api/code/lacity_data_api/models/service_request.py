@@ -1,5 +1,7 @@
 from typing import List
 
+from sqlalchemy import and_
+
 from . import db
 
 
@@ -9,7 +11,7 @@ class ServiceRequest(db.Model):
     request_id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.Date)
     closed_date = db.Column(db.Date)
-    type_id = db.Column(db.SmallInteger)
+    type_id = db.Column(db.SmallInteger, db.ForeignKey('request_types.type_id'))
     council_id = db.Column(db.SmallInteger)
     region_id = db.Column(db.SmallInteger)
     address = db.Column(db.String)
@@ -31,4 +33,26 @@ async def get_full_request(srnumber: str):
     # query the request table to get full record
     query = db.text("SELECT * FROM requests WHERE srnumber = :num")
     result = await db.first(query, num=srnumber)
+    return result
+
+
+async def get_filtered_requests(start_date, end_date, type_ids, council_ids):
+
+    result = await (
+        db.select(
+            [
+                ServiceRequest.request_id,
+                ServiceRequest.type_id,
+                ServiceRequest.latitude,
+                ServiceRequest.longitude
+            ]
+        ).where(
+            and_(
+                ServiceRequest.created_date >= start_date,
+                ServiceRequest.created_date <= end_date,
+                ServiceRequest.type_id.in_(type_ids),
+                ServiceRequest.council_id.in_(council_ids)
+            )
+        ).gino.all()
+    )
     return result

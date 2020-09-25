@@ -6,7 +6,7 @@ from .api_models import (
     Filter, StatusTypes, Feedback, Comparison
 )
 from ..models import (
-    clusters, request_type, service_request, status
+    clusters, request_type, service_request, status, council
 )
 from ..config import GITHUB_CODE_VERSION, GITHUB_SHA
 from .utilities import build_cache
@@ -78,9 +78,7 @@ async def get_open_requests():
     result = await service_request.get_open_requests()
 
     requests_list = []
-
     types_dict = await request_type.get_types_dict()
-
     for i in result:
         requests_list.append({
             'srnumber': f"1-{i.request_id}",
@@ -89,7 +87,18 @@ async def get_open_requests():
             'longitude': i.longitude
         })
 
-    return requests_list
+    council_data = {}
+    for item in await council.Council.query.gino.all():
+        result = await council.get_open_request_counts(item.council_id)
+        dict((row.type_name, row.type_count) for row in result)
+        council_data[int(item.council_id)] = dict((row.type_name, row.type_count) for row in result)  # noqa
+
+    return {
+        "counts": {
+            "nc": council_data
+        },
+        "requests": requests_list
+    }
 
 
 @router.post("/map/clusters")
@@ -126,41 +135,18 @@ async def get_heatmap(filter: Filter):
     return result
 
 
-# TODO: PLACEHOLDER
 @router.post("/map/pins")
 async def get_pins(filter: Filter):
-    return [
-        {
-            "srnumber": "1-1597411711",
-            "requesttype": "Single Streetlight Issue",
-            "latitude": 33.9547572,
-            "longitude": -118.39466885
-        },
-        {
-            "srnumber": "1-1597412651",
-            "requesttype": "Single Streetlight Issue",
-            "latitude": 33.95474831,
-            "longitude": -118.39326973
-        },
-        {
-            "srnumber": "1-1597418591",
-            "requesttype": "Homeless Encampment",
-            "latitude": 34.1015964889,
-            "longitude": -118.323675347
-        },
-        {
-            "srnumber": "1-1597533121",
-            "requesttype": "Graffiti Removal",
-            "latitude": 34.0248294082,
-            "longitude": -118.202687279
-        },
-        {
-            "srnumber": "1-1597535051",
-            "requesttype": "Graffiti Removal",
-            "latitude": 34.0244950305,
-            "longitude": -118.202230826
-        }
-    ]
+    # convert type names to type ids
+    type_ids = await request_type.get_type_ids_by_str_list(filter.requestTypes)
+
+    result = await service_request.get_filtered_requests(
+        filter.startDate,
+        filter.endDate,
+        type_ids,
+        filter.ncList
+    )
+    return result
 
 
 # TODO: PLACEHOLDER

@@ -45,7 +45,11 @@ async def get_types_by_int_list(int_list: List[int]) -> List[RequestType]:
     return result
 
 
-@cached(cache=Cache.REDIS, endpoint=CACHE_ENDPOINT, namespace="types")
+@cached(cache=Cache.REDIS,
+        endpoint=CACHE_ENDPOINT,
+        namespace="types",
+        serializer=serializers.PickleSerializer(),
+        )
 async def get_type_ids_by_str_list(str_list: List[str]) -> List[int]:
     '''Get a list of RequestType IDs from their type_names'''
     result = await db.all(
