@@ -22,6 +22,12 @@ const Header = () => {
     setActiveBurger(!activeBurger);
   };
 
+  const handleKeyDown = e => {
+    if (e.key !== 'Tab' && e.key !== 'Shift' && e.key !== 'Alt') {
+      handleClick(e);
+    }
+  };
+
   return (
     <nav
       className="navbar"
@@ -32,7 +38,15 @@ const Header = () => {
         <Link to="/" className="navbar-item">
           <img id="navbar-logo" src={require('../../../assets/311-data-logo.png')} alt="311-Data logo"></img>
         </Link>
-        <a role="button" tabIndex={0} className={clx('navbar-burger', { 'is-active': activeBurger })} aria-label="menu" aria-expanded="false" onClick={handleClick} onKeyDown={handleClick}>
+        <a // eslint-disable-line
+          role="button"
+          tabIndex={0}
+          className={clx('navbar-burger', { 'is-active': activeBurger })}
+          aria-label="menu"
+          aria-expanded={activeBurger}
+          onClick={handleClick}
+          onKeyDown={handleKeyDown}
+        >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
           <span aria-hidden="true" />
