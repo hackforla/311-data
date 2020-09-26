@@ -24,7 +24,7 @@ const Header = () => {
   };
 
   const handleKeyDown = e => {
-    if (e.key !== 'Tab' && e.key !== 'Shift') {
+    if (e.key !== 'Tab' && e.key !== 'Shift' && e.key !== 'Alt') {
       handleClick(e);
     }
   };
