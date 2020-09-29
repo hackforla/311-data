@@ -33,6 +33,11 @@ async def get_councils_dict():
     return dict(councils_dict)
 
 
+@cached(cache=Cache.REDIS,
+        endpoint=CACHE_ENDPOINT,
+        namespace="councils",
+        serializer=serializers.PickleSerializer(),
+        )
 async def get_open_request_counts(council: int):
 
     result = await (

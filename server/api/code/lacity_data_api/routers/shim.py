@@ -19,6 +19,15 @@ methods but get data from the new models using async database queries and cache.
 """
 
 
+@router.get("/status/reset-cache", include_in_schema=False)
+async def index():
+    await status.reset_cache()
+    await build_cache()
+    return {
+        "message": "Cache successfully reset"
+    }
+
+
 # TODO: separate into own file and add sys
 @router.get("/status/{status_type}",
             description="Provides the status of backend systems")
@@ -47,8 +56,8 @@ async def check_status_type(status_type: StatusTypes):
         await build_cache()
 
         return {
-            "info": await status.get_cache_info(),
-            "keys": await status.get_cache_keys()
+            "keys": await status.get_cache_keys(),
+            "info": await status.get_cache_info()
         }
 
 
@@ -72,7 +81,6 @@ async def get_service_request(srnumber: str):
     return result
 
 
-# TODO: return format is slightly different than current...FIX?
 @router.post("/open-requests")
 async def get_open_requests():
     result = await service_request.get_open_requests()
@@ -88,10 +96,10 @@ async def get_open_requests():
         })
 
     council_data = {}
-    for item in await council.Council.query.gino.all():
-        result = await council.get_open_request_counts(item.council_id)
+    for item in await council.get_councils_dict():
+        result = await council.get_open_request_counts(item)
         dict((row.type_name, row.type_count) for row in result)
-        council_data[int(item.council_id)] = dict((row.type_name, row.type_count) for row in result)  # noqa
+        council_data[item] = dict((row.type_name, row.type_count) for row in result)  # noqa
 
     return {
         "counts": {

@@ -1,9 +1,11 @@
 import datetime
 from typing import List
 
+from aiocache import cached, Cache, serializers
 from sqlalchemy import and_
 
 from . import db
+from ..config import CACHE_ENDPOINT
 
 
 class ServiceRequest(db.Model):
@@ -20,8 +22,12 @@ class ServiceRequest(db.Model):
     longitude = db.Column(db.Float)
 
 
+@cached(cache=Cache.REDIS,
+        endpoint=CACHE_ENDPOINT,
+        namespace="open",
+        serializer=serializers.PickleSerializer(),
+        )
 async def get_open_requests() -> List[ServiceRequest]:
-    '''Get a list of RequestTypes from their type_names'''
     result = await db.all(
         ServiceRequest.query.where(
             ServiceRequest.closed_date == None  # noqa

@@ -59,7 +59,7 @@ async def get_cache_keys():
 
 async def reset_cache():
     '''need to think about when to call this'''
-    await cache.raw("dbflush")
+    await cache.raw("flushdb")
     # config set maxmemory 1000mb
     # config set maxmemory-policy allkeys-lru
     # used memory peak: 286 390 120
