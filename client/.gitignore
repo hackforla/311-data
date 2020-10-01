@@ -7,3 +7,5 @@ node_modules_non_es5
 
 # production build
 dist/
+
+webpack-stats.json
