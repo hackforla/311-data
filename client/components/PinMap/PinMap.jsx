@@ -1,38 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getPinInfoRequest } from '@reducers/data';
-import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
-import PinPopup from '@components/PinMap/PinPopup';
-import CustomMarker from '@components/PinMap/CustomMarker';
-import ClusterMarker from '@components/PinMap/ClusterMarker';
+import Button from '@components/common/Button';
 import HeatmapLegend from '@components/PinMap/HeatmapLegend';
 import ExportLegend from '@components/PinMap/ExportLegend';
 import MapboxWordmark from '@components/PinMap/MapboxWordmark';
+import DotsLayer from '@components/PinMap/DotsLayer';
 import {
   Map,
-  Pane,
-  Circle,
-  Popup,
-  CircleMarker,
   LayerGroup,
-  FeatureGroup,
   TileLayer,
   LayersControl,
   ZoomControl,
   ScaleControl,
   withLeaflet,
 } from 'react-leaflet';
-import { PixiOverlay } from 'react-leaflet-pixi-overlay';
-import { renderToString } from 'react-dom/server';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Choropleth from 'react-leaflet-choropleth';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import PrintControlDefault from 'react-leaflet-easyprint';
-import Button from '@components/common/Button';
+
+// These imports are for the disabled MarkerClusterGroup
+// import { updateMapPosition } from '@reducers/ui';
+// import PinPopup from '@components/PinMap/PinPopup';
+// import CustomMarker from '@components/PinMap/CustomMarker';
+// import ClusterMarker from '@components/PinMap/ClusterMarker';
+// import MarkerClusterGroup from 'react-leaflet-markercluster';
+// import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -110,14 +106,20 @@ class PinMap extends Component {
     this.setState({ bounds });
   }
 
-  updatePosition = ({ target: map }) => {
-    const { updatePosition } = this.props;
+  // updatePosition = ({ target: map }) => {
+  //   const { updatePosition } = this.props;
+  //   const { zoomBreak } = this.state;
+  //   const mapZoom = map.getZoom();
+  //   updatePosition({
+  //     zoom: mapZoom,
+  //     bounds: map.getBounds(),
+  //   });
+  //   this.setState({ zoomThresholdMet: (mapZoom >= zoomBreak) });
+  // }
+
+  updateZoomThreshold = () => {
     const { zoomBreak } = this.state;
-    const mapZoom = map.getZoom();
-    updatePosition({
-      zoom: mapZoom,
-      bounds: map.getBounds(),
-    });
+    const mapZoom = this.map.getZoom();
     this.setState({ zoomThresholdMet: (mapZoom >= zoomBreak) });
   }
 
@@ -176,84 +178,84 @@ class PinMap extends Component {
     }
   }
 
-  renderMarkers = () => {
-    const {
-      pinClusters,
-      getPinInfo,
-      pinsInfo,
-      pins,
-    } = this.props;
+  // renderMarkers = () => {
+  //   const {
+  //     pinClusters,
+  //     getPinInfo,
+  //     pinsInfo,
+  //     pins,
+  //   } = this.props;
 
-    if (pinClusters) {
-      return pinClusters.map(({
-        id,
-        count,
-        latitude,
-        longitude,
-        expansion_zoom: expansionZoom,
-        srnumber,
-        requesttype,
-      }) => {
-        const position = [latitude, longitude];
+  //   if (pinClusters) {
+  //     return pinClusters.map(({
+  //       id,
+  //       count,
+  //       latitude,
+  //       longitude,
+  //       expansion_zoom: expansionZoom,
+  //       srnumber,
+  //       requesttype,
+  //     }) => {
+  //       const position = [latitude, longitude];
 
-        if (count > 1) {
-          return (
-            <ClusterMarker
-              key={id}
-              position={position}
-              count={count}
-              onClick={({ latlng }) => {
-                this.map.flyTo(latlng, expansionZoom);
-              }}
-            />
-          );
-        }
+  //       if (count > 1) {
+  //         return (
+  //           <ClusterMarker
+  //             key={id}
+  //             position={position}
+  //             count={count}
+  //             onClick={({ latlng }) => {
+  //               this.map.flyTo(latlng, expansionZoom);
+  //             }}
+  //           />
+  //         );
+  //       }
 
-        const {
-          status,
-          createddate,
-          updateddate,
-          closeddate,
-          address,
-          ncname,
-        } = pinsInfo[srnumber] || {};
-        const { displayName, color, abbrev } = REQUEST_TYPES[requesttype];
+  //       const {
+  //         status,
+  //         createddate,
+  //         updateddate,
+  //         closeddate,
+  //         address,
+  //         ncname,
+  //       } = pinsInfo[srnumber] || {};
+  //       const { displayName, color, abbrev } = REQUEST_TYPES[requesttype];
 
-        const popup = (
-          <PinPopup
-            displayName={displayName}
-            color={color}
-            abbrev={abbrev}
-            address={address}
-            createdDate={createddate}
-            updatedDate={updateddate}
-            closedDate={closeddate}
-            status={status}
-            ncName={ncname}
-          />
-        );
+  //       const popup = (
+  //         <PinPopup
+  //           displayName={displayName}
+  //           color={color}
+  //           abbrev={abbrev}
+  //           address={address}
+  //           createdDate={createddate}
+  //           updatedDate={updateddate}
+  //           closedDate={closeddate}
+  //           status={status}
+  //           ncName={ncname}
+  //         />
+  //       );
 
-        return (
-          <CustomMarker
-            key={srnumber}
-            position={position}
-            onClick={() => {
-              if (!pinsInfo[srnumber]) {
-                getPinInfo(srnumber);
-              }
-            }}
-            color={color}
-            icon="map-marker-alt"
-            size="3x"
-            style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
-          >
-            {popup}
-          </CustomMarker>
-        );
-      });
-    }
-    return null;
-  }
+  //       return (
+  //         <CustomMarker
+  //           key={srnumber}
+  //           position={position}
+  //           onClick={() => {
+  //             if (!pinsInfo[srnumber]) {
+  //               getPinInfo(srnumber);
+  //             }
+  //           }}
+  //           color={color}
+  //           icon="map-marker-alt"
+  //           size="3x"
+  //           style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
+  //         >
+  //           {popup}
+  //         </CustomMarker>
+  //       );
+  //     });
+  //   }
+  //   return null;
+  // }
 
   renderMap = () => {
     const {
@@ -286,14 +288,15 @@ class PinMap extends Component {
           zoomControl={false}
           zoomSnap={0.25}
           keepBuffer={4}
-          // zoomDelta={0.75}
+          zoomDelta={0.75}
           updateWhenZooming={false}
           updateWhenIdle
           whenReady={e => {
             this.map = e.target;
-            this.updatePosition(e);
+            this.updateZoomThreshold(e);
+            // this.updatePosition(e);
           }}
-          onMoveend={this.updatePosition}
+          // onMoveend={this.updatePosition}
           onOverlayadd={({ name }) => {
             if (name === 'Heatmap') {
               this.setState({ heatmapVisible: true });
@@ -302,7 +305,7 @@ class PinMap extends Component {
               this.setState({ markersVisible: true });
             }
             if (name === 'Dots') {
-              this.setState({ dotsVisible: true })
+              this.setState({ dotsVisible: true });
             }
           }}
           onOverlayremove={({ name }) => {
@@ -313,10 +316,13 @@ class PinMap extends Component {
               this.setState({ markersVisible: false });
             }
             if (name === 'Dots') {
-              this.setState({ dotsVisible: false })
+              this.setState({ dotsVisible: false });
             }
           }}
-          onZoomEnd={this.resizeNcNames}
+          onZoomEnd={() => {
+            this.resizeNcNames();
+            this.updateZoomThreshold();
+          }}
         >
           <ZoomControl position="topright" />
           <ScaleControl position="bottomright" />
@@ -340,61 +346,15 @@ class PinMap extends Component {
                 zoomOffset={-1}
               />
             </BaseLayer>
-            <Overlay name="Markers">
+            {/* <Overlay checked name="Markers">
               <MarkerClusterGroup maxClusterRadius={0}>
-                {/* {this.renderMarkers()} */}
+                {this.renderMarkers()}
               </MarkerClusterGroup>
-            </Overlay>
-            {/* <Overlay checked name="LeafletDots">
-              <FeatureGroup>
-              {
-                pins.map(pin => {
-                  return (
-                    <Circle
-                      key={`circle-${pin.srnumber}`}
-                      center={[pin.latitude, pin.longitude]}
-                      stroke={false}
-                      // color={REQUEST_TYPES[pin.requesttype].color}
-                      fill
-                      fillColor={REQUEST_TYPES[pin.requesttype].color}
-                      fillOpacity={0.9}
-                      radius={15}
-                      bubblingMouseEvents={false}
-                    >
-                      <Popup
-                        key={`circle-popup-${pin.srnumber}`}
-                      >
-                        <div>A popup!</div>
-                      </Popup>
-                    </Circle>
-                  )
-                })
-              }
-              </FeatureGroup>
             </Overlay> */}
-            <Overlay checked name="Dots">
+            <Overlay checked name="Markers">
               <LayerGroup id="pixi-dots-layer">
-                <PixiOverlay
-                  markers={dotsVisible ? 
-                  // [
-                  //   {
-                  //     id: 'randomStringOrNumber',
-                  //     iconColor: 'red',
-                  //     position: [34.0094213, -118.6008506],
-                  //     popup: renderToString(
-                  //       <div>All good!</div>
-                  //     ),
-                  //   },
-                  // ] 
-                  pins.map(pin => {
-                    return ({
-                      id: `dot-${pin.srnumber}`,
-                      iconColor: REQUEST_TYPES[pin.requesttype].color,
-                      position: [pin.latitude, pin.longitude],
-                      popup: renderToString(<div>{pin.srnumber}</div>)
-                    })
-                  })
-                  : []}
+                <DotsLayer
+                  markers={dotsVisible ? pins : []}
                 />
               </LayerGroup>
             </Overlay>
@@ -425,7 +385,7 @@ class PinMap extends Component {
             {
               (zoomThresholdMet === true && geoJSON)
               && (
-                <Overlay checked name="Neighborhood Council Boundaries">
+                <Overlay name="Neighborhood Council Boundaries">
                   <Choropleth
                     data={geoJSON}
                     style={{
@@ -447,8 +407,6 @@ class PinMap extends Component {
               )
             }
             <Overlay name="Heatmap">
-              {/* The heatmapVisible test prevents the component from doing
-                * unnecessary calculations when the heatmap isn't visible */}
               <HeatmapLayer
                 max={1}
                 points={heatmapVisible ? heatmap : []}
@@ -496,31 +454,32 @@ class PinMap extends Component {
 
 const mapDispatchToProps = dispatch => ({
   getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
-  updatePosition: position => dispatch(updateMapPosition(position)),
   exportMap: () => dispatch(trackMapExport()),
+  // updatePosition: position => dispatch(updateMapPosition(position)),
 });
 
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   pins: state.data.pins,
-  pinClusters: state.data.pinClusters,
   heatmap: state.data.heatmap,
+  // pinClusters: state.data.pinClusters,
 });
 
 PinMap.propTypes = {
   pinsInfo: PropTypes.shape({}),
   pins: PropTypes.arrayOf(PropTypes.shape({})),
-  pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
   heatmap: PropTypes.arrayOf(PropTypes.array),
-  getPinInfo: PropTypes.func.isRequired,
-  updatePosition: PropTypes.func.isRequired,
   exportMap: PropTypes.func.isRequired,
+  // These are for the disabled MarkerClusterGroup
+  // getPinInfo: PropTypes.func.isRequired,
+  // pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
+  // updatePosition: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {
   pinsInfo: {},
   pins: [],
-  pinClusters: [],
+  // pinClusters: [],
   heatmap: [],
 };
 
