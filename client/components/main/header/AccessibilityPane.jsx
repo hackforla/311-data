@@ -15,7 +15,7 @@ const AccessibilityPane = () => {
   };
 
   const handleKeyDown = e => {
-    if (e.key !== 'Tab' && e.key !== 'Shift' && e.key !== 'Alt') {
+    if (e.key === ' ' || e.key === 'Enter') {
       handleClick(e);
     }
   };
