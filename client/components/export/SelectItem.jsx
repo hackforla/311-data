@@ -46,7 +46,7 @@ SelectItem.propTypes = {
 };
 
 SelectItem.defaultProps = {
-  onClick: () => { },
-  onComplete: () => { },
+  onClick: () => {},
+  onComplete: () => {},
   openInTab: false,
 };

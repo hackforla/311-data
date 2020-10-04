@@ -43,7 +43,7 @@ const DistrictSelectorModal = ({
             className="level-right"
             tabIndex="0"
             role="button"
-            onKeyUp={e => { if (e.key === 'Enter') { closeModal(); } }}
+            onKeyUp={e => { if (e.key === 'Enter' || e.key === ' ') { closeModal(); } }}
           >
             <Icon
               id="district-selector-modal-close"

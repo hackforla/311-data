@@ -24,7 +24,7 @@ const ChartExportSelect = ({
       onFocus={() => setOpen(true)}
       onClick={() => setOpen(true)}
       onKeyUp={e => {
-        if (e === 'Enter') { setOpen(true); }
+        if (e.key === 'Enter' || e.key === ' ') { setOpen(!open); }
       }}
       tabIndex="0"
       role="button"

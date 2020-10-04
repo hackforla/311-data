@@ -8,6 +8,8 @@ const HoverOverInfo = ({
   text,
   position,
   children,
+  tabIndex,
+  style,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -18,6 +20,8 @@ const HoverOverInfo = ({
       onFocus={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
       onBlur={() => setShowTooltip(false)}
+      tabIndex={tabIndex}
+      style={style}
     >
       { children }
       { showTooltip && (
@@ -63,6 +67,8 @@ HoverOverInfo.propTypes = {
   ]),
   position: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
   children: PropTypes.node,
+  tabIndex: PropTypes.number,
+  style: PropTypes.shape({}),
 };
 
 HoverOverInfo.defaultProps = {
@@ -70,4 +76,6 @@ HoverOverInfo.defaultProps = {
   text: undefined,
   position: 'right',
   children: (<div />),
+  tabIndex: 0,
+  style: {},
 };

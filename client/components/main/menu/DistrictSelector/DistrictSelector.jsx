@@ -73,7 +73,7 @@ const DistrictSelector = ({
         tabIndex="0"
         role="button"
         onKeyUp={e => {
-          if (e.key === 'Enter') {
+          if (e.key === 'Enter' || e.key === ' ') {
             openModal(set);
           }
         }}

@@ -16,6 +16,7 @@ import { MENU_TABS } from '@components/common/CONSTANTS';
 import Button from '@components/common/Button';
 import InfoTitle from '@components/common/InfoTitle';
 import HoverOverInfo from '@components/common/HoverOverInfo';
+import Icon from '@components/common/Icon';
 import Submit from './Submit';
 import ErrorMessage from './ErrorMessage';
 import DateSelector from './DateSelector/DateSelector';
@@ -79,7 +80,7 @@ const Menu = ({
                 className={clx('menu-tab', { active: tab === activeTab })}
                 onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
                 onKeyUp={e => {
-                  if (e.key === 'Enter') {
+                  if (e.key === 'Enter' || e.key === ' ') {
                     setMenuTab(tab);
                   }
                 }}
@@ -179,6 +180,24 @@ const Menu = ({
                 '* Please click to make a selection.',
               ]}
             />
+            <HoverOverInfo
+              title="Skip to Neighborhood Councils"
+              position="left"
+              tabIndex={0}
+              style={{
+                position: 'absolute',
+                right: '50px',
+                top: '125px',
+                padding: '10px 0 0 0',
+              }}
+            >
+              <Icon
+                id="nav-jump"
+                icon="angle-double-down"
+                iconSize='2x'
+                ariaLabel="skip to neighborhood councils"
+              />
+            </HoverOverInfo>
             {
               dataErrors.missingEndDate && <ErrorMessage errorType="data" />
             }
@@ -193,9 +212,26 @@ const Menu = ({
                 ]}
                 position="top"
               />
-              <a href="#request-selection-container" className="nav-jump">
+              <HoverOverInfo
+                title="Skip to Request Types"
+                position="left"
+                tabIndex={0}
+                style={{
+                  position: 'absolute',
+                  right: '50px',
+                  padding: '10px 0 10px',
+                }}
+              >
+                <Icon
+                  id="nav-jump"
+                  icon="angle-double-down"
+                  iconSize='2x'
+                  ariaLabel="skip to request types"
+                />
+              </HoverOverInfo>
+              {/* <a href="#request-selection-container" className="nav-jump">
                 Jump to Request Type
-              </a>
+              </a> */}
             </div>
             {dataErrors.missingCouncils && (
               <ErrorMessage errorType="selectone" />
@@ -210,9 +246,26 @@ const Menu = ({
                   '* Please check box to make one or more selections.',
                 ]}
               />
-              <a href="#nc-selection-container" className="nav-jump">
+              <HoverOverInfo
+                title="Skip to Neighborhood Councils"
+                position="left"
+                tabIndex={0}
+                style={{
+                  position: 'absolute',
+                  right: '50px',
+                  padding: '10px 0 10px',
+                }}
+              >
+                <Icon
+                  id="nav-jump"
+                  icon="angle-double-up"
+                  iconSize='2x'
+                  ariaLabel="skip to neighborhood councils"
+                />
+              </HoverOverInfo>
+              {/* <a href="#nc-selection-container" className="nav-jump">
                 Jump to Neighborhood Council
-              </a>
+              </a> */}
             </div>
             {dataErrors.missingRequestTypes && (
               <ErrorMessage errorType="selectone" />

@@ -8,6 +8,7 @@ const InfoTitle = ({
   element,
   infoText,
   position,
+  icon,
 }) => {
   const titleEl = React.createElement(
     element,
@@ -48,6 +49,7 @@ InfoTitle.propTypes = {
     PropTypes.arrayOf(PropTypes.string),
   ]),
   position: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
+  icon: PropTypes.string,
 };
 
 InfoTitle.defaultProps = {
@@ -55,4 +57,5 @@ InfoTitle.defaultProps = {
   element: 'h1',
   infoText: '',
   position: 'right',
+  icon: 'info-icon',
 };
