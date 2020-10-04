@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import clx from 'classnames';
@@ -35,6 +35,8 @@ const Menu = ({
     MENU_TABS.MAP,
     MENU_TABS.VISUALIZATIONS,
   ];
+  const ncRef = useRef();
+  const requestsRef = useRef();
   const [dataErrors, setDataErrors] = useState({
     missingStartDate: false,
     missingEndDate: false,
@@ -196,6 +198,7 @@ const Menu = ({
                 icon="angle-double-down"
                 iconSize='2x'
                 ariaLabel="skip to neighborhood councils"
+                handleClick={() => ncRef.current.focus()}
               />
             </HoverOverInfo>
             {
