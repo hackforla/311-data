@@ -11,7 +11,6 @@ from settings import Server
 
 app = Sanic(__name__)
 
-
 routes = {
     '/': (
         ['GET'], R.index),
@@ -61,13 +60,20 @@ def start():
     Compress(app)
 
     for route, (methods, handler) in routes.items():
-        app.add_route(handler, route, methods)
+        # need to have OPTIONS on all routes for CORS
+        app.add_route(handler, route, methods + ['OPTIONS'])
 
     app.error_handler = ErrorHandler()
 
     @app.listener('after_server_stop')
     async def on_restart(app, loop):
         log_heading('restarting server')
+
+    # fixes error raised when compressing OPTIONS response
+    def fix_compression(req, res):
+        if req.method == 'OPTIONS':
+            res.content_type = ''
+    app.register_middleware(fix_compression, attach_to='response')
 
     if Server.DEBUG:
         add_performance_header(app)

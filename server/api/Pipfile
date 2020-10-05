@@ -1,0 +1,29 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest-asyncio = "*"
+pytest = "*"
+flake8 = "*"
+
+[packages]
+numpy = "*"
+pandas = "*"
+psycopg2-binary = "*"
+pysupercluster = "*"
+python-dotenv = "*"
+redis = "*"
+requests-async = "*"
+sanic = "*"
+sanic-plugins-framework = "*"
+sanic-cors = "*"
+sanic-compress = "*"
+sendgrid = "*"
+sodapy = "*"
+SQLAlchemy = "*"
+tabulate = "*"
+
+[requires]
+python_version = "3.7"

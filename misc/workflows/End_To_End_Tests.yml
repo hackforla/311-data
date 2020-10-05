@@ -1,0 +1,27 @@
+# DISABLED UNTIL: (1) we get more test coverage, and
+# (2) the tests run against the code that's being pushed
+# instead of the code already on dev
+
+name: End-to-end tests
+on: [push]
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          #build: npm run build
+          #start: npm start
+          spec: cypress/integration/e2e_tests.spec.js
+          wait-on: http://dev.311-data.org/
+          record: true
+          working-directory: e2e
+        env:
+          # pass the Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # pass GitHub token to allow accurately detecting a build vs a re-run build
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }

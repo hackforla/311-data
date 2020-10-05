@@ -21,17 +21,22 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
   * PostgreSql
   * Socrata API
 
-## Management Philosophies:
-  * Open Source
-  * Kanban
-
 ## UI/UX Technologies
   * Figma
   * Google Drive
   * Adobe CC
   * Miro
 
-## 🎉🎉 Engineers start [here](https://github.com/hackforla/311-data/blob/master/GETTING_STARTED.md)!!!! 🎉🎉🎉
+## Management Philosophies:
+  * Open Source
+  * Kanban
+  
+## To Sign Up:
+  * Follow the steps [here](https://github.com/hackforla/311-data/wiki/Joining-the-311-Team)  
+  * Don't forget to [enable two factor authentication](https://www.hackforla.org/guide-pages/2FA.html)  
+
+
+## 🎉🎉 After Signing up, Engineers start [here](https://github.com/hackforla/311-data/blob/master/GETTING_STARTED.md)!!!! 🎉🎉🎉
 
 ## Resources
 [Empower LA - HfLA Initial Meeting](https://docs.google.com/document/d/19jrYWjq_FfQbuqTfnwJFruWEo9pPF0R0qh4njDZsuzM)

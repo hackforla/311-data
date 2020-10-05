@@ -16,13 +16,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install and Run Api
+      - name: Install and Configure Api
         run: |
           cp .env.example .env
           echo SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }} >> .env
           docker-compose up --no-start api
-          docker-compose run api python bin/db_seed.py --years 2020 --rows 500 --reset
-          docker-compose up -d api
+
+      - name: Seed DB and Run Api
+        run: |          
+            docker-compose run api python bin/db_seed.py --file data/requests.csv.gz
+            docker-compose up -d api
 
       - name: Linting
         run: docker-compose run api flake8

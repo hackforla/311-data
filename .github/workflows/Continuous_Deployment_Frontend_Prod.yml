@@ -5,8 +5,11 @@ on:
     branches:
       - master
     paths:
-      - 'src/**'
-      - 'public/**'
+      - 'client/**'
+
+defaults:
+  run:
+    working-directory: client
 
 jobs:
   build:
@@ -20,14 +23,14 @@ jobs:
       run: npm install
     - name: Setup environment
       run: |
-        echo MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > src/.env
-        echo MAPBOX_STREETS_URL=${{ secrets.MAPBOX_STREETS_URL }} >> src/.env
-        echo MAPBOX_SATELLITE_URL=${{ secrets.MAPBOX_SATELLITE_URL }} >> src/.env
-        echo API_URL=${{ secrets.API_URL_PROD }} >> src/.env
-        echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> src/.env
-        echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> src/.env
-        echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> src/.env
-        echo GITHUB_SHA=${{ github.sha }} >> src/.env
+        echo MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
+        echo MAPBOX_STREETS_URL=${{ secrets.MAPBOX_STREETS_URL }} >> .env
+        echo MAPBOX_SATELLITE_URL=${{ secrets.MAPBOX_SATELLITE_URL }} >> .env
+        echo API_URL=${{ secrets.API_URL_PROD }} >> .env
+        echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> .env
+        echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> .env
+        echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env
+        echo GITHUB_SHA=${{ github.sha }} >> .env
     - name: Build project
       run: npm run build
     - name: Configure AWS Credentials

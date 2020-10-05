@@ -1,6 +1,4 @@
 
-dist/
-
 # Test results
 coverage/
 
@@ -22,15 +20,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-package-lock.json
-
-node_modules_non_es5
-
 # config
 config.js
 .env
-
-# dataAnalysis
-/dataAnalysis/datasets
-/dataAnalysis/.ipynb_checkpoints
-__pycache__

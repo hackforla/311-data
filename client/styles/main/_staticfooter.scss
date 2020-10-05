@@ -1,0 +1,36 @@
+.static-footer {
+  color: $brand-bg-color;
+  font-family: $brand-text-family;
+  font-size: 14px;
+  font-weight: normal;
+  margin: 15px 0 0 20px;
+  position: absolute;
+
+  @media only screen and (max-width: 640px) {
+    margin-top: 0;
+  }
+
+  a {
+    color: $brand-bg-color;
+  }
+}
+.social-media-links {
+  margin: 5px 20px 0 0;
+  position: absolute;
+  right: 0;
+
+  @media only screen and (max-width: 710px) {
+    display: none;
+  }
+
+  a {
+    display: table-cell;
+    vertical-align: middle;
+    line-height: $footer-height;
+    height: $footer-height;
+  }
+
+  .icon {
+    margin: 0 3px;
+  }
+}

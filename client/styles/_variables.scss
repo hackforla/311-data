@@ -1,0 +1,50 @@
+
+/////////////////// BRAND /////////////////////
+// https://www.figma.com/file/9RJJyaGAdT5hcRuv9PUMOY/311-Wireframe-v1.0?node-id=16%3A4
+
+// colors
+$brand-heading-color:   #002449;    // dark blue
+$brand-text-color:      #002449;    // dark blue
+$brand-main-color:      #002449;    // dark blue
+$brand-main-color-light: #113355;   // faded dark blue
+$brand-cta1-color:      #FFB24A;    // orange
+$brand-cta2-color:      #55D4D2;    // light blue
+$brand-bg-color:        #FFFFFF;    // white
+$brand-stroke-color:    #999999;    // grey
+$brand-stroke-color-light: #EEEEEE;    // light grey
+
+// font families
+$brand-heading-family:  'Open Sans', sans-serif;
+$brand-text-family:     Roboto, sans-serif;
+
+// font sizes
+$brand-heading-size:    20px;
+$brand-subheading-size: 18px;
+$brand-text-size:       16px;
+
+//////////////////// LAYOUT ////////////////////
+
+$header-height: 62px;
+$footer-height: 52px;
+$menu-width: 509px;
+$chart-max-width: 840px;
+
+//////////////////// Z-INDEX ///////////////////
+
+$z-snapshot-renderer: -100000;
+
+// leaflet-pane: 400
+// leaflet-control-layers: 800
+// leaflet-top, bottom, left, right: 1000
+
+$z-map-export-button: 1000;
+$z-mapbox-wordmark: 1000;
+$z-visualizations: 1050;
+$z-menu: 1100;
+$z-tooltip: 1150;
+$z-loader: 1200;
+$z-modal: 10000;
+
+// header and footer
+$z-navbar: 20000;
+$z-top-navbar: 30000;

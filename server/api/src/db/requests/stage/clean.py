@@ -17,7 +17,7 @@ def clean_table():
         ALTER TABLE stage DROP COLUMN id;
         ALTER TABLE stage ADD PRIMARY KEY (srnumber);
     """)
-    log(f'\tSwitched primary key column to srnumber')
+    log('\tSwitched primary key column to srnumber')
 
     # remove invalid closed dates
     res = exec_sql("""
