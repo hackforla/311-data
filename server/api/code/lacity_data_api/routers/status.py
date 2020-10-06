@@ -3,9 +3,8 @@ import datetime
 from fastapi import APIRouter
 
 from .api_models import StatusTypes
-from ..services import status
+from ..services import status, utilities
 from ..config import GITHUB_CODE_VERSION, GITHUB_SHA
-from .utilities import build_cache
 
 router = APIRouter()
 
@@ -13,7 +12,7 @@ router = APIRouter()
 @router.get("/reset-cache", include_in_schema=False)
 async def index():
     await status.reset_cache()
-    await build_cache()
+    await utilities.build_cache()
     return {
         "message": "Cache successfully reset"
     }
@@ -43,7 +42,7 @@ async def check_status_type(status_type: StatusTypes):
         }
 
     if status_type == StatusTypes.cache:
-        await build_cache()
+        await utilities.build_cache()
 
         return {
             "keys": await status.get_cache_keys(),

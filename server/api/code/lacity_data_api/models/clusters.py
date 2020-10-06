@@ -11,7 +11,7 @@ from .council import get_councils_dict
 from .request_type import get_types_dict
 from . import db, cache
 from ..config import DEBUG, CACHE_MAX_RETRIES
-from ..routers import utilities
+from ..services import utilities
 
 
 DEFAULT_CITY_ZOOM = 11  # a click on a city point zooms from 10 to 12

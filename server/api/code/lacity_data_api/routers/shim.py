@@ -6,6 +6,9 @@ from .api_models import (
 from ..models import (
     clusters, request_type, service_request, council
 )
+from ..services import (
+    email, github
+)
 
 router = APIRouter()
 
@@ -959,10 +962,16 @@ async def get_comparison_counts(comp_filter: Comparison):
     }
 
 
-# TODO: PLACEHOLDER
 @router.post("/feedback")
 async def get_feedback(feedback: Feedback):
-    return {'success': True}
+
+    id, number = await github.create_issue(feedback.title, feedback.body)
+    await github.add_issue_to_project(id)
+    await email.respond_to_feedback(feedback.body, number)
+
+    return {
+        'success': True
+    }
 
 
 # class SimpleServiceRequest(BaseModel):
