@@ -73,5 +73,11 @@ CACHE_ENDPOINT = config('CACHE_ENDPOINT', default="localhost")
 CACHE_MAX_RETRIES = config('CACHE_MAX_RETRIES', cast=int, default=5)
 
 # set up GitHub data
+GITHUB_TOKEN = config('GITHUB_TOKEN')
+GITHUB_ISSUES_URL = config('GITHUB_ISSUES_URL')
+GITHUB_PROJECT_URL = config('GITHUB_PROJECT_URL')
 GITHUB_SHA = config('GITHUB_SHA', default="DEVELOPMENT")
 GITHUB_CODE_VERSION = config('GITHUB_CODE_VERSION', default="0.2.0")
+
+# Sendgrid email
+SENDGRID_API_KEY = config('SENDGRID_API_KEY')
