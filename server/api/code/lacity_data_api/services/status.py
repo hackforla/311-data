@@ -1,4 +1,4 @@
-from . import db, cache
+from ..models import db, cache
 
 
 async def get_last_updated():

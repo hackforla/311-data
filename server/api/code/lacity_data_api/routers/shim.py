@@ -1,15 +1,11 @@
-import datetime
-
 from fastapi import APIRouter, HTTPException
 
 from .api_models import (
-    Filter, StatusTypes, Feedback, Comparison
+    Filter, Feedback, Comparison
 )
 from ..models import (
-    clusters, request_type, service_request, status, council
+    clusters, request_type, service_request, council
 )
-from ..config import GITHUB_CODE_VERSION, GITHUB_SHA
-from .utilities import build_cache
 
 router = APIRouter()
 
@@ -17,48 +13,6 @@ router = APIRouter()
 These are new legacy-compatible router routes. They implement the existing API
 methods but get data from the new models using async database queries and cache.
 """
-
-
-@router.get("/status/reset-cache", include_in_schema=False)
-async def index():
-    await status.reset_cache()
-    await build_cache()
-    return {
-        "message": "Cache successfully reset"
-    }
-
-
-# TODO: separate into own file and add sys
-@router.get("/status/{status_type}",
-            description="Provides the status of backend systems")
-async def check_status_type(status_type: StatusTypes):
-    if status_type == StatusTypes.api:
-        return {
-            'currentTime': datetime.datetime.now(),
-            'gitSha': GITHUB_SHA,
-            'version': GITHUB_CODE_VERSION,
-            'lastPulled': await status.get_last_updated()
-        }
-
-    if status_type == StatusTypes.database:
-        return {
-            "postgres_version": await status.get_db_version(),
-            "alembic_version": await status.get_alembic_version(),
-            "last_updated": await status.get_last_updated(),
-            "request_types": await status.get_request_types_count(),
-            "regions": await status.get_regions_count(),
-            "councils": await status.get_councils_count(),
-            "service_requests": await status.get_service_requests_count(),
-            "requests": await status.get_requests_count()
-        }
-
-    if status_type == StatusTypes.cache:
-        await build_cache()
-
-        return {
-            "keys": await status.get_cache_keys(),
-            "info": await status.get_cache_info()
-        }
 
 
 # TODO: some clean up

@@ -7,7 +7,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from .config import API_LEGACY_MODE   # important to load config first
 from .models import db
 from .routers import (
-    index, legacy, councils, regions, request_types, service_requests, shim
+    index, legacy, councils, regions, request_types, service_requests, shim, status
 )
 
 
@@ -19,6 +19,7 @@ def get_app():
 
     db.init_app(app)
     app.include_router(index.router)
+    app.include_router(status.router, prefix="/status")
 
     if API_LEGACY_MODE:
         app.include_router(legacy.router)
