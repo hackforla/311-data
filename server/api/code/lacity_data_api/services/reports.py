@@ -185,7 +185,8 @@ async def ttc_comparison(startDate,
         query = db.text(f"""
             SELECT
                 {groupField},
-                (closeddate::date - createddate::date) as _daystoclose
+                cast (extract(days FROM (closeddate - createddate)) as double precision)
+                    as _daystoclose
             FROM
                 requests
             WHERE
@@ -206,7 +207,8 @@ async def ttc_comparison(startDate,
             df,
             plotField='_daystoclose',
             groupField=groupField,
-            groupFieldItems=items)
+            groupFieldItems=items
+        )
 
     set1data = await get_data(set1['district'], set1['list'], requestTypes)
     set2data = await get_data(set2['district'], set2['list'], requestTypes)
@@ -234,10 +236,10 @@ async def counts_comparison(startDate,
 
         if district == 'nc':
             filters['ncList'] = items
-            groupField = 'nc'
+            # groupField = 'nc'
         elif district == 'cc':
             filters['cdList'] = items
-            groupField = 'cd'
+            # groupField = 'cd'
 
         requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
 

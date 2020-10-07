@@ -34,8 +34,10 @@ services:
     ports:
       - target: ${APP_PORT}
         published: ${API_HOST_PORT}
-    volumes:
-      - ./api/:/home/api
+    # command: 
+    #   - gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:5000
+    # volumes:
+    #   - ./api/:/home/api
     depends_on:
       - db
       - redis

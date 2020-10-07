@@ -246,6 +246,57 @@ def test_compare_frequency(client):
     assert response.json()["set2"]
 
 
+def test_compare_total_requests(client):
+    # post old style filters (i.e. text request types)
+    url = "/comparison/frequency"
+    response = client.post(
+        url,
+        json={
+            "startDate": "01/01/2020",
+            "endDate": "01/02/2020",
+            "requestTypes": [
+                "Dead Animal Removal",
+                "Homeless Encampment",
+                "Bulky Items",
+                "Electronic Waste",
+                "Metal/Household Appliances"
+            ],
+            "chart": "requests",
+            "set1": {
+                "district": "nc",
+                "list": [
+                    32,
+                    34,
+                    119,
+                    29,
+                    33,
+                    30,
+                    58,
+                    60
+                ]
+            },
+            "set2": {
+                "district": "nc",
+                "list": [
+                    52,
+                    46,
+                    128,
+                    54,
+                    104,
+                    76,
+                    97,
+                    121,
+                    55
+                ]
+            }
+        }
+    )
+    assert response.status_code == 200
+    assert response.json()["bins"]
+    assert response.json()["set1"]
+    assert response.json()["set2"]
+
+
 def test_compare_timetoclose(client):
     # post old style filters (i.e. text request types)
     url = "/comparison/timetoclose"
@@ -261,7 +312,7 @@ def test_compare_timetoclose(client):
                 "Electronic Waste",
                 "Metal/Household Appliances"
             ],
-            "chart": "frequency",
+            "chart": "time",
             "set1": {
                 "district": "nc",
                 "list": [
@@ -311,7 +362,7 @@ def test_compare_counts(client):
                 "Electronic Waste",
                 "Metal/Household Appliances"
             ],
-            "chart": "frequency",
+            "chart": "contact",
             "set1": {
                 "district": "nc",
                 "list": [
