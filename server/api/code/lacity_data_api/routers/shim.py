@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from .api_models import (
+from ..models.schemas import (
     Filter, Feedback, Comparison
 )
 from ..models import (

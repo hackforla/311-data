@@ -2,14 +2,14 @@ import datetime
 
 from fastapi import APIRouter
 
-from .api_models import StatusTypes
+from ..models.schemas import StatusTypes
 from ..services import status, utilities
-from ..config import GITHUB_CODE_VERSION, GITHUB_SHA
+from ..config import GITHUB_CODE_VERSION, GITHUB_SHA, DEBUG
 
 router = APIRouter()
 
 
-@router.get("/reset-cache", include_in_schema=False)
+@router.get("/reset-cache", include_in_schema=True if DEBUG else False)
 async def index():
     await status.reset_cache()
     await utilities.build_cache()

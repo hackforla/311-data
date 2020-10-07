@@ -1,7 +1,7 @@
 import os
 
 from sqlalchemy.engine.url import URL, make_url
-from starlette.config import Config, environ
+from starlette.config import Config   # , environ
 from starlette.datastructures import Secret
 
 CONF_FILE = os.path.join(
@@ -51,14 +51,14 @@ DB_RETRY_LIMIT = config("DB_RETRY_LIMIT", cast=int, default=32)
 DB_RETRY_INTERVAL = config("DB_RETRY_INTERVAL", cast=int, default=1)
 
 # check whether running in legacy mode
-API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=True)
+# API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=True)
 
-# TODO: figure out how to remove dependency on DATABASE_URL from services
-# the legacy code needs these created as environment settings
-if True:
-    environ['DATABASE_URL'] = str(DB_DSN)
-    environ['TMP_DIR'] = config('TEMP_FOLDER', default="./__tmp__")
-    environ['PICKLECACHE_ENABLED'] = config('USE_FILE_CACHE', default="True")
+# # TODO: figure out how to remove dependency on DATABASE_URL from services
+# # the legacy code needs these created as environment settings
+# if True:
+#     environ['DATABASE_URL'] = str(DB_DSN)
+#     environ['TMP_DIR'] = config('TEMP_FOLDER', default="./__tmp__")
+#     environ['PICKLECACHE_ENABLED'] = config('USE_FILE_CACHE', default="True")
 
 # print out debug information
 if DEBUG:

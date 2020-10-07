@@ -1,29 +1,13 @@
-from typing import List
-
 from fastapi import APIRouter
-from pydantic import BaseModel
 
+from ..models.schemas import CouncilList
 from ..models.council import Council, get_open_request_counts
 from ..models import db
 
 router = APIRouter()
 
 
-class CouncilModel(BaseModel):
-    council_id: int
-    council_name: str
-    region_id: int
-    latitude: float
-    longitude: float
-
-    class Config:
-        orm_mode = True
-
-
-Items = List[CouncilModel]
-
-
-@router.get("/", response_model=Items)
+@router.get("/", response_model=CouncilList)
 async def get_all_councils():
     result = await db.all(Council.query)
     return result

@@ -4,28 +4,22 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from .config import API_LEGACY_MODE   # important to load config first
+from .config import DEBUG
 from .models import db
 from .routers import (
-    index, legacy, councils, regions, request_types, service_requests, shim, status
+    index, councils, regions, request_types, service_requests, shim, status
 )
-
 
 logger = logging.getLogger(__name__)
 
 
 def get_app():
-    app = FastAPI(title="LA City 311 Data API", debug=True)
+    app = FastAPI(title="LA City 311 Data API", debug=DEBUG)
 
     db.init_app(app)
     app.include_router(index.router)
     app.include_router(status.router, prefix="/status")
-
-    if API_LEGACY_MODE:
-        app.include_router(legacy.router)
-    else:
-        app.include_router(shim.router)
-
+    app.include_router(shim.router)
     app.include_router(councils.router, prefix="/councils")
     app.include_router(regions.router, prefix="/regions")
     app.include_router(request_types.router, prefix="/types")

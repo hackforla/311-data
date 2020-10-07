@@ -1,15 +1,10 @@
-import os
 
 """
-These are 'integration tests' of the legacy API endpoints.
+These are 'integration tests' of the shim API endpoints.
 
 These tests run on a live database and assume that data
 from the first 10K records of 2020 have been loaded.
 """
-
-
-def setup_function(function):
-    print(f"With test DB ({os.getenv('DATABASE_URL')}) setting up", function)
 
 
 def test_map_clusters(client):

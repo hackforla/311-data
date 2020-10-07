@@ -37,9 +37,16 @@ class Filter(BaseModel):
         return v
 
 
-class Pin(BaseModel):
+class ClassicPin(BaseModel):
     srnumber: str
     requesttype: str
+    latitude: float
+    longitude: float
+
+
+class Pin(BaseModel):
+    request_id: int
+    type_id: int
     latitude: float
     longitude: float
 
@@ -86,5 +93,52 @@ class StatusTypes(str, Enum):
     cache = "cache"
 
 
-Pins = List[Pin]
-Clusters = List[Cluster]
+class ServiceRequest(BaseModel):
+    request_id: int
+    council_id: int
+    type_id: int
+    created_date: datetime.date
+    closed_date: Optional[datetime.date]
+    address: str
+    latitude: float
+    longitude: float
+
+    class Config:
+        orm_mode = True
+
+
+class RequestType(BaseModel):
+    type_id: int
+    type_name: str
+
+    class Config:
+        orm_mode = True
+
+
+class Region(BaseModel):
+    region_id: int
+    region_name: str
+    latitude: float
+    longitude: float
+
+    class Config:
+        orm_mode = True
+
+
+class Council(BaseModel):
+    council_id: int
+    council_name: str
+    region_id: int
+    latitude: float
+    longitude: float
+
+    class Config:
+        orm_mode = True
+
+
+CouncilList = List[Council]
+RegionList = List[Region]
+RequestTypeList = List[RequestType]
+ServiceRequestList = List[ServiceRequest]
+ClusterList = List[Cluster]
+PinList = List[Pin]
