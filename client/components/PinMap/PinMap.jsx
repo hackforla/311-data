@@ -141,6 +141,7 @@ class PinMap extends Component {
       mouseover: this.highlightRegion,
       mouseout: this.resetRegionHighlight,
       click: this.zoomToRegion,
+      focus: this.zoomToRegion,
     });
   }
 
@@ -293,7 +294,10 @@ class PinMap extends Component {
           updateWhenIdle
           whenReady={e => {
             this.map = e.target;
+            // eslint-disable-next-line no-underscore-dangle
+            this.map._container.ariaLabel = 'Hello';
             this.updateZoomThreshold(e);
+            // this.map.setAttribute('aria-label', 'hello');
             // this.updatePosition(e);
           }}
           // onMoveend={this.updatePosition}
@@ -326,10 +330,7 @@ class PinMap extends Component {
         >
           <ZoomControl position="topright" />
           <ScaleControl position="bottomright" />
-          <LayersControl
-            position="bottomright"
-            collapsed={false}
-          >
+          <LayersControl position="bottomright" collapsed={false}>
             <BaseLayer checked name="Streets">
               <TileLayer
                 url={streetsLayerUrl}
@@ -353,59 +354,55 @@ class PinMap extends Component {
             </Overlay> */}
             <Overlay checked name="Markers">
               <LayerGroup id="pixi-dots-layer">
-                <DotsLayer
-                  markers={dotsVisible ? pins : []}
-                />
+                <DotsLayer markers={dotsVisible ? pins : []} />
               </LayerGroup>
             </Overlay>
-            {
-              (zoomThresholdMet === false && geoJSON)
-              && (
-                <Overlay checked name="Neighborhood Council Boundaries">
-                  <Choropleth
-                    data={geoJSON}
-                    style={{
-                      fillColor: 'transparent',
-                      weight: 2,
-                      color: boundaryDefaultColor,
-                      dashArray: '3',
-                    }}
-                    onEachFeature={this.onEachRegionFeatureMouseTooltip}
-                    ref={el => {
-                      if (el) {
-                        this.choropleth = el.leafletElement;
-                        return this.choropleth;
-                      }
-                      return null;
-                    }}
-                  />
-                </Overlay>
-              )
-            }
-            {
-              (zoomThresholdMet === true && geoJSON)
-              && (
-                <Overlay name="Neighborhood Council Boundaries">
-                  <Choropleth
-                    data={geoJSON}
-                    style={{
-                      fillColor: 'transparent',
-                      weight: 2,
-                      color: boundaryDefaultColor,
-                      dashArray: '3',
-                    }}
-                    onEachFeature={this.onEachRegionFeatureLabelTooltip}
-                    ref={el => {
-                      if (el) {
-                        this.choropleth = el.leafletElement;
-                        return this.choropleth;
-                      }
-                      return null;
-                    }}
-                  />
-                </Overlay>
-              )
-            }
+            {zoomThresholdMet === false && geoJSON && (
+              <Overlay checked name="Neighborhood Council Boundaries">
+                <Choropleth
+                  data={geoJSON}
+                  style={{
+                    fillColor: 'transparent',
+                    weight: 2,
+                    color: boundaryDefaultColor,
+                    dashArray: '3',
+                  }}
+                  onEachFeature={
+                    this.onEachRegionFeatureMouseTooltip
+                  }
+                  ref={el => {
+                    if (el) {
+                      this.choropleth = el.leafletElement;
+                      return this.choropleth;
+                    }
+                    return null;
+                  }}
+                />
+              </Overlay>
+            )}
+            {zoomThresholdMet === true && geoJSON && (
+              <Overlay name="Neighborhood Council Boundaries">
+                <Choropleth
+                  data={geoJSON}
+                  style={{
+                    fillColor: 'transparent',
+                    weight: 2,
+                    color: boundaryDefaultColor,
+                    dashArray: '3',
+                  }}
+                  onEachFeature={
+                    this.onEachRegionFeatureLabelTooltip
+                  }
+                  ref={el => {
+                    if (el) {
+                      this.choropleth = el.leafletElement;
+                      return this.choropleth;
+                    }
+                    return null;
+                  }}
+                />
+              </Overlay>
+            )}
             <Overlay name="Heatmap">
               <HeatmapLayer
                 max={1}
@@ -419,7 +416,10 @@ class PinMap extends Component {
             </Overlay>
           </LayersControl>
           <ExportLegend visible={markersVisible} position="bottomright" />
-          <HeatmapLegend visible={heatmapVisible} position="bottomright" />
+          <HeatmapLegend
+            visible={heatmapVisible}
+            position="bottomright"
+          />
           <PrintControl
             sizeModes={['Current']}
             hideControlContainer={false}
@@ -445,7 +445,7 @@ class PinMap extends Component {
   render() {
     const { ready } = this.state;
     return (
-      <div ref={this.container} className="map-container">
+      <div ref={this.container} className="map-container" >
         { ready ? this.renderMap() : null }
       </div>
     );
