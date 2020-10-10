@@ -59,18 +59,45 @@ class PinMap extends Component {
       heatmapVisible: false,
       zoomBreak: 14,
       zoomThresholdMet: false,
+      ariaStatement: '',
     };
     this.container = React.createRef();
   }
 
   componentDidMount() {
-    this.setDimensions();
+    const { filters } = this.props;
+    this.setDimensions(filters);
     this.setState({ ready: true });
     window.addEventListener('resize', this.setDimensions);
+    this.updateAriaStatement(filters)
+  }
+
+  componentDidUpdate(prevProps) {
+    const { filters } = this.props;
+    const { ariaStatement } = this.state;
+    if (filters !== prevProps.filters) {
+      this.updateAriaStatement(filters);
+      // eslint-disable-next-line no-underscore-dangle
+      this.map._container.ariaLabel = ariaStatement;
+
+    }
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.setDimensions);
+  }
+
+  updateAriaStatement = filters => {
+    const { requestTypes, dateRange } = filters;
+    const { pins } = this.props;
+    let requests = '';
+    Object.keys(requestTypes).forEach(key => {
+      if (requestTypes[key] === true) {
+        requests += key;
+      }
+    });
+    this.setState({ ariaStatement: `Map displaying ${pins.length} ${requests} 311 requests for ${dateRange || 'no date range'}` });
+    // eslint-disable-next-line no-underscore-dangle
   }
 
   setDimensions = () => {
@@ -272,6 +299,7 @@ class PinMap extends Component {
       markersVisible,
       dotsVisible,
       zoomThresholdMet,
+      ariaStatement,
     } = this.state;
 
     const { heatmap, pins } = this.props;
@@ -295,9 +323,8 @@ class PinMap extends Component {
           whenReady={e => {
             this.map = e.target;
             // eslint-disable-next-line no-underscore-dangle
-            this.map._container.ariaLabel = 'Hello';
+            this.map._container.ariaLabel = ariaStatement;
             this.updateZoomThreshold(e);
-            // this.map.setAttribute('aria-label', 'hello');
             // this.updatePosition(e);
           }}
           // onMoveend={this.updatePosition}
@@ -445,7 +472,7 @@ class PinMap extends Component {
   render() {
     const { ready } = this.state;
     return (
-      <div ref={this.container} className="map-container" >
+      <div ref={this.container} className="map-container">
         { ready ? this.renderMap() : null }
       </div>
     );
@@ -459,16 +486,20 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
+  filters: state.filters,
   pinsInfo: state.data.pinsInfo,
   pins: state.data.pins,
   heatmap: state.data.heatmap,
+  metadata: state.metadata,
   // pinClusters: state.data.pinClusters,
 });
 
 PinMap.propTypes = {
+  filters: PropTypes.shape({}),
   pinsInfo: PropTypes.shape({}),
   pins: PropTypes.arrayOf(PropTypes.shape({})),
   heatmap: PropTypes.arrayOf(PropTypes.array),
+  metadata: PropTypes.shape({}),
   exportMap: PropTypes.func.isRequired,
   // These are for the disabled MarkerClusterGroup
   // getPinInfo: PropTypes.func.isRequired,
@@ -477,10 +508,12 @@ PinMap.propTypes = {
 };
 
 PinMap.defaultProps = {
+  filters: {},
   pinsInfo: {},
   pins: [],
   // pinClusters: [],
   heatmap: [],
+  metadata: {},
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PinMap);
