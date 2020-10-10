@@ -69,7 +69,7 @@ class PinMap extends Component {
     this.setDimensions(filters);
     this.setState({ ready: true });
     window.addEventListener('resize', this.setDimensions);
-    this.updateAriaStatement(filters)
+    this.updateAriaStatement(filters);
   }
 
   componentDidUpdate(prevProps) {
@@ -79,7 +79,6 @@ class PinMap extends Component {
       this.updateAriaStatement(filters);
       // eslint-disable-next-line no-underscore-dangle
       this.map._container.ariaLabel = ariaStatement;
-
     }
   }
 
@@ -91,12 +90,17 @@ class PinMap extends Component {
     const { requestTypes, dateRange } = filters;
     const { pins } = this.props;
     let requests = '';
+    const pinLength = pins.length;
     Object.keys(requestTypes).forEach(key => {
       if (requestTypes[key] === true) {
-        requests += key;
+        if (requests === '') {
+          requests += key;
+        } else {
+          requests += `, ${key}`;
+        }
       }
     });
-    this.setState({ ariaStatement: `Map displaying ${pins.length} ${requests} 311 requests for ${dateRange || 'no date range'}` });
+    this.setState({ ariaStatement: `Map displaying ${pinLength} ${requests} 311 requests for ${dateRange || 'no date range'}` });
     // eslint-disable-next-line no-underscore-dangle
   }
 
