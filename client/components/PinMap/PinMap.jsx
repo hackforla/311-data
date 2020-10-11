@@ -86,22 +86,73 @@ class PinMap extends Component {
     window.removeEventListener('resize', this.setDimensions);
   }
 
-  updateAriaStatement = filters => {
-    const { requestTypes, dateRange } = filters;
-    const { pins } = this.props;
+  updateRequestString = (requestTypes, pins) => {
     let requests = '';
-    const pinLength = pins.length;
+    if (pins.length === 0) {
+      return requests;
+    }
+
     Object.keys(requestTypes).forEach(key => {
       if (requestTypes[key] === true) {
         if (requests === '') {
-          requests += key;
+          requests += ` ${key}`;
         } else {
           requests += `, ${key}`;
         }
       }
     });
-    this.setState({ ariaStatement: `Map displaying ${pinLength} ${requests} 311 requests for ${dateRange || 'no date range'}` });
-    // eslint-disable-next-line no-underscore-dangle
+
+    return requests;
+  }
+
+  updateCouncilString = councils => {
+    let neighborhoodCouncil = '';
+
+    councils.forEach(council => {
+      // eslint-disable-next-line no-unused-expressions
+      (neighborhoodCouncil === '')
+        ? neighborhoodCouncil = ` in ${council} neighborhood council`
+        : neighborhoodCouncil += `, ${council} neighborhood council`;
+    });
+
+    return neighborhoodCouncil;
+  }
+
+  updateRequestBreakdown = pins => {
+    let requestsBreakdown = '';
+    const pinsPerRequestType = {};
+    if (pins.length === 0) {
+      return requestsBreakdown;
+    }
+
+    pins.forEach(pin => {
+      const request = pin.requesttype;
+      // eslint-disable-next-line no-unused-expressions
+      Object.prototype.hasOwnProperty.call(pinsPerRequestType, request)
+        ? pinsPerRequestType[request] += 1
+        : pinsPerRequestType[request] = 1;
+    });
+
+    Object.keys(pinsPerRequestType).forEach(key => {
+      // eslint-disable-next-line no-unused-expressions
+      (requestsBreakdown === '')
+        ? requestsBreakdown = ` There were ${pinsPerRequestType[key]} ${key} requests`
+        : requestsBreakdown += `, ${pinsPerRequestType[key]} ${key} requests`;
+    });
+
+    return requestsBreakdown;
+  }
+
+  updateAriaStatement = filters => {
+    const { requestTypes, dateRange, councils } = filters;
+    const { pins } = this.props;
+    const pinLength = pins.length;
+    const requests = this.updateRequestString(requestTypes, pins);
+    const requestsBreakdown = this.updateRequestBreakdown(pins);
+    const neighborhoodCouncil = this.updateCouncilString(councils);
+    this.setState({
+      ariaStatement: `Map displaying ${pinLength}${requests} 311 requests for ${dateRange || 'no date range'}${neighborhoodCouncil}.${requestsBreakdown}`,
+    });
   }
 
   setDimensions = () => {
