@@ -42,6 +42,32 @@ const TotalRequestsComparison = ({
       getDataSet('set2'),
     ],
   };
+  const generateAriaLabelString = () => {
+    const { labels, datasets } = chartData;
+    const setOneData = datasets[0].data;
+    const setTwoData = datasets[1].data;
+    const dataLabels = labels;
+    let ariaLabel = '';
+    let count = 0;
+
+    if (dataLabels.length === 0) {
+      return ariaLabel;
+    }
+
+    while (count < dataLabels.length) {
+      if (ariaLabel === '') {
+        ariaLabel = (
+        `This table displays datasets comparing total requests of selected request types for ${datasets[0].label} and ${datasets[1].label}. Starting ${dataLabels[count]}, there were ${setOneData[count]} for ${datasets[0].label} and ${setTwoData[count]} for ${datasets[1].label}.`
+        );
+      } else {
+        ariaLabel += ` Starting ${dataLabels[count]}, there were ${setOneData[count]} for ${datasets[0].label} and ${setTwoData[count]} for ${datasets[1].label}.`;
+      }
+      count += 1;
+    }
+
+    return ariaLabel;
+  };
+  const ariaLabelString = generateAriaLabelString();
 
   /* /// EXPORT /// */
 
@@ -103,6 +129,7 @@ const TotalRequestsComparison = ({
       data={chartData}
       options={chartOptions}
       exportButton={exportButton}
+      ariaLabelString={ariaLabelString}
     />
   );
 };
