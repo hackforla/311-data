@@ -69,13 +69,12 @@ class PinMap extends Component {
     this.setDimensions(filters);
     this.setState({ ready: true });
     window.addEventListener('resize', this.setDimensions);
-    this.updateAriaStatement(filters);
   }
 
   componentDidUpdate(prevProps) {
     const { filters } = this.props;
     const { ariaStatement } = this.state;
-    if (filters !== prevProps.filters) {
+    if (prevProps !== this.props) {
       this.updateAriaStatement(filters);
       // eslint-disable-next-line no-underscore-dangle
       this.map._container.ariaLabel = ariaStatement;
@@ -86,11 +85,8 @@ class PinMap extends Component {
     window.removeEventListener('resize', this.setDimensions);
   }
 
-  updateRequestString = (requestTypes, pins) => {
+  updateRequestString = requestTypes => {
     let requests = '';
-    if (pins.length === 0) {
-      return requests;
-    }
 
     Object.keys(requestTypes).forEach(key => {
       if (requestTypes[key] === true) {
@@ -121,9 +117,6 @@ class PinMap extends Component {
   updateRequestBreakdown = pins => {
     let requestsBreakdown = '';
     const pinsPerRequestType = {};
-    if (pins.length === 0) {
-      return requestsBreakdown;
-    }
 
     pins.forEach(pin => {
       const request = pin.requesttype;
@@ -147,7 +140,7 @@ class PinMap extends Component {
     const { requestTypes, dateRange, councils } = filters;
     const { pins } = this.props;
     const pinLength = pins.length;
-    const requests = this.updateRequestString(requestTypes, pins);
+    const requests = this.updateRequestString(requestTypes);
     const requestsBreakdown = this.updateRequestBreakdown(pins);
     const neighborhoodCouncil = this.updateCouncilString(councils);
     this.setState({
