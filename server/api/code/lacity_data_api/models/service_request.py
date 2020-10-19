@@ -5,6 +5,7 @@ from aiocache import cached, Cache, serializers
 from sqlalchemy import and_
 
 from . import db
+from .request_type import RequestType
 from ..config import CACHE_ENDPOINT
 
 
@@ -65,6 +66,34 @@ async def get_filtered_requests(
                 ServiceRequest.type_id.in_(type_ids),
                 ServiceRequest.council_id.in_(council_ids)
             )
+        ).gino.all()
+    )
+    return result
+
+
+@cached(cache=Cache.REDIS,
+        endpoint=CACHE_ENDPOINT,
+        namespace="open",
+        serializer=serializers.PickleSerializer(),
+        )
+async def get_open_request_counts():
+
+    result = await (
+        db.select(
+            [
+                ServiceRequest.type_id,
+                RequestType.type_name,
+                db.func.count().label("type_count")
+            ]
+        ).select_from(
+            ServiceRequest.join(RequestType)
+        ).where(
+            and_(
+                ServiceRequest.closed_date == None,  # noqa
+            )
+        ).group_by(
+            ServiceRequest.type_id,
+            RequestType.type_name
         ).gino.all()
     )
     return result

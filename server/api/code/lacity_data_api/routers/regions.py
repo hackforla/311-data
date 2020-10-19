@@ -2,14 +2,13 @@ from fastapi import APIRouter
 
 from ..models.schemas import RegionList
 from ..models.region import Region
-from ..models import db
 
 router = APIRouter()
 
 
 @router.get("/", response_model=RegionList)
 async def get_all_regions():
-    result = await db.all(Region.query)
+    result = await Region.query.gino.all()
     return result
 
 

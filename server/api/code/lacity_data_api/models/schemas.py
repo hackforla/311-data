@@ -6,6 +6,13 @@ from pydantic import BaseModel, validator
 from pydantic.dataclasses import dataclass
 
 
+class Filters(BaseModel):
+    startDate: datetime.date
+    endDate: datetime.date
+    ncList: List[int]
+    requestTypes: List[int]
+
+
 class Bounds(BaseModel):
     north: float
     south: float
@@ -47,6 +54,11 @@ class ClassicPin(BaseModel):
 class Pin(BaseModel):
     request_id: int
     type_id: int
+    latitude: float
+    longitude: float
+
+
+class Point(BaseModel):
     latitude: float
     longitude: float
 
@@ -142,3 +154,4 @@ RequestTypeList = List[RequestType]
 ServiceRequestList = List[ServiceRequest]
 ClusterList = List[Cluster]
 PinList = List[Pin]
+PointList = List[Point]
