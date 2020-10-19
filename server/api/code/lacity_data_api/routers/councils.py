@@ -18,6 +18,7 @@ async def get_council(id: int):
     return result.to_dict()
 
 
+# TODO: add test
 @router.get("/{id}/open/counts/types")
 async def get_council_open_requests(id: int):
     result = await get_open_request_counts(id)
