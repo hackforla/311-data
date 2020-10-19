@@ -81,3 +81,6 @@ GITHUB_CODE_VERSION = config('GITHUB_CODE_VERSION', default="0.2.0")
 
 # Sendgrid email
 SENDGRID_API_KEY = config('SENDGRID_API_KEY')
+
+# Sentry URL
+SENTRY_URL = config('SENTRY_URL')
