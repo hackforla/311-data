@@ -1,4 +1,6 @@
 
+from lacity_data_api.services import github, email
+
 """
 These are 'integration tests' of the shim API endpoints.
 
@@ -390,3 +392,34 @@ def test_compare_counts(client):
     assert response.status_code == 200
     assert response.json()["set1"]
     assert response.json()["set2"]
+
+
+def test_feedback(client, monkeypatch):
+    # monkeypatching creating issue, adding to project, and sending email
+    async def mock_create_issue(title, body):
+        print(f"Mock 'create_issue' called with '{title}' and '{body}'")
+        return 1, 2
+
+    async def mock_add_issue_to_project(id):
+        print(f"Mock 'add_issue_to_project' called with '{id}'")
+        return 200
+
+    async def mock_respond_to_feedback(feedback, number):
+        print(f"Mock 'respond_to_feedback' called with '{feedback}' and '{number}'")
+        return "message sent"
+
+    monkeypatch.setattr(github, 'create_issue', mock_create_issue)
+    monkeypatch.setattr(github, 'add_issue_to_project', mock_add_issue_to_project)
+    monkeypatch.setattr(email, 'respond_to_feedback', mock_respond_to_feedback)
+
+    url = "/feedback"
+    response = client.post(
+        url,
+        json={
+            "title": "Test Feedback Title",
+            "body": "Test Feedback Body"
+        }
+    )
+
+    assert response.status_code == 201
+    assert response.json()["success"] is True

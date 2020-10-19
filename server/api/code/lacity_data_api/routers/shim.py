@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from ..models.schemas import (
     Filter, Feedback, Comparison
@@ -142,8 +142,8 @@ async def get_comparison_counts(comp_filter: Comparison):
     return result
 
 
-@router.post("/feedback")
-async def get_feedback(feedback: Feedback):
+@router.post("/feedback", status_code=status.HTTP_201_CREATED)
+async def send_feedback(feedback: Feedback):
 
     id, number = await github.create_issue(feedback.title, feedback.body)
     await github.add_issue_to_project(id)
