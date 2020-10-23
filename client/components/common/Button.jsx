@@ -5,6 +5,7 @@ import classNames from 'classnames';
 const Button = ({
   id,
   label,
+  ariaLabel,
   handleClick,
   className,
   /*
@@ -55,6 +56,7 @@ const Button = ({
       disabled={disabled}
       className={buttonClassName}
       style={style}
+      aria-label={ariaLabel}
     >
       {icon && (
         <span className="icon is-small" style={iconStyle}>
@@ -73,6 +75,7 @@ export default Button;
 Button.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
+  ariaLabel: PropTypes.string,
   handleClick: PropTypes.func,
   className: PropTypes.string,
   color: PropTypes.string,
@@ -95,6 +98,7 @@ Button.propTypes = {
 
 Button.defaultProps = {
   label: null,
+  ariaLabel: null,
   handleClick: () => null,
   className: undefined,
   color: 'primary',

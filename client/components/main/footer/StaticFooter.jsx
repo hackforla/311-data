@@ -15,6 +15,7 @@ const StaticFooter = () => (
       Powered by volunteers from&nbsp;
       <a
         href="https://www.hackforla.org/#projects"
+        aria-label="hack for la website"
         className="has-text-weight-bold"
         rel="external noopener noreferrer"
         target="_blank"
