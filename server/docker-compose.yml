@@ -34,13 +34,20 @@ services:
     ports:
       - target: ${APP_PORT}
         published: ${API_HOST_PORT}
-    # command: 
-    #   - gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:5000
+    command: gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker --log-level info -b 0.0.0.0:5000
     # volumes:
     #   - ./api/:/home/api
     depends_on:
       - db
       - redis
+
+  prefect:
+    container_name: 311-prefect
+    build: ./prefect
+    environment: 
+      PREFECT__CONTEXT__SECRETS__DSN: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
+    depends_on:
+      - db
 
 volumes:
   backend_data:

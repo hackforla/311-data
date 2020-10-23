@@ -1,21 +1,21 @@
-name: Daily_Backend_Update
+name: Daily_Backend_Update_Dev
 
 on:
   schedule:
-    - cron: '10 7 * * *'
+    - cron: '0 7 * * *'
 
 jobs:
-  prod_update:
+  dev_update:
     runs-on: ubuntu-latest
     steps:
-      - name: run update script on AWS prod
+      - name: run update script on AWS dev
         uses: appleboy/ssh-action@master
         with:
           username: ec2-user
-          host: ${{ secrets.AWS_SSH_HOST_PROD }}
+          host: ${{ secrets.AWS_SSH_HOST_DEV }}
           key: ${{ secrets.AWS_SSH_PEM_KEY }}
           command_timeout: 60m
           script: |
             set -e
             cd 311-data/server
-            docker-compose run --rm api python bin/db_update.py
+            docker-compose run --rm prefect python flow.py
