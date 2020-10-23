@@ -1,4 +1,4 @@
-name: Daily_Backend_Update
+name: Daily_Backend_Update_Prod
 
 on:
   schedule:

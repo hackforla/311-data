@@ -50,46 +50,6 @@ REQUESTS_VIEW = """
         CREATE INDEX ON service_requests(region_id);
     """
 
-MAP_VIEW = """
-        CREATE MATERIALIZED VIEW map AS (
-            SELECT
-                srnumber,
-                createddate,
-                requesttype,
-                nc,
-                latitude,
-                longitude
-            FROM requests
-            WHERE
-                latitude IS NOT NULL AND
-                longitude IS NOT NULL
-        ) WITH DATA;
-
-        CREATE UNIQUE INDEX ON map(srnumber);
-        CREATE INDEX ON map(nc);
-        CREATE INDEX ON map(requesttype);
-        CREATE INDEX ON map(createddate);
-    """
-
-VIS_VIEW = """
-        CREATE MATERIALIZED VIEW vis AS (
-            SELECT
-                srnumber,
-                createddate,
-                requesttype,
-                nc,
-                cd,
-                requestsource,
-                _daystoclose
-            FROM requests
-        ) WITH DATA;
-
-        CREATE UNIQUE INDEX ON vis(srnumber);
-        CREATE INDEX ON vis(nc);
-        CREATE INDEX ON vis(cd);
-        CREATE INDEX ON vis(requesttype);
-        CREATE INDEX ON vis(createddate);
-    """
 
 def upgrade():
 
@@ -105,14 +65,10 @@ def upgrade():
         op.bulk_insert(request_types_table, list(csv.DictReader(f)))
 
     op.execute(REQUESTS_VIEW)
-    op.execute(MAP_VIEW)
-    op.execute(VIS_VIEW)
 
 
 def downgrade():
 
-    op.execute("DROP MATERIALIZED VIEW map")
-    op.execute("DROP MATERIALIZED VIEW vis")
     op.execute("DROP MATERIALIZED VIEW service_requests")
     
     op.drop_table('request_types')

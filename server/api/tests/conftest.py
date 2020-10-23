@@ -13,7 +13,6 @@ from os.path import join, dirname
 
 # manually adding python paths due to VS code bug
 sys.path.append(join(dirname(__file__), '../code'))
-sys.path.append(join(dirname(__file__), '../src'))
 
 # set env setting to ensure _test DB is used by pytests
 os.environ["TESTING"] = "True"
