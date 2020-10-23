@@ -60,20 +60,6 @@ async def test_service_requests(db):
 
 
 @pytest.mark.asyncio
-async def test_map_view(db):
-    query = db.text("SELECT count(*) FROM map")
-    result = await db.scalar(query)
-    assert result == 9989
-
-
-@pytest.mark.asyncio
-async def test_vis_view(db):
-    query = db.text("SELECT count(*) FROM vis")
-    result = await db.scalar(query)
-    assert result == 10000
-
-
-@pytest.mark.asyncio
 async def test_requests(db):
     query = db.text("SELECT count(*) FROM requests")
     result = await db.scalar(query)
