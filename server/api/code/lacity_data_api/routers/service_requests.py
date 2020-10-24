@@ -21,7 +21,6 @@ async def get_all_service_requests(skip: int = 0, limit: int = 100):
     return result
 
 
-# TODO: add test
 @router.get("/open", response_model=ServiceRequestList)
 async def get_open_service_requests():
     result = await ServiceRequest.query.where(
@@ -30,14 +29,12 @@ async def get_open_service_requests():
     return result
 
 
-# TODO: add test
 @router.get("/open/counts/types")
 async def get_open_counts_by_type():
     result = await get_open_request_counts()
     return result
 
 
-# TODO: add test
 @router.post("/pins", response_model=ServiceRequestList)
 async def get_service_request_pins(filters: Filters):
     result = await ServiceRequest.query.where(
@@ -51,7 +48,6 @@ async def get_service_request_pins(filters: Filters):
     return result
 
 
-# TODO: add test
 @router.post("/points")  # , response_model=PointList)
 async def get_service_request_points(filters: Filters):
     result = await ServiceRequest.select(
