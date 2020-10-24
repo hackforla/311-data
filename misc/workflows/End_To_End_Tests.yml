@@ -1,3 +1,8 @@
+
+# DISABLED UNTIL: (1) we get more test coverage, and
+# (2) the tests run against the code that's being pushed
+# instead of the code already on dev
+
 name: End-to-end tests
 on: [push]
 jobs:
