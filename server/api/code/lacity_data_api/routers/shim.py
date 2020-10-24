@@ -110,7 +110,18 @@ async def get_pins(filter: Filter):
         type_ids,
         filter.ncList
     )
-    return result
+
+    requests_list = []
+    types_dict = await request_type.get_types_dict()
+    for i in result:
+        requests_list.append({
+            'srnumber': f"1-{i.request_id}",
+            'requesttype': types_dict.get(i.type_id),
+            'latitude': i.latitude,
+            'longitude': i.longitude
+        })
+
+    return requests_list
 
 
 @router.post("/visualizations")

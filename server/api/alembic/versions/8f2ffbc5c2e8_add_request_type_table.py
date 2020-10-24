@@ -25,7 +25,7 @@ depends_on = None
 
 REQUESTS_VIEW = """
         CREATE MATERIALIZED VIEW service_requests AS
-        SELECT right(requests.srnumber::VARCHAR(12), -2)::INTEGER as request_id,
+        SELECT right(requests.srnumber::VARCHAR(12), -2)::BIGINT as request_id,
             requests.createddate::DATE as created_date,
             requests.closeddate::DATE as closed_date,
             request_types.type_id as type_id,
