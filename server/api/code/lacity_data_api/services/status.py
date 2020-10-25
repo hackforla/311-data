@@ -64,3 +64,9 @@ async def reset_cache():
     # config set maxmemory-policy allkeys-lru
     # used memory peak: 286 390 120
     return
+
+
+async def get_recent_log():
+    query = db.text("SELECT * FROM log ORDER BY created_time DESC LIMIT 10")
+    result = await db.all(query)
+    return result

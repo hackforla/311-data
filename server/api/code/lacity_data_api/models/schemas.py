@@ -101,8 +101,8 @@ class Feedback(BaseModel):
 class StatusTypes(str, Enum):
     api = "api"
     database = "db"
-    system = "sys"
     cache = "cache"
+    log = "log"
 
 
 class ServiceRequest(BaseModel):

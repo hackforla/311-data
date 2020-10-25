@@ -14,6 +14,7 @@ import csv
 from alembic import op
 from sqlalchemy import Column
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.sql.functions import now
 
 SEED_FILE = join(dirname(dirname(__file__)), 'seeds/requests.csv')
 
@@ -57,7 +58,7 @@ def upgrade():
         Column('id', postgresql.INTEGER, autoincrement=True, primary_key=True),
         Column('status', postgresql.VARCHAR, nullable=False, server_default='INFO'),
         Column('message', postgresql.TEXT, nullable=True),
-        Column('created_time', postgresql.TIMESTAMP, nullable=False, server_default=str('NOW()'))
+        Column('created_time', postgresql.TIMESTAMP, nullable=False, server_default=now())
     )
 
     # seed the database during testing

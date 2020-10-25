@@ -33,14 +33,13 @@ def download_dataset(
     mode = prefect.config.mode
     offset = 0
 
-    # use config setting if not pulled from database
-    if since is None:
-        since = datetime.strptime(prefect.config.data.since, '%Y-%m-%dT%H:%M:%S')
-
     if mode == "full":
         where = None
         output_file = f"output/{dataset}-{mode}.csv"
     else:
+        # use config setting if not pulled from database
+        if since is None:
+            since = datetime.strptime(prefect.config.data.since, '%Y-%m-%dT%H:%M:%S')
         where = None if since is None else f"updateddate > '{since.isoformat()}'"
         output_file = f"output/{dataset}-{mode}-{prefect.context.today}.csv"
 
