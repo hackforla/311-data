@@ -29,7 +29,7 @@ async def test_alembic_version(db):
 
 @pytest.mark.asyncio
 async def test_last_updated(db):
-    query = db.text("SELECT last_pulled FROM metadata")
+    query = db.text("SELECT max(created_time) as last_pulled FROM log WHERE status = 'INFO'")  # noqa
     result = await db.first(query)
     assert result[0].replace(tzinfo=None) > datetime.strptime("2020-01-01", '%Y-%m-%d')
 

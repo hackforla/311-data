@@ -2,7 +2,7 @@ from ..models import db, cache
 
 
 async def get_last_updated():
-    query = db.text("SELECT last_pulled FROM metadata")
+    query = db.text("SELECT max(created_time) as last_pulled FROM log WHERE status = 'INFO'")  # noqa
     result = await db.first(query)
     return result.last_pulled.replace(tzinfo=None)
 
