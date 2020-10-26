@@ -8,17 +8,15 @@ jobs:
   dev_update:
     runs-on: ubuntu-latest
     steps:
-      - name: run update script on AWS dev
+      - name: run update script on DEV environment
         uses: appleboy/ssh-action@master
         env:
-          PREFECT__CONTEXT__SECRETS__SLACK_HOOK: ${{ secrets.SLACK_HOOK }}
+          PREFECT__CONTEXT__SECRETS__SLACK_HOOK: ${{ secrets.SLACK_HOOK_DEV }}
         with:
           username: ec2-user
           host: ${{ secrets.AWS_SSH_HOST_DEV }}
           key: ${{ secrets.AWS_SSH_PEM_KEY }}
-          command_timeout: 60m
           envs: PREFECT__CONTEXT__SECRETS__SLACK_HOOK
           script: |
-            set -e
             cd 311-data/server
             docker-compose run -e PREFECT__CONTEXT__SECRETS__SLACK_HOOK prefect python flow.py
