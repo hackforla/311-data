@@ -13,6 +13,7 @@ class ServiceRequest(db.Model):
     __tablename__ = 'service_requests'
 
     request_id = db.Column(db.Integer, primary_key=True)
+    srnumber = db.Column(db.String, unique=True)
     created_date = db.Column(db.Date)
     closed_date = db.Column(db.Date)
     type_id = db.Column(db.SmallInteger, db.ForeignKey('request_types.type_id'))
@@ -55,6 +56,7 @@ async def get_filtered_requests(
         db.select(
             [
                 ServiceRequest.request_id,
+                ServiceRequest.srnumber,
                 ServiceRequest.type_id,
                 ServiceRequest.latitude,
                 ServiceRequest.longitude

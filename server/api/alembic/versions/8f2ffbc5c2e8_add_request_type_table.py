@@ -25,7 +25,9 @@ depends_on = None
 
 REQUESTS_VIEW = """
         CREATE MATERIALIZED VIEW service_requests AS
-        SELECT right(requests.srnumber::VARCHAR(12), -2)::BIGINT as request_id,
+        SELECT 
+            requests.id as request_id,
+            requests.srnumber::VARCHAR(12) as srnumber,
             requests.createddate::DATE as created_date,
             requests.closeddate::DATE as closed_date,
             request_types.type_id as type_id,
@@ -34,7 +36,8 @@ REQUESTS_VIEW = """
             requests.address::VARCHAR(100),
             requests.latitude,
             requests.longitude
-        FROM requests, request_types, councils
+        FROM 
+            requests, request_types, councils
         WHERE
             requests.nc IS NOT NULL
             AND requests.latitude IS NOT NULL
@@ -44,6 +47,7 @@ REQUESTS_VIEW = """
             ;
 
         CREATE UNIQUE INDEX ON service_requests(request_id);
+        CREATE UNIQUE INDEX ON service_requests(srnumber);
         CREATE INDEX ON service_requests(created_date);
         CREATE INDEX ON service_requests(type_id);
         CREATE INDEX ON service_requests(council_id);

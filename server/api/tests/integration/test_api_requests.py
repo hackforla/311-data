@@ -7,9 +7,10 @@ def test_service_requests(client):
 
 
 def test_service_request(client):
-    url = "/requests/1523590121"
+    url = "/requests/1"
     response = client.get(url)
     assert response.status_code == 200
+    assert response.json()["srnumber"] == "1-1523590121"
     assert response.json()["created_date"] == "2020-01-01"
     assert response.json()["closed_date"] == "2020-01-02"
     assert response.json()["type_id"] == 7

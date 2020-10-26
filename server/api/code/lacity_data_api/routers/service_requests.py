@@ -65,10 +65,7 @@ async def get_service_request_points(filters: Filters):
     return [[row.latitude, row.longitude] for row in result]
 
 
-@router.get("/{id}", description="""
-    The service request ID is the integer created from the srnumber
-    when the initial "1-" is removed.
-    """)
+@router.get("/{id}")
 async def get_service_request(id: int):
     result = await ServiceRequest.get_or_404(id)
     return result.to_dict()
