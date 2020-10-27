@@ -30,10 +30,18 @@ class ServiceRequest(db.Model):
         serializer=serializers.PickleSerializer(),
         )
 async def get_open_requests() -> List[ServiceRequest]:
-    result = await db.all(
-        ServiceRequest.query.where(
+    result = await (
+        db.select(
+            [
+                ServiceRequest.request_id,
+                ServiceRequest.srnumber,
+                ServiceRequest.type_id,
+                ServiceRequest.latitude,
+                ServiceRequest.longitude
+            ]
+        ).where(
             ServiceRequest.closed_date == None  # noqa
-        )
+        ).gino.all()
     )
     return result
 

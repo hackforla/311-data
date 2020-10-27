@@ -63,7 +63,7 @@ async def reset_cache():
     # config set maxmemory 1000mb
     # config set maxmemory-policy allkeys-lru
     # used memory peak: 286 390 120
-    return
+    return True
 
 
 async def get_recent_log():

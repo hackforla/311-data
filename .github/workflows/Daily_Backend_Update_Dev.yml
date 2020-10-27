@@ -20,3 +20,7 @@ jobs:
           script: |
             cd 311-data/server
             docker-compose run -e PREFECT__CONTEXT__SECRETS__SLACK_HOOK prefect python flow.py
+      - name: clear API cache with curl
+        uses: wei/curl@v1
+        with:
+          args: -X POST ${{ secrets.API_URL_DEV }}/status/reset-cache

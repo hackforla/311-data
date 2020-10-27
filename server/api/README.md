@@ -85,3 +85,12 @@ sudo du -sh *
 # show the size of a drive mounted at xvda1 (EC2)
 df -hT /dev/xvda1
 ```
+
+Some helpful Redis commands
+
+```bash
+redis-cli
+keys *
+mget <key>
+MEMORY USAGE <key>
+```

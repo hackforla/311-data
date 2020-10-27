@@ -2,9 +2,11 @@ from sqlalchemy import sql
 from fastapi import APIRouter
 
 from ..models.schemas import (
-    ServiceRequestList, Filters
+    ServiceRequestList, Filters, PinList
 )
-from ..models.service_request import ServiceRequest, get_open_request_counts
+from ..models.service_request import (
+    ServiceRequest, get_open_request_counts, get_open_requests
+)
 from ..models import db
 
 router = APIRouter()
@@ -21,16 +23,14 @@ async def get_all_service_requests(skip: int = 0, limit: int = 100):
     return result
 
 
-@router.get("/open", response_model=ServiceRequestList)
+@router.get("/open", response_model=PinList)
 async def get_open_service_requests():
-    result = await ServiceRequest.query.where(
-        ServiceRequest.closed_date == None  # noqa
-    ).gino.all()
+    result = await get_open_requests()
     return result
 
 
 @router.get("/open/counts/types")
-async def get_open_counts_by_type():
+async def get_open_request_counts_by_type():
     result = await get_open_request_counts()
     return result
 
@@ -69,16 +69,3 @@ async def get_service_request_points(filters: Filters):
 async def get_service_request(id: int):
     result = await ServiceRequest.get_or_404(id)
     return result.to_dict()
-
-
-# # TODO: implement conditional cluster logic based on zoom
-# @router.post("/clusters", response_model=ClusterList)
-# async def get_service_request_clusters(filter: Filter):
-
-#     result = await clusters.get_clusters_for_city(
-#         filter.startDate,
-#         filter.endDate,
-#         filter.requestTypes
-#     )
-
-#     return result

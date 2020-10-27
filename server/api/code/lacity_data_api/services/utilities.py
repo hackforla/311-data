@@ -1,18 +1,24 @@
 import json
 import hashlib
 
-from ..models import request_type, council, region
+from ..models import (
+    request_type, council, region, service_request
+)
 
 
 async def build_cache():
-    types = await request_type.get_types_dict()
-    councils = await council.get_councils_dict()
+    open_requests = await service_request.get_open_requests()
+    open_requests_counts = await service_request.get_open_request_counts()
     regions = await region.get_regions_dict()
+    councils = await council.get_councils_dict()
+    types = await request_type.get_types_dict()
 
     return {
-        "types": types,
-        "councils": councils,
-        "regions": regions
+        "open_requests": len(open_requests),
+        "open_requests_counts": len(open_requests_counts),
+        "types": len(types),
+        "councils": len(councils),
+        "regions": len(regions)
     }
 
 

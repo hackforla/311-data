@@ -8,5 +8,5 @@ disabling cache altogether for tests.
 
 def test_cache_reset(client):
     url = "/status/reset-cache"
-    response = client.get(url)
+    response = client.post(url)
     assert response.status_code == 200

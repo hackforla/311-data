@@ -107,6 +107,7 @@ class StatusTypes(str, Enum):
 
 class ServiceRequest(BaseModel):
     request_id: int
+    srnumber: str
     council_id: int
     type_id: int
     created_date: datetime.date

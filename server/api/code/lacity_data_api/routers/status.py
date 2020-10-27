@@ -9,13 +9,18 @@ from ..config import GITHUB_CODE_VERSION, GITHUB_SHA, DEBUG
 router = APIRouter()
 
 
-@router.get("/reset-cache", include_in_schema=True if DEBUG else False)
-async def index():
-    await status.reset_cache()
-    await utilities.build_cache()
-    return {
-        "message": "Cache successfully reset"
-    }
+@router.post("/reset-cache", include_in_schema=True if DEBUG else False)
+async def reset_cache():
+    if await status.reset_cache():
+        prime_result = await utilities.build_cache()
+        return {
+            "message": "cache successfully reset",
+            "details": prime_result
+        }
+    else:
+        return {
+            "message": "cache not reset"
+        }
 
 
 @router.get("/{status_type}",
