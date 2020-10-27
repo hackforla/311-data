@@ -5,21 +5,38 @@ on:
     - cron: '0 7 * * *'
 
 jobs:
+  # dev_update:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: run update script on AWS dev
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         username: ec2-user
+  #         host: ${{ secrets.AWS_SSH_HOST_DEV }}
+  #         key: ${{ secrets.AWS_SSH_PEM_KEY }}
+  #         command_timeout: 60m
+  #         script: |
+  #           set -e
+  #           cd 311-data/server
+  #           docker-compose run --rm api python bin/db_update.py
+
   dev_update:
     runs-on: ubuntu-latest
     steps:
       - name: run update script on AWS dev
         uses: appleboy/ssh-action@master
+        env:
+          PREFECT__CONTEXT__SECRETS__SLACK_HOOK: ${{ secrets.SLACK_HOOK_DEV }}
         with:
           username: ec2-user
           host: ${{ secrets.AWS_SSH_HOST_DEV }}
           key: ${{ secrets.AWS_SSH_PEM_KEY }}
           command_timeout: 60m
+          envs: PREFECT__CONTEXT__SECRETS__SLACK_HOOK
           script: |
             set -e
             cd 311-data/server
-            # docker-compose run --rm api python bin/db_update.py
-            docker-compose run --rm prefect python flow.py
+            docker-compose run -e PREFECT__CONTEXT__SECRETS__SLACK_HOOK prefect python flow.py
 
   prod_update:
     runs-on: ubuntu-latest
