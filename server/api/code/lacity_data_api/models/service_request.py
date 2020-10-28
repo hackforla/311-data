@@ -24,6 +24,13 @@ class ServiceRequest(db.Model):
     longitude = db.Column(db.Float)
 
 
+async def get_full_request(srnumber: str):
+    # query the request table to get full record
+    query = db.text("SELECT * FROM requests WHERE srnumber = :num")
+    result = await db.first(query, num=srnumber)
+    return result
+
+
 @cached(cache=Cache.REDIS,
         endpoint=CACHE_ENDPOINT,
         namespace="open",
@@ -46,20 +53,12 @@ async def get_open_requests() -> List[ServiceRequest]:
     return result
 
 
-async def get_full_request(srnumber: str):
-    # query the request table to get full record
-    query = db.text("SELECT * FROM requests WHERE srnumber = :num")
-    result = await db.first(query, num=srnumber)
-    return result
-
-
 async def get_filtered_requests(
         start_date: datetime.date,
         end_date: datetime.date,
         type_ids: List[int],
         council_ids: List[int]
 ):
-
     result = await (
         db.select(
             [
@@ -87,7 +86,6 @@ async def get_filtered_requests(
         serializer=serializers.PickleSerializer(),
         )
 async def get_open_request_counts():
-
     result = await (
         db.select(
             [

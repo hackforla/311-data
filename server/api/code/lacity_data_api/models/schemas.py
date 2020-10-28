@@ -9,8 +9,13 @@ from pydantic.dataclasses import dataclass
 class Filters(BaseModel):
     startDate: datetime.date
     endDate: datetime.date
-    ncList: List[int]
     requestTypes: List[int]
+    ncList: List[int]
+
+    class Config:
+        schema_extra = {
+            "description": "New version of filters using ints and ISO dates"
+        }
 
 
 class Bounds(BaseModel):
@@ -57,10 +62,20 @@ class Pin(BaseModel):
     latitude: float
     longitude: float
 
+    class Config:
+        schema_extra = {
+            "description": "New version of lat/long with additional metadata using ints"
+        }
+
 
 class Point(BaseModel):
     latitude: float
     longitude: float
+
+    class Config:
+        schema_extra = {
+            "description": "A simple lat/long point"
+        }
 
 
 class Cluster(BaseModel):
@@ -118,6 +133,9 @@ class ServiceRequest(BaseModel):
 
     class Config:
         orm_mode = True
+        schema_extra = {
+            "description": "Requests for city services from citizens"
+        }
 
 
 class RequestType(BaseModel):
@@ -126,6 +144,9 @@ class RequestType(BaseModel):
 
     class Config:
         orm_mode = True
+        schema_extra = {
+            "description": "Categories of service requests"
+        }
 
 
 class Region(BaseModel):
@@ -136,7 +157,9 @@ class Region(BaseModel):
 
     class Config:
         orm_mode = True
-
+        schema_extra = {
+            "description": "Regions which group neighborhood councils"
+        }
 
 class Council(BaseModel):
     council_id: int
@@ -147,7 +170,9 @@ class Council(BaseModel):
 
     class Config:
         orm_mode = True
-
+        schema_extra = {
+            "description": "The neighborhood councils in the city"
+        }
 
 CouncilList = List[Council]
 RegionList = List[Region]

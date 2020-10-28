@@ -21,8 +21,8 @@ def test_service_request(client):
     assert response.json()["longitude"] == -118.4994716
 
 
-def test_open_service_requests(client):
-    url = "/requests/open"
+def test_open_service_request_pins(client):
+    url = "/requests/pins/open"
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 43
@@ -49,7 +49,6 @@ def test_service_request_pins(client):
                 1
             ]
         })
-
     assert response.status_code == 200
     assert len(response.json()) == 36
 
@@ -68,6 +67,5 @@ def test_service_request_points(client):
                 1
             ]
         })
-
     assert response.status_code == 200
     assert len(response.json()) == 36
