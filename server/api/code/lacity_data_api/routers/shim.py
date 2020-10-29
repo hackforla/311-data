@@ -127,10 +127,10 @@ async def get_pins(filter: Filter):
 @router.post("/visualizations")
 async def get_visualizations(filter: Filter):
     result = await reports.get_visualization(
-        startDate=filter.startDate,
-        endDate=filter.endDate,
-        requestTypes=filter.requestTypes,
-        ncList=filter.ncList
+        filter.startDate,
+        filter.endDate,
+        filter.requestTypes,
+        filter.ncList
     )
     return result
 

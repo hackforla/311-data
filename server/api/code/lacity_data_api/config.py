@@ -1,8 +1,30 @@
 import os
+import json
 
 from sqlalchemy.engine.url import URL, make_url
-from starlette.config import Config   # , environ
+from starlette.config import Config, environ
 from starlette.datastructures import Secret
+
+# TODO: set this for ECS to /run/secrets (or . when local)
+SECRETS_PATH = "/run/secrets"
+
+
+def get_managed_secrets(env_name):
+    """
+    utility function for getting secrets from Amazon Secrets Manager
+    expects secrets to be provided as a JSON file with keys matching
+    the config settings. function will override any matching settings
+    found in the secrets file.
+    """
+    try:
+        with open(os.path.join(SECRETS_PATH, env_name), 'r') as secret_file:
+            data = json.load(secret_file)
+            for k, v in data.items():
+                environ[k] = v
+            return secret_file.read()
+    except IOError:
+        return None
+
 
 CONF_FILE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
@@ -15,10 +37,17 @@ DEBUG = config("DEBUG", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
 ENV_SOURCE = config("ENV_SOURCE", default=None)
 
+# set to dev or prod when running in ECS
+ENV_NAME = config("ENV_NAME", default=None)
+
+# try getting managed secrets
+if ENV_NAME:
+    get_managed_secrets(ENV_NAME)
+
 # getting database configuration
 DB_DRIVER = config("DB_DRIVER", default="postgresql")
 DB_HOST = config("DB_HOST", default="localhost")
-DB_PORT = config("DB_PORT", cast=int)
+DB_PORT = config("DB_PORT", cast=int, default=5432)
 DB_USER = config("DB_USER", default="311_user")
 DB_PASSWORD = config("DB_PASS", cast=Secret, default=None)
 DB_DATABASE = config("DB_NAME", default="311_db")
@@ -50,16 +79,6 @@ DB_USE_CONNECTION_FOR_REQUEST = config(
 DB_RETRY_LIMIT = config("DB_RETRY_LIMIT", cast=int, default=32)
 DB_RETRY_INTERVAL = config("DB_RETRY_INTERVAL", cast=int, default=1)
 
-# check whether running in legacy mode
-# API_LEGACY_MODE = config('API_LEGACY_MODE', cast=bool, default=True)
-
-# # TODO: figure out how to remove dependency on DATABASE_URL from services
-# # the legacy code needs these created as environment settings
-# if True:
-#     environ['DATABASE_URL'] = str(DB_DSN)
-#     environ['TMP_DIR'] = config('TEMP_FOLDER', default="./__tmp__")
-#     environ['PICKLECACHE_ENABLED'] = config('USE_FILE_CACHE', default="True")
-
 # print out debug information
 if DEBUG:
     print("\n\033[93mLA City Data API server starting with DEBUG mode ENABLED\033[0m")
@@ -73,14 +92,14 @@ CACHE_ENDPOINT = config('CACHE_ENDPOINT', default="localhost")
 CACHE_MAX_RETRIES = config('CACHE_MAX_RETRIES', cast=int, default=5)
 
 # set up GitHub data
-GITHUB_TOKEN = config('GITHUB_TOKEN')
-GITHUB_ISSUES_URL = config('GITHUB_ISSUES_URL')
-GITHUB_PROJECT_URL = config('GITHUB_PROJECT_URL')
+GITHUB_TOKEN = config('GITHUB_TOKEN', default=None)
+GITHUB_ISSUES_URL = config('GITHUB_ISSUES_URL', default=None)
+GITHUB_PROJECT_URL = config('GITHUB_PROJECT_URL', default=None)
 GITHUB_SHA = config('GITHUB_SHA', default="DEVELOPMENT")
 GITHUB_CODE_VERSION = config('GITHUB_CODE_VERSION', default="0.2.0")
 
 # Sendgrid email
-SENDGRID_API_KEY = config('SENDGRID_API_KEY')
+SENDGRID_API_KEY = config('SENDGRID_API_KEY', default=None)
 
 # Sentry URL
-SENTRY_URL = config('SENTRY_URL')
+SENTRY_URL = config('SENTRY_URL', default=None)

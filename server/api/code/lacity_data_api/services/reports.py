@@ -1,6 +1,6 @@
 import pandas as pd
 
-from ..models import db
+from ..models import db, request_type
 from .stats import box_plots, date_bins, date_histograms, counts
 
 
@@ -11,22 +11,25 @@ async def get_visualization(startDate,
 
     bins, start, end = date_bins(startDate, endDate)
 
-    requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
+    type_ids = await request_type.get_type_ids_by_str_list(requestTypes)
+    typeList = (', ').join([str(rt) for rt in type_ids])
     ncList = (', ').join([str(nc) for nc in ncList])
 
     query = db.text(f"""
         SELECT
-            requesttype,
-            createddate,
-            closeddate::date - createddate::date as _daystoclose,
+            type_name as requesttype,
+            created_date as createddate,
+            closed_date - created_date as _daystoclose,
             requestsource
         FROM
-            requests
+            service_requests
+        LEFT JOIN requests on service_requests.request_id = requests.id
+        LEFT JOIN request_types on service_requests.type_id = request_types.type_id
         WHERE
-            createddate >= '{startDate}' AND
-            createddate <= '{endDate}' AND
-            requesttype IN ({requestTypes}) AND
-            nc IN ({ncList})
+            service_requests.created_date >= '{startDate}' AND
+            service_requests.created_date <= '{endDate}' AND
+            service_requests.type_id IN ({typeList}) AND
+            service_requests.council_id IN ({ncList})
         """)
 
     result = await db.all(query)
@@ -37,8 +40,8 @@ async def get_visualization(startDate,
     )
 
     inner_df = df.loc[
-        (df['createddate'] >= startDate) &
-        (df['createddate'] <= endDate)]
+        (df['createddate'] >= startDate.date()) &
+        (df['createddate'] <= endDate.date())]
 
     return {
         'frequency': {

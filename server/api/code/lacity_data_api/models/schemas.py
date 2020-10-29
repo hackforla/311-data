@@ -161,6 +161,7 @@ class Region(BaseModel):
             "description": "Regions which group neighborhood councils"
         }
 
+
 class Council(BaseModel):
     council_id: int
     council_name: str
@@ -173,6 +174,7 @@ class Council(BaseModel):
         schema_extra = {
             "description": "The neighborhood councils in the city"
         }
+
 
 CouncilList = List[Council]
 RegionList = List[Region]

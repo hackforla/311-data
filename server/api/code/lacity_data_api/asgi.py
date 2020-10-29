@@ -8,10 +8,10 @@ from .main import get_app
 
 app = get_app()
 
-sentry_sdk.init(
-    SENTRY_URL,
-    traces_sample_rate=1.0,
-    integrations=[SqlalchemyIntegration()]
-)
-
-app = SentryAsgiMiddleware(app)
+if SENTRY_URL:
+    sentry_sdk.init(
+        SENTRY_URL,
+        traces_sample_rate=1.0,
+        integrations=[SqlalchemyIntegration()]
+    )
+    app = SentryAsgiMiddleware(app)
