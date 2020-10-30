@@ -1,0 +1,34 @@
+{
+  "family": "311 Data API",
+  "containerDefinitions": [
+    {
+      "portMappings": [
+        {
+          "hostPort": 6379,
+          "protocol": "tcp",
+          "containerPort": 6379
+        }
+      ],
+      "cpu": 0,
+      "memoryReservation": 400,
+      "image": "123.dkr.ecr.us-west-2.amazonaws.com/redis",
+      "name": "redis"
+    },
+    {
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 5000
+        }
+      ],
+      "cpu": 0,
+      "memoryReservation": 400,
+      "image": "123.dkr.ecr.us-west-2.amazonaws.com/pythonapp",
+    "links": [
+        "redis"
+      ],
+      "name": "app"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+1209:    [-] "waddress": null,                                   [+] "waddress": "https://www.voicesnc.org",
+1214:    [-] "dwebsite": "http://empowerla.org/VOICESOF90037"    [+] "dwebsite": "https://empowerla.org/voicesof90037/"
+9341:    [-] "waddress": null,                                   [+] "waddress": "https://www.southcentralnc.org/",
+9346:    [-] "dwebsite": "http://empowerla.org/SOUTHCENTRALNC"   [+] "dwebsite": "https://empowerla.org/southcentralnc/"
+49709:   [-] "waddress": null,                                   [+] "waddress": "NULL",
+55607:   [-] "waddress": null,                                   [+] "waddress": "https://www.westlakenorthnc.org",
+55612:   [-] "dwebsite": "http://empowerla.org/WNNC"             [+] "dwebsite": "https://empowerla.org/wnnc/"
+57406:   [-] "certified": "2002-04-27T00:00:00.000Z",            [+] "certified": "2018-10-29T00:00:00.000Z",
+57409:   [-] "nc_id": "0",                                       [+] "nc_id": "128",
+63092:   [-] "waddress": null,                                   [+] "waddress": "https://www.eccandc.org/",
+63097:   [-] "dwebsite": "http://empowerla.org/ECCANDC"          [+] "dwebsite": "https://empowerla.org/eccandc/"
+64014:   [-] -118.28204350160829,                                [+] -118.28204350269118,
+64015:   [-] 34.0374824027313                                    [+] 34.03748240272877
+98484:   [-] "waddress": null,                                   [+] "waddress": "NULL",
+98489:   [-] "dwebsite": "http://empowerla.org/ECSEANDC"         [+] "dwebsite": "https://empowerla.org/ecseandc/"
+104419:  [-] "waddress": null,                                   [+] "waddress": "https://centralalameda.com/",
+104424:  [-] "dwebsite": "http://empowerla.org/CANC"             [+] "dwebsite": "https://empowerla.org/canc/"
+130211:  [-] "waddress": null,                                   [+] "waddress": "https://www.wsncla.org",
+130216:  [-] "dwebsite": "http://empowerla.org/WSNC"             [+] "dwebsite": "https://empowerla.org/wsnc/"
+237671:  [-] "waddress": null,                                   [+] "waddress": "https://www.cypressparknc.com/",
+237676:  [-] "dwebsite": "http://empowerla.org/GCPNC"            [+] "dwebsite": "https://empowerla.org/gcpnc/"
+249299:  [-] "waddress": "http://www.hermonla.org/",             [+] "waddress": "https:/www./hermonnc.org/",
+251108:  [-] "nc_id": "0",                                       [+] "nc_id": "127",

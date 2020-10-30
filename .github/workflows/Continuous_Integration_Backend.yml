@@ -1,9 +1,9 @@
 name: CI_Backend
 
-on:
-  pull_request:
-    paths:
-      - 'server/**'
+on: [push]
+  # pull_request:
+  #   paths:
+  #     - 'server/**'
 
 defaults:
   run:
@@ -23,8 +23,8 @@ jobs:
           docker-compose up --no-start api
 
       - name: Seed DB and Run Api
-        run: |          
-            docker-compose run api python bin/db_seed.py --file data/requests.csv.gz
+        run: |
+            docker-compose run -e TESTING=True api alembic upgrade head
             docker-compose up -d api
 
       - name: Linting

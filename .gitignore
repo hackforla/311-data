@@ -23,3 +23,6 @@ yarn-error.log*
 # config
 config.js
 .env
+
+# builds
+dist

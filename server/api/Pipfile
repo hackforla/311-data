@@ -7,23 +7,29 @@ verify_ssl = true
 pytest-asyncio = "*"
 pytest = "*"
 flake8 = "*"
+requests = "*"
+pytest-cov = "*"
 
 [packages]
 numpy = "*"
 pandas = "*"
 psycopg2-binary = "*"
 pysupercluster = "*"
-python-dotenv = "*"
 redis = "*"
 requests-async = "*"
-sanic = "*"
-sanic-plugins-framework = "*"
-sanic-cors = "*"
-sanic-compress = "*"
 sendgrid = "*"
 sodapy = "*"
 SQLAlchemy = "*"
 tabulate = "*"
+gino = {extras = ["starlette"], version = "*"}
+fastapi = "*"
+uvicorn = "*"
+alembic = "*"
+geopandas = "*"
+ujson = "*"
+sentry-sdk = "*"
+aiocache = {extras = ["redis"], version = "*"}
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
