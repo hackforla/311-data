@@ -21,7 +21,7 @@ def test_council(client):
 
 
 def test_council_open_counts(client):
-    url = "/councils/6/open/counts/types"
+    url = "/councils/6/counts/open/types"
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 1

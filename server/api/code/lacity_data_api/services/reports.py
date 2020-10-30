@@ -8,6 +8,12 @@ async def get_visualization(startDate,
                          endDate,
                          requestTypes=[],
                          ncList=[]):
+    """
+    Runs a report on a single distict that includes request totals by date,
+    request types, and request sources.
+
+    Updated to use the service_requests materialized view with joins to other tables.
+    """
 
     bins, start, end = date_bins(startDate, endDate)
 
@@ -39,10 +45,6 @@ async def get_visualization(startDate,
         columns=['requesttype', 'createddate', '_daystoclose', 'requestsource']
     )
 
-    inner_df = df.loc[
-        (df['createddate'] >= startDate.date()) &
-        (df['createddate'] <= endDate.date())]
-
     return {
         'frequency': {
             'bins': list(bins.astype(str)),
@@ -51,79 +53,80 @@ async def get_visualization(startDate,
                 dateField='createddate',
                 bins=bins,
                 groupField='requesttype',
-                groupFieldItems=requestTypes)},
-
+                groupFieldItems=requestTypes)
+        },
         'timeToClose': box_plots(
-            inner_df,
+            df,
             plotField='_daystoclose',
             groupField='requesttype',
-            groupFieldItems=requestTypes),
-
+            groupFieldItems=requestTypes
+        ),
         'counts': {
-            'type': counts(inner_df, groupField='requesttype'),
-            'source': counts(inner_df, groupField='requestsource')}
+            'type': counts(df, groupField='requesttype'),
+            'source': counts(df, groupField='requestsource')
+        }
     }
 
 
-async def get_data(district, items, bins, start, end, requestTypes):
-    filters = {
-        'startDate': start,
-        'endDate': end,
-        'requestTypes': requestTypes}
-
-    if district == 'nc':
-        filters['ncList'] = items
-        groupField = 'nc'
-    elif district == 'cc':
-        filters['cdList'] = items
-        groupField = 'cd'
-
-    requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
-
-    ncList = filters.get('ncList', [])
-    cdList = filters.get('cdList', [])
-
-    if len(ncList) > 0:
-        ncList = (', ').join([str(nc) for nc in ncList])
-        where = f'nc IN ({ncList})'
-    else:
-        cdList = (', ').join([str(cd) for cd in cdList])
-        where = f'cd IN ({cdList})'
-
-    query = db.text(f"""
-        SELECT
-            {groupField},
-            createddate
-        FROM
-            requests
-        WHERE
-            createddate >= '{start}' AND
-            createddate <= '{end}' AND
-            requesttype IN ({requestTypes}) AND
-            {where}
-        """)
-
-    result = await db.all(query)
-
-    df = pd.DataFrame(
-        result,
-        columns=[groupField, 'createddate']
-    )
-
-    return date_histograms(
-        df,
-        dateField='createddate',
-        bins=bins,
-        groupField=groupField,
-        groupFieldItems=items
-    )
-
-
+# TODO: port to a new view with indexes
 async def freq_comparison(startDate,
                           endDate,
                           requestTypes=[],
                           set1={'district': None, 'list': []},
                           set2={'district': None, 'list': []}):
+
+    async def get_data(district, items, bins, start, end, requestTypes):
+        filters = {
+            'startDate': start,
+            'endDate': end,
+            'requestTypes': requestTypes}
+
+        if district == 'nc':
+            filters['ncList'] = items
+            groupField = 'nc'
+        elif district == 'cc':
+            filters['cdList'] = items
+            groupField = 'cd'
+
+        requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
+
+        ncList = filters.get('ncList', [])
+        cdList = filters.get('cdList', [])
+
+        if len(ncList) > 0:
+            ncList = (', ').join([str(nc) for nc in ncList])
+            where = f'nc IN ({ncList})'
+        else:
+            cdList = (', ').join([str(cd) for cd in cdList])
+            where = f'cd IN ({cdList})'
+
+        query = db.text(f"""
+            SELECT
+                {groupField},
+                createddate
+            FROM
+                requests
+            WHERE
+                createddate >= '{start}' AND
+                createddate <= '{end}' AND
+                requesttype IN ({requestTypes}) AND
+                {where}
+            """)
+
+        result = await db.all(query)
+
+        df = pd.DataFrame(
+            result,
+            columns=[groupField, 'createddate']
+        )
+
+        return date_histograms(
+            df,
+            dateField='createddate',
+            bins=bins,
+            groupField=groupField,
+            groupFieldItems=items
+        )
 
     bins, start, end = date_bins(startDate, endDate)
 
@@ -154,6 +157,7 @@ async def freq_comparison(startDate,
             'counts': set2data}}
 
 
+# TODO: port to a new view with indexes
 async def ttc_comparison(startDate,
                          endDate,
                          requestTypes=[],
@@ -225,6 +229,7 @@ async def ttc_comparison(startDate,
             'data': set2data}}
 
 
+# TODO: port to a new view with indexes
 async def counts_comparison(startDate,
                             endDate,
                             requestTypes=[],
