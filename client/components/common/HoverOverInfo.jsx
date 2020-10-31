@@ -15,6 +15,7 @@ const HoverOverInfo = ({
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
+    // eslint-disable-next-line
     <span
       className="hover-over-info"
       onMouseEnter={() => setShowTooltip(true)}

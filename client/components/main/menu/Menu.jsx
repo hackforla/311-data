@@ -204,7 +204,7 @@ const Menu = ({
                 size="small"
                 ariaLabel="skip to neighborhood councils"
                 handleClick={() => {
-                  ncRef.current.focus()
+                  ncRef.current.focus();
                 }}
 
               />
