@@ -10,8 +10,10 @@ import { COUNCILS } from '@components/common/CONSTANTS';
 
 import {
   types,
-  getPinClustersSuccess,
-  getPinClustersFailure,
+  getPinsSuccess,
+  getPinsFailure,
+  // getPinClustersSuccess,
+  // getPinClustersFailure,
   getHeatmapSuccess,
   getHeatmapFailure,
   getPinInfoSuccess,
@@ -23,7 +25,7 @@ import {
 } from '../reducers/data';
 
 import {
-  types as uiTypes,
+  // types as uiTypes,
   setErrorModal,
   showDataCharts,
   showFeedbackSuccess,
@@ -35,27 +37,35 @@ const BASE_URL = process.env.API_URL;
 
 /* ////  MAP //// */
 
-function* fetchPinClusters(filters, { zoom, bounds }) {
-  const clustersUrl = `${BASE_URL}/map/clusters`;
+function* fetchPins(filters) {
+  const pinsUrl = `${BASE_URL}/map/pins`;
 
-  const {
-    _northEast: { lat: north, lng: east },
-    _southWest: { lat: south, lng: west },
-  } = bounds;
-
-  const { data } = yield call(axios.post, clustersUrl, {
-    ...filters,
-    zoom,
-    bounds: {
-      north,
-      east,
-      south,
-      west,
-    },
-  });
+  const { data } = yield call(axios.post, pinsUrl, filters);
 
   return data;
 }
+
+// function* fetchPinClusters(filters, { zoom, bounds }) {
+//   const clustersUrl = `${BASE_URL}/map/clusters`;
+
+//   const {
+//     _northEast: { lat: north, lng: east },
+//     _southWest: { lat: south, lng: west },
+//   } = bounds;
+
+//   const { data } = yield call(axios.post, clustersUrl, {
+//     ...filters,
+//     zoom,
+//     bounds: {
+//       north,
+//       east,
+//       south,
+//       west,
+//     },
+//   });
+
+//   return data;
+// }
 
 function* fetchHeatmap(filters) {
   const heatmapUrl = `${BASE_URL}/map/heat`;
@@ -116,25 +126,34 @@ function* getFilters() {
   };
 }
 
-function* getMapPosition() {
-  const { map } = yield select(getState, 'ui');
-  return map;
-}
+// function* getMapPosition() {
+//   const { map } = yield select(getState, 'ui');
+//   return map;
+// }
 
 /* /////////////////// SAGAS ///////////////// */
 
 function* getMapData() {
   const filters = yield getFilters();
-  const mapPosition = yield getMapPosition();
+  // const mapPosition = yield getMapPosition();
 
   try {
-    const clustersData = yield call(fetchPinClusters, filters, mapPosition);
-    yield put(getPinClustersSuccess(clustersData));
+    const pinsData = yield call(fetchPins, filters);
+    yield put(getPinsSuccess(pinsData));
   } catch (e) {
-    yield put(getPinClustersFailure(e));
+    yield put(getPinsFailure(e));
     yield put(setErrorModal(true));
     return;
   }
+
+  // try {
+  //   const clustersData = yield call(fetchPinClusters, filters, mapPosition);
+  //   yield put(getPinClustersSuccess(clustersData));
+  // } catch (e) {
+  //   yield put(getPinClustersFailure(e));
+  //   yield put(setErrorModal(true));
+  //   return;
+  // }
 
   try {
     const heatmapData = yield call(fetchHeatmap, filters);
@@ -157,25 +176,25 @@ function* getVisData() {
   }
 }
 
-function* updatePinClusters() {
-  const filters = yield getFilters();
+// function* updatePinClusters() {
+//   const filters = yield getFilters();
 
-  if (
-    !filters.startDate
-    || !filters.endDate
-    || !filters.ncList.length
-    || !filters.requestTypes.length
-  ) return;
+//   if (
+//     !filters.startDate
+//     || !filters.endDate
+//     || !filters.ncList.length
+//     || !filters.requestTypes.length
+//   ) return;
 
-  const mapPosition = yield getMapPosition();
-  try {
-    const data = yield call(fetchPinClusters, filters, mapPosition);
-    yield put(getPinClustersSuccess(data));
-  } catch (e) {
-    yield put(getPinClustersFailure(e));
-    yield put(setErrorModal(true));
-  }
-}
+//   const mapPosition = yield getMapPosition();
+//   try {
+//     const data = yield call(fetchPinClusters, filters, mapPosition);
+//     yield put(getPinClustersSuccess(data));
+//   } catch (e) {
+//     yield put(getPinClustersFailure(e));
+//     yield put(setErrorModal(true));
+//   }
+// }
 
 function* getPinData(action) {
   try {
@@ -203,7 +222,7 @@ function* sendContactData(action) {
 export default function* rootSaga() {
   yield takeLatest(types.GET_DATA_REQUEST, getMapData);
   yield takeLatest(types.GET_DATA_REQUEST, getVisData);
-  yield takeLatest(uiTypes.UPDATE_MAP_POSITION, updatePinClusters);
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
   yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
+  // yield takeLatest(uiTypes.UPDATE_MAP_POSITION, updatePinClusters);
 }

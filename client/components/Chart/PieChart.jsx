@@ -11,6 +11,7 @@ const PieChart = ({
   exportable,
   componentName,
   pdfTemplateName,
+  ariaLabelString,
 }) => {
   // // SET ORDER OF SECTORS ////
   // This weird code goes a long way towards ensuring that the sectors
@@ -122,6 +123,7 @@ const PieChart = ({
       options={chartOptions}
       datalabels
       exportButton={exportButton}
+      ariaLabelString={ariaLabelString}
     />
   );
 };
@@ -140,6 +142,7 @@ PieChart.propTypes = {
   exportable: PropTypes.bool,
   componentName: PropTypes.string,
   pdfTemplateName: PropTypes.string,
+  ariaLabelString: PropTypes.string,
 };
 
 PieChart.defaultProps = {
@@ -149,4 +152,5 @@ PieChart.defaultProps = {
   exportable: true,
   componentName: undefined,
   pdfTemplateName: undefined,
+  ariaLabelString: '',
 };

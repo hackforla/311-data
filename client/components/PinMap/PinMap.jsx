@@ -1,30 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getPinInfoRequest } from '@reducers/data';
-import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
-import PinPopup from '@components/PinMap/PinPopup';
-import CustomMarker from '@components/PinMap/CustomMarker';
-import ClusterMarker from '@components/PinMap/ClusterMarker';
+import Button from '@components/common/Button';
 import HeatmapLegend from '@components/PinMap/HeatmapLegend';
 import ExportLegend from '@components/PinMap/ExportLegend';
 import MapboxWordmark from '@components/PinMap/MapboxWordmark';
+import DotsLayer from '@components/PinMap/DotsLayer';
 import {
   Map,
+  LayerGroup,
   TileLayer,
   LayersControl,
   ZoomControl,
   ScaleControl,
   withLeaflet,
 } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Choropleth from 'react-leaflet-choropleth';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import PropTypes from 'proptypes';
 import COLORS from '@styles/COLORS';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import PrintControlDefault from 'react-leaflet-easyprint';
-import Button from '@components/common/Button';
+
+// These imports are for the disabled MarkerClusterGroup
+// import { updateMapPosition } from '@reducers/ui';
+// import PinPopup from '@components/PinMap/PinPopup';
+// import CustomMarker from '@components/PinMap/CustomMarker';
+// import ClusterMarker from '@components/PinMap/ClusterMarker';
+// import MarkerClusterGroup from 'react-leaflet-markercluster';
+// import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 // import neighborhoodOverlay from '../../data/la-county-neighborhoods-v6.json';
 // import municipalOverlay from '../../data/la-county-municipal-regions-current.json';
@@ -51,21 +55,97 @@ class PinMap extends Component {
       width: null,
       height: null,
       markersVisible: true,
+      dotsVisible: true,
       heatmapVisible: false,
       zoomBreak: 14,
       zoomThresholdMet: false,
+      ariaStatement: '',
     };
     this.container = React.createRef();
   }
 
   componentDidMount() {
-    this.setDimensions();
+    const { filters } = this.props;
+    this.setDimensions(filters);
     this.setState({ ready: true });
     window.addEventListener('resize', this.setDimensions);
   }
 
+  componentDidUpdate(prevProps) {
+    const { filters } = this.props;
+    const { ariaStatement } = this.state;
+    if (prevProps !== this.props) {
+      this.updateAriaStatement(filters);
+      // eslint-disable-next-line no-underscore-dangle
+      this.map._container.ariaLabel = ariaStatement;
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.setDimensions);
+  }
+
+  updateRequestString = requestTypes => {
+    let requests = '';
+
+    Object.keys(requestTypes).forEach(key => {
+      if (requestTypes[key] === true) {
+        if (requests === '') {
+          requests += ` ${key}`;
+        } else {
+          requests += `, ${key}`;
+        }
+      }
+    });
+
+    return requests;
+  }
+
+  updateCouncilString = councils => {
+    let neighborhoodCouncil = '';
+
+    councils.forEach(council => {
+      // eslint-disable-next-line no-unused-expressions
+      (neighborhoodCouncil === '')
+        ? neighborhoodCouncil = ` in ${council} neighborhood council`
+        : neighborhoodCouncil += `, ${council} neighborhood council`;
+    });
+
+    return neighborhoodCouncil;
+  }
+
+  updateRequestBreakdown = pins => {
+    let requestsBreakdown = '';
+    const pinsPerRequestType = {};
+
+    pins.forEach(pin => {
+      const request = pin.requesttype;
+      // eslint-disable-next-line no-unused-expressions
+      Object.prototype.hasOwnProperty.call(pinsPerRequestType, request)
+        ? pinsPerRequestType[request] += 1
+        : pinsPerRequestType[request] = 1;
+    });
+
+    Object.keys(pinsPerRequestType).forEach(key => {
+      // eslint-disable-next-line no-unused-expressions
+      (requestsBreakdown === '')
+        ? requestsBreakdown = ` There were ${pinsPerRequestType[key]} ${key} requests`
+        : requestsBreakdown += `, ${pinsPerRequestType[key]} ${key} requests`;
+    });
+
+    return requestsBreakdown;
+  }
+
+  updateAriaStatement = filters => {
+    const { requestTypes, dateRange, councils } = filters;
+    const { pins } = this.props;
+    const pinLength = pins.length;
+    const requests = this.updateRequestString(requestTypes);
+    const requestsBreakdown = this.updateRequestBreakdown(pins);
+    const neighborhoodCouncil = this.updateCouncilString(councils);
+    this.setState({
+      ariaStatement: `Map displaying ${pinLength}${requests} 311 requests for ${dateRange || 'no date range'}${neighborhoodCouncil}.${requestsBreakdown}`,
+    });
   }
 
   setDimensions = () => {
@@ -101,14 +181,20 @@ class PinMap extends Component {
     this.setState({ bounds });
   }
 
-  updatePosition = ({ target: map }) => {
-    const { updatePosition } = this.props;
+  // updatePosition = ({ target: map }) => {
+  //   const { updatePosition } = this.props;
+  //   const { zoomBreak } = this.state;
+  //   const mapZoom = map.getZoom();
+  //   updatePosition({
+  //     zoom: mapZoom,
+  //     bounds: map.getBounds(),
+  //   });
+  //   this.setState({ zoomThresholdMet: (mapZoom >= zoomBreak) });
+  // }
+
+  updateZoomThreshold = () => {
     const { zoomBreak } = this.state;
-    const mapZoom = map.getZoom();
-    updatePosition({
-      zoom: mapZoom,
-      bounds: map.getBounds(),
-    });
+    const mapZoom = this.map.getZoom();
     this.setState({ zoomThresholdMet: (mapZoom >= zoomBreak) });
   }
 
@@ -130,6 +216,7 @@ class PinMap extends Component {
       mouseover: this.highlightRegion,
       mouseout: this.resetRegionHighlight,
       click: this.zoomToRegion,
+      focus: this.zoomToRegion,
     });
   }
 
@@ -167,83 +254,84 @@ class PinMap extends Component {
     }
   }
 
-  renderMarkers = () => {
-    const {
-      pinClusters,
-      getPinInfo,
-      pinsInfo,
-    } = this.props;
+  // renderMarkers = () => {
+  //   const {
+  //     pinClusters,
+  //     getPinInfo,
+  //     pinsInfo,
+  //     pins,
+  //   } = this.props;
 
-    if (pinClusters) {
-      return pinClusters.map(({
-        id,
-        count,
-        latitude,
-        longitude,
-        expansion_zoom: expansionZoom,
-        srnumber,
-        requesttype,
-      }) => {
-        const position = [latitude, longitude];
+  //   if (pinClusters) {
+  //     return pinClusters.map(({
+  //       id,
+  //       count,
+  //       latitude,
+  //       longitude,
+  //       expansion_zoom: expansionZoom,
+  //       srnumber,
+  //       requesttype,
+  //     }) => {
+  //       const position = [latitude, longitude];
 
-        if (count > 1) {
-          return (
-            <ClusterMarker
-              key={id}
-              position={position}
-              count={count}
-              onClick={({ latlng }) => {
-                this.map.flyTo(latlng, expansionZoom);
-              }}
-            />
-          );
-        }
+  //       if (count > 1) {
+  //         return (
+  //           <ClusterMarker
+  //             key={id}
+  //             position={position}
+  //             count={count}
+  //             onClick={({ latlng }) => {
+  //               this.map.flyTo(latlng, expansionZoom);
+  //             }}
+  //           />
+  //         );
+  //       }
 
-        const {
-          status,
-          createddate,
-          updateddate,
-          closeddate,
-          address,
-          ncname,
-        } = pinsInfo[srnumber] || {};
-        const { displayName, color, abbrev } = REQUEST_TYPES[requesttype];
+  //       const {
+  //         status,
+  //         createddate,
+  //         updateddate,
+  //         closeddate,
+  //         address,
+  //         ncname,
+  //       } = pinsInfo[srnumber] || {};
+  //       const { displayName, color, abbrev } = REQUEST_TYPES[requesttype];
 
-        const popup = (
-          <PinPopup
-            displayName={displayName}
-            color={color}
-            abbrev={abbrev}
-            address={address}
-            createdDate={createddate}
-            updatedDate={updateddate}
-            closedDate={closeddate}
-            status={status}
-            ncName={ncname}
-          />
-        );
+  //       const popup = (
+  //         <PinPopup
+  //           displayName={displayName}
+  //           color={color}
+  //           abbrev={abbrev}
+  //           address={address}
+  //           createdDate={createddate}
+  //           updatedDate={updateddate}
+  //           closedDate={closeddate}
+  //           status={status}
+  //           ncName={ncname}
+  //         />
+  //       );
 
-        return (
-          <CustomMarker
-            key={srnumber}
-            position={position}
-            onClick={() => {
-              if (!pinsInfo[srnumber]) {
-                getPinInfo(srnumber);
-              }
-            }}
-            color={color}
-            icon="map-marker-alt"
-            size="3x"
-            style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
-          >
-            {popup}
-          </CustomMarker>
-        );
-      });
-    }
-    return null;
-  }
+  //       return (
+  //         <CustomMarker
+  //           key={srnumber}
+  //           position={position}
+  //           onClick={() => {
+  //             if (!pinsInfo[srnumber]) {
+  //               getPinInfo(srnumber);
+  //             }
+  //           }}
+  //           color={color}
+  //           icon="map-marker-alt"
+  //           size="3x"
+  //           style={{ textShadow: '1px 0px 3px rgba(0,0,0,1.0), -1px 0px 3px rgba(0,0,0,1.0)' }}
+  //         >
+  //           {popup}
+  //         </CustomMarker>
+  //       );
+  //     });
+  //   }
+  //   return null;
+  // }
 
   renderMap = () => {
     const {
@@ -257,10 +345,12 @@ class PinMap extends Component {
       height,
       heatmapVisible,
       markersVisible,
+      dotsVisible,
       zoomThresholdMet,
+      ariaStatement,
     } = this.state;
 
-    const { heatmap } = this.props;
+    const { heatmap, pins } = this.props;
 
     const handleExportMap = () => {
       const { exportMap } = this.props;
@@ -290,18 +380,31 @@ class PinMap extends Component {
           maxZoom={18}
           bounds={bounds}
           style={{ width, height }}
+          preferCanvas
+          useFlyTo
           zoomControl={false}
+          zoomSnap={0.25}
+          keepBuffer={4}
+          zoomDelta={0.75}
+          updateWhenZooming={false}
+          updateWhenIdle
           whenReady={e => {
             this.map = e.target;
-            this.updatePosition(e);
+            // eslint-disable-next-line no-underscore-dangle
+            this.map._container.ariaLabel = ariaStatement;
+            this.updateZoomThreshold(e);
+            // this.updatePosition(e);
           }}
-          onMoveend={this.updatePosition}
+          // onMoveend={this.updatePosition}
           onOverlayadd={({ name }) => {
             if (name === 'Heatmap') {
               this.setState({ heatmapVisible: true });
             }
             if (name === 'Markers') {
               this.setState({ markersVisible: true });
+            }
+            if (name === 'Dots') {
+              this.setState({ dotsVisible: true });
             }
           }}
           onOverlayremove={({ name }) => {
@@ -311,15 +414,18 @@ class PinMap extends Component {
             if (name === 'Markers') {
               this.setState({ markersVisible: false });
             }
+            if (name === 'Dots') {
+              this.setState({ dotsVisible: false });
+            }
           }}
-          onZoomEnd={this.resizeNcNames}
+          onZoomEnd={() => {
+            this.resizeNcNames();
+            this.updateZoomThreshold();
+          }}
         >
           <ZoomControl position="topright" />
           <ScaleControl position="bottomright" />
-          <LayersControl
-            position="bottomright"
-            collapsed={false}
-          >
+          <LayersControl position="bottomright" collapsed={false}>
             <BaseLayer checked name="Streets">
               <TileLayer
                 url={streetsLayerUrl}
@@ -336,66 +442,63 @@ class PinMap extends Component {
                 zoomOffset={-1}
               />
             </BaseLayer>
-            {
-              (zoomThresholdMet === false && geoJSON)
-              && (
-                <Overlay checked name="Neighborhood Council Boundaries">
-                  <Choropleth
-                    data={geoJSON}
-                    style={{
-                      fillColor: 'transparent',
-                      weight: 2,
-                      color: boundaryDefaultColor,
-                      dashArray: '3',
-                    }}
-                    onEachFeature={this.onEachRegionFeatureMouseTooltip}
-                    ref={el => {
-                      if (el) {
-                        this.choropleth = el.leafletElement;
-                        return this.choropleth;
-                      }
-                      return null;
-                    }}
-                  />
-                </Overlay>
-              )
-            }
-            {
-              (zoomThresholdMet === true && geoJSON)
-              && (
-                <Overlay checked name="Neighborhood Council Boundaries">
-                  <Choropleth
-                    data={geoJSON}
-                    style={{
-                      fillColor: 'transparent',
-                      weight: 2,
-                      color: boundaryDefaultColor,
-                      dashArray: '3',
-                    }}
-                    onEachFeature={this.onEachRegionFeatureLabelTooltip}
-                    ref={el => {
-                      if (el) {
-                        this.choropleth = el.leafletElement;
-                        return this.choropleth;
-                      }
-                      return null;
-                    }}
-                  />
-                </Overlay>
-              )
-            }
-            <Overlay checked name="Markers">
+            {/* <Overlay checked name="Markers">
               <MarkerClusterGroup maxClusterRadius={0}>
                 {this.renderMarkers()}
               </MarkerClusterGroup>
+            </Overlay> */}
+            <Overlay checked name="Markers">
+              <LayerGroup id="pixi-dots-layer">
+                <DotsLayer markers={dotsVisible ? pins : []} />
+              </LayerGroup>
             </Overlay>
+            {zoomThresholdMet === false && geoJSON && (
+              <Overlay checked name="Neighborhood Council Boundaries">
+                <Choropleth
+                  data={geoJSON}
+                  style={{
+                    fillColor: 'transparent',
+                    weight: 2,
+                    color: boundaryDefaultColor,
+                    dashArray: '3',
+                  }}
+                  onEachFeature={
+                    this.onEachRegionFeatureMouseTooltip
+                  }
+                  ref={el => {
+                    if (el) {
+                      this.choropleth = el.leafletElement;
+                      return this.choropleth;
+                    }
+                    return null;
+                  }}
+                />
+              </Overlay>
+            )}
+            {zoomThresholdMet === true && geoJSON && (
+              <Overlay name="Neighborhood Council Boundaries">
+                <Choropleth
+                  data={geoJSON}
+                  style={{
+                    fillColor: 'transparent',
+                    weight: 2,
+                    color: boundaryDefaultColor,
+                    dashArray: '3',
+                  }}
+                  onEachFeature={
+                    this.onEachRegionFeatureLabelTooltip
+                  }
+                  ref={el => {
+                    if (el) {
+                      this.choropleth = el.leafletElement;
+                      return this.choropleth;
+                    }
+                    return null;
+                  }}
+                />
+              </Overlay>
+            )}
             <Overlay name="Heatmap">
-              {/* intensityExtractor is required and requires a callback as the value.
-                * The heatmap is working with an empty callback but we'll probably
-                * improve functionality post-MVP by generating a heatmap list
-                * on the backend. */}
-              {/* The heatmapVisible test prevents the component from doing
-                * unnecessary calculations when the heatmap isn't visible */}
               <HeatmapLayer
                 max={1}
                 points={heatmapVisible ? heatmap : []}
@@ -408,7 +511,10 @@ class PinMap extends Component {
             </Overlay>
           </LayersControl>
           <ExportLegend visible={markersVisible} position="bottomright" />
-          <HeatmapLegend visible={heatmapVisible} position="bottomright" />
+          <HeatmapLegend
+            visible={heatmapVisible}
+            position="bottomright"
+          />
           <PrintControl
             sizeModes={['Current']}
             hideControlContainer={false}
@@ -433,29 +539,39 @@ class PinMap extends Component {
 
 const mapDispatchToProps = dispatch => ({
   getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
-  updatePosition: position => dispatch(updateMapPosition(position)),
   exportMap: () => dispatch(trackMapExport()),
+  // updatePosition: position => dispatch(updateMapPosition(position)),
 });
 
 const mapStateToProps = state => ({
+  filters: state.filters,
   pinsInfo: state.data.pinsInfo,
-  pinClusters: state.data.pinClusters,
+  pins: state.data.pins,
   heatmap: state.data.heatmap,
+  metadata: state.metadata,
+  // pinClusters: state.data.pinClusters,
 });
 
 PinMap.propTypes = {
+  filters: PropTypes.shape({}),
   pinsInfo: PropTypes.shape({}),
-  pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
+  pins: PropTypes.arrayOf(PropTypes.shape({})),
   heatmap: PropTypes.arrayOf(PropTypes.array),
-  getPinInfo: PropTypes.func.isRequired,
-  updatePosition: PropTypes.func.isRequired,
+  metadata: PropTypes.shape({}),
   exportMap: PropTypes.func.isRequired,
+  // These are for the disabled MarkerClusterGroup
+  // getPinInfo: PropTypes.func.isRequired,
+  // pinClusters: PropTypes.arrayOf(PropTypes.shape({})),
+  // updatePosition: PropTypes.func.isRequired,
 };
 
 PinMap.defaultProps = {
+  filters: {},
   pinsInfo: {},
-  pinClusters: [],
+  pins: [],
+  // pinClusters: [],
   heatmap: [],
+  metadata: {},
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PinMap);

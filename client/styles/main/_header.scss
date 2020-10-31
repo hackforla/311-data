@@ -106,7 +106,7 @@
       right: auto;
       left: -350px;
       top: 45px;
-      height: calc(100vh - #{$header-height + $hamburger-height});
+      height: calc(100vh - #{$header-height + $hamburger-height + 40px});
     }
   }
 

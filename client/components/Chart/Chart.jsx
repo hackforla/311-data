@@ -101,6 +101,7 @@ class Chart extends React.Component {
       titleInfo,
       titleInfoPosition,
       exportButton,
+      ariaLabelString,
     } = this.props;
 
     const { top, right } = this.state;
@@ -129,7 +130,7 @@ class Chart extends React.Component {
           />
         )}
         <div style={canvasWrapStyle}>
-          <canvas ref={this.canvasRef} />
+          <canvas ref={this.canvasRef} aria-label={ariaLabelString} tabIndex="0" />
           <div style={exportWrapStyle}>{ exportButton }</div>
           <DynamicTooltip ref={this.tooltipRef} />
         </div>
@@ -152,6 +153,7 @@ Chart.propTypes = {
   exportButton: PropTypes.element,
   className: PropTypes.string,
   tooltip: PropTypes.func,
+  ariaLabelString: PropTypes.string,
 };
 
 Chart.defaultProps = {
@@ -163,4 +165,5 @@ Chart.defaultProps = {
   exportButton: null,
   className: undefined,
   tooltip: undefined,
+  ariaLabelString: '',
 };

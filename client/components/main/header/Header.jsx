@@ -23,6 +23,12 @@ const Header = () => {
     setActiveBurger(!activeBurger);
   };
 
+  const handleKeyDown = e => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      handleClick(e);
+    }
+  };
+
   return (
     <nav
       className="navbar"
@@ -49,7 +55,7 @@ const Header = () => {
           aria-label="menu"
           aria-expanded={activeBurger}
           onClick={handleClick}
-          onKeyDown={handleClick}
+          onKeyDown={handleKeyDown}
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
