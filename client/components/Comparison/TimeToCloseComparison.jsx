@@ -70,6 +70,24 @@ const TimeToCloseComparison = ({
     return <Tooltip lines={lines} />;
   };
 
+  const generateAriaLabelString = () => {
+    const { labels, datasets } = chartData;
+    const targetData = datasets[0].data;
+    let string = '';
+
+    let count = 0;
+    const totalDistricts = datasets[0].data.length;
+    while (count < totalDistricts) {
+      string += (
+      `${labels[count]}: ${targetData[count].count} total requests. Minimum time to close was ${(targetData[count].min).toFixed(2)} days. Maximum time to close was ${(targetData[count].max).toFixed(2)} days. 25% were closed in ${(targetData[count].q1).toFixed(2)} days. 50% were closed in ${(targetData[count].median).toFixed(2)} days. 75% were closed in ${(targetData[count].q3).toFixed(2)} days. 
+      `
+      );
+      count += 1;
+    }
+
+    return string;
+  };
+  const AriaLabelString = generateAriaLabelString();
   /* /// EXPORT /// */
 
   const exportData = () => {
@@ -127,6 +145,7 @@ const TimeToCloseComparison = ({
       height={Math.max(160, 130 + (chartData.labels.length * 40))}
       exportButton={exportButton}
       tooltip={tooltip}
+      ariaLabelString={AriaLabelString}
     />
   );
 };

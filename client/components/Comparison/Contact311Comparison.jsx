@@ -67,6 +67,50 @@ const Contact311Comparison = ({
     };
   };
 
+  const ariaLabelGenerator = set => {
+    const labelDataSet = {};
+    let ariaLabel = '';
+
+    if (set === 1) {
+      labelDataSet.name = set1list;
+      labelDataSet.label = setSectors(set1counts);
+    } else {
+      labelDataSet.name = set2list;
+      labelDataSet.label = setSectors(set2counts);
+    }
+
+    let totalVal = 0;
+    const { name, label } = labelDataSet;
+    label.forEach(item => {
+      totalVal += item.value;
+    });
+
+    let count = 0;
+    const max = label.length;
+
+    let setNames = '';
+    name.forEach(n => {
+      // eslint-disable-next-line no-unused-expressions
+      setNames === ''
+        ? setNames += ` ${n}`
+        : setNames += `, ${n}`;
+    });
+
+    while (count < max) {
+      const percent = ((label[count].value / totalVal) * 100).toFixed(1);
+      // eslint-disable-next-line no-unused-expressions
+      (ariaLabel === '')
+        ? ariaLabel = `This pie chart looks at how people contacted Neighborhood Council Set ${set} :${setNames}. ${label[count].label}: ${percent}% of contact methods.`
+        : ariaLabel += ` ${label[count].label}: ${percent}% of contact methods.`;
+      count += 1;
+    }
+
+    return ariaLabel;
+  };
+
+  const setOneAriaLabelString = ariaLabelGenerator(1);
+  const setTwoAriaLabelString = ariaLabelGenerator(2);
+
   return (
     <div className="contact-311-comparison">
       <InfoTitle
@@ -85,6 +129,7 @@ const Contact311Comparison = ({
             sectors={setSectors(set1counts)}
             addLabels
             exportable={false}
+            ariaLabelString={setOneAriaLabelString}
           />
           <h2>{`${set1name}${set1list.length > 1 ? 's' : ''} (Set 1):`}</h2>
           <p className="set-list">{ set1list.join(', ')}</p>
@@ -94,6 +139,7 @@ const Contact311Comparison = ({
             sectors={setSectors(set2counts)}
             addLabels
             exportable={false}
+            ariaLabelString={setTwoAriaLabelString}
           />
           <h2>{`${set2name}${set2list.length > 1 ? 's' : ''} (Set 2):`}</h2>
           <p className="set-list">{ set2list.join(', ') }</p>
