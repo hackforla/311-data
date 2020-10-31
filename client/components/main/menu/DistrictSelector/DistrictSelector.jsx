@@ -68,7 +68,16 @@ const DistrictSelector = ({
     }
 
     return (
-      <div onClick={() => openModal(set)}>
+      <div
+        onClick={() => openModal(set)}
+        tabIndex="0"
+        role="button"
+        onKeyUp={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            openModal(set);
+          }
+        }}
+      >
         <Icon
           id={`add-district-${set}`}
           icon="plus-circle"

@@ -22,6 +22,11 @@
     height: auto;
   }
 
+  #btn-map-export:focus {
+    border: 3px solid #002549;
+    outline:none;
+  }
+
   .heatmap-legend-wrapper {
     font-size: 12px;
     font-weight: 600;

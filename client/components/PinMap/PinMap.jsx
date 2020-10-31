@@ -352,8 +352,28 @@ class PinMap extends Component {
 
     const { heatmap, pins } = this.props;
 
+    const handleExportMap = () => {
+      const { exportMap } = this.props;
+      const selector = '.leaflet-control-easyPrint .CurrentSize';
+      const link = document.body.querySelector(selector);
+      if (link) link.click();
+      exportMap();
+    };
+
     return (
       <>
+        <Button
+          id="map-export"
+          label="Export"
+          handleClick={() => {
+            handleExportMap();
+          }}
+          onKeyUp={e => {
+            if (e.key === 'Enter') {
+              handleExportMap();
+            }
+          }}
+        />
         <Map
           center={position}
           zoom={zoom}
@@ -501,17 +521,7 @@ class PinMap extends Component {
             exportOnly
           />
         </Map>
-        <Button
-          id="map-export"
-          label="Export"
-          handleClick={() => {
-            const { exportMap } = this.props;
-            const selector = '.leaflet-control-easyPrint .CurrentSize';
-            const link = document.body.querySelector(selector);
-            if (link) link.click();
-            exportMap();
-          }}
-        />
+
         <MapboxWordmark />
       </>
     );
@@ -521,7 +531,7 @@ class PinMap extends Component {
     const { ready } = this.state;
     return (
       <div ref={this.container} className="map-container">
-        { ready ? this.renderMap() : null }
+        { ready ? this.renderMap() : null}
       </div>
     );
   }

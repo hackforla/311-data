@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import clx from 'classnames';
@@ -16,6 +16,7 @@ import { MENU_TABS } from '@components/common/CONSTANTS';
 import Button from '@components/common/Button';
 import InfoTitle from '@components/common/InfoTitle';
 import HoverOverInfo from '@components/common/HoverOverInfo';
+import Icon from '@components/common/Icon';
 import Submit from './Submit';
 import ErrorMessage from './ErrorMessage';
 import DateSelector from './DateSelector/DateSelector';
@@ -34,6 +35,8 @@ const Menu = ({
     MENU_TABS.MAP,
     MENU_TABS.VISUALIZATIONS,
   ];
+  const ncRef = useRef(null);
+  const requestsRef = useRef(null);
   const [dataErrors, setDataErrors] = useState({
     missingStartDate: false,
     missingEndDate: false,
@@ -78,8 +81,15 @@ const Menu = ({
                 key={tab}
                 className={clx('menu-tab', { active: tab === activeTab })}
                 onClick={tab === activeTab ? undefined : () => setMenuTab(tab)}
+                onKeyUp={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setMenuTab(tab);
+                  }
+                }}
+                tabIndex="0"
+                role="button"
               >
-                { tab }
+                {tab}
               </a>
             ))}
           </div>
@@ -130,7 +140,7 @@ const Menu = ({
             />
             {
               (comparisonErrors.missingDistrictOne || comparisonErrors.missingDistrictTwo)
-                && <ErrorMessage errorType="districtset" />
+              && <ErrorMessage errorType="districtset" />
             }
             <DistrictSelector />
             <InfoTitle
@@ -172,34 +182,121 @@ const Menu = ({
                 '* Please click to make a selection.',
               ]}
             />
+            <HoverOverInfo
+              title="Skip to Neighborhood Councils"
+              position="left"
+              tabIndex={0}
+              style={{
+                position: 'absolute',
+                right: '50px',
+                top: '125px',
+                padding: '10px 0 0 0',
+              }}
+              onKeyUp={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  ncRef.current.focus();
+                }
+              }}
+            >
+              <Icon
+                id="nav-jump"
+                icon="angle-double-down"
+                size="small"
+                ariaLabel="skip to neighborhood councils"
+                handleClick={() => {
+                  ncRef.current.focus();
+                }}
+
+              />
+            </HoverOverInfo>
             {
               dataErrors.missingEndDate && <ErrorMessage errorType="data" />
             }
             <DateSelector key="data-dateselector" />
-            <InfoTitle
-              title="Neighborhood Council (NC) Selection *"
-              element="h2"
-              infoText={[
-                'This filter allows the user to select specific neighborhood councils.',
-                '* Please check box to make one or more selections.',
-              ]}
-              position="top"
-            />
-            {
-              dataErrors.missingCouncils && <ErrorMessage errorType="selectone" />
-            }
+            <div className="flex" id="nc-selection-container" ref={ncRef} tabIndex={-1}>
+              <InfoTitle
+                title="Neighborhood Council (NC) Selection *"
+                element="h2"
+                infoText={[
+                  'This filter allows the user to select specific neighborhood councils.',
+                  '* Please check box to make one or more selections.',
+                ]}
+                position="top"
+              />
+              <HoverOverInfo
+                title="Skip to Request Types"
+                position="left"
+                tabIndex={0}
+                style={{
+                  position: 'absolute',
+                  right: '50px',
+                  padding: '10px 0 10px',
+                }}
+                onKeyUp={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    requestsRef.current.focus();
+                  }
+                }}
+              >
+                <Icon
+                  id="nav-jump"
+                  icon="angle-double-down"
+                  size="small"
+                  ariaLabel="skip to request types"
+                  handleClick={() => {
+                    requestsRef.current.focus();
+                  }}
+                />
+              </HoverOverInfo>
+            </div>
+            {dataErrors.missingCouncils && (
+              <ErrorMessage errorType="selectone" />
+            )}
             <NCSelector />
-            <InfoTitle
-              title="Request Type Selection *"
-              element="h2"
-              infoText={[
-                'This filter allows the user to select specific 311 request types.',
-                '* Please check box to make one or more selections.',
-              ]}
-            />
-            {
-              dataErrors.missingRequestTypes && <ErrorMessage errorType="selectone" />
-            }
+            <div
+              className="flex"
+              id="request-selection-container"
+              ref={requestsRef}
+              tabIndex={-1}
+            >
+              <InfoTitle
+                title="Request Type Selection *"
+                element="h2"
+                infoText={[
+                  'This filter allows the user to select specific 311 request types.',
+                  '* Please check box to make one or more selections.',
+                ]}
+              />
+              <HoverOverInfo
+                title="Skip to Neighborhood Councils"
+                position="left"
+                tabIndex={0}
+                style={{
+                  position: 'absolute',
+                  right: '50px',
+                  padding: '10px 0 10px',
+                }}
+                onKeyUp={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    ncRef.current.focus();
+                  }
+                }}
+              >
+                <Icon
+                  id="nav-jump"
+                  icon="angle-double-up"
+                  size="small"
+                  ariaLabel="skip to neighborhood councils"
+                  handleClick={() => {
+                    ncRef.current.focus();
+                  }}
+                />
+              </HoverOverInfo>
+            </div>
+            {dataErrors.missingRequestTypes && (
+              <ErrorMessage errorType="selectone" />
+            )}
+
             <RequestTypeSelector />
             <Submit setCErrors={setCErrors} setDErrors={setDErrors} />
           </div>

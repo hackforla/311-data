@@ -39,7 +39,12 @@ const DistrictSelectorModal = ({
               District Selection
             </p>
           </div>
-          <div className="level-right">
+          <div
+            className="level-right"
+            tabIndex="0"
+            role="button"
+            onKeyUp={e => { if (e.key === 'Enter' || e.key === ' ') { closeModal(); } }}
+          >
             <Icon
               id="district-selector-modal-close"
               icon="times"
@@ -68,7 +73,7 @@ const DistrictSelectorModal = ({
           }
         })()}
         <br />
-        { district && (
+        {district && (
           <div className="has-text-centered">
             <Button
               id="district-selector-submit"

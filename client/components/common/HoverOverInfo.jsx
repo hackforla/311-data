@@ -8,16 +8,23 @@ const HoverOverInfo = ({
   text,
   position,
   children,
+  tabIndex,
+  style,
+  onKeyUp,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
+    // eslint-disable-next-line
     <span
       className="hover-over-info"
       onMouseEnter={() => setShowTooltip(true)}
       onFocus={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
       onBlur={() => setShowTooltip(false)}
+      onKeyUp={onKeyUp}
+      tabIndex={tabIndex}
+      style={style}
     >
       { children }
       { showTooltip && (
@@ -63,6 +70,9 @@ HoverOverInfo.propTypes = {
   ]),
   position: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
   children: PropTypes.node,
+  tabIndex: PropTypes.number,
+  style: PropTypes.shape({}),
+  onKeyUp: PropTypes.func,
 };
 
 HoverOverInfo.defaultProps = {
@@ -70,4 +80,7 @@ HoverOverInfo.defaultProps = {
   text: undefined,
   position: 'right',
   children: (<div />),
+  tabIndex: 0,
+  style: {},
+  onKeyUp: () => {},
 };
