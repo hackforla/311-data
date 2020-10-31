@@ -31,7 +31,7 @@ def get_pins(filters):
             'srnumber',
             'requesttype',
             'latitude',
-            'longitude'
+            'longitude',
         ], filters, table='map')
 
         # add result to cache
