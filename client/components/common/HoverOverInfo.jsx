@@ -10,6 +10,7 @@ const HoverOverInfo = ({
   children,
   tabIndex,
   style,
+  onKeyUp,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -20,6 +21,7 @@ const HoverOverInfo = ({
       onFocus={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
       onBlur={() => setShowTooltip(false)}
+      onKeyUp={onKeyUp}
       tabIndex={tabIndex}
       style={style}
     >
@@ -69,6 +71,7 @@ HoverOverInfo.propTypes = {
   children: PropTypes.node,
   tabIndex: PropTypes.number,
   style: PropTypes.shape({}),
+  onKeyUp: PropTypes.func,
 };
 
 HoverOverInfo.defaultProps = {
@@ -78,4 +81,5 @@ HoverOverInfo.defaultProps = {
   children: (<div />),
   tabIndex: 0,
   style: {},
+  onKeyUp: () => {},
 };

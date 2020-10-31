@@ -35,8 +35,8 @@ const Menu = ({
     MENU_TABS.MAP,
     MENU_TABS.VISUALIZATIONS,
   ];
-  const ncRef = useRef();
-  const requestsRef = useRef();
+  const ncRef = useRef(null);
+  const requestsRef = useRef(null);
   const [dataErrors, setDataErrors] = useState({
     missingStartDate: false,
     missingEndDate: false,
@@ -192,20 +192,28 @@ const Menu = ({
                 top: '125px',
                 padding: '10px 0 0 0',
               }}
+              onKeyUp={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  ncRef.current.focus();
+                }
+              }}
             >
               <Icon
                 id="nav-jump"
                 icon="angle-double-down"
-                iconSize='2x'
+                size="small"
                 ariaLabel="skip to neighborhood councils"
-                handleClick={() => ncRef.current.focus()}
+                handleClick={() => {
+                  ncRef.current.focus()
+                }}
+
               />
             </HoverOverInfo>
             {
               dataErrors.missingEndDate && <ErrorMessage errorType="data" />
             }
             <DateSelector key="data-dateselector" />
-            <div className="flex" id="nc-selection-container">
+            <div className="flex" id="nc-selection-container" ref={ncRef} tabIndex={-1}>
               <InfoTitle
                 title="Neighborhood Council (NC) Selection *"
                 element="h2"
@@ -224,23 +232,33 @@ const Menu = ({
                   right: '50px',
                   padding: '10px 0 10px',
                 }}
+                onKeyUp={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    requestsRef.current.focus();
+                  }
+                }}
               >
                 <Icon
                   id="nav-jump"
                   icon="angle-double-down"
-                  iconSize='2x'
+                  size="small"
                   ariaLabel="skip to request types"
+                  handleClick={() => {
+                    requestsRef.current.focus();
+                  }}
                 />
               </HoverOverInfo>
-              {/* <a href="#request-selection-container" className="nav-jump">
-                Jump to Request Type
-              </a> */}
             </div>
             {dataErrors.missingCouncils && (
               <ErrorMessage errorType="selectone" />
             )}
             <NCSelector />
-            <div className="flex" id="request-selection-container">
+            <div
+              className="flex"
+              id="request-selection-container"
+              ref={requestsRef}
+              tabIndex={-1}
+            >
               <InfoTitle
                 title="Request Type Selection *"
                 element="h2"
@@ -258,17 +276,22 @@ const Menu = ({
                   right: '50px',
                   padding: '10px 0 10px',
                 }}
+                onKeyUp={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    ncRef.current.focus();
+                  }
+                }}
               >
                 <Icon
                   id="nav-jump"
                   icon="angle-double-up"
-                  iconSize='2x'
+                  size="small"
                   ariaLabel="skip to neighborhood councils"
+                  handleClick={() => {
+                    ncRef.current.focus();
+                  }}
                 />
               </HoverOverInfo>
-              {/* <a href="#nc-selection-container" className="nav-jump">
-                Jump to Neighborhood Council
-              </a> */}
             </div>
             {dataErrors.missingRequestTypes && (
               <ErrorMessage errorType="selectone" />
