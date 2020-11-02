@@ -35,46 +35,6 @@ class Cluster:
         self.longitude = longitude
 
 
-async def get_clusters_for_city(
-        start_date: datetime.date,
-        end_date: datetime.date,
-        type_ids: List[int],
-        zoom_current: int
-) -> List[Cluster]:
-    """
-    Cluster pins for the entire city
-
-    Args:
-        start_date (date): beginning of date range service was requested
-        end_date (date): end of date range service was requested
-        type_ids (List[int]): the request type ids to match on
-
-    Returns:
-        cluster: a cluster object
-    """
-
-    result = await (db.select([db.func.count()])
-        .where(and_(
-            ServiceRequest.created_date >= start_date,
-            ServiceRequest.created_date <= end_date,
-            ServiceRequest.type_id.in_(type_ids)
-        ))
-    ).gino.scalar()
-
-    # zoom_next = (zoom_current + 1) or DEFAULT_CITY_ZOOM
-
-    cluster_list = []
-    cluster_list.append(Cluster(
-        count=result,
-        expansion_zoom=DEFAULT_CITY_ZOOM,
-        id=0,
-        latitude=DEFAULT_LATITUDE,
-        longitude=DEFAULT_LONGITUDE
-    ))
-
-    return cluster_list
-
-
 async def get_clusters_for_regions(
         start_date: datetime.date,
         end_date: datetime.date,

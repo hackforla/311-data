@@ -243,6 +243,44 @@ def test_compare_frequency(client):
     assert response.json()["set2"]
 
 
+def test_compare_frequency_cd(client):
+    # post old style filters (i.e. text request types)
+    url = "/comparison/frequency"
+    response = client.post(
+        url,
+        json={
+            "startDate": "01/01/2020",
+            "endDate": "01/02/2020",
+            "requestTypes": [
+                "Dead Animal Removal",
+                "Homeless Encampment",
+                "Bulky Items",
+                "Electronic Waste",
+                "Metal/Household Appliances"
+            ],
+            "chart": "frequency",
+            "set1": {
+                "district": "cc",
+                "list": [
+                    1,
+                    2
+                ]
+            },
+            "set2": {
+                "district": "cc",
+                "list": [
+                    3,
+                    4
+                ]
+            }
+        }
+    )
+    assert response.status_code == 200
+    assert response.json()["bins"]
+    assert response.json()["set1"]
+    assert response.json()["set2"]
+
+
 def test_compare_total_requests(client):
     # post old style filters (i.e. text request types)
     url = "/comparison/frequency"
@@ -284,6 +322,44 @@ def test_compare_total_requests(client):
                     97,
                     121,
                     55
+                ]
+            }
+        }
+    )
+    assert response.status_code == 200
+    assert response.json()["bins"]
+    assert response.json()["set1"]
+    assert response.json()["set2"]
+
+
+def test_compare_total_requests_cd(client):
+    # post old style filters (i.e. text request types)
+    url = "/comparison/frequency"
+    response = client.post(
+        url,
+        json={
+            "startDate": "01/01/2020",
+            "endDate": "01/02/2020",
+            "requestTypes": [
+                "Dead Animal Removal",
+                "Homeless Encampment",
+                "Bulky Items",
+                "Electronic Waste",
+                "Metal/Household Appliances"
+            ],
+            "chart": "requests",
+            "set1": {
+                "district": "cc",
+                "list": [
+                    1,
+                    2
+                ]
+            },
+            "set2": {
+                "district": "cc",
+                "list": [
+                    3,
+                    4
                 ]
             }
         }
@@ -344,6 +420,43 @@ def test_compare_timetoclose(client):
     assert response.json()["set2"]
 
 
+def test_compare_timetoclose_cd(client):
+    # post old style filters (i.e. text request types)
+    url = "/comparison/timetoclose"
+    response = client.post(
+        url,
+        json={
+            "startDate": "01/01/2020",
+            "endDate": "01/02/2020",
+            "requestTypes": [
+                "Dead Animal Removal",
+                "Homeless Encampment",
+                "Bulky Items",
+                "Electronic Waste",
+                "Metal/Household Appliances"
+            ],
+            "chart": "time",
+            "set1": {
+                "district": "cc",
+                "list": [
+                    1,
+                    2
+                ]
+            },
+            "set2": {
+                "district": "cc",
+                "list": [
+                    3,
+                    4
+                ]
+            }
+        }
+    )
+    assert response.status_code == 200
+    assert response.json()["set1"]
+    assert response.json()["set2"]
+
+
 def test_compare_counts(client):
     # post old style filters (i.e. text request types)
     url = "/comparison/counts"
@@ -394,6 +507,43 @@ def test_compare_counts(client):
     assert response.json()["set2"]
 
 
+def test_compare_counts_cd(client):
+    # post old style filters (i.e. text request types)
+    url = "/comparison/counts"
+    response = client.post(
+        url,
+        json={
+            "startDate": "01/01/2020",
+            "endDate": "01/02/2020",
+            "requestTypes": [
+                "Dead Animal Removal",
+                "Homeless Encampment",
+                "Bulky Items",
+                "Electronic Waste",
+                "Metal/Household Appliances"
+            ],
+            "chart": "contact",
+            "set1": {
+                "district": "cc",
+                "list": [
+                    1,
+                    2
+                ]
+            },
+            "set2": {
+                "district": "cc",
+                "list": [
+                    3,
+                    4
+                ]
+            }
+        }
+    )
+    assert response.status_code == 200
+    assert response.json()["set1"]
+    assert response.json()["set2"]
+
+
 def test_feedback(client, monkeypatch):
     # monkeypatching creating issue, adding to project, and sending email
     async def mock_create_issue(title, body):
@@ -423,3 +573,16 @@ def test_feedback(client, monkeypatch):
 
     assert response.status_code == 201
     assert response.json()["success"] is True
+
+
+def test_servicerequest(client):
+    url = "/servicerequest/1-1523590121"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert response.json()["createddate"] == 1577865900
+    assert response.json()["closeddate"] == 1577983380
+    assert response.json()["requesttype"] == "Illegal Dumping Pickup"
+    assert response.json()["nc"] == 19
+    assert response.json()["address"] == "16815 W VANOWEN ST, 91406"
+    assert response.json()["latitude"] == 34.19402846
+    assert response.json()["longitude"] == -118.4994716

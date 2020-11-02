@@ -33,7 +33,7 @@ REQUESTS_VIEW = """
             request_types.type_id as type_id,
             requests.nc::SMALLINT as council_id,
             councils.region_id,
-            requests.cc::SMALLINT as city_id,
+            requests.cd::SMALLINT as city_id,
             requests.address::VARCHAR(100),
             requests.latitude,
             requests.longitude
