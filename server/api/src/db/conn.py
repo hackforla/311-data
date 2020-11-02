@@ -8,7 +8,7 @@ from utils.log import log, log_colors
 
 
 def get_engine(url):
-    ATTEMPTS = 5
+    ATTEMPTS = 3
     DELAY = 3
 
     def fail(message):
@@ -29,7 +29,7 @@ def get_engine(url):
                 engine.connect()
             except Exception:
                 if attempt < ATTEMPTS:
-                    log(f'Could not connect to DB, retrying in {DELAY}')
+                    log(f'Could not connect to DB ({engine.url}), retrying in {DELAY}')
                     time.sleep(DELAY)
                     attempt += 1
                     continue

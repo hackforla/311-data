@@ -1,23 +1,34 @@
-FROM python:3.7-slim
+# For more information, please refer to https://aka.ms/vscode-docker-python
+FROM python:3.7-slim-buster
 
-RUN apt-get update && \
-    apt-get install -yq \
-      python3 \
-      python3-dev \
-      gcc \
-      g++ \
-      gfortran \
-      musl-dev && \
-    pip install --upgrade pip
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE 1
 
-COPY requirements.txt /home/api/
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED 1
 
-RUN pip install --no-cache-dir -r /home/api/requirements.txt
+# Install gcc and g++ to build pysupercluster (may not need)
+RUN apt-get update \
+    && apt-get install -y \
+    gcc \
+    g++ \
+    && apt-get clean
 
-COPY setup.cfg /home/api/
-COPY /bin /home/api/bin/
-COPY .env* /src /home/api/src/
+# Install pip requirements
+ADD requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-WORKDIR /home/api
+# Add the application code
+WORKDIR /app
+ADD . /app
 
-CMD python bin/api_check.py && python bin/api_start.py
+# Switch to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
+RUN useradd appuser && chown -R appuser /app
+USER appuser
+
+# Tell Prefect where to look for the config
+ENV PYTHONPATH=.:/app/code
+ENV APP_HOST=0.0.0.0
+
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD python code/run.py

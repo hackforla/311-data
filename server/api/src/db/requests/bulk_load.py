@@ -2,10 +2,8 @@ import gzip
 import csv
 import psycopg2
 from settings import Database, Picklecache
-from . import views
 from .. import info
 from utils.log import log
-import db
 import cache
 
 
@@ -45,8 +43,7 @@ def bulk_load():
 
 
 def load_file(csv_file):
-    """Reset the database, load data from file, and update views"""
-    db.reset()
+    """load data from file"""
 
     conn = psycopg2.connect(Database.URL)
     cur = conn.cursor()
@@ -78,7 +75,7 @@ def load_file(csv_file):
     conn.close()
 
     # finish up
-    views.refresh()
+    # views.refresh()
     info.update()
 
     if Picklecache.ENABLED:

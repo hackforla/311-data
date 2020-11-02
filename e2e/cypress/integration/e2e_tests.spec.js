@@ -3,7 +3,7 @@ describe('311 Data', () => {
     const {_} = Cypress
 
     context('Explore My Council\'s 311 Data', () => {
-        it('Map: Last Week, Dead Animal [DAN]', () => {
+        it('Map: Year-to-date, Dead Animal [DAN]', () => {
 
             cy.server()
             cy.route({
@@ -19,9 +19,9 @@ describe('311 Data', () => {
             cy.get('.menu-tabs > :nth-child(1)').click()
             cy.get('.active').click()
             cy.get('.dropdown-trigger > .button').click()
-            cy.get('[value="LAST_WEEK"]').click()
+            cy.get('[value="YEAR_TO_DATE"]').click()
             cy.get(':nth-child(2) > .select-group-content > .select-item > .select-item-box').click()
-            cy.get('#type-selector-container > div.columns.is-gapless > div:nth-child(1) > div:nth-child(2) > span > input').click({force: true})
+            cy.get('#checkbox-request-checkbox-all').click({force: true})
             cy.get('#btn-sidebar-submit-button').click()
 
             cy.wait('@getFilterList').should((xhr) => {
@@ -41,7 +41,7 @@ describe('311 Data', () => {
             })
         })
 
-        it('Data Visualization: Last Week, Dead Animal [DAN]', () => {
+        it('Data Visualization: Year-to-date, Dead Animal [DAN]', () => {
 
             cy.server()
             cy.route({
@@ -56,9 +56,9 @@ describe('311 Data', () => {
             cy.get('.navbar-end > :nth-child(1)').click()
             cy.get('.menu-tabs > :nth-child(2)').click()
             cy.get('.dropdown-trigger > .button').click()
-            cy.get('[value="LAST_WEEK"]').click()
+            cy.get('[value="YEAR_TO_DATE"]').click()
             cy.get(':nth-child(2) > .select-group-content > .select-item > .select-item-box').click()
-            cy.get('#type-selector-container > div.columns.is-gapless > div:nth-child(1) > div:nth-child(2) > span > input').click({force: true})
+            cy.get('#checkbox-request-checkbox-all').click({force: true})
             cy.get('#btn-sidebar-submit-button').click()
 
             cy.wait('@getFilterList').should((xhr) => {
@@ -81,7 +81,7 @@ describe('311 Data', () => {
             cy.visit('/')
             cy.get('#navbar > div > div:nth-child(2)').click()
             cy.get('#date-selector-dropdown > .dropdown-trigger > .button').click()
-            cy.get('[value="LAST_WEEK"]').click()
+            cy.get('[value="YEAR_TO_DATE"]').click()
             cy.get('.district-selector > :nth-child(1)').click()
             cy.get('#district-selector-dropdown > .dropdown-trigger > .button').click()
             cy.get('[value="nc"]').click()

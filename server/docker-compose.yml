@@ -5,6 +5,7 @@ services:
     container_name: 311-postgres
     image: postgres
     restart: always
+    env_file: .env
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
@@ -17,48 +18,37 @@ services:
 
   redis:
     container_name: 311-redis
-    build: ./redis
+    image: redis
     restart: always
-    expose:
-      - 6379
+    ports:
+      - "6379:6379"
 
   api:
     container_name: 311-api
     build: ./api
     restart: ${API_RESTART_POLICY}
     env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
+      CACHE_ENDPOINT: redis
     ports:
-      - target: ${PORT}
+      - target: ${APP_PORT}
         published: ${API_HOST_PORT}
-    volumes:
-      - ./api/:/home/api
+    command: gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker --log-level info -b 0.0.0.0:5000
+    # volumes:
+    #   - ./api/:/home/api
     depends_on:
       - db
       - redis
 
-  adminer:
-    container_name: postgres-dashboard
-    image: adminer
-    ports:
-      - 8080:8080
-
-  rebrow:
-    container_name: redis-dashboard
-    image: marian/rebrow
-    links:
-      - redis:redis
-    ports:
-      - 5001:5001
-
-  # jupyter:
-  #   container_name: 311-notebook
-  #   image: jupyter/scipy-notebook
-  #   environment:
-  #     DATABASE_URL: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
-  #   ports:
-  #     - 8888:8888
-  #   volumes:
-  #     - ../:/home/jovyan/work
+  prefect:
+    container_name: 311-prefect
+    build: ./prefect
+    env_file: .env
+    environment: 
+      PREFECT__CONTEXT__SECRETS__DSN: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
+    depends_on:
+      - db
 
 volumes:
   backend_data:
