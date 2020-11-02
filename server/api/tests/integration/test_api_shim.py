@@ -579,8 +579,6 @@ def test_servicerequest(client):
     url = "/servicerequest/1-1523590121"
     response = client.get(url)
     assert response.status_code == 200
-    assert response.json()["createddate"] == 1577865900
-    assert response.json()["closeddate"] == 1577983380
     assert response.json()["requesttype"] == "Illegal Dumping Pickup"
     assert response.json()["nc"] == 19
     assert response.json()["address"] == "16815 W VANOWEN ST, 91406"
