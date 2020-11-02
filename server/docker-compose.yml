@@ -44,9 +44,9 @@ services:
   prefect:
     container_name: 311-prefect
     build: ./prefect
+    env_file: .env
     environment: 
       PREFECT__CONTEXT__SECRETS__DSN: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
-    tmpfs: /app/output
     depends_on:
       - db
 

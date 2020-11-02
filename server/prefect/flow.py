@@ -55,12 +55,14 @@ if __name__ == "__main__":
     years = list(prefect.config.data.years)
 
     # use only year datasets if in full mode otherwise use all w/since
-    if mode == 'full':
-        run_datasets = dict((k, all_datasets[k]) for k in years)
-    else:
-        run_datasets = all_datasets
+    run_datasets = dict((k, all_datasets[str(k)]) for k in years)
 
-    logger.info(f"Starting \"{mode}\" flow for {', '.join(run_datasets.keys())}"
+    # if mode == 'full':
+    #     run_datasets = dict((k, all_datasets[str(k)]) for k in years)
+    # else:
+    #     run_datasets = all_datasets
+
+    logger.info(f"Starting \"{mode}\" flow for {', '.join(map(str, run_datasets.keys()))}"
                 f" {'and resetting db' if reset_db else ''}")
     state = flow.run(
         datasets=list(run_datasets.values()),

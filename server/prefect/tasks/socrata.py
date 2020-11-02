@@ -31,17 +31,18 @@ def download_dataset(
     logger = prefect.context.get("logger")
     fieldnames = list(prefect.config.data.fields.keys())
     mode = prefect.config.mode
+    temp_folder = prefect.config.temp_folder or "output"
     offset = 0
 
     if mode == "full":
         where = None
-        output_file = f"output/{dataset}-{mode}.csv"
+        output_file = os.path.join(temp_folder, f"{dataset}-{mode}.csv")
     else:
         # use config setting if not pulled from database
-        if since is None:
-            since = datetime.strptime(prefect.config.data.since, '%Y-%m-%dT%H:%M:%S')
+        # if since is None:
+        #     since = datetime.strptime(prefect.config.data.since, '%Y-%m-%dT%H:%M:%S')
         where = None if since is None else f"updateddate > '{since.isoformat()}'"
-        output_file = f"output/{dataset}-{mode}-{prefect.context.today}.csv"
+        output_file = os.path.join(temp_folder, f"{dataset}-{mode}-{prefect.context.today}.csv")  # noqa
 
     # create Socrata client
     client = Socrata(
@@ -73,12 +74,12 @@ def download_dataset(
                         writer = csv.DictWriter(fd, fieldnames)
                         writer.writeheader()
 
-                logger.info(f'Adding {len(rows)} rows')
-
                 # append batch to CSV file
                 with open(output_file, "a") as fd:
                     writer = csv.DictWriter(fd, fieldnames)
                     writer.writerows(rows)
+
+                logger.info(f'Added {len(rows)} rows to file')
 
                 offset += len(rows)
 

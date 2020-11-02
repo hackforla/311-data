@@ -17,9 +17,7 @@ Works in 3 stages:
 - committing temp data to database
 """
 
-DATA_FOLDER = join(dirname(dirname(__file__)), 'output')
 TEMP_TABLE = "temp_loading"
-MOST_RECENT_COLUMN = "updateddate"
 
 
 def infer_types(fields: Dict[str, str]) -> Dict[str, str]:
@@ -45,12 +43,13 @@ def infer_types(fields: Dict[str, str]) -> Dict[str, str]:
 def get_last_updated() -> datetime:
     logger = prefect.context.get("logger")
     target = prefect.config.data.target
+    recent_column = prefect.config.data.recent_column
     dsn = prefect.context.secrets["DSN"]
     connection = psycopg2.connect(dsn)
     cursor = connection.cursor()
 
     # get last updated
-    query = f"select max({MOST_RECENT_COLUMN}) from {target}"
+    query = f"select max({recent_column}) from {target}"
     cursor.execute(query)
     last_updated = cursor.fetchone()[0]
     connection.commit()
@@ -76,7 +75,7 @@ def prep_load():
     cursor = connection.cursor()
 
     fields = infer_types(prefect.config.data.fields)
-    db_reset = prefect.config.reset_db
+    reset_db = prefect.config.reset_db
     target = prefect.config.data.target
 
     query = f"""
@@ -85,11 +84,13 @@ def prep_load():
         );
     """
     cursor.execute(query)
-    cursor.execute(f"TRUNCATE TABLE {TEMP_TABLE}")
+    logger.info("Resetting data")
+    cursor.execute(f"TRUNCATE TABLE {TEMP_TABLE};")
     logger.info(f"'{TEMP_TABLE}' table truncated")
 
-    if db_reset:
-        cursor.execute(f"TRUNCATE TABLE {target}")
+    if reset_db:
+        cursor.execute(f"TRUNCATE {target} RESTART IDENTITY;")
+        cursor.execute(f"ALTER SEQUENCE {target}_id_seq RESTART WITH 1;")
         logger.info(f"'{target}' table truncated")
 
     connection.commit()
@@ -104,13 +105,14 @@ def load_datafile(datafile: str):
     """
     logger = prefect.context.get("logger")
     dsn = prefect.context.secrets["DSN"]
+    temp_folder = prefect.config.temp_folder or "output"
 
     connection = psycopg2.connect(dsn)
     cursor = connection.cursor()
 
     logger.info(f"Loading data from file: {datafile}")
     try:
-        with open(join(DATA_FOLDER, datafile), 'r') as f:
+        with open(join(temp_folder, datafile), 'r') as f:
             try:
                 cursor.copy_expert(
                     f"COPY {TEMP_TABLE} FROM STDIN WITH (FORMAT CSV, HEADER TRUE)",
@@ -141,7 +143,7 @@ def complete_load() -> Dict[str, int]:
     dsn = prefect.context.secrets["DSN"]
 
     mode = prefect.config.mode
-    db_reset = prefect.config.reset_db
+    reset_db = prefect.config.reset_db
     fieldnames = list(prefect.config.data.fields.keys())
     key = prefect.config.data.key
     target = prefect.config.data.target
@@ -194,7 +196,7 @@ def complete_load() -> Dict[str, int]:
     logger.info(f"{rows_inserted:,} rows inserted in table '{target}'")
 
     # update rows if necessary
-    if db_reset is False or mode != "full":
+    if reset_db is False or mode != "full":
         cursor.execute(update_query)
         rows_updated = cursor.fetchone()[0]
         connection.commit()
@@ -205,7 +207,7 @@ def complete_load() -> Dict[str, int]:
 
     if rows_inserted > 0 or rows_updated > 0:
         # empty temp table if resetting the db
-        if db_reset:
+        if reset_db:
             cursor.execute(f"TRUNCATE TABLE {TEMP_TABLE}")
 
         # refresh views
