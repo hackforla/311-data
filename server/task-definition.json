@@ -7,8 +7,6 @@
       "image": "redis",
       "portMappings": [
         {
-          "hostPort": 6379,
-          "protocol": "tcp",
           "containerPort": 6379
         }
       ],
@@ -19,8 +17,6 @@
       "image": "docker.pkg.github.com/hackforla/311-data/api:dev",
       "portMappings": [
         {
-          "hostPort": 5000,
-          "protocol": "tcp",
           "containerPort": 5000
         }
       ],
@@ -36,6 +32,7 @@
       },
       "environment": [
         { "name": "DEBUG", "value": "True" },
+        { "name": "CACHE_ENDPOINT", "value": "localhost" },
         { "name": "DB_DSN", "value": "postgresql://311_user_dev:QDAQutA5FVVkAUTU@dbsvr-311-data.cs29ter7rwc4.us-east-1.rds.amazonaws.com:5432/311_db_dev" },
         { "name": "SENTRY_URL", "value": "https://467b42786c584f87ae7a7760f96b5652@o452210.ingest.sentry.io/5439266" }
       ]
