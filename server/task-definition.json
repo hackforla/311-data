@@ -37,10 +37,7 @@
         "interval": 20,
         "timeout": 30,
         "retries": 2
-      },      
-      "links": [
-          "redis"
-      ],
+      },
       "environment": [
         { "name": "DEBUG", "value": "True" },
         { "name": "DB_DSN", "value": "postgresql://311_user_dev:QDAQutA5FVVkAUTU@dbsvr-311-data.cs29ter7rwc4.us-east-1.rds.amazonaws.com:5432/311_db_dev" },
