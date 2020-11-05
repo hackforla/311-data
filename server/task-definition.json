@@ -1,5 +1,5 @@
 {
-  "family": "311 Data API",
+  "family": "Data API",
   "containerDefinitions": [
     {
       "name": "redis",
