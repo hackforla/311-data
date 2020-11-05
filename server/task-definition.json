@@ -1,5 +1,5 @@
 {
-  "family": "311-data-api",
+  "family": "311-data-server-task",
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
@@ -13,7 +13,7 @@
       "essential": true
     },
     {
-      "name": "app",
+      "name": "311_data_api",
       "image": "docker.pkg.github.com/hackforla/311-data/api:dev",
       "portMappings": [
         {
