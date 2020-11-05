@@ -20,16 +20,6 @@
           "containerPort": 5000
         }
       ],
-      "essential": true,
-      "healthCheck": {
-        "command": [
-          "CMD-SHELL",
-          "curl -f http://localhost/status/api"
-        ],
-        "interval": 20,
-        "timeout": 30,
-        "retries": 2
-      },
       "environment": [
         { "name": "DEBUG", "value": "True" },
         { "name": "CACHE_ENDPOINT", "value": "localhost" },
