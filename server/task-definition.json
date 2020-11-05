@@ -28,6 +28,12 @@
       ]
     }
   ],
+  "secrets": [
+    {
+      "name": "dev",
+      "valueFrom": "arn:aws:secretsmanager:us-east-1:640613795150:secret:dev-De9UIi"
+    }
+  ],
   "requiresCompatibilities": [
     "FARGATE"
   ],
