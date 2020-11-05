@@ -21,6 +21,15 @@
           "containerPort": 5000
         }
       ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:5000/status/api"
+        ],
+        "interval": 20,
+        "timeout": 30,
+        "retries": 2
+      },
       "secrets": [
         {
           "name": "dev",
