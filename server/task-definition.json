@@ -42,13 +42,8 @@
       ],
       "environment": [
         { "name": "DEBUG", "value": "True" },
+        { "name": "DB_DSN", "value": "postgresql://311_user_dev:QDAQutA5FVVkAUTU@dbsvr-311-data.cs29ter7rwc4.us-east-1.rds.amazonaws.com:5432/311_db_dev" },
         { "name": "SENTRY_URL", "value": "https://467b42786c584f87ae7a7760f96b5652@o452210.ingest.sentry.io/5439266" }
-      ],      
-      "secrets": [
-        {
-          "name": "dev",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:640613795150:secret:dev-De9UIi"
-        }
       ]
     }
   ]
