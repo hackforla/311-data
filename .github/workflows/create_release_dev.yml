@@ -2,7 +2,7 @@ name: Create Images DEV
 on:
   push:
     branches:
-      - dev
+      - feat-dev-ops-ecs
     paths:
       - 'server/**'
 jobs:
