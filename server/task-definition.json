@@ -14,7 +14,7 @@
     },
     {
       "name": "311_data_api",
-      "image": "docker.pkg.github.com/hackforla/311-data/api:dev",
+      "image": "sapparisoftware/311_data_api",
       "portMappings": [
         {
           "containerPort": 5000
