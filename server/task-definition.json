@@ -29,6 +29,15 @@
         "timeout": 30,
         "retries": 2
       },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group" : "/dev-cluster/311_data_api",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      },
       "environment": [
         { "name": "DEBUG", "value": "True" },
         { "name": "CACHE_ENDPOINT", "value": "localhost" },
