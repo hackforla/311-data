@@ -23,7 +23,7 @@ Running ```docker container ls``` should now show 4 containers:
 
 ## Step 2: Configure your environment
 
-Copy .env.example to .env
+Make a copy of the example ```.env``` file as follows.
 
 ```bash
 cp .env.example .env

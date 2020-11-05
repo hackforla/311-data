@@ -2,6 +2,7 @@
 
 [![Build and Test Action Status](https://github.com/hackforla/311-data/workflows/Build%20and%20Test/badge.svg)](https://github.com/hackforla/311-data/actions)
 
+- [How to set up a local API server](docs/server_setup.md)
 - [How to contribute](docs/contributing.md)
 - [Useful commands](docs/useful_commands.md)
 

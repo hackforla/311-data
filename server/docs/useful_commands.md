@@ -1,5 +1,7 @@
 # Useful Commands
 
+## Curl
+
 To time API calls using curl: add ```--write-out '%{time_total}\n' --output /dev/null --silent```
 
 For example:
@@ -7,6 +9,8 @@ For example:
 ```bash
 curl -X POST "http://localhost:5000/map/pins" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"startDate\":\"01/01/2020\",\"endDate\":\"08/27/2020\",\"ncList\":[52,46,128,54,104,76,97,121,55],\"requestTypes\":[\"Homeless Encampment\"]}" --write-out '%{time_total}\n' --output /dev/null --silent
 ```
+
+## Docker
 
 Some other helpful commands:
 
@@ -22,6 +26,8 @@ sudo du -sh *
 # show the size of a drive mounted at xvda1 (EC2)
 df -hT /dev/xvda1
 ```
+
+## Redis
 
 Some helpful Redis commands
 
