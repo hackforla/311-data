@@ -1,5 +1,6 @@
 {
   "family": "DataAPI",
+  "networkMode": "awsvpc",
   "containerDefinitions": [
     {
       "name": "redis",
@@ -17,7 +18,7 @@
     },
     {
       "name": "app",
-      "image": "sapparisoftware/311_data_api",
+      "image": "docker.pkg.github.com/hackforla/311-data/api:dev",
       "portMappings": [
         {
           "hostPort": 80,
@@ -46,5 +47,8 @@
         { "name": "SENTRY_URL", "value": "https://467b42786c584f87ae7a7760f96b5652@o452210.ingest.sentry.io/5439266" }
       ]
     }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
   ]
 }
