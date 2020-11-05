@@ -1,7 +1,6 @@
 {
   "family": "311-data-server-task",
   "networkMode": "awsvpc",
-  "executionRoleArn": "arn:aws:iam::640613795150:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "name": "redis",
@@ -30,12 +29,6 @@
         "timeout": 30,
         "retries": 2
       },
-      "secrets": [
-        {
-          "name": "dev",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:640613795150:secret:dev-De9UIi"
-        }
-      ],
       "environment": [
         { "name": "DEBUG", "value": "True" },
         { "name": "CACHE_ENDPOINT", "value": "localhost" },
