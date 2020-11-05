@@ -1,5 +1,5 @@
 {
-  "family": "DataAPI",
+  "family": "311-data-api",
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
@@ -12,9 +12,7 @@
           "containerPort": 6379
         }
       ],
-      "essential": true,
-      "cpu": 0,
-      "memoryReservation": 400
+      "essential": true
     },
     {
       "name": "app",
@@ -27,8 +25,6 @@
         }
       ],
       "essential": true,
-      "cpu": 0,
-      "memoryReservation": 400,
       "healthCheck": {
         "command": [
           "CMD-SHELL",
@@ -47,5 +43,7 @@
   ],
   "requiresCompatibilities": [
     "FARGATE"
-  ]
+  ],
+  "cpu": "256", 
+  "memory": "512"
 }
