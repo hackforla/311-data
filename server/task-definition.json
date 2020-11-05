@@ -2,6 +2,8 @@
   "family": "311 Data API",
   "containerDefinitions": [
     {
+      "name": "redis",
+      "image": "redis",
       "portMappings": [
         {
           "hostPort": 6379,
@@ -9,12 +11,13 @@
           "containerPort": 6379
         }
       ],
+      "essential": true,
       "cpu": 0,
-      "memoryReservation": 400,
-      "image": "123.dkr.ecr.us-west-2.amazonaws.com/redis",
-      "name": "redis"
+      "memoryReservation": 400
     },
     {
+      "name": "app",
+      "image": "sapparisoftware/311_data_api",
       "portMappings": [
         {
           "hostPort": 80,
@@ -22,13 +25,31 @@
           "containerPort": 5000
         }
       ],
+      "essential": true,
       "cpu": 0,
       "memoryReservation": 400,
-      "image": "123.dkr.ecr.us-west-2.amazonaws.com/pythonapp",
-    "links": [
-        "redis"
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost/status/api"
+        ],
+        "interval": 20,
+        "timeout": 30,
+        "retries": 2
+      },      
+      "links": [
+          "redis"
       ],
-      "name": "app"
+      "environment": [
+        { "name": "DEBUG", "value": "True" },
+        { "name": "SENTRY_URL", "value": "https://467b42786c584f87ae7a7760f96b5652@o452210.ingest.sentry.io/5439266" }
+      ],      
+      "secrets": [
+        {
+          "name": "dev",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:640613795150:secret:dev-De9UIi"
+        }
+      ]
     }
   ]
 }

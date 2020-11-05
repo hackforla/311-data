@@ -1,37 +1,25 @@
-name: CI_Backend
-
+name: Build and Test
 on: [push]
-  # pull_request:
-  #   paths:
-  #     - 'server/**'
-
 defaults:
   run:
     shell: bash
     working-directory: server
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - name: Install and Configure Api
         run: |
           cp .env.example .env
-          echo SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }} >> .env
           docker-compose up --no-start api
-
+      - name: Lint API
+        run: docker-compose run api flake8
       - name: Seed DB and Run Api
         run: |
-            docker-compose run -e TESTING=True api alembic upgrade head
-            docker-compose up -d api
-
-      - name: Linting
-        run: docker-compose run api flake8
-
-      - name: Unit Tests
+          docker-compose run -e TESTING=True api alembic upgrade head
+          docker-compose up -d api
+      - name: Run Unit Tests
         run: docker-compose run api pytest
-
-      - name: Postman Tests
+      - name: Run Postman Tests
         run: chmod +x postman/test.sh && postman/test.sh

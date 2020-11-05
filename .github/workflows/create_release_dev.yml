@@ -1,0 +1,36 @@
+name: Create Images DEV
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'server/**'
+jobs:
+  build:
+    name: Create Dev Docker Images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build and Push Dev API to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          path: server/api
+          registry: docker.pkg.github.com
+          repository: hackforla/311-data/api
+          tags: 'dev'
+          tag_with_ref: true
+          tag_with_sha: true
+      - name: Build and Push Dev Prefect to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          path: server/prefect
+          registry: docker.pkg.github.com
+          repository: hackforla/311-data/prefect
+          tags: 'dev'
+          tag_with_ref: true
+          tag_with_sha: true
