@@ -1,6 +1,7 @@
 {
   "family": "311-data-server-task",
   "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::640613795150:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "name": "redis",
