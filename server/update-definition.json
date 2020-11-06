@@ -1,0 +1,28 @@
+{
+  "family": "311-data-update-task",
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::640613795150:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "311_data_prefect",
+      "image": "sapparisoftware/311_data_prefect",
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group" : "/dev-cluster/311_data_prefect",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      },
+      "environment": [
+        { "name": "PREFECT__CONTEXT__SECRETS__DSN", "value": "postgresql://311_user_dev:QDAQutA5FVVkAUTU@dbsvr-311-data.cs29ter7rwc4.us-east-1.rds.amazonaws.com:5432/311_db_dev" }
+      ]
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256", 
+  "memory": "512"
+}
