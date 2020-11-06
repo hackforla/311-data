@@ -13,20 +13,22 @@ jobs:
       - name: Build and Push Dev API to GitHub Packages
         uses: docker/build-push-action@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           path: server/api
-          repository: hackforla/311-data-api
+          registry: docker.pkg.github.com
+          repository: hackforla/311-data/api
           tags: 'dev'
           tag_with_ref: true
           tag_with_sha: true
       - name: Build and Push Dev Prefect to GitHub Packages
         uses: docker/build-push-action@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           path: server/prefect
-          repository: hackforla/311-data-prefect
+          registry: docker.pkg.github.com
+          repository: hackforla/311-data/prefect
           tags: 'dev'
           tag_with_ref: true
           tag_with_sha: true
