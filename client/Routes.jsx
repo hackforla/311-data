@@ -1,3 +1,5 @@
+// temporarily disabling eslint until this is updated for v2
+// eslint-disable
 import React from 'react';
 import {
   Switch,
