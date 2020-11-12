@@ -11,8 +11,6 @@ import moment from 'moment';
 // TODO: pull style constants into mui theme
 const useStyles = makeStyles({
   footer: {
-    display: 'flex',
-    verticalAlign: 'center',
     position: 'absolute',
     bottom: 0,
     height: '40px',
