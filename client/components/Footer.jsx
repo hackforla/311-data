@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   lastUpdated: {
     lineHeight: '40px',
     fontSize: '14px',
-  }
+  },
 });
 
 // TODO: check with UI/UX re placement of social media, privacy policy links
@@ -41,7 +41,7 @@ const Footer = ({
         )}
       </Container>
     </footer>
-  )
+  );
 };
 
 const mapStateToProps = state => ({

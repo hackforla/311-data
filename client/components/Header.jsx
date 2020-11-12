@@ -11,7 +11,7 @@ import {
 const useStyles = makeStyles({
   appBar: {
     height: '62px',
-    backgroundColor: '#2A404E'
+    backgroundColor: '#2A404E',
   },
   button: {
     textTransform: 'none',
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     fontFamily: 'Oswald, sans-serif',
     fontSize: '30px',
     fontWeight: 'bold',
-    letterSpacing: '4px'
+    letterSpacing: '4px',
   },
 });
 
@@ -41,7 +41,7 @@ const Header = () => {
         <Button className={classes.button}>Help Center</Button>
       </Toolbar>
     </AppBar>
-  )
-}
+  );
+};
 
 export default Header;
