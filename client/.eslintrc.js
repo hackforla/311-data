@@ -56,7 +56,8 @@ module.exports = {
         tags: [],
         roles: ['tabpanel'],
       },
-    ]
+    ],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
   },
 
 };
