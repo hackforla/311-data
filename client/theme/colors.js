@@ -1,5 +1,5 @@
 const primaryTextColor = '#FFFFFF';
 
-export {
+export default {
   primaryTextColor,
 };

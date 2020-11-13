@@ -7,7 +7,7 @@ import { getMetadataRequest } from '@reducers/metadata';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Map from '@components/Map';
-import theme from './theme/theme'
+import theme from './theme/theme';
 
 const App = ({
   getMetadata,
