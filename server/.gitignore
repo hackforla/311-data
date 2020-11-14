@@ -1,5 +1,8 @@
 .env
 
+.tfvars
+.tfstate*
+
 __tmp__
 /jmeter/out
 
