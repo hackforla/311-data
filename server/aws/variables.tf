@@ -53,6 +53,6 @@ variable health_check_path {
 variable acm_certificate_arn  {}
 
 variable tags {
-  default = {}
-  type    = map
+  default     = {}
+  type        = map
 }

@@ -8,7 +8,7 @@ resource "aws_lb" "alb" {
   load_balancer_type = "application"
   subnets            = module.networked_rds.network_public_subnet_ids
   security_groups    = [aws_security_group.alb.id]
-#   tags               = merge({ Name = local.name }, var.tags)
+  tags               = merge({ Name = local.name }, var.tags)
 }
 
 resource "aws_security_group" "alb" {
@@ -16,7 +16,7 @@ resource "aws_security_group" "alb" {
   description = "load balancer sg for ingress and egress to ${var.task_name}"
   vpc_id      = module.networked_rds.network_vpc_id
 
-#   tags = merge({ Name = local.name }, var.tags)
+  tags = merge({ Name = local.name }, var.tags)
 
   ingress {
     description = "HTTP from world"
@@ -50,13 +50,13 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   default_action {
-    type = "redirect"
+    type              = "redirect"
     redirect {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
-    target_group_arn = aws_lb_target_group.default.arn
+    target_group_arn  = aws_lb_target_group.default.arn
   }
 }
 
@@ -74,21 +74,21 @@ resource "aws_lb_listener" "https" {
 }
 
 resource "aws_lb_target_group" "default" {
-  name_prefix = substr(local.name, 0, 6)
-  port        = var.container_port
-  protocol    = "HTTP"
-	deregistration_delay = 100
-  target_type = "ip"
-  vpc_id      = module.networked_rds.network_vpc_id
+  name_prefix           = substr(local.name, 0, 6)
+  port                  = var.container_port
+  protocol              = "HTTP"
+	deregistration_delay  = 100
+  target_type           = "ip"
+  vpc_id                = module.networked_rds.network_vpc_id
 
   health_check {
-		enabled = true
-		healthy_threshold = 5
-		interval = 30
-		path = var.health_check_path
-		port = "traffic-port"
-		protocol = "HTTP"
-		timeout = 10
+		enabled             = true
+		healthy_threshold   = 5
+		interval            = 30
+		path                = var.health_check_path
+		port                = "traffic-port"
+		protocol            = "HTTP"
+		timeout             = 10
 		unhealthy_threshold = 3
   }
 }

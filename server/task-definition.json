@@ -40,15 +40,12 @@
         }
       },
       "secrets": [
-        {
-          "name": "dev",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:640613795150:secret:dev-De9UIi"
-        }
+        { "name": "DB_DSN", "valueFrom": "/dev/us-east-1/DB_DSN" },
+        { "name": "SENTRY_URL", "valueFrom": "/dev/us-east-1/SENTRY_URL" }
       ],
       "environment": [
         { "name": "DEBUG", "value": "True" },
-        { "name": "CACHE_ENDPOINT", "value": "localhost" },
-        { "name": "SENTRY_URL", "value": "https://467b42786c584f87ae7a7760f96b5652@o452210.ingest.sentry.io/5439266" }
+        { "name": "CACHE_ENDPOINT", "value": "localhost" }
       ]
     }
   ],

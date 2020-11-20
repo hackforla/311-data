@@ -37,3 +37,23 @@ keys *
 mget <key>
 MEMORY USAGE <key>
 ```
+
+
+## AWS
+
+aws ecs register-task-definition --cli-input-json task-definition.json --profile 311user
+
+aws logs describe-log-groups --profile 311user
+
+
+
+docker -c 311context -f docker-compose.ecs.yml compose up
+
+docker -c 311context -f docker-compose.ecs.yml compose up
+
+aws elbv2 describe-load-balancers --profile 311userpw
+
+aws cloudformation delete-stack --stack-name arn:aws:cloudformation:us-east-1:640613795150:stack/server/32b66700-1968-11eb-bb25-1246411399d1 --profile 311user
+
+aws secretsmanager get-secret-value --secret-id dev --profile 311user
+

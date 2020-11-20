@@ -1,7 +1,12 @@
 .env
 
-.tfvars
-.tfstate*
+# settings
+*.tfvars
+
+# Compiled files
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
 
 __tmp__
 /jmeter/out

@@ -7,21 +7,21 @@ provider "aws" {
 module "networked_rds" {
   source = "git::https://github.com/100Automations/terraform-aws-postgres-vpc.git"
 
-  project_name = "la-311-data"
-  region = var.region
-  account_id = var.account_id
-  stage = var.stage
+  project_name          = "la-311-data"
+  region                = var.region
+  account_id            = var.account_id
+  stage                 = var.stage
 
-  availability_zones = var.availability_zones
-  ssh_public_key_names = ["id_matt_H4LA"]
+  availability_zones    = var.availability_zones
+  ssh_public_key_names  = ["id_matt_H4LA"]
   
   # database settings
-  db_name = var.db_name
-  db_username = var.db_username
-  db_password = var.db_password
+  db_name               = var.db_name
+  db_username           = var.db_username
+  db_password           = var.db_password
 
   bastion_instance_type = "t2.micro"
-  db_instance_class = "db.t2.micro"
+  db_instance_class     = "db.t2.micro"
 }
 
 resource "aws_ssm_parameter" "secret" {
@@ -31,25 +31,12 @@ resource "aws_ssm_parameter" "secret" {
   value       = "postgresql://${var.db_username}:${var.db_password}@${module.networked_rds.db_instance_endpoint}/${var.db_name}"
 }
 
-# data "template_file" "task_definition" {
-#   template = file("templates/task-definition.json")
-#   vars = {
-#     account_id       = var.account_id
-#     task_name        = var.task_name
-#     stage            = var.stage
-#     container_memory = var.container_memory
-#     container_cpu    = var.container_cpu
-#     region           = var.region
-#     # secrets injected securely from AWS SSM systems manager param store
-#     # https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html
-#     # db_hostname = data.aws_ssm_parameter.db_hostname.arn
-#     # token_secret = data.aws_ssm_parameter.token_secret.arn
-#     # postgres_password = data.aws_ssm_parameter.postgres_password.arn
-#   }
-# }
-
 resource "aws_ecs_cluster" "cluster" {
   name = "311-data-cluster"
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 resource "aws_security_group" "svc_sg" {
@@ -77,14 +64,14 @@ resource "aws_security_group" "svc_sg" {
   }
 
   egress {
-    description = "outbound traffic to the world"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description     = "outbound traffic to the world"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
     security_groups = [aws_security_group.alb.id]
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks     = ["0.0.0.0/0"]
   }
-  # tags = merge({ Name = "ecs-service-sg" }, var.tags)
+  tags = merge({ Name = "ecs-service-sg" }, var.tags)
 }
 
 resource "aws_ecs_service" "svc" {
@@ -105,5 +92,5 @@ resource "aws_ecs_service" "svc" {
     security_groups  = [aws_security_group.svc_sg.id, module.networked_rds.db_security_group_id, module.networked_rds.bastion_security_group_id]
     assign_public_ip = true
   }
-  depends_on = [aws_lb.alb, aws_lb_listener.https, aws_ssm_parameter.secret]
+  depends_on      = [aws_lb.alb, aws_lb_listener.https, aws_ssm_parameter.secret]
 }
