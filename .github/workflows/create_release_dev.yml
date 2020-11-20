@@ -42,12 +42,12 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: server/update-definition.json
-          service: dev-ecs-service
-          cluster: dev-cluster
+          # service: dev-ecs-service
+          # cluster: dev-cluster
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: server/task-definition.json
-          service: dev-ecs-service
-          cluster: dev-cluster
-          wait-for-service-stability: true
+          # service: dev-ecs-service
+          # cluster: 311-data-cluster
+          # wait-for-service-stability: true
