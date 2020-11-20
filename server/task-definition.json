@@ -15,7 +15,7 @@
     },
     {
       "name": "311_data_api",
-      "image": "sapparisoftware/311_data_api",
+      "image": "la311data/311_data_api",
       "portMappings": [
         {
           "containerPort": 5000

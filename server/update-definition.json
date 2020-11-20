@@ -5,7 +5,7 @@
   "containerDefinitions": [
     {
       "name": "311_data_prefect",
-      "image": "sapparisoftware/311_data_prefect",
+      "image": "la311data/311_data_prefect",
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
