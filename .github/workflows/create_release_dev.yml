@@ -17,8 +17,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           path: server/api
           repository: la311data/311_data_api
-          tags: 'latest'
-          tags: 'dev'
+          tags: 'latest', 'dev'
           tag_with_ref: true
           tag_with_sha: true
       - name: Build and Push Dev Prefect to Docker Hub
@@ -28,8 +27,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           path: server/prefect
           repository: la311data/311_data_prefect
-          tags: 'latest'
-          tags: 'dev'
+          tags: 'latest', 'dev'
           tag_with_ref: true
           tag_with_sha: true
       - name: Configure AWS credentials
