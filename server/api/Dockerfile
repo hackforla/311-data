@@ -26,9 +26,12 @@ ADD . /app
 RUN useradd appuser && chown -R appuser /app
 USER appuser
 
-# Tell Prefect where to look for the config
+# Set python path
 ENV PYTHONPATH=.:/app/code
 ENV APP_HOST=0.0.0.0
 
+# Make startup script executable
+RUN ["chmod", "+x", "/app/start_api.sh"]
+
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD python code/run.py
+CMD /app/start_api.sh

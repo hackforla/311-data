@@ -1,17 +1,19 @@
 .env
 
-# settings
+# Terraform stuff
 *.tfvars
-
-# Compiled files
 *.tfstate
 *.tfstate.backup
 *.tfstate.lock.info
+.terraform/
 
+# SSH keys
+public_keys/
+*.pub
+
+# Python temp directories
 __tmp__
 /jmeter/out
-
 __pycache__
 .pytest_cache
-
 __working__
