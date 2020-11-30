@@ -62,3 +62,14 @@ ssh -i ~/.ssh/[YOUR SSH KEY] -L 5432:[DB URL]:5432 [EC2 USER]@[BASTION IP]
 There are database clients such as [Postico](https://eggerapps.at/postico/) which have good support for using SSH tunnels to connect to a database.
 
 GitHub has a [good guide](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/connecting-to-github-with-ssh) for creating a SSH key for yourself if you've never done it before. It's a good idea to create a new key for HackforLA projects and name it accordingly (e.g. "yourname_H4LA").
+
+## Terraform Workspaces
+
+The infrastructure is designed to be implemented in multiple "stages" (e.g. development and production) using Terraform workspaces.
+
+```bash
+terraform init
+terraform workspace list
+terraform workspace select dev
+terraform apply -var-file=dev.tfvars
+```

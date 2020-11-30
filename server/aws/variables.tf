@@ -1,3 +1,7 @@
+locals {
+  name = "${var.stage}-${var.task_name}"
+}
+
 variable profile {}
 
 variable region {
@@ -6,7 +10,7 @@ variable region {
 }
 
 variable availability_zones {
-  description = "Available cidr blocks for public subnets."
+  description = "Available CIDR blocks for public subnets."
   type        = list(string)  
   default     = [
     "us-east-1a",
@@ -40,9 +44,14 @@ variable container_port {
   default     = 5000
 }
 
+variable container_tag {
+  type        = string
+  default     = "dev"
+}
+
 variable task_name {
   type        = string
-  default     = "311-data-api"
+  default     = "la-311-data"
 }
 
 variable health_check_path {

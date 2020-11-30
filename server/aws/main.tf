@@ -1,4 +1,3 @@
-
 provider "aws" {
   profile = var.profile
   region  = var.region
@@ -32,15 +31,15 @@ resource "aws_ssm_parameter" "secret" {
 }
 
 resource "aws_ecs_cluster" "cluster" {
-  name = "311-data-cluster"
-  setting {
-    name  = "containerInsights"
-    value = "enabled"
-  }
+  name = "${local.name}-cluster"
+  # setting {
+  #   name  = "containerInsights"
+  #   value = "disabled"
+  # }
 }
 
-resource "aws_security_group" "svc_sg" {
-  name_prefix = "bn-loadbalancer"
+resource "aws_security_group" "svc" {
+  name_prefix = "${local.name}-svc"
   description = "inbound from load balancer to ecs service"
 
   vpc_id = module.networked_rds.network_vpc_id
@@ -71,11 +70,12 @@ resource "aws_security_group" "svc_sg" {
     security_groups = [aws_security_group.alb.id]
     cidr_blocks     = ["0.0.0.0/0"]
   }
+  
   tags = merge({ Name = "ecs-service-sg" }, var.tags)
 }
 
 resource "aws_ecs_service" "svc" {
-  name            = var.task_name
+  name            = "${local.name}-svc"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = "arn:aws:ecs:${var.region}:${var.account_id}:task-definition/311-data-server-task"
   launch_type     = "FARGATE"
@@ -89,8 +89,28 @@ resource "aws_ecs_service" "svc" {
 
   network_configuration {
     subnets          = module.networked_rds.network_public_subnet_ids
-    security_groups  = [aws_security_group.svc_sg.id, module.networked_rds.db_security_group_id, module.networked_rds.bastion_security_group_id]
+    security_groups  = [aws_security_group.svc.id, module.networked_rds.db_security_group_id, module.networked_rds.bastion_security_group_id]
     assign_public_ip = true
   }
+
   depends_on      = [aws_lb.alb, aws_lb_listener.https, aws_ssm_parameter.secret]
+}
+
+# scheduled tasks use the same subnets and security groups as services
+module "ecs_scheduled_task" {
+  source                          = "git::https://github.com/tmknom/terraform-aws-ecs-scheduled-task.git?ref=tags/2.0.0"
+  name                            = "${local.name}-update-task"
+  schedule_expression             = "cron(0 8 * * ? *)"
+  container_definitions           = file("templates/prefect.json")
+  cluster_arn                     = aws_ecs_cluster.cluster.arn
+  subnets                         = module.networked_rds.network_public_subnet_ids
+  security_groups                 = [aws_security_group.svc.id, module.networked_rds.db_security_group_id, module.networked_rds.bastion_security_group_id]
+  assign_public_ip                = true
+  cpu                             = var.container_cpu
+  memory                          = var.container_memory
+  requires_compatibilities        = ["FARGATE"]
+  create_ecs_events_role          = false
+  ecs_events_role_arn             = "arn:aws:iam::${var.account_id}:role/ecsEventsRole"
+  create_ecs_task_execution_role  = false
+  ecs_task_execution_role_arn     = "arn:aws:iam::${var.account_id}:role/ecsTaskExecutionRole"
 }

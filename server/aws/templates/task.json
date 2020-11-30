@@ -1,0 +1,47 @@
+[
+  {
+    "name": "redis",
+    "image": "redis",
+    "portMappings": [
+      {
+        "containerPort": 6379
+      }
+    ],
+    "essential": true
+  },
+  {
+    "name": "311_data_api",
+    "image": "la311data/311_data_api",
+    "portMappings": [
+      {
+        "containerPort": 5000
+      }
+    ],
+    "healthCheck": {
+      "command": [
+        "CMD-SHELL",
+        "python -c \"print('health OK')\""
+      ],
+      "interval": 20,
+      "timeout": 30,
+      "retries": 2
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group" : "/dev-cluster/311_data_api",
+        "awslogs-region": "us-east-1",
+        "awslogs-stream-prefix": "ecs",
+        "awslogs-create-group": "true"
+      }
+    },
+    "secrets": [
+      { "name": "DB_DSN", "valueFrom": "/dev/us-east-1/DB_DSN" },
+      { "name": "SENTRY_URL", "valueFrom": "/dev/us-east-1/SENTRY_URL" }
+    ],
+    "environment": [
+      { "name": "DEBUG", "value": "True" },
+      { "name": "CACHE_ENDPOINT", "value": "localhost" }
+    ]
+  }
+]

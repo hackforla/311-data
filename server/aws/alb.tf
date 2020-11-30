@@ -1,8 +1,4 @@
 # application load balancer 
-locals {
-  name = "${var.stage}-${var.task_name}"
-}
-
 resource "aws_lb" "alb" {
   name               = "${local.name}-lb"
   load_balancer_type = "application"
@@ -51,12 +47,13 @@ resource "aws_lb_listener" "http" {
 
   default_action {
     type              = "redirect"
+    target_group_arn  = aws_lb_target_group.default.arn
+
     redirect {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
-    target_group_arn  = aws_lb_target_group.default.arn
   }
 }
 
