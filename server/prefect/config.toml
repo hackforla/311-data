@@ -3,9 +3,6 @@
 # These settings can be overridden with environment variables that follow the pattern:
 #     PREFECT__[setting name]
 
-# mode can be "full" (uses datasets for "data.years") or "update" (uses "data.since" as start across all datasets)
-mode = "update"
-
 # determines whether Dask should be used to parallelize the flow run
 dask = true
 

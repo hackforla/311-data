@@ -30,19 +30,10 @@ def download_dataset(
     # config for run
     logger = prefect.context.get("logger")
     fieldnames = list(prefect.config.data.fields.keys())
-    mode = prefect.config.mode
     temp_folder = prefect.config.temp_folder or "output"
     offset = 0
-
-    if mode == "full":
-        where = None
-        output_file = os.path.join(temp_folder, f"{dataset}-{mode}.csv")
-    else:
-        # use config setting if not pulled from database
-        # if since is None:
-        #     since = datetime.strptime(prefect.config.data.since, '%Y-%m-%dT%H:%M:%S')
-        where = None if since is None else f"updateddate > '{since.isoformat()}'"
-        output_file = os.path.join(temp_folder, f"{dataset}-{mode}-{prefect.context.today}.csv")  # noqa
+    where = None if since is None else f"updateddate > '{since.isoformat()}'"
+    output_file = os.path.join(temp_folder, f"{dataset}-{prefect.context.today}.csv")
 
     # create Socrata client
     client = Socrata(

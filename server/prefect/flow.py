@@ -50,7 +50,6 @@ if __name__ == "__main__":
     logger = prefect.context.get("logger")
 
     dask = prefect.config.dask
-    mode = prefect.config.mode
     reset_db = prefect.config.reset_db
 
     all_datasets = dict(prefect.config.socrata.datasets)
@@ -59,7 +58,7 @@ if __name__ == "__main__":
     # use only datasets for configured years
     run_datasets = dict((k, all_datasets[str(k)]) for k in years)
 
-    logger.info(f"Starting \"{mode}\" flow for {', '.join(map(str, run_datasets.keys()))}"
+    logger.info(f"Starting update flow for {', '.join(map(str, run_datasets.keys()))}"
                 f" {'and resetting db' if reset_db else ''}")
 
     state = flow.run(

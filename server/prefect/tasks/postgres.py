@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from os.path import join, dirname
+from os.path import join
 from typing import Dict
 import requests
 
@@ -141,8 +141,6 @@ def complete_load() -> Dict[str, int]:
     """
     logger = prefect.context.get("logger")
     dsn = prefect.context.secrets["DSN"]
-
-    mode = prefect.config.mode
     reset_db = prefect.config.reset_db
     fieldnames = list(prefect.config.data.fields.keys())
     key = prefect.config.data.key
@@ -196,7 +194,7 @@ def complete_load() -> Dict[str, int]:
     logger.info(f"{rows_inserted:,} rows inserted in table '{target}'")
 
     # update rows if necessary
-    if reset_db is False or mode != "full":
+    if reset_db is False:
         cursor.execute(update_query)
         rows_updated = cursor.fetchone()[0]
         connection.commit()
@@ -264,21 +262,21 @@ def log_to_database(task, old_state, new_state):
         connection = psycopg2.connect(dsn)
         cursor = connection.cursor()
 
-        table_query = """
-            CREATE TABLE IF NOT EXISTS log (
-                id SERIAL PRIMARY KEY,
-                status character varying DEFAULT 'INFO'::character varying,
-                message text,
-                created_time timestamp without time zone DEFAULT now()
-            );
-        """
+        # table_query = """
+        #     CREATE TABLE IF NOT EXISTS log (
+        #         id SERIAL PRIMARY KEY,
+        #         status character varying DEFAULT 'INFO'::character varying,
+        #         message text,
+        #         created_time timestamp without time zone DEFAULT now()
+        #     );
+        # """
 
         insert_query = f"""
             INSERT INTO log (status, message)
             VALUES ('{status}', '{msg}')
         """
-        cursor.execute(table_query)
-        connection.commit()
+        # cursor.execute(table_query)
+        # connection.commit()
         cursor.execute(insert_query)
         connection.commit()
         cursor.close()

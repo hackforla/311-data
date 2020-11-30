@@ -46,20 +46,17 @@ docker run --env PREFECT__CONTEXT__SECRETS__DSN -it prefect
 
 Populating a new database from Socrata using the pipeline requires a few additional configuration settings. They are found in the TOML file but the easiest way to provide them is using environment variables.
 
-The mode needs to set to "full" and the years to be loaded need to be specified as in the following example. Optionally, any existing data can be cleared out using the reset_db flag.
+When running the prefect flow the only required environment variable is the DSN of the 311 database to connect to. Optionally, the years to be loaded can be specified in order to limit the amount of data in the database.
 
 ```bash
 # set the DSN as an environment variable
 export PREFECT__CONTEXT__SECRETS__DSN=postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}
-export PREFECT__MODE=full  # specify that this is a full data loadd
-export PREFECT__RESET_DB=true  # to wipe any existing requests data
-export PREFECT__DATA__YEARS=["2020","2019"]  # the years to load as a string list
+export PREFECT__DATA__YEARS=["2020","2019"]  # OPTIONAL: the years to load as a string list
+
 # run the image interactively
-docker run -e PREFECT__CONTEXT__SECRETS__DSN -e PREFECT__MODE -e PREFECT__RESET_DB -e PREFECT__DATA__YEARS -it prefect
+docker run -e PREFECT__CONTEXT__SECRETS__DSN -e PREFECT__DATA__YEARS -it prefect
 # or do the above with an environment file and the --env-file argument
 ```
-
-docker-compose run -e PREFECT__MODE=full -e PREFECT__DATA__YEARS=["2020","2019","2018","2017","2016","2015"] -it prefect
 
 ## Enabling Slack notifications
 
@@ -96,7 +93,6 @@ The database URL (DSN) secrets are expected to be provided as environment variab
 
 ### Flow configuration
 
-* mode: either *'full'* whether all records for the matching 'year' setting or *'update'* whether to download new and updated records using the 'since' setting
 * domain: the path to the Socrata instance (e.g. "data.lacity.org")
 * dask: setting this to True will run the download steps in parallel
 * datasets: a dictionary of available years and Socrata dataset keys
