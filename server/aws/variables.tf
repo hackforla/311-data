@@ -23,6 +23,11 @@ variable stage {
   default     = "dev"
 }
 
+variable image_tag {
+  type        = string
+  default     = "dev"
+}
+
 variable account_id {}
 
 variable db_name {}
@@ -36,7 +41,7 @@ variable container_cpu {
 
 variable container_memory {
   type        = number
-  default     = 512
+  default     = 1024
 }
 
 variable container_port {

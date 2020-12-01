@@ -1,7 +1,7 @@
 [
   {
     "name": "redis",
-    "image": "redis",
+    "image": "redis:6",
     "portMappings": [
       {
         "containerPort": 6379
@@ -11,10 +11,10 @@
   },
   {
     "name": "311_data_api",
-    "image": "la311data/311_data_api",
+    "image": "la311data/311_data_api:${image_tag}",
     "portMappings": [
       {
-        "containerPort": 5000
+        "containerPort": ${container_port}
       }
     ],
     "healthCheck": {
@@ -29,15 +29,15 @@
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group" : "/dev-cluster/311_data_api",
-        "awslogs-region": "us-east-1",
+        "awslogs-group" : "/${stage}/${task_name}/311_data_api",
+        "awslogs-region": "${region}",
         "awslogs-stream-prefix": "ecs",
         "awslogs-create-group": "true"
       }
     },
     "secrets": [
-      { "name": "DB_DSN", "valueFrom": "/dev/us-east-1/DB_DSN" },
-      { "name": "SENTRY_URL", "valueFrom": "/dev/us-east-1/SENTRY_URL" }
+      { "name": "DB_DSN", "valueFrom": "/${stage}/${region}/DB_DSN" },
+      { "name": "SENTRY_URL", "valueFrom": "/${stage}/${region}/SENTRY_URL" }
     ],
     "environment": [
       { "name": "DEBUG", "value": "True" },

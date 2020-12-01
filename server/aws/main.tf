@@ -74,10 +74,48 @@ resource "aws_security_group" "svc" {
   tags = merge({ Name = "ecs-service-sg" }, var.tags)
 }
 
+data "template_file" "task_definition" {
+  template = file("templates/task.json")
+  vars = {
+    # container_memory = var.container_memory
+    # container_cpu    = var.container_cpu
+    container_port   = var.container_port
+    # container_name   = var.container_name
+    image_tag        = var.image_tag
+    task_name        = var.task_name
+    region           = var.region
+    stage            = var.stage
+  }
+}
+
+data "template_file" "prefect_definition" {
+  template = file("templates/prefect.json")
+  vars = {
+    # container_memory = var.container_memory
+    # container_cpu    = var.container_cpu
+    # container_port   = var.container_port
+    # container_name   = var.container_name
+    image_tag        = var.image_tag
+    task_name        = var.task_name
+    region           = var.region
+    stage            = var.stage
+  }
+}
+
+resource "aws_ecs_task_definition" "task" {
+  family = "${local.name}-server-task"
+  container_definitions    = data.template_file.task_definition.rendered
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  memory                   = var.container_memory
+  cpu                      = var.container_cpu
+  execution_role_arn       = "arn:aws:iam::${var.account_id}:role/ecsTaskExecutionRole"
+}
+
 resource "aws_ecs_service" "svc" {
   name            = "${local.name}-svc"
   cluster         = aws_ecs_cluster.cluster.id
-  task_definition = "arn:aws:ecs:${var.region}:${var.account_id}:task-definition/311-data-server-task"
+  task_definition = aws_ecs_task_definition.task.arn
   launch_type     = "FARGATE"
   desired_count   = 1
 
@@ -101,13 +139,13 @@ module "ecs_scheduled_task" {
   source                          = "git::https://github.com/tmknom/terraform-aws-ecs-scheduled-task.git?ref=tags/2.0.0"
   name                            = "${local.name}-update-task"
   schedule_expression             = "cron(0 8 * * ? *)"
-  container_definitions           = file("templates/prefect.json")
+  container_definitions           = data.template_file.prefect_definition.rendered
   cluster_arn                     = aws_ecs_cluster.cluster.arn
   subnets                         = module.networked_rds.network_public_subnet_ids
   security_groups                 = [aws_security_group.svc.id, module.networked_rds.db_security_group_id, module.networked_rds.bastion_security_group_id]
   assign_public_ip                = true
   cpu                             = var.container_cpu
-  memory                          = var.container_memory
+  memory                          = 2048
   requires_compatibilities        = ["FARGATE"]
   create_ecs_events_role          = false
   ecs_events_role_arn             = "arn:aws:iam::${var.account_id}:role/ecsEventsRole"
