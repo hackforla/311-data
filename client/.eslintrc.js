@@ -50,5 +50,14 @@ module.exports = {
       }
     ],
     "template-curly-spacing": 'off',
+    'jsx-a11y/no-noninteractive-tabindex': [
+      'error',
+      {
+        tags: [],
+        roles: ['tabpanel'],
+      },
+    ],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
   },
+
 };

@@ -1,2 +1,4 @@
 *.json
 *.test.js*
+v1/*
+

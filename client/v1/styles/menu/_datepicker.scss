@@ -1,0 +1,37 @@
+@import '~react-datepicker/dist/react-datepicker.css';
+
+.react-datepicker {
+  font-family: $brand-text-family;
+  color: $brand-text-color;
+  top: 100px;
+
+  &__current-month,
+  &__day-name {
+    color: $brand-text-color;
+  }
+
+  &__year-read-view--down-arrow,
+  &__month-read-view--down-arrow {
+    border-top-color: $brand-main-color;
+    top: 6px;
+    margin-left: 25px;
+  }
+
+  &__navigation--previous {
+    border-right-color: $brand-main-color;
+  }
+
+  &__navigation--next {
+    border-left-color: $brand-main-color;
+  }
+
+  &__day {
+    &:not(&--disabled) {
+      border: 1px solid $brand-stroke-color;
+      border-radius: 4px;
+    }
+    &:not(&--selected):not(&--disabled) {
+      color: $brand-text-color;
+    }
+  }
+}

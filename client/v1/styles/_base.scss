@@ -1,0 +1,46 @@
+
+html {
+  overflow: hidden;
+}
+
+h1 {
+  font-family: $brand-heading-family;
+  color: $brand-heading-color;
+  font-size: $brand-heading-size;
+  font-weight: bold;
+}
+
+h2 {
+  font-family: $brand-heading-family;
+  color: $brand-heading-color;
+  font-size: $brand-subheading-size;
+  font-weight: bold;
+}
+
+.modal {
+  z-index: $z-modal;
+}
+
+// modifies bulma loader
+.loader {
+  animation: spinAround 750ms infinite linear;
+  border: 2px solid $brand-main-color;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+
+.cta-button {
+  color: $brand-main-color;
+  background-color: $brand-cta1-color;
+  font-family: $brand-heading-family;
+  font-size: 18px;
+  padding: 5px 15px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  border: 0;
+}
+
+.flex {
+  display: flex;
+}
