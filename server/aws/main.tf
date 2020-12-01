@@ -103,7 +103,7 @@ data "template_file" "prefect_definition" {
 }
 
 resource "aws_ecs_task_definition" "task" {
-  family = "${local.name}-server-task"
+  family = "${local.name}-server"
   container_definitions    = data.template_file.task_definition.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -137,7 +137,7 @@ resource "aws_ecs_service" "svc" {
 # scheduled tasks use the same subnets and security groups as services
 module "ecs_scheduled_task" {
   source                          = "git::https://github.com/tmknom/terraform-aws-ecs-scheduled-task.git?ref=tags/2.0.0"
-  name                            = "${local.name}-update-task"
+  name                            = "${local.name}-nightly-update"
   schedule_expression             = "cron(0 8 * * ? *)"
   container_definitions           = data.template_file.prefect_definition.rendered
   cluster_arn                     = aws_ecs_cluster.cluster.arn
@@ -145,7 +145,7 @@ module "ecs_scheduled_task" {
   security_groups                 = [aws_security_group.svc.id, module.networked_rds.db_security_group_id, module.networked_rds.bastion_security_group_id]
   assign_public_ip                = true
   cpu                             = var.container_cpu
-  memory                          = 2048
+  memory                          = var.container_memory
   requires_compatibilities        = ["FARGATE"]
   create_ecs_events_role          = false
   ecs_events_role_arn             = "arn:aws:iam::${var.account_id}:role/ecsEventsRole"
