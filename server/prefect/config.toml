@@ -11,7 +11,9 @@ reset_db = false
 
 # will write to ./output if left blank but can be overridden
 temp_folder = ""
-api_url = "http://localhost:5000  # "https://dev-api.311-data.org"
+
+# set to local API instance or override with PREFECT__API_URL
+api_url = "http://localhost:5000"
 
 [socrata]
 host = "data.lacity.org"
