@@ -32,10 +32,11 @@ resource "aws_ssm_parameter" "secret" {
 
 resource "aws_ecs_cluster" "cluster" {
   name = "${local.name}-cluster"
-  # setting {
-  #   name  = "containerInsights"
-  #   value = "disabled"
-  # }
+  
+  setting {
+    name  = "containerInsights"
+    value = "disabled"
+  }
 }
 
 resource "aws_security_group" "svc" {
