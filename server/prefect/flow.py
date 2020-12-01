@@ -5,7 +5,7 @@ from prefect import Flow, Parameter
 from prefect.engine.executors import LocalDaskExecutor, LocalExecutor
 from prefect.utilities.edges import unmapped
 
-from tasks import postgres, socrata
+from tasks import postgres, socrata, cache
 
 
 """
@@ -40,11 +40,15 @@ with Flow(
     # commit new data to database and clean up
     complete = postgres.complete_load()
 
+    # clear the API cache
+    cache = cache.clear_cache()
+
     # make sure prep runs before load
     flow.add_edge(upstream_task=prep, downstream_task=load)
     # make sure load runs before complete
     flow.add_edge(upstream_task=load, downstream_task=complete)
-
+# make sure load runs before complete
+    flow.add_edge(upstream_task=complete, downstream_task=cache)
 
 if __name__ == "__main__":
     logger = prefect.context.get("logger")
