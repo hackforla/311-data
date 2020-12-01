@@ -1,22 +1,18 @@
 # Default configuration for 311 Data prefect task
-
 # These settings can be overridden with environment variables that follow the pattern:
 #     PREFECT__[setting name]
-
 # determines whether Dask should be used to parallelize the flow run
 dask = true
-
 # (!) WARNING: setting this to "true" will wipe out whatever is in the target table (e.g. 'requests')
 reset_db = false  
-
 # will write to ./output if left blank but can be overridden
 temp_folder = ""
-
 # set to local API instance or override with PREFECT__API_URL
 api_url = "http://localhost:5000"
-
 # whether the data update is being run in a testing, development or production environment
 stage = "Testing"
+# whether to vacuum database and reset stats after load
+vacuum_db = false
 
 [socrata]
 host = "data.lacity.org"
