@@ -15,6 +15,9 @@ temp_folder = ""
 # set to local API instance or override with PREFECT__API_URL
 api_url = "http://localhost:5000"
 
+# whether the data update is being run in a testing, development or production environment
+stage = "Testing"
+
 [socrata]
 host = "data.lacity.org"
 token = "6b5lwk1jHSQTgx7PAVFKOOdt2"

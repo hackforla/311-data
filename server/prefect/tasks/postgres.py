@@ -285,8 +285,11 @@ def log_to_database(task, old_state, new_state):
         # try posting to Slack
         try:
             slack_url = prefect.context.secrets["SLACK_HOOK"]
+            stage = prefect.config.stage
+
             if slack_url:
-                requests.post(slack_url, json={"text": emoji + msg})
+                requests.post(slack_url, json={"text": stage + emoji + msg})
+
         except Exception as e:
             logger.warn(f"Unable to post to Slack: {e}")
 
