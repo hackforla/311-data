@@ -1,0 +1,25 @@
+name: Build and Test
+on: [push]
+defaults:
+  run:
+    shell: bash
+    working-directory: server
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install and configure API
+        run: |
+          cp .env.example .env
+          docker-compose up --no-start api
+      - name: Lint API
+        run: docker-compose run api flake8
+      - name: Seed database and run API
+        run: |
+          docker-compose run -e TESTING=True api alembic upgrade head
+          docker-compose up -d api
+      - name: Run unit tests
+        run: docker-compose run api pytest
+      - name: Run Postman tests
+        run: chmod +x postman/test.sh && postman/test.sh

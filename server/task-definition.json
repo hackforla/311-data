@@ -1,34 +1,57 @@
 {
-  "family": "311 Data API",
+  "family": "311-data-server-task",
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::640613795150:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
+      "name": "redis",
+      "image": "redis",
       "portMappings": [
         {
-          "hostPort": 6379,
-          "protocol": "tcp",
           "containerPort": 6379
         }
       ],
-      "cpu": 0,
-      "memoryReservation": 400,
-      "image": "123.dkr.ecr.us-west-2.amazonaws.com/redis",
-      "name": "redis"
+      "essential": true
     },
     {
+      "name": "311_data_api",
+      "image": "la311data/311_data_api",
       "portMappings": [
         {
-          "hostPort": 80,
-          "protocol": "tcp",
           "containerPort": 5000
         }
       ],
-      "cpu": 0,
-      "memoryReservation": 400,
-      "image": "123.dkr.ecr.us-west-2.amazonaws.com/pythonapp",
-    "links": [
-        "redis"
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "python -c \"print('health OK')\""
+        ],
+        "interval": 20,
+        "timeout": 30,
+        "retries": 2
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group" : "/dev-cluster/311_data_api",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      },
+      "secrets": [
+        { "name": "DB_DSN", "valueFrom": "/dev/us-east-1/DB_DSN" },
+        { "name": "SENTRY_URL", "valueFrom": "/dev/us-east-1/SENTRY_URL" }
       ],
-      "name": "app"
+      "environment": [
+        { "name": "DEBUG", "value": "True" },
+        { "name": "CACHE_ENDPOINT", "value": "localhost" }
+      ]
     }
-  ]
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256", 
+  "memory": "512"
 }

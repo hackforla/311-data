@@ -84,7 +84,7 @@ if DEBUG:
     print("\n\033[93mLA City Data API server starting with DEBUG mode ENABLED\033[0m")
     print("\nEnvironment variables after executing config.py file:")
     for k, v in sorted(os.environ.items()):
-        print(f'\033[92m{k}\033[0m: {v}')
+        print(f'{k}: {v}')
     print(f"\n\033[93mDatabase\033[0m: {DB_DSN}\n")
 
 # set up endpoint for REDIS cache

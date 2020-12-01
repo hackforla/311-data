@@ -8,8 +8,7 @@
 !README.md
 !alembic
 !alembic.ini
-!bin
 !code
 !setup.cfg
-!src
+!start_api.sh
 !tests

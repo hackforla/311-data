@@ -1,118 +1,34 @@
-# Getting Started
+# 311 Data Server
 
-## TL;DR
+[![Build and Test Action Status](https://github.com/hackforla/311-data/workflows/Build%20and%20Test/badge.svg)](https://github.com/hackforla/311-data/actions)
 
-- install docker and docker compose on your machine
-- run `chmod +x install.sh && ./install.sh` from this directory
-- put a [Socrata](https://dev.socrata.com/) API token in your `.env` file
-- run `docker-compose run api python bin/db_seed.py --years 2019,2020`
+- [How to set up a local API server](docs/server_setup.md)
+- [How to contribute](docs/contributing.md)
+- [Nightly data loading](prefect/README.md)
+- [Infrastructure](aws/README.md)
+- [Useful commands](docs/useful_commands.md)
 
-### Step 1: install docker and docker-compose
+## Server Tech Stack
 
-Docker and Docker-Compose are the only required dependencies for running the server. You can find installation instructions [here](https://docs.docker.com/compose/install/) for Docker and [here](https://docs.docker.com/compose/install/) for Docker-Compose.
+- [FastAPI](https://fastapi.tiangolo.com/) and [Starlette](https://www.starlette.io/): tools to provide a fast, asynchronous stack for building RESTful APIs in Python
+- [Gino](https://python-gino.org/) and [SQL Alchemy](https://www.sqlalchemy.org/): tools for accessing and modifying the database
+- [Postgres](https://www.postgresql.org/docs/12/index.html): the persistent SQL database
+- [Redis](https://redis.io/) with [Aiocache](https://aiocache.readthedocs.io/) and [Aioredis](https://aioredis.readthedocs.io/en/v1.3.0/): to provide high-performance caching
+- [Prefect](https://www.prefect.io/core): for the nightly data ingestion pipeline
 
-Once you're done, you can check that everything is working:
+Everything runs on Python 3.7 and the Debian 10 "Buster" Linux distribution where applicable.
 
-```bash
-docker --version              # confirms docker is installed
-docker-compose --version      # confirms docker-compose is installed
-docker info                   # confirms the docker daemon is running
-```
+The API is intended to be modern, simple, performant, secure, open-source and well-supported. The tech stack focuses on Python tools with good asynchronous support. As asynchronous libraries are still somewhat immature these dependencies may need to be updated in the future.
 
-### Step 2: run the install script
+## Data Loading
 
-With docker running on your machine, `cd` into this directory and run:
+Data comes from the LA 311 system by way of the Socrata app.
+https://data.lacity.com
+https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz2f
 
-```bash
-chmod +x install.sh && ./install.sh
-```
+## Testing
 
-This will download/build a bunch of docker images, create your `.env` file, set up your database, and then fire everything up. If all goes well, at the end you should have running API server backed by Postgres and Redis. You can then tour the running services by hitting these URLs in a browser:
+- pytest
+- postman
 
-- http://localhost:5000 -- the API -- should say "you hit the index". This means the API is running.
-- http://localhost:8080 -- a Postgres GUI. Login with the following:
-  - System: **PostgreSQL**
-  - Server: **db**
-  - Username: **311_user**
-  - Password: **311_pass**
-  - Database: **311_db**
-- http://localhost:5001 -- a Redis GUI. Login with the following:
-  - Host: **redis**
-  - Port: **6379**
-  - Database ID: **0**
-
-You can shut down all the services by hitting `Ctrl-C`. And run `docker-compose up` to bring everything back up again.
-
-### Step 3: seed your database
-
-Right now the server is functional and all endpoints should be working. But for most purposes you'll need some data in your database. The data comes from [Socrata](https://dev.socrata.com/), a public api that hosts many datasets for LA and other cities. To add data, you'll need to get a Socrata token and run one more command.
-
-- #### 3a: add a Socrata token to your .env file (possible optional)
-
-Socrata threatens to throttle you if you don't have an api token. We're not sure they actually do that, but the api does seem to run more slowly without a token. So get a token from another team member, or [register](https://opendata.socrata.com/login) with Socrata and they'll give you one. Then add it to the Socrata section in your `.env` file:
-
-```bash
-SOCRATA_TOKEN=thetoken
-```
-
-- #### 3b: run the seed script
-
-It takes a while to seed the database, so we recommend starting with 2 years of data from Socrata. Run the following command to get data for 2019 and 2020, which is plenty for most dev purposes. ETA **20 to 30 minutes**. (If you've still got the backend services running, you can run this command in a separate terminal window.)
-
-```bash
-docker-compose run api python bin/db_seed.py --years 2019,2020
-```
-
-If you decide later that you need more data, just run the command again with the year(s) you want to add. Socrata goes back to 2015.
-
-(NOTE: run the above command with `--help` instead of `--years` for more info on the options. And if you ever want to reset your database and start over, run `docker-compose run api python bin/db_reset.py`.)
-
-## Development
-
-### Optional Dependencies
-
-#### Postman
-
-[Postman](https://www.postman.com/) is an api-development tool that lets you save api requests so you can run them over and over without having to remember what all the parameters are (or use the awkward syntax of `curl`). You can also group api calls together in collections, and run all of the api calls in a collection at once -- which is a great way to test the entire api. If you'd like to use it, see the README in `/server/postman`, which explains how to set it up with a collection that contains pre-defined api calls for all of our endpoints.
-
-#### JMeter
-
-[JMeter](https://jmeter.apache.org/) is a performance-focused api testing tool. It produces reports that show how the api performs when multiple users are using the app simultaneously. For more info, see the README in `/server/jmeter`.
-
-### Useful commands
-
-```bash
-docker-compose up                     # start the backend services
-docker-compose up --build             # start the backend services after rebuilding containers
-
-docker-compose run api bash           # log in to api shell
-docker-compose run api flake8         # lint your python code
-docker-compose run api pytest         # run unit tests against python code
-```
-
-### Using the python interpreter
-
-```bash
-docker-compose run api bash
-cd src
-python
-
-Python 3.7.7 (default, May 20 2020, 21:10:21)
-[GCC 8.3.0] on linux
-Type "help", "copyright", "credits" or "license" for more information.
->>> import db
->>> db.version()                      # print version
->>> db.info.years()                   # list years currently in db
->>> db.info.rows()                    # row counts for years in db
->>> db.requests.add_years([2018])     # add 2018 to DB
->>> db.requests.drop_years([2018])    # drop 2018
->>> db.reset()                        # wipe the DB and recreate tables/views
-```
-
-## Uninstall
-
-Run this command to remove all docker containers, images, volumes, and networks that are specific to this project. It will leave in place generic docker assets (like the `postgres` and `python` images) that you may be using for other purposes.
-
-```bash
-docker-compose down --rmi local --volumes
-```
+To get code coverage reports run ```pytest --cov=code```
