@@ -14,22 +14,25 @@ Note that this blueprint only handles the server infrastructure. The client appl
 
 ## Assumptions
 
-- AWS account is already created
-- A task-definition.json is already loaded to the AWS account
+- AWS account is already created and profile with required user credentials set up locally
 - IAM Role (ecsTaskExecutionRole) already created with SSMReadOnlyAccess AND ECSTaskExecutionRolePolicy applied
 - SSL/TLS certificate is already created and loaded to the AWS account
-- DNS is manually pointed to the ALB once the deployment is complete
+- DNS can be manually pointed to the ALB once the deployment is complete
 
 ## Deployment
 
 The blueprint is meant to be deployed manually. The person deploying the blueprint will have the AWS CLI installed and a profile with Admin access for the AWS account being used. Use the Terraform commands (init, plan, apply, etc.) to configure the 0.12 version environment and deploy the environment.
 
+The same blueprint is intended to be run in separate stages for ```dev``` and ```prod``` using Terraform Workspaces as described [here](https://learn.hashicorp.com/tutorials/terraform/organize-configuration?in=terraform/modules#separate-states).
+
 ### Parameters
 
-The following parameters (at minimum) need to be set in order to run the blueprint. You can use, for example, a .tfvars file for these.
+The following parameters (at minimum) need to be set in order to run the blueprint. You can use, for example, a .tfvars file for these (e.g. a dev.tfvars and prod.tfvars)
 
 - profile
 - account_id
+- stage
+- image_tag
 - db_name
 - db_username
 - db_password
@@ -43,9 +46,15 @@ For example, the value from ```/dev/us-east-1/DB_DSN``` will be injected as the 
 
 ## After the Deployment
 
-The environment will be created with a blank database. As a result the application will initially show an error message. The initial Alembic migration needs to be run then the database populated using the Prefect data pipeline.
+The environment will be created with a blank database. As a result the application will initially show an error message. The initial Alembic migration needs to be run then the database populated using the Prefect data pipeline. The easiest way to do this is with a SSH tunnel to the database using the Bastion server.
 
-The easiest way to do this is with a SSH tunnel to the database using the Bastion server.
+Alternatively, the appropriate ECS task ```prod-la-311-data-server``` can be run manually with the following container Command override:
+
+```bash
+alembic,upgrade,head
+```
+
+Once the database schema has been applied the data loading task ```prod-la-311-data-nightly-update``` can be manually run. When run on a blank database it will pull all available data.
 
 ### Developer Access with SSH and Bastion Server
 

@@ -13,9 +13,7 @@
     },
     "secrets": [
       { "name": "PREFECT__CONTEXT__SECRETS__DSN", "valueFrom": "/${stage}/${region}/DB_DSN" },
-      { "name": "PREFECT__CONTEXT__SECRETS__SLACK_HOOK", "valueFrom": "/${stage}/${region}/SLACK_HOOK" }
-    ],
-    "environment": [
+      { "name": "PREFECT__CONTEXT__SECRETS__SLACK_HOOK", "valueFrom": "/${stage}/${region}/SLACK_HOOK" },
       { "name": "PREFECT__API_URL", "valueFrom": "/${stage}/${region}/API_URL" },
       { "name": "PREFECT__STAGE", "valueFrom": "/${stage}/${region}/STAGE" }
     ],

@@ -214,10 +214,11 @@ def complete_load() -> Dict[str, int]:
         connection.commit()
         logger.info("Views successfully refreshed")
 
-        # need to have autocommit set for VACUUM to work
-        connection.autocommit = True
-        cursor.execute("VACUUM FULL ANALYZE")
-        logger.info("Database vacuumed and analyzed")
+        if prefect.config.vacuum_db:
+            # need to have autocommit set for VACUUM to work
+            connection.autocommit = True
+            cursor.execute("VACUUM FULL ANALYZE")
+            logger.info("Database vacuumed and analyzed")
 
     cursor.close()
     connection.close()
