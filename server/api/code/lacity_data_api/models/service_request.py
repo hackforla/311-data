@@ -53,6 +53,11 @@ async def get_open_requests() -> List[ServiceRequest]:
     return result
 
 
+@cached(cache=Cache.REDIS,
+        endpoint=CACHE_ENDPOINT,
+        namespace="filtered",
+        serializer=serializers.PickleSerializer(),
+        )
 async def get_filtered_requests(
         start_date: datetime.date,
         end_date: datetime.date,
