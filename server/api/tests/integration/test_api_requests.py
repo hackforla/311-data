@@ -29,7 +29,7 @@ def test_open_service_request_pins(client):
 
 
 def test_open_counts_by_type(client):
-    url = "/requests/open/counts/types"
+    url = "/requests/counts/open/types"
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 6

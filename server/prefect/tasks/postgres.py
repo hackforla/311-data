@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from os.path import join, dirname
+from os.path import join
 from typing import Dict
 import requests
 
@@ -17,9 +17,7 @@ Works in 3 stages:
 - committing temp data to database
 """
 
-DATA_FOLDER = join(dirname(dirname(__file__)), 'output')
 TEMP_TABLE = "temp_loading"
-MOST_RECENT_COLUMN = "updateddate"
 
 
 def infer_types(fields: Dict[str, str]) -> Dict[str, str]:
@@ -45,12 +43,13 @@ def infer_types(fields: Dict[str, str]) -> Dict[str, str]:
 def get_last_updated() -> datetime:
     logger = prefect.context.get("logger")
     target = prefect.config.data.target
+    recent_column = prefect.config.data.recent_column
     dsn = prefect.context.secrets["DSN"]
     connection = psycopg2.connect(dsn)
     cursor = connection.cursor()
 
     # get last updated
-    query = f"select max({MOST_RECENT_COLUMN}) from {target}"
+    query = f"select max({recent_column}) from {target}"
     cursor.execute(query)
     last_updated = cursor.fetchone()[0]
     connection.commit()
@@ -76,7 +75,7 @@ def prep_load():
     cursor = connection.cursor()
 
     fields = infer_types(prefect.config.data.fields)
-    db_reset = prefect.config.reset_db
+    reset_db = prefect.config.reset_db
     target = prefect.config.data.target
 
     query = f"""
@@ -85,11 +84,13 @@ def prep_load():
         );
     """
     cursor.execute(query)
-    cursor.execute(f"TRUNCATE TABLE {TEMP_TABLE}")
+    logger.info("Resetting data")
+    cursor.execute(f"TRUNCATE TABLE {TEMP_TABLE};")
     logger.info(f"'{TEMP_TABLE}' table truncated")
 
-    if db_reset:
-        cursor.execute(f"TRUNCATE TABLE {target}")
+    if reset_db:
+        cursor.execute(f"TRUNCATE {target} RESTART IDENTITY;")
+        cursor.execute(f"ALTER SEQUENCE {target}_id_seq RESTART WITH 1;")
         logger.info(f"'{target}' table truncated")
 
     connection.commit()
@@ -104,13 +105,14 @@ def load_datafile(datafile: str):
     """
     logger = prefect.context.get("logger")
     dsn = prefect.context.secrets["DSN"]
+    temp_folder = prefect.config.temp_folder or "output"
 
     connection = psycopg2.connect(dsn)
     cursor = connection.cursor()
 
     logger.info(f"Loading data from file: {datafile}")
     try:
-        with open(join(DATA_FOLDER, datafile), 'r') as f:
+        with open(join(temp_folder, datafile), 'r') as f:
             try:
                 cursor.copy_expert(
                     f"COPY {TEMP_TABLE} FROM STDIN WITH (FORMAT CSV, HEADER TRUE)",
@@ -139,9 +141,7 @@ def complete_load() -> Dict[str, int]:
     """
     logger = prefect.context.get("logger")
     dsn = prefect.context.secrets["DSN"]
-
-    mode = prefect.config.mode
-    db_reset = prefect.config.reset_db
+    reset_db = prefect.config.reset_db
     fieldnames = list(prefect.config.data.fields.keys())
     key = prefect.config.data.key
     target = prefect.config.data.target
@@ -194,7 +194,7 @@ def complete_load() -> Dict[str, int]:
     logger.info(f"{rows_inserted:,} rows inserted in table '{target}'")
 
     # update rows if necessary
-    if db_reset is False or mode != "full":
+    if reset_db is False:
         cursor.execute(update_query)
         rows_updated = cursor.fetchone()[0]
         connection.commit()
@@ -205,7 +205,7 @@ def complete_load() -> Dict[str, int]:
 
     if rows_inserted > 0 or rows_updated > 0:
         # empty temp table if resetting the db
-        if db_reset:
+        if reset_db:
             cursor.execute(f"TRUNCATE TABLE {TEMP_TABLE}")
 
         # refresh views
@@ -214,10 +214,11 @@ def complete_load() -> Dict[str, int]:
         connection.commit()
         logger.info("Views successfully refreshed")
 
-        # need to have autocommit set for VACUUM to work
-        connection.autocommit = True
-        cursor.execute("VACUUM FULL ANALYZE")
-        logger.info("Database vacuumed and analyzed")
+        if prefect.config.vacuum_db:
+            # need to have autocommit set for VACUUM to work
+            connection.autocommit = True
+            cursor.execute("VACUUM FULL ANALYZE")
+            logger.info("Database vacuumed and analyzed")
 
     cursor.close()
     connection.close()
@@ -262,21 +263,21 @@ def log_to_database(task, old_state, new_state):
         connection = psycopg2.connect(dsn)
         cursor = connection.cursor()
 
-        table_query = """
-            CREATE TABLE IF NOT EXISTS log (
-                id SERIAL PRIMARY KEY,
-                status character varying DEFAULT 'INFO'::character varying,
-                message text,
-                created_time timestamp without time zone DEFAULT now()
-            );
-        """
+        # table_query = """
+        #     CREATE TABLE IF NOT EXISTS log (
+        #         id SERIAL PRIMARY KEY,
+        #         status character varying DEFAULT 'INFO'::character varying,
+        #         message text,
+        #         created_time timestamp without time zone DEFAULT now()
+        #     );
+        # """
 
         insert_query = f"""
             INSERT INTO log (status, message)
             VALUES ('{status}', '{msg}')
         """
-        cursor.execute(table_query)
-        connection.commit()
+        # cursor.execute(table_query)
+        # connection.commit()
         cursor.execute(insert_query)
         connection.commit()
         cursor.close()
@@ -285,8 +286,11 @@ def log_to_database(task, old_state, new_state):
         # try posting to Slack
         try:
             slack_url = prefect.context.secrets["SLACK_HOOK"]
+            stage = prefect.config.stage
+
             if slack_url:
-                requests.post(slack_url, json={"text": emoji + msg})
+                requests.post(slack_url, json={"text": stage + emoji + msg})
+
         except Exception as e:
             logger.warn(f"Unable to post to Slack: {e}")
 

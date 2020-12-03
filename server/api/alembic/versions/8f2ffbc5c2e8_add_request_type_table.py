@@ -33,6 +33,7 @@ REQUESTS_VIEW = """
             request_types.type_id as type_id,
             requests.nc::SMALLINT as council_id,
             councils.region_id,
+            requests.cd::SMALLINT as city_id,
             requests.address::VARCHAR(100),
             requests.latitude,
             requests.longitude
@@ -52,6 +53,7 @@ REQUESTS_VIEW = """
         CREATE INDEX ON service_requests(type_id);
         CREATE INDEX ON service_requests(council_id);
         CREATE INDEX ON service_requests(region_id);
+        CREATE INDEX ON service_requests(city_id);
     """
 
 

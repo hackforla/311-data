@@ -8,6 +8,12 @@ async def get_visualization(startDate,
                          endDate,
                          requestTypes=[],
                          ncList=[]):
+    """
+    Runs a report on a single distict that includes request totals by date,
+    request types, and request sources.
+
+    Updated to use the service_requests materialized view with joins to other tables.
+    """
 
     bins, start, end = date_bins(startDate, endDate)
 
@@ -39,10 +45,6 @@ async def get_visualization(startDate,
         columns=['requesttype', 'createddate', '_daystoclose', 'requestsource']
     )
 
-    inner_df = df.loc[
-        (df['createddate'] >= startDate.date()) &
-        (df['createddate'] <= endDate.date())]
-
     return {
         'frequency': {
             'bins': list(bins.astype(str)),
@@ -51,72 +53,19 @@ async def get_visualization(startDate,
                 dateField='createddate',
                 bins=bins,
                 groupField='requesttype',
-                groupFieldItems=requestTypes)},
-
+                groupFieldItems=requestTypes)
+        },
         'timeToClose': box_plots(
-            inner_df,
+            df,
             plotField='_daystoclose',
             groupField='requesttype',
-            groupFieldItems=requestTypes),
-
+            groupFieldItems=requestTypes
+        ),
         'counts': {
-            'type': counts(inner_df, groupField='requesttype'),
-            'source': counts(inner_df, groupField='requestsource')}
+            'type': counts(df, groupField='requesttype'),
+            'source': counts(df, groupField='requestsource')
+        }
     }
-
-
-async def get_data(district, items, bins, start, end, requestTypes):
-    filters = {
-        'startDate': start,
-        'endDate': end,
-        'requestTypes': requestTypes}
-
-    if district == 'nc':
-        filters['ncList'] = items
-        groupField = 'nc'
-    elif district == 'cc':
-        filters['cdList'] = items
-        groupField = 'cd'
-
-    requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
-
-    ncList = filters.get('ncList', [])
-    cdList = filters.get('cdList', [])
-
-    if len(ncList) > 0:
-        ncList = (', ').join([str(nc) for nc in ncList])
-        where = f'nc IN ({ncList})'
-    else:
-        cdList = (', ').join([str(cd) for cd in cdList])
-        where = f'cd IN ({cdList})'
-
-    query = db.text(f"""
-        SELECT
-            {groupField},
-            createddate
-        FROM
-            requests
-        WHERE
-            createddate >= '{start}' AND
-            createddate <= '{end}' AND
-            requesttype IN ({requestTypes}) AND
-            {where}
-        """)
-
-    result = await db.all(query)
-
-    df = pd.DataFrame(
-        result,
-        columns=[groupField, 'createddate']
-    )
-
-    return date_histograms(
-        df,
-        dateField='createddate',
-        bins=bins,
-        groupField=groupField,
-        groupFieldItems=items
-    )
 
 
 async def freq_comparison(startDate,
@@ -124,6 +73,60 @@ async def freq_comparison(startDate,
                           requestTypes=[],
                           set1={'district': None, 'list': []},
                           set2={'district': None, 'list': []}):
+
+    async def get_data(district, items, bins, start, end, requestTypes):
+        filters = {
+            'startDate': start,
+            'endDate': end,
+            'requestTypes': requestTypes}
+
+        if district == 'cc':
+            filters['cdList'] = items
+            groupField = 'city_id'
+        else:
+            filters['ncList'] = items
+            groupField = 'council_id'
+
+        type_ids = await request_type.get_type_ids_by_str_list(requestTypes)
+        typeList = (', ').join([str(rt) for rt in type_ids])
+
+        ncList = filters.get('ncList', [])
+        cdList = filters.get('cdList', [])
+
+        if len(cdList) > 0:
+            cdList = (', ').join([str(cd) for cd in cdList])
+            where = f'city_id IN ({cdList})'
+        else:
+            ncList = (', ').join([str(nc) for nc in ncList])
+            where = f'council_id IN ({ncList})'
+
+        query = db.text(f"""
+            SELECT
+                {groupField},
+                created_date
+            FROM
+                service_requests
+            WHERE
+                created_date >= '{start}' AND
+                created_date <= '{end}' AND
+                type_id IN ({typeList}) AND
+                {where}
+            """)
+
+        result = await db.all(query)
+
+        df = pd.DataFrame(
+            result,
+            columns=[groupField, 'created_date']
+        )
+
+        return date_histograms(
+            df,
+            dateField='created_date',
+            bins=bins,
+            groupField=groupField,
+            groupFieldItems=items
+        )
 
     bins, start, end = date_bins(startDate, endDate)
 
@@ -166,36 +169,39 @@ async def ttc_comparison(startDate,
             'endDate': endDate,
             'requestTypes': requestTypes}
 
-        if district == 'nc':
-            filters['ncList'] = items
-            groupField = 'nc'
-        elif district == 'cc':
+        if district == 'cc':
             filters['cdList'] = items
-            groupField = 'cd'
+            groupField = 'city_id'
+        else:
+            filters['ncList'] = items
+            groupField = 'council_id'
 
-        requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
+        type_ids = await request_type.get_type_ids_by_str_list(requestTypes)
+        typeList = (', ').join([str(rt) for rt in type_ids])
 
         ncList = filters.get('ncList', [])
         cdList = filters.get('cdList', [])
 
-        if len(ncList) > 0:
-            ncList = (', ').join([str(nc) for nc in ncList])
-            where = f'nc IN ({ncList})'
-        else:
+        if len(cdList) > 0:
             cdList = (', ').join([str(cd) for cd in cdList])
-            where = f'cd IN ({cdList})'
+            where = f'city_id IN ({cdList})'
+        else:
+            ncList = (', ').join([str(nc) for nc in ncList])
+            where = f'council_id IN ({ncList})'
 
         query = db.text(f"""
             SELECT
                 {groupField},
                 cast (extract(days FROM (closeddate - createddate)) as double precision)
-                    as _daystoclose
+                    as days_to_close
             FROM
-                requests
+                service_requests
+            LEFT JOIN
+                requests on requests.id = service_requests.request_id
             WHERE
-                createddate >= '{startDate}' AND
-                createddate <= '{endDate}' AND
-                requesttype IN ({requestTypes}) AND
+                created_date >= '{startDate}' AND
+                created_date <= '{endDate}' AND
+                type_id IN ({typeList}) AND
                 {where}
             """)
 
@@ -203,12 +209,12 @@ async def ttc_comparison(startDate,
 
         df = pd.DataFrame(
             result,
-            columns=[groupField, '_daystoclose']
+            columns=[groupField, 'days_to_close']
         )
 
         return box_plots(
             df,
-            plotField='_daystoclose',
+            plotField='days_to_close',
             groupField=groupField,
             groupFieldItems=items
         )
@@ -237,34 +243,37 @@ async def counts_comparison(startDate,
             'endDate': endDate,
             'requestTypes': requestTypes}
 
-        if district == 'nc':
-            filters['ncList'] = items
-            # groupField = 'nc'
-        elif district == 'cc':
+        if district == 'cc':
             filters['cdList'] = items
             # groupField = 'cd'
+        else:
+            filters['ncList'] = items
+            # groupField = 'nc'
 
-        requestTypes = (', ').join([f"'{rt}'" for rt in requestTypes])
+        type_ids = await request_type.get_type_ids_by_str_list(requestTypes)
+        typeList = (', ').join([str(rt) for rt in type_ids])
 
         ncList = filters.get('ncList', [])
         cdList = filters.get('cdList', [])
 
-        if len(ncList) > 0:
-            ncList = (', ').join([str(nc) for nc in ncList])
-            where = f'nc IN ({ncList})'
-        else:
+        if len(cdList) > 0:
             cdList = (', ').join([str(cd) for cd in cdList])
-            where = f'cd IN ({cdList})'
+            where = f'city_id IN ({cdList})'
+        else:
+            ncList = (', ').join([str(nc) for nc in ncList])
+            where = f'council_id IN ({ncList})'
 
         query = db.text(f"""
             SELECT
                 requestsource
             FROM
-                requests
+                service_requests
+            LEFT JOIN
+                requests on requests.id = service_requests.request_id
             WHERE
-                createddate >= '{startDate}' AND
-                createddate <= '{endDate}' AND
-                requesttype IN ({requestTypes}) AND
+                created_date >= '{startDate}' AND
+                created_date <= '{endDate}' AND
+                type_id IN ({typeList}) AND
                 {where}
             """)
 

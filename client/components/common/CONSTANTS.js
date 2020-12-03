@@ -1,5 +1,7 @@
 export default {};
 
+// TODO: fetch constants from backend
+
 // 'primary' or 'alt' to change request type colors
 const COLOR_SELECTION = 'alt';
 

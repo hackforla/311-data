@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     container_name: 311-postgres
-    image: postgres
+    image: postgres:12
     restart: always
     env_file: .env
     environment:
@@ -18,7 +18,7 @@ services:
 
   redis:
     container_name: 311-redis
-    image: redis
+    image: redis:6
     restart: always
     ports:
       - "6379:6379"
@@ -34,7 +34,7 @@ services:
     ports:
       - target: ${APP_PORT}
         published: ${API_HOST_PORT}
-    command: gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker --log-level info -b 0.0.0.0:5000
+    # command: gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker --log-level info -b 0.0.0.0:5000
     # volumes:
     #   - ./api/:/home/api
     depends_on:
@@ -44,11 +44,13 @@ services:
   prefect:
     container_name: 311-prefect
     build: ./prefect
+    env_file: .env
     environment: 
-      PREFECT__CONTEXT__SECRETS__DSN: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
-    tmpfs: /app/output
+      PREFECT__CONTEXT__SECRETS__DSN: postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:5432/${DB_NAME}
+      PREFECT__API_URL: ${APP_PROTOCOL}://${APP_HOST}:${APP_PORT}
     depends_on:
       - db
+    # entrypoint: python flow.py
 
 volumes:
   backend_data:

@@ -1,18 +1,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import 'focus-visible';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { CssBaseline } from '@material-ui/core';
 import { getMetadataRequest } from '@reducers/metadata';
-
-import RouteChange from '@components/main/util/RouteChange';
-import actions from '@components/main/util/routeChangeActions';
-import CookieNotice from '@components/main/body/CookieNotice';
-import Header from '@components/main/header/Header';
-import Footer from '@components/main/footer/Footer';
-import StaticFooter from '@components/main/footer/StaticFooter';
-import { SnapshotRenderer } from '@components/export/SnapshotService';
-import Routes from './Routes';
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Map from '@components/Map';
+import theme from './theme/theme';
 
 const App = ({
   getMetadata,
@@ -22,17 +17,12 @@ const App = ({
   });
 
   return (
-    <Router>
-      <RouteChange actions={actions} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Header />
-      <Routes />
-      <Switch>
-        <Route path="/(about|contact|privacy|faq)" component={StaticFooter} />
-        <Route path="/" component={Footer} />
-      </Switch>
-      <SnapshotRenderer />
-      <CookieNotice />
-    </Router>
+      <Map />
+      <Footer />
+    </ThemeProvider>
   );
 };
 

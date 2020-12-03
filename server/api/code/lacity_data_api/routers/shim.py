@@ -78,7 +78,7 @@ async def get_clusters(filter: Filter):
         filter.zoom,
         filter.bounds
     )
-    # if the restult is empty most likely there was a cache timeout
+    # if the result is empty most likely there was a cache timeout
     if result == []:
         raise HTTPException(status_code=429, detail="Too many requests")
 

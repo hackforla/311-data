@@ -23,7 +23,7 @@ async def get_all_service_requests(skip: int = 0, limit: int = 100):
     return result
 
 
-@router.get("/open/counts/types")
+@router.get("/counts/open/types")
 async def get_open_request_counts_by_type():
     result = await get_open_request_counts()
     return result

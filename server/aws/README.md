@@ -1,56 +1,84 @@
-## Notes
+# 311 Data Terraform Blueprint
 
-### Dev/Prod Setup
+This Terraform blueprint manages the infrastructure needed to run the 311 Data API project in AWS.
 
-The `dev` and `prod` apis both live on `t2.micro` instances on `ec2`. They're both run with `docker-compose`. There's an AMI called `311-api` that includes the software necessary to run both instances, namely `docker`, `docker-compose`, and `git`.
+- creates the complete network infrastructure including the VPC, subnets, gateway, network ACLs, and security groups across 2 availability zones
+- creates the Postgres RDS instance with the database and credentials (which are stored in a SSM parameter)
+- creates the ECS cluster, service and the load balancer
 
-The `prod` instance is behind a load balancer that uses our SSL cert to encrypt traffic. The `dev` instance is not, since it's not necessary to encrypt traffic from `dev`. Due to this difference, api calls follow different paths in the two environments:
+Note that this blueprint only handles the server infrastructure. The client application needs to be provisioned separately (DNS, S3 bucket and CloudFront).
 
-#### dev environment
+## Diagram
 
-1. client sends `http` request to `dev-api` ec2 instance (on port 80)
-2. docker-compose forwards the request to the Sanic api (on port 5000)
-3. Sanic api responds (on port 5000)
-4. docker-compose responds (on port 80)
+![Network diagram](./311-aws-diagram.png)
 
-#### prod environment
+## Assumptions
 
-1. client sends `https` request to load balancer (on port 443)
-2. load balancer forwards request to `prod-api` ec2 instance (on port 80)
-3. docker-compose forwards the request to the Sanic api (on port 5000)
-4. Sanic api responds (on port 5000)
-5. docker-compose responds (on port 80)
-6. load balancer encrypts the payload using our cert, and responds to client (on port 443)
+- AWS account is already created and profile with required user credentials set up locally
+- IAM Role (ecsTaskExecutionRole) already created with SSMReadOnlyAccess AND ECSTaskExecutionRolePolicy applied
+- SSL/TLS certificate is already created and loaded to the AWS account
+- DNS can be manually pointed to the ALB once the deployment is complete
 
-### User Data Script
+## Deployment
 
-The `dev-api` and `prod-api` instances both have "user data" scripts to start the `docker` daemon whenever the instances are started or rebooted. Here's the script, which is adapted from [this article](https://aws.amazon.com/premiumsupport/knowledge-center/execute-user-data-ec2/).
+The blueprint is meant to be deployed manually. The person deploying the blueprint will have the AWS CLI installed and a profile with Admin access for the AWS account being used. Use the Terraform commands (init, plan, apply, etc.) to configure the 0.12 version environment and deploy the environment.
 
+The same blueprint is intended to be run in separate stages for ```dev``` and ```prod``` using Terraform Workspaces as described [here](https://learn.hashicorp.com/tutorials/terraform/organize-configuration?in=terraform/modules#separate-states).
+
+### Parameters
+
+The following parameters (at minimum) need to be set in order to run the blueprint. You can use, for example, a .tfvars file for these (e.g. a dev.tfvars and prod.tfvars)
+
+- profile
+- account_id
+- stage
+- image_tag
+- db_name
+- db_username
+- db_password
+- acm_certificate_arn
+
+### Secrets Stored in SSM
+
+Secrets are injected into the ECS containers as environment variables at runtime. The secrets are stored as AWS Systems Manager (AWS SSM) parameters in the format ```/[environment]/[region]/[secret_name]```.
+
+For example, the value from ```/dev/us-east-1/DB_DSN``` will be injected as the database connection string into the application.
+
+## After the Deployment
+
+The environment will be created with a blank database. As a result the application will initially show an error message. The initial Alembic migration needs to be run then the database populated using the Prefect data pipeline. The easiest way to do this is with a SSH tunnel to the database using the Bastion server.
+
+Alternatively, the appropriate ECS task ```prod-la-311-data-server``` can be run manually with the following container Command override:
+
+```bash
+alembic,upgrade,head
 ```
-Content-Type: multipart/mixed; boundary="//"
-MIME-Version: 1.0
 
---//
-Content-Type: text/cloud-config; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="cloud-config.txt"
+Once the database schema has been applied the data loading task ```prod-la-311-data-nightly-update``` can be manually run. When run on a blank database it will pull all available data.
 
-#cloud-config
-cloud_final_modules:
-- [scripts-user, always]
+### Developer Access with SSH and Bastion Server
 
---//
-Content-Type: text/x-shellscript; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="userdata.txt"
+The network infrastructure is hardened but allows developers to support the application using SSH to connect to a Bastion server.
 
-#!/bin/bash
-sudo service docker start
---//
+Developers provide public SSH keys which are then added to a ```public_keys``` folder in the directory from where you are applying this terraform configuration.
+
+Developers can then set up port forwarding to the database through the bastion by running a SSH command like the following.
+
+```bash
+ssh -i ~/.ssh/[YOUR SSH KEY] -L 5432:[DB URL]:5432 [EC2 USER]@[BASTION IP]
 ```
 
-### Terraform
+There are database clients such as [Postico](https://eggerapps.at/postico/) which have good support for using SSH tunnels to connect to a database.
 
-We're not using it right now, so those files don't do anything.
+GitHub has a [good guide](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/connecting-to-github-with-ssh) for creating a SSH key for yourself if you've never done it before. It's a good idea to create a new key for HackforLA projects and name it accordingly (e.g. "yourname_H4LA").
+
+## Terraform Workspaces
+
+The infrastructure is designed to be implemented in multiple "stages" (e.g. development and production) using Terraform workspaces.
+
+```bash
+terraform init
+terraform workspace list
+terraform workspace select dev
+terraform apply -var-file=dev.tfvars
+```
