@@ -35,7 +35,7 @@ config = Config(CONF_FILE)
 # checking for testing or debug
 DEBUG = config("DEBUG", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
-ENV_SOURCE = config("ENV_SOURCE", default=None)
+STAGE = config("STAGE", default="Development")
 
 # set to dev or prod when running in ECS
 ENV_NAME = config("ENV_NAME", default=None)
@@ -90,6 +90,7 @@ if DEBUG:
 # set up endpoint for REDIS cache
 CACHE_ENDPOINT = config('CACHE_ENDPOINT', default="localhost")
 CACHE_MAX_RETRIES = config('CACHE_MAX_RETRIES', cast=int, default=5)
+CACHE_MAXMEMORY = config('CACHE_MAXMEMORY', cast=int, default=524288000)
 
 # set up GitHub data
 GITHUB_TOKEN = config('GITHUB_TOKEN', default=None)

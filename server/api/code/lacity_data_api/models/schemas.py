@@ -141,6 +141,7 @@ class ServiceRequest(BaseModel):
 class RequestType(BaseModel):
     type_id: int
     type_name: str
+    color: str
 
     class Config:
         orm_mode = True

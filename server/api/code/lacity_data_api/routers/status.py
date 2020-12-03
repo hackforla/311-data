@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from ..models.schemas import StatusTypes
 from ..services import status, utilities
-from ..config import GITHUB_CODE_VERSION, GITHUB_SHA, DEBUG
+from ..config import GITHUB_CODE_VERSION, GITHUB_SHA, DEBUG, STAGE
 
 router = APIRouter()
 
@@ -29,9 +29,10 @@ async def check_status_type(status_type: StatusTypes):
     if status_type == StatusTypes.api:
         return {
             'currentTime': datetime.datetime.now(),
-            'gitSha': GITHUB_SHA,
+            'lastPulled': await status.get_last_updated(),
+            'stage': STAGE,
             'version': GITHUB_CODE_VERSION,
-            'lastPulled': await status.get_last_updated()
+            'gitSha': GITHUB_SHA
         }
 
     if status_type == StatusTypes.database:
