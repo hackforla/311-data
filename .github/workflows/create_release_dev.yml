@@ -19,7 +19,7 @@ jobs:
         uses: nelonoel/branch-name@v1.0.1        
       - name: Setup environment
         run: |
-          echo GITHUB_CODE_VERSION=${BRANCH_NAME} >> server/api/.env
+          echo GITHUB_CODE_VERSION=${{ env.BRANCH_NAME }} >> server/api/.env
           echo GITHUB_SHA=${{ github.sha }} >> server/api/.env
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v1
