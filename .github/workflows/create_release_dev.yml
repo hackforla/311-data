@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup environment
         run: |
-          echo GITHUB_SHA=${{ github.sha }} >> server/.env        
+          echo GITHUB_SHA=${{ github.sha }} >> server/api/.env        
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v1
         with:
