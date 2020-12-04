@@ -1,34 +1,14 @@
 import os
-import json
 
 from sqlalchemy.engine.url import URL, make_url
-from starlette.config import Config, environ
+from starlette.config import Config
 from starlette.datastructures import Secret
 
-# TODO: set this for ECS to /run/secrets (or . when local)
-SECRETS_PATH = "/run/secrets"
 
-
-def get_managed_secrets(env_name):
-    """
-    utility function for getting secrets from Amazon Secrets Manager
-    expects secrets to be provided as a JSON file with keys matching
-    the config settings. function will override any matching settings
-    found in the secrets file.
-    """
-    try:
-        with open(os.path.join(SECRETS_PATH, env_name), 'r') as secret_file:
-            data = json.load(secret_file)
-            for k, v in data.items():
-                environ[k] = v
-            return secret_file.read()
-    except IOError:
-        return None
-
-
+# Load (optional) .env file from server/api directory
 CONF_FILE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-    "api.env"
+    ".env"
 )
 config = Config(CONF_FILE)
 
@@ -36,13 +16,6 @@ config = Config(CONF_FILE)
 DEBUG = config("DEBUG", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
 STAGE = config("STAGE", default="Development")
-
-# set to dev or prod when running in ECS
-ENV_NAME = config("ENV_NAME", default=None)
-
-# try getting managed secrets
-if ENV_NAME:
-    get_managed_secrets(ENV_NAME)
 
 # getting database configuration
 DB_DRIVER = config("DB_DRIVER", default="postgresql")
@@ -97,7 +70,7 @@ GITHUB_TOKEN = config('GITHUB_TOKEN', default=None)
 GITHUB_ISSUES_URL = config('GITHUB_ISSUES_URL', default=None)
 GITHUB_PROJECT_URL = config('GITHUB_PROJECT_URL', default=None)
 GITHUB_SHA = config('GITHUB_SHA', default="DEVELOPMENT")
-GITHUB_CODE_VERSION = config('GITHUB_CODE_VERSION', default="0.2.0")
+GITHUB_CODE_VERSION = config('GITHUB_CODE_VERSION', default="ALPHA")
 
 # Sendgrid email
 SENDGRID_API_KEY = config('SENDGRID_API_KEY', default=None)
