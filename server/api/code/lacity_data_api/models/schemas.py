@@ -166,6 +166,7 @@ class Region(BaseModel):
 class Council(BaseModel):
     council_id: int
     council_name: str
+    waddress: str
     region_id: int
     latitude: float
     longitude: float
