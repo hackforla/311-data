@@ -14,11 +14,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Get branch name
-        uses: nelonoel/branch-name@v1.0.1
       - name: Setup environment
         run: |
-          echo GITHUB_CODE_VERSION=${{ BRANCH_NAME }} >> server/api/.env
+          echo GITHUB_CODE_VERSION=${{ GITHUB_REF##*/ }} >> server/api/.env
           echo GITHUB_SHA=${{ github.sha }} >> server/api/.env
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v1
