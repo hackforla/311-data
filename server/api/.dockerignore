@@ -12,3 +12,4 @@
 !setup.cfg
 !start_api.sh
 !tests
+!.env
