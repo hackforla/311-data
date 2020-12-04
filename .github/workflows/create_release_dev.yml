@@ -4,7 +4,6 @@ on:
     branches:
       - dev
       - feat-adding-gitsha
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10    
     paths:
       - 'server/api/**'
 jobs:
@@ -27,4 +26,3 @@ jobs:
           repository: la311data/311_data_api
           tag_with_ref: true
           tag_with_sha: true
-          tags: ${{ BRANCH_NAME }}
