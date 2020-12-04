@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Get branch name
+        uses: nelonoel/branch-name@v1  
       - name: Setup environment
         run: |
           echo GITHUB_CODE_VERSION=${{ env.BRANCH_NAME }} >> server/api/.env
@@ -27,3 +29,4 @@ jobs:
           repository: la311data/311_data_api
           tag_with_ref: true
           tag_with_sha: true
+          tags: ${{ env.BRANCH_NAME }}
