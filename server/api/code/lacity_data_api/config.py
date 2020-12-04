@@ -15,7 +15,7 @@ config = Config(CONF_FILE)
 # checking for testing or debug
 DEBUG = config("DEBUG", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
-STAGE = config("STAGE", default="Development")
+STAGE = config("STAGE", default="Local")
 
 # getting database configuration
 DB_DRIVER = config("DB_DRIVER", default="postgresql")
