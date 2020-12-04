@@ -4,10 +4,9 @@ on:
     branches:
       - dev
       - master
-      - 'feat-adding-gitsha'
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10    
-    # paths:
-    #   - 'server/api/**'
+    paths:
+      - 'server/api/**'
 jobs:
   build:
     name: Create Docker Image
