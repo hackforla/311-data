@@ -48,6 +48,8 @@ aws ecs update-service --cluster dev-la-311-data-cluster --service dev-la-311-da
 
 aws ecs register-task-definition --cli-input-json task-definition.json --profile 311user
 
+aws ecs run-task --cli-input-json file://alembic_task.json --profile 311user
+
 aws logs describe-log-groups --profile 311user
 
 aws elbv2 describe-load-balancers --profile 311user

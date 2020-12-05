@@ -39,10 +39,6 @@
       { "name": "DB_DSN", "valueFrom": "/${stage}/${region}/DB_DSN" },
       { "name": "SENTRY_URL", "valueFrom": "/${stage}/${region}/SENTRY_URL" },
       { "name": "STAGE", "valueFrom": "/${stage}/${region}/STAGE" }      
-    ],
-    "environment": [
-      { "name": "DEBUG", "value": "True" },
-      { "name": "CACHE_ENDPOINT", "value": "localhost" }
     ]
   }
 ]
