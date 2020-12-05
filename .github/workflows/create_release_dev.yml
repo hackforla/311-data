@@ -1,10 +1,8 @@
-name: Create API Docker Image
+name: Create API Docker Image DEV
 on:
   push:
     branches:
       - dev
-      - master
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10    
     paths:
       - 'server/api/**'
 jobs:
@@ -29,3 +27,12 @@ jobs:
           repository: la311data/311_data_api
           tag_with_ref: true
           tag_with_sha: true
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: (Rolling) Restart ECS Tasks
+        run: |
+          aws ecs update-service --cluster dev-la-311-data-cluster --service dev-la-311-data-svc --force-new-deployment
