@@ -6,7 +6,7 @@ import { CssBaseline } from '@material-ui/core';
 import { getMetadataRequest } from '@reducers/metadata';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
-import Map from '@components/Map';
+import PinMap from '@components/Map';
 import theme from './theme/theme';
 
 const App = ({
@@ -20,7 +20,7 @@ const App = ({
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Header />
-      <Map />
+      {/* <PinMap /> */}
       <Footer />
     </ThemeProvider>
   );
