@@ -1,4 +1,5 @@
 from ..models import db, cache
+from ..config import CACHE_MAXMEMORY
 
 
 async def get_last_updated():
@@ -58,11 +59,10 @@ async def get_cache_keys():
 
 
 async def reset_cache():
-    '''need to think about when to call this'''
+    # setting memory limit and policy on Redis
+    await cache.raw("config_set", "maxmemory-policy", "allkeys-lru")
+    await cache.raw("config_set", "maxmemory", CACHE_MAXMEMORY)
     await cache.raw("flushdb")
-    # config set maxmemory 1000mb
-    # config set maxmemory-policy allkeys-lru
-    # used memory peak: 286 390 120
     return True
 
 

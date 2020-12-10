@@ -141,6 +141,7 @@ class ServiceRequest(BaseModel):
 class RequestType(BaseModel):
     type_id: int
     type_name: str
+    color: str
 
     class Config:
         orm_mode = True
@@ -165,6 +166,7 @@ class Region(BaseModel):
 class Council(BaseModel):
     council_id: int
     council_name: str
+    waddress: str
     region_id: int
     latitude: float
     longitude: float

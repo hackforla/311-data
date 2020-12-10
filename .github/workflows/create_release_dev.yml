@@ -1,25 +1,38 @@
-name: Create API Image DEV
+name: Create API Docker Image DEV
 on:
   push:
     branches:
       - dev
-      - master
     paths:
       - 'server/api/**'
 jobs:
   build:
-    name: Create Dev Docker Images
+    name: Create Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build and Push Dev API to Docker Hub
+      - name: Get branch name
+        uses: nelonoel/branch-name@v1.0.1        
+      - name: Setup environment
+        run: |
+          echo GITHUB_CODE_VERSION=${{ env.BRANCH_NAME }} >> server/api/.env
+          echo GITHUB_SHA=${{ github.sha }} >> server/api/.env
+      - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           path: server/api
           repository: la311data/311_data_api
-          tags: latest
           tag_with_ref: true
           tag_with_sha: true
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: (Rolling) Restart ECS Tasks
+        run: |
+          aws ecs update-service --cluster dev-la-311-data-cluster --service dev-la-311-data-svc --force-new-deployment
