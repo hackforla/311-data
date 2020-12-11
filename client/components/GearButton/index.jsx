@@ -34,6 +34,7 @@ const GearButton = ({ onClick }) => {
   };
   const toggleClick = () => {
     setPressed(!pressed);
+    console.log('clicked')
     onClick();
   };
   return (
