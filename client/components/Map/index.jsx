@@ -2,11 +2,22 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 import { MAP_MODES } from '../common/CONSTANTS';
 import Map from './Map';
+
+const styles = theme => ({
+  root: {
+    position: 'absolute',
+    top: theme.palette.header.height,
+    bottom: theme.palette.footer.height,
+    left: 0,
+    right: 0,
+  },
+})
 
 class MapContainer extends React.Component {
   constructor(props) {
@@ -25,6 +36,7 @@ class MapContainer extends React.Component {
   }
 
   componentDidMount() {
+    // TODO: redux-saga, add to store instead of local state
     this.setData();
   }
 
@@ -90,19 +102,21 @@ class MapContainer extends React.Component {
   };
 
   render() {
-    const { position, lastUpdated, updatePosition, exportMap } = this.props;
+    const { position, lastUpdated, updatePosition, exportMap, classes } = this.props;
     const { requests, ncCounts, ccCounts, selectedTypes } = this.state;
     return (
-      <Map
-        requests={requests}
-        ncCounts={ncCounts}
-        ccCounts={ccCounts}
-        position={position}
-        lastUpdated={lastUpdated}
-        updatePosition={updatePosition}
-        exportMap={exportMap}
-        selectedTypes={selectedTypes}
-      />
+      <div className={classes.root}>
+        <Map
+          requests={requests}
+          // ncCounts={ncCounts}
+          // ccCounts={ccCounts}
+          position={position}
+          // lastUpdated={lastUpdated}
+          // updatePosition={updatePosition}
+          // exportMap={exportMap}
+          selectedTypes={selectedTypes}
+        />
+      </div>
     );
   }
 }
@@ -124,4 +138,4 @@ MapContainer.propTypes = {};
 
 MapContainer.defaultProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MapContainer));

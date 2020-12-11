@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'proptypes';
+// import PropTypes from 'proptypes';
+import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
@@ -17,7 +18,7 @@ import {
   ncNameFromId,
   ccNameFromId,
   ncInfoFromLngLat,
-  ccNameFromLngLat,
+  // ccNameFromLngLat,
 } from './districts';
 
 import { pointsWithinGeo } from './geoUtils';
@@ -27,13 +28,29 @@ import BoundaryLayer from './layers/BoundaryLayer';
 import AddressLayer from './layers/AddressLayer';
 
 // import MapOverview from './controls/MapOverview';
+
 import MapSearch from './controls/MapSearch';
-import MapLayers from './controls/MapLayers';
-import MapRegion from './controls/MapRegion';
-import MapMeta from './controls/MapMeta';
+// import MapLayers from './controls/MapLayers';
+// import MapRegion from './controls/MapRegion';
+// import MapMeta from './controls/MapMeta';
 
-import RequestDetail from './RequestDetail';
+// import RequestDetail from './RequestDetail';
 
+const styles = theme => ({
+  root: {
+    height: '100%',
+    margin: '0 auto',
+    '& canvas.mapboxgl-canvas:focus': {
+      outline: 'none',
+    },
+    // TODO: controls placement
+    '& .mapboxgl-control-container': {
+      display: 'none',
+    },
+  },
+})
+
+// TODO: major refactor, hooks
 class Map extends React.Component {
   constructor(props) {
     super(props);
@@ -81,14 +98,12 @@ class Map extends React.Component {
 
       this.map.on('click', this.onClick);
 
-      this.map.on('moveend', this.updatePosition);
+      // this.map.on('moveend', this.updatePosition);
 
       this.map.once('idle', e => {
-        this.updatePosition();
+        // this.updatePosition();
         this.setState({ mapReady: true });
       });
-
-      this.map.addControl(new mapboxgl.FullscreenControl(), 'bottom-left');
     });
 
     this.setFilteredRequestCounts();
@@ -240,7 +255,7 @@ class Map extends React.Component {
 
     const features = this.map.queryRenderedFeatures(e.point, {
       layers: [
-        'request-circles',
+        // 'request-circles',
         ...masks,
         ...hoverables
       ]
@@ -299,19 +314,6 @@ class Map extends React.Component {
     });
 
     this.addressLayer.zoomTo(lngLat);
-  };
-
-  updatePosition = () => {
-    // NOTE: currently there's no need to inform redux about map position
-    // const { updatePosition } = this.props;
-    // const bounds = this.map.getBounds();
-    // updatePosition({
-    //   zoom: this.map.getZoom(),
-    //   bounds: {
-    //     _northEast: bounds.getNorthEast(),
-    //     _southWest: bounds.getSouthWest(),
-    //   },
-    // });
   };
 
   zoomOut = () => {
@@ -419,20 +421,22 @@ class Map extends React.Component {
     const {
       requests,
       geoFilterType,
-      locationInfo,
-      filteredRequestCounts,
+      // locationInfo,
+      // filteredRequestCounts,
       colorScheme,
       filterGeo,
       activeRequestsLayer,
       mapStyle,
-      hoveredRegionName,
+      // hoveredRegionName,
       canReset,
       selectedRequestId,
       selectedTypes,
     } = this.state;
 
+    const { classes } = this.props;
+
     return (
-      <div className="mapbox-container" ref={el => this.mapContainer = el}>
+      <div className={classes.root} ref={el => this.mapContainer = el} >
         <RequestsLayer
           ref={el => this.requestsLayer = el}
           requests={requests}
@@ -455,9 +459,9 @@ class Map extends React.Component {
           visible={geoFilterType === GEO_FILTER_TYPES.cc}
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
-        <div ref={el => this.requestDetail = el}>
+        {/* <div ref={el => this.requestDetail = el}>
           <RequestDetail srnumber={selectedRequestId} />
-        </div>
+        </div> */}
         { this.state.mapReady && (
           <>
             {/* <MapOverview
@@ -474,7 +478,7 @@ class Map extends React.Component {
               onReset={this.reset}
               canReset={!!filterGeo && canReset}
             />
-            <MapLayers
+            {/* <MapLayers
               selectedTypes={selectedTypes}
               onChangeSelectedTypes={this.setSelectedTypes}
               requestsLayer={activeRequestsLayer}
@@ -483,9 +487,9 @@ class Map extends React.Component {
               onChangeMapStyle={this.setMapStyle}
               colorScheme={colorScheme}
               onChangeColorScheme={this.setColorScheme}
-            />
-            <MapRegion regionName={hoveredRegionName} />
-            <MapMeta map={this.map} />
+            /> */}
+            {/* <MapRegion regionName={hoveredRegionName} />
+            <MapMeta map={this.map} /> */}
           </>
         )}
       </div>
@@ -497,4 +501,6 @@ Map.propTypes = {};
 
 Map.defaultProps = {};
 
-export default Map;
+export default withStyles(styles)(Map);
+
+// export default Map;

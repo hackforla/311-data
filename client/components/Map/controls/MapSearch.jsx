@@ -1,12 +1,20 @@
 import React from 'react';
 import PropTypes from 'proptypes';
 import clx from 'classnames';
+import { withStyles } from '@material-ui/core/styles'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
 import { GEO_FILTER_TYPES } from '../constants';
 import { ncBoundaries } from '../districts';
 
 const TABS = Object.values(GEO_FILTER_TYPES);
+
+const styles = theme => ({
+  searchContainer: {
+    // TODO: geocoder refactor, styles
+    display: 'none',
+  }
+})
 
 class MapSearch extends React.Component {
   componentDidMount() {
@@ -91,9 +99,9 @@ class MapSearch extends React.Component {
   }
 
   render() {
-    const { geoFilterType } = this.props;
+    const { geoFilterType, classes } = this.props;
     return (
-      <div className="map-search map-control">
+      <div className={classes.searchContainer}>
         <div>
           <div className="map-control-tabs">
             { TABS.map(tab => (
@@ -143,4 +151,4 @@ MapSearch.defaultProps = {
   canReset: false
 };
 
-export default MapSearch;
+export default withStyles(styles)(MapSearch);

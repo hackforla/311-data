@@ -60,7 +60,9 @@ const initialState = {
     isOpen: true,
     // activeTab: MENU_TABS.MAP,
   },
-  map: {},
+  map: {
+    activeMode: MAP_MODES.OPEN,
+  },
   error: {
     isOpen: false,
   },

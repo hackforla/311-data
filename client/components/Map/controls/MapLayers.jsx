@@ -81,7 +81,7 @@ class MapLayers extends React.Component {
             <div className="type-selectors">
               { Object.keys(REQUEST_TYPES).map(id => {
                 const type = REQUEST_TYPES[id];
-                const selected = selectedTypes.includes(id);
+                // const selected = selectedTypes.includes(id);
                 return (
                   <div
                     key={id}
@@ -90,8 +90,10 @@ class MapLayers extends React.Component {
                     <div
                       className="type-color"
                       style={{
-                        backgroundColor: selected ? schemeColors[id] : 'transparent',
-                        borderWidth: selected ? 0 : 1,
+                        // backgroundColor: selected ? schemeColors[id] : 'transparent',
+                        // borderWidth: selected ? 0 : 1,
+                        backgroundColor: 'transparent',
+                        borderWidth: 1,
                       }}
                     />
                     <div className="type-name">{ type.displayName }</div>
