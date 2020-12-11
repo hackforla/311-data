@@ -11,11 +11,11 @@ export const updateMapDateRange = ({ dateRange, startDate, endDate }) => ({
 
 // set all types to either true or false
 const allRequestTypes = value => (
-    Object.keys(REQUEST_TYPES).reduce((acc, type) => {
-      acc[type] = value;
-      return acc;
-    }, { All: value })
-  );
+  Object.keys(REQUEST_TYPES).reduce((acc, type) => {
+    acc[type] = value;
+    return acc;
+  }, { All: value })
+);
 
 const allCouncils = COUNCILS.map(council => council.name);
 

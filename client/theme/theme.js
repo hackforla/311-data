@@ -22,7 +22,7 @@ const theme = createMuiTheme({
     },
     footer: {
       height: '40px',
-    }
+    },
   },
 });
 

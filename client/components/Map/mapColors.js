@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 // carto schemes from: https://carto.com/carto-colors/

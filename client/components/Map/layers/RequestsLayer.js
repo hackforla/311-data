@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';

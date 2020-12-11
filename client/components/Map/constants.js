@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { boundingBox } from './geoUtils';
 import { ncBoundaries } from './districts';
 

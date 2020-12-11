@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import PropTypes from 'proptypes';
 import clx from 'classnames';

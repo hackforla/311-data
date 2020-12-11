@@ -817,9 +817,7 @@ export const COUNCILS = [
 
 export const MAP_DATE_RANGES = (() => {
   const endDate = moment().format('MM/DD/YY');
-  const priorDate = (num, timeInterval) => {
-    return moment().subtract(num, timeInterval).format('MM/DD/YY');
-  };
+  const priorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format('MM/DD/YY');
 
   return [
     {
@@ -828,14 +826,12 @@ export const MAP_DATE_RANGES = (() => {
       startDate: priorDate(1, 'week'),
       endDate,
     },
-  ]
+  ];
 })();
 
 export const DATE_RANGES = (() => {
   const endDate = moment().format('MM/DD/YYYY');
-  const priorDate = (num, timeInterval) => {
-    return moment().subtract(num, timeInterval).format('MM/DD/YYYY');
-  };
+  const priorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format('MM/DD/YYYY');
 
   return [
     {
@@ -886,7 +882,7 @@ export const DATE_RANGES = (() => {
       startDate: null,
       endDate: null,
     },
-  ]
+  ];
 })();
 
 export const MAP_MODES = {
