@@ -5,6 +5,7 @@ import filters from './reducers/filters';
 import ui from './reducers/ui';
 import comparisonData from './reducers/comparisonData';
 import comparisonFilters from './reducers/comparisonFilters';
+import mapFilters from './reducers/mapFilters';
 
 export default combineReducers({
   metadata,
@@ -13,4 +14,5 @@ export default combineReducers({
   ui,
   comparisonData,
   comparisonFilters,
+  mapFilters,
 });
