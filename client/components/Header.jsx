@@ -8,22 +8,22 @@ import {
   Typography,
 } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   appBar: {
-    height: theme.palette.header.height,
-    backgroundColor: theme.palette.primary.main,
+    height: '62px',
+    backgroundColor: '#2A404E',
   },
   button: {
     textTransform: 'none',
   },
   title: {
     flexGrow: 1,
-    fontFamily: theme.palette.typography.fontFamily,
+    fontFamily: 'Oswald, sans-serif',
     fontSize: '30px',
     fontWeight: 'bold',
     letterSpacing: '4px',
   },
-}));
+});
 
 // TODO: links/routing, mobile
 const Header = () => {

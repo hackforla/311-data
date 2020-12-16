@@ -9,20 +9,19 @@ import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 
 // TODO: pull style constants into mui theme
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   footer: {
     position: 'absolute',
     bottom: 0,
     height: '40px',
     width: '100%',
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: '#2A404E',
   },
   lastUpdated: {
-    color: theme.palette.typography.dark,
     lineHeight: '40px',
     fontSize: '14px',
   },
-}));
+});
 
 // TODO: check with UI/UX re placement of social media, privacy policy links
 const Footer = ({
@@ -32,15 +31,15 @@ const Footer = ({
 
   return (
     <footer className={classes.footer}>
-      { lastUpdated && (
-        <Container maxWidth="xs">
+      <Container maxWidth="xs">
+        { lastUpdated && (
           <Typography className={classes.lastUpdated}>
             Data Updated Through:
             &nbsp;
             {moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
           </Typography>
-        </Container>
-      )}
+        )}
+      </Container>
     </footer>
   );
 };
