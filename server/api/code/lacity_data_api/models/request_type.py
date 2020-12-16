@@ -12,6 +12,7 @@ class RequestType(db.Model):
     type_id = db.Column(db.SmallInteger, primary_key=True)
     type_name = db.Column(db.String)
     color = db.Column(db.String)
+    data_code = db.Column(db.String)
 
 
 @cached(cache=Cache.REDIS,
@@ -21,29 +22,10 @@ class RequestType(db.Model):
         serializer=serializers.PickleSerializer(),
         )
 async def get_types_dict():
+    '''This is a shim function to allow types to be retrieved by strings'''
     result = await db.all(RequestType.query)
-    types_dict = [(i.type_id, i.type_name) for i in result]
+    types_dict = [(i.type_id, i.data_code) for i in result]
     return dict(types_dict)
-
-
-async def get_types_by_str_list(str_list: List[str]) -> List[RequestType]:
-    '''Get a list of RequestTypes from their type_names'''
-    result = await db.all(
-        RequestType.query.where(
-            RequestType.type_name.in_(str_list)
-        )
-    )
-    return result
-
-
-async def get_types_by_int_list(int_list: List[int]) -> List[RequestType]:
-    '''Get a list of RequestTypes from their type_names'''
-    result = await db.all(
-        RequestType.query.where(
-            RequestType.type_id.in_(int_list)
-        )
-    )
-    return result
 
 
 @cached(cache=Cache.REDIS,
@@ -52,10 +34,10 @@ async def get_types_by_int_list(int_list: List[int]) -> List[RequestType]:
         serializer=serializers.PickleSerializer(),
         )
 async def get_type_ids_by_str_list(str_list: List[str]) -> List[int]:
-    '''Get a list of RequestType IDs from their type_names'''
+    '''Get a list of RequestType IDs from their type_names using data code'''
     result = await db.all(
         RequestType.query.where(
-            RequestType.type_name.in_(str_list)
+            RequestType.data_code.in_(str_list)
         )
     )
     return [row.type_id for row in result]

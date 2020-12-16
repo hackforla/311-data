@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, status
 
 from ..models.schemas import (
     Filter, Feedback, Comparison
@@ -63,26 +63,6 @@ async def get_open_requests():
         },
         "requests": requests_list
     }
-
-
-@router.post("/map/clusters")
-async def get_clusters(filter: Filter):
-    # convert type names to type ids
-    type_ids = await request_type.get_type_ids_by_str_list(filter.requestTypes)
-
-    result = await clusters.get_clusters_for_bounds(
-        filter.startDate,
-        filter.endDate,
-        type_ids,
-        filter.ncList,
-        filter.zoom,
-        filter.bounds
-    )
-    # if the result is empty most likely there was a cache timeout
-    if result == []:
-        raise HTTPException(status_code=429, detail="Too many requests")
-
-    return result
 
 
 @router.post("/map/heat")

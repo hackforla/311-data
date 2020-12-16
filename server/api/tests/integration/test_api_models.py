@@ -45,11 +45,11 @@ def test_types(client):
     url = "/types"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 12
+    assert len(response.json()) == 11
 
 
 def test_type(client):
     url = "/types/1"
     response = client.get(url)
     assert response.status_code == 200
-    assert response.json()["type_name"] == "Bulky Items"
+    assert response.json()["type_name"] == "Animal Remains"
