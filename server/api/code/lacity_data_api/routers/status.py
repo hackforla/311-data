@@ -27,12 +27,18 @@ async def reset_cache():
             description="Provides the status of backend systems")
 async def check_status_type(status_type: StatusTypes):
     if status_type == StatusTypes.api:
+
+        cache_items = await status.get_cache_keys()
+        if len(cache_items) == 0:
+            await utilities.build_cache()
+
         return {
             'currentTime': datetime.datetime.now(),
             'lastPulled': await status.get_last_updated(),
             'stage': STAGE,
             'version': GITHUB_CODE_VERSION,
-            'gitSha': GITHUB_SHA
+            'gitSha': GITHUB_SHA,
+            'cachedItems': len(cache_items)
         }
 
     if status_type == StatusTypes.database:
@@ -48,8 +54,6 @@ async def check_status_type(status_type: StatusTypes):
         }
 
     if status_type == StatusTypes.cache:
-        await utilities.build_cache()
-
         return {
             "keys": await status.get_cache_keys(),
             "info": await status.get_cache_info()

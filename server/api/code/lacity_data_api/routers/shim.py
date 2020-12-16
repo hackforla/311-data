@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, status
 
 from ..models.schemas import (
     Filter, Feedback, Comparison
