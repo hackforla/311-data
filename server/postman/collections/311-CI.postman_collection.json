@@ -145,57 +145,6 @@
 			"response": []
 		},
 		{
-			"name": "/map/clusters",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "874a8e2e-ebd0-414d-9ee5-81992dd5b352",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    if (pm.response.code === 500) {",
-							"        console.log(pm.response.text())",
-							"    }",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"startDate\": \"2019-01-01\",\n\t\"endDate\": \"2020-06-01\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\", \"Dead Animal Removal\"],\n\t\"ncList\": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20],\n\t\"zoom\": 14,\n\t\"bounds\": {\n\t\t\"north\": 90,\n\t\t\"south\": -90,\n\t\t\"west\": -180,\n\t\t\"east\": 180\n\t}\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/map/clusters",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"map",
-						"clusters"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "/map/heat",
 			"event": [
 				{
@@ -577,54 +526,6 @@
 					"path": [
 						"status",
 						"api"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/map/clusters -- invalid ncList",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "eaf88891-878e-4ab6-b1bf-b03101326461",
-						"exec": [
-							"pm.test(\"Status code is 400 or 422\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"startDate\": \"2019-01-01\",\n\t\"endDate\": \"2020-06-01\",\n\t\"requestTypes\": [\"Bulky Items\", \"Graffiti Removal\", \"Dead Animal Removal\"],\n\t\"ncList\": \"4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20\",\n\t\"zoom\": 14,\n\t\"bounds\": {\n\t\t\"north\": 90,\n\t\t\"south\": -90,\n\t\t\"west\": -180,\n\t\t\"east\": 180\n\t}\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/map/clusters",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"map",
-						"clusters"
 					]
 				}
 			},
