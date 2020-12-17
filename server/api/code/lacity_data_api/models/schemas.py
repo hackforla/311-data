@@ -1,5 +1,6 @@
 from typing import List, Optional
 import datetime
+# from datetime.datetime import datetime.date
 from enum import Enum
 
 from pydantic import BaseModel, validator
@@ -46,7 +47,7 @@ class Filter(BaseModel):
                         v = datetime.datetime.strptime(v, '%Y-%m-%d')
                     except ValueError:
                         pass
-        return v
+        return v.date()
 
 
 class ClassicPin(BaseModel):
@@ -118,6 +119,7 @@ class StatusTypes(str, Enum):
     database = "db"
     cache = "cache"
     log = "log"
+    redis = "redis"
 
 
 class ServiceRequest(BaseModel):
