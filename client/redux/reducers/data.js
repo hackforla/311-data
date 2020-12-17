@@ -5,8 +5,6 @@ export const types = {
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
-  GET_PIN_CLUSTERS_SUCCESS: 'GET_PIN_CLUSTERS_SUCCESS',
-  GET_PIN_CLUSTERS_FAILURE: 'GET_PIN_CLUSTERS_FAILURE',
   GET_HEATMAP_SUCCESS: 'GET_HEATMAP_SUCCESS',
   GET_HEATMAP_FAILURE: 'GET_HEATMAP_FAILURE',
   GET_VIS_DATA_SUCCESS: 'GET_VIS_DATA_SUCCESS',
@@ -42,16 +40,6 @@ export const getPinInfoSuccess = response => ({
 
 export const getPinInfoFailure = error => ({
   type: types.GET_PIN_INFO_FAILURE,
-  payload: error,
-});
-
-export const getPinClustersSuccess = response => ({
-  type: types.GET_PIN_CLUSTERS_SUCCESS,
-  payload: response,
-});
-
-export const getPinClustersFailure = error => ({
-  type: types.GET_PIN_CLUSTERS_FAILURE,
   payload: error,
 });
 
@@ -95,7 +83,6 @@ const initialState = {
   isVisLoading: false,
   error: null,
   pins: [],
-  pinClusters: [],
   heatmap: [],
   pinsInfo: {},
   counts: {},
@@ -157,28 +144,6 @@ export default (state = initialState, action) => {
           message,
           error: action.payload,
         },
-      };
-    }
-    case types.GET_PIN_CLUSTERS_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        pinClusters: action.payload,
-        isMapLoading: false,
-      };
-    case types.GET_PIN_CLUSTERS_FAILURE: {
-      const {
-        response: { status },
-        message,
-      } = action.payload;
-      return {
-        ...state,
-        error: {
-          code: status,
-          message,
-          error: action.payload,
-        },
-        isMapLoading: false,
       };
     }
     case types.GET_HEATMAP_SUCCESS:
