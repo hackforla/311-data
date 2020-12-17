@@ -11,7 +11,20 @@ import theme from './theme/theme';
 import PersistentDrawerLeft from '@components/LeftDrawer';
 import GearButton from '@components/GearButton';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
-import { useSwipeable } from "react-swipeable";
+import { useSwipeable } from 'react-swipeable';
+
+const menuStyles = {
+  swipeAreaOpen:{
+    float: 'left',
+    position: 'fixed',
+    width: '30%',
+    height: '100%',
+  },
+  gear:{
+    marginLeft: '85vw',
+    marginTop:'70vh',
+  }
+};
 
 const App = ({
   getMetadata,
@@ -32,10 +45,10 @@ const App = ({
       <CssBaseline />
       <Header />
       <PersistentDrawerLeft />
-      <GearButton onClick={toggleMenu}/>
-      <div {...handleSwipeMenu}>
-        <MapContainer />
-      </div>
+      <MapContainer />
+        {/* area where you can swipe the menu sidebar */}
+      <div {...handleSwipeMenu}  style={menuStyles.swipeAreaOpen}/>
+      <GearButton onClick={toggleMenu} style={menuStyles.gear} />
       <Footer />
     </ThemeProvider>
   );

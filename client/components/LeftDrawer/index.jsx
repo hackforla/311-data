@@ -80,10 +80,10 @@ const useStyles = makeStyles((theme) => ({
 const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
 
   // TODO ADD FUNCTIONALITY
-  const [selectedMapStyleValue, setMapStyleValue] = React.useState('');
-  const [selectedMapModeValue, setMapModeValue] = React.useState('');
-  const [selectedDataColorScheme, setDataColorScheme] = React.useState('');
-  const [selectedBoundariesValue, setBoundariesValue] = React.useState('');
+  const [selectedMapStyleValue, setMapStyleValue] = React.useState('Point Map');
+  const [selectedMapModeValue, setMapModeValue] = React.useState('Dark');
+  const [selectedDataColorScheme, setDataColorScheme] = React.useState('Original');
+  const [selectedBoundariesValue, setBoundariesValue] = React.useState('None');
   
   
   const handleChangeMapStyle = (event) => {

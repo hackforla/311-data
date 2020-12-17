@@ -18,10 +18,10 @@ const useStyles = makeStyles({
   },
 });
 
-const GearButton = ({ onClick }) => {
+const GearButton = (props) => {
   const { gearIcon, button } = useStyles();
   const [pressed, setPressed] = useState(false);
-
+  const { onClick, style } = props;
   const onKeyDown = e => {
     e.preventDefault();
     if (e.key === ' '
@@ -45,6 +45,7 @@ const GearButton = ({ onClick }) => {
       role="button"
       aria-pressed={pressed}
       aria-label="Toggle Sidebar"
+      style={style}
     >
       <SettingsSharpIcon className={gearIcon} />
     </IconButton>
