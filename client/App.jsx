@@ -6,7 +6,7 @@ import { CssBaseline } from '@material-ui/core';
 import { getMetadataRequest } from '@reducers/metadata';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
-import Map from '@components/Map';
+import MapContainer from '@components/Map';
 import theme from './theme/theme';
 import PersistentDrawerLeft from '@components/LeftDrawer';
 import GearButton from '@components/GearButton';
@@ -34,7 +34,7 @@ const App = ({
       <PersistentDrawerLeft />
       <GearButton onClick={toggleMenu}/>
       <div {...handleSwipeMenu}>
-        <Map />
+        <MapContainer />
       </div>
       <Footer />
     </ThemeProvider>

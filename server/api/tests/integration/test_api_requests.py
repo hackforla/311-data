@@ -13,7 +13,7 @@ def test_service_request(client):
     assert response.json()["srnumber"] == "1-1523590121"
     assert response.json()["created_date"] == "2020-01-01"
     assert response.json()["closed_date"] == "2020-01-02"
-    assert response.json()["type_id"] == 7
+    assert response.json()["type_id"] == 8
     assert response.json()["council_id"] == 19
     assert response.json()["region_id"] == 3
     assert response.json()["address"] == "16815 W VANOWEN ST, 91406"
@@ -46,7 +46,7 @@ def test_service_request_pins(client):
                 29
             ],
             "requestTypes": [
-                1
+                6
             ]
         })
     assert response.status_code == 200
@@ -64,7 +64,7 @@ def test_service_request_points(client):
                 29
             ],
             "requestTypes": [
-                1
+                6
             ]
         })
     assert response.status_code == 200

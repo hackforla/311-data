@@ -63,8 +63,10 @@ def upgrade():
         'request_types',
         sa.Column('type_id', sa.SMALLINT(), primary_key=True),
         sa.Column('type_name', sa.VARCHAR(), nullable=False),
+        sa.Column('type_group', sa.VARCHAR()),
         sa.Column('color', sa.VARCHAR()),
-        sa.Column('data_code', sa.VARCHAR(), nullable=False)
+        sa.Column('data_code', sa.VARCHAR(), nullable=False),
+        sa.Column('sort_order', sa.SMALLINT())
     )
 
     with open(DATA_FOLDER + 'request_types.csv') as f:

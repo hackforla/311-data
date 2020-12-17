@@ -49,14 +49,14 @@ async def test_regions(db):
 @pytest.mark.asyncio
 async def test_request_types(db):
     result = await db.all(RequestType.query)
-    assert len(result) == 12
+    assert len(result) == 11
 
 
 @pytest.mark.asyncio
 async def test_service_requests(db):
     query = db.text("SELECT count(*) FROM service_requests")
     result = await db.scalar(query)
-    assert result == 9883
+    assert result == 9877
 
 
 @pytest.mark.asyncio

@@ -1,4 +1,4 @@
-import { MENU_TABS } from '@components/common/CONSTANTS';
+import { MAP_MODES } from '@components/common/CONSTANTS';
 
 export const types = {
   TOGGLE_MENU: 'TOGGLE_MENU',
@@ -9,6 +9,7 @@ export const types = {
   SHOW_FEEDBACK_SUCCESS: 'SHOW_FEEDBACK_SUCCESS',
   UPDATE_MAP_POSITION: 'UPDATE_MAP_POSITION',
   ACCEPT_COOKIES: 'ACCEPT_COOKIES',
+  SET_MAP_MODE: 'SET_MAP_MODE',
 };
 
 export const toggleMenu = () => ({
@@ -49,12 +50,19 @@ export const acceptCookies = () => ({
   type: types.ACCEPT_COOKIES,
 });
 
+export const setMapMode = mode => ({
+  type: types.SET_MAP_MODE,
+  payload: mode,
+});
+
 const initialState = {
   menu: {
     isOpen: false,
-    activeTab: MENU_TABS.MAP,
+    // activeTab: MENU_TABS.MAP,
   },
-  map: {},
+  map: {
+    activeMode: MAP_MODES.OPEN,
+  },
   error: {
     isOpen: false,
   },
