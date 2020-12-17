@@ -144,14 +144,17 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
             <ListItemText primary='Map Style'/>
           </ListItem>
           {['Point Map', 'Heat Map'].map((text, index) => (
-            <ListItem className={classes.listItem} button key={text}>
+            <ListItem className={classes.listItem} 
+              style={{color: selectedMapStyleValue===text && '#87C8BC'}} 
+              button key={text} 
+              >
               <ListItemIcon>
                 <Radio
                   checked={selectedMapStyleValue === text}
                   onChange={handleChangeMapStyle}
                   value={text}
-                  color="default"
-                  name="radio-button"
+                  style={{color:selectedMapStyleValue === text && '#87C8BC'}}
+                  name='radio-button'
                   inputProps={{ 'aria-label': text }}
                 />
               </ListItemIcon>
@@ -171,13 +174,17 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
             <ListItemText primary='Map Mode'/>
           </ListItem>
           {['Dark', 'Light', 'Street'].map((text, index) => (
-            <ListItem button key={text} className={classes.listItem}>
+            <ListItem
+              style={{color: selectedMapModeValue===text && '#87C8BC'}}
+              button key={text}
+              className={classes.listItem}
+            >
               <ListItemIcon>
                 <Radio
                   checked={selectedMapModeValue === text}
                   onChange={handleChangeMapMode}
                   value={text}
-                  color="default"
+                  style={{color:selectedMapModeValue === text && '#87C8BC'}}
                   name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
@@ -192,13 +199,17 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
             <ListItemText primary='Data Color Scheme'/>
           </ListItem>
           {['Original', 'Prism', 'Bold'].map((text, index) => (
-            <ListItem button key={text} className={classes.listItem}>
+            <ListItem
+              style={{color: selectedDataColorScheme===text && '#87C8BC'}}
+              button key={text}
+              className={classes.listItem}
+            >
               <ListItemIcon>
                 <Radio
                   checked={selectedDataColorScheme === text}
                   onChange={handleChangeDataColorScheme}
                   value={text}
-                  color="default"
+                  style={{color:selectedDataColorScheme === text && '#87C8BC'}}
                   name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
@@ -209,17 +220,22 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
         </List>
         <Divider />
         <List>
-        <ListItem key={'Boundaries'} className={classes.listItemTitle}>
+        <ListItem key={'Boundaries'} className={classes.listItemTitle} >
             <ListItemText primary='Boundaries'/>
           </ListItem>
           {['None', 'Neighborhood Councils', 'City Councils'].map((text, index) => (
-            <ListItem button key={text} className={classes.listItem}>
+            <ListItem
+              style={{color: selectedDataColorScheme===text && '#87C8BC'}}
+              button key={text}
+              className={classes.listItem}
+              selected={selectedBoundariesValue===text}
+            >
               <ListItemIcon>
                 <Radio
                   checked={selectedBoundariesValue === text}
                   onChange={handleChangeBoundaries}
                   value={text}
-                  color="default"
+                  style={{color:selectedBoundariesValue === text && '#87C8BC'}}
                   name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
