@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_app():
-    app = FastAPI(title="LA City 311 Data API", debug=DEBUG)
+    app = FastAPI(title="LA 311 Data API", debug=DEBUG)
 
     db.init_app(app)
     app.include_router(index.router)
