@@ -7,6 +7,7 @@ from sqlalchemy import and_
 from . import db
 from .request_type import RequestType
 from ..config import CACHE_ENDPOINT
+from ..services import utilities
 
 
 class ServiceRequest(db.Model):
@@ -57,6 +58,7 @@ async def get_open_requests() -> List[ServiceRequest]:
         endpoint=CACHE_ENDPOINT,
         namespace="filtered",
         serializer=serializers.PickleSerializer(),
+        key_builder=utilities.cache_key
         )
 async def get_filtered_requests(
         start_date: datetime.date,

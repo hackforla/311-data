@@ -54,10 +54,13 @@ async def check_status_type(status_type: StatusTypes):
         }
 
     if status_type == StatusTypes.cache:
-        return {
-            "keys": await status.get_cache_keys(),
-            "info": await status.get_cache_info()
-        }
+        result = await status.get_cache_keys()
+        result.sort()
+        return result
+
+    if status_type == StatusTypes.redis:
+        result = await status.get_cache_info()
+        return result
 
     if status_type == StatusTypes.log:
         result = await status.get_recent_log()
