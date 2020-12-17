@@ -15,12 +15,12 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import LinkIcon from '@material-ui/icons/Link';
 import { connect } from 'react-redux';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
+import Radio from '@material-ui/core/Radio';
 
-const drawerWidth = 240;
+const drawerWidth = 275;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,14 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
-  },
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
+    backgroundColor:'#2A404E',
   },
   content: {
     flexGrow: 1,
@@ -70,56 +63,71 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: -drawerWidth,
   },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
+  share: {
+    marginBottom:'100px',
+    paddingLeft:'25px',
   },
+  listItem:{
+    paddingTop:'15px',
+    paddingBottom:'15px',
+    height:'24px',
+  },
+  listItemTitle:{
+    paddingLeft: '28px',
+  }
 }));
 
 const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
+
+  // TODO ADD FUNCTIONALITY
+  const [selectedMapStyleValue, setMapStyleValue] = React.useState('');
+  const [selectedMapModeValue, setMapModeValue] = React.useState('');
+  const [selectedDataColorScheme, setDataColorScheme] = React.useState('');
+  const [selectedBoundariesValue, setBoundariesValue] = React.useState('');
+  
+  
+  const handleChangeMapStyle = (event) => {
+    setMapStyleValue(event.target.value);
+  };
+  const handleChangeMapMode = (event) => {
+    setMapModeValue(event.target.value);
+  };
+  const handleChangeDataColorScheme = (event) => {
+    setDataColorScheme(event.target.value);
+  };
+  const handleChangeBoundaries = (event) => {
+    setBoundariesValue(event.target.value);
+  };
   const classes = useStyles();
   const theme = useTheme();
-  // const [open, setOpen] = React.useState(false);
 
-  // const handleDrawerOpen = () => {
-  //   setOpen(true);
-  // };
+  const escFunction = e => {
+    e.preventDefault();
+    if (e.key === "Escape"
+    ) {
+      toggleMenu();
+    }
+  };
 
-  // const handleDrawerClose = () => {
-  //   setOpen(false);
-  // };
+  const onClickShare = e => {
+    // TODO ADD FUNCTIONALITY
+    console.log('clicked')
+  }
+
+  React.useEffect(() => {
+    document.addEventListener("keydown", escFunction, false);
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  }, []);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      {/* <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Persistent drawer
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
       <Drawer
         className={classes.drawer}
-        variant="persistent"
-        anchor="left"
+        variant='persistent'
+        anchor='left'
         open={menuIsOpen}
         classes={{
           paper: classes.drawerPaper,
@@ -132,9 +140,21 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
         </div>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+          <ListItem key={'Map Style'} className={classes.listItemTitle}>
+            <ListItemText primary='Map Style'/>
+          </ListItem>
+          {['Point Map', 'Heat Map'].map((text, index) => (
+            <ListItem className={classes.listItem} button key={text}>
+              <ListItemIcon>
+                <Radio
+                  checked={selectedMapStyleValue === text}
+                  onChange={handleChangeMapStyle}
+                  value={text}
+                  color="default"
+                  name="radio-button"
+                  inputProps={{ 'aria-label': text }}
+                />
+              </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
@@ -143,47 +163,81 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
         {
           /**
            * TODO ADD DYNAMIC LIST OF ITEMS
+           * ADD COLOR TO RADIO BUTTONS
            */
         }
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+        <ListItem key={'Map Mode'} className={classes.listItemTitle}>
+            <ListItemText primary='Map Mode'/>
+          </ListItem>
+          {['Dark', 'Light', 'Street'].map((text, index) => (
+            <ListItem button key={text} className={classes.listItem}>
+              <ListItemIcon>
+                <Radio
+                  checked={selectedMapModeValue === text}
+                  onChange={handleChangeMapMode}
+                  value={text}
+                  color="default"
+                  name="radio-button"
+                  inputProps={{ 'aria-label': text }}
+                />
+              </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
         </List>
+        <Divider />
+        <List>
+        <ListItem key={'Data Color Scheme'} className={classes.listItemTitle}>
+            <ListItemText primary='Data Color Scheme'/>
+          </ListItem>
+          {['Original', 'Prism', 'Bold'].map((text, index) => (
+            <ListItem button key={text} className={classes.listItem}>
+              <ListItemIcon>
+                <Radio
+                  checked={selectedDataColorScheme === text}
+                  onChange={handleChangeDataColorScheme}
+                  value={text}
+                  color="default"
+                  name="radio-button"
+                  inputProps={{ 'aria-label': text }}
+                />
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+        <ListItem key={'Boundaries'} className={classes.listItemTitle}>
+            <ListItemText primary='Boundaries'/>
+          </ListItem>
+          {['None', 'Neighborhood Councils', 'City Councils'].map((text, index) => (
+            <ListItem button key={text} className={classes.listItem}>
+              <ListItemIcon>
+                <Radio
+                  checked={selectedBoundariesValue === text}
+                  onChange={handleChangeBoundaries}
+                  value={text}
+                  color="default"
+                  name="radio-button"
+                  inputProps={{ 'aria-label': text }}
+                />
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          <ListItem key={'Share'} className={classes.share}>
+            <ListItemIcon onClick={onClickShare}>
+              <LinkIcon/>
+            </ListItemIcon>
+            <ListItemText primary='Share'/>
+          </ListItem>
+        </List>
       </Drawer>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: menuIsOpen,
-        })}
-      >
-        {/* <div className={classes.drawerHeader} />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-          facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-          gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-          donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-          Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-          imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-          arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-          donec massa sapien faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-          facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-          tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-          consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-          vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-          hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-          tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-          nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-          accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography> */}
-      </main>
     </div>
   );
 }

@@ -11,16 +11,7 @@ import theme from './theme/theme';
 import PersistentDrawerLeft from '@components/LeftDrawer';
 import GearButton from '@components/GearButton';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
-
-// const useStyles = makeStyles((theme) => ({
-//   contentShift: {
-//     transition: theme.transitions.create('margin', {
-//       easing: theme.transitions.easing.easeOut,
-//       duration: theme.transitions.duration.enteringScreen,
-//     }),
-//     marginLeft: 0,
-//   },
-// })
+import { useSwipeable } from "react-swipeable";
 
 const App = ({
   getMetadata,
@@ -30,8 +21,11 @@ const App = ({
     getMetadata();
   });
 
-  // const classes = useStyles();
-  // const mapTheme = useTheme();
+  const handleSwipeMenu = useSwipeable({
+    trackMouse: true,
+    onSwipedRight: () => toggleMenu(),
+    onSwipedLeft: () => toggleMenu()
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -39,7 +33,9 @@ const App = ({
       <Header />
       <PersistentDrawerLeft />
       <GearButton onClick={toggleMenu}/>
-      <Map />
+      <div {...handleSwipeMenu}>
+        <Map />
+      </div>
       <Footer />
     </ThemeProvider>
   );
