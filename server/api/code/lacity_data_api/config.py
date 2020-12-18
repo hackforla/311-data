@@ -64,7 +64,7 @@ if SHOW_ENV:
 # set up endpoint for REDIS cache
 CACHE_ENDPOINT = config('CACHE_ENDPOINT', default="localhost")
 CACHE_MAX_RETRIES = config('CACHE_MAX_RETRIES', cast=int, default=5)
-CACHE_MAXMEMORY = config('CACHE_MAXMEMORY', cast=int, default=524288000)
+CACHE_MAXMEMORY = config('CACHE_MAXMEMORY', cast=int, default=262144000)
 
 # set up GitHub data
 GITHUB_TOKEN = config('GITHUB_TOKEN', default=None)
