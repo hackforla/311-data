@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   },
 });
 
-const GearButton = (props) => {
+const GearButton = props => {
   const { gearIcon, button } = useStyles();
   const [pressed, setPressed] = useState(false);
   const { onClick, style } = props;
@@ -34,7 +34,7 @@ const GearButton = (props) => {
   };
   const toggleClick = () => {
     setPressed(!pressed);
-    console.log('clicked')
+    console.log('clicked');
     onClick();
   };
   return (

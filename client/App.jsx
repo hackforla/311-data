@@ -7,28 +7,28 @@ import { getMetadataRequest } from '@reducers/metadata';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import MapContainer from '@components/Map';
-import theme from './theme/theme';
 import PersistentDrawerLeft from '@components/LeftDrawer';
 import GearButton from '@components/GearButton';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 import { useSwipeable } from 'react-swipeable';
+import theme from './theme/theme';
 
 const menuStyles = {
-  swipeAreaOpen:{
+  swipeAreaOpen: {
     float: 'left',
     position: 'fixed',
     width: '30%',
     height: '100%',
   },
-  gear:{
+  gear: {
     marginLeft: '85vw',
-    marginTop:'70vh',
-  }
+    marginTop: '70vh',
+  },
 };
 
 const App = ({
   getMetadata,
-  toggleMenu
+  toggleMenu,
 }) => {
   useEffect(() => {
     getMetadata();
@@ -37,7 +37,7 @@ const App = ({
   const handleSwipeMenu = useSwipeable({
     trackMouse: true,
     onSwipedRight: () => toggleMenu(),
-    onSwipedLeft: () => toggleMenu()
+    onSwipedLeft: () => toggleMenu(),
   });
 
   return (
@@ -46,8 +46,8 @@ const App = ({
       <Header />
       <PersistentDrawerLeft />
       <MapContainer />
-        {/* area where you can swipe the menu sidebar */}
-      <div {...handleSwipeMenu}  style={menuStyles.swipeAreaOpen}/>
+      {/* area where you can swipe the menu sidebar */}
+      <div {...handleSwipeMenu} style={menuStyles.swipeAreaOpen} />
       <GearButton onClick={toggleMenu} style={menuStyles.gear} />
       <Footer />
     </ThemeProvider>
@@ -56,7 +56,7 @@ const App = ({
 
 const mapDispatchToProps = dispatch => ({
   getMetadata: () => dispatch(getMetadataRequest()),
-  toggleMenu: () => dispatch(reduxToggleMenu())
+  toggleMenu: () => dispatch(reduxToggleMenu()),
 });
 
 export default connect(null, mapDispatchToProps)(App);

@@ -22,7 +22,7 @@ import Radio from '@material-ui/core/Radio';
 
 const drawerWidth = 275;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
   },
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor:'#2A404E',
+    backgroundColor: '#2A404E',
   },
   content: {
     flexGrow: 1,
@@ -64,38 +64,36 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: -drawerWidth,
   },
   share: {
-    marginBottom:'100px',
-    paddingLeft:'25px',
+    marginBottom: '100px',
+    paddingLeft: '25px',
   },
-  listItem:{
-    paddingTop:'15px',
-    paddingBottom:'15px',
-    height:'24px',
+  listItem: {
+    paddingTop: '15px',
+    paddingBottom: '15px',
+    height: '24px',
   },
-  listItemTitle:{
+  listItemTitle: {
     paddingLeft: '28px',
-  }
+  },
 }));
 
-const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
-
+const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
   // TODO ADD FUNCTIONALITY
   const [selectedMapStyleValue, setMapStyleValue] = React.useState('Point Map');
   const [selectedMapModeValue, setMapModeValue] = React.useState('Dark');
   const [selectedDataColorScheme, setDataColorScheme] = React.useState('Original');
   const [selectedBoundariesValue, setBoundariesValue] = React.useState('None');
-  
-  
-  const handleChangeMapStyle = (event) => {
+
+  const handleChangeMapStyle = event => {
     setMapStyleValue(event.target.value);
   };
-  const handleChangeMapMode = (event) => {
+  const handleChangeMapMode = event => {
     setMapModeValue(event.target.value);
   };
-  const handleChangeDataColorScheme = (event) => {
+  const handleChangeDataColorScheme = event => {
     setDataColorScheme(event.target.value);
   };
-  const handleChangeBoundaries = (event) => {
+  const handleChangeBoundaries = event => {
     setBoundariesValue(event.target.value);
   };
   const classes = useStyles();
@@ -103,7 +101,7 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
 
   const escFunction = e => {
     e.preventDefault();
-    if (e.key === "Escape"
+    if (e.key === 'Escape'
     ) {
       toggleMenu();
     }
@@ -111,23 +109,23 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
 
   const onClickShare = e => {
     // TODO ADD FUNCTIONALITY
-    console.log('clicked')
-  }
+    console.log('clicked');
+  };
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction, false);
+    document.addEventListener('keydown', escFunction, false);
     return () => {
-      document.removeEventListener("keydown", escFunction, false);
+      document.removeEventListener('keydown', escFunction, false);
     };
-  }, []);
+  }, [escFunction]);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Drawer
         className={classes.drawer}
-        variant='persistent'
-        anchor='left'
+        variant="persistent"
+        anchor="left"
         open={menuIsOpen}
         classes={{
           paper: classes.drawerPaper,
@@ -140,21 +138,23 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
         </div>
         <Divider />
         <List>
-          <ListItem key={'Map Style'} className={classes.listItemTitle}>
-            <ListItemText primary='Map Style'/>
+          <ListItem key="Map Style" className={classes.listItemTitle}>
+            <ListItemText primary="Map Style" />
           </ListItem>
           {['Point Map', 'Heat Map'].map((text, index) => (
-            <ListItem className={classes.listItem} 
-              style={{color: selectedMapStyleValue===text && '#87C8BC'}} 
-              button key={text} 
-              >
+            <ListItem
+              className={classes.listItem}
+              style={{ color: selectedMapStyleValue === text && '#87C8BC' }}
+              button
+              key={text}
+            >
               <ListItemIcon>
                 <Radio
                   checked={selectedMapStyleValue === text}
                   onChange={handleChangeMapStyle}
                   value={text}
-                  style={{color:selectedMapStyleValue === text && '#87C8BC'}}
-                  name='radio-button'
+                  style={{ color: selectedMapStyleValue === text && '#87C8BC' }}
+                  name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
               </ListItemIcon>
@@ -170,13 +170,14 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
            */
         }
         <List>
-        <ListItem key={'Map Mode'} className={classes.listItemTitle}>
-            <ListItemText primary='Map Mode'/>
+          <ListItem key="Map Mode" className={classes.listItemTitle}>
+            <ListItemText primary="Map Mode" />
           </ListItem>
           {['Dark', 'Light', 'Street'].map((text, index) => (
             <ListItem
-              style={{color: selectedMapModeValue===text && '#87C8BC'}}
-              button key={text}
+              style={{ color: selectedMapModeValue === text && '#87C8BC' }}
+              button
+              key={text}
               className={classes.listItem}
             >
               <ListItemIcon>
@@ -184,7 +185,7 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
                   checked={selectedMapModeValue === text}
                   onChange={handleChangeMapMode}
                   value={text}
-                  style={{color:selectedMapModeValue === text && '#87C8BC'}}
+                  style={{ color: selectedMapModeValue === text && '#87C8BC' }}
                   name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
@@ -195,13 +196,14 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
         </List>
         <Divider />
         <List>
-        <ListItem key={'Data Color Scheme'} className={classes.listItemTitle}>
-            <ListItemText primary='Data Color Scheme'/>
+          <ListItem key="Data Color Scheme" className={classes.listItemTitle}>
+            <ListItemText primary="Data Color Scheme" />
           </ListItem>
           {['Original', 'Prism', 'Bold'].map((text, index) => (
             <ListItem
-              style={{color: selectedDataColorScheme===text && '#87C8BC'}}
-              button key={text}
+              style={{ color: selectedDataColorScheme === text && '#87C8BC' }}
+              button
+              key={text}
               className={classes.listItem}
             >
               <ListItemIcon>
@@ -209,7 +211,7 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
                   checked={selectedDataColorScheme === text}
                   onChange={handleChangeDataColorScheme}
                   value={text}
-                  style={{color:selectedDataColorScheme === text && '#87C8BC'}}
+                  style={{ color: selectedDataColorScheme === text && '#87C8BC' }}
                   name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
@@ -220,22 +222,23 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
         </List>
         <Divider />
         <List>
-        <ListItem key={'Boundaries'} className={classes.listItemTitle} >
-            <ListItemText primary='Boundaries'/>
+          <ListItem key="Boundaries" className={classes.listItemTitle}>
+            <ListItemText primary="Boundaries" />
           </ListItem>
           {['None', 'Neighborhood Councils', 'City Councils'].map((text, index) => (
             <ListItem
-              style={{color: selectedDataColorScheme===text && '#87C8BC'}}
-              button key={text}
+              style={{ color: selectedDataColorScheme === text && '#87C8BC' }}
+              button
+              key={text}
               className={classes.listItem}
-              selected={selectedBoundariesValue===text}
+              selected={selectedBoundariesValue === text}
             >
               <ListItemIcon>
                 <Radio
                   checked={selectedBoundariesValue === text}
                   onChange={handleChangeBoundaries}
                   value={text}
-                  style={{color:selectedBoundariesValue === text && '#87C8BC'}}
+                  style={{ color: selectedBoundariesValue === text && '#87C8BC' }}
                   name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
@@ -246,25 +249,24 @@ const PersistentDrawerLeft = ({menuIsOpen, toggleMenu}) => {
         </List>
         <Divider />
         <List>
-          <ListItem key={'Share'} className={classes.share}>
+          <ListItem key="Share" className={classes.share}>
             <ListItemIcon onClick={onClickShare}>
-              <LinkIcon/>
+              <LinkIcon />
             </ListItemIcon>
-            <ListItemText primary='Share'/>
+            <ListItemText primary="Share" />
           </ListItem>
         </List>
       </Drawer>
     </div>
   );
-}
-
+};
 
 const mapStateToProps = state => ({
   menuIsOpen: state.ui.menu.isOpen,
 });
 
 const mapDispatchToProps = dispatch => ({
-  toggleMenu: () => dispatch(reduxToggleMenu())
+  toggleMenu: () => dispatch(reduxToggleMenu()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersistentDrawerLeft);
