@@ -6,7 +6,7 @@ from ..models.council import Council, get_open_request_counts
 router = APIRouter()
 
 
-@router.get("/", response_model=CouncilList)
+@router.get("", response_model=CouncilList)
 async def get_all_councils():
     result = await Council.query.gino.all()
     return result
