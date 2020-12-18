@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card'
+import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
+import IconButton from '@material-ui/core/IconButton';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
-import Typography from '@material-ui/core/Typography'
-import GearButton from '../GearButton'
+import Typography from '@material-ui/core/Typography';
+import GearButton from '../GearButton';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     left: 35,
     top: 75,
-    borderRadius: 15,
+    borderRadius: 10,
   },
   header: {
     color: theme.palette.text.cyan,
@@ -48,8 +48,9 @@ const useStyles = makeStyles(theme => ({
 
 const FilterMenu = () => {
   const [expanded, setExpanded] = useState(false);
-  const classes = useStyles()
+  const classes = useStyles();
 
+  // TODO: add basic/advanced toggle switch
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -62,6 +63,7 @@ const FilterMenu = () => {
             <GearButton
               aria-label="toggle map menu"
               // TODO: toggle left slider menu
+              // eslint-disable-next-line
               onClick={() => console.log('toggle left slider')}
             />
             <Typography
@@ -72,27 +74,25 @@ const FilterMenu = () => {
             </Typography>
           </>
         )}
-        action={
+        action={(
           <IconButton
             className={classes.button}
             aria-label="toggle filter menu"
-            onClick={() => setExpanded(expanded => !expanded)}
+            onClick={() => setExpanded(prevExpanded => !prevExpanded)}
             disableFocusRipple
             disableRipple
           >
-            {expanded ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/> }
+            {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon /> }
           </IconButton>
-        }
-      >
-      // TODO: add basic/advanced toggle switch
-      </CardHeader>
+        )}
+      />
       <Collapse in={expanded}>
         <CardContent>
           TODO: Selectors
         </CardContent>
       </Collapse>
     </Card>
-  )
+  );
 };
 
 export default FilterMenu;

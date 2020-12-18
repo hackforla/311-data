@@ -18,14 +18,14 @@ import {
 function* getMetadata() {
   const baseUrl = process.env.API_URL;
   try {
-    const [metadata, types, councils, regions] = yield all([
-      call(axios.get, baseUrl + '/status/api'),
-      call(axios.get, baseUrl +  '/types/'),
-      call(axios.get, baseUrl + '/councils/'),
-      call(axios.get, baseUrl + '/regions/'),
+    const [metadata, requestTypes, councils, regions] = yield all([
+      call(axios.get, '/status/api'),
+      call(axios.get, `${baseUrl}/types/`),
+      call(axios.get, `${baseUrl}/councils/`),
+      call(axios.get, `${baseUrl}/regions/`),
     ]);
     const { data: statusMetadata } = metadata;
-    const { data: typesMetadata } = types;
+    const { data: typesMetadata } = requestTypes;
     const { data: councilsMetadata } = councils;
     const { data: regionsMetadata } = regions;
 

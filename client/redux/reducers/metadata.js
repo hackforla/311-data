@@ -24,17 +24,17 @@ export const getMetadataFailure = error => ({
 export const getRequestTypesSuccess = response => ({
   type: types.GET_REQUEST_TYPES_SUCCESS,
   payload: response,
-})
+});
 
 export const getCouncilsSuccess = response => ({
   type: types.GET_COUNCILS_SUCCESS,
   payload: response,
-})
+});
 
 export const getRegionsSuccess = response => ({
   type: types.GET_REGIONS_SUCCESS,
   payload: response,
-})
+});
 
 const initialState = {
   currentTime: null,
@@ -57,17 +57,17 @@ export default (state = initialState, action) => {
       return {
         ...state,
         requestTypes: action.payload,
-      }
+      };
     case types.GET_COUNCILS_SUCCESS:
       return {
         ...state,
         councils: action.payload,
-      }
+      };
     case types.GET_REGIONS_SUCCESS:
       return {
         ...state,
         regions: action.payload,
-      }
+      };
     case types.GET_METADATA_FAILURE: {
       const {
         response: { status },

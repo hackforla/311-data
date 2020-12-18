@@ -3,9 +3,9 @@ import PropTypes from 'proptypes';
 import { BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getMetadataRequest } from '@reducers/metadata';
-import Routes from './Routes';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
+import Routes from './Routes';
 
 const App = ({
   getMetadata,
