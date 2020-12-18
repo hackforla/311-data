@@ -624,11 +624,6 @@ export const COUNCILS = [
     region: 'South LA 2',
   },
   {
-    id: -1, // REPLACE THIS WHEN WE KNOW THE ID
-    name: 'Central Avenue Historic',
-    region: 'South LA 2',
-  },
-  {
     id: 87,
     name: 'EC Southeast',
     region: 'South LA 2',
@@ -641,11 +636,6 @@ export const COUNCILS = [
   {
     id: 78,
     name: 'South Central',
-    region: 'South LA 2',
-  },
-  {
-    id: 123,
-    name: 'United For Victory',
     region: 'South LA 2',
   },
   {
@@ -788,6 +778,7 @@ export const COUNCILS = [
     name: 'Wilmington',
     region: 'Harbor',
   },
+
   // these aren't listed on empowerla's website, but they do show up in the DB
   // {
   //   id: 65,
@@ -808,5 +799,12 @@ export const COUNCILS = [
   //   id: 117,
   //   name: 'Pacific Palisades NC',
   //   region: 'Unknown',
+  // },
+
+  // United for Victory is not a certified NC
+  // {
+  //   id: 123,
+  //   name: 'United For Victory',
+  //   region: 'South LA 2',
   // },
 ];
