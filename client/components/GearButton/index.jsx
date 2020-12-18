@@ -34,7 +34,6 @@ const GearButton = props => {
   };
   const toggleClick = () => {
     setPressed(!pressed);
-    console.log('clicked');
     onClick();
   };
   return (
@@ -54,9 +53,11 @@ const GearButton = props => {
 
 GearButton.propTypes = {
   onClick: PropTypes.func,
+  style: PropTypes.obj,
 };
 GearButton.defaultProps = {
   onClick: undefined,
+  style: undefined,
 };
 
 export default GearButton;

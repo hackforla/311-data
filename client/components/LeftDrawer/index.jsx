@@ -1,15 +1,11 @@
 import React from 'react';
-import clsx from 'clsx';
+import PropTypes from 'proptypes';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
@@ -87,17 +83,25 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
   const handleChangeMapStyle = event => {
     setMapStyleValue(event.target.value);
   };
+
   const handleChangeMapMode = event => {
     setMapModeValue(event.target.value);
   };
+
   const handleChangeDataColorScheme = event => {
     setDataColorScheme(event.target.value);
   };
+
   const handleChangeBoundaries = event => {
     setBoundariesValue(event.target.value);
   };
+
   const classes = useStyles();
   const theme = useTheme();
+
+  const onClickShare = () => {
+    // TODO ADD FUNCTIONALITY
+  };
 
   const escFunction = e => {
     e.preventDefault();
@@ -105,11 +109,6 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
     ) {
       toggleMenu();
     }
-  };
-
-  const onClickShare = e => {
-    // TODO ADD FUNCTIONALITY
-    console.log('clicked');
   };
 
   React.useEffect(() => {
@@ -141,13 +140,8 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
           <ListItem key="Map Style" className={classes.listItemTitle}>
             <ListItemText primary="Map Style" />
           </ListItem>
-          {['Point Map', 'Heat Map'].map((text, index) => (
-            <ListItem
-              className={classes.listItem}
-              style={{ color: selectedMapStyleValue === text && '#87C8BC' }}
-              button
-              key={text}
-            >
+          {['Point Map', 'Heat Map'].map(text => (
+            <ListItem className={classes.listItem} style={{ color: selectedMapStyleValue === text && '#87C8BC' }} button key={text}>
               <ListItemIcon>
                 <Radio
                   checked={selectedMapStyleValue === text}
@@ -173,13 +167,8 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
           <ListItem key="Map Mode" className={classes.listItemTitle}>
             <ListItemText primary="Map Mode" />
           </ListItem>
-          {['Dark', 'Light', 'Street'].map((text, index) => (
-            <ListItem
-              style={{ color: selectedMapModeValue === text && '#87C8BC' }}
-              button
-              key={text}
-              className={classes.listItem}
-            >
+          {['Dark', 'Light', 'Street'].map(text => (
+            <ListItem style={{ color: selectedMapModeValue === text && '#87C8BC' }} button key={text} className={classes.listItem}>
               <ListItemIcon>
                 <Radio
                   checked={selectedMapModeValue === text}
@@ -199,7 +188,7 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
           <ListItem key="Data Color Scheme" className={classes.listItemTitle}>
             <ListItemText primary="Data Color Scheme" />
           </ListItem>
-          {['Original', 'Prism', 'Bold'].map((text, index) => (
+          {['Original', 'Prism', 'Bold'].map(text => (
             <ListItem
               style={{ color: selectedDataColorScheme === text && '#87C8BC' }}
               button
@@ -225,7 +214,7 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
           <ListItem key="Boundaries" className={classes.listItemTitle}>
             <ListItemText primary="Boundaries" />
           </ListItem>
-          {['None', 'Neighborhood Councils', 'City Councils'].map((text, index) => (
+          {['None', 'Neighborhood Councils', 'City Councils'].map(text => (
             <ListItem
               style={{ color: selectedDataColorScheme === text && '#87C8BC' }}
               button
@@ -259,6 +248,11 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
       </Drawer>
     </div>
   );
+};
+
+PersistentDrawerLeft.propTypes = {
+  menuIsOpen: PropTypes.bool.isRequired,
+  toggleMenu: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

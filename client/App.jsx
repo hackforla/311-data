@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { ThemeProvider, makeStyles, useTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import { getMetadataRequest } from '@reducers/metadata';
 import Header from '@components/Header';
@@ -47,6 +47,7 @@ const App = ({
       <PersistentDrawerLeft />
       <MapContainer />
       {/* area where you can swipe the menu sidebar */}
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <div {...handleSwipeMenu} style={menuStyles.swipeAreaOpen} />
       <GearButton onClick={toggleMenu} style={menuStyles.gear} />
       <Footer />
@@ -63,4 +64,5 @@ export default connect(null, mapDispatchToProps)(App);
 
 App.propTypes = {
   getMetadata: PropTypes.func.isRequired,
+  toggleMenu: PropTypes.func.isRequired,
 };
