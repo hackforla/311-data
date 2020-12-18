@@ -4,9 +4,9 @@ import { IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SettingsSharpIcon from '@material-ui/icons/SettingsSharp';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   gearIcon: {
-    color: 'white',
+    color: theme.palette.text.dark,
     background: '#29404F',
     borderRadius: '12px',
     height: '33px',
@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   button: {
     padding: '0',
   },
-});
+}));
 
 const GearButton = ({ onClick }) => {
   const { gearIcon, button } = useStyles();
@@ -44,6 +44,8 @@ const GearButton = ({ onClick }) => {
       role="button"
       aria-pressed={pressed}
       aria-label="Toggle Sidebar"
+      disableFocusRipple
+      disableRipple
     >
       <SettingsSharpIcon className={gearIcon} />
     </IconButton>
