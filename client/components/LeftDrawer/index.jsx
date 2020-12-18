@@ -22,20 +22,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
   },
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -112,9 +98,9 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
   };
 
   React.useEffect(() => {
-    document.addEventListener('keydown', escFunction, false);
+    document.addEventListener('keypress', escFunction, false);
     return () => {
-      document.removeEventListener('keydown', escFunction, false);
+      document.removeEventListener('keypress', escFunction, false);
     };
   }, [escFunction]);
 
