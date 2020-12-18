@@ -12,7 +12,7 @@ import {
 // import About from './components/about/About';
 // import Body from './components/main/body/Body';
 // import Faq from './components/faq/Faq';
-import MapContainer from '@components/Map/'
+import Desktop from '@components/main/Desktop'
 
 export default function Routes() {
   return (
@@ -23,7 +23,7 @@ export default function Routes() {
       {/* <Route path="/comparison" component={Body} /> */}
       {/* <Route path="/faq" component={Faq} /> */}
       {/* <Route path="/data" component={Body} /> */}
-      <Route path="/map" component={MapContainer} />
+      <Route path="/map" component={Desktop} />
       <Route path="/">
         <Redirect to="map" />
       </Route>
