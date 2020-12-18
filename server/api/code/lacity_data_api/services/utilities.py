@@ -15,8 +15,8 @@ async def build_cache():
     councils = await council.get_councils_dict()
     types = await request_type.get_types_dict()
 
-    for i in councils:
-        await council.get_open_request_counts(i)
+    # for i in councils:
+    #     await council.get_open_request_counts(i)
 
     # get results for past week
     await service_request.get_filtered_requests(
