@@ -19,7 +19,7 @@ function* getMetadata() {
   const baseUrl = process.env.API_URL;
   try {
     const [metadata, requestTypes, councils, regions] = yield all([
-      call(axios.get, '/status/api'),
+      call(axios.get, `${baseUrl}/status/api`),
       call(axios.get, `${baseUrl}/types/`),
       call(axios.get, `${baseUrl}/councils/`),
       call(axios.get, `${baseUrl}/regions/`),
