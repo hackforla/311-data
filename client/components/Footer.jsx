@@ -8,19 +8,19 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 
-// TODO: pull style constants into mui theme
 const useStyles = makeStyles(theme => ({
   footer: {
     position: 'absolute',
     bottom: 0,
-    height: '40px',
+    height: theme.footer.height,
     width: '100%',
     backgroundColor: theme.palette.primary.dark,
   },
   lastUpdated: {
-    color: theme.palette.typography.dark,
-    lineHeight: '40px',
+    color: theme.palette.text.dark,
+    lineHeight: theme.footer.height,
     fontSize: '14px',
+    fontFamily: 'Roboto',
   },
 }));
 
