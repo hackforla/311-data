@@ -1,6 +1,8 @@
 import logging
+import os
 
 from fastapi import FastAPI
+from fastapi.logger import logger as fastapi_logger
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
@@ -10,7 +12,19 @@ from .routers import (
     index, councils, regions, request_types, service_requests, shim, status
 )
 
-logger = logging.getLogger(__name__)
+
+if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
+    '''
+    When running with gunicorn the log handlers get suppressed instead of
+    passed along to the container manager. This code forces the gunicorn handlers
+    to be used throughout the project.
+    '''
+    gunicorn_error_logger = logging.getLogger("gunicorn.error")
+    gunicorn_logger = logging.getLogger("gunicorn")
+    uvicorn_access_logger = logging.getLogger("uvicorn.access")
+    uvicorn_access_logger.handlers = gunicorn_error_logger.handlers
+
+    fastapi_logger.handlers = gunicorn_error_logger.handlers
 
 
 def get_app():

@@ -36,7 +36,7 @@ variable db_password {}
 
 variable container_cpu {
   type        = number
-  default     = 256
+  default     = 512
 }
 
 variable container_memory {

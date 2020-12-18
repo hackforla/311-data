@@ -17,7 +17,7 @@ db = Gino(
 cache = RedisCache(
     endpoint=config.CACHE_ENDPOINT,
     serializer=serializers.PickleSerializer(),
-    timeout=10,  # lowering to 1
-    pool_min_size=5,  # raising min and max
-    pool_max_size=20,
+    timeout=10,
+    pool_min_size=5,
+    pool_max_size=20
 )
