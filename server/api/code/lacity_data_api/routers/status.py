@@ -34,7 +34,8 @@ async def check_status_type(status_type: StatusTypes):
             'currentTimeUTC': datetime.datetime.utcnow(),
             'lastPulledUTC': lastPulled,
             'currentTimeLocal': datetime.datetime.now(tz=pytz.timezone('US/Pacific')),
-            'lastPulledLocal': pytz.utc.localize(lastPulled).astimezone(pytz.timezone('US/Pacific')),
+            'lastPulledLocal':
+                pytz.utc.localize(lastPulled).astimezone(pytz.timezone('US/Pacific')),
             'stage': STAGE,
             'version': GITHUB_CODE_VERSION,
             'gitSha': GITHUB_SHA,
