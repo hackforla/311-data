@@ -19,6 +19,7 @@ jobs:
           echo GITHUB_CODE_VERSION=${{ env.BRANCH_NAME }} >> server/api/.env
           echo GITHUB_SHA=${{ github.sha }} >> server/api/.env
           echo DEBUG=True >> server/api/.env
+          echo DB_ECHO=True >> server/api/.env
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v1
         with:

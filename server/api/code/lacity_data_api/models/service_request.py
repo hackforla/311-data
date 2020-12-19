@@ -32,10 +32,10 @@ async def get_full_request(srnumber: str):
     return result
 
 
-@cached(cache=Cache.REDIS,
-        endpoint=CACHE_ENDPOINT,
+@cached(cache=Cache.MEMORY,
+        # endpoint=CACHE_ENDPOINT,
         namespace="open",
-        serializer=serializers.PickleSerializer(),
+        serializer=serializers.NullSerializer(),
         )
 async def get_open_requests() -> List[ServiceRequest]:
     result = await (
