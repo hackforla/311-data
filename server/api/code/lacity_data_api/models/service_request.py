@@ -32,12 +32,9 @@ async def get_full_request(srnumber: str):
     return result
 
 
-@cached(cache=Cache.MEMORY,
-        # endpoint=CACHE_ENDPOINT,
-        namespace="open",
-        serializer=serializers.NullSerializer(),
-        )
+@cached(alias="default")
 async def get_open_requests() -> List[ServiceRequest]:
+
     result = await (
         db.select(
             [
@@ -49,6 +46,29 @@ async def get_open_requests() -> List[ServiceRequest]:
             ]
         ).where(
             ServiceRequest.closed_date == None  # noqa
+        ).gino.all()
+    )
+    return result
+
+
+@cached(alias="default")
+async def get_open_request_counts():
+    result = await (
+        db.select(
+            [
+                ServiceRequest.type_id,
+                RequestType.type_name,
+                db.func.count().label("type_count")
+            ]
+        ).select_from(
+            ServiceRequest.join(RequestType)
+        ).where(
+            and_(
+                ServiceRequest.closed_date == None,  # noqa
+            )
+        ).group_by(
+            ServiceRequest.type_id,
+            RequestType.type_name
         ).gino.all()
     )
     return result
@@ -82,33 +102,6 @@ async def get_filtered_requests(
                 ServiceRequest.type_id.in_(type_ids),
                 ServiceRequest.council_id.in_(council_ids)
             )
-        ).gino.all()
-    )
-    return result
-
-
-@cached(cache=Cache.REDIS,
-        endpoint=CACHE_ENDPOINT,
-        namespace="open",
-        serializer=serializers.PickleSerializer(),
-        )
-async def get_open_request_counts():
-    result = await (
-        db.select(
-            [
-                ServiceRequest.type_id,
-                RequestType.type_name,
-                db.func.count().label("type_count")
-            ]
-        ).select_from(
-            ServiceRequest.join(RequestType)
-        ).where(
-            and_(
-                ServiceRequest.closed_date == None,  # noqa
-            )
-        ).group_by(
-            ServiceRequest.type_id,
-            RequestType.type_name
         ).gino.all()
     )
     return result
