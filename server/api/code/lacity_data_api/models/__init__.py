@@ -19,7 +19,7 @@ caches.set_config({
         'cache': RedisCache,
         'endpoint': config.CACHE_ENDPOINT,
         'port': 6379,
-        'timeout': 10,
+        'timeout': None,
         'pool_min_size': 5,
         'pool_max_size': 20,
         'serializer': {
