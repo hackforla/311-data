@@ -1,5 +1,5 @@
 from gino.ext.starlette import Gino
-from aiocache import RedisCache, serializers
+from aiocache import caches, RedisCache, serializers
 
 from .. import config
 
@@ -14,10 +14,27 @@ db = Gino(
     retry_interval=config.DB_RETRY_INTERVAL,
 )
 
-cache = RedisCache(
-    endpoint=config.CACHE_ENDPOINT,
-    serializer=serializers.PickleSerializer(),
-    timeout=10,
-    pool_min_size=5,
-    pool_max_size=20
-)
+caches.set_config({
+    'default': {
+        'cache': RedisCache,
+        'endpoint': config.CACHE_ENDPOINT,
+        'port': 6379,
+        'timeout': 10,
+        'pool_min_size': 5,
+        'pool_max_size': 20,
+        'serializer': {
+            'class': serializers.PickleSerializer
+        }
+    }
+})
+
+cache = caches.get('default')   # This always returns the same instance
+
+
+# cache = RedisCache(
+#     endpoint=config.CACHE_ENDPOINT,
+#     serializer=serializers.PickleSerializer(),
+#     timeout=10,
+#     pool_min_size=5,
+#     pool_max_size=20
+# )
