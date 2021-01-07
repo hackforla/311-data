@@ -57,7 +57,7 @@ export const setMapMode = mode => ({
 
 const initialState = {
   menu: {
-    isOpen: true,
+    isOpen: false,
     // activeTab: MENU_TABS.MAP,
   },
   map: {
