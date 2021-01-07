@@ -121,7 +121,7 @@ class MapContainer extends React.Component {
 const mapStateToProps = state => ({
   pins: state.data.pins,
   position: state.ui.map,
-  lastUpdated: state.metadata.lastPulled,
+  lastUpdated: state.metadata.lastPulledLocal,
   activeMode: state.ui.map.activeMode,
   requestTypes: state.mapFilters.requestTypes,
 });

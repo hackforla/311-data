@@ -20,9 +20,9 @@ function* getMetadata() {
   try {
     const [metadata, requestTypes, councils, regions] = yield all([
       call(axios.get, `${baseUrl}/status/api`),
-      call(axios.get, `${baseUrl}/types/`),
-      call(axios.get, `${baseUrl}/councils/`),
-      call(axios.get, `${baseUrl}/regions/`),
+      call(axios.get, `${baseUrl}/types`),
+      call(axios.get, `${baseUrl}/councils`),
+      call(axios.get, `${baseUrl}/regions`),
     ]);
     const { data: statusMetadata } = metadata;
     const { data: typesMetadata } = requestTypes;
