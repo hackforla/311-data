@@ -12,7 +12,7 @@ from ..models import db
 router = APIRouter()
 
 
-@router.get("/", response_model=ServiceRequestList)
+@router.get("", response_model=ServiceRequestList)
 async def get_all_service_requests(skip: int = 0, limit: int = 100):
     async with db.transaction():
         cursor = await ServiceRequest.query.gino.iterate()

@@ -14,6 +14,7 @@ config = Config(CONF_FILE)
 
 # checking for testing or debug
 DEBUG = config("DEBUG", cast=bool, default=False)
+SHOW_ENV = config("SHOW_ENV", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
 STAGE = config("STAGE", default="Local")
 
@@ -53,7 +54,7 @@ DB_RETRY_LIMIT = config("DB_RETRY_LIMIT", cast=int, default=32)
 DB_RETRY_INTERVAL = config("DB_RETRY_INTERVAL", cast=int, default=1)
 
 # print out debug information
-if DEBUG:
+if SHOW_ENV:
     print("\n\033[93mLA City Data API server starting with DEBUG mode ENABLED\033[0m")
     print("\nEnvironment variables after executing config.py file:")
     for k, v in sorted(os.environ.items()):
@@ -63,7 +64,7 @@ if DEBUG:
 # set up endpoint for REDIS cache
 CACHE_ENDPOINT = config('CACHE_ENDPOINT', default="localhost")
 CACHE_MAX_RETRIES = config('CACHE_MAX_RETRIES', cast=int, default=5)
-CACHE_MAXMEMORY = config('CACHE_MAXMEMORY', cast=int, default=524288000)
+CACHE_MAXMEMORY = config('CACHE_MAXMEMORY', cast=int, default=262144000)
 
 # set up GitHub data
 GITHUB_TOKEN = config('GITHUB_TOKEN', default=None)

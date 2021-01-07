@@ -1,7 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+
 import MapContainer from '@components/Map';
 import FilterMenu from '@components/FilterMenu';
+import PersistentDrawerLeft from '@components/LeftDrawer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,6 +20,7 @@ const Desktop = () => {
 
   return (
     <div className={classes.root}>
+      <PersistentDrawerLeft />
       <MapContainer />
       <FilterMenu />
     </div>

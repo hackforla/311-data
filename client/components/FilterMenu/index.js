@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
+import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 import { makeStyles } from '@material-ui/core/styles';
+
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -18,6 +22,7 @@ const useStyles = makeStyles(theme => ({
     left: 35,
     top: 75,
     borderRadius: 10,
+    zIndex: 2000,
   },
   header: {
     color: theme.palette.text.cyan,
@@ -46,7 +51,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const FilterMenu = () => {
+const FilterMenu = ({
+  toggleMenu,
+}) => {
   const [expanded, setExpanded] = useState(false);
   const classes = useStyles();
 
@@ -62,9 +69,7 @@ const FilterMenu = () => {
           <>
             <GearButton
               aria-label="toggle map menu"
-              // TODO: toggle left slider menu
-              // eslint-disable-next-line
-              onClick={() => console.log('toggle left slider')}
+              onClick={toggleMenu}
             />
             <Typography
               className={classes.headerTitle}
@@ -95,4 +100,12 @@ const FilterMenu = () => {
   );
 };
 
-export default FilterMenu;
+const mapDispatchToProps = dispatch => ({
+  toggleMenu: () => dispatch(reduxToggleMenu()),
+});
+
+export default connect(null, mapDispatchToProps)(FilterMenu);
+
+FilterMenu.propTypes = {
+  toggleMenu: PropTypes.func.isRequired,
+};

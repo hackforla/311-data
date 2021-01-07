@@ -18,7 +18,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const GearButton = ({ onClick }) => {
+const GearButton = ({
+  onClick,
+}) => {
   const { gearIcon, button } = useStyles();
   const [pressed, setPressed] = useState(false);
 
@@ -32,10 +34,12 @@ const GearButton = ({ onClick }) => {
       onClick();
     }
   };
+
   const toggleClick = () => {
     setPressed(!pressed);
     onClick();
   };
+  
   return (
     <IconButton
       className={button}

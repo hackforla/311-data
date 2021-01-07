@@ -6,7 +6,7 @@ from ..models.request_type import RequestType
 router = APIRouter()
 
 
-@router.get("/", response_model=RequestTypeList)
+@router.get("", response_model=RequestTypeList)
 async def get_all_request_types():
     return await RequestType.query.gino.all()
 

@@ -1,17 +1,14 @@
-from locust import HttpUser, TaskSet, task, between
+from locust import task, between
 from locust.contrib.fasthttp import FastHttpUser
 
 
-class WebsiteUser(HttpUser):
+class WebsiteUser(FastHttpUser):
     """
     User class that does requests to the locust web server running on localhost,
     using the fast HTTP client
     """
 
-    host = "http://dev-api.311-data.org"
-    users = 20
-    hatch_rate = 2
-    wait_time = between(2, 5)
+    wait_time = between(1.0, 5.0)
 
     # some other things you can configure on FastHttpUser
     # connection_timeout = 60.0
@@ -25,13 +22,9 @@ class WebsiteUser(HttpUser):
         self.client.get("/status/api")
 
     @task
-    def open_requests_shim(self):
-        self.client.post("/open-requests")
-
-    @task
     def open_requests(self):
-        self.client.get("/requests/open")
+        self.client.get("/requests/pins/open")
 
     @task
     def open_requests_counts(self):
-        self.client.get("/requests/open/counts/types")
+        self.client.get("/requests/counts/open/types")

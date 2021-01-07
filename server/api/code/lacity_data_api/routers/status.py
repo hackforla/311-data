@@ -1,4 +1,6 @@
 import datetime
+import pytz
+import os
 
 from fastapi import APIRouter
 
@@ -27,18 +29,17 @@ async def reset_cache():
             description="Provides the status of backend systems")
 async def check_status_type(status_type: StatusTypes):
     if status_type == StatusTypes.api:
-
-        cache_items = await status.get_cache_keys()
-        if len(cache_items) == 0:
-            await utilities.build_cache()
-
+        lastPulled = await status.get_last_updated()
         return {
-            'currentTime': datetime.datetime.now(),
-            'lastPulled': await status.get_last_updated(),
+            'currentTimeUTC': datetime.datetime.utcnow(),
+            'lastPulledUTC': lastPulled,
+            'currentTimeLocal': datetime.datetime.now(tz=pytz.timezone('US/Pacific')),
+            'lastPulledLocal':
+                pytz.utc.localize(lastPulled).astimezone(pytz.timezone('US/Pacific')),
             'stage': STAGE,
             'version': GITHUB_CODE_VERSION,
             'gitSha': GITHUB_SHA,
-            'cachedItems': len(cache_items)
+            'process': os.getpid()
         }
 
     if status_type == StatusTypes.database:

@@ -1,7 +1,7 @@
 [
   {
     "name": "redis",
-    "image": "redis:6",
+    "image": "redis:5",
     "portMappings": [
       {
         "containerPort": 6379
@@ -35,6 +35,8 @@
         "awslogs-create-group": "true"
       }
     },
+    "entryPoint": ["gunicorn"],
+    "command": ["lacity_data_api.asgi:app", "-w", "3", "-t", "60", "-k", "uvicorn.workers.UvicornWorker", "--log-level", "info", "-b", "0.0.0.0:5000"],
     "secrets": [
       { "name": "DB_DSN", "valueFrom": "/${stage}/${region}/DB_DSN" },
       { "name": "SENTRY_URL", "valueFrom": "/${stage}/${region}/SENTRY_URL" },
