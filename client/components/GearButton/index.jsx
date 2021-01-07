@@ -39,7 +39,7 @@ const GearButton = ({
     setPressed(!pressed);
     onClick();
   };
-  
+
   return (
     <IconButton
       className={button}
