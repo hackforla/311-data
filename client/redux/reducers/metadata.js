@@ -37,10 +37,12 @@ export const getRegionsSuccess = response => ({
 });
 
 const initialState = {
-  currentTime: null,
+  currentTimeUTC: null,
+  currentTimeLocal: null,
   gitSha: null,
   version: null,
-  lastPulled: null,
+  lastPulledUTC: null,
+  lastPulledLocal: null,
   requestTypes: null,
   councils: null,
   regions: null,

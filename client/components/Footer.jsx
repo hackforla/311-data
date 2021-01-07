@@ -46,7 +46,7 @@ const Footer = ({
 };
 
 const mapStateToProps = state => ({
-  lastUpdated: state.metadata.lastPulled,
+  lastUpdated: state.metadata.lastPulledLocal,
 });
 
 Footer.propTypes = {
