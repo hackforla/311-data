@@ -1,28 +1,21 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
+import { BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
 import { getMetadataRequest } from '@reducers/metadata';
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import MapContainer from '@components/Map';
-import PersistentDrawerLeft from '@components/LeftDrawer';
-import GearButton from '@components/GearButton';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 import { useSwipeable } from 'react-swipeable';
-import theme from './theme/theme';
+
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Routes from './Routes';
 
 const menuStyles = {
   swipeAreaOpen: {
     float: 'left',
     position: 'fixed',
-    width: '30%',
+    width: 150,
     height: '100%',
-  },
-  gear: {
-    marginLeft: '85vw',
-    marginTop: '70vh',
   },
 };
 
@@ -41,17 +34,14 @@ const App = ({
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <BrowserRouter>
       <Header />
-      <PersistentDrawerLeft />
-      <MapContainer />
+      <Routes />
       {/* area where you can swipe the menu sidebar */}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <div {...handleSwipeMenu} style={menuStyles.swipeAreaOpen} />
-      <GearButton onClick={toggleMenu} style={menuStyles.gear} />
       <Footer />
-    </ThemeProvider>
+    </BrowserRouter>
   );
 };
 

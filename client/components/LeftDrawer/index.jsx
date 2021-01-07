@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    zIndex: 2100,
   },
   drawerPaper: {
     width: drawerWidth,
@@ -89,20 +90,18 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
     // TODO ADD FUNCTIONALITY
   };
 
-  const escFunction = e => {
-    e.preventDefault();
-    if (e.key === 'Escape'
-    ) {
-      toggleMenu();
-    }
-  };
-
-  React.useEffect(() => {
-    document.addEventListener('keypress', escFunction, false);
-    return () => {
-      document.removeEventListener('keypress', escFunction, false);
+  useEffect(() => {
+    const escFunction = e => {
+      e.preventDefault();
+      if (e.key === 'Escape') {
+        toggleMenu();
+      }
     };
-  }, [escFunction]);
+
+    document.addEventListener('keypress', escFunction, false);
+
+    return () => document.removeEventListener('keypress', escFunction, false);
+  }, [toggleMenu]);
 
   return (
     <div className={classes.root}>

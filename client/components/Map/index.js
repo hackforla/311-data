@@ -12,11 +12,7 @@ import Map from './Map';
 
 const styles = theme => ({
   root: {
-    position: 'absolute',
-    top: theme.palette.header.height,
-    bottom: theme.palette.footer.height,
-    left: 0,
-    right: 0,
+    height: '100%',
   },
 })
 

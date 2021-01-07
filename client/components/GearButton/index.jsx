@@ -4,9 +4,9 @@ import { IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SettingsSharpIcon from '@material-ui/icons/SettingsSharp';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   gearIcon: {
-    color: 'white',
+    color: theme.palette.text.dark,
     background: '#29404F',
     borderRadius: '12px',
     height: '33px',
@@ -16,12 +16,14 @@ const useStyles = makeStyles({
   button: {
     padding: '0',
   },
-});
+}));
 
-const GearButton = props => {
+const GearButton = ({
+  onClick,
+}) => {
   const { gearIcon, button } = useStyles();
   const [pressed, setPressed] = useState(false);
-  const { onClick, style } = props;
+
   const onKeyDown = e => {
     e.preventDefault();
     if (e.key === ' '
@@ -32,10 +34,12 @@ const GearButton = props => {
       onClick();
     }
   };
+
   const toggleClick = () => {
     setPressed(!pressed);
     onClick();
   };
+
   return (
     <IconButton
       className={button}
@@ -44,7 +48,8 @@ const GearButton = props => {
       role="button"
       aria-pressed={pressed}
       aria-label="Toggle Sidebar"
-      style={style}
+      disableFocusRipple
+      disableRipple
     >
       <SettingsSharpIcon className={gearIcon} />
     </IconButton>
@@ -53,11 +58,9 @@ const GearButton = props => {
 
 GearButton.propTypes = {
   onClick: PropTypes.func,
-  style: PropTypes.obj,
 };
 GearButton.defaultProps = {
   onClick: undefined,
-  style: undefined,
 };
 
 export default GearButton;

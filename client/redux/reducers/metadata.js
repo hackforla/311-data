@@ -2,6 +2,9 @@ export const types = {
   GET_METADATA_REQUEST: 'GET_METADATA_REQUEST',
   GET_METADATA_SUCCESS: 'GET_METADATA_SUCCESS',
   GET_METADATA_FAILURE: 'GET_METADATA_FAILURE',
+  GET_REQUEST_TYPES_SUCCESS: 'GET_REQUEST_TYPES_SUCCESS',
+  GET_COUNCILS_SUCCESS: 'GET_COUNCILS_SUCCESS',
+  GET_REGIONS_SUCCESS: 'GET_REGIONS_SUCCESS',
 };
 
 export const getMetadataRequest = () => ({
@@ -18,13 +21,52 @@ export const getMetadataFailure = error => ({
   payload: error,
 });
 
-const initialState = {};
+export const getRequestTypesSuccess = response => ({
+  type: types.GET_REQUEST_TYPES_SUCCESS,
+  payload: response,
+});
+
+export const getCouncilsSuccess = response => ({
+  type: types.GET_COUNCILS_SUCCESS,
+  payload: response,
+});
+
+export const getRegionsSuccess = response => ({
+  type: types.GET_REGIONS_SUCCESS,
+  payload: response,
+});
+
+const initialState = {
+  currentTime: null,
+  gitSha: null,
+  version: null,
+  lastPulled: null,
+  requestTypes: null,
+  councils: null,
+  regions: null,
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.GET_METADATA_SUCCESS:
       return {
+        ...state,
         ...action.payload,
+      };
+    case types.GET_REQUEST_TYPES_SUCCESS:
+      return {
+        ...state,
+        requestTypes: action.payload,
+      };
+    case types.GET_COUNCILS_SUCCESS:
+      return {
+        ...state,
+        councils: action.payload,
+      };
+    case types.GET_REGIONS_SUCCESS:
+      return {
+        ...state,
+        regions: action.payload,
       };
     case types.GET_METADATA_FAILURE: {
       const {
