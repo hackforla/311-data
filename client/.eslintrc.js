@@ -22,34 +22,34 @@ module.exports = {
     sourceType: 'module',
   },
   settings: {
-    "import/extensions": [
-      ".js",
-      ".jsx"
+    'import/extensions': [
+      '.js',
+      '.jsx',
     ],
     'import/resolver': {
       node: {},
-      webpack: "webpack.config.js",
+      webpack: 'webpack.config.js',
     },
   },
   plugins: [
     'react',
-    'react-hooks'
+    'react-hooks',
   ],
   rules: {
     'linebreak-style': 'off',
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "arrow-parens": ["error", "as-needed"],
-    "indent": [
-      "error",
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'arrow-parens': ['error', 'as-needed'],
+    indent: [
+      'error',
       2,
       {
-        "SwitchCase": 1,
-        "MemberExpression": 'off',
-        "ignoredNodes": ["TemplateLiteral"]
-      }
+        SwitchCase: 1,
+        MemberExpression: 'off',
+        ignoredNodes: ['TemplateLiteral'],
+      },
     ],
-    "template-curly-spacing": 'off',
+    'template-curly-spacing': 'off',
     'jsx-a11y/no-noninteractive-tabindex': [
       'error',
       {
@@ -57,7 +57,7 @@ module.exports = {
         roles: ['tabpanel'],
       },
     ],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
   },
 
 };
