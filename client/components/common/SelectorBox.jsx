@@ -8,6 +8,7 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CollapseMUI from "@material-ui/core/Collapse";
+import { makeStyles } from "@material-ui/core/styles";
 
 const Context = React.createContext({ expanded: false });
 
@@ -18,6 +19,7 @@ const SelectorBox = ({
   arrowHidden,
 }) => {
   const [expanded, setExpanded] = useState(initial);
+  const classes = useStyles();
 
   const toggleCollapse = () => {
     onToggle && onToggle();
@@ -60,8 +62,8 @@ const SelectorBox = ({
     return element;
   };
   return (
-    <Context.Provider value={{ expanded }}>
-      <Card >
+    <Context.Provider value={{ expanded, classes }}>
+      <Card className={classes.card}>
         {renderDisplay()}
         {renderCollapse()}
       </Card>
@@ -86,13 +88,59 @@ function Display({ children }) {
 }
 
 function Collapse({ children }) {
-  const { expanded } = useContext(Context);
+  const { expanded, classes } = useContext(Context);
 
   return (
     <CollapseMUI in={expanded}>
-      <CardContent >{children}</CardContent>
+      <CardContent className={classes.content}>{children}</CardContent>
     </CollapseMUI>
   );
+}
+
+function useStyles() {
+  const getStyles = makeStyles((theme) => ({
+    card: {
+      backgroundColor: theme.palette.primary.main,
+      boxShadow: "none",
+    },
+    header: {
+      backgroundColor: theme.palette.primary.dark,
+      color: theme.palette.text.primary,
+      padding: 5,
+      paddingLeft: 10,
+      fontSize: "1rem",
+      marginBottom: 2,
+      borderRadius: 5,
+    },
+    content: {
+      borderRadius: 5,
+      backgroundColor: theme.palette.primary.dark,
+      padding: "10px 10px",
+    },
+    headerAction: {
+      margin: "auto",
+    },
+    headerTitle: {
+      marginLeft: 10,
+      fontSize: 20,
+      fontWeight: 600,
+      letterSpacing: "2px",
+    },
+    button: {
+      padding: "0 0 0 5px",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.dark,
+      },
+      "& svg": {
+        fontSize: 30,
+        paddingRight: 0,
+        "&  path": {
+          fill: theme.palette.primary.focus,
+        },
+      },
+    },
+  }));
+  return getStyles();
 }
 
 export default SelectorBox;
