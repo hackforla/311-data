@@ -1,31 +1,33 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from "@material-ui/core/styles";
+import { colorPrimaryFocus } from "./colors";
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark',
+    type: "dark",
     primary: {
-      main: '#29404F',
-      dark: '#192730',
+      main: "#29404F",
+      dark: "#192730",
+      focus: colorPrimaryFocus,
     },
     secondary: {
-      main: '#0F181F',
+      main: "#0F181F",
     },
     background: {
-      default: '#1A1A1A',
+      default: "#1A1A1A",
     },
     text: {
-      dark: '#C4C4C4',
-      cyan: '#87C8BC',
+      dark: "#C4C4C4",
+      cyan: "#87C8BC",
     },
   },
   header: {
-    height: '62px',
+    height: "62px",
   },
   footer: {
-    height: '40px',
+    height: "40px",
   },
   typography: {
-    fontFamily: ['Oswald', 'sans-serif'],
+    fontFamily: ["Oswald", "sans-serif"],
   },
 });
 
