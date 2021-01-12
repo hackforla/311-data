@@ -12,7 +12,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
-import GearButton from '../GearButton';
+import GearButton from '@components/common/GearButton';
 
 const useStyles = makeStyles(theme => ({
   card: {

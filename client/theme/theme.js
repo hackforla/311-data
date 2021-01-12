@@ -27,6 +27,13 @@ const theme = createMuiTheme({
   typography: {
     fontFamily: ['Oswald', 'sans-serif'],
   },
+  // breakpoints: {
+  //   values: {
+  //     mobile: 375,
+  //     tablet: 640,
+  //     desktop: 1024,
+  //   },
+  // },
 });
 
 export default theme;
