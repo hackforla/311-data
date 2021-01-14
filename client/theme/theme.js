@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import { colorPrimaryFocus } from './colors';
 
 const theme = createMuiTheme({
   palette: {
@@ -6,6 +7,7 @@ const theme = createMuiTheme({
     primary: {
       main: '#29404F',
       dark: '#192730',
+      focus: colorPrimaryFocus,
     },
     secondary: {
       main: '#0F181F',
