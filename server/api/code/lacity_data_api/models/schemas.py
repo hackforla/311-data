@@ -3,11 +3,12 @@ import datetime
 # from datetime.datetime import datetime.date
 from enum import Enum
 
-from pydantic import BaseModel, validator
+from pydantic import validator
 from pydantic.dataclasses import dataclass
+from fastapi_utils.api_model import APIModel
 
 
-class Filters(BaseModel):
+class Filters(APIModel):
     startDate: datetime.date
     endDate: datetime.date
     requestTypes: List[int]
@@ -19,14 +20,14 @@ class Filters(BaseModel):
         }
 
 
-class Bounds(BaseModel):
+class Bounds(APIModel):
     north: float
     south: float
     east: float
     west: float
 
 
-class Filter(BaseModel):
+class Filter(APIModel):
     startDate: str
     endDate: str
     ncList: List[int]
@@ -50,14 +51,14 @@ class Filter(BaseModel):
         return v.date()
 
 
-class ClassicPin(BaseModel):
+class ClassicPin(APIModel):
     srnumber: str
     requesttype: str
     latitude: float
     longitude: float
 
 
-class Pin(BaseModel):
+class Pin(APIModel):
     request_id: int
     type_id: int
     latitude: float
@@ -69,7 +70,7 @@ class Pin(BaseModel):
         }
 
 
-class Point(BaseModel):
+class Point(APIModel):
     latitude: float
     longitude: float
 
@@ -79,7 +80,7 @@ class Point(BaseModel):
         }
 
 
-class Cluster(BaseModel):
+class Cluster(APIModel):
     count: int
     expansion_zoom: Optional[int]
     id: int
@@ -101,7 +102,7 @@ class Set:
         return getattr(cls, item)
 
 
-class Comparison(BaseModel):
+class Comparison(APIModel):
     startDate: str
     endDate: str
     requestTypes: List[str]
@@ -109,7 +110,7 @@ class Comparison(BaseModel):
     set2: Set
 
 
-class Feedback(BaseModel):
+class Feedback(APIModel):
     title: str
     body: str
 
@@ -122,7 +123,7 @@ class StatusTypes(str, Enum):
     redis = "redis"
 
 
-class ServiceRequest(BaseModel):
+class ServiceRequest(APIModel):
     request_id: int
     srnumber: str
     council_id: int
@@ -140,7 +141,7 @@ class ServiceRequest(BaseModel):
         }
 
 
-class RequestType(BaseModel):
+class RequestType(APIModel):
     type_id: int
     type_name: str
     color: str
@@ -152,7 +153,7 @@ class RequestType(BaseModel):
         }
 
 
-class Region(BaseModel):
+class Region(APIModel):
     region_id: int
     region_name: str
     latitude: float
@@ -165,7 +166,7 @@ class Region(BaseModel):
         }
 
 
-class Council(BaseModel):
+class Council(APIModel):
     council_id: int
     council_name: str
     waddress: str
