@@ -1,4 +1,7 @@
+import React, { useEffect, useRef, useState } from "react";
 import SelectorBox from "../common/SelectorBox";
+import ReactDayPicker from "@components/common/ReactDayPicker";
+
 import CalendarIcon from "@material-ui/icons/CalendarToday";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,16 +22,33 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  selectorPopUp: {
+    position: "fixed",
+  },
   separator: {
     marginLeft: 5,
   },
 }));
 
 function DatePicker() {
+  const ref = useRef(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const [dates, setDates] = useState({ from: null, to: null });
+  const [coord, setCoord] = useState({});
   const classes = useStyles();
 
+  useEffect(() => {
+    if (ref.current) {
+      const { left, top } = ref.current.getClientRects()[0];
+      const offsetFromSelectorDisplay = 39;
+      const leftPadding = 10;
+
+      setCoord(() => ({
+        left: left - leftPadding,
+        top: top + offsetFromSelectorDisplay,
+      }));
+    }
+  }, [ref.current]);
 
   const toggleCalendar = () => {
     setShowCalendar((prevState) => !prevState);
@@ -43,7 +63,7 @@ function DatePicker() {
   return (
     <SelectorBox>
       <SelectorBox.Display>
-        <div className={classes.selector}>
+        <div ref={ref} className={classes.selector}>
           <div>
             {dates.from && (
               <span> {dates.from.toLocaleDateString("en-US")} </span>
@@ -60,10 +80,19 @@ function DatePicker() {
           >
             <CalendarIcon /> {separator}
           </IconButton>
+          {showCalendar ? (
+            <div style={coord} className={classes.selectorPopUp}>
+              <ReactDayPicker onChange={handleDateChage} />
+            </div>
+          ) : null}
         </div>
       </SelectorBox.Display>
       <SelectorBox.Collapse>
-        TO DO: ADD Options here . . 
+        <span>Last Week (11/01 - 11/08)</span>
+        <span>Last Week (11/01 - 11/08)</span>
+        <span>Last Week (11/01 - 11/08)</span>
+        <span>Last Week (11/01 - 11/08)</span>
+        <span>Last Week (11/01 - 11/08)</span>
       </SelectorBox.Collapse>
     </SelectorBox>
   );
