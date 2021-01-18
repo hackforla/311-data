@@ -1,3 +1,4 @@
+/* General background */
 .DayPicker.Range {
   font-family: Roboto;
   background: #192730;
@@ -26,20 +27,24 @@
   text-decoration: underline;
 }
 
+/* Selected range without start and end dates */
 .Range .DayPicker-Day--selected:not(.DayPicker-Day--outside) {
   background-color: #29404f !important;
 }
 
+/* Disabled cell */
 .Range .DayPicker-Day--disabled {
   color: #a8a8a8;
 }
 
+/* Day cel hover */
 .DayPicker:not(.DayPicker--interactionDisabled)
   .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
   background-color: #29404f;
   border-radius: 50% !important;
 }
 
+/* General day cell */
 .Range .DayPicker-Day {
   border-radius: 0 !important;
   display: block;
@@ -47,17 +52,20 @@
   max-width: 32px;
 }
 
+/* Today cell */
 .Range .DayPicker-Day.DayPicker-Day--selected.DayPicker-Day--today,
 .Range .DayPicker-Day--today {
   color: #ffb100;
 }
 
+/* Selected start and end days  */
 .Range .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected,
 .Range .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected {
   position: relative;
   z-index: 1;
 }
 
+/* next and prev arrows */
 .DayPicker-NavButton {
   position: absolute;
   top: 50%;
@@ -71,6 +79,7 @@
   left: 0;
 }
 
+/*Rounded border with volume for selected start end days */
 .Range .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected:before,
 .Range .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected:before {
   content: "";
@@ -98,6 +107,8 @@
   border-bottom-left-radius: 50% !important;
 }
 
+/* Layout styling, Initial styling was table based. See doc: 
+https://react-day-picker.js.org/examples/selected-range-enter  */
 .Range .DayPicker-Caption,
 .Range .DayPicker-Weekdays,
 .Range .DayPicker-WeekdaysRow,
