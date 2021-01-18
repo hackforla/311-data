@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DatePicker() {
+function DateSelector() {
   const ref = useRef(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const [dates, setDates] = useState({ from: null, to: null });
@@ -98,4 +98,4 @@ function DatePicker() {
   );
 }
 
-export default DatePicker;
+export default DateSelector;
