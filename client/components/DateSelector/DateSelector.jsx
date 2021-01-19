@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import SelectorBox from "../common/SelectorBox";
+import React, { useEffect, useRef, useState, useMemo } from "react";
+import PropTypes from "prop-types";
+import SelectorBox from "@components/common/SelectorBox";
 import ReactDayPicker from "@components/common/ReactDayPicker";
+import { DateUtils } from "react-day-picker";
 
 import CalendarIcon from "@material-ui/icons/CalendarToday";
 import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
-import { DateUtils } from "react-day-picker";
 
 const today = new Date();
 
@@ -97,10 +97,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DateSelector() {
+function DateSelector({ onRangeSelect, initialDates }) {
   const ref = useRef(null);
   const [showCalendar, setShowCalendar] = useState(false);
-  const [dates, setDates] = useState({ from: null, to: null });
+  const [dates, setDates] = useState({
+    from: initialDates.from,
+    to: initialDates.to,
+  });
   const [coord, setCoord] = useState({});
   const classes = useStyles();
 
@@ -123,16 +126,19 @@ function DateSelector() {
 
   const handleDateChage = (dates) => {
     setDates(() => dates);
+    onRangeSelect(dates);
   };
 
   const separator = <span className={classes.separator}> &#10072; </span>;
 
   const onOptionSelect = (option) => {
-    setDates((prevState) => option.dates);
+    setDates(() => option.dates);
   };
 
+  const closeReactDayPicker = useMemo(() => () => setShowCalendar(false), []);
+
   return (
-    <SelectorBox>
+    <SelectorBox onToggle={closeReactDayPicker}>
       <SelectorBox.Display>
         <div ref={ref} className={classes.selector}>
           <div>
@@ -153,7 +159,7 @@ function DateSelector() {
           </IconButton>
           {showCalendar ? (
             <div style={coord} className={classes.selectorPopUp}>
-              <ReactDayPicker onChange={handleDateChage} />
+              <ReactDayPicker initialDates={dates} onChange={handleDateChage} />
             </div>
           ) : null}
         </div>
@@ -171,5 +177,20 @@ function DateSelector() {
     </SelectorBox>
   );
 }
+
+DateSelector.propTypes = {
+  onRangeSelect: PropTypes.func,
+  initialDates: PropTypes.exact({
+    from: PropTypes.instanceOf(Date),
+    to: PropTypes.instanceOf(Date),
+  }),
+};
+
+DateSelector.defaultProps = {
+  initialDates: {
+    from: null,
+    to: null,
+  },
+};
 
 export default DateSelector;

@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import DayPicker, { DateUtils } from "react-day-picker";
-import PropTypes from "proptypes";
+import PropTypes from "prop-types";
 
 import "react-day-picker/lib/style.css";
 import "./styles.css";
 
-const getInitialState = () => {
+const getInitialState = (initialDates) => {
   return {
-    from: null,
-    to: null,
-    enteredTo: null, // Keep track of the last day for mouseEnter.
+    from: initialDates.from,
+    to: initialDates.to,
+    enteredTo: initialDates.to, // Keep track of the last day for mouseEnter.
   };
 };
+
+const defaultState = { from: null, to: null };
 
 const Weekday = ({ weekday, className, localeUtils, locale }) => {
   const weekdayName = localeUtils.formatWeekdayLong(weekday, locale);
@@ -22,8 +24,8 @@ const Weekday = ({ weekday, className, localeUtils, locale }) => {
   );
 };
 
-function ReactDayPicker({ onChange }) {
-  const [state, setState] = useState(getInitialState());
+function ReactDayPicker({ onChange, initialDates }) {
+  const [state, setState] = useState(getInitialState(initialDates));
 
   const isSelectingFirstDay = (from, to, day) => {
     const isBeforeFirstDay = from && DateUtils.isDayBefore(day, from);
@@ -32,9 +34,8 @@ function ReactDayPicker({ onChange }) {
   };
 
   const resetDays = () => {
-    const initialState = getInitialState();
-    setState(initialState);
-    onChange({ from: initialState.from, to: initialState.to });
+    setState(defaultState);
+    onChange(defaultState);
   };
 
   const setFromDay = (day) => {
@@ -99,8 +100,19 @@ function ReactDayPicker({ onChange }) {
   );
 }
 
-DayPicker.propTypes = {
+ReactDayPicker.propTypes = {
   onChange: PropTypes.func,
+  initialDates: PropTypes.exact({
+    from: PropTypes.instanceOf(Date),
+    to: PropTypes.instanceOf(Date),
+  }),
+};
+
+ReactDayPicker.defaultProps = {
+  initialDates: {
+    from: null,
+    to: null,
+  },
 };
 
 export default ReactDayPicker;
