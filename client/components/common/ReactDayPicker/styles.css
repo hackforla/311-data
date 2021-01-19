@@ -2,8 +2,8 @@
 .DayPicker.Range {
   font-family: Roboto;
   background: #192730;
-  min-width: 268px;
   border-radius: 5px;
+  min-width: 268px;
 }
 
 .Range .DayPicker-Body {
@@ -66,17 +66,8 @@
 }
 
 /* next and prev arrows */
-.DayPicker-NavButton {
-  position: absolute;
-  top: 50%;
-}
-
-.DayPicker-NavButton.DayPicker-NavButton--next {
-  right: 0;
-}
-
 .DayPicker-NavButton.DayPicker-NavButton--prev {
-  left: 0;
+  left: 1.5rem;
 }
 
 /*Rounded border with volume for selected start end days */
