@@ -25,7 +25,7 @@ with Flow(
     datasets = Parameter("datasets")
 
     # get last updated from database
-    since = postgres.get_last_updated()
+    since = postgres.get_start_datetime()
     # download dataset from Socrata
     downloads = socrata.download_dataset.map(
         dataset=datasets,
