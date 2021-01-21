@@ -12,11 +12,7 @@ import Map from './Map';
 
 const styles = theme => ({
   root: {
-    position: 'absolute',
-    top: theme.palette.header.height,
-    bottom: theme.palette.footer.height,
-    left: 0,
-    right: 0,
+    height: '100%',
   },
 })
 
@@ -125,7 +121,7 @@ class MapContainer extends React.Component {
 const mapStateToProps = state => ({
   pins: state.data.pins,
   position: state.ui.map,
-  lastUpdated: state.metadata.lastPulled,
+  lastUpdated: state.metadata.lastPulledLocal,
   activeMode: state.ui.map.activeMode,
   requestTypes: state.mapFilters.requestTypes,
 });

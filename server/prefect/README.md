@@ -105,6 +105,30 @@ The database URL (DSN) secrets are expected to be provided as environment variab
 * years: the years to be loaded
 * since: will only load records change since this date (note that if since is specified it will load updated data for ALL years)
 
+## Troubleshooting
+
+### Prefect Output Logs
+
+The first thing to look at when running the prefect tasks is you should see an output like the following in your shell.
+
+```bash
+$ docker-compose run prefect python flow.py
+
+Creating 311_data_prefect_run ... done
+[2021-01-20 22:02:11] INFO - prefect | Starting update flow for 2019, 2020, 2021 
+[2021-01-20 22:02:11] INFO - prefect.FlowRunner | Beginning Flow run for 'Loading Socrata data to Postgres'
+[2021-01-20 22:02:11] INFO - prefect.TaskRunner | Task 'get_start_datetime': Starting task run...
+[2021-01-20 22:02:11] INFO - prefect.TaskRunner | Task 'datasets': Starting task run...
+[2021-01-20 22:02:11] INFO - prefect.TaskRunner | Task 'datasets': finished task run for task with final state: 'Success'
+[2021-01-20 22:02:27] INFO - prefect.get_start_datetime | 2021-01-20 10:59:40
+[2021-01-20 22:02:28] INFO - prefect.TaskRunner | Task 'get_start_datetime': finished task run for task with final state: 'Success'
+
+```
+
+In the example above, the ```prefect | Starting update flow``` will show you the years the flow is trying to load and the ```prefect.get_start_datetime``` will show you the date the flow uses as the last modified date for new data to be loaded.
+
+Other log lines will show the number of records inserted versus updated as well as any errors in the process.
+
 ## Helpful Postgres commands to watch your database
 
 ```sql

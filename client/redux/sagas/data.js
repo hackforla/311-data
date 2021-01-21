@@ -15,8 +15,6 @@ import {
   getDataRequest,
   getPinsSuccess,
   getPinsFailure,
-  // getPinClustersSuccess,
-  // getPinClustersFailure,
   getHeatmapSuccess,
   getHeatmapFailure,
   getPinInfoSuccess,
@@ -51,28 +49,6 @@ function* fetchPins(filters) {
 
   return data;
 }
-
-// function* fetchPinClusters(filters, { zoom, bounds }) {
-//   const clustersUrl = `${BASE_URL}/map/clusters`;
-
-//   const {
-//     _northEast: { lat: north, lng: east },
-//     _southWest: { lat: south, lng: west },
-//   } = bounds;
-
-//   const { data } = yield call(axios.post, clustersUrl, {
-//     ...filters,
-//     zoom,
-//     bounds: {
-//       north,
-//       east,
-//       south,
-//       west,
-//     },
-//   });
-
-//   return data;
-// }
 
 function* fetchHeatmap(filters) {
   const heatmapUrl = `${BASE_URL}/map/heat`;
@@ -199,26 +175,6 @@ function* getVisData() {
   }
 }
 
-// function* updatePinClusters() {
-//   const filters = yield getFilters();
-
-//   if (
-//     !filters.startDate
-//     || !filters.endDate
-//     || !filters.ncList.length
-//     || !filters.requestTypes.length
-//   ) return;
-
-//   const mapPosition = yield getMapPosition();
-//   try {
-//     const data = yield call(fetchPinClusters, filters, mapPosition);
-//     yield put(getPinClustersSuccess(data));
-//   } catch (e) {
-//     yield put(getPinClustersFailure(e));
-//     yield put(setErrorModal(true));
-//   }
-// }
-
 function* getPinData(action) {
   try {
     const srnumber = action.payload;
@@ -248,5 +204,4 @@ export default function* rootSaga() {
   yield takeLatest(types.GET_DATA_REQUEST, getVisData);
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
   yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
-  // yield takeLatest(uiTypes.UPDATE_MAP_POSITION, updatePinClusters);
 }

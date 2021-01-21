@@ -10,15 +10,17 @@ import {
 
 const useStyles = makeStyles(theme => ({
   appBar: {
-    height: theme.palette.header.height,
+    height: theme.header.height,
     backgroundColor: theme.palette.primary.main,
   },
   button: {
     textTransform: 'none',
+    fontFamily: 'Roboto',
+    marginLeft: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
-    fontFamily: theme.palette.typography.fontFamily,
+    fontFamily: theme.typography.fontFamily,
     fontSize: '30px',
     fontWeight: 'bold',
     letterSpacing: '4px',

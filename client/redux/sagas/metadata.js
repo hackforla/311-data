@@ -3,19 +3,38 @@ import {
   takeLatest,
   call,
   put,
+  all,
 } from 'redux-saga/effects';
 
 import {
   types,
   getMetadataSuccess,
+  getRequestTypesSuccess,
+  getCouncilsSuccess,
+  getRegionsSuccess,
   getMetadataFailure,
 } from '../reducers/metadata';
 
 function* getMetadata() {
-  const url = `${process.env.API_URL}/status/api`;
+  const baseUrl = process.env.API_URL;
   try {
-    const { data } = yield call(axios.get, url);
-    yield put(getMetadataSuccess(data));
+    const [metadata, requestTypes, councils, regions] = yield all([
+      call(axios.get, `${baseUrl}/status/api`),
+      call(axios.get, `${baseUrl}/types`),
+      call(axios.get, `${baseUrl}/councils`),
+      call(axios.get, `${baseUrl}/regions`),
+    ]);
+    const { data: statusMetadata } = metadata;
+    const { data: typesMetadata } = requestTypes;
+    const { data: councilsMetadata } = councils;
+    const { data: regionsMetadata } = regions;
+
+    yield all([
+      put(getMetadataSuccess(statusMetadata)),
+      put(getRequestTypesSuccess(typesMetadata)),
+      put(getCouncilsSuccess(councilsMetadata)),
+      put(getRegionsSuccess(regionsMetadata)),
+    ]);
   } catch (e) {
     yield put(getMetadataFailure(e));
   }

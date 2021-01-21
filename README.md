@@ -8,11 +8,12 @@ Empower Neighborhood Associations to Improve analysis of their initiatives using
   * HTML/CSS
 
 ## Backend Technologies
-  * Python
-  * Sanic (Asynchronous Flask)
-  * Pandas
-  * PostgreSql
-  * Docker + Docker Compose
+
+  * FastAPI: asynchronous Python REST API
+  * Redis: key-value caching
+  * PostgreSql: persistant SQL database
+  * Prefect: data ingestion pipeline in Python
+  * Docker: containerized servers hosted in AWS
 
 ## Data Analysis Technologies
   * Python
