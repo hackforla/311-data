@@ -1,1 +1,1 @@
-export { default } from "./DateSelector.jsx";
+export { default } from './DateSelector';

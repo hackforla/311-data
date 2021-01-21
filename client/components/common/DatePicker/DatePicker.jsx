@@ -3,7 +3,7 @@ import ReactDayPicker from "@components/common/ReactDayPicker";
 import PropTypes from "prop-types";
 import CalendarIcon from "@material-ui/icons/CalendarToday";
 import IconButton from "@material-ui/core/IconButton";
-import { useOutsideClick } from "@components/common/customHooks";
+import useOutsideClick from "@components/common/customHooks/useOutsideClick";
 import { makeStyles } from "@material-ui/core";
 
 // TODO: Apply gaps (margin, padding) from theme
@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const renderSelectedDays = (dates) => {
-  console.log(dates);
   const [from, to] = dates;
   const isFromSelected = Boolean(from);
   const isBothSelected = Boolean(from && to);
@@ -45,19 +44,19 @@ const renderSelectedDays = (dates) => {
 
   if (isBothSelected) {
     selectedDaysElements.push(
-      <span key={"from"}> {from.toLocaleDateString("en-US")} </span>,
-      <span key={"to"}> - {to.toLocaleDateString("en-US")}</span>
+      <span key="from">{from.toLocaleDateString("en-US")}</span>,
+      <span key="to">-{to.toLocaleDateString("en-US")}</span>
     );
-    return selectedDaysElements;
-  } else if (isFromSelected) {
-    selectedDaysElements.push(
-      <span key={"from"}> {from.toLocaleDateString("en-US")} </span>
-    );
-    return selectedDaysElements;
-  } else {
-    selectedDaysElements.push(<span key={"N/A"}>Not selected</span>);
     return selectedDaysElements;
   }
+  if (isFromSelected) {
+    selectedDaysElements.push(
+      <span key="from"> {from.toLocaleDateString("en-US")} </span>
+    );
+    return selectedDaysElements;
+  }
+  selectedDaysElements.push(<span key="N/A">Not selected</span>);
+  return selectedDaysElements;
 };
 
 const DatePicker = ({ dates, onSelect, open, onToggle, range }) => {
@@ -84,22 +83,20 @@ const DatePicker = ({ dates, onSelect, open, onToggle, range }) => {
       const offsetFromSelectorDisplay = 2;
 
       setCoord(() => ({
-        left: left,
+        left,
         top: top + height + offsetFromSelectorDisplay,
       }));
     }
-  }, [ref.current]);
+  }, []);
 
   const toggleCalendar = () => {
-    setShowCalendar((prevState) => {
-      return !prevState;
-    });
-    onToggle && onToggle();
+    setShowCalendar((prevState) => !prevState);
+    if (onToggle) onToggle();
   };
 
-  const handleDateChage = (dates) => {
-    setSelectedDays(() => dates);
-    onSelect && onSelect(dates);
+  const handleDateChage = (incomingDates) => {
+    setSelectedDays(() => incomingDates);
+    if (onSelect) onSelect(incomingDates);
   };
 
   return (
@@ -129,6 +126,7 @@ const DatePicker = ({ dates, onSelect, open, onToggle, range }) => {
 
 DatePicker.propTypes = {
   onSelect: PropTypes.func,
+  range: PropTypes.bool,
   open: PropTypes.bool,
   onToggle: PropTypes.func,
   dates: PropTypes.arrayOf(Date),
@@ -142,6 +140,9 @@ DatePicker.propTypes = {
 
 DatePicker.defaultProps = {
   open: false,
+  range: false,
+  onToggle: null,
+  onSelect: null,
   dates: [],
   classes: {
     button: "",

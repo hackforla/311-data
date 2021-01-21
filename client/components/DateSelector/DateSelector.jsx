@@ -1,24 +1,17 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import SelectorBox from "@components/common/SelectorBox";
-import options from "./options";
-import useStyles from "./useStyles";
-import DateRanges from "./DateRanges";
-import DatePicker from "@components/common/DatePicker";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import SelectorBox from '@components/common/SelectorBox';
+import DatePicker from '@components/common/DatePicker';
+import options from './options';
+import useStyles from './useStyles';
+import DateRanges from './DateRanges';
 
 function DateSelector({ onRangeSelect, initialDates }) {
   const [dates, setDates] = useState(initialDates);
-
-  const [expanded, setExpanded] = useState(false);
-
   const classes = useStyles();
 
-  const handleOptionSelect = (option) => {
+  const handleOptionSelect = option => {
     setDates(() => option.dates);
-  };
-
-  const closeCollapse = () => {
-    setExpanded((prev) => !prev);
   };
 
   return (
@@ -27,7 +20,6 @@ function DateSelector({ onRangeSelect, initialDates }) {
         <div className={classes.selector}>
           <DatePicker
             range={false}
-            onToggle={closeCollapse}
             classes={classes}
             dates={dates}
             onSelect={onRangeSelect}
@@ -52,6 +44,7 @@ DateSelector.propTypes = {
 };
 
 DateSelector.defaultProps = {
+  onRangeSelect: null,
   initialDates: [],
 };
 

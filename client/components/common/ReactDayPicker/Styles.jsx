@@ -1,8 +1,8 @@
-import React from "react";
-import { useTheme } from "@material-ui/core";
-import PropTypes from "prop-types";
+import React from 'react';
+import { useTheme } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
-const selectedDayBg = "#426881";
+const selectedDayBg = '#426881';
 
 const Styles = ({ range }) => {
   const theme = useTheme();

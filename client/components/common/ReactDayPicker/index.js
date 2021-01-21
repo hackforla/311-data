@@ -1,1 +1,1 @@
-export { default } from "./ReactDayPicker.jsx";
+export { default } from './ReactDayPicker';
