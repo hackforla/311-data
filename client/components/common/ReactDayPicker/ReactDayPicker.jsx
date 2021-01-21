@@ -3,7 +3,6 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import PropTypes from "prop-types";
 
 import "react-day-picker/lib/style.css";
-// import "./styles.css";
 import Styles from "./Styles";
 
 const getInitialState = (initialDates) => {
