@@ -14,9 +14,11 @@ import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import GearButton from '@components/common/GearButton';
 
+import RequestTypeSelector from '@components/main/Desktop/RequestTypeSelector';
+
 const useStyles = makeStyles(theme => ({
   card: {
-    width: 300,
+    width: 325,
     backgroundColor: theme.palette.primary.main,
     position: 'absolute',
     left: 35,
@@ -93,7 +95,7 @@ const FilterMenu = ({
       />
       <Collapse in={expanded}>
         <CardContent>
-          TODO: Selectors
+          <RequestTypeSelector />
         </CardContent>
       </Collapse>
     </Card>

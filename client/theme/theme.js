@@ -1,5 +1,8 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { colorPrimaryFocus } from './colors';
+import {
+  colorPrimaryFocus,
+  colorTextSecondaryLight
+} from './colors';
 
 const theme = createMuiTheme({
   palette: {
@@ -11,6 +14,7 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: '#0F181F',
+      light: colorTextSecondaryLight,
     },
     background: {
       default: '#1A1A1A',
@@ -28,6 +32,7 @@ const theme = createMuiTheme({
   },
   typography: {
     fontFamily: ['Oswald', 'sans-serif'],
+    b2: '14px Roboto',
   },
   // breakpoints: {
   //   values: {

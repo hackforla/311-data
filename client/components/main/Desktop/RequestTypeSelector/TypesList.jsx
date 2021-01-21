@@ -40,6 +40,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// TODO: add counts to request types
 const TypesList = ({
   onClick,
   items,
