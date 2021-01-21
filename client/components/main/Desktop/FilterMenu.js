@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
     font: theme.typography.b2,
     marginBottom: '10px',
     color: theme.palette.secondary.light,
-  }
+  },
 }));
 
 const FilterMenu = ({
