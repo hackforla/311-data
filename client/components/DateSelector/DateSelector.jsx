@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import SelectorBox from "@components/common/SelectorBox";
 import options from "./options";
 import useStyles from "./useStyles";
 import DateRanges from "./DateRanges";
-import DatePicker from "./DatePicker";
+import DatePicker from "@components/common/DatePicker";
 
 function DateSelector({ onRangeSelect, initialDates }) {
   const [dates, setDates] = useState(initialDates);

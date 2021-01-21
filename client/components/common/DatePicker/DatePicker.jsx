@@ -6,6 +6,8 @@ import IconButton from "@material-ui/core/IconButton";
 import { useOutsideClick } from "@components/common/customHooks";
 import { makeStyles } from "@material-ui/core";
 
+// TODO: Apply gaps (margin, padding) from theme
+
 const useStyles = makeStyles((theme) => ({
   selector: {
     display: "flex",
