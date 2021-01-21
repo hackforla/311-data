@@ -28,6 +28,7 @@ ujson = "*"
 sentry-sdk = "*"
 aiocache = {extras = ["redis"], version = "*"}
 gunicorn = "*"
+uvloop = "*"
 
 [requires]
 python_version = "3.7"
