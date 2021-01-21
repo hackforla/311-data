@@ -4,7 +4,7 @@ export const colorSecondaryDark = '#0F181F';
 export const colorSecondaryFocus = '#87C8BC';
 export const colorTextPrimaryDark = '#0F181F';
 export const colorTextPrimaryLight = '#FFFFFF';
-export const colorTextSecondaryDark = '#0F181F';
+export const colorTextSecondaryDark = '#A8A8A8';
 export const colorTextSecondaryLight = '#ECECEC';
 export const colorTextFocus = '#87C8BC';
 
