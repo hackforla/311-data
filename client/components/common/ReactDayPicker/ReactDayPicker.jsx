@@ -3,7 +3,8 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import PropTypes from "prop-types";
 
 import "react-day-picker/lib/style.css";
-import "./styles.css";
+// import "./styles.css";
+import Styles from "./Styles";
 
 const getInitialState = (initialDates) => {
   const [from, to] = initialDates;
@@ -93,17 +94,20 @@ function ReactDayPicker({ onChange, initialDates, range }) {
   const { from, to, enteredTo } = state;
 
   return (
-    <DayPicker
-      className="Range"
-      numberOfMonths={1}
-      fromMonth={from}
-      selectedDays={[from, { from, to: enteredTo }]}
-      disabledDays={{ ...(range && { before: from }) }}
-      modifiers={{ start: from, end: enteredTo }}
-      onDayClick={handleDayClick}
-      onDayMouseEnter={handleDayMouseEnter}
-      weekdayElement={<Weekday />}
-    />
+    <>
+      <Styles range={range} />
+      <DayPicker
+        className="Range"
+        numberOfMonths={1}
+        fromMonth={from}
+        selectedDays={[from, { from, to: enteredTo }]}
+        disabledDays={{ ...(range && { before: from }) }}
+        modifiers={{ start: from, end: enteredTo }}
+        onDayClick={handleDayClick}
+        onDayMouseEnter={handleDayMouseEnter}
+        weekdayElement={<Weekday />}
+      />
+    </>
   );
 }
 
