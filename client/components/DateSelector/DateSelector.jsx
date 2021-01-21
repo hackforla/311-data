@@ -6,7 +6,7 @@ import options from './options';
 import useStyles from './useStyles';
 import DateRanges from './DateRanges';
 
-function DateSelector({ onRangeSelect, initialDates }) {
+function DateSelector({ onRangeSelect, range, initialDates }) {
   const [dates, setDates] = useState(initialDates);
   const classes = useStyles();
 
@@ -19,7 +19,7 @@ function DateSelector({ onRangeSelect, initialDates }) {
       <SelectorBox.Display>
         <div className={classes.selector}>
           <DatePicker
-            range={false}
+            range={range}
             classes={classes}
             dates={dates}
             onSelect={onRangeSelect}
@@ -39,11 +39,13 @@ function DateSelector({ onRangeSelect, initialDates }) {
 }
 
 DateSelector.propTypes = {
+  range: PropTypes.bool,
   onRangeSelect: PropTypes.func,
   initialDates: PropTypes.arrayOf(Date),
 };
 
 DateSelector.defaultProps = {
+  range: false,
   onRangeSelect: null,
   initialDates: [],
 };

@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import PropTypes from 'proptypes';
-import { connect } from 'react-redux';
-import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from "react";
+import PropTypes from "proptypes";
+import { connect } from "react-redux";
+import { toggleMenu as reduxToggleMenu } from "@reducers/ui";
+import DateSelector from "@components/DateSelector";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardContent from "@material-ui/core/CardContent";
+import IconButton from "@material-ui/core/IconButton";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import Collapse from "@material-ui/core/Collapse";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import GearButton from "../GearButton";
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import Collapse from '@material-ui/core/Collapse';
-import Typography from '@material-ui/core/Typography';
-import GearButton from '../GearButton';
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     width: 300,
     backgroundColor: theme.palette.primary.main,
-    position: 'absolute',
+    position: "absolute",
     left: 35,
     top: 75,
     borderRadius: theme.borderRadius.md,
@@ -30,22 +30,22 @@ const useStyles = makeStyles(theme => ({
     paddingRight: 0,
   },
   headerAction: {
-    margin: 'auto',
+    margin: "auto",
   },
   headerTitle: {
     marginLeft: theme.gaps.xs,
     fontSize: 20,
     fontWeight: 600,
-    letterSpacing: '2px',
+    letterSpacing: "2px",
   },
   button: {
     padding: theme.gaps.xs,
     paddingRight: 0,
     color: theme.palette.text.dark,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: theme.palette.primary.main,
     },
-    '& svg': {
+    "& svg": {
       fontSize: 30,
     },
   },
@@ -63,34 +63,37 @@ const FilterMenu = ({ toggleMenu }) => {
           root: classes.header,
           action: classes.headerAction,
         }}
-        title={(
+        title={
           <>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
             <Typography className={classes.headerTitle} component="span">
               FILTERS
             </Typography>
           </>
-        )}
-        action={(
+        }
+        action={
           <IconButton
             className={classes.button}
             aria-label="toggle filter menu"
-            onClick={() => setExpanded(prevExpanded => !prevExpanded)}
+            onClick={() => setExpanded((prevExpanded) => !prevExpanded)}
             disableFocusRipple
             disableRipple
           >
             {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
           </IconButton>
-        )}
+        }
       />
       <Collapse in={expanded}>
-        <CardContent>TODO: Selectors</CardContent>
+        <CardContent>
+          TODO: Selectors
+          <DateSelector range />
+        </CardContent>
       </Collapse>
     </Card>
   );
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   toggleMenu: () => dispatch(reduxToggleMenu()),
 });
 
