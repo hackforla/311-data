@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import SelectorBox from '@components/common/SelectorBox';
-import DatePicker from '@components/common/DatePicker';
-import options from './options';
-import useStyles from './useStyles';
-import DateRanges from './DateRanges';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import SelectorBox from "@components/common/SelectorBox";
+import DatePicker from "@components/common/DatePicker";
+import options from "./options";
+import useStyles from "./useStyles";
+import DateRanges from "./DateRanges";
 
 function DateSelector({ onRangeSelect, range, initialDates }) {
   const [dates, setDates] = useState(initialDates);
   const classes = useStyles();
 
-  const handleOptionSelect = option => {
-    setDates(() => option.dates);
+  const handleOptionSelect = (dates) => {
+    const { from, to } = dates;
+    setDates(() => [from, to]);
   };
 
   return (

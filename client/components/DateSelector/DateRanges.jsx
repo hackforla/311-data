@@ -1,19 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 const DateRanges = ({ options, onSelect, className }) => (
   <div>
     {options
-      ? options.map(option => (
-        <button
-          type="button"
-          key={option.text}
-          onClick={() => onSelect(option)}
-          className={className}
-        >
-          {option.text}
-        </button>
-      ))
+      ? options.map((option) => (
+          <button
+            type="button"
+            key={option.text}
+            onClick={() => onSelect(option.dates)}
+            className={className}
+          >
+            {option.text}
+          </button>
+        ))
       : null}
   </div>
 );
@@ -28,7 +28,7 @@ DateRanges.propTypes = {
 };
 
 DateRanges.defaultProps = {
-  className: '',
+  className: "",
 };
 
 export default DateRanges;
