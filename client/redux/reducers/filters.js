@@ -1,9 +1,7 @@
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-
 export const types = {
   UPDATE_START_DATE: 'UPDATE_START_DATE',
   UPDATE_END_DATE: 'UPDATE_END_DATE',
-  UPDATE_REQUEST_TYPE: 'UPDATE_REQUEST_TYPE',
+  UPDATE_REQUEST_TYPES: 'UPDATE_REQUEST_TYPES',
   UPDATE_NEIGHBORHOOD_COUNCIL: 'UPDATE_NEIGHBORHOOD_COUNCIL',
   SELECT_ALL_REQUEST_TYPES: 'SELECT_ALL_REQUEST_TYPES',
   DESELECT_ALL_REQUEST_TYPES: 'DESELECT_ALL_REQUEST_TYPES',
@@ -19,38 +17,39 @@ export const updateEndDate = newEndDate => ({
   payload: newEndDate,
 });
 
-export const updateRequestType = requestTypes => ({
-  type: types.UPDATE_REQUEST_TYPE,
-  payload: requestTypes,
+export const updateRequestTypes = requestTypes => ({
+  type: types.UPDATE_REQUEST_TYPES,
+  payload: requestTypes.map(({typeId}) => typeId),
 });
 
-export const selectAllRequestTypes = () => ({
-  type: types.SELECT_ALL_REQUEST_TYPES,
-});
+// TODO: these may not be needed
+// export const selectAllRequestTypes = () => ({
+//   type: types.SELECT_ALL_REQUEST_TYPES,
+// });
 
-export const deselectAllRequestTypes = () => ({
-  type: types.DESELECT_ALL_REQUEST_TYPES,
-});
+// export const deselectAllRequestTypes = () => ({
+//   type: types.DESELECT_ALL_REQUEST_TYPES,
+// });
 
 export const updateNC = council => ({
   type: types.UPDATE_NEIGHBORHOOD_COUNCIL,
   payload: council,
 });
 
-// set all types to either true or false
-const allRequestTypes = value => (
-  Object.keys(REQUEST_TYPES).reduce((acc, type) => {
-    acc[type] = value;
-    return acc;
-  }, { All: value })
-);
+// TODO: probably no longer needed
+// const allRequestTypes = value => (
+//   Object.keys(REQUEST_TYPES).reduce((acc, type) => {
+//     acc[type] = value;
+//     return acc;
+//   }, { All: value })
+// );
 
 const initialState = {
   dateRange: null,
   startDate: null,
   endDate: null,
   councils: [],
-  requestTypes: allRequestTypes(false),
+  requestTypes: [],
 };
 
 export default (state = initialState, action) => {
@@ -69,25 +68,22 @@ export default (state = initialState, action) => {
         endDate: action.payload,
       };
     }
-    case types.UPDATE_REQUEST_TYPE:
+    case types.UPDATE_REQUEST_TYPES:
       return {
         ...state,
-        requestTypes: {
-          ...state.requestTypes,
-          All: false,
-          [action.payload]: !state.requestTypes[action.payload],
-        },
+        requestTypes: action.payload,
       };
-    case types.SELECT_ALL_REQUEST_TYPES:
-      return {
-        ...state,
-        requestTypes: allRequestTypes(true),
-      };
-    case types.DESELECT_ALL_REQUEST_TYPES:
-      return {
-        ...state,
-        requestTypes: initialState.requestTypes,
-      };
+    // TODO: probably not needed
+    // case types.SELECT_ALL_REQUEST_TYPES:
+    //   return {
+    //     ...state,
+    //     requestTypes: allRequestTypes(true),
+    //   };
+    // case types.DESELECT_ALL_REQUEST_TYPES:
+    //   return {
+    //     ...state,
+    //     requestTypes: initialState.requestTypes,
+    //   };
     case types.UPDATE_NEIGHBORHOOD_COUNCIL:
       return {
         ...state,
