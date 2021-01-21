@@ -6,10 +6,11 @@ import "react-day-picker/lib/style.css";
 import "./styles.css";
 
 const getInitialState = (initialDates) => {
+  const [from, to] = initialDates;
   return {
-    from: initialDates.from,
-    to: initialDates.to,
-    enteredTo: initialDates.to, // Keep track of the last day for mouseEnter.
+    from: from,
+    to: to,
+    enteredTo: to, // Keep track of the last day for mouseEnter.
   };
 };
 
@@ -24,7 +25,7 @@ const Weekday = ({ weekday, className, localeUtils, locale }) => {
   );
 };
 
-function ReactDayPicker({ onChange, initialDates }) {
+function ReactDayPicker({ onChange, initialDates, range }) {
   const [state, setState] = useState(getInitialState(initialDates));
 
   const isSelectingFirstDay = (from, to, day) => {
@@ -35,7 +36,7 @@ function ReactDayPicker({ onChange, initialDates }) {
 
   const resetDays = () => {
     setState(defaultState);
-    onChange(defaultState);
+    onChange([]);
   };
 
   const setFromDay = (day) => {
@@ -44,7 +45,7 @@ function ReactDayPicker({ onChange, initialDates }) {
       to: null,
       enteredTo: null,
     }));
-    onChange({ from: day, to: null });
+    onChange([day]);
   };
 
   const setFromToDay = (day) => {
@@ -53,10 +54,15 @@ function ReactDayPicker({ onChange, initialDates }) {
       to: day,
       enteredTo: day,
     }));
-    onChange({ from, to: day });
+    onChange([state.from, day]);
   };
 
   const handleDayClick = (day) => {
+    if (!range) {
+      setFromDay(day);
+      return;
+    }
+
     const { from, to } = state;
     const dayIsInSelectedRange = from && to && day >= from && day <= to;
     const sameDaySelected = from ? day.getTime() === from.getTime() : false;
@@ -74,6 +80,7 @@ function ReactDayPicker({ onChange, initialDates }) {
   };
 
   const handleDayMouseEnter = (day) => {
+    if (!range) return;
     const { from, to } = state;
     if (!isSelectingFirstDay(from, to, day)) {
       setState((prevState) => ({
@@ -91,7 +98,7 @@ function ReactDayPicker({ onChange, initialDates }) {
       numberOfMonths={1}
       fromMonth={from}
       selectedDays={[from, { from, to: enteredTo }]}
-      disabledDays={{ before: from }}
+      disabledDays={{ ...(range && { before: from }) }}
       modifiers={{ start: from, end: enteredTo }}
       onDayClick={handleDayClick}
       onDayMouseEnter={handleDayMouseEnter}
@@ -102,17 +109,11 @@ function ReactDayPicker({ onChange, initialDates }) {
 
 ReactDayPicker.propTypes = {
   onChange: PropTypes.func,
-  initialDates: PropTypes.exact({
-    from: PropTypes.instanceOf(Date),
-    to: PropTypes.instanceOf(Date),
-  }),
+  initialDates: PropTypes.arrayOf(Date),
 };
 
 ReactDayPicker.defaultProps = {
-  initialDates: {
-    from: null,
-    to: null,
-  },
+  initialDates: [],
 };
 
 export default ReactDayPicker;
