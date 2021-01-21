@@ -50,6 +50,11 @@ const useStyles = makeStyles(theme => ({
       fontSize: 30,
     },
   },
+  subheader: {
+    font: theme.typography.b2,
+    marginBottom: '10px',
+    color: theme.palette.secondary.light,
+  }
 }));
 
 const FilterMenu = ({
@@ -94,6 +99,7 @@ const FilterMenu = ({
       />
       <Collapse in={expanded}>
         <CardContent>
+          <div className={classes.subheader}>Request Types</div>
           <RequestTypeSelector />
         </CardContent>
       </Collapse>
