@@ -46,32 +46,32 @@ const SelectedTypes = ({
           classes={{
             label: classes.label,
             deleteIcon: classes.deleteIcon,
-          }}  
+          }}
           label={item.typeName}
           onDelete={onDelete}
-          deleteIcon={<CloseIcon data-id={item.typeId}/>}
+          deleteIcon={<CloseIcon data-id={item.typeId} />}
           size="small"
           style={{ backgroundColor: item.color }}
         />
       </li>
     ))
-  )
+  );
 
-  const renderSwitch = items => {
-    switch(items.length) {
+  const renderSwitch = selected => {
+    switch (selected.length) {
       case 0:
         return <span className={classes.placeholder}>Select request types</span>;
       default:
         return renderSelected();
     }
-  }
+  };
 
   return (
     <Box className={classes.root} component="ul">
       {renderSwitch(items)}
     </Box>
   );
-}
+};
 
 export default SelectedTypes;
 

@@ -19,7 +19,7 @@ export const updateEndDate = newEndDate => ({
 
 export const updateRequestTypes = requestTypes => ({
   type: types.UPDATE_REQUEST_TYPES,
-  payload: requestTypes.map(({typeId}) => typeId),
+  payload: requestTypes.map(({ typeId }) => typeId),
 });
 
 // TODO: these may not be needed

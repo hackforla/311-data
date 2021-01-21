@@ -49,7 +49,6 @@ class MapContainer extends React.Component {
   getOpenRequests = async () => {
     const url = `${process.env.API_URL}/requests/pins/open`;
     const { data } = await axios.get(url);
-    console.log(data);
     this.openRequests = data;
   };
 

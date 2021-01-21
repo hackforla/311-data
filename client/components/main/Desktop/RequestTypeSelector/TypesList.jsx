@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -56,7 +56,7 @@ const TypesList = ({
         onClick={onClick}
         dense
         value={item.typeId}
-        selected={selectedItems.some(({typeId}) => typeId === item.typeId)}
+        selected={selectedItems.some(({ typeId }) => typeId === item.typeId)}
       >
         <FiberManualRecordIcon
           className={classes.icon}
@@ -65,7 +65,7 @@ const TypesList = ({
         {item.typeName}
       </MenuItem>
     ))
-  )
+  );
 
   return (
     <div className={classes.wrapper}>
@@ -74,13 +74,18 @@ const TypesList = ({
       </div>
     </div>
   );
-}
+};
 
 export default TypesList;
 
 TypesList.propTypes = {
   onClick: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({
+    typeId: PropTypes.number,
+    typeName: PropTypes.string,
+    color: PropTypes.string,
+  })).isRequired,
+  selectedItems: PropTypes.arrayOf(PropTypes.shape({
     typeId: PropTypes.number,
     typeName: PropTypes.string,
     color: PropTypes.string,

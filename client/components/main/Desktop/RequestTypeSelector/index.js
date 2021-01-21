@@ -12,35 +12,35 @@ const RequestTypeSelector = ({
   updateTypesFilter,
 }) => {
   const [types, setTypes] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([])
-  
+  const [selectedTypes, setSelectedTypes] = useState([]);
+
   useEffect(() => {
     setTypes(requestTypes);
-  }, [requestTypes])
+  }, [requestTypes]);
 
   const handleDelete = e => {
-    const deletedTypeId = parseInt(e.currentTarget.dataset.id);
-    const newSelectedTypes = selectedTypes.filter(({typeId}) => typeId !== deletedTypeId);
+    const deletedTypeId = Number(e.currentTarget.dataset.id);
+    const newSelectedTypes = selectedTypes.filter(({ typeId }) => typeId !== deletedTypeId);
     setSelectedTypes(newSelectedTypes);
     updateTypesFilter(newSelectedTypes);
-  }
+  };
 
   const handleSelect = e => {
-    const selectedTypeId = parseInt(e.currentTarget.value);
-    if (!selectedTypes.some(({typeId}) => typeId === selectedTypeId)) {
-      const newSelectedType = types.find(({typeId}) => typeId === selectedTypeId);
+    const selectedTypeId = Number(e.currentTarget.value);
+    if (!selectedTypes.some(({ typeId }) => typeId === selectedTypeId)) {
+      const newSelectedType = types.find(({ typeId }) => typeId === selectedTypeId);
       const newTypes = [...selectedTypes, newSelectedType];
       setSelectedTypes(newTypes);
       updateTypesFilter(newTypes);
     }
-  }
+  };
 
   return (
     <div>
       <SelectorBox>
         <SelectorBox.Display>
           { types && (
-            <SelectedTypes items={selectedTypes} onDelete={handleDelete} /> 
+            <SelectedTypes items={selectedTypes} onDelete={handleDelete} />
           )}
         </SelectorBox.Display>
         <SelectorBox.Collapse>
@@ -55,7 +55,7 @@ const RequestTypeSelector = ({
       </SelectorBox>
     </div>
   );
-}
+};
 
 const mapStateToProps = state => ({
   requestTypes: state.metadata.requestTypes,
@@ -67,7 +67,7 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(RequestTypeSelector);
 
 RequestTypeSelector.propTypes = {

@@ -13,7 +13,6 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import GearButton from '@components/common/GearButton';
-
 import RequestTypeSelector from '@components/main/Desktop/RequestTypeSelector';
 
 const useStyles = makeStyles(theme => ({

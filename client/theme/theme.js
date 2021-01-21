@@ -1,7 +1,7 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import {
   colorPrimaryFocus,
-  colorTextSecondaryLight
+  colorTextSecondaryLight,
 } from './colors';
 
 const theme = createMuiTheme({
