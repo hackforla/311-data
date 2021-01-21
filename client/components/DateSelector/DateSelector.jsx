@@ -15,26 +15,29 @@ function DateSelector({ onRangeSelect, range, initialDates }) {
   };
 
   return (
-    <SelectorBox>
-      <SelectorBox.Display>
-        <div className={classes.selector}>
-          <DatePicker
-            range={range}
-            classes={classes}
-            dates={dates}
-            onSelect={onRangeSelect}
+    <>
+      <span className={classes.label}>Date Range</span>
+      <SelectorBox>
+        <SelectorBox.Display>
+          <div className={classes.selector}>
+            <DatePicker
+              range={range}
+              classes={classes}
+              dates={dates}
+              onSelect={onRangeSelect}
+            />
+            <div className={classes.separator} />
+          </div>
+        </SelectorBox.Display>
+        <SelectorBox.Collapse>
+          <DateRanges
+            className={classes.option}
+            options={options}
+            onSelect={handleOptionSelect}
           />
-          <div className={classes.separator} />
-        </div>
-      </SelectorBox.Display>
-      <SelectorBox.Collapse>
-        <DateRanges
-          className={classes.option}
-          options={options}
-          onSelect={handleOptionSelect}
-        />
-      </SelectorBox.Collapse>
-    </SelectorBox>
+        </SelectorBox.Collapse>
+      </SelectorBox>
+    </>
   );
 }
 

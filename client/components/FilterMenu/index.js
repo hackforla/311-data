@@ -85,7 +85,6 @@ const FilterMenu = ({ toggleMenu }) => {
       />
       <Collapse in={expanded}>
         <CardContent>
-          TODO: Selectors
           <DateSelector range />
         </CardContent>
       </Collapse>
