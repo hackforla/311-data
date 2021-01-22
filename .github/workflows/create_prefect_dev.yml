@@ -1,10 +1,8 @@
-name: Create Prefect Image
+name: Create Prefect Image (DEV)
 on:
   push:
     branches:
       - dev
-      - master
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
     paths:
       - 'server/prefect/**'
 jobs:

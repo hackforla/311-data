@@ -26,6 +26,7 @@ token = "6b5lwk1jHSQTgx7PAVFKOOdt2"
 2018 = "h65r-yf5i"
 2019 = "pvft-t768"
 2020 = "rq3b-xjk8"
+2021 = "97z7-y5bt"
 
 [data]
 # years to load
@@ -35,7 +36,8 @@ years = [
     2017,
     2018,
     2019,
-    2020
+    2020,
+    2021
     ]
 # name of table to load
 target = "requests"

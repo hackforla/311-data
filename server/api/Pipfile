@@ -5,10 +5,10 @@ verify_ssl = true
 
 [dev-packages]
 pytest-asyncio = "*"
-pytest = "*"
 flake8 = "*"
 requests = "*"
 pytest-cov = "*"
+pytest = "*"
 
 [packages]
 numpy = "*"
@@ -18,18 +18,16 @@ pysupercluster = "*"
 redis = "*"
 requests-async = "*"
 sendgrid = "*"
-sodapy = "*"
 SQLAlchemy = "*"
-tabulate = "*"
 gino = {extras = ["starlette"], version = "*"}
 fastapi = "*"
-uvicorn = "*"
 alembic = "*"
 geopandas = "*"
 ujson = "*"
 sentry-sdk = "*"
 aiocache = {extras = ["redis"], version = "*"}
 gunicorn = "*"
+uvicorn = {extras = ["standard"], version = "*"}
 
 [requires]
 python_version = "3.7"

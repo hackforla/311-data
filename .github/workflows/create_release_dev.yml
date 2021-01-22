@@ -1,4 +1,4 @@
-name: Create API Docker Image DEV
+name: Create API Image (DEV)
 on:
   push:
     branches:

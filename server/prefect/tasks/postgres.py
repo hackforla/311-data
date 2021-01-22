@@ -40,7 +40,10 @@ def infer_types(fields: Dict[str, str]) -> Dict[str, str]:
 
 
 @task
-def get_last_updated() -> datetime:
+def get_start_datetime() -> datetime:
+    if hasattr(prefect.config.data, "start_datetime"):
+        return datetime.fromisoformat(prefect.config.data.start_datetime)
+
     logger = prefect.context.get("logger")
     target = prefect.config.data.target
     recent_column = prefect.config.data.recent_column

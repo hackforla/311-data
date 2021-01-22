@@ -1,19 +1,26 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import {
   colorPrimaryFocus,
+  colorPrimaryDark,
+  colorTextSecondaryDark,
   colorTextSecondaryLight,
+  colorSecondaryFocus,
 } from './colors';
+import gaps from './gaps';
+import borderRadius from './borderRadius';
 
 const theme = createMuiTheme({
+  gaps,
+  borderRadius,
   palette: {
     type: 'dark',
     primary: {
-      main: '#29404F',
+      main: colorPrimaryDark,
       dark: '#192730',
       focus: colorPrimaryFocus,
     },
     secondary: {
-      main: '#0F181F',
+      main: colorTextSecondaryDark,
       light: colorTextSecondaryLight,
     },
     background: {
@@ -21,7 +28,7 @@ const theme = createMuiTheme({
     },
     text: {
       dark: '#C4C4C4',
-      cyan: '#87C8BC',
+      cyan: colorSecondaryFocus,
     },
   },
   header: {
