@@ -57,6 +57,7 @@ const TypesList = ({
         dense
         value={item.typeId}
         selected={selectedItems.some(({ typeId }) => typeId === item.typeId)}
+        disableRipple
       >
         <FiberManualRecordIcon
           className={classes.icon}
