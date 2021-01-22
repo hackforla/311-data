@@ -141,6 +141,12 @@ class ServiceRequest(APIModel):
         }
 
 
+class TypeCount(APIModel):
+    type_id: int
+    type_name: str
+    type_count: int
+
+
 class RequestType(APIModel):
     type_id: int
     type_name: str
@@ -188,3 +194,4 @@ ServiceRequestList = List[ServiceRequest]
 ClusterList = List[Cluster]
 PinList = List[Pin]
 PointList = List[Point]
+TypeCountList = List[TypeCount]

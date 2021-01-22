@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ..models.schemas import CouncilList
+from ..models.api_models import CouncilList, TypeCountList
 from ..models.council import Council, get_open_request_counts
 
 router = APIRouter()
@@ -19,7 +19,7 @@ async def get_council(id: int):
 
 
 # TODO: add test
-@router.get("/{id}/counts/open/types")
+@router.get("/{id}/counts/open/types", response_model=TypeCountList)
 async def get_council_open_requests(id: int):
     result = await get_open_request_counts(id)
     return result
