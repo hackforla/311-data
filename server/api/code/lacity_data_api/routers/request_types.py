@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ..models.schemas import RequestTypeList
+from ..models.api_models import RequestTypeList
 from ..models.request_type import RequestType
 
 router = APIRouter()

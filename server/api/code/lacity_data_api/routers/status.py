@@ -4,7 +4,7 @@ import os
 
 from fastapi import APIRouter
 
-from ..models.schemas import StatusTypes
+from ..models.api_models import StatusTypes
 from ..services import status, utilities
 from ..config import GITHUB_CODE_VERSION, GITHUB_SHA, DEBUG, STAGE
 

@@ -1,8 +1,8 @@
 from sqlalchemy import sql
 from fastapi import APIRouter
 
-from ..models.schemas import (
-    ServiceRequestList, Filters, PinList
+from ..models.api_models import (
+    ServiceRequestList, Filters, PinList, TypeCountList
 )
 from ..models.service_request import (
     ServiceRequest, get_open_request_counts, get_open_requests, get_filtered_requests
@@ -23,7 +23,7 @@ async def get_all_service_requests(skip: int = 0, limit: int = 100):
     return result
 
 
-@router.get("/counts/open/types")
+@router.get("/counts/open/types", response_model=TypeCountList)
 async def get_open_request_counts_by_type():
     result = await get_open_request_counts()
     return result

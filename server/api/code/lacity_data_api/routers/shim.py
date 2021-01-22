@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from ..models.schemas import (
+from ..models.api_models import (
     Filter, Feedback, Comparison
 )
 from ..models import (
