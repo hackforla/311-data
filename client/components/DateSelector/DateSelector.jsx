@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import SelectorBox from '@components/common/SelectorBox';
 import DatePicker from '@components/common/DatePicker';
@@ -8,25 +8,35 @@ import DateRanges from './DateRanges';
 
 function DateSelector({ onRangeSelect, range, initialDates }) {
   const [dates, setDates] = useState(initialDates);
+  const [expanded, setExpanded] = useState(false);
   const classes = useStyles();
 
   const handleOptionSelect = optionDates => {
-    const { from, to } = optionDates;
-    setDates(() => [from, to]);
+    setDates(() => optionDates);
   };
+
+  const handleDateSelect = selectedDays => {
+    setDates(() => selectedDays);
+    if (typeof onRangeSelect === 'function') onRangeSelect(selectedDays);
+  };
+
+  const closeOptionsOnDateToggle = useCallback(() => {
+    setExpanded(false);
+  }, []);
 
   const { option, selected } = classes;
 
   return (
     <>
       <span className={classes.label}>Date Range</span>
-      <SelectorBox>
+      <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
           <div className={classes.selector}>
             <DatePicker
               range={range}
               dates={dates}
-              onSelect={onRangeSelect}
+              onToggle={closeOptionsOnDateToggle}
+              onSelect={handleDateSelect}
             />
             <div className={classes.separator} />
           </div>
