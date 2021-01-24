@@ -4,8 +4,10 @@ const useStyles = makeStyles(theme => ({
   label: {
     marginBottom: 10,
     display: 'inline-block',
+    fontFamily: 'Roboto',
   },
   selector: {
+    fontFamily: 'Roboto',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -17,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: -10,
   },
   separator: {
-    marginLeft: 10,
+    marginLeft: theme.gaps.md,
     borderRight: `1.5px solid ${theme.palette.text.primary}`,
     height: '1.2rem',
   },
@@ -34,6 +36,9 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
     },
+  },
+  selected: {
+    backgroundColor: `${theme.palette.primary.main} !important`,
   },
 }));
 
