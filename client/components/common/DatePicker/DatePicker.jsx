@@ -1,19 +1,21 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import ReactDayPicker from "@components/common/ReactDayPicker";
-import PropTypes from "prop-types";
-import CalendarIcon from "@material-ui/icons/CalendarToday";
-import IconButton from "@material-ui/core/IconButton";
-import useOutsideClick from "@components/common/customHooks/useOutsideClick";
-import { makeStyles } from "@material-ui/core";
+import React, {
+  useRef, useState, useEffect, useCallback,
+} from 'react';
+import ReactDayPicker from '@components/common/ReactDayPicker';
+import PropTypes from 'prop-types';
+import CalendarIcon from '@material-ui/icons/CalendarToday';
+import IconButton from '@material-ui/core/IconButton';
+import useOutsideClick from '@components/common/customHooks/useOutsideClick';
+import { makeStyles } from '@material-ui/core';
 
 // TODO: Apply gaps (margin, padding) from theme
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   selector: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
     maxWidth: 268,
     backgroundColor: theme.palette.primary.dark,
     padding: 10,
@@ -24,15 +26,15 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondaryDark,
   },
   selectorPopUp: {
-    position: "fixed",
+    position: 'fixed',
   },
   button: {
     padding: 0,
     color: theme.palette.text.dark,
-    "&:hover": {
+    '&:hover': {
       backgroundColor: theme.palette.primary.dark,
     },
-    "& svg": {
+    '& svg': {
       fontSize: 20,
       fill: theme.palette.text.primary,
     },
@@ -48,26 +50,38 @@ const renderSelectedDays = (dates, classes, range) => {
 
   if (isBothSelected) {
     selectedDaysElements.push(
-      <span key="from">{from.toLocaleDateString("en-US")}</span>,
-      <span key="to"> - {to.toLocaleDateString("en-US")}</span>
+      <span key="from">{from.toLocaleDateString('en-US')}</span>,
+      <span key="to">
+        {' '}
+        -
+        {to.toLocaleDateString('en-US')}
+      </span>,
     );
     return selectedDaysElements;
   }
   if (isFromSelected) {
     selectedDaysElements.push(
-      <span key="from"> {from.toLocaleDateString("en-US")} </span>
+      <span key="from">
+        {' '}
+        {from.toLocaleDateString('en-US')}
+        {' '}
+      </span>,
     );
     return selectedDaysElements;
   }
   selectedDaysElements.push(
     <span className={classes.placeholder} key="N/A">
-      Select a date {range ? " range" : ""}
-    </span>
+      Select a date
+      {' '}
+      {range ? ' range' : ''}
+    </span>,
   );
   return selectedDaysElements;
 };
 
-const DatePicker = ({ dates, onSelect, open, onToggle, range }) => {
+const DatePicker = ({
+  dates, onSelect, open, onToggle, range,
+}) => {
   const [coord, setCoord] = useState({});
   const [selectedDays, setSelectedDays] = useState(() => dates);
   const [showCalendar, setShowCalendar] = useState(() => open);
@@ -98,11 +112,11 @@ const DatePicker = ({ dates, onSelect, open, onToggle, range }) => {
   }, []);
 
   const toggleCalendar = () => {
-    setShowCalendar((prevState) => !prevState);
+    setShowCalendar(prevState => !prevState);
     if (onToggle) onToggle();
   };
 
-  const handleDateChage = (incomingDates) => {
+  const handleDateChage = incomingDates => {
     setSelectedDays(() => incomingDates);
     if (onSelect) onSelect(incomingDates);
   };

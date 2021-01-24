@@ -1,7 +1,9 @@
-import React from "react";
-import { WeekdayElementProps } from "react-day-picker/";
+import React from 'react';
+import { WeekdayElementProps } from 'react-day-picker/';
 
-const Weekday = ({ weekday, className, localeUtils, locale }) => {
+const Weekday = ({
+  weekday, className, localeUtils, locale,
+}) => {
   const weekdayName = localeUtils.formatWeekdayLong(weekday, locale);
   return (
     <div className={className} title={weekdayName}>
