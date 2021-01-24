@@ -75,8 +75,8 @@ const DatePicker = ({
   const classes = useStyles();
 
   const ref = useRef(null);
-
-  useOutsideClick(ref, () => setShowCalendar(false));
+  const closeCalendar = useCallback(() => setShowCalendar(false), []);
+  useOutsideClick(ref, closeCalendar);
 
   useEffect(() => {
     setShowCalendar(false);
