@@ -139,12 +139,6 @@ DatePicker.propTypes = {
   open: PropTypes.bool,
   onToggle: PropTypes.func,
   dates: PropTypes.arrayOf(Date),
-  classes: PropTypes.shape({
-    button: PropTypes.string,
-    selectorPopUp: PropTypes.string,
-    selector: PropTypes.string,
-    separator: PropTypes.string,
-  }),
 };
 
 DatePicker.defaultProps = {
@@ -153,12 +147,6 @@ DatePicker.defaultProps = {
   onToggle: null,
   onSelect: null,
   dates: [],
-  classes: {
-    button: '',
-    selectorPopUp: '',
-    selector: '',
-    separator: '',
-  },
 };
 
 export default DatePicker;

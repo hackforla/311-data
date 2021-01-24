@@ -23,7 +23,6 @@ function DateSelector({ onRangeSelect, range, initialDates }) {
           <div className={classes.selector}>
             <DatePicker
               range={range}
-              classes={classes}
               dates={dates}
               onSelect={onRangeSelect}
             />
