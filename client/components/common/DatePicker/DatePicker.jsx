@@ -62,7 +62,11 @@ const renderSelectedDays = dates => {
     );
     return selectedDaysElements;
   }
-  selectedDaysElements.push(<span key="N/A">Not selected</span>);
+  selectedDaysElements.push(
+    <span className={classes.placeholder} key="N/A">
+      Select a date {range ? " range" : ""}
+    </span>
+  );
   return selectedDaysElements;
 };
 
