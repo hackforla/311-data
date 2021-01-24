@@ -15,6 +15,8 @@ function DateSelector({ onRangeSelect, range, initialDates }) {
     setDates(() => [from, to]);
   };
 
+  const { option, selected } = classes;
+
   return (
     <>
       <span className={classes.label}>Date Range</span>
@@ -31,9 +33,10 @@ function DateSelector({ onRangeSelect, range, initialDates }) {
         </SelectorBox.Display>
         <SelectorBox.Collapse>
           <DateRanges
-            className={classes.option}
+            classes={{ option, selected }}
             options={options}
             onSelect={handleOptionSelect}
+            dates={dates}
           />
         </SelectorBox.Collapse>
       </SelectorBox>
