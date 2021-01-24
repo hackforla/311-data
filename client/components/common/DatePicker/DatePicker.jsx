@@ -113,7 +113,7 @@ const DatePicker = ({
       <div>{renderSelectedDays(selectedDays)}</div>
       <IconButton
         className={classes.button}
-        aria-label="toggle filter menu"
+        aria-label="toggle calendar datepicker"
         onClick={toggleCalendar}
         disableFocusRipple
         disableRipple
