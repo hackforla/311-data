@@ -6,10 +6,9 @@ const DateRanges = ({
 }) => {
   const highlightIfSelected = (optionDays, selectedDays) => {
     if (dates.length > 0) {
-      const [from, to, start, end] = [
-        ...optionDays,
-        ...selectedDays,
-      ].map(date => date.toLocaleDateString('en-US'));
+      const [from, to, start, end] = [...optionDays, ...selectedDays].map(
+        date => date.toLocaleDateString('en-US'),
+      );
 
       const isSelected = from === start && to === end;
 
