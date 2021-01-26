@@ -1,5 +1,5 @@
-export default (endpoint) => {
-  const match = endpoint.match(/{([a-z]{0,})\w}+/);
+module.exports = (endpoint) => {
+  const match = endpoint.match(/{([a-z,_]{0,})\w}+/);
   if (match) {
     const [firstMatch] = match;
     const formattedendpoint = endpoint.replace(
@@ -7,5 +7,7 @@ export default (endpoint) => {
       `:${firstMatch.substr(1, firstMatch.length - 2)}`
     );
     return formattedendpoint;
+  } else {
+    return endpoint;
   }
 };
