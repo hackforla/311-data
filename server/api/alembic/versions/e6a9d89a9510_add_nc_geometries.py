@@ -28,6 +28,7 @@ depends_on = None
 
 
 def upgrade():
+    op.execute("DROP EXTENSION IF EXISTS postgis CASCADE;")
     op.execute("CREATE EXTENSION postgis;")
 
     geometries_table = op.create_table(
