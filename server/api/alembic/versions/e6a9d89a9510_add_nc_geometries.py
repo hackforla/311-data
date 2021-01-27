@@ -34,7 +34,7 @@ def upgrade():
     geometries_table = op.create_table(
         'geometries',
         sa.Column('nc_id', sa.SMALLINT(), primary_key=True),
-        sa.Column('geometry', Geometry(geometry_type="MULTIPOLYGON", srid=4326), nullable=False)
+        sa.Column('geometry', Geometry(geometry_type="MULTIPOLYGON"), nullable=False)
     )
 
     with open(BOUNDARY_FILE, "r") as read_file:
