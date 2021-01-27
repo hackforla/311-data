@@ -31,7 +31,6 @@ def test_database_status(client):
     response = client.get(url)
     assert response.status_code == 200
     assert response.json()["postgres_version"] is not None
-    assert response.json()["alembic_version"] == "8f2ffbc5c2e8"
 
 
 def test_log_status(client):

@@ -14,7 +14,8 @@ fastapi==0.63.0
 fastapi-utils==0.2.1
 Fiona==1.8.18
 flake8==3.8.4
-geopandas==0.8.1
+GeoAlchemy2==0.8.4
+geopandas==0.8.2
 gino==1.0.1
 gino-starlette==0.1.1
 gunicorn==20.0.4
@@ -67,7 +68,7 @@ starkbank-ecdsa==1.1.0
 starlette==0.13.6
 toml==0.10.2
 typing-extensions==3.7.4.3
-ujson==4.0.1
+ujson==4.0.2
 urllib3==1.26.2
 uvicorn==0.13.3
 uvloop==0.14.0

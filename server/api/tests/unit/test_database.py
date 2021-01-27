@@ -24,7 +24,7 @@ def setup_function(function):
 async def test_alembic_version(db):
     query = db.text("SELECT version_num FROM alembic_version")
     result = await db.first(query)
-    assert result[0] == "8f2ffbc5c2e8"
+    assert result[0] == "e6a9d89a9510"
 
 
 @pytest.mark.asyncio
