@@ -21,25 +21,25 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     left: 35,
     top: 75,
-    borderRadius: 10,
+    borderRadius: theme.borderRadius.md,
     zIndex: 2000,
   },
   header: {
     color: theme.palette.text.cyan,
-    padding: 5,
+    padding: theme.gaps.xs,
     paddingRight: 0,
   },
   headerAction: {
     margin: 'auto',
   },
   headerTitle: {
-    marginLeft: 10,
+    marginLeft: theme.gaps.xs,
     fontSize: 20,
     fontWeight: 600,
     letterSpacing: '2px',
   },
   button: {
-    padding: 5,
+    padding: theme.gaps.xs,
     paddingRight: 0,
     color: theme.palette.text.dark,
     '&:hover': {
@@ -51,9 +51,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const FilterMenu = ({
-  toggleMenu,
-}) => {
+const FilterMenu = ({ toggleMenu }) => {
   const [expanded, setExpanded] = useState(false);
   const classes = useStyles();
 
@@ -67,14 +65,8 @@ const FilterMenu = ({
         }}
         title={(
           <>
-            <GearButton
-              aria-label="toggle map menu"
-              onClick={toggleMenu}
-            />
-            <Typography
-              className={classes.headerTitle}
-              component="span"
-            >
+            <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
+            <Typography className={classes.headerTitle} component="span">
               FILTERS
             </Typography>
           </>
@@ -87,14 +79,12 @@ const FilterMenu = ({
             disableFocusRipple
             disableRipple
           >
-            {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon /> }
+            {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
           </IconButton>
         )}
       />
       <Collapse in={expanded}>
-        <CardContent>
-          TODO: Selectors
-        </CardContent>
+        <CardContent>TODO: Selectors</CardContent>
       </Collapse>
     </Card>
   );
