@@ -37,6 +37,16 @@ const theme = createMuiTheme({
   },
   typography: {
     fontFamily: ['Oswald', 'sans-serif'],
+    h1: {
+      fontSize: 20,
+      fontWeight: 600,
+      letterSpacing: '2px',
+    },
+    h2: {
+      fontSize: 14,
+      fontWeight: 600,
+      letterSpacing: '2px',
+    },
   },
 });
 

@@ -34,9 +34,6 @@ const useStyles = makeStyles(theme => ({
   },
   headerTitle: {
     marginLeft: theme.gaps.xs,
-    fontSize: 20,
-    fontWeight: 600,
-    letterSpacing: '2px',
   },
   button: {
     padding: theme.gaps.xs,
@@ -66,7 +63,7 @@ const FilterMenu = ({ toggleMenu }) => {
         title={(
           <>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
-            <Typography className={classes.headerTitle} component="span">
+            <Typography variant="h1" className={classes.headerTitle} component="span">
               FILTERS
             </Typography>
           </>
