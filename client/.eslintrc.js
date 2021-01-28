@@ -30,8 +30,6 @@ module.exports = {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "arrow-parens": ["error", "as-needed"],
-    "consistent-return": "off",
-    "array-callback-return": "off",
     indent: [
       "error",
       2,
