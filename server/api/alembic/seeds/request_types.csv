@@ -1,12 +1,12 @@
 type_id,type_name,type_group,color,data_code,sort_order
-1,Animal Remains,,#ECB800,Dead Animal Removal,1
-2,Homeless Encampment,,#FF0000,Homeless Encampment,2
-3,Graffiti,Repairs,#FFE6BB,Graffiti Removal,3
-4,Multiple Streetlights,Repairs,#AD7B56,Multiple Streetlight Issue,4
-5,Single Streetlight,Repairs,#FEFE6B,Single Streetlight Issue,5
-6,Bulky Items,Trash,#4FEFEF,Bulky Items,6
-7,Electronic Waste,Trash,#AD7B56,Electronic Waste,7
-8,Illegal Dumping,Trash,#F7ADAD,Illegal Dumping Pickup,8
-9,Metal/Appliances,Trash,#ECB800,Metal/Household Appliances,9
-10,Other,,#999999,Other,10
-11,Feedback,,#333333,Feedback,11
+1,Animal Remains,,#267370,Dead Animal Removal,1
+2,Homeless Encampment,,#11975F,Homeless Encampment,2
+3,Graffiti,Repairs,#BF82BA,Graffiti Removal,3
+4,Multiple Streetlights,Repairs,#EDAD08,Multiple Streetlight Issue,4
+5,Single Streetlight,Repairs,#79B74E,Single Streetlight Issue,5
+6,Bulky Items,Trash,#D05F4E,Bulky Items,6
+7,Electronic Waste,Trash,#AE3D51,Electronic Waste,7
+8,Illegal Dumping,Trash,#685DB1,Illegal Dumping Pickup,8
+9,Metal/Appliances,Trash,#8B508B,Metal/Household Appliances,9
+10,Other,,#1D6996,Other,10
+11,Feedback,,#E17C05,Feedback,11
