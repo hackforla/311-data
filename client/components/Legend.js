@@ -67,7 +67,7 @@ const Legend = () => {
         </ListItem>
       );
     });
-  }
+  };
 
   return (
     <Card className={classes.root}>
