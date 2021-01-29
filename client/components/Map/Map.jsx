@@ -16,8 +16,6 @@ import {
 } from './constants';
 
 import {
-  // fetching ncBoundaries from api
-  // ncBoundaries,
   ccBoundaries,
   ncNameFromId,
   ccNameFromId,
@@ -320,7 +318,7 @@ class Map extends React.Component {
       }
     });
 
-    // this.addressLayer.zoomTo(lngLat);
+    this.addressLayer.zoomTo(lngLat);
   };
 
   zoomOut = () => {
@@ -513,5 +511,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, null)(withStyles(styles)(Map));
-
-// export default Map;
