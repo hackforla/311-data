@@ -1,7 +1,6 @@
 import { MAP_MODES } from '@components/common/CONSTANTS';
 
 export const types = {
-  TOGGLE_LEGEND: 'TOGGLE_LEGEND',
   TOGGLE_MENU: 'TOGGLE_MENU',
   SET_MENU_TAB: 'SET_MENU_TAB',
   SET_ERROR_MODAL: 'SET_ERROR_MODAL',
@@ -12,10 +11,6 @@ export const types = {
   ACCEPT_COOKIES: 'ACCEPT_COOKIES',
   SET_MAP_MODE: 'SET_MAP_MODE',
 };
-
-export const toggleLegend = () => ({
-  type: types.TOGGLE_LEGEND,
-});
 
 export const toggleMenu = () => ({
   type: types.TOGGLE_MENU,
@@ -61,9 +56,6 @@ export const setMapMode = mode => ({
 });
 
 const initialState = {
-  legend: {
-    isOpen: false,
-  },
   menu: {
     isOpen: false,
     // activeTab: MENU_TABS.MAP,
@@ -82,14 +74,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.TOGGLE_LEGEND:
-      return {
-        ...state,
-        legend: {
-          ...state.legend,
-          isOpen: !state.legend.isOpen,
-        },
-      };
     case types.TOGGLE_MENU:
       return {
         ...state,

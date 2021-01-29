@@ -47,6 +47,11 @@ const theme = createMuiTheme({
       fontWeight: 600,
       letterSpacing: '2px',
     },
+    subtitle1: {
+      fontFamily: 'Roboto',
+      fontWeight: 400,
+      fontSize: 12,
+    },
   },
 });
 

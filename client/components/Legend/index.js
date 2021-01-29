@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import PropTypes from 'proptypes';
-import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { toggleLegend } from '@reducers/ui';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import LensIcon from '@material-ui/icons/Lens';
+import ListItemText from '@material-ui/core/ListItemText';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: 300,
+    width: 200,
     backgroundColor: theme.palette.primary.main,
     position: 'absolute',
     right: 35,
@@ -20,13 +25,49 @@ const useStyles = makeStyles(theme => ({
   header: {
     color: theme.palette.primary.focus,
     textAlign: 'center',
-  }
+  },
+  content: {
+    padding: 0,
+  },
+  listItem: {
+    padding: 0,
+  },
+  listText: {
+    margin: 0,
+  },
+  colorIcon: {
+    fontSize: 'small',
+    minWidth: theme.spacing(4),
+  },
 }));
 
-const Legend = ({
-  toggleLegend,
-}) => {
+const Legend = () => {
   const classes = useStyles();
+
+  const renderLegendItems = () => {
+    const items = Object.keys(REQUEST_TYPES).map(type => REQUEST_TYPES[type]);
+    return items.map(item => {
+      return (
+        <ListItem className={classes.listItem}>
+          <ListItemIcon>
+            <LensIcon className={classes.colorIcon} style={{ color: item.color }} />
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              <Typography
+                component="span"
+                variant="subtitle1"
+                className={classes.inline}
+              >
+                {item.displayName}
+              </Typography>
+            }
+            className={classes.listText}
+          />
+        </ListItem>
+      );
+    });
+  }
 
   return (
     <Card className={classes.root}>
@@ -40,16 +81,14 @@ const Legend = ({
         )}
         className={classes.header}
       />
+      <Divider />
+      <CardContent className={classes.content}>
+        <List>
+          {renderLegendItems()}
+        </List>
+      </CardContent>
     </Card>
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  toggleLegend: () => dispatch(toggleLegend()),
-});
-
-export default connect(null, mapDispatchToProps)(Legend);
-
-Legend.propTypes = {
-  toggleLegend: PropTypes.func.isRequired,
-};
+export default Legend;
