@@ -1,62 +1,32 @@
-import { DateUtils } from 'react-day-picker';
-
-const MMDD = 'MMDD';
-const MMYYYY = 'MMYYYY';
+import { DateUtils } from "react-day-picker";
 
 const today = new Date();
 
-const oneMonthBack = DateUtils.addMonths(new Date(), -1);
-const sixMonthsBack = DateUtils.addMonths(new Date(), -6);
-const twelveMonthsBack = DateUtils.addMonths(new Date(), -12);
+const oneMonthBack = DateUtils.addMonths(today, -1);
+const sixMonthsBack = DateUtils.addMonths(today, -6);
+const twelveMonthsBack = DateUtils.addMonths(today, -12);
 const startOfThisYear = new Date(`1/1/${today.getFullYear()}`);
 const oneWeekBack = new Date(new Date().setDate(today.getDate() - 7));
 
-const convertDatesToFormattedString = (dates, format) => {
-  const localeDateString = dates
-    .map(date => date.toLocaleDateString('en-Us').split('/'))
-    .map(dateArr => {
-      const [day, month, year] = dateArr;
-      if (format === MMYYYY) return [month, year].join('/');
-      if (format === MMDD) return [month, day].join('/');
-    });
-
-  return localeDateString.join(' - ');
-};
-
 const options = [
   {
-    text: `Last Week ( ${convertDatesToFormattedString(
-      [oneWeekBack, today],
-      MMDD,
-    )})`,
+    text: `Last Week`,
     dates: [oneWeekBack, today],
   },
   {
-    text: `Last Month (${convertDatesToFormattedString(
-      [oneMonthBack, today],
-      MMYYYY,
-    )})`,
+    text: `Last Month`,
     dates: [oneMonthBack, today],
   },
   {
-    text: `Last 6 months (${convertDatesToFormattedString(
-      [sixMonthsBack, today],
-      MMYYYY,
-    )})`,
+    text: `Last 6 months`,
     dates: [sixMonthsBack, today],
   },
   {
-    text: `Last 12 months (${convertDatesToFormattedString(
-      [twelveMonthsBack, today],
-      MMYYYY,
-    )})`,
+    text: `Last 12 months`,
     dates: [twelveMonthsBack, today],
   },
   {
-    text: `Year to Date (${convertDatesToFormattedString(
-      [startOfThisYear, today],
-      MMDD,
-    )})`,
+    text: `Year to Date`,
     dates: [startOfThisYear, today],
   },
 ];
