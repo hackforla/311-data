@@ -1,8 +1,6 @@
-import React from 'react';
-import { useTheme } from '@material-ui/core';
-import PropTypes from 'prop-types';
-
-const selectedDayBg = '#426881';
+import React from "react";
+import { useTheme } from "@material-ui/core";
+import PropTypes from "prop-types";
 
 const Styles = ({ range }) => {
   const theme = useTheme();
@@ -43,7 +41,7 @@ const Styles = ({ range }) => {
     /* Selected range without start and end dates */ 
 
     .Range .DayPicker-Day--selected:not(.DayPicker-Day--outside) {
-      background-color: ${theme.palette.primary.main} !important;
+      background-color: ${theme.palette.selected.primary} !important;
     }
 
     /* Disabled cell */
@@ -56,7 +54,7 @@ const Styles = ({ range }) => {
 
     .DayPicker:not(.DayPicker--interactionDisabled)
       .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
-      background-color: ${theme.palette.primary.main};
+      background-color:  ${theme.palette.selected.primary};
       border-radius: 50% !important;
     }
 
@@ -104,7 +102,7 @@ const Styles = ({ range }) => {
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: -1;
-      background: ${selectedDayBg};
+      background: ${theme.palette.selected.primary};
     }
 
     ${
