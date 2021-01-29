@@ -36,7 +36,7 @@ function* getMetadata() {
     const { data: typesMetadata } = requestTypes;
     const { data: councilsMetadata } = councils;
     const { data: regionsMetadata } = regions;
-    const { data: ncGeojsonMetadata} = ncGeojson;
+    const { data: ncGeojsonMetadata } = ncGeojson;
 
     yield all([
       put(getMetadataSuccess(statusMetadata)),
