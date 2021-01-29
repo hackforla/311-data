@@ -47,6 +47,8 @@ class MapContainer extends React.Component {
   }
 
   getOpenRequests = async () => {
+    // const url = `${process.env.API_URL}/requests/pins/open`;
+    // const { data } = await axios.get(url);
     const url = `${process.env.API_URL}/open-requests`;
     const { data } = await axios.post(url);
     this.openRequests = data;
@@ -61,14 +63,14 @@ class MapContainer extends React.Component {
 
         return this.setState({
           requests: this.convertRequests(this.openRequests.requests),
-          ncCounts: this.openRequests.counts.nc,
-          ccCounts: this.openRequests.counts.cc,
+          // ncCounts: this.openRequests.counts.nc,
+          // ccCounts: this.openRequests.counts.cc,
         });
       case MAP_MODES.CLOSED:
         return this.setState({
           requests: this.convertRequests(pins),
-          ncCounts: null,
-          ccCounts: null,
+          // ncCounts: null,
+          // ccCounts: null,
         });
     }
   };

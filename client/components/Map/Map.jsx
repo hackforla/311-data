@@ -2,6 +2,7 @@
 
 import React from 'react';
 // import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
 
@@ -15,7 +16,6 @@ import {
 } from './constants';
 
 import {
-  ncBoundaries,
   ccBoundaries,
   ncNameFromId,
   ccNameFromId,
@@ -62,7 +62,7 @@ class Map extends React.Component {
       activeRequestsLayer: 'points',
       selectedTypes: props.selectedTypes,
       locationInfo: INITIAL_LOCATION,
-      geoFilterType: GEO_FILTER_TYPES.address,
+      geoFilterType: GEO_FILTER_TYPES.nc,
       filterGeo: null,
       filteredRequestCounts: {},
       hoveredRegionName: null,
@@ -127,8 +127,39 @@ class Map extends React.Component {
     if (
       this.state.filterGeo !== prevState.filterGeo ||
       this.state.selectedTypes !== prevState.selectedTypes
-    )
-      this.map.once('idle', this.setFilteredRequestCounts);
+      ) this.map.once('idle', this.setFilteredRequestCounts);
+
+    if (this.props.ncBoundaries != prevProps.ncBoundaries) {
+      this.ncLayer.init({
+        map: this.map,
+        addListeners: true,
+        sourceId: 'nc',
+        sourceData: this.props.ncBoundaries,
+        idProperty: 'nc_id',
+        onSelectRegion: geo => {
+          this.setState({
+            locationInfo: {
+              nc: {
+                name: ncNameFromId(geo.properties.nc_id),
+                // url removed from /geojson payload
+                // need to map from /councils response
+                // url: geo.properties.waddress || geo.properties.dwebsite,
+              },
+            },
+          });
+          this.map.once('zoomend', () => {
+            this.setState({ filterGeo: geo });
+          });
+        },
+        onHoverRegion: geo => {
+          this.setState({
+            hoveredRegionName: geo
+              ? ncNameFromId(geo.properties.nc_id)
+              : null
+          });
+        }
+      });
+    }
   }
 
   initLayers = addListeners => {
@@ -153,34 +184,6 @@ class Map extends React.Component {
           : {}
         )
       }),
-    });
-
-    this.ncLayer.init({
-      map: this.map,
-      addListeners,
-      sourceId: 'nc',
-      sourceData: ncBoundaries,
-      idProperty: 'nc_id',
-      onSelectRegion: geo => {
-        this.setState({
-          locationInfo: {
-            nc: {
-              name: ncNameFromId(geo.properties.nc_id),
-              url: geo.properties.waddress || geo.properties.dwebsite,
-            },
-          },
-        });
-        this.map.once('zoomend', () => {
-          this.setState({ filterGeo: geo });
-        });
-      },
-      onHoverRegion: geo => {
-        this.setState({
-          hoveredRegionName: geo
-            ? ncNameFromId(geo.properties.nc_id)
-            : null
-        });
-      }
     });
 
     this.ccLayer.init({
@@ -257,7 +260,7 @@ class Map extends React.Component {
 
     const features = this.map.queryRenderedFeatures(e.point, {
       layers: [
-        // 'request-circles',
+        'request-circles',
         ...masks,
         ...hoverables
       ]
@@ -503,6 +506,8 @@ Map.propTypes = {};
 
 Map.defaultProps = {};
 
-export default withStyles(styles)(Map);
+const mapStateToProps = state => ({
+  ncBoundaries: state.metadata.ncGeojson,
+});
 
-// export default Map;
+export default connect(mapStateToProps, null)(withStyles(styles)(Map));
