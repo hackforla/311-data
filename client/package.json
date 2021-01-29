@@ -60,7 +60,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint"
+      "pre-commit": "sh ./pre_commit_lint.sh"
     }
   },
   "devDependencies": {
