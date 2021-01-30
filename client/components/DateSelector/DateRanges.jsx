@@ -1,47 +1,45 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-const DateRanges = ({
-  options, onSelect, dates, classes,
-}) => {
-  const highlightIfSelected = (optionDays, selectedDays) => {
+const DateRanges = ({ options, onSelect, dates, classes }) => {
+  function highlightIfSelected(optionDays, selectedDays) {
     if (dates.length > 0) {
-      const [from, to, start, end] = [...optionDays, ...selectedDays].map(
-        date => date.toLocaleDateString('en-US'),
-      );
-
+      const [from, to, start, end] = [
+        ...optionDays,
+        ...selectedDays,
+      ].map((date) => date.toLocaleDateString("en-US"));
+      console.log(from, to, start, end);
       const isSelected = from === start && to === end;
 
-      return isSelected ? classes.selected : '';
+      if (isSelected) return classes.selected;
     }
-  };
+    return " ";
+  }
 
   return (
     <div>
       {options
-        ? options.map(option => (
-          <button
-            type="button"
-            key={option.text}
-            onClick={() => {
-              onSelect(option.dates);
-            }}
-            className={`${classes.option} ${highlightIfSelected(
-              option.dates,
-              dates,
-            )}`}
-          >
-            {option.text}
-          </button>
-        ))
+        ? options.map((option) => (
+            <button
+              type="button"
+              key={option.text}
+              onClick={() => {
+                onSelect(option.dates);
+              }}
+              className={`${classes.option} ${highlightIfSelected(
+                option.dates,
+                dates
+              )}`}
+            >
+              {option.text}
+            </button>
+          ))
         : null}
     </div>
   );
 };
 
-const {
-  func, arrayOf, shape, string,
-} = PropTypes;
+const { func, arrayOf, shape, string } = PropTypes;
 
 const Option = shape({
   text: string,
@@ -59,7 +57,7 @@ DateRanges.propTypes = {
 };
 
 DateRanges.defaultProps = {
-  classes: { selected: '', option: '' },
+  classes: { selected: "", option: "" },
   dates: [],
 };
 
