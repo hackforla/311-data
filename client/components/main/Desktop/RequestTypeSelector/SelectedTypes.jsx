@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
 import CloseIcon from '@material-ui/icons/Close';
+import OutlinedChip from './OutlinedChip';
+import SolidChip from './SolidChip';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 const SelectedTypes = ({
   items,
   onDelete,
+  outlined,
 }) => {
   const classes = useStyles();
 
@@ -42,17 +45,33 @@ const SelectedTypes = ({
         key={item.typeName}
         className={classes.chipWrapper}
       >
-        <Chip
+        { outlined ? (
+          <OutlinedChip
+            typeName={item.typeName}
+            typeId={item.typeId}
+            color={item.color}
+            onDelete={onDelete}
+          />
+        ) : (
+          <SolidChip
+            typeName={item.typeName}
+            typeId={item.typeId}
+            color={item.color}
+            onDelete={onDelete}
+          />
+        )}
+        {/* <Chip
           classes={{
             label: classes.label,
             deleteIcon: classes.deleteIcon,
           }}
+          // variant="outlined"
           label={item.typeName}
           onDelete={onDelete}
           deleteIcon={<CloseIcon data-id={item.typeId} />}
           size="small"
           style={{ backgroundColor: item.color }}
-        />
+        /> */}
       </li>
     ))
   );

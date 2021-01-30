@@ -92,6 +92,7 @@ const FilterMenu = ({ toggleMenu }) => {
       <Collapse in={expanded}>
         <CardContent>
           <div className={classes.subheader}>Request Types</div>
+          <RequestTypeSelector outlined />
           <RequestTypeSelector />
         </CardContent>
       </Collapse>

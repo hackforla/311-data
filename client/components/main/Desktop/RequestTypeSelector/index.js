@@ -10,6 +10,7 @@ import TypesList from './TypesList';
 const RequestTypeSelector = ({
   requestTypes,
   updateTypesFilter,
+  outlined,
 }) => {
   const [types, setTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -40,7 +41,7 @@ const RequestTypeSelector = ({
       <SelectorBox>
         <SelectorBox.Display>
           { types && (
-            <SelectedTypes items={selectedTypes} onDelete={handleDelete} />
+            <SelectedTypes outlined={outlined} items={selectedTypes} onDelete={handleDelete} />
           )}
         </SelectorBox.Display>
         <SelectorBox.Collapse>
