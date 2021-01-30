@@ -1,17 +1,17 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   label: {
     marginBottom: 10,
-    display: 'inline-block',
-    fontFamily: 'Roboto',
+    display: "inline-block",
+    fontFamily: "Roboto",
   },
   selector: {
-    fontFamily: 'Roboto',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    '& > div': {
+    fontFamily: "Roboto",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    "& > div": {
       paddingTop: 0,
       paddingRight: 0,
       paddingBottom: 0,
@@ -20,25 +20,25 @@ const useStyles = makeStyles(theme => ({
   },
   separator: {
     marginLeft: theme.gaps.md,
-    borderRight: `1.5px solid ${theme.palette.text.primary}`,
-    height: '1.2rem',
+    borderRight: `1.5px solid ${theme.palette.text.secondaryLight}`,
+    height: "1.2rem",
   },
   option: {
-    cursor: 'pointer',
+    cursor: "pointer",
     padding: 6,
-    margin: '2px 0',
-    fontFamily: 'Roboto',
-    width: '100%',
+    margin: "2px 0",
+    fontFamily: "Roboto",
+    width: "100%",
     backgroundColor: theme.palette.primary.dark,
-    border: 'none',
-    textAlign: 'left',
-    color: theme.palette.text.primary,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
+    border: "none",
+    textAlign: "left",
+    color: theme.palette.text.secondaryLight,
+    "&:hover": {
+      backgroundColor: theme.palette.selected.primary,
     },
   },
   selected: {
-    backgroundColor: `${theme.palette.primary.main} !important`,
+    backgroundColor: `${theme.palette.selected.primary} !important`,
   },
 }));
 
