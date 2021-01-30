@@ -1,4 +1,4 @@
-import { DateUtils } from "react-day-picker";
+import { DateUtils } from 'react-day-picker';
 
 const today = new Date();
 
@@ -10,23 +10,23 @@ const oneWeekBack = new Date(new Date().setDate(today.getDate() - 7));
 
 const options = [
   {
-    text: `Last Week`,
+    text: 'Last Week',
     dates: [oneWeekBack, today],
   },
   {
-    text: `Last Month`,
+    text: 'Last Month',
     dates: [oneMonthBack, today],
   },
   {
-    text: `Last 6 months`,
+    text: 'Last 6 months',
     dates: [sixMonthsBack, today],
   },
   {
-    text: `Last 12 months`,
+    text: 'Last 12 months',
     dates: [twelveMonthsBack, today],
   },
   {
-    text: `Year to Date`,
+    text: 'Year to Date',
     dates: [startOfThisYear, today],
   },
 ];

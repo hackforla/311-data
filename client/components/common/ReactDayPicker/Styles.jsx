@@ -1,6 +1,6 @@
-import React from "react";
-import { useTheme } from "@material-ui/core";
-import PropTypes from "prop-types";
+import React from 'react';
+import { useTheme } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 const Styles = ({ range }) => {
   const theme = useTheme();
