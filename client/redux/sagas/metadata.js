@@ -12,28 +12,38 @@ import {
   getRequestTypesSuccess,
   getCouncilsSuccess,
   getRegionsSuccess,
+  getNcGeojsonSuccess,
   getMetadataFailure,
 } from '../reducers/metadata';
 
 function* getMetadata() {
   const baseUrl = process.env.API_URL;
   try {
-    const [metadata, requestTypes, councils, regions] = yield all([
+    const [
+      metadata,
+      requestTypes,
+      councils,
+      regions,
+      ncGeojson,
+    ] = yield all([
       call(axios.get, `${baseUrl}/status/api`),
       call(axios.get, `${baseUrl}/types`),
       call(axios.get, `${baseUrl}/councils`),
       call(axios.get, `${baseUrl}/regions`),
+      call(axios.get, `${baseUrl}/geojson`),
     ]);
     const { data: statusMetadata } = metadata;
     const { data: typesMetadata } = requestTypes;
     const { data: councilsMetadata } = councils;
     const { data: regionsMetadata } = regions;
+    const { data: ncGeojsonMetadata } = ncGeojson;
 
     yield all([
       put(getMetadataSuccess(statusMetadata)),
       put(getRequestTypesSuccess(typesMetadata)),
       put(getCouncilsSuccess(councilsMetadata)),
       put(getRegionsSuccess(regionsMetadata)),
+      put(getNcGeojsonSuccess(ncGeojsonMetadata)),
     ]);
   } catch (e) {
     yield put(getMetadataFailure(e));

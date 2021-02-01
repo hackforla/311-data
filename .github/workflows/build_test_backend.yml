@@ -13,12 +13,12 @@ jobs:
         run: |
           cp .env.example .env
           docker-compose up --no-start api
-      - name: Lint API
-        run: docker-compose run api flake8
       - name: Seed database and run API
         run: |
           docker-compose up -d api
       - name: Run unit tests
         run: docker-compose run api pytest
+      - name: Lint API
+        run: docker-compose run api flake8
       # - name: Run Postman tests
       #   run: chmod +x postman/test.sh && postman/test.sh

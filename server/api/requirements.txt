@@ -27,16 +27,15 @@ http3==0.6.7
 httptools==0.1.1
 hyperframe==5.2.0
 idna==2.10
-immutables==0.14
 importlib-metadata==1.7.0
 iniconfig==1.1.1
 Mako==1.1.4
 MarkupSafe==1.1.1
 mccabe==0.6.1
 munch==2.5.0
-numpy==1.19.5
+numpy==1.20.0
 packaging==20.9
-pandas==1.1.5
+pandas==1.2.1
 pluggy==0.13.1
 psycopg2-binary==2.8.6
 py==1.10.0
@@ -45,7 +44,6 @@ pydantic==1.7.3
 pyflakes==2.2.0
 pyparsing==2.4.7
 pyproj==3.0.0.post1
-pysupercluster==0.7.6
 pytest==6.2.2
 pytest-asyncio==0.14.0
 pytest-cov==2.11.1
