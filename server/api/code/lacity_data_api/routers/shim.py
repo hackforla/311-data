@@ -4,7 +4,7 @@ from ..models.api_models import (
     Filter, Feedback, Comparison
 )
 from ..models import (
-    clusters, request_type, service_request, council
+    request_type, service_request, council
 )
 from ..services import (
     email, github, reports
