@@ -41,11 +41,11 @@ export default function ToggleGroup({
 
   const addClasses = component => {
     const { props } = component;
-    
-    const isTheSelectedChild = props.value === selectedValue
+
+    const isTheSelectedChild = props.value === selectedValue;
 
     let className = '';
-    
+
     if (isTheSelectedChild) {
       className = `${classes.selected} ${classes.regular}`;
     } else {
@@ -58,13 +58,13 @@ export default function ToggleGroup({
   };
 
   const handleClick = e => {
-    const isContainerClicked = e.target.classList.contains(classes.root)
+    const isContainerClicked = e.target.classList.contains(classes.root);
 
     if (isContainerClicked) return;
 
     let element = e.target;
 
-    const isNotDirectChildOfContainer = !element.parentElement.classList.contains(classes.root)
+    const isNotDirectChildOfContainer = !element.parentElement.classList.contains(classes.root);
     while (isNotDirectChildOfContainer) {
       element = element.parentElement;
     }
