@@ -30,8 +30,5 @@ USER appuser
 ENV PYTHONPATH=.:/app/code
 ENV APP_HOST=0.0.0.0
 
-# Make startup script executable
-RUN ["chmod", "+x", "/app/start_api.sh"]
-
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD /app/start_api.sh
+CMD python code/run.py
