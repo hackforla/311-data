@@ -92,20 +92,6 @@ data "template_file" "task_definition" {
   }
 }
 
-data "template_file" "task_definition_dev" {
-  template = file("templates/task.json")
-  vars = {
-    # container_memory = var.container_memory
-    # container_cpu    = var.container_cpu
-    container_port   = var.container_port
-    # container_name   = var.container_name
-    image_tag        = var.image_tag
-    task_name        = var.task_name
-    region           = var.region
-    stage            = "dev"
-  }
-}
-
 data "template_file" "prefect_definition" {
   template = file("templates/prefect.json")
   vars = {
@@ -120,33 +106,9 @@ data "template_file" "prefect_definition" {
   }
 }
 
-data "template_file" "prefect_definition_dev" {
-  template = file("templates/prefect.json")
-  vars = {
-    # container_memory = var.container_memory
-    # container_cpu    = var.container_cpu
-    # container_port   = var.container_port
-    # container_name   = var.container_name
-    image_tag        = "dev"
-    task_name        = var.task_name
-    region           = var.region
-    stage            = "dev"
-  }
-}
-
 resource "aws_ecs_task_definition" "task" {
   family = "${local.name}-server"
   container_definitions    = data.template_file.task_definition.rendered
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  memory                   = var.container_memory
-  cpu                      = var.container_cpu
-  execution_role_arn       = "arn:aws:iam::${var.account_id}:role/ecsTaskExecutionRole"
-}
-
-resource "aws_ecs_task_definition" "task_dev" {
-  family = "dev-${var.task_name}-server"
-  container_definitions    = data.template_file.task_definition_dev.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   memory                   = var.container_memory
@@ -165,28 +127,6 @@ resource "aws_ecs_service" "svc" {
     container_name   = "311_data_api"
     container_port   = var.container_port
     target_group_arn = aws_lb_target_group.default.arn
-  }
-
-  network_configuration {
-    subnets          = module.networked_rds.network_public_subnet_ids
-    security_groups  = [aws_security_group.svc.id, module.networked_rds.db_security_group_id, module.networked_rds.bastion_security_group_id]
-    assign_public_ip = true
-  }
-
-  depends_on      = [aws_lb.alb, aws_lb_listener.https, aws_ssm_parameter.secret]
-}
-
-resource "aws_ecs_service" "svc_dev" {
-  name            = "dev-${var.task_name}--svc"
-  cluster         = aws_ecs_cluster.cluster.id
-  task_definition = aws_ecs_task_definition.task_dev.arn
-  launch_type     = "FARGATE"
-  desired_count   = 1
-
-  load_balancer {
-    container_name   = "311_data_api"
-    container_port   = var.container_port
-    target_group_arn = aws_lb_target_group.dev.arn
   }
 
   network_configuration {
