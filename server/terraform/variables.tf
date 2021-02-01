@@ -70,9 +70,3 @@ variable tags {
   default     = {}
   type        = map
 }
-
-variable prd_host_header_values {
-  type        = list(string)
-  description = "List of one or more hostnames of the dev API to be used for ALB host header routing"
-  default     = ["dev-api.311-data.org"]
-}
