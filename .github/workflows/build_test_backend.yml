@@ -15,7 +15,7 @@ jobs:
           docker-compose up --no-start api
       - name: Seed database and run API
         run: |
-          docker-compose run -e TESTING=True api alembic upgrade head
+          docker-compose run -e TESTING=True DEBUG=True api alembic upgrade head
           docker-compose up -d api
       - name: Run unit tests
         run: docker-compose run api pytest
