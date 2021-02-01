@@ -6,7 +6,7 @@ export default function ToggleGroup({
   children, onToggle, value, rounded,
 }) {
   const [firstChild] = children;
-  const [selected, setSelected] = React.useState(
+  const [selectedValue, setSelectedValue] = React.useState(
     value || firstChild.props.value,
   );
 
@@ -41,8 +41,12 @@ export default function ToggleGroup({
 
   const addClasses = component => {
     const { props } = component;
+    
+    const isTheSelectedChild = props.value === selectedValue
+
     let className = '';
-    if (props.value === selected) {
+    
+    if (isTheSelectedChild) {
       className = `${classes.selected} ${classes.regular}`;
     } else {
       className = classes.regular;
@@ -54,15 +58,18 @@ export default function ToggleGroup({
   };
 
   const handleClick = e => {
-    if (e.target.classList.contains(classes.root)) return;
+    const isContainerClicked = e.target.classList.contains(classes.root)
+
+    if (isContainerClicked) return;
 
     let element = e.target;
 
-    while (!element.parentElement.classList.contains(classes.root)) {
+    const isNotDirectChildOfContainer = !element.parentElement.classList.contains(classes.root)
+    while (isNotDirectChildOfContainer) {
       element = element.parentElement;
     }
 
-    setSelected(element.value);
+    setSelectedValue(element.value);
     if (onToggle) onToggle(element.value);
   };
 
