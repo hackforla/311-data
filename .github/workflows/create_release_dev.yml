@@ -37,4 +37,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: (Rolling) Restart ECS Tasks
         run: |
-          aws ecs update-service --cluster dev-la-311-data-cluster --service dev-la-311-data-svc --force-new-deployment
+          aws ecs update-service --cluster prod-la-311-data-cluster --service dev-la-311-data-svc --force-new-deployment
