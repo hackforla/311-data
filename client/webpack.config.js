@@ -13,7 +13,7 @@ module.exports = {
     filename: 'bundle.js',
   },
   watchOptions: {
-    ignored: /node_modules/
+    ignored: /node_modules/,
   },
   resolve: {
     extensions: ['.js', '.jsx'],
