@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
-import { makeStyles } from '@material-ui/core/styles';
-
+import DateSelector from '@components/DateSelector';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,6 +11,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import GearButton from '../GearButton';
 
 const useStyles = makeStyles(theme => ({
@@ -84,7 +84,9 @@ const FilterMenu = ({ toggleMenu }) => {
         )}
       />
       <Collapse in={expanded}>
-        <CardContent>TODO: Selectors</CardContent>
+        <CardContent>
+          <DateSelector range />
+        </CardContent>
       </Collapse>
     </Card>
   );
