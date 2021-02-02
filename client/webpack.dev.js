@@ -1,4 +1,5 @@
 const merge = require('webpack-merge');
+const path = require('path');
 const config = require('./webpack.config.js');
 
 module.exports = merge(config, {
@@ -6,10 +7,11 @@ module.exports = merge(config, {
   devtool: 'inline-source-map',
   devServer: {
     open: true,
-    contentBase: './public',
+    contentBase: path.join(__dirname, './dist'),
+    publicPath: '/',
+    writeToDisk: true,
     compress: true,
     port: 3000,
-    host: '0.0.0.0',
     hot: true,
     historyApiFallback: true,
   },
