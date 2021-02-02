@@ -12,6 +12,9 @@ module.exports = {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js',
   },
+  watchOptions: {
+    ignored: /node_modules/,
+  },
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {

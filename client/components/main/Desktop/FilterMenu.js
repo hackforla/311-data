@@ -3,7 +3,6 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 import { makeStyles } from '@material-ui/core/styles';
-
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -13,6 +12,8 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import GearButton from '@components/common/GearButton';
+
+import DateSelector from '@components/DateSelector';
 import RequestTypeSelector from '@components/main/Desktop/RequestTypeSelector';
 
 const useStyles = makeStyles(theme => ({
@@ -94,6 +95,7 @@ const FilterMenu = ({ toggleMenu }) => {
           <div className={classes.subheader}>Request Types</div>
           <RequestTypeSelector outlined />
           <RequestTypeSelector />
+          <DateSelector range />
         </CardContent>
       </Collapse>
     </Card>

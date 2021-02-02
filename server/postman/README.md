@@ -1,3 +1,7 @@
+# Postman tests
+
+These are legacy tests developed against the initial version of the API. They run a series of tests against the old endpoints and check the HTTP status.
+
 ## Setup
 
 ### 1. Install and run Postman
@@ -13,13 +17,15 @@ To create one, select "create new" from dropdown menu in the middle of the nav b
 ### 3. Import this folder
 
 Click the Import button at the top left, select "Folder" from the tabs, and then select this folder (`/server/postman`) from the finder. The import will add two collections to Postman:
-  - **311-all**: a collection containing all of the endpoints that the api currently supports, with prepopulated params for each api call.
-  - **311-CI**: a collection containing all of the tests we run during continuous integration. These include tests for bad input -- e.g., a missing required param should return 400, an unsupported endpoint should return a 404.
+
+- **311-all**: a collection containing all of the endpoints that the api currently supports, with pre-populated params for each api call.
+- **311-CI**: a collection containing all of the tests we run during continuous integration. These include tests for bad input -- e.g., a missing required param should return 400, an unsupported endpoint should return a 404.
 
 The import will also add three environments:
-  - **311-local**: all api calls go to your local server (which should be running)
-  - **311-dev**: api calls go to the dev server
-  - **311-prod**: api calls go to the production server
+
+- **311-local**: all api calls go to your local server (which should be running)
+- **311-dev**: api calls go to the dev server
+- **311-prod**: api calls go to the production server
 
 ### 4. Activate the `311-local` environment.
 
@@ -40,6 +46,7 @@ Note that the `311-CI` collection contains all of the tests we run whenever you 
 ### Run CI tests from the command line
 
 As an alternative to running the CI tests in Postman, you can run them from the command line. Run this command from the `/server` directory:
-```
+
+```bash
 chmod +x postman/test.sh && postman/test.sh
 ```

@@ -75,6 +75,9 @@ resource "aws_security_group" "svc" {
   tags = merge({ Name = "ecs-service-sg" }, var.tags)
 }
 
+
+# SPLIT
+
 data "template_file" "task_definition" {
   template = file("templates/task.json")
   vars = {

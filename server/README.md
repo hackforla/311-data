@@ -3,9 +3,11 @@
 [![Build and Test Action Status](https://github.com/hackforla/311-data/workflows/Build%20and%20Test/badge.svg)](https://github.com/hackforla/311-data/actions)
 
 - [How to set up a local API server](docs/server_setup.md)
-- [How to contribute](docs/contributing.md)
+- [Infrastructure](terraform/README.md)
 - [Nightly data loading](prefect/README.md)
-- [Infrastructure](aws/README.md)
+- [Data fiels](prefect/data_fields.md)
+- [Server Setup](docs/server_setup.md)
+- [Upgrades](docs/upgrades.md)
 - [Useful commands](docs/useful_commands.md)
 
 ## Server Tech Stack

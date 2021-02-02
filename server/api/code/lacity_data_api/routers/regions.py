@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ..models.schemas import RegionList
+from ..models.api_models import RegionList
 from ..models.region import Region
 
 router = APIRouter()

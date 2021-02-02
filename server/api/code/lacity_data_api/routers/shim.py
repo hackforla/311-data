@@ -1,10 +1,10 @@
 from fastapi import APIRouter, status
 
-from ..models.schemas import (
+from ..models.api_models import (
     Filter, Feedback, Comparison
 )
 from ..models import (
-    clusters, request_type, service_request, council
+    request_type, service_request, council
 )
 from ..services import (
     email, github, reports
@@ -63,20 +63,6 @@ async def get_open_requests():
         },
         "requests": requests_list
     }
-
-
-@router.post("/map/heat")
-async def get_heatmap(filter: Filter):
-    # convert type names to type ids
-    type_ids = await request_type.get_type_ids_by_str_list(filter.requestTypes)
-
-    result = await clusters.get_points(
-        filter.startDate,
-        filter.endDate,
-        type_ids,
-        filter.ncList
-    )
-    return result
 
 
 @router.post("/map/pins")

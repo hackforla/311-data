@@ -5,6 +5,7 @@ export const types = {
   GET_REQUEST_TYPES_SUCCESS: 'GET_REQUEST_TYPES_SUCCESS',
   GET_COUNCILS_SUCCESS: 'GET_COUNCILS_SUCCESS',
   GET_REGIONS_SUCCESS: 'GET_REGIONS_SUCCESS',
+  GET_NC_GEOJSON_SUCCESS: 'GET_NC_GEOJSON_SUCCESS',
 };
 
 export const getMetadataRequest = () => ({
@@ -36,6 +37,11 @@ export const getRegionsSuccess = response => ({
   payload: response,
 });
 
+export const getNcGeojsonSuccess = response => ({
+  type: types.GET_NC_GEOJSON_SUCCESS,
+  payload: response,
+});
+
 const initialState = {
   currentTimeUTC: null,
   currentTimeLocal: null,
@@ -46,6 +52,7 @@ const initialState = {
   requestTypes: [],
   councils: null,
   regions: null,
+  ncGeojson: null,
 };
 
 export default (state = initialState, action) => {
@@ -69,6 +76,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         regions: action.payload,
+      };
+    case types.GET_NC_GEOJSON_SUCCESS:
+      return {
+        ...state,
+        ncGeojson: action.payload,
       };
     case types.GET_METADATA_FAILURE: {
       const {

@@ -9,7 +9,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from .config import DEBUG
 from .models import db
 from .routers import (
-    index, councils, regions, request_types, service_requests, shim, status
+    index, councils, regions, request_types, service_requests, shim, status, geojson
 )
 
 
@@ -33,11 +33,12 @@ def get_app():
     db.init_app(app)
     app.include_router(index.router)
     app.include_router(status.router, prefix="/status")
-    app.include_router(shim.router)
     app.include_router(councils.router, prefix="/councils")
     app.include_router(regions.router, prefix="/regions")
     app.include_router(request_types.router, prefix="/types")
     app.include_router(service_requests.router, prefix="/requests")
+    app.include_router(geojson.router, prefix="/geojson")
+    app.include_router(shim.router, include_in_schema=DEBUG)
 
     app.add_middleware(
         CORSMiddleware,

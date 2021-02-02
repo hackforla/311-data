@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'proptypes';
 
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -64,10 +64,15 @@ const SelectorBox = ({
   const [expanded, setExpanded] = useState(initial);
   const classes = useStyles();
 
+  useEffect(() => {
+    setExpanded(initial);
+  }, [initial]);
+
   const toggleCollapse = () => {
     if (onToggle) onToggle();
     setExpanded(prevState => !prevState);
   };
+
   const renderDisplay = () => {
     const element = children.find(child => child.type.name === 'Display');
     return (
