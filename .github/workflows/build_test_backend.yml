@@ -15,9 +15,12 @@ jobs:
           docker-compose up --no-start api
       - name: Run API
         run: |
-          docker ps -a
           docker-compose up -d api
+          docker ps -a
           docker network inspect 311_data_default
+          nc -zv localhost 5432
+          docker-compose logs db
+          docker-compose logs api
       - name: Run unit tests
         run: docker-compose run api pytest
       - name: Lint API
