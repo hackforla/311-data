@@ -17,6 +17,7 @@ jobs:
         run: |
           docker ps -a
           docker-compose up -d api
+          docker network inspect 311_data_default
       - name: Run unit tests
         run: docker-compose run api pytest
       - name: Lint API
