@@ -9,3 +9,4 @@ node_modules_non_es5
 dist/
 
 webpack-stats.json
+storybook-static

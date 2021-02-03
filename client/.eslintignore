@@ -2,4 +2,7 @@
 *.test.js*
 v1/*
 dist/*
-
+storybook-static/*
+node_modules/*
+*stories.*
+stories
