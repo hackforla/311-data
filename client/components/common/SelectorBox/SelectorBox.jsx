@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   card: {
+    maxWidth: 350,
+    width: '100%',
     backgroundColor: theme.palette.primary.main,
     boxShadow: 'none',
   },
@@ -74,7 +76,7 @@ const SelectorBox = ({
   };
 
   const renderDisplay = () => {
-    const element = children.find(child => child.type.name === 'Display');
+    const element = children ? children.find(child => child.type.name === 'Display') : null;
     return (
       <CardHeader
         disableTypography
