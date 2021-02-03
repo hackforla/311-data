@@ -63,10 +63,10 @@ export default function ToggleGroup({
     if (isContainerClicked) return;
 
     let element = e.target;
-
-    const isNotDirectChildOfContainer = !element.parentElement.classList.contains(classes.root);
+    let isNotDirectChildOfContainer = !element.parentElement.classList.contains(classes.root);
     while (isNotDirectChildOfContainer) {
       element = element.parentElement;
+      isNotDirectChildOfContainer = !element.parentElement.classList.contains(classes.root);
     }
 
     setSelectedValue(element.value);
