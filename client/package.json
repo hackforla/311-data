@@ -56,7 +56,9 @@
     "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
     "check-env": "node ./utils/checkEnv",
-    "postinstall": "sh -c \"are-you-es5 check -r . | tail -n 2 | head -n 1 > ./node_modules_non_es5 \""
+    "postinstall": "sh -c \"are-you-es5 check -r . | tail -n 2 | head -n 1 > ./node_modules_non_es5 \"",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "husky": {
     "hooks": {
@@ -68,6 +70,10 @@
     "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.8.3",
+    "@storybook/addon-actions": "^6.1.16",
+    "@storybook/addon-essentials": "^6.1.16",
+    "@storybook/addon-links": "^6.1.16",
+    "@storybook/react": "^6.1.16",
     "are-you-es5": "^2.1.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.6",
