@@ -35,6 +35,8 @@ services:
       - target: ${APP_PORT}
         published: ${API_HOST_PORT}
     command: gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker --log-level info -b 0.0.0.0:5000
+    # volumes:
+    #   - ./api/:/home/api
     depends_on:
       - db
       - redis
@@ -48,6 +50,7 @@ services:
       PREFECT__API_URL: ${APP_PROTOCOL}://${APP_HOST}:${APP_PORT}
     depends_on:
       - db
+    # entrypoint: python flow.py
 
 volumes:
   backend_data:
