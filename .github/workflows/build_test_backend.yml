@@ -13,9 +13,13 @@ jobs:
         run: |
           cp .env.example .env
           docker-compose up --no-start api
-      - name: Seed database and run API
+      - name: Seed the test database
         run: |
+          docker ps -a
           docker-compose run -e TESTING=True api alembic upgrade head
+      - name: Run API
+        run: |
+          docker ps -a
           docker-compose up -d api
       - name: Run unit tests
         run: docker-compose run api pytest
