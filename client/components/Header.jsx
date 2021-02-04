@@ -19,8 +19,8 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2),
   },
   title: {
+    ...theme.typography.h1,
     flexGrow: 1,
-    fontFamily: theme.typography.fontFamily,
     fontSize: '30px',
     fontWeight: 'bold',
     letterSpacing: '4px',

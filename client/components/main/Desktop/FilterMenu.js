@@ -10,7 +10,6 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
-import Typography from '@material-ui/core/Typography';
 import GearButton from '@components/common/GearButton';
 
 import DateSelector from '@components/DateSelector';
@@ -35,10 +34,14 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto',
   },
   headerTitle: {
+    ...theme.typography.h1,
     marginLeft: theme.gaps.xs,
-    fontSize: 20,
     fontWeight: 600,
     letterSpacing: '2px',
+  },
+  headerContent: {
+    display: 'flex',
+    alignItems: 'center',
   },
   button: {
     padding: theme.gaps.xs,
@@ -64,16 +67,19 @@ const FilterMenu = ({ toggleMenu }) => {
   return (
     <Card className={classes.card}>
       <CardHeader
+        disableTypography
         classes={{
           root: classes.header,
           action: classes.headerAction,
+          content: classes.headerContent,
         }}
         title={(
           <>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
-            <Typography className={classes.headerTitle} component="span">
+            {/* <Typography className={classes.headerTitle} component="span">
               FILTERS
-            </Typography>
+            </Typography> */}
+            <span className={classes.headerTitle}>FILTERS</span>
           </>
         )}
         action={(
