@@ -8,10 +8,12 @@ import {
 } from './colors';
 import gaps from './gaps';
 import borderRadius from './borderRadius';
+import typography from './typography';
 
 const theme = createMuiTheme({
   gaps,
   borderRadius,
+  typography,
   palette: {
     type: 'dark',
     primary: {
@@ -38,9 +40,6 @@ const theme = createMuiTheme({
   },
   footer: {
     height: '40px',
-  },
-  typography: {
-    fontFamily: ['Oswald', 'sans-serif'],
   },
 });
 
