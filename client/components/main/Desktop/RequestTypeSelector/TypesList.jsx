@@ -40,11 +40,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-// TODO: add counts to request types
 const TypesList = ({
   onClick,
   items,
-  selectedItems,
 }) => {
   const classes = useStyles();
 
@@ -56,7 +54,6 @@ const TypesList = ({
         onClick={onClick}
         dense
         value={item.typeId}
-        selected={selectedItems.some(({ typeId }) => typeId === item.typeId)}
         disableRipple
       >
         <FiberManualRecordIcon
@@ -82,11 +79,6 @@ export default TypesList;
 TypesList.propTypes = {
   onClick: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({
-    typeId: PropTypes.number,
-    typeName: PropTypes.string,
-    color: PropTypes.string,
-  })).isRequired,
-  selectedItems: PropTypes.arrayOf(PropTypes.shape({
     typeId: PropTypes.number,
     typeName: PropTypes.string,
     color: PropTypes.string,

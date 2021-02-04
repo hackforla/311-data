@@ -2,59 +2,74 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateRequestTypes } from '@reducers/filters';
+import { makeStyles } from '@material-ui/core/styles';
 
 import SelectorBox from '@components/common/SelectorBox';
 import SelectedTypes from './SelectedTypes';
 import TypesList from './TypesList';
 
+const useStyles = makeStyles(theme => ({
+  label: {
+    display: 'inline-block',
+    font: theme.typography.b2,
+    marginBottom: '10px',
+    color: theme.palette.secondary.light,
+  },
+}));
+
+const not = (a, b, key) => a.filter(itemA => !b.some(itemB => itemA[key] === itemB[key]));
+
 const RequestTypeSelector = ({
   requestTypes,
   updateTypesFilter,
-  outlined,
 }) => {
   const [types, setTypes] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [unselected, setUnselected] = useState([]);
+  const classes = useStyles();
 
   useEffect(() => {
     setTypes(requestTypes);
+    setUnselected(requestTypes);
   }, [requestTypes]);
 
   const handleDelete = e => {
     const deletedTypeId = Number(e.currentTarget.dataset.id);
-    const newSelectedTypes = selectedTypes.filter(({ typeId }) => typeId !== deletedTypeId);
-    setSelectedTypes(newSelectedTypes);
-    updateTypesFilter(newSelectedTypes);
+    const newSelected = selected.filter(({ typeId }) => typeId !== deletedTypeId);
+    const newUnselected = not(types, newSelected, 'typeId');
+    setSelected(newSelected);
+    setUnselected(newUnselected);
+    updateTypesFilter(newSelected);
   };
 
   const handleSelect = e => {
     const selectedTypeId = Number(e.currentTarget.value);
-    if (!selectedTypes.some(({ typeId }) => typeId === selectedTypeId)) {
+    if (!selected.some(({ typeId }) => typeId === selectedTypeId)) {
       const newSelectedType = types.find(({ typeId }) => typeId === selectedTypeId);
-      const newTypes = [...selectedTypes, newSelectedType];
-      setSelectedTypes(newTypes);
-      updateTypesFilter(newTypes);
+      const newSelected = [...selected, newSelectedType];
+      const newUnselected = not(types, newSelected, 'typeId');
+      setSelected(newSelected);
+      setUnselected(newUnselected);
+      updateTypesFilter(newSelected);
     }
   };
 
   return (
-    <div>
+    <>
+      <div className={classes.label}>Request Types</div>
       <SelectorBox>
         <SelectorBox.Display>
           { types && (
-            <SelectedTypes outlined={outlined} items={selectedTypes} onDelete={handleDelete} />
+            <SelectedTypes items={selected} onDelete={handleDelete} />
           )}
         </SelectorBox.Display>
         <SelectorBox.Collapse>
           { types && (
-            <TypesList
-              onClick={handleSelect}
-              items={types}
-              selectedItems={selectedTypes}
-            />
+            <TypesList items={unselected} onClick={handleSelect} />
           )}
         </SelectorBox.Collapse>
       </SelectorBox>
-    </div>
+    </>
   );
 };
 
