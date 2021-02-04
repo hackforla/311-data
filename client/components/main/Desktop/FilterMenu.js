@@ -51,10 +51,8 @@ const useStyles = makeStyles(theme => ({
       fontSize: 30,
     },
   },
-  subheader: {
-    font: theme.typography.b2,
-    marginBottom: '10px',
-    color: theme.palette.secondary.light,
+  selectorWrapper: {
+    marginBottom: theme.gaps.md,
   },
 }));
 
@@ -92,10 +90,12 @@ const FilterMenu = ({ toggleMenu }) => {
       />
       <Collapse in={expanded}>
         <CardContent>
-          <div className={classes.subheader}>Request Types</div>
-          <RequestTypeSelector outlined />
-          <RequestTypeSelector />
-          <DateSelector range />
+          <div className={classes.selectorWrapper}>
+            <RequestTypeSelector />
+          </div>
+          <div className={classes.selectorWrapper}>
+            <DateSelector range />
+          </div>
         </CardContent>
       </Collapse>
     </Card>
