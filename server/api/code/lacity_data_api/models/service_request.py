@@ -2,7 +2,7 @@ import datetime
 from typing import List
 
 from aiocache import cached, Cache, serializers
-from sqlalchemy import and_
+from sqlalchemy import sql, and_
 
 from . import db
 from .request_type import RequestType
@@ -18,11 +18,42 @@ class ServiceRequest(db.Model):
     created_date = db.Column(db.Date)
     closed_date = db.Column(db.Date)
     type_id = db.Column(db.SmallInteger, db.ForeignKey('request_types.type_id'))
-    council_id = db.Column(db.SmallInteger)
+    council_id = db.Column(db.SmallInteger, db.ForeignKey('councils.council_id'))
     region_id = db.Column(db.SmallInteger)
     address = db.Column(db.String)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+
+    @classmethod
+    async def get_request_reports(
+            cls,
+            start_date: datetime.date,
+            end_date: datetime.date
+    ):
+        from .council import Council  # noqa ... avoiding circular import
+
+        result = await (
+            db.select(
+                [
+                    RequestType.type_name,
+                    Council.council_name,
+                    ServiceRequest.created_date,
+                    db.func.count().label("counts")
+                ]
+            ).select_from(
+                ServiceRequest.join(RequestType).join(Council)
+            ).where(
+                sql.and_(
+                    ServiceRequest.created_date >= start_date,
+                    ServiceRequest.created_date <= end_date
+                )
+            ).group_by(
+                RequestType.type_name,
+                Council.council_name,
+                ServiceRequest.created_date
+            ).gino.all()
+        )
+        return result
 
 
 async def get_full_request(srnumber: str):
