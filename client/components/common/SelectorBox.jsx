@@ -18,25 +18,18 @@ const useStyles = makeStyles(theme => ({
   header: {
     backgroundColor: theme.palette.primary.dark,
     color: theme.palette.text.primary,
-    padding: 5,
-    paddingLeft: 10,
-    fontSize: '1rem',
+    padding: theme.gaps.xs,
+    paddingLeft: theme.gaps.sm,
     marginBottom: 2,
-    borderRadius: 5,
+    borderRadius: theme.borderRadius.sm,
   },
   content: {
-    borderRadius: 5,
+    borderRadius: theme.borderRadius.sm,
     backgroundColor: theme.palette.primary.dark,
-    padding: '10px 10px',
+    padding: theme.gaps.sm,
   },
   headerAction: {
     margin: 'auto',
-  },
-  headerTitle: {
-    marginLeft: 10,
-    fontSize: 20,
-    fontWeight: 600,
-    letterSpacing: '2px',
   },
   button: {
     padding: '0 0 0 5px',
@@ -74,7 +67,8 @@ const SelectorBox = ({
   };
 
   const renderDisplay = () => {
-    const element = children.find(child => child.type.name === 'Display');
+    const element = children.find(child => child.type.displayName === 'Display');
+
     return (
       <CardHeader
         disableTypography
@@ -103,10 +97,12 @@ const SelectorBox = ({
       />
     );
   };
+
   const renderCollapse = () => {
-    const element = children.find(child => child.type.name === 'Collapse');
+    const element = children.find(child => child.type.displayName === 'Collapse');
     return element;
   };
+
   return (
     <Context.Provider value={{ expanded, classes }}>
       <Card className={classes.card}>
@@ -135,6 +131,7 @@ function Display({ children }) {
   return <div>{children}</div>;
 }
 
+Display.displayName = "Display"
 Display.propTypes = {
   children: PropTypes.node,
 };
@@ -153,6 +150,7 @@ function Collapse({ children }) {
   );
 }
 
+Collapse.displayName = "Collapse"
 Collapse.propTypes = {
   children: PropTypes.node,
 };
