@@ -80,7 +80,6 @@ const renderSelectedDays = (dates, classes, range) => {
 const DatePicker = ({
   dates, onSelect, open, onToggle, range,
 }) => {
-  const [coord, setCoord] = useState({});
   const [selectedDays, setSelectedDays] = useState(() => dates);
   const [showCalendar, setShowCalendar] = useState(() => open);
   const classes = useStyles();
@@ -97,16 +96,17 @@ const DatePicker = ({
     setSelectedDays(() => dates);
   }, [dates]);
 
- const getCoordinates = () => {
+  const getCoordinates = () => {
     if (ref.current) {
       const { left, top, height } = ref.current.getClientRects()[0];
       const offsetFromSelectorDisplay = 2;
       return {
         left,
         top: top + height + offsetFromSelectorDisplay,
-      }
+      };
     }
-  }
+    return {}
+  };
 
   const toggleCalendar = () => {
     setShowCalendar(prevState => !prevState);
