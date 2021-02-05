@@ -105,7 +105,7 @@ const DatePicker = ({
         top: top + height + offsetFromSelectorDisplay,
       };
     }
-    return {}
+    return {};
   };
 
   const toggleCalendar = () => {

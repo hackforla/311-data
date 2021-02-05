@@ -131,7 +131,7 @@ function Display({ children }) {
   return <div>{children}</div>;
 }
 
-Display.displayName = "Display"
+Display.displayName = 'Display';
 Display.propTypes = {
   children: PropTypes.node,
 };
@@ -150,7 +150,7 @@ function Collapse({ children }) {
   );
 }
 
-Collapse.displayName = "Collapse"
+Collapse.displayName = 'Collapse';
 Collapse.propTypes = {
   children: PropTypes.node,
 };
