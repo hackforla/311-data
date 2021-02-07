@@ -7,7 +7,7 @@ from ..models import (
     request_type, service_request, council
 )
 from ..services import (
-    email, github, reports
+    email, github, visualizations
 )
 
 router = APIRouter()
@@ -92,7 +92,7 @@ async def get_pins(filter: Filter):
 
 @router.post("/visualizations")
 async def get_visualizations(filter: Filter):
-    result = await reports.get_visualization(
+    result = await visualizations.get_visualization(
         filter.startDate,
         filter.endDate,
         filter.requestTypes,
@@ -103,19 +103,19 @@ async def get_visualizations(filter: Filter):
 
 @router.post("/comparison/frequency")
 async def get_comparison_frequency(comp_filter: Comparison):
-    result = await reports.freq_comparison(**dict(comp_filter))
+    result = await visualizations.freq_comparison(**dict(comp_filter))
     return result
 
 
 @router.post("/comparison/timetoclose")
 async def get_comparison_time_to_close(comp_filter: Comparison):
-    result = await reports.ttc_comparison(**dict(comp_filter))
+    result = await visualizations.ttc_comparison(**dict(comp_filter))
     return result
 
 
 @router.post("/comparison/counts")
 async def get_comparison_counts(comp_filter: Comparison):
-    result = await reports.counts_comparison(**dict(comp_filter))
+    result = await visualizations.counts_comparison(**dict(comp_filter))
     return result
 
 
