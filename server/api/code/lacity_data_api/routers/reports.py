@@ -27,7 +27,7 @@ field_dict = {
     "type_name": RequestType.type_name
 }
 
-filter_regex = "^(\w+)([>=<]+)([\w-]+)$"
+filter_regex = "^(\w+)([>=<]+)([\w-]+)$"  # noqa
 
 
 @router.get("")
@@ -39,7 +39,10 @@ async def run_report(
     ),
     filter: Optional[List[str]] = Query(
         [f"created_date>={str(datetime.date.today() - datetime.timedelta(days=7))}"],
-        description="Field then operator then value (ex. created_date>=2021-01-01 or council_name=Arleta",
+        description="""
+            Field then operator then value
+            (ex. created_date>=2021-01-01 or council_name=Arleta
+            """,
         regex=filter_regex
     )
 ):
