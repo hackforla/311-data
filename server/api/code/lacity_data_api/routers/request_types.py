@@ -11,6 +11,12 @@ async def get_all_request_types():
     return await RequestType.query.gino.all()
 
 
+@router.get("/stats")
+async def get_request_stats():
+    result = await RequestType.get_type_stats()
+    return result
+
+
 @router.get("/{id}")
 async def get_request_type(id: int):
     result = await RequestType.get_or_404(id)
