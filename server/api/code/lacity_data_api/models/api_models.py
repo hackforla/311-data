@@ -127,7 +127,9 @@ class ServiceRequest(APIModel):
     request_id: int
     srnumber: str
     council_id: int
+    council_name: str
     type_id: int
+    type_name: str
     created_date: datetime.date
     closed_date: Optional[datetime.date]
     address: str
