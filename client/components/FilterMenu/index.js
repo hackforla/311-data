@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
-import DateSelector from '@components/DateSelector';
+import DateSelector from '@components/DateSelector/DateSelector';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -33,10 +33,13 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto',
   },
   headerTitle: {
+    ...theme.typography.h1,
     marginLeft: theme.gaps.xs,
-    fontSize: 20,
-    fontWeight: 600,
     letterSpacing: '2px',
+  },
+  headerContent: {
+    display: 'flex',
+    alignItems: 'center',
   },
   button: {
     padding: theme.gaps.xs,
@@ -63,13 +66,14 @@ const FilterMenu = ({ toggleMenu }) => {
           root: classes.header,
           action: classes.headerAction,
         }}
+        disableTypography
         title={(
-          <>
+          <div className={classes.headerContent}>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
-            <Typography className={classes.headerTitle} component="span">
+            <Typography className={classes.headerTitle} variant="h1">
               FILTERS
             </Typography>
-          </>
+          </div>
         )}
         action={(
           <IconButton
