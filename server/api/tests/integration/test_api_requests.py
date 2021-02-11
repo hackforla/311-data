@@ -17,28 +17,42 @@ def test_service_requests_end(client):
     url = "/requests?start_date=2020-01-01&end_date=2020-01-02"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 7574
+    assert len(response.json()) == 8208
 
 
 def test_service_requests_type(client):
     url = "/requests?start_date=2020-01-01&end_date=2020-01-02&type_id=2"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 297
+    assert len(response.json()) == 294
 
 
 def test_service_requests_council(client):
     url = "/requests?start_date=2020-01-01&end_date=2020-01-02&council_id=4"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 38
+    assert len(response.json()) == 55
 
 
 def test_service_requests_all(client):
     url = "/requests?start_date=2020-01-01&end_date=2020-01-02&type_id=2&council_id=4"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 3
+    assert len(response.json()) == 6
+
+
+def test_updated_service_requests(client):
+    url = "/requests/updated?start_date=2020-01-01&end_date=2020-01-02"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 9682
+
+
+def test_updated_service_requests_council(client):
+    url = "/requests/updated?start_date=2020-01-01&end_date=2020-01-02&council_id=4"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 64
 
 
 def test_service_request(client):
@@ -85,7 +99,7 @@ def test_service_request_pins(client):
             ]
         })
     assert response.status_code == 200
-    assert len(response.json()) == 36
+    assert len(response.json()) == 34
 
 
 def test_service_request_points(client):
