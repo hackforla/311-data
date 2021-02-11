@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   innerWrapper: {
-    paddingTop: '5px',
+    padding: '5px 0',
   },
   option: {
     fontFamily: 'Roboto',
@@ -41,26 +41,28 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TypesList = ({
-  onClick,
   items,
+  selected,
+  onClick,
 }) => {
   const classes = useStyles();
 
-  const renderItems = () => (
-    items.map(item => (
+  const renderOptions = ({ options, disabled = false }) => (
+    options.map(option => (
       <MenuItem
-        key={item.typeName}
+        key={option.typeName}
         className={classes.option}
         onClick={onClick}
         dense
-        value={item.typeId}
+        value={option.typeId}
         disableRipple
+        disabled={disabled}
       >
         <FiberManualRecordIcon
           className={classes.icon}
-          style={{ color: item.color }}
+          style={{ color: option.color }}
         />
-        {item.typeName}
+        {option.typeName}
       </MenuItem>
     ))
   );
@@ -68,7 +70,8 @@ const TypesList = ({
   return (
     <div className={classes.wrapper}>
       <div className={classes.innerWrapper}>
-        {renderItems()}
+        {renderOptions({ options: items, disabled: false })}
+        {renderOptions({ options: selected, disabled: true })}
       </div>
     </div>
   );
@@ -77,10 +80,15 @@ const TypesList = ({
 export default TypesList;
 
 TypesList.propTypes = {
-  onClick: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({
     typeId: PropTypes.number,
     typeName: PropTypes.string,
     color: PropTypes.string,
   })).isRequired,
+  selected: PropTypes.arrayOf(PropTypes.shape({
+    typeId: PropTypes.number,
+    typeName: PropTypes.string,
+    color: PropTypes.string,
+  })).isRequired,
+  onClick: PropTypes.func.isRequired,
 };

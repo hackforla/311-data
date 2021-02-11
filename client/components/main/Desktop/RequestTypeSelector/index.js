@@ -65,7 +65,11 @@ const RequestTypeSelector = ({
         </SelectorBox.Display>
         <SelectorBox.Collapse>
           { types && (
-            <TypesList items={unselected} onClick={handleSelect} />
+            <TypesList
+              items={unselected}
+              selected={selected}
+              onClick={handleSelect}
+            />
           )}
         </SelectorBox.Collapse>
       </SelectorBox>
