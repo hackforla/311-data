@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
-import DateSelector from '@components/DateSelector/DateSelector';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,12 +11,14 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import GearButton from '../GearButton';
+
+import GearButton from '@components/common/GearButton';
+import DateSelector from '@components/DateSelector/DateSelector';
+import RequestTypeSelector from '@components/main/Desktop/RequestTypeSelector';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    width: 300,
+    width: 325,
     backgroundColor: theme.palette.primary.main,
     position: 'absolute',
     left: 35,
@@ -35,6 +37,7 @@ const useStyles = makeStyles(theme => ({
   headerTitle: {
     ...theme.typography.h1,
     marginLeft: theme.gaps.xs,
+    fontWeight: 600,
     letterSpacing: '2px',
   },
   headerContent: {
@@ -52,6 +55,9 @@ const useStyles = makeStyles(theme => ({
       fontSize: 30,
     },
   },
+  selectorWrapper: {
+    marginBottom: theme.gaps.md,
+  },
 }));
 
 const FilterMenu = ({ toggleMenu }) => {
@@ -62,11 +68,12 @@ const FilterMenu = ({ toggleMenu }) => {
   return (
     <Card className={classes.card}>
       <CardHeader
+        disableTypography
         classes={{
           root: classes.header,
           action: classes.headerAction,
+          content: classes.headerContent,
         }}
-        disableTypography
         title={(
           <div className={classes.headerContent}>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
@@ -89,7 +96,12 @@ const FilterMenu = ({ toggleMenu }) => {
       />
       <Collapse in={expanded}>
         <CardContent>
-          <DateSelector range />
+          <div className={classes.selectorWrapper}>
+            <RequestTypeSelector />
+          </div>
+          <div className={classes.selectorWrapper}>
+            <DateSelector range />
+          </div>
         </CardContent>
       </Collapse>
     </Card>

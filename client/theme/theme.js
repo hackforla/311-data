@@ -3,8 +3,8 @@ import {
   colorPrimaryFocus,
   colorPrimaryDark,
   colorTextSecondaryDark,
-  colorSecondaryFocus,
   colorTextSecondaryLight,
+  colorSecondaryFocus,
 } from './colors';
 import gaps from './gaps';
 import borderRadius from './borderRadius';
@@ -24,6 +24,7 @@ const theme = createMuiTheme({
     selected: { primary: 'rgba(129, 123, 123, 0.3)' },
     secondary: {
       main: colorTextSecondaryDark,
+      light: colorTextSecondaryLight,
     },
     background: {
       default: '#1A1A1A',
