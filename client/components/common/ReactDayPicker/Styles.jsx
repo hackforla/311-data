@@ -50,7 +50,7 @@ const Styles = ({ range }) => {
       color: #a8a8a8;
     }
 
-    /* Day cel hover */
+    /* Day cell hover */
 
     .DayPicker:not(.DayPicker--interactionDisabled)
       .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
@@ -88,10 +88,10 @@ const Styles = ({ range }) => {
       left: 1.5rem;
     }
 
-    /*Rounded border with volume for selected start end days */
+    /*Rounded border with volume for selected start and end days */
 
-    .Range .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected:before,
-    .Range .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected:before {
+    .Range .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected:not(.DayPicker-Day--outside):before,
+    .Range .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected:not(.DayPicker-Day--outside):before {
       content: "";
       position: absolute;
       border: 2px solid white;
@@ -129,7 +129,7 @@ const Styles = ({ range }) => {
     }
 
 
-    /* Layout styling, Initial styling was table based. See doc:  */
+    /* Layout styling, Initial styling was table based. See docs:  */
     /* https://react-day-picker.js.org/examples/selected-range-enter  */ 
 
     .Range .DayPicker-Caption,
