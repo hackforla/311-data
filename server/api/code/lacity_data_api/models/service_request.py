@@ -124,18 +124,21 @@ async def get_filtered_requests(
         type_ids: List[int] = None,
         council_ids: List[int] = None
 ):
+    from .council import Council  # noqa ... avoiding circular import
 
     where_text = f"created_date >= '{start_date}'"
     if (end_date):
         where_text += f" AND created_date <= '{end_date}'"
     if (type_ids):
-        where_text += f" AND type_id IN ({', '.join([str(i) for i in type_ids])})"
+        where_text += f" AND service_requests.type_id IN ({', '.join([str(i) for i in type_ids])})"  # noqa
     if (council_ids):
-        where_text += f" AND council_id IN ({', '.join([str(i) for i in council_ids])})"
+        where_text += f" AND service_requests.council_id IN ({', '.join([str(i) for i in council_ids])})"  # noqa
 
     result = await (
         db.select(
-            ServiceRequest
+            [ServiceRequest, RequestType.type_name, Council.council_name]
+        ).select_from(
+            ServiceRequest.join(RequestType).join(Council)
         ).where(
             text(where_text)
         ).order_by(
