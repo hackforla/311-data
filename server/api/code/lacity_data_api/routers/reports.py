@@ -30,6 +30,7 @@ field_dict = {
 filter_regex = "^(\w+)([>=<]+)([\w-]+)$"  # noqa
 
 
+# TODO: add created_dow option
 @router.get("")
 async def run_report(
     field: Optional[List[str]] = Query(

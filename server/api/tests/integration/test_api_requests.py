@@ -3,7 +3,42 @@ def test_service_requests(client):
     url = "/requests"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 100
+    assert len(response.json()) == 0
+
+
+def test_service_requests_start(client):
+    url = "/requests?start_date=2020-01-01"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 9877
+
+
+def test_service_requests_end(client):
+    url = "/requests?start_date=2020-01-01&end_date=2020-01-02"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 7574
+
+
+def test_service_requests_type(client):
+    url = "/requests?start_date=2020-01-01&end_date=2020-01-02&type_id=2"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 297
+
+
+def test_service_requests_council(client):
+    url = "/requests?start_date=2020-01-01&end_date=2020-01-02&council_id=4"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 38
+
+
+def test_service_requests_all(client):
+    url = "/requests?start_date=2020-01-01&end_date=2020-01-02&type_id=2&council_id=4"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 3
 
 
 def test_service_request(client):

@@ -1,13 +1,11 @@
 import datetime
 from typing import List
 
-from aiocache import cached, Cache, serializers
-from sqlalchemy import sql, and_
+from aiocache import cached
+from sqlalchemy import sql, and_, desc, text
 
 from . import db
 from .request_type import RequestType
-from ..config import CACHE_ENDPOINT
-from ..services import utilities
 
 
 class ServiceRequest(db.Model):
@@ -51,6 +49,21 @@ class ServiceRequest(db.Model):
                 RequestType.type_name,
                 Council.council_name,
                 ServiceRequest.created_date
+            ).gino.all()
+        )
+        return result
+
+    @classmethod
+    @cached(alias="default")
+    async def get_recent_requests(cls, start_date: datetime.date):
+
+        result = await (
+            db.select(
+                ServiceRequest
+            ).where(
+                ServiceRequest.created_date >= start_date
+            ).order_by(
+                desc(ServiceRequest.created_date)
             ).gino.all()
         )
         return result
@@ -105,34 +118,28 @@ async def get_open_request_counts():
     return result
 
 
-@cached(cache=Cache.REDIS,
-        endpoint=CACHE_ENDPOINT,
-        namespace="filtered",
-        serializer=serializers.PickleSerializer(),
-        key_builder=utilities.cache_key
-        )
 async def get_filtered_requests(
         start_date: datetime.date,
-        end_date: datetime.date,
-        type_ids: List[int],
-        council_ids: List[int]
+        end_date: datetime.date = None,
+        type_ids: List[int] = None,
+        council_ids: List[int] = None
 ):
+
+    where_text = f"created_date >= '{start_date}'"
+    if (end_date):
+        where_text += f" AND created_date <= '{end_date}'"
+    if (type_ids):
+        where_text += f" AND type_id IN ({', '.join([str(i) for i in type_ids])})"
+    if (council_ids):
+        where_text += f" AND council_id IN ({', '.join([str(i) for i in council_ids])})"
+
     result = await (
         db.select(
-            [
-                ServiceRequest.request_id,
-                ServiceRequest.srnumber,
-                ServiceRequest.type_id,
-                ServiceRequest.latitude,
-                ServiceRequest.longitude
-            ]
+            ServiceRequest
         ).where(
-            and_(
-                ServiceRequest.created_date >= start_date,
-                ServiceRequest.created_date <= end_date,
-                ServiceRequest.type_id.in_(type_ids),
-                ServiceRequest.council_id.in_(council_ids)
-            )
+            text(where_text)
+        ).order_by(
+            desc(ServiceRequest.created_date)
         ).gino.all()
     )
     return result
