@@ -14,6 +14,41 @@ class RequestType(db.Model):
     color = db.Column(db.String)
     data_code = db.Column(db.String)
 
+    @classmethod
+    @cached(cache=Cache.REDIS,
+            endpoint=CACHE_ENDPOINT,
+            namespace="types",
+            key="stats",
+            serializer=serializers.PickleSerializer(),
+            )
+    async def get_type_stats(cls):
+
+        query = db.text("""
+            SELECT
+                service_requests.type_id,
+                request_types.type_name,
+                min(closed_date - created_date),
+                percentile_disc(0.25) within group
+                    (order by closed_date - created_date) as q1,
+                percentile_disc(0.5) within group
+                    (order by closed_date - created_date) as median,
+                percentile_disc(0.75) within group
+                    (order by closed_date - created_date) as q3,
+                max(closed_date - created_date)
+            FROM
+                service_requests
+            JOIN
+                request_types ON request_types.type_id = service_requests.type_id
+            WHERE
+                service_requests.closed_date <= CURRENT_DATE AND
+                service_requests.closed_date >= service_requests.created_date
+            GROUP BY
+                service_requests.type_id, request_types.type_name
+        """)
+
+        result = await db.all(query)
+        return result
+
 
 @cached(cache=Cache.REDIS,
         endpoint=CACHE_ENDPOINT,

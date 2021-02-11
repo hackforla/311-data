@@ -10,9 +10,10 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
-import GearButton from '@components/common/GearButton';
+import Typography from '@material-ui/core/Typography';
 
-import DateSelector from '@components/DateSelector';
+import GearButton from '@components/common/GearButton';
+import DateSelector from '@components/DateSelector/DateSelector';
 import RequestTypeSelector from '@components/main/Desktop/RequestTypeSelector';
 
 const useStyles = makeStyles(theme => ({
@@ -74,13 +75,12 @@ const FilterMenu = ({ toggleMenu }) => {
           content: classes.headerContent,
         }}
         title={(
-          <>
+          <div className={classes.headerContent}>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
-            {/* <Typography className={classes.headerTitle} component="span">
+            <Typography className={classes.headerTitle} variant="h1">
               FILTERS
-            </Typography> */}
-            <span className={classes.headerTitle}>FILTERS</span>
-          </>
+            </Typography>
+          </div>
         )}
         action={(
           <IconButton

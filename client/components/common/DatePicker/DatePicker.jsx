@@ -80,7 +80,6 @@ const renderSelectedDays = (dates, classes, range) => {
 const DatePicker = ({
   dates, onSelect, open, onToggle, range,
 }) => {
-  const [coord, setCoord] = useState({});
   const [selectedDays, setSelectedDays] = useState(() => dates);
   const [showCalendar, setShowCalendar] = useState(() => open);
   const classes = useStyles();
@@ -97,17 +96,17 @@ const DatePicker = ({
     setSelectedDays(() => dates);
   }, [dates]);
 
-  useEffect(() => {
+  const getCoordinates = () => {
     if (ref.current) {
       const { left, top, height } = ref.current.getClientRects()[0];
       const offsetFromSelectorDisplay = 2;
-
-      setCoord(() => ({
+      return {
         left,
         top: top + height + offsetFromSelectorDisplay,
-      }));
+      };
     }
-  }, []);
+    return {};
+  };
 
   const toggleCalendar = () => {
     setShowCalendar(prevState => !prevState);
@@ -131,7 +130,7 @@ const DatePicker = ({
       >
         <CalendarIcon />
       </IconButton>
-      <div style={coord} className={classes.selectorPopUp}>
+      <div style={getCoordinates()} className={classes.selectorPopUp}>
         {showCalendar ? (
           <ReactDayPicker
             range={range}

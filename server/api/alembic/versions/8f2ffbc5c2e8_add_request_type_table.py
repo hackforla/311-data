@@ -50,6 +50,7 @@ REQUESTS_VIEW = """
         CREATE UNIQUE INDEX ON service_requests(request_id);
         CREATE UNIQUE INDEX ON service_requests(srnumber);
         CREATE INDEX ON service_requests(created_date);
+        CREATE INDEX ON service_requests(closed_date);
         CREATE INDEX ON service_requests(type_id);
         CREATE INDEX ON service_requests(council_id);
         CREATE INDEX ON service_requests(region_id);

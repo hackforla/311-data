@@ -16,7 +16,7 @@ from sqlalchemy import Column
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.functions import now
 
-SEED_FILE = join(dirname(dirname(__file__)), 'seeds/requests.csv')
+SEED_FILE = join(dirname(dirname(__file__)), 'seeds/test_requests.csv')
 
 # revision identifiers, used by Alembic.
 revision = '72973ee94bac'
