@@ -44,7 +44,7 @@ def test_map_pins(client):
         }
     )
     assert response.status_code == 200
-    assert len(response.json()) == 621
+    assert len(response.json()) == 662
 
 
 def test_open_requests(client):
