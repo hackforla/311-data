@@ -122,13 +122,22 @@ async def get_filtered_requests(
         start_date: datetime.date,
         end_date: datetime.date = None,
         type_ids: List[int] = None,
-        council_ids: List[int] = None
+        council_ids: List[int] = None,
+        include_updated: bool = False
 ):
     from .council import Council  # noqa ... avoiding circular import
 
-    where_text = f"created_date >= '{start_date}'"
+    if include_updated:
+        where_text = f"(created_date >= '{start_date}' OR closed_date >= '{start_date}')"  # noqa
+    else:
+        where_text = f"created_date >= '{start_date}'"
+
     if (end_date):
-        where_text += f" AND created_date <= '{end_date}'"
+        if include_updated:
+            where_text = f"(created_date >= '{end_date}' OR closed_date >= '{end_date}')"  # noqa
+        else:
+            where_text = f"created_date >= '{end_date}'"
+
     if (type_ids):
         where_text += f" AND service_requests.type_id IN ({', '.join([str(i) for i in type_ids])})"  # noqa
     if (council_ids):
