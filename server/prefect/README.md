@@ -66,7 +66,7 @@ The flow supports sending a final status notification to Slack. To configure thi
 PREFECT__CONTEXT__SECRETS__SLACK_HOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-## Developing the Pipeline 
+## Developing the Pipeline
 
 ### Running the app locally
 

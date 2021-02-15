@@ -4,6 +4,8 @@ The easiest way to get up and running with the 311 API is to build and deploy it
 
 *Prerequisite:* Docker is the only required dependency for running the server. You can find installation instructions [here](https://docs.docker.com/compose/install/).
 
+![Releases](images/docker.png)
+
 ## Step 1: Install the project and Docker containers
 
 Download the project from GitHub and build the Docker containers.
@@ -11,6 +13,7 @@ Download the project from GitHub and build the Docker containers.
 ```bash
 git clone https://github.com/hackforla/311-data.git    # get the project
 cd 311-data/server                                     # go to the server directory
+cp .env.example .env                                   # make loacl copy of the ENV file
 docker-compose up                                      # build and start the containers
 ```
 
@@ -20,14 +23,6 @@ Running ```docker container ls``` should now show 4 containers:
 2. redis: a redis cache
 3. api: the 311 Data API
 4. prefect: the data loading tool
-
-## Step 2: Configure your environment
-
-Make a copy of the example ```.env``` file as follows.
-
-```bash
-cp .env.example .env
-```
 
 ## Step 3: Build and seed your local database
 
@@ -58,7 +53,7 @@ The Prefect data loading task will run in interactive mode printing out status i
 "Loading Socrata data to Postgres" loaded [2,560,585] records, updated [0] records, and finished with message "All reference tasks succeeded."
 ```
 
-## Step 4: Browse the API documentation
+## Step 3: Browse the API documentation
 
 The OpenAPI documentation will appear here: http://localhost:5000/docs
 
