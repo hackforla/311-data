@@ -2,11 +2,6 @@
 
 Welcome! This readme assumes you have already listened to the 311-data pitch, and gone through the basic onboarding. The following will be more geared towards the programming side of 311-data and getting your development environment setup. If you run into any problems, please submit a new issue.
 
-## System architecture
-
-Here is a high-level look at our architecture:
-![System diagram](images/data-arch.png)
-
 ## Client Development
 
 For JavaScript developers looking to contribute to the 311 Data client, start by reading [how to set up a local client environment](../client/README.md)
@@ -14,6 +9,11 @@ For JavaScript developers looking to contribute to the 311 Data client, start by
 ## API Server Development
 
 For Python developers looking to contribute to the 311 Data server, start by reading [how to set up a local API server](./server_setup.md)
+
+## Technology and system architecture
+
+Here is a high-level look at our architecture:
+![System diagram](images/data-arch.png)
 
 ## Branching and Release Process
 
@@ -50,20 +50,3 @@ CI Is driven by tests, they help instill confidence in pull requests because a d
 - One for the "null path": Test with empty params/nothing/emptiness
 
 Our front end tests are run through Cypress and our backend tests are run through Pytest.
-
-## React
-
-The front end is written in React/Redux as the application is a reporting dashboard with several visualizations driven by sets of filters. If you are unfamiliar, we recommend starting [here](https://hackernoon.com/getting-started-with-react-redux-1baae4dcb99b).
-
-## Socrata API
-
-We use an api called Socrata to pull 311-related data from `data.lacity.org`. The cool thing about this api is that you can send sql requests, including aggregates. The even cooler thing is that we can ask for a substantial amount of information by using the `$limit` parameter.
-An example of this request would look like this:
-
-```bash
-https://data.lacity.org/resource/pvft-t768.csv
-?$select=Address,count(*)+AS+CallVolume
-&$where=date_extract_m(CreatedDate)+between+1+and+12+and+RequestType=%27Bulky%20Items%27+and+NCName=%27ARLETA%20NC%27
-&$group=Address&$order=CallVolume%20DESC
-&$limit=50000000
-```

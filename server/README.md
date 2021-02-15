@@ -42,10 +42,8 @@ For more information about the deployment process look at the [Terraform README]
 
 ## More Information
 
-- [How to set up a local API server](../docs/server_setup.md)
-- [Infrastructure](terraform/README.md)
+- [Local API server setup](../docs/server_setup.md)
+- [Infrastructure with Terraform](terraform/README.md)
 - [Nightly data loading](prefect/README.md)
-- [Data fields](../docs/data_fields.md)
-- [Server Setup](../server_setup.md)
-- [Upgrades](../upgrades.md)
-- [Useful commands](../docs/useful_commands.md)
+- [Data loading and fields](../docs/data_loading.md)
+- [Releases and upgrades](../upgrades.md)

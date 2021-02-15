@@ -43,11 +43,9 @@ Empowering Los Angeles neighborhood councils to analyze initiatives using data c
 
 ## Joining the 311 Data project
 
-We are looking for volunteers!
+We are looking for volunteers! Those with non-technical skills are welcome as well.
 
-311 Data is part of [Hack for LA](https://www.hackforla.org/) where you can sign up to join weekly onboarding meetings.
-
-You can find more information about the current project team [here](https://www.hackforla.org/projects/311-data).
+311 Data is part of [Hack for LA](https://www.hackforla.org/) where you can sign up to join weekly onboarding meetings. You can find more information about the current project team [here](https://www.hackforla.org/projects/311-data).
 
 ### To Sign Up
 
@@ -56,6 +54,6 @@ You can find more information about the current project team [here](https://www.
 
 ## More Information about the 311 Data project
 
-* [Background resources](docs/background.md)
+* [Project background and resources](docs/background.md)
 * [Contributing to the project](docs/contributing.md)
 * [Data loading and analysis](docs/data_loading.md)
