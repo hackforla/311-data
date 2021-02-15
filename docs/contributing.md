@@ -2,6 +2,11 @@
 
 Welcome! This readme assumes you have already listened to the 311-data pitch, and gone through the basic onboarding. The following will be more geared towards the programming side of 311-data and getting your development environment setup. If you run into any problems, please submit a new issue.
 
+## System architecture
+
+Here is a high-level look at our architecture:
+![System diagram](images/data-arch.png)
+
 ## Client Development
 
 For JavaScript developers looking to contribute to the 311 Data client, start by reading [how to set up a local client environment](../client/README.md)
@@ -45,11 +50,6 @@ CI Is driven by tests, they help instill confidence in pull requests because a d
 - One for the "null path": Test with empty params/nothing/emptiness
 
 Our front end tests are run through Cypress and our backend tests are run through Pytest.
-
-## System architecture
-
-Here is our rough draft of our architecture diagram:
-![System diagram](images/data-arch.png)
 
 ## React
 

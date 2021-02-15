@@ -59,5 +59,3 @@ You can find more information about the current project team [here](https://www.
 * [Background resources](docs/background.md)
 * [Contributing to the project](docs/contributing.md)
 * [Data loading and analysis](docs/data_loading.md)
-* [Server setup](docs/server_setup.md)
-* [Upgrades](docs/upgrades.md)

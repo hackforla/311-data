@@ -155,3 +155,4 @@ While the 311 data sources are the primary ones, we also load geographic data fo
 
 * [Neighborhood Geographic data](https://geohub.lacity.org/datasets/neighborhood-council-boundaries-2018/data?geometry=-121.842%2C33.513%2C-115.019%2C35.101)
 * [Neighborhood Demographic data](https://geohub.lacity.org/datasets/demographics-of-neighborhood-councils?geometry=-118.566%2C34.016%2C-118.140%2C34.116)
+* [Citywide Crime data](https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8)
