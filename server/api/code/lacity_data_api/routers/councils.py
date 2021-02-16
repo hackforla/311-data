@@ -1,26 +1,26 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
-from ..models.api_models import CouncilList, TypeCountList
+from ..models import api_models as schemas
 from ..models.council import Council, get_open_request_counts
 
 router = APIRouter()
 
 
-@router.get("", response_model=CouncilList)
+@router.get("", response_model=schemas.CouncilList)
 async def get_all_councils():
-    result = await Council.query.gino.all()
+    result = await Council.all()
     return result
 
 
-@router.get("/{id}")
+@router.get("/{id}", response_model=schemas.Council)
 async def get_council(id: int):
-    result = await Council.get_or_404(id)
-    return result.to_dict()
+    result = await Council.one(id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return result
 
 
-# TODO: add test
-@router.get("/{id}/counts/open/types", response_model=TypeCountList)
+@router.get("/{id}/counts/open/types", response_model=schemas.TypeCountList)
 async def get_council_open_requests(id: int):
     result = await get_open_request_counts(id)
     return result
-    # return dict((row.type_name, row.type_count) for row in result)

@@ -4,6 +4,7 @@ from sqlalchemy import and_
 
 from . import db
 from .service_request import ServiceRequest
+from .region import Region
 from .request_type import RequestType
 from ..config import CACHE_ENDPOINT
 
@@ -13,10 +14,43 @@ class Council(db.Model):
 
     council_id = db.Column(db.SmallInteger, primary_key=True)
     council_name = db.Column(db.String)
-    waddress = db.Column(db.String)
-    region_id = db.Column(db.SmallInteger)
+    website = db.Column(db.String)
+    twitter = db.Column(db.String)
+    region_id = db.Column(db.SmallInteger, db.ForeignKey('regions.region_id'))
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+
+    @classmethod
+    async def all(cls):
+        result = await (
+            db.select(
+                [
+                    Council,
+                    Region.region_name
+                ]
+            ).select_from(
+                Council.join(Region)
+            ).where(
+                Council.council_id > 0
+            ).gino.all()
+        )
+        return result
+
+    @classmethod
+    async def one(cls, id: int):
+        result = await (
+            db.select(
+                [
+                    Council,
+                    Region.region_name
+                ]
+            ).select_from(
+                Council.join(Region)
+            ).where(
+                Council.council_id == id
+            ).gino.first()
+        )
+        return result
 
 
 @cached(cache=Cache.REDIS,

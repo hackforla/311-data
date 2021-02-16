@@ -98,6 +98,7 @@ class Set:
         assert v in ['cc', 'nc'], 'district must be either "nc" or "cc".'
         return v
 
+    @classmethod
     def __getitem__(cls, item):
         return getattr(cls, item)
 
@@ -179,6 +180,7 @@ class Council(APIModel):
     council_name: str
     waddress: str
     region_id: int
+    region_name: str
     latitude: float
     longitude: float
 
