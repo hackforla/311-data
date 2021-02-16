@@ -131,6 +131,8 @@ class ServiceRequest(APIModel):
     council_name: str
     type_id: int
     type_name: str
+    agency_id: int
+    agency_name: str
     created_date: datetime.date
     closed_date: Optional[datetime.date]
     address: str
@@ -153,12 +155,27 @@ class TypeCount(APIModel):
 class RequestType(APIModel):
     type_id: int
     type_name: str
+    agency_id: int
+    agency_name: Optional[str]
     color: str
 
     class Config:
         orm_mode = True
         schema_extra = {
             "description": "Categories of service requests"
+        }
+
+
+class Agency(APIModel):
+    agency_id: int
+    agency_name: str
+    website: str
+    twitter: str
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "description": "Agencies which address requests"
         }
 
 
@@ -178,7 +195,8 @@ class Region(APIModel):
 class Council(APIModel):
     council_id: int
     council_name: str
-    waddress: str
+    website: Optional[str]
+    twitter: Optional[str]
     region_id: int
     region_name: str
     latitude: float
@@ -191,8 +209,9 @@ class Council(APIModel):
         }
 
 
-CouncilList = List[Council]
+AgencyList = List[Agency]
 RegionList = List[Region]
+CouncilList = List[Council]
 RequestTypeList = List[RequestType]
 ServiceRequestList = List[ServiceRequest]
 ClusterList = List[Cluster]

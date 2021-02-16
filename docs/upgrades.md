@@ -2,6 +2,8 @@
 
 This document is a quick introduction to how upgrades of the API are made.
 
+![Releases](images/releases.png)
+
 ## Standard upgrades
 
 New code is packaged by a GitHub action and deployed to Docker Hub as a public image. Then an AWS API call is made to force the cluster to recycle and pull down the new image ```aws ecs update-service```.

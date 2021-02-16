@@ -2,15 +2,9 @@
 
 [![Build and Test Action Status](https://github.com/hackforla/311-data/workflows/Build%20and%20Test/badge.svg)](https://github.com/hackforla/311-data/actions)
 
-- [How to set up a local API server](docs/server_setup.md)
-- [Infrastructure](terraform/README.md)
-- [Nightly data loading](prefect/README.md)
-- [Data fiels](prefect/data_fields.md)
-- [Server Setup](docs/server_setup.md)
-- [Upgrades](docs/upgrades.md)
-- [Useful commands](docs/useful_commands.md)
-
 ## Server Tech Stack
+
+The 311 Data Server is comprised of several different components deployed in containers to the cloud using Terraform.
 
 - [FastAPI](https://fastapi.tiangolo.com/) and [Starlette](https://www.starlette.io/): tools to provide a fast, asynchronous stack for building RESTful APIs in Python
 - [Gino](https://python-gino.org/) and [SQL Alchemy](https://www.sqlalchemy.org/): tools for accessing and modifying the database
@@ -24,13 +18,32 @@ The API is intended to be modern, simple, performant, secure, open-source and we
 
 ## Data Loading
 
-Data comes from the LA 311 system by way of the Socrata app.
-https://data.lacity.com
-https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz2f
+Data comes from the LA 311 system by way of the Socrata app using a Prefect workflow that is run nightly. Prefect is deployed in its own container and is run as a nightly Scheduled Task.
+
+For more information about the data loading process look at the [Prefect README](prefect/README.md).
 
 ## Testing
 
-- pytest
-- postman
+Testing is done locally and as a CI process run using GitHub Actions.
 
-To get code coverage reports run ```pytest --cov=code```
+There are several testing tools used in the project:
+
+- pytest: unit and integration tests
+- postman: REST API integration tests
+- locust: load tests
+
+We currently have 90+% coverage on the API. To get code coverage reports run ```pytest --cov=code```
+
+## Deployment
+
+The API is deployed to AWS using Terraform. API containers are hosted in ECS with data served from an RDS instance.
+
+For more information about the deployment process look at the [Terraform README](terraform/README.md).
+
+## More Information
+
+- [Local API server setup](../docs/server_setup.md)
+- [Infrastructure with Terraform](terraform/README.md)
+- [Nightly data loading](prefect/README.md)
+- [Data loading and fields](../docs/data_loading.md)
+- [Releases and upgrades](../upgrades.md)

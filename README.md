@@ -1,72 +1,59 @@
-# 311-data
-Empower Neighborhood Associations to Improve analysis of their initiatives using 311 data
+# The 311 Data project
 
-## Frontend Technologies
-  * Javascript (React)
-  * Redux
-  * Bulma
-  * HTML/CSS
+Empowering Los Angeles neighborhood councils to analyze initiatives using data collected from the city 311 system.
 
-## Backend Technologies
+![311 Screenshot](docs/images/screenshot.png)
 
-  * FastAPI: asynchronous Python REST API
-  * Redis: key-value caching
-  * PostgreSql: persistant SQL database
-  * Prefect: data ingestion pipeline in Python
-  * Docker: containerized servers hosted in AWS
+## Project Technology
 
-## Data Analysis Technologies
-  * Python
-  * Pandas
-  * Numpy
-  * PostgreSql
-  * Socrata API
+### Frontend
 
-## UI/UX Technologies
-  * Figma
-  * Google Drive
-  * Adobe CC
-  * Miro
+* Javascript (React)
+* Redux
+* Bulma
+* HTML/CSS
 
-## Management Philosophies:
-  * Open Source
-  * Kanban
-  
-## To Sign Up:
-  * Follow the steps [here](https://github.com/hackforla/311-data/wiki/Joining-the-311-Team)  
-  * Don't forget to [enable two factor authentication](https://www.hackforla.org/guide-pages/2FA.html)  
+[See here](client/README.md) for more information about 311 Data client technology.
 
+### Server/API
 
-## 🎉🎉 After Signing up, Engineers start [here](https://github.com/hackforla/311-data/blob/master/GETTING_STARTED.md)!!!! 🎉🎉🎉
+* FastAPI: asynchronous Python REST API
+* Redis: key-value caching
+* PostgreSql: persistent SQL database
+* Prefect: data ingestion pipeline in Python
+* Docker: containerized servers hosted in AWS
 
-## Resources
-[Empower LA - HfLA Initial Meeting](https://docs.google.com/document/d/19jrYWjq_FfQbuqTfnwJFruWEo9pPF0R0qh4njDZsuzM)
+[See here](server/README.md) for more information about 311 Data server technology.
 
-[Empower LA - HfLA Initial Questions](https://docs.google.com/document/d/14WRgY_vjqG0FFLUPrB3Z4iARfm7cAsN3w0gjqdtoyjw/)
+### Data Analysis
 
-[Raw 311 data by year](https://data.lacity.org/browse?category=A+Well+Run+City&limitTo=filters&q=%22MyLA311+Service+Request+Data+201%22&sortBy=relevance)
+* Python
+* Pandas/Numpy/Matplotlib
+* PostgreSql
+* Socrata API
 
-## Existing 311 visualization tools:
-[Empower LA’s Demographics BI tool](https://empowerla.org/demographics-BI/)
+[See here](docs/data_loading.md) for more information about 311 Data project data analysis.
 
-[Mayor’s Dashboard](http://dashboard.lamayor.org/)
+### UI/UX
 
-[NYC 311 Data](http://people.ischool.berkeley.edu/~samuel.goodgame/311/)
+* Figma
+* Google Drive
+* Adobe CC
+* Miro
 
-[Neighborhood Council Funding System Dashboard](https://cityclerk.lacity.org/NCFundPortal/Dashboard.html)
+## Joining the 311 Data project
 
-## People involved in the project
-311-Data Roster: [Roster](https://docs.google.com/spreadsheets/d/1CZHH_91zTb9avfsJG9MtakCqbhLWQzTyTtQVNDqKqyM/edit#gid=0)
+We are looking for volunteers! Those with non-technical skills are welcome as well.
 
-Facilitator to Stakeholder: [EmpowerLA](http://empowerla.org/)
+311 Data is part of [Hack for LA](https://www.hackforla.org/) where you can sign up to join weekly onboarding meetings. You can find more information about the current project team [here](https://www.hackforla.org/projects/311-data).
 
-## Agendas
-[311-Data Agendas](https://docs.google.com/document/d/1Dr-AiOEBOGKDrAm7O2fxoZul2z5uSXH032QRzcUCYd0/edit)
+### To Sign Up
 
-## Working Documents
-[Diff Dashboard](https://docs.google.com/document/d/1CNEJ1yAa41WbjMLYDB-UuTUjnd51X5tTJ9kWVQlH9NM/edit)
+* Go to the [Getting Started](https://www.hackforla.org/getting-started) page on the Hack for LA website and learn about the projects and onboarding process.
+* Sign up for an onboarding session on the [Hack for LA Meetup](https://www.meetup.com/hackforla/events) page. These session happen every week!
 
-## Deliverables
-[Email to NC Members](https://docs.google.com/document/d/12JQ46SVsyywmdwEFPpE-Q1xFHdXNIP-AnbSaPKs0Kvk/edit#)
+## More Information about the 311 Data project
 
-[NC initial survey](https://drive.google.com/open?id=1N_cY23y4u04oHOlkyQId-K3k11J23lUGwMljmNHpmMk)
+* [Project background and resources](docs/background.md)
+* [Contributing to the project](docs/contributing.md)
+* [Data loading and analysis](docs/data_loading.md)

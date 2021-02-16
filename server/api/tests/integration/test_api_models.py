@@ -10,7 +10,7 @@ def test_councils(client):
     url = "/councils"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 99
+    assert len(response.json()) == 100
 
 
 def test_council(client):
@@ -45,11 +45,25 @@ def test_types(client):
     url = "/types"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 11
+    assert len(response.json()) == 12
 
 
 def test_type(client):
     url = "/types/1"
     response = client.get(url)
     assert response.status_code == 200
-    assert response.json()["type_name"] == "Animal Remains"
+    assert response.json()["typeName"] == "Graffiti"
+
+
+def test_agencies(client):
+    url = "/agencies"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 12
+
+
+def test_agency(client):
+    url = "/agencies/1"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert response.json()["agency_name"] == "Street Lighting Bureau"

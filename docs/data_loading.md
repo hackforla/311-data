@@ -1,15 +1,14 @@
-# Data Fields
+# Data Loading
 
-## Notes about 311 Data
+Data is pulled nightly from the [LA Open Data](https://data.lacity.org/) website using a [Prefect](https://www.prefect.io/) workflow. The workflow loads new records and updates any that have been modified. Prefect tasks then update the API cache and reloads the dashboards.
 
-1. Not all requests are associated with a neighborhood council. There are some areas such as Pacific Palisades, Brentwood, and parts of South LA that are not covered by councils. Therefore there will always be more requests at the city-wide level than the sum of the council.
-2. The Report Water Waste request type is currently being ignored.
+![Data Loading Process](images/data-loading.png)
 
-## TABLE: requests
+## LA Open Data Format
 
-Contains 311 Service Request data for 2019 and 2020.
+The service request data from the LA Open Data system is divided up into different data source for each year but they all follow essentially the same format.
 
-Source is here and includes data dictionary:
+A sample data source is here and includes the data dictionary:
 https://data.lacity.org/A-Well-Run-City/MyLA311-Service-Request-Data-2020/rq3b-xjk8
 
 Fields that are pulled into the 311 Data system a listed below.
@@ -143,3 +142,17 @@ Fields that are pulled into the 311 Data system a listed below.
 ### latitude (double)
 
 ### longitude (double)
+
+## Notes about 311 Data
+
+1. Data is loaded with very little transformation. It is formatted for reporting by joining with clean dimensions.
+2. Not all requests are associated with a neighborhood council. There are some areas such as Pacific Palisades, Brentwood, and parts of South LA that are not covered by councils. Therefore there will always be more requests at the city-wide level than the sum of the council.
+3. The Report Water Waste request type is currently being ignored.
+
+## Other Open Data sources
+
+While the 311 data sources are the primary ones, we also load geographic data for the councils. Demographic and safety data are also available.
+
+* [Neighborhood Geographic data](https://geohub.lacity.org/datasets/neighborhood-council-boundaries-2018/data?geometry=-121.842%2C33.513%2C-115.019%2C35.101)
+* [Neighborhood Demographic data](https://geohub.lacity.org/datasets/demographics-of-neighborhood-councils?geometry=-118.566%2C34.016%2C-118.140%2C34.116)
+* [Citywide Crime data](https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8)
