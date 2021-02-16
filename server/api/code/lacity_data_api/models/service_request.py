@@ -123,6 +123,17 @@ async def get_open_requests() -> List[ServiceRequest]:
     return result
 
 
+async def get_id_from_srnumber(srnumber: str):
+    result = await (
+        db.select(
+            ServiceRequest
+        ).where(
+            ServiceRequest.srnumber == srnumber
+        ).gino.scalar()
+    )
+    return result
+
+
 @cached(alias="default")
 async def get_open_request_counts():
     result = await (

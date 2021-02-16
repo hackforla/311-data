@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 
 from ..models import api_models as schemas
 from ..models.service_request import (
-    ServiceRequest, get_open_request_counts, get_open_requests, get_filtered_requests
+    ServiceRequest, get_id_from_srnumber, get_open_request_counts, get_open_requests, get_filtered_requests
 )
 
 router = APIRouter()
@@ -106,6 +106,15 @@ async def get_filtered_service_request_points(filters: schemas.Filters):
 
 @router.get("/{id}", response_model=schemas.ServiceRequest)
 async def get_service_request(id: int):
+    result = await ServiceRequest.one(id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return result
+
+
+@router.get("/srnumber/{srnumber}", response_model=schemas.ServiceRequest)
+async def get_service_request_by_srnumber(srnumber: str):
+    id = await get_id_from_srnumber(srnumber)
     result = await ServiceRequest.one(id)
     if not result:
         raise HTTPException(status_code=404, detail="Item not found")
