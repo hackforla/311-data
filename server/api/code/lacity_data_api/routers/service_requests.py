@@ -6,7 +6,11 @@ from fastapi import APIRouter, HTTPException
 
 from ..models import api_models as schemas
 from ..models.service_request import (
-    ServiceRequest, get_id_from_srnumber, get_open_request_counts, get_open_requests, get_filtered_requests
+    ServiceRequest,
+    get_id_from_srnumber,
+    get_open_request_counts,
+    get_open_requests,
+    get_filtered_requests
 )
 
 router = APIRouter()
