@@ -6,6 +6,7 @@ import pytest
 from lacity_data_api.models.council import Council
 from lacity_data_api.models.region import Region
 from lacity_data_api.models.request_type import RequestType
+from lacity_data_api.models.agency import Agency
 
 """
 These are 'unit tests' of the database models bypassing the API.
@@ -24,7 +25,7 @@ def setup_function(function):
 async def test_alembic_version(db):
     query = db.text("SELECT version_num FROM alembic_version")
     result = await db.first(query)
-    assert result[0] == "e6a9d89a9510"
+    assert result[0] == "f605be47c1ec"
 
 
 @pytest.mark.asyncio
@@ -37,7 +38,7 @@ async def test_last_updated(db):
 @pytest.mark.asyncio
 async def test_councils(db):
     result = await db.all(Council.query)
-    assert len(result) == 99
+    assert len(result) == 100
 
 
 @pytest.mark.asyncio
@@ -49,14 +50,20 @@ async def test_regions(db):
 @pytest.mark.asyncio
 async def test_request_types(db):
     result = await db.all(RequestType.query)
-    assert len(result) == 11
+    assert len(result) == 12
+
+
+@pytest.mark.asyncio
+async def test_agencies(db):
+    result = await db.all(Agency.query)
+    assert len(result) == 12
 
 
 @pytest.mark.asyncio
 async def test_service_requests(db):
     query = db.text("SELECT count(*) FROM service_requests")
     result = await db.scalar(query)
-    assert result == 9877
+    assert result == 9989
 
 
 @pytest.mark.asyncio

@@ -41,8 +41,8 @@ def upgrade():
         'councils',
         sa.Column('council_id', sa.SMALLINT(), primary_key=True),
         sa.Column('council_name', sa.VARCHAR(), nullable=False),
-        sa.Column('waddress', sa.VARCHAR()),
-        sa.Column('dwebsite', sa.VARCHAR()),
+        sa.Column('website', sa.VARCHAR()),
+        sa.Column('twitter', sa.VARCHAR()),
         sa.Column('region_id', sa.SMALLINT(), index=True, nullable=False),
         sa.Column('latitude', sa.FLOAT(), nullable=True),
         sa.Column('longitude', sa.FLOAT(), nullable=True)

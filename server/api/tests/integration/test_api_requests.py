@@ -10,21 +10,21 @@ def test_service_requests_start(client):
     url = "/requests?start_date=2020-01-01"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 9877
+    assert len(response.json()) == 9910
 
 
 def test_service_requests_end(client):
     url = "/requests?start_date=2020-01-01&end_date=2020-01-02"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 8208
+    assert len(response.json()) == 8240
 
 
 def test_service_requests_type(client):
     url = "/requests?start_date=2020-01-01&end_date=2020-01-02&type_id=2"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 294
+    assert len(response.json()) == 297
 
 
 def test_service_requests_council(client):
@@ -45,7 +45,7 @@ def test_updated_service_requests(client):
     url = "/requests/updated?start_date=2020-01-01&end_date=2020-01-02"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 9682
+    assert len(response.json()) == 9715
 
 
 def test_updated_service_requests_council(client):
@@ -60,11 +60,14 @@ def test_service_request(client):
     response = client.get(url)
     assert response.status_code == 200
     assert response.json()["srnumber"] == "1-1523590121"
-    assert response.json()["created_date"] == "2020-01-01"
-    assert response.json()["closed_date"] == "2020-01-02"
-    assert response.json()["type_id"] == 8
-    assert response.json()["council_id"] == 19
-    assert response.json()["region_id"] == 3
+    assert response.json()["typeId"] == 6
+    assert response.json()["typeName"] == "Illegal Dumping"
+    assert response.json()["agencyId"] == 2
+    assert response.json()["agencyName"] == "Sanitation Bureau"
+    assert response.json()["councilId"] == 19
+    assert response.json()["councilName"] == "Lake Balboa"
+    assert response.json()["createdDate"] == "2020-01-01"
+    assert response.json()["closedDate"] == "2020-01-02"
     assert response.json()["address"] == "16815 W VANOWEN ST, 91406"
     assert response.json()["latitude"] == 34.19402846
     assert response.json()["longitude"] == -118.4994716
@@ -95,7 +98,7 @@ def test_service_request_pins(client):
                 29
             ],
             "requestTypes": [
-                6
+                4
             ]
         })
     assert response.status_code == 200
@@ -113,7 +116,7 @@ def test_service_request_points(client):
                 29
             ],
             "requestTypes": [
-                6
+                4
             ]
         })
     assert response.status_code == 200
