@@ -10,14 +10,14 @@ def test_councils(client):
     url = "/councils"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 100
+    assert len(response.json()) == 99
 
 
 def test_council(client):
     url = "/councils/6"
     response = client.get(url)
     assert response.status_code == 200
-    assert response.json()["council_name"] == "Arleta"
+    assert response.json()["councilName"] == "Arleta"
 
 
 def test_council_open_counts(client):
