@@ -2,11 +2,9 @@ import datetime
 from typing import Optional
 
 from sqlalchemy import sql
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
-from ..models.api_models import (
-    ServiceRequestList, Filters, PinList, TypeCountList
-)
+from ..models import api_models as schemas
 from ..models.service_request import (
     ServiceRequest, get_open_request_counts, get_open_requests, get_filtered_requests
 )
@@ -15,7 +13,7 @@ router = APIRouter()
 
 
 # TODO: #942 default to last week's data if no limit provided
-@router.get("", response_model=ServiceRequestList)
+@router.get("", response_model=schemas.ServiceRequestList)
 async def get_all_service_requests(
     start_date: datetime.date = datetime.date.today() - datetime.timedelta(days=7),
     end_date: datetime.date = None,
@@ -40,7 +38,7 @@ async def get_all_service_requests(
     return result
 
 
-@router.get("/updated", response_model=ServiceRequestList)
+@router.get("/updated", response_model=schemas.ServiceRequestList)
 async def get_updated_service_requests(
     start_date: datetime.date = datetime.date.today() - datetime.timedelta(days=7),
     end_date: datetime.date = None,
@@ -66,14 +64,14 @@ async def get_updated_service_requests(
     return result
 
 
-@router.get("/counts/open/types", response_model=TypeCountList)
+@router.get("/counts/open/types", response_model=schemas.TypeCountList)
 async def get_open_request_counts_by_type():
     result = await get_open_request_counts()
     return result
 
 
-@router.post("/pins", response_model=PinList)
-async def get_filtered_service_request_pins(filters: Filters):
+@router.post("/pins", response_model=schemas.PinList)
+async def get_filtered_service_request_pins(filters: schemas.Filters):
     result = await get_filtered_requests(
         filters.startDate,
         filters.endDate,
@@ -83,14 +81,14 @@ async def get_filtered_service_request_pins(filters: Filters):
     return result
 
 
-@router.get("/pins/open", response_model=PinList)
+@router.get("/pins/open", response_model=schemas.PinList)
 async def get_open_service_request_pins():
     result = await get_open_requests()
     return result
 
 
 @router.post("/points")  # , response_model=PointList)
-async def get_filtered_service_request_points(filters: Filters):
+async def get_filtered_service_request_points(filters: schemas.Filters):
     result = await ServiceRequest.select(
         'latitude',
         'longitude'
@@ -106,7 +104,9 @@ async def get_filtered_service_request_points(filters: Filters):
     return [[row.latitude, row.longitude] for row in result]
 
 
-@router.get("/{id}")
+@router.get("/{id}", response_model=schemas.ServiceRequest)
 async def get_service_request(id: int):
-    result = await ServiceRequest.get_or_404(id)
-    return result.to_dict()
+    result = await ServiceRequest.one(id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return result

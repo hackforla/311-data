@@ -11,8 +11,51 @@ class RequestType(db.Model):
 
     type_id = db.Column(db.SmallInteger, primary_key=True)
     type_name = db.Column(db.String)
+    agency_id = db.Column(db.SmallInteger, db.ForeignKey('agencies.agency_id'))
     color = db.Column(db.String)
     data_code = db.Column(db.String)
+
+    @classmethod
+    @cached(cache=Cache.REDIS,
+            endpoint=CACHE_ENDPOINT,
+            namespace="types",
+            key="all",
+            serializer=serializers.PickleSerializer(),
+            )
+    async def all(cls):
+        from .agency import Agency
+
+        result = await (
+            db.select(
+                [
+                    RequestType,
+                    Agency.agency_name
+                ]
+            ).select_from(
+                RequestType.join(Agency, isouter=True)
+            ).order_by(
+                RequestType.agency_id.desc(), RequestType.type_id
+            ).gino.all()
+        )
+        return result
+
+    @classmethod
+    async def one(cls, id: int):
+        from .agency import Agency
+
+        result = await (
+            db.select(
+                [
+                    RequestType,
+                    Agency.agency_name
+                ]
+            ).select_from(
+                RequestType.join(Agency, isouter=True)
+            ).where(
+                RequestType.type_id == id
+            ).gino.first()
+        )
+        return result
 
     @classmethod
     @cached(cache=Cache.REDIS,

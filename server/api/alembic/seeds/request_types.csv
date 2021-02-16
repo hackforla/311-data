@@ -1,12 +1,13 @@
-type_id,type_name,type_group,color,data_code,sort_order
-1,Animal Remains,,#267370,Dead Animal Removal,1
-2,Homeless Encampment,,#11975F,Homeless Encampment,2
-3,Graffiti,Repairs,#BF82BA,Graffiti Removal,3
-4,Multiple Streetlights,Repairs,#EDAD08,Multiple Streetlight Issue,4
-5,Single Streetlight,Repairs,#79B74E,Single Streetlight Issue,5
-6,Bulky Items,Trash,#D05F4E,Bulky Items,6
-7,Electronic Waste,Trash,#AE3D51,Electronic Waste,7
-8,Illegal Dumping,Trash,#685DB1,Illegal Dumping Pickup,8
-9,Metal/Appliances,Trash,#8B508B,Metal/Household Appliances,9
-10,Other,,#1D6996,Other,10
-11,Feedback,,#E17C05,Feedback,11
+type_id,type_name,agency_id,color,data_code
+1,Graffiti,4,#BF82BA,Graffiti Removal
+2,Homeless Encampment,2,#11975F,Homeless Encampment
+3,Animal Remains,2,#267370,Dead Animal Removal
+4,Bulky Items,2,#D05F4E,Bulky Items
+5,Electronic Waste,2,#AE3D51,Electronic Waste
+6,Illegal Dumping,2,#685DB1,Illegal Dumping Pickup
+7,Metal/Appliances,2,#8B508B,Metal/Household Appliances
+8,Single Streetlight,1,#79B74E,Single Streetlight Issue
+9,Multiple Streetlights,1,#EDAD08,Multiple Streetlight Issue
+10,Water Waste,1,#EDAD08,Report Water Waste
+11,Other,0,#1D6996,Other
+12,Feedback,0,#E17C05,Feedback

@@ -16,11 +16,39 @@ class ServiceRequest(db.Model):
     created_date = db.Column(db.Date)
     closed_date = db.Column(db.Date)
     type_id = db.Column(db.SmallInteger, db.ForeignKey('request_types.type_id'))
+    agency_id = db.Column(db.SmallInteger, db.ForeignKey('agencies.agency_id'))
     council_id = db.Column(db.SmallInteger, db.ForeignKey('councils.council_id'))
     region_id = db.Column(db.SmallInteger)
     address = db.Column(db.String)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+
+    @classmethod
+    async def one(cls, id: int):
+        from .council import Council  # noqa ... avoiding circular import
+        from .agency import Agency  # noqa ... avoiding circular import
+
+        result = await (
+            db.select(
+                [
+                    ServiceRequest,
+                    RequestType.type_name,
+                    Council.council_name,
+                    Agency.agency_name
+                ]
+            ).select_from(
+                ServiceRequest.join(
+                    RequestType
+                ).join(
+                    Council
+                ).join(
+                    Agency, ServiceRequest.agency_id == Agency.agency_id
+                )
+            ).where(
+                ServiceRequest.request_id == id
+            ).gino.first()
+        )
+        return result
 
     @classmethod
     async def get_request_reports(
@@ -126,6 +154,7 @@ async def get_filtered_requests(
         include_updated: bool = False
 ):
     from .council import Council  # noqa ... avoiding circular import
+    from .agency import Agency  # noqa ... avoiding circular import
 
     if include_updated:
         where_text = f"(created_date >= '{start_date}' OR closed_date >= '{start_date}')"  # noqa
@@ -145,9 +174,20 @@ async def get_filtered_requests(
 
     result = await (
         db.select(
-            [ServiceRequest, RequestType.type_name, Council.council_name]
+            [
+                ServiceRequest,
+                RequestType.type_name,
+                Council.council_name,
+                Agency.agency_name
+            ]
         ).select_from(
-            ServiceRequest.join(RequestType).join(Council)
+            ServiceRequest.join(
+                RequestType
+            ).join(
+                Council
+            ).join(
+                Agency, ServiceRequest.agency_id == Agency.agency_id
+            )
         ).where(
             text(where_text)
         ).order_by(
