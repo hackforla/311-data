@@ -4,6 +4,20 @@ Data is pulled nightly from the [LA Open Data](https://data.lacity.org/) website
 
 ![Data Loading Process](images/data-loading.png)
 
+## Notes about how we handle the 311 Data
+
+The data we load essentially comes from a single data source of 311 requests (technically, it's broken up by calendar year) and a GeoJSON file for Neighborhood councils.
+
+1. Data for service requests are **loaded with very little transformation**. Formatting for reporting is mostly done by joining with clean dimensions.
+2. Those key dimensions are: council (nc), type (requesttype), agency (owner).
+3. **Not all requests are associated with a neighborhood council**. There are some areas such as Pacific Palisades, Brentwood, and parts of South LA that are not covered by councils. We associate these requests with a "council" with an ID of 0. 4.
+4. These "no-council" requests will appear in some reports and therefore some totals may not add up; I.E., there will always be more requests at the city-wide level than the sum of the councils.
+5. **We only use requests that have a valid latitude and longitude** (this is more than 99% of the data). Some Feedback requests are pure commentary and have no location so they do not appear in reports. However, there are some Feedback requests that are either associated with other requests or are requests on their own (should probably be categorized as Other) which are included.
+6. There is some conflict in the data between dates and statuses. There are also some quality problems with dates (e.g. closed is before created, dates in the future). To keep things simple **a request is considered 'closed' if there is a closeddate and 'open' otherwise**. Also, we enforce a rule that requests take a minimum of 0 days to close.
+7. The Report Water Waste request type is currently being ignored.
+
+Details on the data are below.
+
 ## LA Open Data Format
 
 The service request data from the LA Open Data system is divided up into different data source for each year but they all follow essentially the same format.
@@ -13,7 +27,7 @@ https://data.lacity.org/A-Well-Run-City/MyLA311-Service-Request-Data-2020/rq3b-x
 
 Fields that are pulled into the 311 Data system a listed below.
 
-## FIELDS
+## 311 REQUEST FIELDS
 
 (Note: counts below are as of late 2020)
 
@@ -142,12 +156,6 @@ Fields that are pulled into the 311 Data system a listed below.
 ### latitude (double)
 
 ### longitude (double)
-
-## Notes about 311 Data
-
-1. Data is loaded with very little transformation. It is formatted for reporting by joining with clean dimensions.
-2. Not all requests are associated with a neighborhood council. There are some areas such as Pacific Palisades, Brentwood, and parts of South LA that are not covered by councils. Therefore there will always be more requests at the city-wide level than the sum of the council.
-3. The Report Water Waste request type is currently being ignored.
 
 ## Other Open Data sources
 
