@@ -24,7 +24,8 @@ const App = ({
   toggleMenu,
 }) => {
   useEffect(() => {
-    getMetadata();
+    // TODO: disabled while testing plotly
+    // getMetadata();
   });
 
   const handleSwipeMenu = useSwipeable({
@@ -39,7 +40,7 @@ const App = ({
       <Routes />
       {/* area where you can swipe the menu sidebar */}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <div {...handleSwipeMenu} style={menuStyles.swipeAreaOpen} />
+      {/* <div {...handleSwipeMenu} style={menuStyles.swipeAreaOpen} /> */}
       <Footer />
     </BrowserRouter>
   );

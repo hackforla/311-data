@@ -13,6 +13,7 @@ module.exports = merge(config, {
     compress: true,
     port: 3000,
     hot: true,
+    host: '0.0.0.0',
     historyApiFallback: true,
   },
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-// import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -37,10 +37,16 @@ const Header = () => {
         <Typography variant="h1" className={classes.title}>
           311DATA
         </Typography>
-        <Button className={classes.button}>Explore 311 Data</Button>
+        <Link to='plotly-serverside'>
+          <Button className={classes.button}>Serverside Plotly</Button>
+        </Link>
+        <Link to='/plotly-clientside'>
+          <Button className={classes.button}>Clientside Plotly</Button>
+        </Link>
+        {/* <Button className={classes.button}>Explore 311 Data</Button>
         <Button className={classes.button}>About 311 Data</Button>
         <Button className={classes.button}>Contact Us</Button>
-        <Button className={classes.button}>Help Center</Button>
+        <Button className={classes.button}>Help Center</Button> */}
       </Toolbar>
     </AppBar>
   );
