@@ -1,5 +1,8 @@
 name: Build and Test
-on: [push]
+on:
+  push:
+    paths:
+      - 'server/**'
 defaults:
   run:
     shell: bash
