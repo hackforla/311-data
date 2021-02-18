@@ -2,7 +2,7 @@
 
 Data is pulled nightly from the [LA Open Data](https://data.lacity.org/) website using a [Prefect](https://www.prefect.io/) workflow. The workflow loads new records and updates any that have been modified. Prefect tasks then update the API cache and reloads the dashboards.
 
-![Data Loading Process](images/data-loading.png)
+![Data Loading Process](images/data-arch.png)
 
 ## Notes about how we handle the 311 Data
 
