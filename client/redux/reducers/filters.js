@@ -22,27 +22,10 @@ export const updateRequestTypes = requestTypes => ({
   payload: requestTypes.map(({ typeId }) => typeId),
 });
 
-// TODO: these may not be needed
-// export const selectAllRequestTypes = () => ({
-//   type: types.SELECT_ALL_REQUEST_TYPES,
-// });
-
-// export const deselectAllRequestTypes = () => ({
-//   type: types.DESELECT_ALL_REQUEST_TYPES,
-// });
-
-export const updateNC = council => ({
+export const updateNC = councils => ({
   type: types.UPDATE_NEIGHBORHOOD_COUNCIL,
-  payload: council,
+  payload: councils.map(({ councilId }) => councilId),
 });
-
-// TODO: probably no longer needed
-// const allRequestTypes = value => (
-//   Object.keys(REQUEST_TYPES).reduce((acc, type) => {
-//     acc[type] = value;
-//     return acc;
-//   }, { All: value })
-// );
 
 const initialState = {
   dateRange: null,
@@ -73,17 +56,6 @@ export default (state = initialState, action) => {
         ...state,
         requestTypes: action.payload,
       };
-    // TODO: probably not needed
-    // case types.SELECT_ALL_REQUEST_TYPES:
-    //   return {
-    //     ...state,
-    //     requestTypes: allRequestTypes(true),
-    //   };
-    // case types.DESELECT_ALL_REQUEST_TYPES:
-    //   return {
-    //     ...state,
-    //     requestTypes: initialState.requestTypes,
-    //   };
     case types.UPDATE_NEIGHBORHOOD_COUNCIL:
       return {
         ...state,
