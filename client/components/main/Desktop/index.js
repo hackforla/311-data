@@ -5,8 +5,6 @@ import MapContainer from '@components/Map';
 import FilterMenu from '@components/FilterMenu';
 import PersistentDrawerLeft from '@components/LeftDrawer';
 
-import Plotly from '@components/Plotly';
-
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
@@ -24,7 +22,6 @@ const Desktop = () => {
     <div className={classes.root}>
       <PersistentDrawerLeft />
       <MapContainer />
-      {/* <Plotly /> */}
       <FilterMenu />
     </div>
   );

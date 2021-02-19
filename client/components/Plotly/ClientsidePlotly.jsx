@@ -1,6 +1,6 @@
+/* eslint-disable */
 import React from 'react';
 import Plot from 'react-plotly.js';
-import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const PlotlyClientside = ({
+const ClientsidePlotly = ({
   data,
   layout
 }) => {
@@ -30,4 +30,4 @@ const PlotlyClientside = ({
   )
 };
 
-export default PlotlyClientside;
+export default ClientsidePlotly;

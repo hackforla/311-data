@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100%',
     width: '100%',
   },
-}))
+}));
 
 const ServersidePlotly = () => {
   const classes = useStyles();
@@ -23,11 +23,12 @@ const ServersidePlotly = () => {
   return (
     <div className={classes.serverPlot}>
       <iframe
+        title="Dashboards"
         className={classes.iframe}
         src={url}
       />
     </div>
-  )
+  );
 };
 
 export default ServersidePlotly;

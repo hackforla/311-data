@@ -6,9 +6,8 @@ import {
 } from 'react-router-dom';
 import Desktop from '@components/main/Desktop';
 
-
-import PlotlyClient from '@components/Plotly/PlotlyClient';
-import PlotlyServer from '@components/Plotly/PlotlyServer';
+import ClientsidePlotly from '@components/Plotly/ClientsidePlotly';
+import ServersidePlotly from '@components/Plotly/ServersidePlotly';
 
 export default function Routes() {
   return (
@@ -16,11 +15,11 @@ export default function Routes() {
       <Route path="/map" component={Desktop} />
       <Route
         path="/plotly-clientside"
-        component={PlotlyClient}
+        component={ClientsidePlotly}
       />
       <Route
         path="/plotly-serverside"
-        component={PlotlyServer}
+        component={ServersidePlotly}
       />
       <Route path="/">
         <Redirect to="map" />

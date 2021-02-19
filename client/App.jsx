@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* TODO: disabled linting on this file while testing plotly.  */
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { BrowserRouter } from 'react-router-dom';
@@ -28,11 +30,12 @@ const App = ({
     // getMetadata();
   });
 
-  const handleSwipeMenu = useSwipeable({
-    trackMouse: true,
-    onSwipedRight: () => toggleMenu(),
-    onSwipedLeft: () => toggleMenu(),
-  });
+  // TODO: re-enable swipe area after fixing menu conflict
+  // const handleSwipeMenu = useSwipeable({
+  //   trackMouse: true,
+  //   onSwipedRight: () => toggleMenu(),
+  //   onSwipedLeft: () => toggleMenu(),
+  // });
 
   return (
     <BrowserRouter>
