@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateRequestTypes } from '@reducers/filters';
+import not from '@utils/not';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SelectorBox from '@components/common/SelectorBox';
@@ -16,8 +17,6 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.secondary.light,
   },
 }));
-
-const not = (a, b, key) => a.filter(itemA => !b.some(itemB => itemA[key] === itemB[key]));
 
 const RequestTypeSelector = ({
   requestTypes,

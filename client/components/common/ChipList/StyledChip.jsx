@@ -17,18 +17,24 @@ const useStylesSolid = makeStyles(theme => ({
   },
 }));
 
-const useStylesOutlined = makeStyles({
+const useStylesOutlined = makeStyles(theme => ({
+  root: {
+    backgroundColor: theme.palette.secondary.light,
+  },
   outlined: {
     borderColor: props => props.color,
   },
   label: {
     fontFamily: 'Roboto',
-    color: props => props.color,
+    color: theme.palette.text.primaryDark,
   },
   deleteIcon: {
-    color: props => props.color,
+    color: theme.palette.text.primaryDark,
+    '&:hover': {
+      color: theme.palette.secondary.main,
+    },
   },
-});
+}));
 
 const StyledChip = ({
   label,
