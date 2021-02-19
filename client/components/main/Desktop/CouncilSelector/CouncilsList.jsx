@@ -8,7 +8,7 @@ import GroupedMultiSelect from '@components/common/MultiSelect/GroupedMultiSelec
 const useStyles = makeStyles(theme => ({
   searchWrapper: {
     position: 'relative',
-    height: '40px',
+    height: '50px',
   },
   search: {
     position: 'absolute',
@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     paddingLeft: theme.gaps.xs,
     paddingRight: theme.gaps.xs,
+    paddingBottom: theme.gaps.sm,
   },
   scrollWrapper: {
     maxHeight: '300px',
