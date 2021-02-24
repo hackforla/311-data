@@ -18,6 +18,12 @@ SHOW_ENV = config("SHOW_ENV", cast=bool, default=False)
 TESTING = config("TESTING", cast=bool, default=False)
 STAGE = config("STAGE", default="Local")
 
+# string array of allows client URLs
+API_ALLOWED_ORIGINS = config(
+    "API_ALLOWED_ORIGINS",
+    default=["http://localhost:3000", "https://*.311-data.org"]
+)
+
 # getting database configuration
 DB_DRIVER = config("DB_DRIVER", default="postgresql")
 DB_HOST = config("DB_HOST", default="localhost")
