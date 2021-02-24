@@ -1,19 +1,24 @@
 # Contributing to the project
 
-Welcome! This readme assumes you have already listened to the 311-data pitch, and gone through the basic onboarding. The following will be more geared towards the programming side of 311-data and getting your development environment setup. If you run into any problems, please submit a new issue.
+Welcome! This readme assumes you have already listened to the 311-data pitch, and gone through the basic onboarding. The following will be more geared towards the programming side of 311-data and understanding the rules of the road before getting your development environment setup. If you run into any problems, please submit a new issue.
 
-## Client Development
-
-For JavaScript developers looking to contribute to the 311 Data client, start by reading [how to set up a local client environment](../client/README.md)
-
-## API Server Development
-
-For Python developers looking to contribute to the 311 Data server, start by reading [how to set up a local API server](./server_setup.md)
+**But before you begin, [please turn on two-factor authentication for GitHub](https://www.hackforla.org/guide-pages/2FA.html).** We require 2FA to be in place for all contributors to the project.
 
 ## Technology and system architecture
 
-Here is a high-level look at our architecture:
+First, here is a high-level look at our architecture:
+
 ![System diagram](images/data-arch.png)
+
+The stuff in blue is external to the stack (services owned by 3rd parties). The stuff in the AWS box are all server containers running Python (i.e., the 311 Data Server). The green is the React SPA which users interact with (i.e., the 311 Data Client). We have set this up as a monolithic project in GitHub and whether you develop on the server or the client you will follow the same process.
+
+## 311 Data Client Development
+
+For JavaScript developers looking to contribute to the 311 Data client, start by reading [how to set up a local client environment](../client/README.md)
+
+## 311 Data Server Development
+
+For Python developers looking to contribute to the 311 Data server, start by reading [how to set up a local API server](./server_setup.md)
 
 ## Branching and Release Process
 
