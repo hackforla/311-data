@@ -21,7 +21,7 @@ STAGE = config("STAGE", default="Local")
 # string array of allows client URLs
 API_ALLOWED_ORIGINS = config(
     "API_ALLOWED_ORIGINS",
-    default=["http://localhost:3000", "https://*.311-data.org"]
+    default=["http://localhost:3000", "https://dev.311-data.org"]
 )
 
 # getting database configuration
