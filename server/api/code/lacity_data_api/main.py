@@ -6,7 +6,7 @@ from fastapi.logger import logger as fastapi_logger
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from .config import DEBUG
+from .config import DEBUG, API_ALLOWED_ORIGINS
 from .models import db
 from .routers import (
     index, councils, regions, request_types, service_requests, shim, status,
@@ -45,7 +45,7 @@ def get_app():
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=API_ALLOWED_ORIGINS,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
