@@ -14,14 +14,14 @@ def test_councils(client):
 
 
 def test_council(client):
-    url = "/councils/6"
+    url = "/councils/1"
     response = client.get(url)
     assert response.status_code == 200
     assert response.json()["councilName"] == "Arleta"
 
 
 def test_council_open_counts(client):
-    url = "/councils/6/counts/open/types"
+    url = "/councils/1/counts/open/types"
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 1

@@ -33,18 +33,18 @@ REQUESTS_VIEW = """
             requests.closeddate::DATE as closed_date,
             request_types.type_id as type_id,
             agencies.agency_id,
-            COALESCE(requests.nc, 0)::SMALLINT as council_id,
+            COALESCE(councils.council_id, 0)::SMALLINT as council_id,
             COALESCE(councils.region_id, 0)::SMALLINT as region_id,
             requests.address::VARCHAR(100),
             requests.latitude,
             requests.longitude,
             requests.cd::SMALLINT as city_id
         FROM 
-            requests   
+            requests
         LEFT JOIN 
             request_types on requests.requesttype = request_types.data_code
         LEFT JOIN 
-            councils on requests.nc = councils.council_id
+            councils on requests.nc = councils.data_code
         LEFT JOIN 
             agencies on requests.owner = agencies.data_code
         WHERE 
