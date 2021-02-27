@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -52,8 +52,16 @@ const CouncilsList = ({
   const classes = useStyles();
   const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    console.log(searchTerm)
+  }, [searchTerm])
+
   const handleChange = e => {
-    setSearchTerm(e.currentTarget.value);
+    console.log('inside handleChange');
+    console.log(e.target)
+    console.log(e.target.name)
+    console.log(e.target.value)
+    // setSearchTerm(e.currentTarget.value);
   };
 
   return (
@@ -62,8 +70,9 @@ const CouncilsList = ({
         <div className={classes.search}>
           <SearchBar
             placeholder="Type District Name"
+            // onChange={setSearchTerm}
             onChange={handleChange}
-            value={searchTerm}
+            // value={searchTerm}
           />
         </div>
       </div>

@@ -8,7 +8,7 @@ const GroupedMultiSelect = ({
   groupBy,
   searchTerm,
 }) => {
-  const [filtered, setFiltered] = useState(true);
+  const [filtered, setFiltered] = useState(false);
   const [filteredItems, setFilteredItems] = useState([]);
 
   const groups = items.reduce((acc, item) => ({
