@@ -13,7 +13,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import LinkIcon from '@material-ui/icons/Link';
 import { connect } from 'react-redux';
-import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
+import {
+  toggleMenu as reduxToggleMenu,
+  closeMenu as reduxCloseMenu,
+} from '@reducers/ui';
 import Radio from '@material-ui/core/Radio';
 
 const drawerWidth = 275;
@@ -60,11 +63,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
+const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu, closeMenu }) => {
   // TODO ADD FUNCTIONALITY
   const [selectedMapStyleValue, setMapStyleValue] = React.useState('Point Map');
   const [selectedMapModeValue, setMapModeValue] = React.useState('Dark');
-  const [selectedDataColorScheme, setDataColorScheme] = React.useState('Original');
+  const [selectedDataColorScheme, setDataColorScheme] = React.useState(
+    'Original',
+  );
   const [selectedBoundariesValue, setBoundariesValue] = React.useState('None');
 
   const handleChangeMapStyle = event => {
@@ -92,16 +97,15 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
 
   useEffect(() => {
     const escFunction = e => {
-      e.preventDefault();
       if (e.key === 'Escape') {
-        toggleMenu();
+        closeMenu();
       }
     };
 
-    document.addEventListener('keypress', escFunction, false);
+    document.addEventListener('keyup', escFunction, false);
 
-    return () => document.removeEventListener('keypress', escFunction, false);
-  }, [toggleMenu]);
+    return () => document.removeEventListener('keyup', escFunction, false);
+  }, [closeMenu]);
 
   return (
     <div className={classes.root}>
@@ -117,7 +121,11 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
       >
         <div className={classes.drawerHeader}>
           <IconButton onClick={toggleMenu}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            {theme.direction === 'ltr' ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
@@ -126,7 +134,12 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
             <ListItemText primary="Map Style" />
           </ListItem>
           {['Point Map', 'Heat Map'].map(text => (
-            <ListItem className={classes.listItem} style={{ color: selectedMapStyleValue === text && '#87C8BC' }} button key={text}>
+            <ListItem
+              className={classes.listItem}
+              style={{ color: selectedMapStyleValue === text && '#87C8BC' }}
+              button
+              key={text}
+            >
               <ListItemIcon>
                 <Radio
                   checked={selectedMapStyleValue === text}
@@ -142,18 +155,21 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
           ))}
         </List>
         <Divider />
-        {
-          /**
-           * TODO ADD DYNAMIC LIST OF ITEMS
-           * ADD COLOR TO RADIO BUTTONS
-           */
-        }
+        {/**
+         * TODO ADD DYNAMIC LIST OF ITEMS
+         * ADD COLOR TO RADIO BUTTONS
+         */}
         <List>
           <ListItem key="Map Mode" className={classes.listItemTitle}>
             <ListItemText primary="Map Mode" />
           </ListItem>
           {['Dark', 'Light', 'Street'].map(text => (
-            <ListItem style={{ color: selectedMapModeValue === text && '#87C8BC' }} button key={text} className={classes.listItem}>
+            <ListItem
+              style={{ color: selectedMapModeValue === text && '#87C8BC' }}
+              button
+              key={text}
+              className={classes.listItem}
+            >
               <ListItemIcon>
                 <Radio
                   checked={selectedMapModeValue === text}
@@ -185,7 +201,9 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
                   checked={selectedDataColorScheme === text}
                   onChange={handleChangeDataColorScheme}
                   value={text}
-                  style={{ color: selectedDataColorScheme === text && '#87C8BC' }}
+                  style={{
+                    color: selectedDataColorScheme === text && '#87C8BC',
+                  }}
                   name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
@@ -212,7 +230,9 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
                   checked={selectedBoundariesValue === text}
                   onChange={handleChangeBoundaries}
                   value={text}
-                  style={{ color: selectedBoundariesValue === text && '#87C8BC' }}
+                  style={{
+                    color: selectedBoundariesValue === text && '#87C8BC',
+                  }}
                   name="radio-button"
                   inputProps={{ 'aria-label': text }}
                 />
@@ -238,6 +258,7 @@ const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu }) => {
 PersistentDrawerLeft.propTypes = {
   menuIsOpen: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
+  closeMenu: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -246,6 +267,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   toggleMenu: () => dispatch(reduxToggleMenu()),
+  closeMenu: () => dispatch(reduxCloseMenu()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PersistentDrawerLeft);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PersistentDrawerLeft);
