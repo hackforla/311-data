@@ -67,3 +67,17 @@ def test_agency(client):
     response = client.get(url)
     assert response.status_code == 200
     assert response.json()["agency_name"] == "Street Lighting Bureau"
+
+
+def test_sources(client):
+    url = "/sources"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 18
+
+
+def test_source(client):
+    url = "/sources/1"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert response.json()["source_name"] == "City Attorney"

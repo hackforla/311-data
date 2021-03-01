@@ -64,6 +64,8 @@ def test_service_request(client):
     assert response.json()["typeName"] == "Illegal Dumping"
     assert response.json()["agencyId"] == 2
     assert response.json()["agencyName"] == "Sanitation Bureau"
+    assert response.json()["sourceId"] == 8
+    assert response.json()["sourceName"] == "Phone Call"
     assert response.json()["councilId"] == 44
     assert response.json()["councilName"] == "Lake Balboa"
     assert response.json()["createdDate"] == "2020-01-01"

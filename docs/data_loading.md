@@ -9,7 +9,7 @@ Data is pulled nightly from the [LA Open Data](https://data.lacity.org/) website
 The data we load essentially comes from a single data source of 311 requests (technically, it's broken up by calendar year) and a GeoJSON file for Neighborhood councils.
 
 1. Data for service requests are **loaded with very little transformation**. Preparation for reporting is mostly done by joining with cleaned dimensions.
-2. The key dimensions are: council (nc), type (requesttype), agency (owner). Councils are further grouped into regions.
+2. The key dimensions are: council (nc), type (requesttype), agency (owner), source (requestsource). Councils are further grouped into regions.
 3. **Not all requests are associated with a neighborhood council**. There are some areas such as Pacific Palisades, Brentwood, and parts of South LA that are not covered by councils. We associate these requests with a "council" with an ID of 0.
 4. These "no-council" requests will appear in some reports and therefore some totals may not add up; I.E., there will always be more requests at the city-wide level than the sum of the councils.
 5. **We only use requests that have a valid latitude and longitude** (this is more than 99% of the data). Some Feedback requests are pure commentary and have no location so they do not appear in reports. However, there are some Feedback requests that are either associated with other requests or are requests on their own (should probably be categorized as Other) which are included.

@@ -98,5 +98,5 @@ def upgrade():
 def downgrade():
 
     op.execute("DROP MATERIALIZED VIEW service_requests")
-    op.execute("DROP IF EXISTS sources")
-    op.execute("DROP IF EXISTS agencies")
+    op.execute("DROP TABLE IF EXISTS sources")
+    op.execute("DROP TABLE IF EXISTS agencies")
