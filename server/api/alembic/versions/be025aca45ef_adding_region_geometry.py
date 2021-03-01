@@ -45,7 +45,8 @@ def upgrade():
         sa.Column('twitter', sa.VARCHAR()),
         sa.Column('region_id', sa.SMALLINT(), index=True, nullable=False),
         sa.Column('latitude', sa.FLOAT(), nullable=True),
-        sa.Column('longitude', sa.FLOAT(), nullable=True)
+        sa.Column('longitude', sa.FLOAT(), nullable=True),
+        sa.Column('data_code', sa.SMALLINT(), index=True, nullable=False)
     )
 
     with open(DATA_FOLDER + 'councils.csv') as f:
