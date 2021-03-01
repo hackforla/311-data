@@ -132,6 +132,8 @@ class ServiceRequest(APIModel):
     type_name: str
     agency_id: int
     agency_name: str
+    source_id: int
+    source_name: str
     created_date: datetime.date
     closed_date: Optional[datetime.date]
     address: str
@@ -179,6 +181,17 @@ class Agency(APIModel):
         }
 
 
+class Source(APIModel):
+    source_id: int
+    source_name: str
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "description": "The source where the request was made"
+        }
+
+
 class Region(APIModel):
     region_id: int
     region_name: str
@@ -210,6 +223,7 @@ class Council(APIModel):
 
 
 AgencyList = List[Agency]
+SourceList = List[Source]
 RegionList = List[Region]
 CouncilList = List[Council]
 RequestTypeList = List[RequestType]

@@ -1,0 +1,19 @@
+source_id,source_name,data_code
+1,City Attorney,City Attorney
+2,Council's Office,Council's Office
+3,Email,Email
+4,Fax,Fax
+5,Letter,Letter
+6,Mayor's Office,Mayor's Office
+7,Mobile App,Mobile App
+8,Phone Call,Call
+9,Queue-Initiated,Queue Initiated Customer Call
+10,Radio,Radio
+11,Social,Social
+12,TTY,TTY/ NexTalk
+13,Twitter,Twitter
+14,Voicemail,Voicemail
+15,Walk-in,Walk-in
+16,Web Form,Web Form
+17,Website,Self Service
+18,Work Crew,Driver Self Report

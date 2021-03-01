@@ -6,6 +6,7 @@ from sqlalchemy import sql, and_, desc, text
 
 from . import db
 from .request_type import RequestType
+from .source import Source
 
 
 class ServiceRequest(db.Model):
@@ -17,6 +18,7 @@ class ServiceRequest(db.Model):
     closed_date = db.Column(db.Date)
     type_id = db.Column(db.SmallInteger, db.ForeignKey('request_types.type_id'))
     agency_id = db.Column(db.SmallInteger, db.ForeignKey('agencies.agency_id'))
+    source_id = db.Column(db.SmallInteger, db.ForeignKey('sources.source_id'))
     council_id = db.Column(db.SmallInteger, db.ForeignKey('councils.council_id'))
     region_id = db.Column(db.SmallInteger)
     address = db.Column(db.String)
@@ -34,7 +36,8 @@ class ServiceRequest(db.Model):
                     ServiceRequest,
                     RequestType.type_name,
                     Council.council_name,
-                    Agency.agency_name
+                    Agency.agency_name,
+                    Source.source_name
                 ]
             ).select_from(
                 ServiceRequest.join(
@@ -43,6 +46,8 @@ class ServiceRequest(db.Model):
                     Council
                 ).join(
                     Agency, ServiceRequest.agency_id == Agency.agency_id
+                ).join(
+                    Source, ServiceRequest.source_id == Source.source_id
                 )
             ).where(
                 ServiceRequest.request_id == id
@@ -189,7 +194,8 @@ async def get_filtered_requests(
                 ServiceRequest,
                 RequestType.type_name,
                 Council.council_name,
-                Agency.agency_name
+                Agency.agency_name,
+                Source.source_name,
             ]
         ).select_from(
             ServiceRequest.join(
@@ -198,6 +204,8 @@ async def get_filtered_requests(
                 Council
             ).join(
                 Agency, ServiceRequest.agency_id == Agency.agency_id
+            ).join(
+                Source, ServiceRequest.source_id == Source.source_id
             )
         ).where(
             text(where_text)
