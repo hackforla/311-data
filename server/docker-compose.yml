@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     container_name: 311-postgres
-    image: gangstead/postgis:latest-arm
+    image: postgis/postgis:11-3.1
     restart: always
     env_file: .env
     environment:
