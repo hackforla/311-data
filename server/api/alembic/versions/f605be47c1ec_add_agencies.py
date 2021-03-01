@@ -33,6 +33,7 @@ REQUESTS_VIEW = """
             requests.closeddate::DATE as closed_date,
             request_types.type_id as type_id,
             agencies.agency_id,
+            sources.source_id,
             COALESCE(councils.council_id, 0)::SMALLINT as council_id,
             COALESCE(councils.region_id, 0)::SMALLINT as region_id,
             requests.address::VARCHAR(100),
@@ -47,6 +48,8 @@ REQUESTS_VIEW = """
             councils on requests.nc = councils.data_code
         LEFT JOIN 
             agencies on requests.owner = agencies.data_code
+        LEFT JOIN 
+            sources on requests.requestsource = sources.data_code    
         WHERE 
             requests.latitude IS NOT NULL
             ;
@@ -57,6 +60,7 @@ REQUESTS_VIEW = """
         CREATE INDEX ON service_requests(closed_date);
         CREATE INDEX ON service_requests(type_id);
         CREATE INDEX ON service_requests(agency_id);
+        CREATE INDEX ON service_requests(source_id);
         CREATE INDEX ON service_requests(council_id);
         CREATE INDEX ON service_requests(region_id);
         CREATE INDEX ON service_requests(city_id);
@@ -77,10 +81,22 @@ def upgrade():
     with open(DATA_FOLDER + 'agencies.csv') as f:
         op.bulk_insert(agencies_table, list(csv.DictReader(f)))
 
+
+    sources_table = op.create_table(
+        'sources',
+        sa.Column('source_id', sa.SMALLINT(), primary_key=True),
+        sa.Column('source_name', sa.VARCHAR(), nullable=False),
+        sa.Column('data_code', sa.VARCHAR(), nullable=False),
+    )
+
+    with open(DATA_FOLDER + 'sources.csv') as f:
+        op.bulk_insert(sources_table, list(csv.DictReader(f)))
+
     op.execute(REQUESTS_VIEW)
 
 
 def downgrade():
 
     op.execute("DROP MATERIALIZED VIEW service_requests")
-    op.drop_table('agencies')
+    op.execute("DROP IF EXISTS sources")
+    op.execute("DROP IF EXISTS agencies")

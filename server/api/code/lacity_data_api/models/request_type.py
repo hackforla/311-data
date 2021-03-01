@@ -13,6 +13,7 @@ class RequestType(db.Model):
     type_name = db.Column(db.String)
     agency_id = db.Column(db.SmallInteger, db.ForeignKey('agencies.agency_id'))
     color = db.Column(db.String)
+    description = db.Column(db.String)
     data_code = db.Column(db.String)
 
     @classmethod
