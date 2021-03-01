@@ -9,6 +9,7 @@ from ..models import db
 from ..models.service_request import ServiceRequest
 from ..models.request_type import RequestType
 from ..models.council import Council
+from ..models.source import Source
 
 router = APIRouter()
 
@@ -24,6 +25,7 @@ field_dict = {
     ).label('created_month'),
     "created_date": ServiceRequest.created_date,
     "council_name": Council.council_name,
+    "source_name": Source.source_name,
     "type_name": RequestType.type_name
 }
 
@@ -36,7 +38,7 @@ async def run_report(
     field: Optional[List[str]] = Query(
         ["type_name", "created_date"],
         description="ex. created_date",
-        regex="(created_year|created_month|created_date|council_name|type_name)"
+        regex="""(created_year|created_month|created_date|council_name|type_name|source_name)"""  # noqa
     ),
     filter: Optional[List[str]] = Query(
         [f"created_date>={str(datetime.date.today() - datetime.timedelta(days=7))}"],
@@ -63,7 +65,7 @@ async def run_report(
         db.select(
             fields
         ).select_from(
-            ServiceRequest.join(RequestType).join(Council)
+            ServiceRequest.join(RequestType).join(Council).join(Source)
         ).where(
             text(' AND '.join(filters))
         ).group_by(
