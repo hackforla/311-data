@@ -157,6 +157,7 @@ class RequestType(APIModel):
     agency_id: int
     agency_name: Optional[str]
     color: str
+    description: str
 
     class Config:
         orm_mode = True
