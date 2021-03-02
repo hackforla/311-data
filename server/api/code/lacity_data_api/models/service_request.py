@@ -163,7 +163,7 @@ async def get_open_request_counts():
 
 
 async def get_filtered_requests(
-        start_date: datetime.date,
+        start_date: datetime.date = None,
         end_date: datetime.date = None,
         type_ids: List[int] = None,
         council_ids: List[int] = None,
@@ -174,21 +174,27 @@ async def get_filtered_requests(
     from .council import Council  # noqa ... avoiding circular import
     from .agency import Agency  # noqa ... avoiding circular import
 
-    if include_updated:
-        where_text = f"(created_date >= '{start_date}' OR closed_date >= '{start_date}')"  # noqa
-    else:
-        where_text = f"created_date >= '{start_date}'"
+    where_text = []
+
+    if (start_date):
+        if include_updated:
+            where_text.append(f"(created_date >= '{start_date}' OR closed_date >= '{start_date}')")  # noqa
+        else:
+            where_text.append(f"created_date >= '{start_date}'")
 
     if (end_date):
+        # Making end date inclusive by adding one
+        end_date = end_date + datetime.timedelta(days=1)
+
         if include_updated:
-            where_text = f"(created_date >= '{end_date}' OR closed_date >= '{end_date}')"  # noqa
+            where_text.append(f"(created_date <= '{end_date}' OR closed_date <= '{end_date}')")  # noqa
         else:
-            where_text = f"created_date >= '{end_date}'"
+            where_text.append(f"created_date <= '{end_date}'")
 
     if (type_ids):
-        where_text += f" AND service_requests.type_id IN ({', '.join([str(i) for i in type_ids])})"  # noqa
+        where_text.append(f"service_requests.type_id IN ({', '.join([str(i) for i in type_ids])})")  # noqa
     if (council_ids):
-        where_text += f" AND service_requests.council_id IN ({', '.join([str(i) for i in council_ids])})"  # noqa
+        where_text.append(f"service_requests.council_id IN ({', '.join([str(i) for i in council_ids])})")  # noqa
 
     async with db.transaction():
         cursor = await (
@@ -211,7 +217,7 @@ async def get_filtered_requests(
                     Source, ServiceRequest.source_id == Source.source_id
                 )
             ).where(
-                text(where_text)
+                text(" AND ".join(where_text))
             ).order_by(
                 desc(ServiceRequest.created_date)
             ).gino.iterate()

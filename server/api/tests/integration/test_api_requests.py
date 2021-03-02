@@ -3,21 +3,21 @@ def test_service_requests(client):
     url = "/requests"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 0
+    assert len(response.json()) == 1000
 
 
 def test_service_requests_start(client):
-    url = "/requests?start_date=2020-01-01"
+    url = "/requests?start_date=2020-01-01&limit=10000"
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 9989
 
 
 def test_service_requests_end(client):
-    url = "/requests?start_date=2020-01-01&end_date=2020-01-02"
+    url = "/requests?start_date=2020-01-01&end_date=2020-01-02&limit=10000"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 8304
+    assert len(response.json()) == 7650
 
 
 def test_service_requests_type(client):
@@ -31,28 +31,28 @@ def test_service_requests_council(client):
     url = "/requests?start_date=2020-01-01&end_date=2020-01-02&council_id=27"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 55
+    assert len(response.json()) == 39
 
 
 def test_service_requests_all(client):
     url = "/requests?start_date=2020-01-01&end_date=2020-01-02&type_id=2&council_id=27"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 6
+    assert len(response.json()) == 3
 
 
 def test_updated_service_requests(client):
-    url = "/requests/updated?start_date=2020-01-01&end_date=2020-01-02"
+    url = "/requests/updated?start_date=2020-01-01&end_date=2020-01-02&limit=10000"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 9792
+    assert len(response.json()) == 7650
 
 
 def test_updated_service_requests_council(client):
     url = "/requests/updated?start_date=2020-01-01&end_date=2020-01-02&council_id=27"
     response = client.get(url)
     assert response.status_code == 200
-    assert len(response.json()) == 64
+    assert len(response.json()) == 39
 
 
 def test_service_request(client):

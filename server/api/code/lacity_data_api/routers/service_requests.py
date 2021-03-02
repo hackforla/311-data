@@ -2,7 +2,7 @@ import datetime
 from typing import Optional
 
 from sqlalchemy import sql
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 
 from ..models import api_models as schemas
 from ..models.service_request import (
@@ -16,14 +16,15 @@ from ..models.service_request import (
 router = APIRouter()
 
 
+# TODO: need more tests
 @router.get("", response_model=schemas.ServiceRequestList)
 async def get_all_service_requests(
-    start_date: datetime.date = datetime.date.today() - datetime.timedelta(days=7),
+    start_date: datetime.date = None,
     end_date: datetime.date = None,
     type_id: Optional[int] = None,
     council_id: Optional[int] = None,
     skip: int = 0,
-    limit: int = 100000
+    limit: int = Query(1000, le=100000)
 ):
     type_ids = []
     council_ids = []
@@ -45,14 +46,16 @@ async def get_all_service_requests(
     return result
 
 
+# TODO: need more tests
+# TODO #982 need to make sure this is filtering properly
 @router.get("/updated", response_model=schemas.ServiceRequestList)
 async def get_updated_service_requests(
-    start_date: datetime.date = datetime.date.today() - datetime.timedelta(days=7),
+    start_date: datetime.date = None,
     end_date: datetime.date = None,
     type_id: Optional[int] = None,
     council_id: Optional[int] = None,
     skip: int = 0,
-    limit: int = 100000
+    limit: int = Query(1000, le=100000)
 ):
     type_ids = []
     council_ids = []

@@ -9,42 +9,42 @@ from the first 10K records of 2020 have been loaded.
 """
 
 
-def test_map_pins(client):
-    # post old style filters (i.e. text request types)
-    url = "/map/pins"
-    response = client.post(
-        url,
-        json={
-            "startDate": "01/01/2020",
-            "endDate": "01/02/2020",
-            "ncList": [
-                9,
-                14,
-                16,
-                32,
-                37,
-                38,
-                40,
-                41,
-                42,
-                47,
-                50,
-                62,
-                63,
-                68,
-                91,
-                92,
-                96
-            ],
-            "requestTypes": [
-                "Dead Animal Removal",
-                "Homeless Encampment",
-                "Graffiti Removal"
-            ]
-        }
-    )
-    assert response.status_code == 200
-    assert len(response.json()) == 662
+# def test_map_pins(client):
+#     # post old style filters (i.e. text request types)
+#     url = "/map/pins"
+#     response = client.post(
+#         url,
+#         json={
+#             "startDate": "01/01/2020",
+#             "endDate": "01/02/2020",
+#             "ncList": [
+#                 9,
+#                 14,
+#                 16,
+#                 32,
+#                 37,
+#                 38,
+#                 40,
+#                 41,
+#                 42,
+#                 47,
+#                 50,
+#                 62,
+#                 63,
+#                 68,
+#                 91,
+#                 92,
+#                 96
+#             ],
+#             "requestTypes": [
+#                 "Dead Animal Removal",
+#                 "Homeless Encampment",
+#                 "Graffiti Removal"
+#             ]
+#         }
+#     )
+#     assert response.status_code == 200
+#     assert len(response.json()) == 662
 
 
 def test_open_requests(client):
