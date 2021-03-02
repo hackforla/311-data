@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Query
 
-from sqlalchemy import text
+from sqlalchemy import text, cast, DATE
 from ..models import db
 from ..models.service_request import ServiceRequest
 from ..models.request_type import RequestType
@@ -16,14 +16,20 @@ router = APIRouter()
 # maps keywords to sqlalchemy columns or functions
 field_dict = {
     "created_year": db.extract(
-        'year',
+        'YEAR',
         ServiceRequest.created_date
     ).label('created_year'),
     "created_month": db.extract(
-        'month',
+        'MONTH',
         ServiceRequest.created_date
     ).label('created_month'),
-    "created_date": ServiceRequest.created_date,
+    "created_dow": db.extract(
+        'DOW',
+        ServiceRequest.created_date
+    ).label('created_dow'),
+    "created_date": cast(
+        ServiceRequest.created_date, DATE
+    ).label('created_date'),
     "council_name": Council.council_name,
     "source_name": Source.source_name,
     "type_name": RequestType.type_name
@@ -38,7 +44,7 @@ async def run_report(
     field: Optional[List[str]] = Query(
         ["type_name", "created_date"],
         description="ex. created_date",
-        regex="""(created_year|created_month|created_date|council_name|type_name|source_name)"""  # noqa
+        regex="""(created_year|created_month|created_dow|created_date|council_name|type_name|source_name)"""  # noqa
     ),
     filter: Optional[List[str]] = Query(
         [f"created_date>={str(datetime.date.today() - datetime.timedelta(days=7))}"],

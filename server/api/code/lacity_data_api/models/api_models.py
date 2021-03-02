@@ -134,8 +134,8 @@ class ServiceRequest(APIModel):
     agency_name: str
     source_id: int
     source_name: str
-    created_date: datetime.date
-    closed_date: Optional[datetime.date]
+    created_date: datetime.datetime
+    closed_date: Optional[datetime.datetime]
     address: str
     latitude: float
     longitude: float
