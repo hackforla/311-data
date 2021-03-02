@@ -51,6 +51,8 @@ async def get_updated_service_requests(
     end_date: datetime.date = None,
     type_id: Optional[int] = None,
     council_id: Optional[int] = None,
+    skip: int = 0,
+    limit: int = 100000
 ):
     type_ids = []
     council_ids = []
@@ -65,7 +67,9 @@ async def get_updated_service_requests(
         end_date=end_date,
         type_ids=type_ids,
         council_ids=council_ids,
-        include_updated=True
+        include_updated=True,
+        skip=skip,
+        limit=limit
     )
 
     return result
