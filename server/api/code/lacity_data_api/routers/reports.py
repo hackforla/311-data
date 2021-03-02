@@ -28,6 +28,10 @@ field_dict = {
         'DOW',
         ServiceRequest.created_date
     ).label('created_dow'),
+    "created_hour": db.extract(
+        'HOUR',
+        ServiceRequest.created_date
+    ).label('created_hour'),
     "created_date": cast(
         ServiceRequest.created_date, DATE
     ).label('created_date'),
@@ -46,7 +50,7 @@ async def run_report(
     field: Optional[List[str]] = Query(
         ["type_name", "created_date"],
         description="ex. created_date",
-        regex="""(created_year|created_month|created_dow|created_date|council_name|type_name|agency_name|source_name)"""  # noqa
+        regex="""(created_year|created_month|created_dow|created_hour|created_date|council_name|type_name|agency_name|source_name)"""  # noqa
     ),
     filter: Optional[List[str]] = Query(
         [f"created_date>={str(datetime.date.today().year) + '-01-01'}"],
