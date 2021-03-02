@@ -16,7 +16,6 @@ from ..models.service_request import (
 router = APIRouter()
 
 
-# TODO: #942 default to last week's data if no limit provided
 @router.get("", response_model=schemas.ServiceRequestList)
 async def get_all_service_requests(
     start_date: datetime.date = datetime.date.today() - datetime.timedelta(days=7),

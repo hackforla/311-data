@@ -29,8 +29,8 @@ REQUESTS_VIEW = """
         SELECT 
             requests.id as request_id,
             requests.srnumber::VARCHAR(12) as srnumber,
-            requests.createddate::DATE as created_date,
-            requests.closeddate::DATE as closed_date,
+            requests.createddate::TIMESTAMP as created_date,
+            requests.closeddate::TIMESTAMP as closed_date,
             request_types.type_id as type_id,
             agencies.agency_id,
             sources.source_id,
