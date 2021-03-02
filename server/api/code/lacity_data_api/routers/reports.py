@@ -10,6 +10,7 @@ from ..models.service_request import ServiceRequest
 from ..models.request_type import RequestType
 from ..models.council import Council
 from ..models.source import Source
+from ..models.agency import Agency
 
 router = APIRouter()
 
@@ -31,6 +32,7 @@ field_dict = {
         ServiceRequest.created_date, DATE
     ).label('created_date'),
     "council_name": Council.council_name,
+    "agency_name": Agency.agency_name,
     "source_name": Source.source_name,
     "type_name": RequestType.type_name
 }
@@ -44,10 +46,10 @@ async def run_report(
     field: Optional[List[str]] = Query(
         ["type_name", "created_date"],
         description="ex. created_date",
-        regex="""(created_year|created_month|created_dow|created_date|council_name|type_name|source_name)"""  # noqa
+        regex="""(created_year|created_month|created_dow|created_date|council_name|type_name|agency_name|source_name)"""  # noqa
     ),
     filter: Optional[List[str]] = Query(
-        [f"created_date>={str(datetime.date.today() - datetime.timedelta(days=7))}"],
+        [f"created_date>={str(datetime.date.today().year) + '-01-01'}"],
         description="""
             Field then operator then value
             (ex. created_date>=2021-01-01 or council_name=Arleta
@@ -72,6 +74,7 @@ async def run_report(
             fields
         ).select_from(
             ServiceRequest.join(RequestType).join(Council).join(Source)
+            .join(Agency, ServiceRequest.agency_id == Agency.agency_id)
         ).where(
             text(' AND '.join(filters))
         ).group_by(
