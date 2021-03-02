@@ -19,7 +19,7 @@ router = APIRouter()
 # TODO: need more tests
 @router.get("", response_model=schemas.ServiceRequestList)
 async def get_all_service_requests(
-    start_date: datetime.date = None,  # datetime.date.today() - datetime.timedelta(days=7),
+    start_date: datetime.date = None,
     end_date: datetime.date = None,
     type_id: Optional[int] = None,
     council_id: Optional[int] = None,
@@ -49,7 +49,7 @@ async def get_all_service_requests(
 # TODO: need more tests
 @router.get("/updated", response_model=schemas.ServiceRequestList)
 async def get_updated_service_requests(
-    start_date: datetime.date = None,  # datetime.date.today() - datetime.timedelta(days=7),
+    start_date: datetime.date = None,
     end_date: datetime.date = None,
     type_id: Optional[int] = None,
     council_id: Optional[int] = None,
