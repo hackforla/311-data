@@ -47,6 +47,7 @@ async def get_all_service_requests(
 
 
 # TODO: need more tests
+# TODO #982 need to make sure this is filtering properly
 @router.get("/updated", response_model=schemas.ServiceRequestList)
 async def get_updated_service_requests(
     start_date: datetime.date = None,

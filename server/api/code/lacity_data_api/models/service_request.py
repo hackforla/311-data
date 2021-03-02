@@ -183,6 +183,9 @@ async def get_filtered_requests(
             where_text.append(f"created_date >= '{start_date}'")
 
     if (end_date):
+        # Making end date inclusive by adding one
+        end_date = end_date + datetime.timedelta(days=1)
+
         if include_updated:
             where_text.append(f"(created_date <= '{end_date}' OR closed_date <= '{end_date}')")  # noqa
         else:
