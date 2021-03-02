@@ -22,6 +22,8 @@ async def get_all_service_requests(
     end_date: datetime.date = None,
     type_id: Optional[int] = None,
     council_id: Optional[int] = None,
+    skip: int = 0,
+    limit: int = 100000
 ):
     type_ids = []
     council_ids = []
@@ -35,7 +37,9 @@ async def get_all_service_requests(
         start_date=start_date,
         end_date=end_date,
         type_ids=type_ids,
-        council_ids=council_ids
+        council_ids=council_ids,
+        skip=skip,
+        limit=limit
     )
 
     return result

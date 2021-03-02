@@ -167,7 +167,9 @@ async def get_filtered_requests(
         end_date: datetime.date = None,
         type_ids: List[int] = None,
         council_ids: List[int] = None,
-        include_updated: bool = False
+        include_updated: bool = False,
+        skip: int = 0,
+        limit: int = 100000
 ):
     from .council import Council  # noqa ... avoiding circular import
     from .agency import Agency  # noqa ... avoiding circular import
@@ -188,29 +190,35 @@ async def get_filtered_requests(
     if (council_ids):
         where_text += f" AND service_requests.council_id IN ({', '.join([str(i) for i in council_ids])})"  # noqa
 
-    result = await (
-        db.select(
-            [
-                ServiceRequest,
-                RequestType.type_name,
-                Council.council_name,
-                Agency.agency_name,
-                Source.source_name,
-            ]
-        ).select_from(
-            ServiceRequest.join(
-                RequestType
-            ).join(
-                Council
-            ).join(
-                Agency, ServiceRequest.agency_id == Agency.agency_id
-            ).join(
-                Source, ServiceRequest.source_id == Source.source_id
-            )
-        ).where(
-            text(where_text)
-        ).order_by(
-            desc(ServiceRequest.created_date)
-        ).gino.all()
-    )
+    async with db.transaction():
+        cursor = await (
+            db.select(
+                [
+                    ServiceRequest,
+                    RequestType.type_name,
+                    Council.council_name,
+                    Agency.agency_name,
+                    Source.source_name,
+                ]
+            ).select_from(
+                ServiceRequest.join(
+                    RequestType
+                ).join(
+                    Council
+                ).join(
+                    Agency, ServiceRequest.agency_id == Agency.agency_id
+                ).join(
+                    Source, ServiceRequest.source_id == Source.source_id
+                )
+            ).where(
+                text(where_text)
+            ).order_by(
+                desc(ServiceRequest.created_date)
+            ).gino.iterate()
+        )
+
+        if skip > 0:
+            await cursor.forward(skip)  # skip rows
+        result = await cursor.many(limit)  # and retrieve limit rows
+
     return result
