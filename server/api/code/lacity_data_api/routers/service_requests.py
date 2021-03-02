@@ -22,31 +22,8 @@ async def get_all_service_requests(
     end_date: datetime.date = None,
     type_id: Optional[int] = None,
     council_id: Optional[int] = None,
-):
-    type_ids = []
-    council_ids = []
-
-    if type_id:
-        type_ids = [type_id]
-    if council_id:
-        council_ids = [council_id]
-
-    result = await get_filtered_requests(
-        start_date=start_date,
-        end_date=end_date,
-        type_ids=type_ids,
-        council_ids=council_ids
-    )
-
-    return result
-
-
-@router.get("/updated", response_model=schemas.ServiceRequestList)
-async def get_updated_service_requests(
-    start_date: datetime.date = datetime.date.today() - datetime.timedelta(days=7),
-    end_date: datetime.date = None,
-    type_id: Optional[int] = None,
-    council_id: Optional[int] = None,
+    skip: int = 0,
+    limit: int = 100000
 ):
     type_ids = []
     council_ids = []
@@ -61,7 +38,38 @@ async def get_updated_service_requests(
         end_date=end_date,
         type_ids=type_ids,
         council_ids=council_ids,
-        include_updated=True
+        skip=skip,
+        limit=limit
+    )
+
+    return result
+
+
+@router.get("/updated", response_model=schemas.ServiceRequestList)
+async def get_updated_service_requests(
+    start_date: datetime.date = datetime.date.today() - datetime.timedelta(days=7),
+    end_date: datetime.date = None,
+    type_id: Optional[int] = None,
+    council_id: Optional[int] = None,
+    skip: int = 0,
+    limit: int = 100000
+):
+    type_ids = []
+    council_ids = []
+
+    if type_id:
+        type_ids = [type_id]
+    if council_id:
+        council_ids = [council_id]
+
+    result = await get_filtered_requests(
+        start_date=start_date,
+        end_date=end_date,
+        type_ids=type_ids,
+        council_ids=council_ids,
+        include_updated=True,
+        skip=skip,
+        limit=limit
     )
 
     return result
