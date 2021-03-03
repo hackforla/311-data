@@ -29,6 +29,7 @@ sentry-sdk = "*"
 aiocache = {extras = ["redis"], version = "*"}
 gunicorn = "*"
 uvicorn = {extras = ["standard"], version = "*"}
+pendulum = "*"
 
 [requires]
 python_version = "3.7"
