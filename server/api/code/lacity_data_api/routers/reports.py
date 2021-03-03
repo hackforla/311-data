@@ -1,7 +1,7 @@
-import datetime
 import re
 from typing import List, Optional
 
+import pendulum
 from fastapi import APIRouter, Query
 
 from sqlalchemy import text, cast, DATE
@@ -42,9 +42,11 @@ field_dict = {
 }
 
 filter_regex = "^(\w+)([>=<]+)([\w-]+)$"  # noqa
+dt = pendulum.today()
 
 
-# TODO: add created_dow option
+# TODO: add end of previous month filter.
+# might be a problem with multiple default filters.
 @router.get("")
 async def run_report(
     field: Optional[List[str]] = Query(
@@ -53,7 +55,9 @@ async def run_report(
         regex="""(created_year|created_month|created_dow|created_hour|created_date|council_name|type_name|agency_name|source_name)"""  # noqa
     ),
     filter: Optional[List[str]] = Query(
-        [f"created_date>={str(datetime.date.today().year) + '-01-01'}"],
+        [
+            f"created_date>={ dt.subtract(months=1).start_of('month').format('YYYY-MM-DD') }"  # noqa
+        ],
         description="""
             Field then operator then value
             (ex. created_date>=2021-01-01 or council_name=Arleta
