@@ -39,7 +39,7 @@ async def get_all_service_requests(
         end_date=end_date,
         type_ids=type_ids,
         council_ids=council_ids,
-        skip=skip,
+        offset=skip,
         limit=limit
     )
 
