@@ -71,7 +71,7 @@ async def get_updated_service_requests(
         type_ids=type_ids,
         council_ids=council_ids,
         include_updated=True,
-        skip=skip,
+        offset=skip,
         limit=limit
     )
 
