@@ -66,6 +66,13 @@ async def run_report(
     fields = [field_dict[i] for i in field]
     group_by = fields.copy()
     fields.append(db.func.count().label("counts"))
+    # TODO: good idea, but need to figure out best way to present open vs. closed requests  # noqa
+    # fields.append(db.func.sum(
+    #     (cast(ServiceRequest.closed_date, DATE) - cast(ServiceRequest.created_date, DATE))  # noqa
+    # ).label("total_days"))
+    # fields.append(db.func.count(
+    #     ServiceRequest.closed_date
+    # ).label("total_closed"))
 
     # set up filters for where clause
     filters = []
