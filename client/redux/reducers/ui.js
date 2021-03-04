@@ -2,6 +2,7 @@ import { MAP_MODES } from '@components/common/CONSTANTS';
 
 export const types = {
   TOGGLE_MENU: 'TOGGLE_MENU',
+  CLOSE_MENU: 'CLOSE_MENU',
   SET_MENU_TAB: 'SET_MENU_TAB',
   SET_ERROR_MODAL: 'SET_ERROR_MODAL',
   SHOW_DATA_CHARTS: 'SHOW_DATA_CHARTS',
@@ -14,6 +15,10 @@ export const types = {
 
 export const toggleMenu = () => ({
   type: types.TOGGLE_MENU,
+});
+
+export const closeMenu = () => ({
+  type: types.CLOSE_MENU,
 });
 
 export const setMenuTab = tab => ({
@@ -74,6 +79,14 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case types.CLOSE_MENU:
+      return {
+        ...state,
+        menu: {
+          ...state.menu,
+          isOpen: false,
+        },
+      };
     case types.TOGGLE_MENU:
       return {
         ...state,
