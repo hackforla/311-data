@@ -1,8 +1,6 @@
 from typing import List
 
-from aiocache import cached, Cache, serializers
-
-from ..config import CACHE_ENDPOINT
+from aiocache import cached
 from . import db
 
 
@@ -17,12 +15,7 @@ class RequestType(db.Model):
     data_code = db.Column(db.String)
 
     @classmethod
-    @cached(cache=Cache.REDIS,
-            endpoint=CACHE_ENDPOINT,
-            namespace="types",
-            key="all",
-            serializer=serializers.PickleSerializer(),
-            )
+    @cached(key="types:all", alias="default")
     async def all(cls):
         from .agency import Agency
 
@@ -59,26 +52,21 @@ class RequestType(db.Model):
         return result
 
     @classmethod
-    @cached(cache=Cache.REDIS,
-            endpoint=CACHE_ENDPOINT,
-            namespace="types",
-            key="stats",
-            serializer=serializers.PickleSerializer(),
-            )
+    @cached(key="types:stats", alias="default")
     async def get_type_stats(cls):
 
         query = db.text("""
             SELECT
                 service_requests.type_id,
                 request_types.type_name,
-                min(closed_date - created_date),
+                min(closed_date::date - created_date::date),
                 percentile_disc(0.25) within group
-                    (order by closed_date - created_date) as q1,
+                    (order by closed_date::date - created_date::date) as q1,
                 percentile_disc(0.5) within group
-                    (order by closed_date - created_date) as median,
+                    (order by closed_date::date - created_date::date) as median,
                 percentile_disc(0.75) within group
-                    (order by closed_date - created_date) as q3,
-                max(closed_date - created_date)
+                    (order by closed_date::date - created_date::date) as q3,
+                max(closed_date::date - created_date::date)
             FROM
                 service_requests
             JOIN
@@ -94,12 +82,7 @@ class RequestType(db.Model):
         return result
 
 
-@cached(cache=Cache.REDIS,
-        endpoint=CACHE_ENDPOINT,
-        namespace="types",
-        key="dict",
-        serializer=serializers.PickleSerializer(),
-        )
+@cached(key="types:dict", alias="default")
 async def get_types_dict():
     '''This is a shim function to allow types to be retrieved by strings'''
     result = await db.all(RequestType.query)
@@ -107,11 +90,6 @@ async def get_types_dict():
     return dict(types_dict)
 
 
-@cached(cache=Cache.REDIS,
-        endpoint=CACHE_ENDPOINT,
-        namespace="types",
-        serializer=serializers.PickleSerializer(),
-        )
 async def get_type_ids_by_str_list(str_list: List[str]) -> List[int]:
     '''Get a list of RequestType IDs from their type_names using data code'''
     result = await db.all(
