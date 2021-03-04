@@ -1,7 +1,10 @@
+from aiocache import cached
+
 from ..models import db, cache
 from ..config import CACHE_MAXMEMORY
 
 
+@cached(alias="default")
 async def get_last_updated():
     query = db.text("SELECT max(created_time) as last_pulled FROM log WHERE status = 'INFO'")  # noqa
     result = await db.first(query)
