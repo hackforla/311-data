@@ -53,7 +53,7 @@ async def get_open_requests():
 
     council_data = {}
     for item in await council.get_councils_dict():
-        result = await council.get_open_request_counts(item)
+        result = await council.Council.get_open_request_counts(item)
         dict((row.type_name, row.type_count) for row in result)
         council_data[item] = dict((row.type_name, row.type_count) for row in result)  # noqa
 

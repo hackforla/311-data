@@ -108,7 +108,8 @@ async def get_full_request(srnumber: str):
     return result
 
 
-@cached(key="requests:open", alias="default")
+# TODO: no cache as this appears to be too big for redis (e.g. 2+ MB)
+# @cached(key="requests:open", alias="default")
 async def get_open_requests() -> List[ServiceRequest]:
 
     result = await (
