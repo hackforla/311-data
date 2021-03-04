@@ -53,6 +53,31 @@ class Council(db.Model):
         )
         return result
 
+    @classmethod
+    @cached(alias="default")
+    async def get_open_request_counts(cls, council: int):
+
+        result = await (
+            db.select(
+                [
+                    ServiceRequest.type_id,
+                    RequestType.type_name,
+                    db.func.count().label("type_count")
+                ]
+            ).select_from(
+                ServiceRequest.join(RequestType)
+            ).where(
+                and_(
+                    ServiceRequest.closed_date == None,  # noqa
+                    ServiceRequest.council_id == council  # noqa
+                )
+            ).group_by(
+                ServiceRequest.type_id,
+                RequestType.type_name
+            ).gino.all()
+        )
+        return result
+
 
 @cached(key="councils:dict", alias="default")
 async def get_councils_dict():
@@ -62,28 +87,3 @@ async def get_councils_dict():
         for i in result
     ]
     return dict(councils_dict)
-
-
-@cached(alias="default")
-async def get_open_request_counts(council: int):
-
-    result = await (
-        db.select(
-            [
-                ServiceRequest.type_id,
-                RequestType.type_name,
-                db.func.count().label("type_count")
-            ]
-        ).select_from(
-            ServiceRequest.join(RequestType)
-        ).where(
-            and_(
-                ServiceRequest.closed_date == None,  # noqa
-                ServiceRequest.council_id == council  # noqa
-            )
-        ).group_by(
-            ServiceRequest.type_id,
-            RequestType.type_name
-        ).gino.all()
-    )
-    return result

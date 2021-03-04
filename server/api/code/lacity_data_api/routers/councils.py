@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from ..models import api_models as schemas
-from ..models.council import Council, get_open_request_counts
+from ..models.council import Council
 
 router = APIRouter()
 
@@ -22,5 +22,5 @@ async def get_council(id: int):
 
 @router.get("/{id}/counts/open/types", response_model=schemas.TypeCountList)
 async def get_council_open_requests(id: int):
-    result = await get_open_request_counts(id)
+    result = await Council.get_open_request_counts(id)
     return result
