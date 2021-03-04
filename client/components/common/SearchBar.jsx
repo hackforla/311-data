@@ -36,20 +36,15 @@ const SearchBar = ({
 
   return (
     <div className={classes.wrapper}>
-      {/* <SearchIcon className={classes.icon} /> */}
+      <SearchIcon className={classes.icon} />
       <input
-        // className={classes.input}
+        className={classes.input}
         type="text"
         name="council-search"
-        // placeholder={placeholder}
-        // onChange={e => onChange(e.currentTarget.value)}
-        // onBlur={e => onChange(e.currentTarget.value)}
-        // onBlur={() => console.log('blur!')}
-        // onChange={onChange}
-        onChange={e => onChange(e)}
-        // value={value}
-        // aria-label={placeholder}
-        defaultValue=""
+        placeholder={placeholder}
+        onChange={e => onChange(e.target.value)}
+        value={value}
+        aria-label={placeholder}
       />
     </div>
   );
