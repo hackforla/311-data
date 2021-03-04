@@ -12,6 +12,8 @@ def createFeature(row):
     return {
         "type": "Feature",
         "properties": {
+            "council_id": item['council_id'],
+            "council_name": item['council_name'],
             "nc_id": item['nc_id']
         },
         "geometry": json.loads(item['geometry'])

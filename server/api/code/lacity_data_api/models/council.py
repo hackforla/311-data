@@ -1,4 +1,4 @@
-from aiocache import cached, Cache, serializers
+from aiocache import cached
 
 from sqlalchemy import and_
 
@@ -6,7 +6,6 @@ from . import db
 from .service_request import ServiceRequest
 from .region import Region
 from .request_type import RequestType
-from ..config import CACHE_ENDPOINT
 
 
 class Council(db.Model):
@@ -19,8 +18,10 @@ class Council(db.Model):
     region_id = db.Column(db.SmallInteger, db.ForeignKey('regions.region_id'))
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    data_code = db.Column(db.SmallInteger)
 
     @classmethod
+    @cached(key="councils:all", alias="default")
     async def all(cls):
         result = await (
             db.select(
@@ -53,12 +54,7 @@ class Council(db.Model):
         return result
 
 
-@cached(cache=Cache.REDIS,
-        endpoint=CACHE_ENDPOINT,
-        namespace="councils",
-        key="dict",
-        serializer=serializers.PickleSerializer(),
-        )
+@cached(key="councils:dict", alias="default")
 async def get_councils_dict():
     result = await db.all(Council.query)
     councils_dict = [
@@ -68,11 +64,7 @@ async def get_councils_dict():
     return dict(councils_dict)
 
 
-@cached(cache=Cache.REDIS,
-        endpoint=CACHE_ENDPOINT,
-        namespace="councils",
-        serializer=serializers.PickleSerializer(),
-        )
+@cached(alias="default")
 async def get_open_request_counts(council: int):
 
     result = await (

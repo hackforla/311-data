@@ -87,7 +87,6 @@ class ServiceRequest(db.Model):
         return result
 
     @classmethod
-    @cached(alias="default")
     async def get_recent_requests(cls, start_date: datetime.date):
 
         result = await (
@@ -109,7 +108,7 @@ async def get_full_request(srnumber: str):
     return result
 
 
-@cached(alias="default")
+@cached(key="requests:open", alias="default")
 async def get_open_requests() -> List[ServiceRequest]:
 
     result = await (
@@ -139,7 +138,7 @@ async def get_id_from_srnumber(srnumber: str):
     return result
 
 
-@cached(alias="default")
+@cached(key="requests:open_type_counts", alias="default")
 async def get_open_request_counts():
     result = await (
         db.select(
