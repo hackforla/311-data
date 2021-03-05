@@ -13,6 +13,13 @@ def test_councils(client):
     assert len(response.json()) == 99
 
 
+def test_councils_types_stats(client):
+    url = "/councils/types/stats"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 758
+
+
 def test_council(client):
     url = "/councils/1"
     response = client.get(url)
@@ -25,6 +32,13 @@ def test_council_open_counts(client):
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 1
+
+
+def test_council_types_stats(client):
+    url = "/councils/1/types/stats"
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.json()) == 9
 
 
 def test_regions(client):

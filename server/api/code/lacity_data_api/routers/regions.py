@@ -8,7 +8,7 @@ router = APIRouter()
 
 @router.get("", response_model=RegionList)
 async def get_all_regions():
-    result = await Region.query.gino.all()
+    result = await Region.all()
     return result
 
 

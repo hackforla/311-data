@@ -9,10 +9,10 @@ from fastapi_utils.api_model import APIModel
 
 
 class Filters(APIModel):
-    startDate: datetime.date
-    endDate: datetime.date
-    requestTypes: List[int]
-    ncList: List[int]
+    start_date: datetime.date
+    end_date: datetime.date
+    type_ids: List[int]
+    council_ids: List[int]
 
     class Config:
         schema_extra = {
@@ -27,7 +27,7 @@ class Bounds(APIModel):
     west: float
 
 
-class Filter(APIModel):
+class ClassicFilter(APIModel):
     startDate: str
     endDate: str
     ncList: List[int]

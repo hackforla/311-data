@@ -2,7 +2,6 @@ from geoalchemy2 import Geometry
 from aiocache import cached
 
 from . import db
-from lacity_data_api.models.council import Council
 
 
 class Geometry(db.Model):
@@ -12,8 +11,9 @@ class Geometry(db.Model):
     geometry = db.Column(Geometry(geometry_type="MULTIPOLYGON"))
 
     @classmethod
-    @cached(key="councils:geojson", alias="default")
+    @cached(key="Council.geojson", alias="default")
     async def get_council_geojson(cls):
+        from lacity_data_api.models.council import Council  # noqa
 
         result = await (
             db.select(
@@ -31,6 +31,7 @@ class Geometry(db.Model):
 
     @classmethod
     async def get_enclosing_council(cls, latitude: float, longitude: float):
+        from lacity_data_api.models.council import Council  # noqa
 
         result = await (
             db.select(
