@@ -9,17 +9,13 @@ import { getColors } from '../mapColors';
 // so you don't cover up important labels
 const BEFORE_ID = 'poi-label';
 
-function circleColors(colorScheme) {
-  const colors = getColors(colorScheme);
-
-  const colorsArray = Object.keys(REQUEST_TYPES).reduce((p, c) => {
-    return [...p, c, colors[c]];
-  }, []);
-
+function circleColors(requestTypes) {
+  const colors = [];
+  requestTypes.forEach(type => colors.push(type.typeId, type.color))
   return [
     'match',
     ['get', 'type'],
-    ...colorsArray,
+    ...colors,
     '#FFFFFF',
   ];
 }
@@ -46,6 +42,7 @@ class RequestsLayer extends React.Component {
       selectedTypes,
       requests,
       colorScheme,
+      requestTypes
     } = this.props;
 
     if (activeLayer !== prev.activeLayer)
@@ -65,7 +62,7 @@ class RequestsLayer extends React.Component {
     const { requests } = this.props;
     this.map.addSource('requests', {
       type: 'geojson',
-      data: requests
+      data: requests,
     });
   };
 
@@ -74,6 +71,7 @@ class RequestsLayer extends React.Component {
       activeLayer,
       selectedTypes,
       colorScheme,
+      requestTypes,
     } = this.props;
 
     this.map.addLayer({
@@ -91,36 +89,36 @@ class RequestsLayer extends React.Component {
             [15, 10]
           ],
         },
-        'circle-color': circleColors(colorScheme),
+        'circle-color': circleColors(requestTypes),
         'circle-opacity': 0.8,
       },
-      filter: typeFilter(selectedTypes),
+      // filter: typeFilter(selectedTypes),
     }, BEFORE_ID);
 
-    this.map.addLayer({
-      id: 'request-heatmap',
-      type: 'heatmap',
-      source: 'requests',
-      layout: {
-        visibility: activeLayer === 'heatmap' ? 'visible' : 'none',
-      },
-      paint: {
-        'heatmap-radius': 5,
-      },
-      filter: typeFilter(selectedTypes),
-    }, BEFORE_ID);
+    // this.map.addLayer({
+    //   id: 'request-heatmap',
+    //   type: 'heatmap',
+    //   source: 'requests',
+    //   layout: {
+    //     visibility: activeLayer === 'heatmap' ? 'visible' : 'none',
+    //   },
+    //   paint: {
+    //     'heatmap-radius': 5,
+    //   },
+    //   filter: typeFilter(selectedTypes),
+    // }, BEFORE_ID);
   };
 
   setActiveLayer = activeLayer => {
     switch(activeLayer) {
       case 'points':
         this.map.setLayoutProperty('request-circles', 'visibility', 'visible');
-        this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
+        // this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
         break;
 
       case 'heatmap':
         this.map.setLayoutProperty('request-circles', 'visibility', 'none');
-        this.map.setLayoutProperty('request-heatmap', 'visibility', 'visible');
+        // this.map.setLayoutProperty('request-heatmap', 'visibility', 'visible');
         break;
 
       default:
@@ -154,7 +152,7 @@ export default RequestsLayer;
 
 RequestsLayer.propTypes = {
   activeLayer: PropTypes.oneOf(['points', 'heatmap']),
-  selectedTypes: PropTypes.arrayOf(PropTypes.string),
+  selectedTypes: PropTypes.arrayOf(PropTypes.number),
   requests: PropTypes.shape({}),
   colorScheme: PropTypes.string,
 };

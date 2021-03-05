@@ -41,9 +41,6 @@ class MapContainer extends React.Component {
     if (prevProps.activeMode !== this.props.activeMode ||
         prevProps.pins !== this.props.pins)
       this.setData();
-
-    if (prevProps.requestTypes !== this.props.requestTypes)
-      this.setState({ selectedTypes: this.getSelectedTypes() });
   }
 
   getOpenRequests = async () => {
@@ -91,11 +88,13 @@ class MapContainer extends React.Component {
     }))
   });
 
+  // TODO: fix this
   getSelectedTypes = () => {
     const { requestTypes } = this.props;
-    return Object.keys(requestTypes).filter(type => {
-      return type !== 'All' && requestTypes[type]
-    });
+    // return Object.keys(requestTypes).filter(type => {
+    //   return type !== 'All' && requestTypes[type]
+    // });
+    return requestTypes;
   };
 
   render() {
@@ -123,7 +122,7 @@ const mapStateToProps = state => ({
   position: state.ui.map,
   lastUpdated: state.metadata.lastPulledLocal,
   activeMode: state.ui.map.activeMode,
-  requestTypes: state.mapFilters.requestTypes,
+  requestTypes: state.filters.requestTypes,
 });
 
 const mapDispatchToProps = dispatch => ({

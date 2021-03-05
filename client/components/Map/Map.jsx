@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React from 'react';
-// import PropTypes from 'proptypes';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
@@ -36,7 +36,7 @@ import MapSearch from './controls/MapSearch';
 // import MapRegion from './controls/MapRegion';
 // import MapMeta from './controls/MapMeta';
 
-// import RequestDetail from './RequestDetail';
+import RequestDetail from './RequestDetail';
 
 const styles = theme => ({
   root: {
@@ -52,7 +52,6 @@ const styles = theme => ({
   },
 })
 
-// TODO: major refactor, hooks
 class Map extends React.Component {
   constructor(props) {
     super(props);
@@ -124,6 +123,13 @@ class Map extends React.Component {
       }
     }
 
+    // requestsLayer requires requestTypes for circle-color
+    if (this.props.requestTypes != prevProps.requestTypes) {
+      this.requestsLayer.init({
+        map: this.map,
+      });
+    }
+
     if (
       this.state.filterGeo !== prevState.filterGeo ||
       this.state.selectedTypes !== prevState.selectedTypes
@@ -140,7 +146,7 @@ class Map extends React.Component {
           this.setState({
             locationInfo: {
               nc: {
-                name: ncNameFromId(geo.properties.nc_id),
+                name: geo.properties.council_name,
                 // url removed from /geojson payload
                 // need to map from /councils response
                 // url: geo.properties.waddress || geo.properties.dwebsite,
@@ -163,10 +169,6 @@ class Map extends React.Component {
   }
 
   initLayers = addListeners => {
-    this.requestsLayer.init({
-      map: this.map,
-    });
-
     this.addressLayer.init({
       map: this.map,
       addListeners,
@@ -421,6 +423,7 @@ class Map extends React.Component {
       pinsInfo,
       getPinInfo,
       lastUpdated,
+      requestTypes,
     } = this.props;
 
     const {
@@ -448,6 +451,7 @@ class Map extends React.Component {
           activeLayer={activeRequestsLayer}
           selectedTypes={selectedTypes}
           colorScheme={colorScheme}
+          requestTypes={requestTypes}
         />
         <AddressLayer
           ref={el => this.addressLayer = el}
@@ -464,9 +468,9 @@ class Map extends React.Component {
           visible={geoFilterType === GEO_FILTER_TYPES.cc}
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
-        {/* <div ref={el => this.requestDetail = el}>
+        <div ref={el => this.requestDetail = el}>
           <RequestDetail srnumber={selectedRequestId} />
-        </div> */}
+        </div>
         { this.state.mapReady && (
           <>
             {/* <MapOverview
@@ -502,12 +506,17 @@ class Map extends React.Component {
   }
 }
 
-Map.propTypes = {};
+Map.propTypes = {
+  requests: PropTypes.shape({}),
+  position: PropTypes.shape({}),
+  selectedTypes: PropTypes.arrayOf(PropTypes.number),
+};
 
 Map.defaultProps = {};
 
 const mapStateToProps = state => ({
   ncBoundaries: state.metadata.ncGeojson,
+  requestTypes: state.metadata.requestTypes,
 });
 
 export default connect(mapStateToProps, null)(withStyles(styles)(Map));
