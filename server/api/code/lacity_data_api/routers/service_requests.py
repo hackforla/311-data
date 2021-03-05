@@ -1,7 +1,6 @@
 import datetime
-from typing import Optional
+from typing import Optional, List
 
-from sqlalchemy import sql
 from fastapi import APIRouter, HTTPException, Query
 
 from ..models import api_models as schemas
@@ -84,13 +83,29 @@ async def get_open_request_counts_by_type():
     return result
 
 
-@router.post("/pins", response_model=schemas.PinList)
-async def get_filtered_service_request_pins(filters: schemas.Filters):
+@router.get("/pins", response_model=schemas.PinList)
+async def get_filtered_service_request_pins(
+    start_date: datetime.date = None,
+    end_date: datetime.date = None,
+    type_ids: Optional[List[int]] = None,
+    council_ids: Optional[List[int]] = None
+):
     result = await get_filtered_requests(
-        filters.startDate,
-        filters.endDate,
-        filters.requestTypes,
-        filters.ncList
+        start_date=start_date,
+        end_date=end_date,
+        type_ids=type_ids,
+        council_ids=council_ids
+    )
+    return result
+
+
+@router.post("/pins", response_model=schemas.PinList)
+async def post_filtered_service_request_pins(filters: schemas.Filters):
+    result = await get_filtered_requests(
+        filters.start_date,
+        filters.end_date,
+        filters.type_ids,
+        filters.council_ids
     )
     return result
 
@@ -101,21 +116,21 @@ async def get_open_service_request_pins():
     return result
 
 
-@router.post("/points")  # , response_model=PointList)
-async def get_filtered_service_request_points(filters: schemas.Filters):
-    result = await ServiceRequest.select(
-        'latitude',
-        'longitude'
-    ).where(
-        sql.and_(
-            ServiceRequest.created_date >= filters.startDate,
-            ServiceRequest.created_date <= filters.endDate,
-            ServiceRequest.type_id.in_(filters.requestTypes),
-            ServiceRequest.council_id.in_(filters.ncList)
-        )
-    ).gino.all()
-    # return result
-    return [[row.latitude, row.longitude] for row in result]
+# @router.post("/points")  # , response_model=PointList)
+# async def get_filtered_service_request_points(filters: schemas.Filters):
+#     result = await ServiceRequest.select(
+#         'latitude',
+#         'longitude'
+#     ).where(
+#         sql.and_(
+#             ServiceRequest.created_date >= filters.start_date,
+#             ServiceRequest.created_date <= filters.end_date,
+#             ServiceRequest.type_id.in_(filters.type_ids),
+#             ServiceRequest.council_id.in_(filters.council_ids)
+#         )
+#     ).gino.all()
+#     # return result
+#     return [[row.latitude, row.longitude] for row in result]
 
 
 @router.get("/{id}", response_model=schemas.ServiceRequest)

@@ -11,8 +11,14 @@ class Region(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
 
+    @classmethod
+    @cached(key="Region.all", alias="default")
+    async def all(cls):
+        result = await Region.query.gino.all()
+        return result
 
-@cached(key="regions:dict", alias="default")
+
+@cached(key="Region.dict", alias="default")
 async def get_regions_dict():
     result = await db.all(Region.query)
     regions_dict = [

@@ -15,7 +15,7 @@ class RequestType(db.Model):
     data_code = db.Column(db.String)
 
     @classmethod
-    @cached(key="types:all", alias="default")
+    @cached(key="Type.all", alias="default")
     async def all(cls):
         from .agency import Agency
 
@@ -52,7 +52,7 @@ class RequestType(db.Model):
         return result
 
     @classmethod
-    @cached(key="types:stats", alias="default")
+    @cached(key="Type.stats", alias="default")
     async def get_type_stats(cls):
 
         query = db.text("""
@@ -82,7 +82,7 @@ class RequestType(db.Model):
         return result
 
 
-@cached(key="types:dict", alias="default")
+@cached(key="Type.dict", alias="default")
 async def get_types_dict():
     '''This is a shim function to allow types to be retrieved by strings'''
     result = await db.all(RequestType.query)

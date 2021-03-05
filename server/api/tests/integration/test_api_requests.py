@@ -89,22 +89,40 @@ def test_open_counts_by_type(client):
     assert len(response.json()) == 6
 
 
-# def test_service_request_pins(client):
-#     url = "/requests/pins"
-#     response = client.post(
-#         url,
-#         json={
-#             "startDate": "2020-01-01",
-#             "endDate": "2020-01-02",
-#             "ncList": [
-#                 40
-#             ],
-#             "requestTypes": [
-#                 4
-#             ]
-#         })
-#     assert response.status_code == 200
-#     assert len(response.json()) == 34
+def test_service_request_pins(client):
+    url = "/requests/pins"
+    response = client.post(
+        url,
+        json={
+            "startDate": "2020-01-01",
+            "endDate": "2020-01-02",
+            "councilIds": [
+                40
+            ],
+            "typeIds": [
+                4
+            ]
+        })
+    assert response.status_code == 200
+    assert len(response.json()) == 36
+
+
+def test_service_request_pins_multiple(client):
+    url = "/requests/pins"
+    response = client.post(
+        url,
+        json={
+            "startDate": "2020-01-01",
+            "endDate": "2020-01-03",
+            "councilIds": [
+                1, 2, 3, 4
+            ],
+            "typeIds": [
+                1, 2
+            ]
+        })
+    assert response.status_code == 200
+    assert len(response.json()) == 22
 
 
 # def test_service_request_points(client):

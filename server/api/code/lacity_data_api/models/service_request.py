@@ -109,7 +109,7 @@ async def get_full_request(srnumber: str):
 
 
 # TODO: no cache as this appears to be too big for redis (e.g. 2+ MB)
-# @cached(key="requests:open", alias="default")
+# @cached(key="Request.open", alias="default")
 async def get_open_requests() -> List[ServiceRequest]:
 
     result = await (
@@ -139,7 +139,7 @@ async def get_id_from_srnumber(srnumber: str):
     return result
 
 
-@cached(key="requests:open_type_counts", alias="default")
+@cached(key="Request.open_type_counts", alias="default")
 async def get_open_request_counts():
     result = await (
         db.select(

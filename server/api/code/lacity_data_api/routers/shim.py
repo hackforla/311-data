@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
 from ..models.api_models import (
-    Filter, Feedback, Comparison
+    ClassicFilter, Feedback, Comparison
 )
 from ..models import (
     request_type, service_request, council
@@ -66,7 +66,7 @@ async def get_open_requests():
 
 
 @router.post("/map/pins")
-async def get_pins(filter: Filter):
+async def get_pins(filter: ClassicFilter):
     # convert type names to type ids
     type_ids = await request_type.get_type_ids_by_str_list(filter.requestTypes)
 
@@ -91,7 +91,7 @@ async def get_pins(filter: Filter):
 
 
 @router.post("/visualizations")
-async def get_visualizations(filter: Filter):
+async def get_visualizations(filter: ClassicFilter):
     result = await visualizations.get_visualization(
         filter.startDate,
         filter.endDate,

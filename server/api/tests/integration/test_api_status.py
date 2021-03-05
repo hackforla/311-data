@@ -11,9 +11,9 @@ def test_cache_status(client):
     response = client.get(url)
     assert response.status_code == 200
     # check that redis has keys
-    assert "councils:dict" in response.json()
-    assert "regions:dict" in response.json()
-    assert "types:dict" in response.json()
+    assert "Council.dict" in response.json()
+    assert "Region.dict" in response.json()
+    assert "Type.dict" in response.json()
 
 
 def test_redis_status(client):
