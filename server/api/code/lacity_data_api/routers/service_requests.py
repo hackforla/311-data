@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, List
+from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -13,6 +13,21 @@ from ..models.service_request import (
 )
 
 router = APIRouter()
+
+
+def createFeature(row):
+    item = dict(row)
+    return {
+        "type": "Feature",
+        "properties": {
+            "request_id": item['request_id'],
+            "type_id": item['type_id'],
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [item['longitude'], item['latitude']]
+        }
+    }
 
 
 # TODO: need more tests
@@ -83,22 +98,6 @@ async def get_open_request_counts_by_type():
     return result
 
 
-@router.get("/pins", response_model=schemas.PinList)
-async def get_filtered_service_request_pins(
-    start_date: datetime.date = None,
-    end_date: datetime.date = None,
-    type_ids: Optional[List[int]] = None,
-    council_ids: Optional[List[int]] = None
-):
-    result = await get_filtered_requests(
-        start_date=start_date,
-        end_date=end_date,
-        type_ids=type_ids,
-        council_ids=council_ids
-    )
-    return result
-
-
 @router.post("/pins", response_model=schemas.PinList)
 async def post_filtered_service_request_pins(filters: schemas.Filters):
     result = await get_filtered_requests(
@@ -114,6 +113,20 @@ async def post_filtered_service_request_pins(filters: schemas.Filters):
 async def get_open_service_request_pins():
     result = await get_open_requests()
     return result
+
+
+@router.get("/pins/open/geojson")
+async def get_open_service_request_pin_geojson():
+    result = await get_open_requests()
+
+    features = []
+    for i in result:
+        features.append(createFeature(i))
+
+    return {
+        "type": "FeatureCollection",
+        "features": features
+    }
 
 
 # @router.post("/points")  # , response_model=PointList)
