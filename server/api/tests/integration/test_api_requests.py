@@ -28,14 +28,14 @@ def test_service_requests_type(client):
 
 
 def test_service_requests_council(client):
-    url = "/requests?start_date=2020-01-01&end_date=2020-01-02&council_id=27"
+    url = "/requests?start_date=2020-01-01&end_date=2020-01-02&council_id=28"
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 39
 
 
 def test_service_requests_all(client):
-    url = "/requests?start_date=2020-01-01&end_date=2020-01-02&type_id=2&council_id=27"
+    url = "/requests?start_date=2020-01-01&end_date=2020-01-02&type_id=2&council_id=28"
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 3
@@ -49,7 +49,7 @@ def test_updated_service_requests(client):
 
 
 def test_updated_service_requests_council(client):
-    url = "/requests/updated?start_date=2020-01-01&end_date=2020-01-02&council_id=27"
+    url = "/requests/updated?start_date=2020-01-01&end_date=2020-01-02&council_id=28"
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 39
@@ -115,7 +115,7 @@ def test_service_request_pins_multiple(client):
             "startDate": "2020-01-01",
             "endDate": "2020-01-03",
             "councilIds": [
-                1, 2, 3, 4
+                1, 2, 4, 5
             ],
             "typeIds": [
                 1, 2
