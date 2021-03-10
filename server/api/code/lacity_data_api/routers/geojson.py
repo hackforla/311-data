@@ -1,5 +1,6 @@
 import json
 
+import pendulum
 from fastapi import APIRouter, HTTPException
 
 from ..models.geometry import Geometry
@@ -17,6 +18,24 @@ def createFeature(row):
             "nc_id": item['nc_id']
         },
         "geometry": json.loads(item['geometry'])
+    }
+
+
+def createHotspotFeature(row):
+    item = dict(row)
+    return {
+        "type": "Feature",
+        "properties": {
+            "hotspot_id": item['hotspot_id'],
+            "count": item['hotspot_count'],
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                item['hotspot_long'],
+                item['hotspot_lat']
+            ]
+        }
     }
 
 
@@ -43,3 +62,21 @@ async def get_enclosing_council(
     if not result:
         raise HTTPException(status_code=404, detail="Item not found")
     return result
+
+
+@router.get("/hotspots")
+async def get_hotspots(
+    type_id: int = 6,  # defaults to illegal dumping
+    start_date: str = pendulum.today().subtract(years=1).to_date_string()
+):
+
+    features = []
+    result = await Geometry.get_hotspots(type_id, start_date)
+
+    for i in result:
+        features.append(createHotspotFeature(i))
+
+    return {
+        "type": "FeatureCollection",
+        "features": features
+    }

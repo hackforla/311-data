@@ -47,3 +47,35 @@ class Geometry(db.Model):
             ).gino.first()
         )
         return result
+
+    @classmethod
+    async def get_hotspots(cls, type_id: int, start_date: str):
+
+        # using ~30m radius (epsilon) and 1+ request/month
+        query = db.text(f"""
+            SELECT
+                h.hotspot_id,
+                count(*) as hotspot_count,
+                ST_X(ST_Centroid(ST_Collect(h.request_point))) as hotspot_long,
+                ST_Y(ST_Centroid(ST_Collect(h.request_point))) as hotspot_lat
+            FROM (
+                SELECT
+                    ST_SetSRID(
+                        ST_MakePoint(longitude, latitude), 4326
+                    ) as request_point,
+                    ST_ClusterDBSCAN(
+                        ST_SetSRID(ST_MakePoint(longitude, latitude), 4326),
+                        eps := 0.0003, minpoints := 12
+                    ) over () AS hotspot_id
+                FROM
+                    service_requests
+                WHERE
+                    created_date >= '{start_date}' AND type_id = {type_id}
+            ) as h
+            WHERE hotspot_id is not null
+            GROUP BY h.hotspot_id
+            ;
+        """)
+
+        result = await db.all(query)
+        return result

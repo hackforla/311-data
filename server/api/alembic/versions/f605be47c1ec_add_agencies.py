@@ -37,8 +37,8 @@ REQUESTS_VIEW = """
             COALESCE(councils.council_id, 0)::SMALLINT as council_id,
             COALESCE(councils.region_id, 0)::SMALLINT as region_id,
             requests.address::VARCHAR(100),
-            requests.latitude,
-            requests.longitude,
+            requests.latitude::REAL,
+            requests.longitude::REAL,
             requests.cd::SMALLINT as city_id
         FROM 
             requests
