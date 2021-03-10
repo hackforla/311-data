@@ -2,6 +2,7 @@ from geoalchemy2 import Geometry
 from aiocache import cached
 
 from . import db
+from ..services import utilities
 
 
 class Geometry(db.Model):
@@ -49,6 +50,7 @@ class Geometry(db.Model):
         return result
 
     @classmethod
+    @cached(key_builder=utilities.classmethod_cache_key, alias="default")
     async def get_hotspots(cls, type_id: int, start_date: str):
 
         # using ~30m radius (epsilon) and 1+ request/month

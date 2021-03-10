@@ -66,7 +66,7 @@ async def get_enclosing_council(
 
 @router.get("/hotspots")
 async def get_hotspots(
-    type_id: int = 6,  # defaults to illegal dumping
+    type_id: int = 2,  # defaults to homeless encampment
     start_date: str = pendulum.today().subtract(years=1).to_date_string()
 ):
 
