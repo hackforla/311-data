@@ -26,6 +26,8 @@ def createHotspotFeature(row):
     return {
         "type": "Feature",
         "properties": {
+            "council_name": item['council_name'],
+            "council_id": item['council_id'],
             "hotspot_id": item['hotspot_id'],
             "count": item['hotspot_count'],
         },
