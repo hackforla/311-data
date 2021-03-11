@@ -14,7 +14,7 @@ function circleColors(requestTypes) {
   requestTypes.forEach(type => colors.push(type.typeId, type.color))
   return [
     'match',
-    ['get', 'type'],
+    ['get', 'typeId'],
     ...colors,
     '#FFFFFF',
   ];

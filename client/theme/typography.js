@@ -41,7 +41,7 @@ export default {
   },
   body2: {
     fontSize: 14,
-
+    fontWeight: robotoRegular,
   },
   body3: {
     fontSize: 14,
