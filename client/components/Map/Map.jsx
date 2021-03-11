@@ -316,7 +316,6 @@ class Map extends React.Component {
       if (feature.layer.id === 'request-circles') {
         const { coordinates } = feature.geometry;
         const { requestId, typeId } = feature.properties;
-        console.log(feature.properties)
         return this.addPopup(coordinates, requestId);
       }
     }

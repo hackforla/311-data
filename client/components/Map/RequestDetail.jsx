@@ -99,7 +99,7 @@ class RequestDetail extends React.Component {
               className={classes.icon}
               style={{
                 color: requestTypes.find(({ typeId }) => typeId === requestTypeId).color,
-                fontSize: 20,
+                fontSize: 16,
               }}
             />
           </Grid>
