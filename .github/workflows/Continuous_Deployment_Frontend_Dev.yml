@@ -6,6 +6,7 @@ on:
       - dev
     paths:
       - 'client/**'
+  workflow_dispatch:
 
 defaults:
   run:
