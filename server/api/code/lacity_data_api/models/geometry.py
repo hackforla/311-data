@@ -56,6 +56,8 @@ class Geometry(db.Model):
         # using ~30m radius (epsilon) and 1+ request/month
         query = db.text(f"""
             SELECT
+                councils.council_id,
+                councils.council_name,
                 h.hotspot_id,
                 count(*) as hotspot_count,
                 ST_X(ST_Centroid(ST_Collect(h.request_point))) as hotspot_long,
@@ -74,8 +76,10 @@ class Geometry(db.Model):
                 WHERE
                     created_date >= '{start_date}' AND type_id = {type_id}
             ) as h
+            JOIN geometries ON ST_Within(request_point, ST_SetSRID(geometry, 4326))
+            JOIN councils ON (councils.data_code = geometries.nc_id)
             WHERE hotspot_id is not null
-            GROUP BY h.hotspot_id
+            GROUP BY h.hotspot_id, council_id, council_name
             ;
         """)
 

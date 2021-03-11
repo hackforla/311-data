@@ -3,18 +3,20 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 from ..models import (
-    request_type, council, region, service_request, geometry
+    request_type, council, region, service_request
 )
 # from ..config import DEBUG
 
 
 async def build_cache():
+    from ..models.geometry import Geometry  # avoiding circular imports
+
     open_requests = await service_request.get_open_requests()
     open_requests_counts = await service_request.get_open_request_counts()
     regions = await region.get_regions_dict()
     councils = await council.get_councils_dict()
     types = await request_type.get_types_dict()
-    geojson = await geometry.Geometry.get_council_geojson()
+    geojson = await Geometry.get_council_geojson()
 
     # for i in councils:
     #     await council.get_open_request_counts(i)
