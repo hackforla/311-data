@@ -12,7 +12,7 @@ import Map from './Map';
 
 const styles = theme => ({
   root: {
-    height: '100%',
+    height: `calc(100vh - ${theme.header.height} - ${theme.footer.height})`,
   },
 })
 
@@ -75,8 +75,8 @@ class MapContainer extends React.Component {
     features: requests.map(request => ({
       type: 'Feature',
       properties: {
-        id: request.requestId,
-        type: request.typeId,
+        requestId: request.requestId,
+        typeId: request.typeId,
       },
       geometry: {
         type: 'Point',

@@ -40,7 +40,10 @@ import RequestDetail from './RequestDetail';
 
 const styles = theme => ({
   root: {
-    height: '100%',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: '100%',
     margin: '0 auto',
     '& canvas.mapboxgl-canvas:focus': {
       outline: 'none',
@@ -48,6 +51,32 @@ const styles = theme => ({
     // TODO: controls placement
     '& .mapboxgl-control-container': {
       display: 'none',
+    },
+    '& .mapboxgl-popup-content': {
+      backgroundColor: theme.palette.primary.main,
+      borderRadius: 5,
+      padding: 10,
+    },
+    '& .mapboxgl-popup-close-button': {
+      fontSize: 24,
+      color: 'white',
+      padding: 0,
+      marginTop: 5,
+      marginRight: 5,
+    },
+    '& .mapboxgl-popup': {
+      '&-anchor-bottom .mapboxgl-popup-tip': {
+        borderTopColor: theme.palette.primary.main,
+      },
+      '&-anchor-top .mapboxgl-popup-tip': {
+        borderBottomColor: theme.palette.primary.main,
+      },
+      '&-anchor-left .mapboxgl-popup-tip': {
+        borderRightColor: theme.palette.primary.main,
+      },
+      '&-anchor-right .mapboxgl-popup-tip': {
+        borderLeftColor: theme.palette.primary.main,
+      },
     },
   },
 })
@@ -123,7 +152,6 @@ class Map extends React.Component {
       }
     }
 
-    // requestsLayer requires requestTypes for circle-color
     if (this.props.requestTypes != prevProps.requestTypes) {
       this.requestsLayer.init({
         map: this.map,
@@ -230,25 +258,25 @@ class Map extends React.Component {
     }
   };
 
-  reset = () => {
-    this.zoomOut();
-    this.addressLayer.setCenter(null);
-    this.ncLayer.clearSelectedRegion();
-    this.ccLayer.clearSelectedRegion();
-    this.removePopup();
+  // reset = () => {
+  //   this.zoomOut();
+  //   this.addressLayer.setCenter(null);
+  //   this.ncLayer.clearSelectedRegion();
+  //   this.ccLayer.clearSelectedRegion();
+  //   this.removePopup();
 
-    this.setState({
-      locationInfo: INITIAL_LOCATION,
-      canReset: false,
-    });
+  //   this.setState({
+  //     locationInfo: INITIAL_LOCATION,
+  //     canReset: false,
+  //   });
 
-    this.map.once('zoomend', () => {
-      this.setState({
-        filterGeo: null,
-        canReset: true,
-      });
-    });
-  };
+  //   this.map.once('zoomend', () => {
+  //     this.setState({
+  //       filterGeo: null,
+  //       canReset: true,
+  //     });
+  //   });
+  // };
 
   onClick = e => {
     const masks = [
@@ -287,8 +315,9 @@ class Map extends React.Component {
 
       if (feature.layer.id === 'request-circles') {
         const { coordinates } = feature.geometry;
-        const { id } = feature.properties;
-        return this.addPopup(coordinates, id);
+        const { requestId, typeId } = feature.properties;
+        console.log(feature.properties)
+        return this.addPopup(coordinates, requestId);
       }
     }
   };
@@ -331,23 +360,23 @@ class Map extends React.Component {
     console.log(this.map.getCanvas().toDataURL());
   };
 
-  setSelectedTypes = selectedTypes => {
-    this.setState({ selectedTypes });
-  };
+  // setSelectedTypes = selectedTypes => {
+  //   this.setState({ selectedTypes });
+  // };
 
-  setActiveRequestsLayer = layerName => {
-    this.setState({ activeRequestsLayer: layerName });
-  };
+  // setActiveRequestsLayer = layerName => {
+  //   this.setState({ activeRequestsLayer: layerName });
+  // };
 
-  setMapStyle = mapStyle => {
-    this.setState({ mapStyle });
-    this.map.setStyle(MAP_STYLES[mapStyle]);
-    this.map.once('styledata', () => this.initLayers(false));
-  };
+  // setMapStyle = mapStyle => {
+  //   this.setState({ mapStyle });
+  //   this.map.setStyle(MAP_STYLES[mapStyle]);
+  //   this.map.once('styledata', () => this.initLayers(false));
+  // };
 
-  setColorScheme = scheme => {
-    this.setState({ colorScheme: scheme });
-  };
+  // setColorScheme = scheme => {
+  //   this.setState({ colorScheme: scheme });
+  // };
 
   getDistrictCounts = (geoFilterType, filterGeo, selectedTypes) => {
     const { ncCounts, ccCounts } = this.props;
@@ -469,7 +498,7 @@ class Map extends React.Component {
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
         <div ref={el => this.requestDetail = el}>
-          <RequestDetail srnumber={selectedRequestId} />
+          <RequestDetail requestId={selectedRequestId} />
         </div>
         { this.state.mapReady && (
           <>
