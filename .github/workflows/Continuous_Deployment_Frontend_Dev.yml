@@ -1,11 +1,12 @@
 name: Deploy_Frontend_Dev
 
 on:
-  [push, workflow_dispatch]:
+  push:
     branches:
       - dev
     paths:
       - 'client/**'
+  workflow_dispatch:
 
 defaults:
   run:
