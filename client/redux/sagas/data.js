@@ -59,7 +59,7 @@ function* fetchHeatmap(filters) {
 }
 
 function* fetchPinInfo(srnumber) {
-  const pinInfoUrl = `${BASE_URL}/servicerequest/${srnumber}`;
+  const pinInfoUrl = `${BASE_URL}/requests/${srnumber}`;
 
   const { data } = yield call(axios.get, pinInfoUrl);
 

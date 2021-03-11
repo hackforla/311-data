@@ -2,6 +2,9 @@ export const types = {
   GET_DATA_REQUEST: 'GET_DATA_REQUEST',
   GET_PINS_SUCCESS: 'GET_PINS_SUCCESS',
   GET_PINS_FAILURE: 'GET_PINS_FAILURE',
+  GET_OPEN_REQUESTS: 'GET_OPEN_REQUESTS',
+  GET_OPEN_REQUESTS_SUCCESS: 'GET_OPEN_REQUESTS_SUCCESS',
+  GET_OPEN_REQUESTS_FAILURE: 'GET_OPEN_REQUESTS_FAILURE',
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
@@ -28,9 +31,9 @@ export const getPinsFailure = error => ({
   payload: error,
 });
 
-export const getPinInfoRequest = srnumber => ({
+export const getPinInfoRequest = requestId => ({
   type: types.GET_PIN_INFO_REQUEST,
-  payload: srnumber,
+  payload: requestId,
 });
 
 export const getPinInfoSuccess = response => ({
@@ -129,7 +132,7 @@ export default (state = initialState, action) => {
         error: null,
         pinsInfo: {
           ...state.pinsInfo,
-          [action.payload.srnumber]: action.payload,
+          [action.payload.requestId]: action.payload,
         },
       };
     case types.GET_PIN_INFO_FAILURE: {
