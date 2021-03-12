@@ -22,8 +22,20 @@ class WebsiteUser(FastHttpUser):
         self.client.get("/status/api")
 
     @task
-    def open_requests(self):
-        self.client.get("/requests/pins/open")
+    def councils(self):
+        self.client.get("/councils")
+
+    @task
+    def types(self):
+        self.client.get("/types")
+
+    @task
+    def geojson(self):
+        self.client.get("/geojson")
+
+    # @task
+    # def open_requests(self):
+    #     self.client.get("/requests/pins/open")
 
     @task
     def open_requests_counts(self):
