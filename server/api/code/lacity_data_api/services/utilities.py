@@ -61,7 +61,7 @@ def cache_key(f, *args, **kwargs):
     return format(
         str(f.__module__).split('.')[-1].capitalize() +
         '.' +
-        str(f.__qualname__) + str(args[1:])
+        str(f.__qualname__) + str(args)
     )
 
 
