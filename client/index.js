@@ -14,7 +14,7 @@ import App from './App';
 import theme from './theme/theme';
 
 Sentry.init({
-  dsn: 'https://7e1f75ca9a3d4de797f3f6cb95478ac9@o452210.ingest.sentry.io/5672572',
+  dsn: process.env.SENTRY_CLIENT_DSN,
   integrations: [new Integrations.BrowserTracing()],
 
   // Set tracesSampleRate to 1.0 to capture 100%
