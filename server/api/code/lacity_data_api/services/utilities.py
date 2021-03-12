@@ -54,8 +54,19 @@ def classmethod_cache_key(f, *args, **kwargs):
     return format(str(f.__qualname__) + str(args[1:]))
 
 
+def cache_key(f, *args, **kwargs):
+    """
+    Utility function to create shorter keys for methods
+    """
+    return format(
+        str(f.__module__).split('.')[-1].capitalize() +
+        '.' +
+        str(f.__qualname__) + str(args)
+    )
+
+
 # TODO: maybe recessitate this for object keys (e.g. filters)
-# def cache_key(f, *args, **kwargs):
+# def hashed_cache_key(f, *args, **kwargs):
 #     """
 #     Utility function to create hashed key for pins based on filters
 #     """
