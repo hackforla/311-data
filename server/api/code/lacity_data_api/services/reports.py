@@ -7,6 +7,7 @@ from ..models.request_type import RequestType
 from ..models.council import Council
 from ..models.source import Source
 from ..models.agency import Agency
+from .utilities import cache_key
 
 
 # maps keywords to sqlalchemy columns or functions
@@ -39,7 +40,7 @@ field_dict = {
 filter_regex = "^(\w+)([>=<]+)([\w-]+)$"  # noqa
 
 
-@cached(alias="default")
+@cached(key_builder=cache_key, alias="default")
 async def run_report(field, filter):
 
     # set up the fields for select and group by
