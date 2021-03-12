@@ -41,14 +41,19 @@ with Flow(
     complete = postgres.complete_load()
 
     # clear the API cache
-    cache = cache.clear_cache()
+    clear = cache.clear_cache()
+
+    # clear the API cache
+    reload = cache.reload_reports()
 
     # make sure prep runs before load
     flow.add_edge(upstream_task=prep, downstream_task=load)
     # make sure load runs before complete
     flow.add_edge(upstream_task=load, downstream_task=complete)
-# make sure load runs before complete
-    flow.add_edge(upstream_task=complete, downstream_task=cache)
+    # make sure complete runs before cache is cleared
+    flow.add_edge(upstream_task=complete, downstream_task=clear)
+    # make sure load runs before complete
+    flow.add_edge(upstream_task=clear, downstream_task=reload)
 
 if __name__ == "__main__":
     logger = prefect.context.get("logger")
