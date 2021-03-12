@@ -13,6 +13,7 @@ import {
   getCouncilsSuccess,
   getRegionsSuccess,
   getNcGeojsonSuccess,
+  getAgenciesSuccess,
   getMetadataFailure,
 } from '../reducers/metadata';
 
@@ -24,18 +25,21 @@ function* getMetadata() {
       requestTypes,
       councils,
       regions,
+      agencies,
       ncGeojson,
     ] = yield all([
       call(axios.get, `${baseUrl}/status/api`),
       call(axios.get, `${baseUrl}/types`),
       call(axios.get, `${baseUrl}/councils`),
       call(axios.get, `${baseUrl}/regions`),
+      call(axios.get, `${baseUrl}/agencies`),
       call(axios.get, `${baseUrl}/geojson`),
     ]);
     const { data: statusMetadata } = metadata;
     const { data: typesMetadata } = requestTypes;
     const { data: councilsMetadata } = councils;
     const { data: regionsMetadata } = regions;
+    const { data: agenciesMetadata } = agencies;
     const { data: ncGeojsonMetadata } = ncGeojson;
 
     yield all([
@@ -43,6 +47,7 @@ function* getMetadata() {
       put(getRequestTypesSuccess(typesMetadata)),
       put(getCouncilsSuccess(councilsMetadata)),
       put(getRegionsSuccess(regionsMetadata)),
+      put(getAgenciesSuccess(agenciesMetadata)),
       put(getNcGeojsonSuccess(ncGeojsonMetadata)),
     ]);
   } catch (e) {

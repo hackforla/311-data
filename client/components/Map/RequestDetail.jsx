@@ -78,6 +78,8 @@ class RequestDetail extends React.Component {
       councilName,
       typeName,
       typeId: requestTypeId,
+      // agencyId,
+      // agencyName,
       createdDate,
       closedDate,
       address,
@@ -114,14 +116,12 @@ class RequestDetail extends React.Component {
           justify="space-between"
           alignItems="flex-start"
         >
-          <Grid item xs={6}>
-            Service request:
+          <Grid item xs={6}>Responsible agency:</Grid>
+          <Grid item xs={6} style={{ textAlign: 'right' }}>
+            {/* <a href={} aria-label={`${agencyName} website`}>{agencyName}</a> */}
           </Grid>
-          <Grid
-            item
-            xs={6}
-            style={{ textAlign: 'right' }}
-          >
+          <Grid item xs={6}>Service request:</Grid>
+          <Grid item xs={6} style={{ textAlign: 'right' }}>
             {srnumber}
           </Grid>
           <Grid item xs={6}>
@@ -172,6 +172,7 @@ class RequestDetail extends React.Component {
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   requestTypes: state.metadata.requestTypes,
+  agencies: state.metadata.agencies,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -184,10 +185,12 @@ RequestDetail.propTypes = {
   requestId: PropTypes.number,
   pinsInfo: PropTypes.shape({}),
   requestTypes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  // agencies: PropTypes.arrayOf(PropTypes.shape({})),
   getPinInfo: PropTypes.func.isRequired,
 };
 
 RequestDetail.defaultProps = {
   requestId: null,
   pinsInfo: {},
+  // agencies: null,
 };
