@@ -9,6 +9,8 @@ reset_db = false
 temp_folder = ""
 # set to local API instance or override with PREFECT__API_URL
 api_url = "http://localhost:5000"
+# set to local API instance or override with PREFECT__API_URL
+report_server_url = "https://dash-reporting.tofn9kh9mlm7g.us-east-1.cs.amazonlightsail.com"
 # whether the data update is being run in a testing, development or production environment
 stage = "Testing"
 # whether to vacuum database and reset stats after load
