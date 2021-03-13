@@ -33,9 +33,9 @@ class WebsiteUser(FastHttpUser):
     def geojson(self):
         self.client.get("/geojson")
 
-    # @task
-    # def open_requests(self):
-    #     self.client.get("/requests/pins/open")
+    @task
+    def open_requests(self):
+        self.client.get("/requests/pins/open")
 
     @task
     def open_requests_counts(self):
