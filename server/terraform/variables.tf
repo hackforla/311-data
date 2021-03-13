@@ -70,3 +70,8 @@ variable tags {
   default     = {}
   type        = map
 }
+
+variable db_engine_version {
+  description = "the semver major and minor version of postgres; default to 11.8"
+  default = "11.10"
+}
