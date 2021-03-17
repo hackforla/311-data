@@ -1,3 +1,4 @@
+/* eslint no-shadow: ["error", { "allow": ["data", "errors"] }] */
 import React from 'react';
 
 const url = `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE}`;
@@ -16,9 +17,9 @@ const useContentful = query => {
       body: JSON.stringify({ query }),
     })
     .then(response => response.json())
-    .then(({ resData, resErrors }) => {
-      if (resErrors) setErrors(resErrors);
-      if (resData) setData(resData);
+    .then(({ data, errors }) => {
+      if (errors) setErrors(errors);
+      if (data) setData(data);
     })
     .catch(error => setErrors([error]));
   }, [query]);
