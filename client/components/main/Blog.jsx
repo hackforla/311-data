@@ -56,11 +56,10 @@ const Blog = () => {
               <Grid item xs={9}>
                 { data.blogPostCollection.items.map(item => (
                   <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
-                    <h1 id={`#${item.slug}`}>{item.title}</h1>
-                    <h5>
-                      Posted
+                    <h1 id={`${item.slug}`}>{item.title}</h1>
+                    <h4>
                       {new Date(item.publishDate).toLocaleDateString()}
-                    </h5>
+                    </h4>
                     <ReactMarkdown>{item.body}</ReactMarkdown>
                   </Box>
                 ))}
@@ -68,7 +67,9 @@ const Blog = () => {
               <Grid item xs={3}>
                 <List dense>
                   { data.blogPostCollection.items.map(item => (
-                    <ListItem key={item.sys.id} component="a" href={`#${item.slug}`}>{item.title}</ListItem>
+                    <ListItem key={item.sys.id} component="a" href={`#${item.slug}`}>
+                      {item.title}
+                    </ListItem>
                   ))}
                 </List>
               </Grid>

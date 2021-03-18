@@ -6,6 +6,7 @@ import {
   Box,
   List,
   ListItem,
+  Grid,
 } from '@material-ui/core';
 import useContentful from '../../hooks/useContentful';
 
@@ -49,18 +50,22 @@ const Faqs = () => {
       { data
         && (
           <Container className={classes.root} maxWidth="md">
-            <h1>Frequently Asked Questions</h1>
-            <List dense>
-              { data.faqCollection.items.map(item => (
-                <ListItem key={item.sys.id} component="a" href={`#${item.question}`}>{item.question}</ListItem>
-              ))}
-            </List>
-            { data.faqCollection.items.map(item => (
-              <Box key={item.sys.id} style={{ marginTop: '3em' }}>
-                <h2 id={item.question}>{item.question}</h2>
-                <ReactMarkdown>{item.answer}</ReactMarkdown>
-              </Box>
-            ))}
+            <Grid container spacing={2}>
+              <Grid item xs={9}>
+                <h1>Frequently Asked Questions</h1>
+                <List dense>
+                  { data.faqCollection.items.map(item => (
+                    <ListItem key={item.sys.id} component="a" href={`#${item.question}`}>{item.question}</ListItem>
+                  ))}
+                </List>
+                { data.faqCollection.items.map(item => (
+                  <Box key={item.sys.id} style={{ marginTop: '3em' }}>
+                    <h2 id={item.question}>{item.question}</h2>
+                    <ReactMarkdown>{item.answer}</ReactMarkdown>
+                  </Box>
+                ))}
+              </Grid>
+            </Grid>
           </Container>
         )}
     </>

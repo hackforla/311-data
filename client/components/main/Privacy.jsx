@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import {
   makeStyles,
   Container,
+  Grid,
 } from '@material-ui/core';
 import useContentful from '../../hooks/useContentful';
 
@@ -45,8 +46,12 @@ const Privacy = () => {
       { data
         && (
           <Container className={classes.root} maxWidth="md">
-            <h1>{data.simplePageCollection.items[0].title}</h1>
-            <ReactMarkdown>{data.simplePageCollection.items[0].body}</ReactMarkdown>
+            <Grid container spacing={2}>
+              <Grid item xs={9}>
+                <h1>{data.simplePageCollection.items[0].title}</h1>
+                <ReactMarkdown>{data.simplePageCollection.items[0].body}</ReactMarkdown>
+              </Grid>
+            </Grid>
           </Container>
         )}
     </>
