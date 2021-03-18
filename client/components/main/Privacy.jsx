@@ -29,6 +29,9 @@ const useStyles = makeStyles({
     '& img': {
       maxWidth: '100%',
       height: 'auto',
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
     },
   },
 });

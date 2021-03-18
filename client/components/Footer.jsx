@@ -10,8 +10,6 @@ import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   footer: {
-    position: 'absolute',
-    bottom: 0,
     height: theme.footer.height,
     width: '100%',
     backgroundColor: theme.palette.primary.dark,

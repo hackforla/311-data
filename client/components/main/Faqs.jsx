@@ -33,6 +33,9 @@ const useStyles = makeStyles({
     '& img': {
       maxWidth: '100%',
       height: 'auto',
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
     },
   },
 });
@@ -59,7 +62,7 @@ const Faqs = () => {
                   ))}
                 </List>
                 { data.faqCollection.items.map(item => (
-                  <Box key={item.sys.id} style={{ marginTop: '3em' }}>
+                  <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
                     <h2 id={item.question}>{item.question}</h2>
                     <ReactMarkdown>{item.answer}</ReactMarkdown>
                   </Box>
