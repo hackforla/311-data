@@ -47,6 +47,11 @@ module.exports = {
         roles: ["tabpanel"],
       },
     ],
+    "jsx-a11y/label-has-associated-control": [ 2, {
+      "labelComponents": ["label"],
+      "labelAttributes": ["htmlFor"],
+      "controlComponents": ["input"]
+    }],
     "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
   },
 };

@@ -106,6 +106,9 @@ const Header = () => {
         <Link to="/privacy">
           <Button className={classes.button}>Privacy</Button>
         </Link>
+        <Link to="/contact">
+          <Button className={classes.button}>Contact</Button>
+        </Link>
       </Toolbar>
     </AppBar>
   );
