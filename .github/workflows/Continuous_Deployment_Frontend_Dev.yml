@@ -33,6 +33,8 @@ jobs:
         echo MIXPANEL_ENABLED=${{ secrets.MIXPANEL_ENABLED }} >> .env
         echo MIXPANEL_TOKEN_PROD=${{ secrets.MIXPANEL_TOKEN_PROD }} >> .env
         echo MIXPANEL_TOKEN_DEV=${{ secrets.MIXPANEL_TOKEN_DEV }} >> .env
+        echo CONTENTFUL_SPACE=${{ secrets.CONTENTFUL_SPACE }} >> .env
+        echo CONTENTFUL_TOKEN=${{ secrets.CONTENTFUL_TOKEN }} >> .env
         echo GITHUB_SHA=${{ github.sha }} >> .env
     - name: Build project
       run: npm run build
