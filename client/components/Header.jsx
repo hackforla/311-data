@@ -52,7 +52,7 @@ const Header = () => {
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
         <Typography variant="h1" className={classes.title}>
-          311DATA
+          <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>311DATA</Link>
         </Typography>
         <Link to="/map">
           <Button className={classes.button}>Map</Button>
