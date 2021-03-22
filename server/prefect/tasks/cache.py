@@ -1,10 +1,12 @@
+import asyncio
 import requests
-
+from pyppeteer import launch
 import prefect
 from prefect.utilities.tasks import task
 
 CACHE_PATH = "/status/reset-cache"
 RELOAD_PATH = "/reload"
+SUCCESS_STRING = "Loading..."
 
 
 @task
@@ -23,6 +25,20 @@ def clear_cache():
         logger.info("Cache clearing failed")
 
 
+async def run_js_page(url: str):
+    browser = await launch(
+        headless=True,
+        handleSIGINT=False,
+        handleSIGTERM=False,
+        handleSIGHUP=False,
+    )
+    page = await browser.newPage()
+    await page.goto(url)
+    content = await page.content()
+    await browser.close()
+    return content
+
+
 @task
 def reload_reports():
     """
@@ -31,9 +47,10 @@ def reload_reports():
     logger = prefect.context.get("logger")
     report_server_url = prefect.config.report_server_url
     reload_path = f"{report_server_url}{RELOAD_PATH}"
-    response = requests.get(reload_path)
 
-    if response.status_code == 200:
+    result = asyncio.run(run_js_page(reload_path))
+
+    if SUCCESS_STRING in result:
         logger.info(f"Report reloading successful: {reload_path}")
     else:
-        logger.info("Report reloading failed")
+        logger.warning("Report reloading FAILED")
