@@ -12,6 +12,7 @@ prefect = "*"
 sodapy = "*"
 psycopg2-binary = "*"
 pendulum = "*"
+pyppeteer = "*"
 
 [requires]
 python_version = "3.7"
