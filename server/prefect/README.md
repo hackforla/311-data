@@ -11,6 +11,8 @@ The steps in the data ingestion/update process:
 * Insert the downloaded data to a temporary table in Postgres
 * Move the data from the temporary to the requests table
 * Update views and vacuum the database
+* Clear the API Server data cache (if configured)
+* Reload the Report Server report data (if configured)
 * Write some metadata about the load (and options post to Slack)
 
 ## Background
