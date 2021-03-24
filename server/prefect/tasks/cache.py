@@ -31,6 +31,13 @@ async def run_js_page(url: str):
         handleSIGINT=False,
         handleSIGTERM=False,
         handleSIGHUP=False,
+        args=[
+            '--no-sandbox',
+            '--single-process',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--no-zygote'
+        ]
     )
     page = await browser.newPage()
     await page.goto(url)
