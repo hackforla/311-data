@@ -8,7 +8,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install gcc to build psutil wheel used by Dask
-RUN apt-get update -y && apt-get install -y gcc
+RUN apt-get update -y && apt-get install -y gcc && apt-get install -y curl
 
 # download chrome 
 RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
