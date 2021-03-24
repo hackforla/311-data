@@ -8,7 +8,7 @@ from prefect.utilities.tasks import task
 
 CACHE_PATH = "/status/reset-cache"
 RELOAD_PATH = "/reload"
-SUCCESS_STRING = "Loading..."
+SUCCESS_STRING = "Reloading..."
 
 
 @task
@@ -51,6 +51,7 @@ async def run_js_page(url: str):
 
     page = await browser.newPage()
     await page.goto(url)
+    await page.waitForSelector('#reloading-msg')
     content = await page.content()
     await browser.close()
     return content
@@ -67,6 +68,7 @@ def reload_reports():
 
     result = asyncio.run(run_js_page(reload_path))
 
+    # TODO: REMOVE THIS
     logger.info(result)
 
     if SUCCESS_STRING in result:
