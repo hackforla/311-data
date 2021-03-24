@@ -68,9 +68,6 @@ def reload_reports():
 
     result = asyncio.run(run_js_page(reload_path))
 
-    # TODO: REMOVE THIS
-    logger.info(result)
-
     if SUCCESS_STRING in result:
         logger.info(f"Report reloading successful: {reload_path}")
     else:
