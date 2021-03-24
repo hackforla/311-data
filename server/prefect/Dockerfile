@@ -19,8 +19,8 @@ WORKDIR /app
 ADD . /app
 
 # Switch to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
-RUN useradd appuser && chown -R appuser /app
-USER appuser
+# RUN useradd appuser && chown -R appuser /app
+# USER appuser
 
 # Tell Prefect where to look for the config
 ENV PREFECT__USER_CONFIG_PATH ./config.toml
