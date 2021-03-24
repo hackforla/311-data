@@ -1,5 +1,7 @@
 import asyncio
 import requests
+import os
+
 from pyppeteer import launch
 import prefect
 from prefect.utilities.tasks import task
@@ -26,19 +28,37 @@ def clear_cache():
 
 
 async def run_js_page(url: str):
-    browser = await launch(
-        headless=True,
-        handleSIGINT=False,
-        handleSIGTERM=False,
-        handleSIGHUP=False,
-        args=[
-            '--no-sandbox',
-            '--single-process',
-            '--disable-dev-shm-usage',
-            '--disable-gpu',
-            '--no-zygote'
-        ]
-    )
+
+    if os.environ.get('IS_DOCKER', False):
+        browser = await launch(
+            executablePath='/usr/bin/google-chrome-stable',
+            headless=True,
+            handleSIGINT=False,
+            handleSIGTERM=False,
+            handleSIGHUP=False,
+            args=[
+                '--no-sandbox',
+                '--single-process',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--no-zygote'
+            ]
+        )
+    else:
+        browser = await launch(
+            headless=True,
+            handleSIGINT=False,
+            handleSIGTERM=False,
+            handleSIGHUP=False,
+            args=[
+                '--no-sandbox',
+                '--single-process',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--no-zygote'
+            ]
+        )
+
     page = await browser.newPage()
     await page.goto(url)
     content = await page.content()
