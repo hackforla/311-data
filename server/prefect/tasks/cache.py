@@ -34,6 +34,9 @@ async def run_js_page(url: str):
             executablePath='/usr/bin/google-chrome-stable',
             userDataDir='/app',
             headless=True,
+            handleSIGINT=False,
+            handleSIGTERM=False,
+            handleSIGHUP=False,
             args=[
                 '--no-sandbox',
             ]
