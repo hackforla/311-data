@@ -34,15 +34,8 @@ async def run_js_page(url: str):
             executablePath='/usr/bin/google-chrome-stable',
             userDataDir='/app',
             headless=True,
-            handleSIGINT=False,
-            handleSIGTERM=False,
-            handleSIGHUP=False,
             args=[
                 '--no-sandbox',
-                '--single-process',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
-                '--no-zygote'
             ]
         )
     else:
@@ -51,13 +44,6 @@ async def run_js_page(url: str):
             handleSIGINT=False,
             handleSIGTERM=False,
             handleSIGHUP=False,
-            args=[
-                '--no-sandbox',
-                '--single-process',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
-                '--no-zygote'
-            ]
         )
 
     page = await browser.newPage()
@@ -77,6 +63,8 @@ def reload_reports():
     reload_path = f"{report_server_url}{RELOAD_PATH}"
 
     result = asyncio.run(run_js_page(reload_path))
+
+    logger.info(result)
 
     if SUCCESS_STRING in result:
         logger.info(f"Report reloading successful: {reload_path}")
