@@ -2,7 +2,7 @@ import sys
 
 import prefect
 from prefect import Flow, Parameter
-from prefect.engine.executors import LocalDaskExecutor, LocalExecutor
+from prefect.executors import LocalDaskExecutor, LocalExecutor
 from prefect.utilities.edges import unmapped
 
 from tasks import postgres, socrata, cache
