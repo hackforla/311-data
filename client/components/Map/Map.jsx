@@ -115,7 +115,7 @@ class Map extends React.Component {
     this.isSubscribed = true;
     mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
-    this.map = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       container: this.mapContainer,
       style: MAP_STYLES[this.state.mapStyle],
       bounds: INITIAL_BOUNDS,
@@ -125,19 +125,18 @@ class Map extends React.Component {
       touchZoomRotate: false
     });
 
-    this.map.on('load', () => {
+    map.on('load', () => {
       if (this.isSubscribed) {
         this.initLayers(true);
 
-        this.map.on('click', this.onClick);
+        map.on('click', this.onClick);
 
-        this.map.once('idle', e => {
+        map.once('idle', e => {
           this.setState({ mapReady: true });
         });
       }
     });
-
-    this.setFilteredRequestCounts();
+    this.map = map;
   }
 
   componentWillUnmount() {
@@ -148,16 +147,16 @@ class Map extends React.Component {
     if (this.props.requests != prevProps.requests) {
       if (this.state.mapReady) {
         this.setState({ requests: this.props.requests });
-        this.map.once('idle', this.setFilteredRequestCounts);
+        // this.map.once('idle', this.setFilteredRequestCounts);
       } else {
         this.map.once('idle', () => {
           this.setState({ requests: this.props.requests });
-          this.map.once('idle', this.setFilteredRequestCounts);
+          // this.map.once('idle', this.setFilteredRequestCounts);
         });
       }
     }
 
-    if (this.props.requestTypes != prevProps.requestTypes) {
+    if (this.props.requestTypes != prevProps.requestTypes || !this.map.getSource('requests')) {
       this.requestsLayer.init({
         map: this.map,
       });

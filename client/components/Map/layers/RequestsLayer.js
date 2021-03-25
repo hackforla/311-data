@@ -42,20 +42,19 @@ class RequestsLayer extends React.Component {
       selectedTypes,
       requests,
       colorScheme,
-      requestTypes
     } = this.props;
 
-    if (activeLayer !== prev.activeLayer)
-      this.setActiveLayer(activeLayer);
+      if (activeLayer !== prev.activeLayer)
+        this.setActiveLayer(activeLayer);
 
-    if (selectedTypes !== prev.selectedTypes)
-      this.setSelectedTypes(selectedTypes);
+      if (selectedTypes !== prev.selectedTypes)
+        this.setSelectedTypes(selectedTypes);
 
-    if (requests !== prev.requests)
-      this.setRequests(requests);
+      if (requests !== prev.requests)
+        this.setRequests(requests);
 
-    if (colorScheme !== prev.colorScheme)
-      this.setColorScheme(colorScheme);
+      if (colorScheme !== prev.colorScheme)
+        this.setColorScheme(colorScheme);
   }
 
   addSources = () => {
