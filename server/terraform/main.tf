@@ -21,6 +21,7 @@ module "networked_rds" {
 
   bastion_instance_type = "t2.micro"
   db_instance_class     = "db.t2.micro"
+  db_engine_version      = var.db_engine_version
 }
 
 resource "aws_ssm_parameter" "secret" {

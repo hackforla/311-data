@@ -52,8 +52,11 @@ const Header = () => {
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
         <Typography variant="h1" className={classes.title}>
-          311DATA
+          <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>311DATA</Link>
         </Typography>
+        <Link to="/map">
+          <Button className={classes.button}>Map</Button>
+        </Link>
         <Button
           id="report-anchor"
           onClick={handleClick}
@@ -94,12 +97,15 @@ const Header = () => {
             </MenuItem>
           </Link>
         </Menu>
-        <Link to="/map">
-          <Button className={classes.button}>Explore 311 Data</Button>
+        <Link to="/faqs">
+          <Button className={classes.button}>FAQ</Button>
         </Link>
-        <Button className={classes.button}>About 311 Data</Button>
-        <Button className={classes.button}>Contact Us</Button>
-        <Button className={classes.button}>Help Center</Button>
+        <Link to="/blog">
+          <Button className={classes.button}>Blog</Button>
+        </Link>
+        <Link to="/privacy">
+          <Button className={classes.button}>Privacy</Button>
+        </Link>
       </Toolbar>
     </AppBar>
   );

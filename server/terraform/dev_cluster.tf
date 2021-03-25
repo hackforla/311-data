@@ -9,12 +9,12 @@ resource "aws_lb_target_group" "dev" {
 
   health_check {
 		enabled             = true
-		healthy_threshold   = 5
-		interval            = 30
+		healthy_threshold   = 3
+		interval            = 60
 		path                = var.health_check_path
 		port                = "traffic-port"
 		protocol            = "HTTP"
-		timeout             = 10
+		timeout             = 30
 		unhealthy_threshold = 3
   }
 }
