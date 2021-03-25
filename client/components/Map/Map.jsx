@@ -53,7 +53,7 @@ const styles = theme => ({
       display: 'none',
     },
     '& .mapboxgl-popup-content': {
-      minWidth: 250,
+      width: 'auto',
       backgroundColor: theme.palette.primary.main,
       borderRadius: 5,
       padding: 10,
