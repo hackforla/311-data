@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
-import { MAP_MODES } from '../common/CONSTANTS';
+// import { MAP_MODES } from '../common/CONSTANTS';
 import Map from './Map';
 
 const styles = theme => ({
@@ -30,10 +30,12 @@ class MapContainer extends React.Component {
     }
 
     this.openRequests = null;
+    this.isSubscribed = null;
   }
 
   componentDidMount() {
     // TODO: redux-saga, add to store instead of local state
+    this.isSubscribed = true;
     this.setData();
   }
 
@@ -43,6 +45,10 @@ class MapContainer extends React.Component {
       this.setData();
   }
 
+  componentWillUnmount() {
+    this.isSubscribed = false;
+  }
+
   getOpenRequests = async () => {
     const url = `${process.env.API_URL}/requests/pins/open`;
     const { data } = await axios.get(url);
@@ -50,23 +56,16 @@ class MapContainer extends React.Component {
   };
 
   setData = async () => {
-    const { activeMode, pins } = this.props;
-    switch(activeMode) {
-      case MAP_MODES.OPEN:
-        if (!this.openRequests)
-          await this.getOpenRequests()
+    const { pins } = this.props;
 
-        return this.setState({
-          requests: this.convertRequests(this.openRequests),
-          // ncCounts: this.openRequests.counts.nc,
-          // ccCounts: this.openRequests.counts.cc,
-        });
-      case MAP_MODES.CLOSED:
-        return this.setState({
-          requests: this.convertRequests(pins),
-          // ncCounts: null,
-          // ccCounts: null,
-        });
+    if (!this.openRequests) {
+      await this.getOpenRequests();
+    }
+
+    if (this.isSubscribed) {
+      return this.setState({
+        requests: this.convertRequests(this.openRequests),
+      });
     }
   };
 

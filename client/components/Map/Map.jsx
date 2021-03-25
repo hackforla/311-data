@@ -109,12 +109,14 @@ class Map extends React.Component {
     this.ccLayer = null;
     this.requestDetail = null;
     this.popup = null;
+    this.isSubscribed = null;
   }
 
   componentDidMount() {
+    this.isSubscribed = true;
     mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
-    this.map = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       container: this.mapContainer,
       style: MAP_STYLES[this.state.mapStyle],
       bounds: INITIAL_BOUNDS,
@@ -124,36 +126,39 @@ class Map extends React.Component {
       touchZoomRotate: false
     });
 
-    this.map.on('load', () => {
-      this.initLayers(true);
+    map.on('load', () => {
+      if (this.isSubscribed) {
+        this.initLayers(true);
 
-      this.map.on('click', this.onClick);
+        map.on('click', this.onClick);
 
-      // this.map.on('moveend', this.updatePosition);
-
-      this.map.once('idle', e => {
-        // this.updatePosition();
-        this.setState({ mapReady: true });
-      });
+        map.once('idle', e => {
+          this.setState({ mapReady: true });
+        });
+      }
     });
+    this.map = map;
+  }
 
-    this.setFilteredRequestCounts();
+  componentWillUnmount() {
+    this.isSubscribed = false;
+    this.map.remove();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.requests != prevProps.requests) {
       if (this.state.mapReady) {
         this.setState({ requests: this.props.requests });
-        this.map.once('idle', this.setFilteredRequestCounts);
+        // this.map.once('idle', this.setFilteredRequestCounts);
       } else {
         this.map.once('idle', () => {
           this.setState({ requests: this.props.requests });
-          this.map.once('idle', this.setFilteredRequestCounts);
+          // this.map.once('idle', this.setFilteredRequestCounts);
         });
       }
     }
 
-    if (this.props.requestTypes != prevProps.requestTypes) {
+    if (this.props.requestTypes != prevProps.requestTypes || !this.map.getSource('requests')) {
       this.requestsLayer.init({
         map: this.map,
       });

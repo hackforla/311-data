@@ -42,7 +42,6 @@ class RequestsLayer extends React.Component {
       selectedTypes,
       requests,
       colorScheme,
-      requestTypes
     } = this.props;
 
     if (activeLayer !== prev.activeLayer)
