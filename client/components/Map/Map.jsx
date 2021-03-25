@@ -108,9 +108,11 @@ class Map extends React.Component {
     this.ccLayer = null;
     this.requestDetail = null;
     this.popup = null;
+    this.isSubscribed = null;
   }
 
   componentDidMount() {
+    this.isSubscribed = true;
     mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
     this.map = new mapboxgl.Map({
@@ -124,19 +126,22 @@ class Map extends React.Component {
     });
 
     this.map.on('load', () => {
-      this.initLayers(true);
+      if (this.isSubscribed) {
+        this.initLayers(true);
 
-      this.map.on('click', this.onClick);
+        this.map.on('click', this.onClick);
 
-      // this.map.on('moveend', this.updatePosition);
-
-      this.map.once('idle', e => {
-        // this.updatePosition();
-        this.setState({ mapReady: true });
-      });
+        this.map.once('idle', e => {
+          this.setState({ mapReady: true });
+        });
+      }
     });
 
     this.setFilteredRequestCounts();
+  }
+
+  componentWillUnmount() {
+    this.isSubscribed = false;
   }
 
   componentDidUpdate(prevProps, prevState) {
