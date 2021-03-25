@@ -8,6 +8,7 @@ import { getPinInfoRequest } from '@reducers/data';
 import toTitleCase from '@utils/toTitleCase';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
+import Link from '@material-ui/core/Link';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -22,7 +23,7 @@ const styles = theme => ({
   popupContent: {
     backgroundColor: theme.palette.primary.main,
     padding: '0 8',
-    minWidth: 215,
+    width: '100%',
   },
   requestType: {
     ...theme.typography.h4,
@@ -55,7 +56,7 @@ class RequestDetail extends React.Component {
 
   render() {
     const {
-      classes, requestId, pinsInfo, requestTypes,
+      classes, requestId, pinsInfo, requestTypes, agencies,
     } = this.props;
 
     if (!requestId) return null;
@@ -78,10 +79,16 @@ class RequestDetail extends React.Component {
       councilName,
       typeName,
       typeId: requestTypeId,
+      agencyId: aId,
+      agencyName,
+      sourceName,
       createdDate,
       closedDate,
       address,
     } = pinsInfo[requestId];
+
+    const { color } = requestTypes.find(({ typeId }) => typeId === requestTypeId);
+    const { website } = agencies.find(({ agencyId }) => agencyId === aId);
 
     return (
       <div className={classes.popupContent}>
@@ -98,7 +105,7 @@ class RequestDetail extends React.Component {
             <FiberManualRecordIcon
               className={classes.icon}
               style={{
-                color: requestTypes.find(({ typeId }) => typeId === requestTypeId).color,
+                color,
                 fontSize: 16,
               }}
             />
@@ -114,14 +121,8 @@ class RequestDetail extends React.Component {
           justify="space-between"
           alignItems="flex-start"
         >
-          <Grid item xs={6}>
-            Service request:
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            style={{ textAlign: 'right' }}
-          >
+          <Grid item xs={6}>Service request:</Grid>
+          <Grid item xs={6} style={{ textAlign: 'right' }}>
             {srnumber}
           </Grid>
           <Grid item xs={6}>
@@ -163,6 +164,23 @@ class RequestDetail extends React.Component {
               </>
             )
           }
+          <Grid item xs={6}>Source:</Grid>
+          <Grid item xs={6} style={{ textAlign: 'right' }}>
+            {sourceName}
+          </Grid>
+          <Grid item xs={3}>Agency:</Grid>
+          <Grid item xs={9} style={{ textAlign: 'right' }}>
+            <Link
+              href={website}
+              aria-label={`${agencyName} website`}
+              target="_blank"
+              rel="noopener"
+              color="inherit"
+              underline="always"
+            >
+              {agencyName}
+            </Link>
+          </Grid>
         </Grid>
       </div>
     );
@@ -172,6 +190,7 @@ class RequestDetail extends React.Component {
 const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   requestTypes: state.metadata.requestTypes,
+  agencies: state.metadata.agencies,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -184,10 +203,12 @@ RequestDetail.propTypes = {
   requestId: PropTypes.number,
   pinsInfo: PropTypes.shape({}),
   requestTypes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  agencies: PropTypes.arrayOf(PropTypes.shape({})),
   getPinInfo: PropTypes.func.isRequired,
 };
 
 RequestDetail.defaultProps = {
   requestId: null,
   pinsInfo: {},
+  agencies: [],
 };

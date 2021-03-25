@@ -5,6 +5,7 @@ export const types = {
   GET_REQUEST_TYPES_SUCCESS: 'GET_REQUEST_TYPES_SUCCESS',
   GET_COUNCILS_SUCCESS: 'GET_COUNCILS_SUCCESS',
   GET_REGIONS_SUCCESS: 'GET_REGIONS_SUCCESS',
+  GET_AGENCIES_SUCCESS: 'GET_AGENCIES_SUCCESS',
   GET_NC_GEOJSON_SUCCESS: 'GET_NC_GEOJSON_SUCCESS',
 };
 
@@ -37,6 +38,11 @@ export const getRegionsSuccess = response => ({
   payload: response,
 });
 
+export const getAgenciesSuccess = response => ({
+  type: types.GET_AGENCIES_SUCCESS,
+  payload: response,
+});
+
 export const getNcGeojsonSuccess = response => ({
   type: types.GET_NC_GEOJSON_SUCCESS,
   payload: response,
@@ -52,6 +58,7 @@ const initialState = {
   requestTypes: [],
   councils: null,
   regions: null,
+  agencies: null,
   ncGeojson: null,
 };
 
@@ -76,6 +83,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         regions: action.payload,
+      };
+    case types.GET_AGENCIES_SUCCESS:
+      return {
+        ...state,
+        agencies: action.payload,
       };
     case types.GET_NC_GEOJSON_SUCCESS:
       return {
