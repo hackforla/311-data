@@ -141,6 +141,7 @@ class Map extends React.Component {
 
   componentWillUnmount() {
     this.isSubscribed = false;
+    this.map.remove();
   }
 
   componentDidUpdate(prevProps, prevState) {
