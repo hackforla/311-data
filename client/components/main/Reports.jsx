@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -58,7 +59,8 @@ const Reports = () => {
         frameBorder="0"
         allowFullScreen
         style={{ width: '100%', height: '100%' }}
-      />
+      >
+      </iframe>
     </div>
   );
 };
