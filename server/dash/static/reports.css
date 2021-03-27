@@ -1,0 +1,60 @@
+body {
+    color: #ECECEC;
+    background-color: #0F181F;
+    font-family: 'Robota, Gill Sans', 'Gill Sans MT', sans-serif;
+    font-size: 11pt;
+    font-weight: 300;
+}
+h1 {
+    font-size: 1.8em;
+    font-weight: 300;
+    text-align: center;
+}
+.dash-dropdown {
+    margin: 20pt;
+    color: #0F181F;
+}
+.dash-links a {
+    color: white;
+    padding: 5px;
+}
+._dash-loading {
+    display: none;
+}
+._dash-reloading {
+    color: yellow;
+}
+.stats-label {
+    padding: 10px;
+    margin: 20px;
+    min-width: 15%;
+    text-align: center;
+    border: #666666 1px solid;
+    border-radius: 3pt;
+}
+.stats-label h2 {
+    font-size: 2em;
+    margin-bottom: 3pt;
+    margin-top: 3pt;
+}
+.stats-label label {
+    color: #999999;
+}
+.dash-graph {
+    color: #ECECEC;
+    width: 100%;
+}
+.graph-row {
+    color: #ECECEC;
+    width: 100%;
+}
+@media only screen and (min-width: 768px) {
+    .graph-row {
+        display: flex;
+        color: #ECECEC;
+        width: 100%;
+    }
+    .half-graph {
+        flex: 1;
+    }
+}
