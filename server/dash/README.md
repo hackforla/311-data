@@ -11,6 +11,7 @@ Creating reports with Dash has several benefits:
 - ability to merge data from different sources
 - can easily leverage calculations and statistical tools
 - uses standard Pandas, Numpy and other python libraries
+- straight-forward to make reports responsive
 
 **However, the main benefit is the workflow.**
 
