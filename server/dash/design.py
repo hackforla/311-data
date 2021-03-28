@@ -51,6 +51,7 @@ def apply_figure_style(fig):
 
     fig.update_layout(
         paper_bgcolor='#0F181F',
+        geo_bgcolor='#0F181F',
         plot_bgcolor='#29404F',
         title_x=0.5,
         title_yanchor='top',
