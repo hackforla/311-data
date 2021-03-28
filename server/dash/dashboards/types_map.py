@@ -43,18 +43,19 @@ layout = html.Div([
         clearable=False,
         value="Illegal Dumping",
         placeholder="Select a type",
+        searchable=False,
         options=populate_options(),
     ),
-    dcc.Graph(id="choropleth", config=CONFIG_OPTIONS),
+    dcc.Graph(id="choropleth", config=CONFIG_OPTIONS, className="hidden-graph"),
 ])
 
 
 @app.callback(
     Output("choropleth", "figure"),
+    Output("choropleth", "className"),
     [Input("types", "value")]
 )
 def display_choropleth(selected_value):
-    print(selected_value)
     fig = px.choropleth(
         report_df.query(f"type_name == '{selected_value}'"),
         geojson=nc_geojson,
@@ -67,10 +68,22 @@ def display_choropleth(selected_value):
         height=1000,
     )
     # show only the relevant map
-    fig.update_geos(fitbounds="locations", visible=False)
+    fig.update_geos(
+        fitbounds="locations",
+        visible=False,
+    )
     # crops/zooms it
     fig.update_layout(
-        margin={"r": 0, "t": 0, "l": 0, "b": 0}
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+    )
+    # move the scale to bottom left
+    fig.update_coloraxes(
+        # showscale=False
+        colorbar_x=0.25,
+        colorbar_y=0.25,
+        colorbar_ypad=15,
+        colorbar_lenmode="fraction",
+        colorbar_len=0.25,
     )
     apply_figure_style(fig)
-    return fig
+    return fig, "visible-graph"
