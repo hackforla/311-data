@@ -66,6 +66,8 @@ def reload_reports():
     report_server_url = prefect.config.report_server_url
     reload_path = f"{report_server_url}{RELOAD_PATH}"
 
+    # TODO: might want to switch back to run_until_complete...
+    # https://github.com/pyppeteer/pyppeteer/issues/123
     result = asyncio.run(run_js_page(reload_path))
 
     if SUCCESS_STRING in result:
