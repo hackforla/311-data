@@ -65,7 +65,6 @@ def display_choropleth(selected_value):
         color_continuous_scale=px.colors.sequential.YlOrRd,
         labels=LABELS,
         projection="mercator",
-        height=1000,
     )
     # show only the relevant map
     fig.update_geos(
@@ -74,16 +73,17 @@ def display_choropleth(selected_value):
     )
     # crops/zooms it
     fig.update_layout(
+        autosize=True,
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
     )
     # move the scale to bottom left
     fig.update_coloraxes(
         # showscale=False
-        colorbar_x=0.25,
-        colorbar_y=0.25,
-        colorbar_ypad=15,
+        colorbar_x=0.225,
+        colorbar_y=0.225,
+        # colorbar_ypad=10,
         colorbar_lenmode="fraction",
-        colorbar_len=0.25,
+        colorbar_len=0.3,
     )
     apply_figure_style(fig)
     return fig, "visible-graph"

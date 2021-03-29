@@ -2,7 +2,7 @@ body {
   color: #ececec;
   background-color: #0f181f;
   font-family: 'Robota, Gill Sans', 'Gill Sans MT', sans-serif;
-  font-size: 11pt;
+  font-size: 1em;
   font-weight: 300;
 }
 h1 {
@@ -13,13 +13,23 @@ h1 {
 .hidden-graph {
   visibility: hidden;
 }
+#choropleth > .svg-container {
+  margin-left: auto;
+  margin-right: auto;
+}
+#choropleth > .js-plotly-plot .plotly div {
+  margin-left: auto;
+  margin-right: auto;
+}    
 .dash-dropdown {
   margin: 20pt;
   color: #0f181f;
 }
 .dash-links a {
+  display: flex;
+  font-size: 1.2em;
+  padding: 12pt 10pt;
   color: white;
-  padding: 5px;
 }
 ._dash-loading {
   display: none;
@@ -59,5 +69,8 @@ h1 {
   }
   .half-graph {
     flex: 1;
+  }
+  #choropleth {
+    height: 800px;
   }
 }
