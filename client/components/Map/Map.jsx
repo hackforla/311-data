@@ -158,7 +158,8 @@ class Map extends React.Component {
       }
     }
 
-    if (this.props.requestTypes != prevProps.requestTypes || !this.map.getSource('requests')) {
+    // if (this.props.requestTypes != prevProps.requestTypes || !this.map.getSource('requests')) {
+    if (this.props.requestTypes != prevProps.requestTypes && this.map != null) {
       this.requestsLayer.init({
         map: this.map,
       });

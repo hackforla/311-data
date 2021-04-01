@@ -55,7 +55,7 @@ const initialState = {
   version: null,
   lastPulledUTC: null,
   lastPulledLocal: null,
-  requestTypes: [],
+  requestTypes: null,
   councils: null,
   regions: null,
   agencies: null,
