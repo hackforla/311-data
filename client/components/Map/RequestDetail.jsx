@@ -202,7 +202,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(R
 RequestDetail.propTypes = {
   requestId: PropTypes.number,
   pinsInfo: PropTypes.shape({}),
-  requestTypes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  requestTypes: PropTypes.arrayOf(PropTypes.shape({})),
   agencies: PropTypes.arrayOf(PropTypes.shape({})),
   getPinInfo: PropTypes.func.isRequired,
 };
@@ -210,5 +210,6 @@ RequestDetail.propTypes = {
 RequestDetail.defaultProps = {
   requestId: null,
   pinsInfo: {},
-  agencies: [],
+  agencies: null,
+  requestTypes: null,
 };

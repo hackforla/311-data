@@ -90,10 +90,10 @@ export default connect(
 )(RequestTypeSelector);
 
 RequestTypeSelector.propTypes = {
-  requestTypes: PropTypes.arrayOf(PropTypes.shape({
-    typeId: PropTypes.number,
-    typeName: PropTypes.string,
-    color: PropTypes.string,
-  })).isRequired,
+  requestTypes: PropTypes.arrayOf(PropTypes.shape({})),
   updateTypesFilter: PropTypes.func.isRequired,
+};
+
+RequestTypeSelector.defaultProps = {
+  requestTypes: null,
 };
