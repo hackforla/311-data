@@ -29,11 +29,16 @@ function typeFilter(selectedTypes) {
 }
 
 class RequestsLayer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.ready = false;
+  }
+
   init = ({ map }) => {
     this.map = map;
-
     this.addSources();
     this.addLayers();
+    this.ready = true;
   }
 
   componentDidUpdate(prev) {
@@ -44,17 +49,17 @@ class RequestsLayer extends React.Component {
       colorScheme,
     } = this.props;
 
-    // if (activeLayer !== prev.activeLayer)
-      // this.setActiveLayer(activeLayer);
+    if (activeLayer !== prev.activeLayer)
+      this.setActiveLayer(activeLayer);
 
-    // if (selectedTypes !== prev.selectedTypes)
-      // this.setSelectedTypes(selectedTypes);
+    if (selectedTypes !== prev.selectedTypes)
+      this.setSelectedTypes(selectedTypes);
 
-    if (requests !== prev.requests)
+    if (requests !== prev.requests && this.ready)
       this.setRequests(requests);
 
-    // if (colorScheme !== prev.colorScheme)
-      // this.setColorScheme(colorScheme);
+    if (colorScheme !== prev.colorScheme)
+      this.setColorScheme(colorScheme);
   }
 
   addSources = () => {
