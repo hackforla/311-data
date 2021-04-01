@@ -29,11 +29,16 @@ function typeFilter(selectedTypes) {
 }
 
 class RequestsLayer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.ready = false;
+  }
+
   init = ({ map }) => {
     this.map = map;
-
     this.addSources();
     this.addLayers();
+    this.ready = true;
   }
 
   componentDidUpdate(prev) {
@@ -50,7 +55,7 @@ class RequestsLayer extends React.Component {
     if (selectedTypes !== prev.selectedTypes)
       this.setSelectedTypes(selectedTypes);
 
-    if (requests !== prev.requests)
+    if (requests !== prev.requests && this.ready)
       this.setRequests(requests);
 
     if (colorScheme !== prev.colorScheme)
