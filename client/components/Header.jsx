@@ -11,12 +11,13 @@ import {
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
-  MuiMenuItemButton: {
-    color: 'white',
-  },
   appBar: {
     height: theme.header.height,
     backgroundColor: theme.palette.primary.main,
+  },
+  link: {
+    color: 'white',
+    textDecoration: 'none',
   },
   button: {
     textTransform: 'none',
@@ -52,9 +53,9 @@ const Header = () => {
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
         <Typography variant="h1" className={classes.title}>
-          <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>311DATA</Link>
+          <Link to="/" className={classes.link}>311DATA</Link>
         </Typography>
-        <Link to="/map">
+        <Link className={classes.link} to="/map">
           <Button className={classes.button}>Map</Button>
         </Link>
         <Button
@@ -76,37 +77,42 @@ const Header = () => {
             horizontal: 'left',
           }}
         >
-          <Link to="/reports/dashboards/overview">
+          <Link to="/reports/dashboards/overview" className={classes.link}>
             <MenuItem onClick={handleClose} button className={classes.button}>
               Overview
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/recent">
+          <Link to="/reports/dashboards/recent" className={classes.link}>
             <MenuItem onClick={handleClose} button className={classes.button}>
               Recent
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/neighborhood">
+          <Link to="/reports/dashboards/neighborhood" className={classes.link}>
             <MenuItem onClick={handleClose} button className={classes.button}>
               Neighborhood
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/neighborhood_recent">
+          <Link to="/reports/dashboards/neighborhood_recent" className={classes.link}>
             <MenuItem onClick={handleClose} button className={classes.button}>
               Neighborhood Recent
             </MenuItem>
           </Link>
+          <Link to="/reports/dashboards/types_map" className={classes.link}>
+            <MenuItem onClick={handleClose} button className={classes.button}>
+              Request Type Map
+            </MenuItem>
+          </Link>
         </Menu>
-        <Link to="/faqs">
+        <Link to="/faqs" className={classes.link}>
           <Button className={classes.button}>FAQ</Button>
         </Link>
-        <Link to="/blog">
+        <Link to="/blog" className={classes.link}>
           <Button className={classes.button}>Blog</Button>
         </Link>
-        <Link to="/privacy">
+        <Link to="/privacy" className={classes.link}>
           <Button className={classes.button}>Privacy</Button>
         </Link>
-        <Link to="/contact">
+        <Link to="/contact" className={classes.link}>
           <Button className={classes.button}>Contact</Button>
         </Link>
       </Toolbar>
