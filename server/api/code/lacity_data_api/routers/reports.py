@@ -1,9 +1,12 @@
+import os
 from typing import List, Optional
 
 import pendulum
 from fastapi import APIRouter, Query
+from fastapi.responses import FileResponse
 
-from lacity_data_api.services.reports import run_report
+from lacity_data_api.services.reports import run_report, make_csv_cache
+from lacity_data_api.config import DATA_DIR
 
 router = APIRouter()
 
@@ -33,3 +36,19 @@ async def get_report(
 ):
     results = await run_report(field, filter)
     return results
+
+
+@router.get("/export/{file}.csv")
+async def get_csv(file: str):
+    csv_file = f"{DATA_DIR}/{file}.csv"
+    if not os.path.exists(csv_file):
+        await make_csv_cache(file)
+    return FileResponse(csv_file)
+
+
+@router.get("/export/{file}.csv.gz")
+async def get_gzip(file: str):
+    gzip_file = f"{DATA_DIR}/{file}.csv.gz"
+    if not os.path.exists(gzip_file):
+        await make_csv_cache(file)
+    return FileResponse(gzip_file)

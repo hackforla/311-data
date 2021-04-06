@@ -18,3 +18,16 @@ def test_api_report_council_name(client):
     response = client.get(url)
     assert response.status_code == 200
     assert len(response.json()) == 100
+
+
+def test_csv_export(client):
+    url = "/reports/export/service_requests.csv"
+    response = client.get(url)
+    print(response)
+    assert response.status_code == 200
+
+
+def test_gzip_export(client):
+    url = "/reports/export/service_requests.csv.gz"
+    response = client.get(url)
+    print(response)
