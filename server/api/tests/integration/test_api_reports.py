@@ -21,13 +21,12 @@ def test_api_report_council_name(client):
 
 
 def test_csv_export(client):
-    url = "/reports/export/service_requests.csv"
+    url = "/reports/export/2020/service_requests.csv"
     response = client.get(url)
-    print(response)
     assert response.status_code == 200
 
 
 def test_gzip_export(client):
-    url = "/reports/export/service_requests.csv.gz"
+    url = "/reports/export/2020/service_requests.csv.gz"
     response = client.get(url)
-    print(response)
+    assert response.status_code == 200
