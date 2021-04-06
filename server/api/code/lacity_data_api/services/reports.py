@@ -81,7 +81,7 @@ async def run_report(field, filter):
     return result
 
 
-async def make_csv_cache(table: str):
+async def make_csv_cache(table: str, year: int = 2020) -> None:
 
     columns = [
         "request_id",
@@ -100,16 +100,16 @@ async def make_csv_cache(table: str):
     ]
 
     query = db.text(f"""
-        SELECT * FROM {table}
+        select * from {table} WHERE date_part('year', created_date) = {year};
     """)
 
     result = await db.all(query)
 
-    with open(f"{DATA_DIR}/{table}.csv", 'w', newline='') as f:
+    with open(f"{DATA_DIR}/{table}-{year}.csv", 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(columns)
         writer.writerows(result)
 
-    with open(f"{DATA_DIR}/{table}.csv", 'rb') as f_in:
-        with gzip.open(f"{DATA_DIR}/{table}.csv.gz", 'wb') as f_out:
+    with open(f"{DATA_DIR}/{table}-{year}.csv", 'rb') as f_in:
+        with gzip.open(f"{DATA_DIR}/{table}-{year}.csv.gz", 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)

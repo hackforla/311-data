@@ -38,21 +38,29 @@ async def get_report(
     return results
 
 
-@router.get("/export/{file}.csv")
-async def get_csv(file: str, background_tasks: BackgroundTasks):
-    csv_file = f"{DATA_DIR}/{file}.csv"
+@router.get("/export/{year}/{file}.csv")
+async def get_csv(
+    background_tasks: BackgroundTasks,
+    file: str = "service_requests",
+    year: int = 2020,
+):
+    csv_file = f"{DATA_DIR}/{file}-{year}.csv"
     if os.path.exists(csv_file):
         return FileResponse(csv_file)
     else:
-        background_tasks.add_task(make_csv_cache, file)
+        background_tasks.add_task(make_csv_cache, file, year)
         return "Started file generation"
 
 
-@router.get("/export/{file}.csv.gz")
-async def get_gzip(file: str, background_tasks: BackgroundTasks):
-    gzip_file = f"{DATA_DIR}/{file}.csv.gz"
+@router.get("/export/{year}/{file}.csv.gz")
+async def get_gzip(
+    background_tasks: BackgroundTasks,
+    file: str = "service_requests",
+    year: int = 2020,
+):
+    gzip_file = f"{DATA_DIR}/{file}-{year}.csv.gz"
     if os.path.exists(gzip_file):
         return FileResponse(gzip_file)
     else:
-        background_tasks.add_task(make_csv_cache, file)
+        background_tasks.add_task(make_csv_cache, file, year)
         return "Started file generation"
