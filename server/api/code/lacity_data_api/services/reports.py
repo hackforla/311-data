@@ -1,6 +1,10 @@
+import csv
+import gzip
+import shutil
 import re
 from aiocache import cached
 from sqlalchemy import text, cast, DATE
+from ..config import DATA_DIR
 from ..models import db
 from ..models.service_request import ServiceRequest
 from ..models.request_type import RequestType
@@ -75,3 +79,36 @@ async def run_report(field, filter):
     )
 
     return result
+
+
+async def make_csv_cache(table: str):
+
+    columns = [
+        "request_id",
+        "srnumber",
+        "created_date",
+        "closed_date",
+        "type_id",
+        "agency_id",
+        "source_id",
+        "council_id",
+        "region_id",
+        "address",
+        "latitude",
+        "longitude",
+        "city_id"
+    ]
+    query = db.text(f"""
+        SELECT * FROM {table}
+    """)
+
+    result = await db.all(query)
+
+    with open(f"{DATA_DIR}/{table}.csv", 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(columns)
+        writer.writerows(result)
+
+    with open(f"{DATA_DIR}/{table}.csv", 'rb') as f_in:
+        with gzip.open(f"{DATA_DIR}/{table}.csv.gz", 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)

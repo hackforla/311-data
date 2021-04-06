@@ -1,11 +1,12 @@
 # import hashlib
+import os
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
+from ..config import DATA_DIR
 from ..models import (
     request_type, council, region, service_request
 )
-# from ..config import DEBUG
 
 
 async def build_cache():
@@ -36,6 +37,10 @@ async def build_cache():
         list(types),
         list(councils),
     )
+
+    # delete any cached CSV files
+    for file in os.scandir(DATA_DIR):
+        os.remove(file.path)
 
     return {
         "open_requests": len(open_requests),

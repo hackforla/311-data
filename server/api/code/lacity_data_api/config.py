@@ -84,3 +84,11 @@ SENDGRID_API_KEY = config('SENDGRID_API_KEY', default=None)
 
 # Sentry URL
 SENTRY_URL = config('SENTRY_URL', default=None)
+
+
+DEFAULT_DATA_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    "data"
+)
+
+DATA_DIR = config('FILE_DIR', default=DEFAULT_DATA_DIR)
