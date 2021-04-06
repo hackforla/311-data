@@ -9,6 +9,7 @@
 !alembic
 !alembic.ini
 !code
+!data
 !setup.cfg
 !start_api.sh
 !tests
