@@ -42,8 +42,8 @@ async def build_cache():
     for file in os.scandir(DATA_DIR):
         os.remove(file.path)
 
-    import lacity_data_api.services.reports as rpts
-    await rpts.make_csv_cache("service_requests")
+    # import lacity_data_api.services.reports as rpts
+    # await rpts.make_csv_cache("service_requests")
 
     return {
         "open_requests": len(open_requests),

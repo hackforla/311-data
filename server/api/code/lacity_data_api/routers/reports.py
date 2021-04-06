@@ -2,7 +2,7 @@ import os
 from typing import List, Optional
 
 import pendulum
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, BackgroundTasks
 from fastapi.responses import FileResponse
 
 from lacity_data_api.services.reports import run_report, make_csv_cache
@@ -39,16 +39,20 @@ async def get_report(
 
 
 @router.get("/export/{file}.csv")
-async def get_csv(file: str):
+async def get_csv(file: str, background_tasks: BackgroundTasks):
     csv_file = f"{DATA_DIR}/{file}.csv"
-    if not os.path.exists(csv_file):
-        await make_csv_cache(file)
-    return FileResponse(csv_file)
+    if os.path.exists(csv_file):
+        return FileResponse(csv_file)
+    else:
+        background_tasks.add_task(make_csv_cache, file)
+        return "Started file generation"
 
 
 @router.get("/export/{file}.csv.gz")
-async def get_gzip(file: str):
+async def get_gzip(file: str, background_tasks: BackgroundTasks):
     gzip_file = f"{DATA_DIR}/{file}.csv.gz"
-    if not os.path.exists(gzip_file):
-        await make_csv_cache(file)
-    return FileResponse(gzip_file)
+    if os.path.exists(gzip_file):
+        return FileResponse(gzip_file)
+    else:
+        background_tasks.add_task(make_csv_cache, file)
+        return "Started file generation"
