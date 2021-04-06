@@ -98,6 +98,7 @@ async def make_csv_cache(table: str):
         "longitude",
         "city_id"
     ]
+
     query = db.text(f"""
         SELECT * FROM {table}
     """)
