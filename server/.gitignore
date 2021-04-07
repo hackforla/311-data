@@ -1,5 +1,8 @@
 .env
 
+/api/data/*
+!/api/data/temp.txt
+
 # Terraform stuff
 *.tfvars
 *.tfstate
