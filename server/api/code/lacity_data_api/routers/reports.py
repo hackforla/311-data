@@ -5,7 +5,7 @@ import pendulum
 from fastapi import APIRouter, Query, BackgroundTasks
 from fastapi.responses import FileResponse
 
-from lacity_data_api.services.reports import run_report, make_csv_cache
+from lacity_data_api.services.reports import run_report, make_year_csv, make_csv
 from lacity_data_api.config import DATA_DIR
 
 router = APIRouter()
@@ -38,8 +38,30 @@ async def get_report(
     return results
 
 
-@router.get("/export/{year}/{file}.csv")
-async def get_csv(
+# TODO: Need to rethink. These don't work in production with our tiny CPUs.
+# Gunicorn kills the worker when it sees a CPU/Memory spike.
+@router.get("/export/service_requests.csv", description="EXPERIMENTAL")
+async def get_csv(background_tasks: BackgroundTasks):
+    csv_file = f"{DATA_DIR}/service_requests.csv"
+    if os.path.exists(csv_file):
+        return FileResponse(csv_file)
+    else:
+        background_tasks.add_task(make_csv)
+        return "Started file generation"
+
+
+@router.get("/export/service_requests.csv.gz", description="EXPERIMENTAL")
+async def get_gzip(background_tasks: BackgroundTasks):
+    gzip_file = f"{DATA_DIR}/service_requests.csv.gz"
+    if os.path.exists(gzip_file):
+        return FileResponse(gzip_file)
+    else:
+        background_tasks.add_task(make_csv)
+        return "Started file generation"
+
+
+@router.get("/export/{year}/{file}.csv", description="EXPERIMENTAL")
+async def get_year_csv(
     background_tasks: BackgroundTasks,
     file: str = "service_requests",
     year: int = 2020,
@@ -48,12 +70,12 @@ async def get_csv(
     if os.path.exists(csv_file):
         return FileResponse(csv_file)
     else:
-        background_tasks.add_task(make_csv_cache, file, year)
+        background_tasks.add_task(make_year_csv, file, year)
         return "Started file generation"
 
 
-@router.get("/export/{year}/{file}.csv.gz")
-async def get_gzip(
+@router.get("/export/{year}/{file}.csv.gz", description="EXPERIMENTAL")
+async def get_year_gzip(
     background_tasks: BackgroundTasks,
     file: str = "service_requests",
     year: int = 2020,
@@ -62,5 +84,5 @@ async def get_gzip(
     if os.path.exists(gzip_file):
         return FileResponse(gzip_file)
     else:
-        background_tasks.add_task(make_csv_cache, file, year)
+        background_tasks.add_task(make_year_csv, file, year)
         return "Started file generation"

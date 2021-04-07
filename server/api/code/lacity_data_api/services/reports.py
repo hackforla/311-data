@@ -81,7 +81,7 @@ async def run_report(field, filter):
     return result
 
 
-async def make_csv_cache(table: str, year: int = 2020) -> None:
+async def make_year_csv(table: str, year: int = 2020) -> None:
 
     columns = [
         "request_id",
@@ -112,4 +112,39 @@ async def make_csv_cache(table: str, year: int = 2020) -> None:
 
     with open(f"{DATA_DIR}/{table}-{year}.csv", 'rb') as f_in:
         with gzip.open(f"{DATA_DIR}/{table}-{year}.csv.gz", 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+
+async def make_csv():
+    FILE = "service_requests"
+
+    columns = [
+        "request_id",
+        "srnumber",
+        "created_date",
+        "closed_date",
+        "type_id",
+        "agency_id",
+        "source_id",
+        "council_id",
+        "region_id",
+        "address",
+        "latitude",
+        "longitude",
+        "city_id"
+    ]
+
+    query = db.text(f"""
+        select * from {FILE};
+    """)
+
+    result = await db.all(query)
+
+    with open(f"{DATA_DIR}/{FILE}.csv", 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(columns)
+        writer.writerows(result)
+
+    with open(f"{DATA_DIR}/{FILE}.csv", 'rb') as f_in:
+        with gzip.open(f"{DATA_DIR}/{FILE}.csv.gz", 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
