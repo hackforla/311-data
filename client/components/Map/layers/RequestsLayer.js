@@ -2,8 +2,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getColors } from '../mapColors';
 
 // put layer underneath this layer (from original mapbox tiles)
 // so you don't cover up important labels
