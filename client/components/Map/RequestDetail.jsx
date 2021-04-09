@@ -41,6 +41,10 @@ const styles = theme => ({
     marginTop: 0,
     marginBottom: 0,
   },
+  councilName: {
+    color: '#A8A8A8',
+    marginTop: 5,
+  },
   info2: {
     marginTop: 14,
   },
@@ -52,6 +56,17 @@ class RequestDetail extends React.Component {
     if (requestId === prev.requestId) return;
 
     if (requestId && !pinsInfo[requestId]) getPinInfo(requestId);
+  }
+
+  renderDaysOpen = days => {
+    switch (days) {
+      case 0:
+        return 'today';
+      case 1:
+        return `${days} day`;
+      default:
+        return `${days} days`;
+    }
   }
 
   render() {
@@ -89,6 +104,7 @@ class RequestDetail extends React.Component {
 
     const { color } = requestTypes.find(({ typeId }) => typeId === requestTypeId);
     const { website } = agencies.find(({ agencyId }) => agencyId === aId);
+    const daysOpen = moment().diff(moment(createdDate), 'days');
 
     return (
       <div className={classes.popupContent}>
@@ -113,7 +129,7 @@ class RequestDetail extends React.Component {
         </Grid>
         <Divider className={classes.divider} />
         <p className={classes.info1}>{toTitleCase(address)}</p>
-        <p className={classes.info1}>{`${councilName} NC`}</p>
+        <p className={classes.councilName}>{councilName}</p>
         <Grid
           className={classes.info2}
           container
@@ -159,7 +175,7 @@ class RequestDetail extends React.Component {
                   xs={6}
                   style={{ textAlign: 'right' }}
                 >
-                  Open
+                  {`Open (${this.renderDaysOpen(daysOpen)})`}
                 </Grid>
               </>
             )
