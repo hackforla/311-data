@@ -3,7 +3,6 @@ import { select, call, takeLatest } from 'redux-saga/effects';
 
 import { types as dataTypes } from '../reducers/data';
 import { types as analyticsTypes } from '../reducers/analytics';
-import { types as comparisonTypes } from '../reducers/comparisonData';
 import { COUNCILS } from '../../components/common/CONSTANTS';
 
 const events = {
@@ -214,15 +213,6 @@ function* logDataQuery() {
   yield call(Mixpanel.track, events.dataQuery, filters);
 }
 
-function* timeComparisonQuery() {
-  yield call(Mixpanel.time_event, events.comparisonQuery);
-}
-
-function* logComparisonQuery() {
-  const eventProps = yield getAllComparisonFilters();
-  yield call(Mixpanel.track, events.comparisonQuery, eventProps);
-}
-
 /* //  EXPORTS // */
 
 function* logMapExport() {
@@ -268,8 +258,6 @@ function* logChartExport(action) {
 export default function* rootSaga() {
   yield takeLatest(dataTypes.GET_DATA_REQUEST, timeDataQuery);
   yield takeLatest(dataTypes.GET_HEATMAP_SUCCESS, logDataQuery);
-  yield takeLatest(comparisonTypes.GET_COMPARISON_DATA_REQUEST, timeComparisonQuery);
-  yield takeLatest(comparisonTypes.GET_COMPARISON_DATA_SUCCESS, logComparisonQuery);
   yield takeLatest(analyticsTypes.TRACK_MAP_EXPORT, logMapExport);
   yield takeLatest(analyticsTypes.TRACK_CHART_EXPORT, logChartExport);
 }

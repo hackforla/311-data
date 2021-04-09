@@ -21,11 +21,10 @@ const useStyles = makeStyles(theme => ({
   card: {
     width: 325,
     backgroundColor: theme.palette.primary.main,
-    position: 'absolute',
-    left: 35,
-    top: 75,
-    borderRadius: theme.borderRadius.md,
-    zIndex: 2000,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: theme.borderRadius.md,
+    borderBottomRightRadius: theme.borderRadius.md,
   },
   header: {
     color: theme.palette.text.cyan,
