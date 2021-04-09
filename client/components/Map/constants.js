@@ -12,7 +12,6 @@ export const INITIAL_LOCATION = {
 export const GEO_FILTER_TYPES = {
   address: 'Address',
   nc: 'NC',
-  cc: 'CC',
 };
 
 export const MAP_STYLES = {

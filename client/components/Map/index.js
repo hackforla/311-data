@@ -8,6 +8,7 @@ import axios from 'axios';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 // import { MAP_MODES } from '../common/CONSTANTS';
+// import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
 
 const styles = theme => ({

@@ -5,8 +5,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
+import FilterMenu from '@components/main/Desktop/FilterMenu';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+
+import { getNcByLngLat } from '@reducers/data'
 
 import {
   INITIAL_BOUNDS,
@@ -80,6 +83,18 @@ const styles = theme => ({
       },
     },
   },
+  menuWrapper: {
+    position: 'absolute',
+    left: 35,
+    top: 75,
+  },
+  locationInfo: {
+    marginTop: 5,
+    borderRadius: 10,
+    width: 325,
+    backgroundColor: theme.palette.primary.main,
+    padding: 10,
+  },
 })
 
 class Map extends React.Component {
@@ -91,6 +106,7 @@ class Map extends React.Component {
       activeRequestsLayer: 'points',
       selectedTypes: props.selectedTypes,
       locationInfo: INITIAL_LOCATION,
+      address: null,
       geoFilterType: GEO_FILTER_TYPES.nc,
       filterGeo: null,
       filteredRequestCounts: {},
@@ -157,6 +173,10 @@ class Map extends React.Component {
         });
       }
     }
+
+    // if (this.props.selectedNcId != prevProps.selectedNcId && this.props.selectedId !== null) {
+    //   this.setState({ locationInfo: { nc: this.props.selectedNcId }})
+    // }
 
     if (this.props.requestTypes != prevProps.requestTypes) {
       this.requestsLayer.init({
@@ -333,27 +353,30 @@ class Map extends React.Component {
   };
 
   onGeocoderResult = ({ result }) => {
-    if (result.properties.type === GEO_FILTER_TYPES.nc)
-      return this.ncLayer.selectRegion(result.id);
+    const { getNc } = this.props;
+    const address = result.place_name
+                      .split(',')
+                      .slice(0, -2)
+                      .join(', ');
 
-    if (result.properties.type === GEO_FILTER_TYPES.cc)
-      return this.ccLayer.selectRegion(result.id);
+    // if (result.properties.type === GEO_FILTER_TYPES.nc)
+    //   return this.ncLayer.selectRegion(result.id);
+
+    // if (result.properties.type === GEO_FILTER_TYPES.cc)
+    //   return this.ccLayer.selectRegion(result.id);
 
     const lngLat = {
       lng: result.center[0],
       lat: result.center[1],
     };
 
+    getNc({ longitude: result.center[0], latitude: result.center[1] });
+
     this.setState({
-      locationInfo: {
-        location: result.address
-          ? `${result.address} ${result.text}`
-          : result.text,
-        radius: 1,
-        nc: ncInfoFromLngLat(lngLat),
-      }
+      address: address,
     });
 
+    // need to call ncLayer.selectRegion here
     this.addressLayer.zoomTo(lngLat);
   };
 
@@ -458,12 +481,13 @@ class Map extends React.Component {
       getPinInfo,
       lastUpdated,
       requestTypes,
+      selectedNcId,
     } = this.props;
 
     const {
       requests,
       geoFilterType,
-      // locationInfo,
+      locationInfo,
       // filteredRequestCounts,
       colorScheme,
       filterGeo,
@@ -473,6 +497,7 @@ class Map extends React.Component {
       canReset,
       selectedRequestId,
       selectedTypes,
+      address,
     } = this.state;
 
     const { classes } = this.props;
@@ -513,14 +538,23 @@ class Map extends React.Component {
               selectedRequests={filteredRequestCounts}
               colorScheme={colorScheme}
             /> */}
-            <MapSearch
-              map={this.map}
-              geoFilterType={geoFilterType}
-              onGeocoderResult={this.onGeocoderResult}
-              onChangeTab={this.onChangeSearchTab}
-              onReset={this.reset}
-              canReset={!!filterGeo && canReset}
-            />
+            <div className={classes.menuWrapper}>
+              <MapSearch
+                map={this.map}
+                geoFilterType={geoFilterType}
+                onGeocoderResult={this.onGeocoderResult}
+                onChangeTab={this.onChangeSearchTab}
+                onReset={this.reset}
+                canReset={!!filterGeo && canReset}
+              />
+              <FilterMenu />
+              <div className={classes.locationInfo}>
+                <div>Placeholder</div>
+                TODO: Add NC/CC, links
+                {address && <p>Address: {address}</p>}
+                {selectedNcId && <p>ncId: {selectedNcId}</p>}
+              </div>
+            </div>
             {/* <MapLayers
               selectedTypes={selectedTypes}
               onChangeSelectedTypes={this.setSelectedTypes}
@@ -544,6 +578,7 @@ Map.propTypes = {
   requests: PropTypes.shape({}),
   position: PropTypes.shape({}),
   selectedTypes: PropTypes.arrayOf(PropTypes.number),
+  getNc: PropTypes.func.isRequired,
 };
 
 Map.defaultProps = {};
@@ -551,6 +586,11 @@ Map.defaultProps = {};
 const mapStateToProps = state => ({
   ncBoundaries: state.metadata.ncGeojson,
   requestTypes: state.metadata.requestTypes,
+  selectedNcId: state.data.selectedNcId,
 });
 
-export default connect(mapStateToProps, null)(withStyles(styles)(Map));
+const mapDispatchToProps = dispatch => ({
+  getNc: coords => dispatch(getNcByLngLat(coords)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Map));
