@@ -8,6 +8,9 @@ export const types = {
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
+  GET_NC_BY_LNG_LAT: 'GET_NC_BY_LNG_LAT',
+  GET_NC_BY_LNG_LAT_SUCCESS: 'GET_NC_BY_LNG_LAT_SUCCESS',
+  GET_NC_BY_LNG_LAT_FAILURE: 'GET_NC_BY_LNG_LAT_FAILURE',
   GET_HEATMAP_SUCCESS: 'GET_HEATMAP_SUCCESS',
   GET_HEATMAP_FAILURE: 'GET_HEATMAP_FAILURE',
   GET_VIS_DATA_SUCCESS: 'GET_VIS_DATA_SUCCESS',
@@ -43,6 +46,21 @@ export const getPinInfoSuccess = response => ({
 
 export const getPinInfoFailure = error => ({
   type: types.GET_PIN_INFO_FAILURE,
+  payload: error,
+});
+
+export const getNcByLngLat = ({ longitude, latitude }) => ({
+  type: types.GET_NC_BY_LNG_LAT,
+  payload: { longitude, latitude },
+});
+
+export const getNcByLngLatSuccess = response => ({
+  type: types.GET_NC_BY_LNG_LAT_SUCCESS,
+  payload: response,
+});
+
+export const getNcByLngLatFailure = error => ({
+  type: types.GET_NC_BY_LNG_LAT_FAILURE,
   payload: error,
 });
 
@@ -86,14 +104,8 @@ const initialState = {
   isVisLoading: false,
   error: null,
   pins: [],
-  heatmap: [],
   pinsInfo: {},
-  counts: {},
-  frequency: {
-    bins: [],
-    counts: {},
-  },
-  timeToClose: {},
+  selectedNcId: null,
 };
 
 export default (state = initialState, action) => {
@@ -149,59 +161,18 @@ export default (state = initialState, action) => {
         },
       };
     }
-    case types.GET_HEATMAP_SUCCESS:
+    case types.GET_NC_BY_LNG_LAT_SUCCESS: {
       return {
         ...state,
         error: null,
-        heatmap: action.payload,
-      };
-    case types.GET_HEATMAP_FAILURE: {
-      const {
-        response: { status },
-        message,
-      } = action.payload;
-      return {
-        ...state,
-        error: {
-          code: status,
-          message,
-          error: action.payload,
-        },
+        selectedNcId: action.payload.council_id,
       };
     }
-    case types.GET_VIS_DATA_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        ...action.payload,
-        isVisLoading: false,
-      };
-    case types.GET_VIS_DATA_FAILURE: {
+    case types.GET_NC_BY_LNG_LAT_FAILURE: {
       const {
         response: { status },
         message,
       } = action.payload;
-      return {
-        ...state,
-        error: {
-          code: status,
-          message,
-          error: action.payload,
-        },
-        isVisLoading: false,
-      };
-    }
-    case types.GIT_RESPONSE_SUCCESS:
-      return {
-        ...state,
-        error: null,
-      };
-    case types.GIT_RESPONSE_FAILURE: {
-      const {
-        response: { status },
-        message,
-      } = action.payload;
-
       return {
         ...state,
         error: {
