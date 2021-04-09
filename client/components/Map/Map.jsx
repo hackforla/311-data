@@ -174,9 +174,9 @@ class Map extends React.Component {
       }
     }
 
-    // if (this.props.selectedNcId != prevProps.selectedNcId && this.props.selectedId !== null) {
-    //   this.setState({ locationInfo: { nc: this.props.selectedNcId }})
-    // }
+    if (this.props.selectedNcId != prevProps.selectedNcId && this.props.selectedId !== null) {
+      this.ncLayer.selectRegion(this.props.selectedNcId)
+    }
 
     if (this.props.requestTypes != prevProps.requestTypes) {
       this.requestsLayer.init({
