@@ -1,16 +1,18 @@
-import os
-import signal
-import re
 import glob
 import importlib
 import logging
+import os
+import re
+import signal
 
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input
+from dash.dependencies import Output
 
 from app import app
-from config import PRELOAD, DASH_FILES
+from config import DASH_FILES
+from config import PRELOAD
 
 
 server = app.server
