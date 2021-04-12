@@ -1,13 +1,16 @@
 import datetime
 import textwrap
 
-import pandas as pd
-import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
+import pandas as pd
+import plotly.express as px
 
-from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 from config import API_HOST
+from design import apply_figure_style
+from design import CONFIG_OPTIONS
+from design import DISCRETE_COLORS
+from design import LABELS
 
 
 # TITLE

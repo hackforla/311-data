@@ -1,17 +1,22 @@
 import datetime
 import textwrap
-import pandas as pd
 
-import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+import dash_table
+import pandas as pd
 import plotly.express as px
+from dash.dependencies import Input
+from dash.dependencies import Output
 from flask import request
 
-from app import app, batch_get_data
+from app import app
+from app import batch_get_data
 from config import API_HOST
-from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
+from design import apply_figure_style
+from design import CONFIG_OPTIONS
+from design import DISCRETE_COLORS
+from design import LABELS
 
 
 pretty_columns = {
