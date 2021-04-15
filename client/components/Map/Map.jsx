@@ -174,11 +174,19 @@ class Map extends React.Component {
       }
     }
 
-    // TODO: queryRenderedFeatures to query by feature.properties.nc_id
-    // This currently selects region by feature id (wrong region)
-    // if (this.props.selectedNcId != prevProps.selectedNcId && this.props.selectedId !== null) {
-    //   this.ncLayer.selectRegion(this.props.selectedNcId)
-    // }
+    if (this.props.selectedNcId != prevProps.selectedNcId) {
+      this.reset();
+      this.map.once('zoomend', () => {
+        const features = this.map.queryRenderedFeatures(null, {
+          layers: [
+            'shed-mask-fill',
+            'nc-fills',
+          ],
+        });
+        const selectedFeature = features.find(feature => feature.properties.council_id === this.props.selectedNcId);
+        this.ncLayer.selectRegion(selectedFeature.id)
+      })
+    }
 
     if (this.props.requestTypes != prevProps.requestTypes) {
       this.requestsLayer.init({
@@ -286,25 +294,25 @@ class Map extends React.Component {
     }
   };
 
-  // reset = () => {
-  //   this.zoomOut();
-  //   this.addressLayer.setCenter(null);
-  //   this.ncLayer.clearSelectedRegion();
-  //   this.ccLayer.clearSelectedRegion();
-  //   this.removePopup();
+  reset = () => {
+    this.zoomOut();
+    this.addressLayer.setCenter(null);
+    this.ncLayer.clearSelectedRegion();
+    this.ccLayer.clearSelectedRegion();
+    this.removePopup();
 
-  //   this.setState({
-  //     locationInfo: INITIAL_LOCATION,
-  //     canReset: false,
-  //   });
+    this.setState({
+      locationInfo: INITIAL_LOCATION,
+      canReset: false,
+    });
 
-  //   this.map.once('zoomend', () => {
-  //     this.setState({
-  //       filterGeo: null,
-  //       canReset: true,
-  //     });
-  //   });
-  // };
+    this.map.once('zoomend', () => {
+      this.setState({
+        filterGeo: null,
+        canReset: true,
+      });
+    });
+  };
 
   onClick = e => {
     const masks = [
@@ -367,19 +375,11 @@ class Map extends React.Component {
     // if (result.properties.type === GEO_FILTER_TYPES.cc)
     //   return this.ccLayer.selectRegion(result.id);
 
-    const lngLat = {
-      lng: result.center[0],
-      lat: result.center[1],
-    };
-
     getNc({ longitude: result.center[0], latitude: result.center[1] });
 
     this.setState({
       address: address,
     });
-
-    // need to call ncLayer.selectRegion here
-    this.addressLayer.zoomTo(lngLat);
   };
 
   zoomOut = () => {
