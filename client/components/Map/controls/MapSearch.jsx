@@ -2,9 +2,11 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import clx from 'classnames';
 import { withStyles } from '@material-ui/core/styles'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import Button from '@material-ui/core/Button';
 import { GEO_FILTER_TYPES } from '../constants';
 
 const TABS = Object.values(GEO_FILTER_TYPES);
@@ -13,7 +15,6 @@ const styles = theme => ({
   geocoder: {
     width: 325,
     backgroundColor: theme.palette.primary.dark,
-    borderTopLeftRadius: '10px',
     borderTopRightRadius: '10px',
     padding: '10px 15px 10px 15px',
     '& div.mapboxgl-ctrl': {
@@ -37,6 +38,23 @@ const styles = theme => ({
       }
     }
   },
+  wrapper: {
+    '& button:first-child': {
+      borderRadius: '10px 0 0 0',
+    },
+    '& button:last-child': {
+      borderRadius: '0 10px 0 0',
+    },
+  },
+  button: {
+    backgroundColor: '#0F181F',
+    color: theme.palette.secondary.main,
+    ...theme.typography.body2,
+  },
+  active: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.secondaryLight,
+  },
 });
 
 class MapSearch extends React.Component {
@@ -48,9 +66,30 @@ class MapSearch extends React.Component {
       flyTo: false,
       marker: false,
       minLength: 1,
-      placeholder: 'Search address',
-      // Need to implement localGeocoder
-      localGeocoder: () => {}
+      localGeocoder: searchTerm => {
+        const { geoFilterType } = this.props;
+        const searchFilter = new RegExp(searchTerm, 'i');
+
+        switch(geoFilterType) {
+          case GEO_FILTER_TYPES.address:
+            return [];
+
+          case GEO_FILTER_TYPES.nc:
+            const { councils } = this.props;
+            const filteredCouncils = councils.filter(({ councilName }) => (
+              searchFilter.test(councilName)
+            ));
+            return filteredCouncils.map(council => ({
+              type: 'Feature',
+              id: council.councilId,
+              text: council.councilName,
+              place_name: council.councilName,
+              properties: {
+                type: GEO_FILTER_TYPES.nc,
+              }
+            }));
+        }
+      },
     });
 
     this.geocoder.on('result', ({ result }) => {
@@ -59,18 +98,52 @@ class MapSearch extends React.Component {
     });
 
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(map));
+    this.setTab(GEO_FILTER_TYPES.address);
+  }
+
+  setTab = tab => {
+    this.props.onChangeTab(tab);
+    this.geocoder.clear();
+    switch(tab) {
+      case GEO_FILTER_TYPES.address:
+        this.geocoder.setPlaceholder('Enter address');
+        this.geocoder.options.localGeocoderOnly = false;
+        break;
+      case GEO_FILTER_TYPES.nc:
+        this.geocoder.setPlaceholder('Enter neighborhood council');
+        this.geocoder.options.localGeocoderOnly = true;
+        break;
+    }
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, geoFilterType } = this.props;
     return (
-      <div id="geocoder" className={classes.geocoder} />
+      <div>
+        <div className={classes.wrapper}>
+        { TABS.map(tab => (
+            <Button
+              key={tab}
+              className={clx(classes.button, {
+                [classes.active]: tab === geoFilterType
+              })}
+              variant="contained"
+              size="small"
+              onClick={this.setTab.bind(null, tab)}
+            >
+              { tab }
+            </Button>
+        ))}
+        </div>
+        <div id="geocoder" className={classes.geocoder} />
+      </div>
     );
   }
 };
 
 MapSearch.propTypes = {
   map: PropTypes.shape({}),
+  councils: PropTypes.arrayOf(PropTypes.shape({})),
   onGeocoderResult: PropTypes.func,
   onChangeTab: PropTypes.func,
   onReset: PropTypes.func,
@@ -79,6 +152,7 @@ MapSearch.propTypes = {
 
 MapSearch.defaultProps = {
   map: null,
+  councils: [],
   onGeocoderResult: () => {},
   onChangeTab: () => {},
   onReset: () => {},
