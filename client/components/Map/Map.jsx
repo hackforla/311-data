@@ -8,8 +8,7 @@ import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-
-import { getNcByLngLat } from '@reducers/data'
+import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
 
 import {
   INITIAL_BOUNDS,
@@ -107,12 +106,12 @@ class Map extends React.Component {
       selectedTypes: props.selectedTypes,
       locationInfo: INITIAL_LOCATION,
       address: null,
-      geoFilterType: GEO_FILTER_TYPES.nc,
+      geoFilterType: GEO_FILTER_TYPES.address,
       filterGeo: null,
       filteredRequestCounts: {},
       hoveredRegionName: null,
       colorScheme: 'prism',
-      mapStyle: 'dark',
+      mapStyle: 'streets',
       canReset: true,
       selectedRequestId: null,
       requests: props.requests,
@@ -174,20 +173,6 @@ class Map extends React.Component {
       }
     }
 
-    if (this.props.selectedNcId != prevProps.selectedNcId) {
-      this.reset();
-      this.map.once('zoomend', () => {
-        const features = this.map.queryRenderedFeatures(null, {
-          layers: [
-            'shed-mask-fill',
-            'nc-fills',
-          ],
-        });
-        const selectedFeature = features.find(feature => feature.properties.council_id === this.props.selectedNcId);
-        this.ncLayer.selectRegion(selectedFeature.id)
-      })
-    }
-
     if (this.props.requestTypes != prevProps.requestTypes) {
       this.requestsLayer.init({
         map: this.map,
@@ -205,7 +190,7 @@ class Map extends React.Component {
         addListeners: true,
         sourceId: 'nc',
         sourceData: this.props.ncBoundaries,
-        idProperty: 'nc_id',
+        idProperty: 'council_id',
         onSelectRegion: geo => {
           this.setState({
             locationInfo: {
@@ -303,6 +288,7 @@ class Map extends React.Component {
 
     this.setState({
       locationInfo: INITIAL_LOCATION,
+      address: null,
       canReset: false,
     });
 
@@ -332,6 +318,8 @@ class Map extends React.Component {
       ]
     });
 
+    const { setSelectedNc } = this.props;
+
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
 
@@ -341,6 +329,8 @@ class Map extends React.Component {
       if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
         switch(feature.layer.id) {
           case 'nc-fills':
+            this.setState({ address: null });
+            setSelectedNc(feature.properties.council_id);
             return this.ncLayer.selectRegion(feature.id);
           case 'cc-fills':
             return this.ccLayer.selectRegion(feature.id);
@@ -363,23 +353,28 @@ class Map extends React.Component {
   };
 
   onGeocoderResult = ({ result }) => {
-    const { getNc } = this.props;
+    const { getNc, setSelectedNc } = this.props;
+    if (result.properties.type === GEO_FILTER_TYPES.nc) {
+      this.setState({ address: null });
+      setSelectedNc(result.id);
+      return this.ncLayer.selectRegion(result.id);
+    }
+
     const address = result.place_name
                       .split(',')
                       .slice(0, -2)
                       .join(', ');
-
-    // if (result.properties.type === GEO_FILTER_TYPES.nc)
-    //   return this.ncLayer.selectRegion(result.id);
-
-    // if (result.properties.type === GEO_FILTER_TYPES.cc)
-    //   return this.ccLayer.selectRegion(result.id);
+    const lngLat = {
+      lng: result.center[0],
+      lat: result.center[1],
+    };
 
     getNc({ longitude: result.center[0], latitude: result.center[1] });
 
     this.setState({
       address: address,
     });
+    this.addressLayer.zoomTo(lngLat);
   };
 
   zoomOut = () => {
@@ -484,6 +479,7 @@ class Map extends React.Component {
       lastUpdated,
       requestTypes,
       selectedNcId,
+      councils,
     } = this.props;
 
     const {
@@ -544,6 +540,7 @@ class Map extends React.Component {
               <MapSearch
                 map={this.map}
                 geoFilterType={geoFilterType}
+                councils={councils}
                 onGeocoderResult={this.onGeocoderResult}
                 onChangeTab={this.onChangeSearchTab}
                 onReset={this.reset}
@@ -588,11 +585,13 @@ Map.defaultProps = {};
 const mapStateToProps = state => ({
   ncBoundaries: state.metadata.ncGeojson,
   requestTypes: state.metadata.requestTypes,
+  councils: state.metadata.councils,
   selectedNcId: state.data.selectedNcId,
 });
 
 const mapDispatchToProps = dispatch => ({
   getNc: coords => dispatch(getNcByLngLat(coords)),
+  setSelectedNc: id => dispatch(setSelectedNcId(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Map));
