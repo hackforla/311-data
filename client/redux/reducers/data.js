@@ -11,6 +11,7 @@ export const types = {
   GET_NC_BY_LNG_LAT: 'GET_NC_BY_LNG_LAT',
   GET_NC_BY_LNG_LAT_SUCCESS: 'GET_NC_BY_LNG_LAT_SUCCESS',
   GET_NC_BY_LNG_LAT_FAILURE: 'GET_NC_BY_LNG_LAT_FAILURE',
+  SET_SELECTED_NC_ID: 'SET_SELECTED_NC_ID',
   GET_HEATMAP_SUCCESS: 'GET_HEATMAP_SUCCESS',
   GET_HEATMAP_FAILURE: 'GET_HEATMAP_FAILURE',
   GET_VIS_DATA_SUCCESS: 'GET_VIS_DATA_SUCCESS',
@@ -62,6 +63,11 @@ export const getNcByLngLatSuccess = response => ({
 export const getNcByLngLatFailure = error => ({
   type: types.GET_NC_BY_LNG_LAT_FAILURE,
   payload: error,
+});
+
+export const setSelectedNcId = id => ({
+  type: types.SET_SELECTED_NC_ID,
+  payload: id,
 });
 
 export const getHeatmapSuccess = response => ({
@@ -180,6 +186,12 @@ export default (state = initialState, action) => {
           message,
           error: action.payload,
         },
+      };
+    }
+    case types.SET_SELECTED_NC_ID: {
+      return {
+        ...state,
+        selectedNcId: action.payload,
       };
     }
     default:
