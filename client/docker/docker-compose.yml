@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     container_name: 311-postgres
-    image: postgres:12
+    image: gangstead/postgis:latest-arm
     restart: always
     env_file: .env
     environment:
@@ -18,7 +18,7 @@ services:
 
   redis:
     container_name: 311-redis
-    image: redis:6
+    image: redis:5
     restart: always
     ports:
       - "6379:6379"
@@ -42,7 +42,7 @@ services:
     container_name: 311-prefect
     image: la311data/311_data_prefect:dev
     env_file: .env
-    environment: 
+    environment:
       PREFECT__CONTEXT__SECRETS__DSN: postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:5432/${DB_NAME}
       PREFECT__API_URL: ${APP_PROTOCOL}://${APP_HOST}:${APP_PORT}
     depends_on:

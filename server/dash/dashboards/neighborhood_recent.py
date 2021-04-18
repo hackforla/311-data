@@ -6,18 +6,11 @@ import dash_html_components as html
 import dash_table
 import pandas as pd
 import plotly.express as px
-from dash.dependencies import Input
-from dash.dependencies import Output
-from flask import request
-
-from app import app
-from app import batch_get_data
+from app import app, batch_get_data
 from config import API_HOST
-from design import apply_figure_style
-from design import CONFIG_OPTIONS
-from design import DISCRETE_COLORS
-from design import LABELS
-
+from dash.dependencies import Input, Output
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
+from flask import request
 
 pretty_columns = {
     'srnumber': "SR Number",
@@ -39,8 +32,10 @@ title = "NEIGHBORHOOD WEEKLY REPORT"
 df_path = f"/requests/updated?start_date={start_date}&end_date={end_date}"
 print(" * Downloading data for dataframe")
 df = batch_get_data(API_HOST + df_path)
-df['createdDate'] = pd.to_datetime(df['createdDate'], errors='coerce').dt.strftime('%Y-%m-%d')
-df['closedDate'] = pd.to_datetime(df['closedDate'], errors='coerce').dt.strftime('%Y-%m-%d')
+df['createdDate'] = pd.to_datetime(
+    df['createdDate'], errors='coerce').dt.strftime('%Y-%m-%d')
+df['closedDate'] = pd.to_datetime(
+    df['closedDate'], errors='coerce').dt.strftime('%Y-%m-%d')
 print(" * Dataframe has been loaded")
 
 try:
@@ -128,11 +123,13 @@ layout = html.Div([
             dcc.Graph(id='pie_graph', figure=pie_fig, config=CONFIG_OPTIONS),
             className="half-graph"
         )
-    ], ),
+    ]),
     html.Div(
         dash_table.DataTable(
             id='council_table',
-            columns=[{"name": pretty_columns[i], "id": i} for i in table_df.columns],
+            columns=[
+                {"name": pretty_columns[i], "id": i} for i in table_df.columns
+            ],
             style_as_list_view=True,
             style_cell={
                 'padding': '5px',

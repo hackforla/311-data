@@ -5,13 +5,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import plotly.express as px
-
 from config import API_HOST
-from design import apply_figure_style
-from design import CONFIG_OPTIONS
-from design import DISCRETE_COLORS
-from design import LABELS
-
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 
 # TITLE
 title = "RECENT 311 REQUESTS"
@@ -20,7 +15,7 @@ title = "RECENT 311 REQUESTS"
 start_date = datetime.date.today() - datetime.timedelta(days=15)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
 
-query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"
+query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"  # noqa
 print(" * Downloading data for dataframe")
 df = pd.read_json(API_HOST + query_string)
 print(" * Dataframe has been loaded")
@@ -81,7 +76,7 @@ layout = html.Div([
     ], className="graph-row"),
     dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
     html.Div([
-        dcc.Graph(id='graph3', figure=dow_fig, config=CONFIG_OPTIONS, className="half-graph"),
-        dcc.Graph(id='graph2', figure=pie_fig, config=CONFIG_OPTIONS, className="half-graph"),
+        dcc.Graph(id='graph3', figure=dow_fig, config=CONFIG_OPTIONS, className="half-graph"),  # noqa
+        dcc.Graph(id='graph2', figure=pie_fig, config=CONFIG_OPTIONS, className="half-graph"),  # noqa
     ], className="graph-row"),
 ])
