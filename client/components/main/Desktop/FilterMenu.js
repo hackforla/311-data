@@ -37,9 +37,9 @@ const useStyles = makeStyles(theme => ({
     ...theme.typography.h1,
     fontWeight: 600,
     letterSpacing: '2px',
+    marginLeft: theme.gaps.xs,
   },
   headerContent: {
-    marginLeft: theme.gaps.xs,
     display: 'flex',
     alignItems: 'center',
   },
