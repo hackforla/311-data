@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
+import LocationDetail from './LocationDetail';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
@@ -87,13 +88,6 @@ const styles = theme => ({
     left: 35,
     top: 75,
   },
-  locationInfo: {
-    marginTop: 5,
-    borderRadius: 10,
-    width: 325,
-    backgroundColor: theme.palette.primary.main,
-    padding: 10,
-  },
 })
 
 class Map extends React.Component {
@@ -114,6 +108,7 @@ class Map extends React.Component {
       mapStyle: 'streets',
       canReset: true,
       selectedRequestId: null,
+      selectedNc: null,
       requests: props.requests,
     };
 
@@ -214,6 +209,12 @@ class Map extends React.Component {
           });
         }
       });
+    }
+
+    if (this.props.selectedNcId !== prevProps.selectedNcId) {
+      const { councils, selectedNcId } = this.props;
+      const nc = councils.find(({ councilId }) => councilId === selectedNcId);
+      this.setState({ selectedNc: nc });
     }
   }
 
@@ -494,6 +495,7 @@ class Map extends React.Component {
       // hoveredRegionName,
       canReset,
       selectedRequestId,
+      selectedNc,
       selectedTypes,
       address,
     } = this.state;
@@ -547,12 +549,7 @@ class Map extends React.Component {
                 canReset={!!filterGeo && canReset}
               />
               <FilterMenu />
-              <div className={classes.locationInfo}>
-                <div>Placeholder</div>
-                TODO: Add NC/CC, links
-                {address && <p>Address: {address}</p>}
-                {selectedNcId && <p>ncId: {selectedNcId}</p>}
-              </div>
+              <LocationDetail address={address} nc={selectedNc} />
             </div>
             {/* <MapLayers
               selectedTypes={selectedTypes}

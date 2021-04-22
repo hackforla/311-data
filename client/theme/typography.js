@@ -18,7 +18,6 @@ export default {
   h2: {
     fontSize: 18,
     fontWeight: robotoMedium,
-
   },
   h3: {
     fontFamily: oswald,
