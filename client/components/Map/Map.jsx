@@ -215,6 +215,7 @@ class Map extends React.Component {
       const { councils, selectedNcId } = this.props;
       const nc = councils.find(({ councilId }) => councilId === selectedNcId);
       this.setState({ selectedNc: nc });
+      return this.ncLayer.selectRegion(selectedNcId);
     }
   }
 
@@ -282,7 +283,7 @@ class Map extends React.Component {
 
   reset = () => {
     this.zoomOut();
-    this.addressLayer.setCenter(null);
+    this.addressLayer.clearMarker();
     this.ncLayer.clearSelectedRegion();
     this.ccLayer.clearSelectedRegion();
     this.removePopup();
@@ -291,6 +292,7 @@ class Map extends React.Component {
       locationInfo: INITIAL_LOCATION,
       address: null,
       canReset: false,
+      selectedNc: null,
     });
 
     this.map.once('zoomend', () => {
@@ -302,9 +304,6 @@ class Map extends React.Component {
   };
 
   onClick = e => {
-    const masks = [
-      'shed-mask-fill'
-    ];
 
     const hoverables = [
       'nc-fills',
@@ -314,7 +313,6 @@ class Map extends React.Component {
     const features = this.map.queryRenderedFeatures(e.point, {
       layers: [
         'request-circles',
-        ...masks,
         ...hoverables
       ]
     });
@@ -323,9 +321,6 @@ class Map extends React.Component {
 
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
-
-      if (masks.includes(feature.layer.id))
-        return null;
 
       if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
         switch(feature.layer.id) {
@@ -358,24 +353,19 @@ class Map extends React.Component {
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
       setSelectedNc(result.id);
-      return this.ncLayer.selectRegion(result.id);
     }
 
     const address = result.place_name
                       .split(',')
                       .slice(0, -2)
                       .join(', ');
-    const lngLat = {
-      lng: result.center[0],
-      lat: result.center[1],
-    };
 
     getNc({ longitude: result.center[0], latitude: result.center[1] });
 
     this.setState({
       address: address,
     });
-    this.addressLayer.zoomTo(lngLat);
+    return this.addressLayer.addMarker([result.center[0], result.center[1]]);
   };
 
   zoomOut = () => {
@@ -514,12 +504,14 @@ class Map extends React.Component {
         />
         <AddressLayer
           ref={el => this.addressLayer = el}
-          visible={geoFilterType === GEO_FILTER_TYPES.address}
+          // visible={geoFilterType === GEO_FILTER_TYPES.address}
+          visible
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
         <BoundaryLayer
           ref={el => this.ncLayer = el}
-          visible={geoFilterType === GEO_FILTER_TYPES.nc}
+          // visible={geoFilterType === GEO_FILTER_TYPES.nc}
+          visible
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
         <BoundaryLayer
