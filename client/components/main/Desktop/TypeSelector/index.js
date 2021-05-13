@@ -54,10 +54,10 @@ const RequestTypeSelector = ({
           key={type.typeId}
           control={
             <Checkbox 
-              size={small}
+              size="small"
               checked={selectedTypes.includes(type.typeId)}
               onChange={handleChange}
-              value={1}
+              value={type.typeId}
             />
           }
           label={
