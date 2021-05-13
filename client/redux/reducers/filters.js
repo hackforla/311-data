@@ -19,7 +19,7 @@ export const updateEndDate = newEndDate => ({
 
 export const updateRequestTypes = requestTypes => ({
   type: types.UPDATE_REQUEST_TYPES,
-  payload: requestTypes.map(({ typeId }) => typeId),
+  payload: requestTypes,
 });
 
 export const updateNC = councils => ({
