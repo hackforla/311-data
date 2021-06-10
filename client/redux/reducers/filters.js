@@ -23,9 +23,9 @@ export const updateRequestTypes = typeId => ({
   payload: typeId,
 });
 
-export const updateNC = councils => ({
+export const updateNcId = ncId => ({
   type: types.UPDATE_NEIGHBORHOOD_COUNCIL,
-  payload: councils.map(({ councilId }) => councilId),
+  payload: ncId,
 });
 
 export const updateRequestStatus = status => ({
@@ -37,7 +37,7 @@ const initialState = {
   dateRange: null,
   startDate: null,
   endDate: null,
-  councils: [],
+  councilId: null,
   requestTypes: {
     1: true,
     2: true,
@@ -85,7 +85,7 @@ export default (state = initialState, action) => {
     case types.UPDATE_NEIGHBORHOOD_COUNCIL:
       return {
         ...state,
-        councils: action.payload,
+        councilId: action.payload,
       };
     case types.UPDATE_REQUEST_STATUS:
       return {
