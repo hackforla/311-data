@@ -565,7 +565,7 @@ class Map extends React.Component {
 Map.propTypes = {
   requests: PropTypes.shape({}),
   position: PropTypes.shape({}),
-  selectedTypes: PropTypes.arrayOf(PropTypes.number),
+  selectedTypes: PropTypes.shape({}),
   getNc: PropTypes.func.isRequired,
 };
 

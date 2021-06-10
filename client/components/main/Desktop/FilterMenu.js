@@ -57,10 +57,13 @@ const useStyles = makeStyles(theme => ({
   selectorWrapper: {
     marginBottom: theme.gaps.md,
   },
+  content: {
+    padding: '6px 14px',
+  },
 }));
 
 const FilterMenu = ({ toggleMenu }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const classes = useStyles();
 
   return (
@@ -93,12 +96,12 @@ const FilterMenu = ({ toggleMenu }) => {
         )}
       />
       <Collapse in={expanded}>
-        <CardContent>
-          <div className={classes.selectorWrapper}>
-            <TypeSelector />
-          </div>
+        <CardContent className={classes.content}>
           <div className={classes.selectorWrapper}>
             <DateSelector range />
+          </div>
+          <div className={classes.selectorWrapper}>
+            <TypeSelector />
           </div>
         </CardContent>
       </Collapse>

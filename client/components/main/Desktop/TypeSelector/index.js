@@ -6,17 +6,23 @@ import { updateRequestTypes } from '@reducers/filters';
 import not from '@utils/not';
 import { makeStyles } from '@material-ui/core/styles';
 
+import Grid from '@material-ui/core/Grid';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const useStyles = makeStyles(theme => ({
+  // label: {
+  //   display: 'inline-block',
+  //   font: theme.typography.b2,
+  //   marginBottom: '10px',
+  //   color: theme.palette.secondary.light,
+  // },
   label: {
-    display: 'inline-block',
-    font: theme.typography.b2,
-    marginBottom: '10px',
-    color: theme.palette.secondary.light,
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '12px',
   },
 }));
 
@@ -27,7 +33,7 @@ const RequestTypeSelector = ({
 }) => {
   const [leftCol, setLeftCol] = useState();
   const [rightCol, setRightCol] = useState();
-  // const classes = useStyles();
+  const classes = useStyles();
 
   useEffect(() => {
     if (requestTypes) {
@@ -40,37 +46,57 @@ const RequestTypeSelector = ({
   }, [requestTypes]);
 
   const handleChange = e => {
-    const selectedId = Number(e.target.value);
-    const updatedTypes = selectedTypes.includes(selectedId) ?
-      selectedTypes.filter(({typeId}) => typeId !== selectedId) :
-      [...selectedTypes, selectedId];
-    updateTypesFilter(updatedTypes);
+    const typeId = Number(e.target.value);
+    updateTypesFilter(typeId);
   };
 
   return (
-    <FormGroup>
-      {leftCol && leftCol.map(type => (
-        <FormControlLabel
-          key={type.typeId}
-          control={
-            <Checkbox 
-              size="small"
-              checked={selectedTypes.includes(type.typeId)}
+    <Grid container style={{ margin: 'auto' }}>
+      <Grid item style={{ width: '50%' }}>
+        <FormGroup>
+          {leftCol && leftCol.map(type => (
+            <FormControlLabel
+              key={type.typeId}
+              classes={classes}
               onChange={handleChange}
-              value={type.typeId}
-            />
-          }
-          label={
-            <>
-              <FiberManualRecordIcon 
-                style={{ color: type.color }}
-              />
-              {type.typeName}
-            </>
-          }
-        /> 
-      ))}
-    </FormGroup>
+              control={
+                <Checkbox 
+                  style={{
+                    transform: 'scale(0.8)',
+                    color: type.color,
+                    padding: '0 0 0 9px',
+                  }}
+                  value={type.typeId}
+                />
+              }
+              label={type.typeName}
+            /> 
+          ))}
+        </FormGroup>
+      </Grid>
+      <Grid item style={{ width: '50%' }}>
+        <FormGroup>
+          {rightCol && rightCol.map(type => (
+            <FormControlLabel
+              key={type.typeId}
+              classes={classes}
+              onChange={handleChange}
+              control={
+                <Checkbox 
+                  style={{
+                    transform: 'scale(0.8)',
+                    color: type.color,
+                    padding: '0 2px 0 9px',
+                  }}
+                  value={type.typeId}
+                />
+              }
+              label={type.typeName}
+            /> 
+          ))}
+        </FormGroup>
+      </Grid>
+    </Grid>
   );
 };
 
@@ -91,7 +117,7 @@ export default connect(
 RequestTypeSelector.propTypes = {
   requestTypes: PropTypes.arrayOf(PropTypes.shape({})),
   updateTypesFilter: PropTypes.func.isRequired,
-  selectedTypes: PropTypes.arrayOf(PropTypes.number).isRequired,
+  selectedTypes: PropTypes.shape({}).isRequired,
 };
 
 RequestTypeSelector.defaultProps = {

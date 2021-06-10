@@ -17,9 +17,9 @@ export const updateEndDate = newEndDate => ({
   payload: newEndDate,
 });
 
-export const updateRequestTypes = requestTypes => ({
+export const updateRequestTypes = typeId => ({
   type: types.UPDATE_REQUEST_TYPES,
-  payload: requestTypes,
+  payload: typeId,
 });
 
 export const updateNC = councils => ({
@@ -32,7 +32,20 @@ const initialState = {
   startDate: null,
   endDate: null,
   councils: [],
-  requestTypes: [],
+  requestTypes: {
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+    6: false,
+    7: false,
+    8: false,
+    9: false,
+    10: false,
+    11: false,
+    12: false,
+  },
 };
 
 export default (state = initialState, action) => {
@@ -54,7 +67,10 @@ export default (state = initialState, action) => {
     case types.UPDATE_REQUEST_TYPES:
       return {
         ...state,
-        requestTypes: action.payload,
+        requestTypes: {
+          ...state.requestTypes,
+          [action.payload]: !state.requestTypes[action.payload],
+        },
       };
     case types.UPDATE_NEIGHBORHOOD_COUNCIL:
       return {

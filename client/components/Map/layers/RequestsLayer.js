@@ -154,14 +154,14 @@ export default RequestsLayer;
 
 RequestsLayer.propTypes = {
   activeLayer: PropTypes.oneOf(['points', 'heatmap']),
-  selectedTypes: PropTypes.arrayOf(PropTypes.number),
+  selectedTypes: PropTypes.shape({}),
   requests: PropTypes.shape({}),
   colorScheme: PropTypes.string,
 };
 
 RequestsLayer.defaultProps = {
   activeLayer: 'points',
-  selectedTypes: [],
+  selectedTypes: {},
   requests: {},
   colorScheme: '',
 };
