@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import GearButton from '@components/common/GearButton';
 import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/main/Desktop/TypeSelector';
+import StatusSelector from '@components/main/Desktop/StatusSelector';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -102,6 +103,9 @@ const FilterMenu = ({ toggleMenu }) => {
           </div>
           <div className={classes.selectorWrapper}>
             <TypeSelector />
+          </div>
+          <div className={classes.selectorWrapper}>
+            <StatusSelector />
           </div>
         </CardContent>
       </Collapse>

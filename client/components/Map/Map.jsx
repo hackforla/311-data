@@ -353,19 +353,19 @@ class Map extends React.Component {
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
       setSelectedNc(result.id);
+    } else {
+      const address = result.place_name
+                        .split(',')
+                        .slice(0, -2)
+                        .join(', ');
+  
+      getNc({ longitude: result.center[0], latitude: result.center[1] });
+  
+      this.setState({
+        address: address,
+      });
+      return this.addressLayer.addMarker([result.center[0], result.center[1]]);
     }
-
-    const address = result.place_name
-                      .split(',')
-                      .slice(0, -2)
-                      .join(', ');
-
-    getNc({ longitude: result.center[0], latitude: result.center[1] });
-
-    this.setState({
-      address: address,
-    });
-    return this.addressLayer.addMarker([result.center[0], result.center[1]]);
   };
 
   zoomOut = () => {
@@ -541,7 +541,10 @@ class Map extends React.Component {
                 canReset={!!filterGeo && canReset}
               />
               <FilterMenu />
-              <LocationDetail address={address} nc={selectedNc} />
+              {
+                selectedNc && <LocationDetail address={address} nc={selectedNc} />
+              }
+              
             </div>
             {/* <MapLayers
               selectedTypes={selectedTypes}

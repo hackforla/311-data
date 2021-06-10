@@ -19,6 +19,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const useHeaderStyles = makeStyles(theme => ({
+  header: {
+    marginBottom: 5,
+    display: 'inline-block',
+    fontFamily: 'Roboto',
+  }
+}))
+
 const RequestTypeSelector = ({
   requestTypes,
   updateTypesFilter,
@@ -27,6 +35,7 @@ const RequestTypeSelector = ({
   const [leftCol, setLeftCol] = useState();
   const [rightCol, setRightCol] = useState();
   const classes = useStyles();
+  const headerClass = useHeaderStyles();
 
   useEffect(() => {
     if (requestTypes) {
@@ -39,52 +48,55 @@ const RequestTypeSelector = ({
   }, [requestTypes]);
 
   return (
-    <Grid container style={{ margin: 'auto' }}>
-      <Grid item style={{ width: '50%' }}>
-        <FormGroup>
-          {leftCol && leftCol.map(type => (
-            <FormControlLabel
-              key={type.typeId}
-              classes={classes}
-              control={
-                <Checkbox 
-                  style={{
-                    transform: 'scale(0.8)',
-                    color: type.color,
-                    padding: '0 0 0 9px',
-                  }}
-                  checked={selectedTypes[type.typeId]}
-                  onChange={() => updateTypesFilter(type.typeId)}
-                />
-              }
-              label={type.typeName}
-            /> 
-          ))}
-        </FormGroup>
+    <>
+      <div className={headerClass.header}>Request Types</div>
+      <Grid container style={{ margin: 'auto' }}>
+        <Grid item style={{ width: '50%' }}>
+          <FormGroup>
+            {leftCol && leftCol.map(type => (
+              <FormControlLabel
+                key={type.typeId}
+                classes={classes}
+                control={
+                  <Checkbox 
+                    style={{
+                      transform: 'scale(0.8)',
+                      color: type.color,
+                      padding: '0 0 0 9px',
+                    }}
+                    checked={selectedTypes[type.typeId]}
+                    onChange={() => updateTypesFilter(type.typeId)}
+                  />
+                }
+                label={type.typeName}
+              /> 
+            ))}
+          </FormGroup>
+        </Grid>
+        <Grid item style={{ width: '50%' }}>
+          <FormGroup>
+            {rightCol && rightCol.map(type => (
+              <FormControlLabel
+                key={type.typeId}
+                classes={classes}
+                control={
+                  <Checkbox 
+                    style={{
+                      transform: 'scale(0.8)',
+                      color: type.color,
+                      padding: '0 2px 0 9px',
+                    }}
+                    checked={selectedTypes[type.typeId]}
+                    onChange={() => updateTypesFilter(type.typeId)}
+                  />
+                }
+                label={type.typeName}
+              /> 
+            ))}
+          </FormGroup>
+        </Grid>
       </Grid>
-      <Grid item style={{ width: '50%' }}>
-        <FormGroup>
-          {rightCol && rightCol.map(type => (
-            <FormControlLabel
-              key={type.typeId}
-              classes={classes}
-              control={
-                <Checkbox 
-                  style={{
-                    transform: 'scale(0.8)',
-                    color: type.color,
-                    padding: '0 2px 0 9px',
-                  }}
-                  checked={selectedTypes[type.typeId]}
-                  onChange={() => updateTypesFilter(type.typeId)}
-                />
-              }
-              label={type.typeName}
-            /> 
-          ))}
-        </FormGroup>
-      </Grid>
-    </Grid>
+    </>
   );
 };
 
