@@ -3,22 +3,15 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateRequestTypes } from '@reducers/filters';
-import not from '@utils/not';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+// import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const useStyles = makeStyles(theme => ({
-  // label: {
-  //   display: 'inline-block',
-  //   font: theme.typography.b2,
-  //   marginBottom: '10px',
-  //   color: theme.palette.secondary.light,
-  // },
   label: {
     display: 'flex',
     alignItems: 'center',
@@ -45,11 +38,6 @@ const RequestTypeSelector = ({
     }
   }, [requestTypes]);
 
-  const handleChange = e => {
-    const typeId = Number(e.target.value);
-    updateTypesFilter(typeId);
-  };
-
   return (
     <Grid container style={{ margin: 'auto' }}>
       <Grid item style={{ width: '50%' }}>
@@ -58,7 +46,6 @@ const RequestTypeSelector = ({
             <FormControlLabel
               key={type.typeId}
               classes={classes}
-              onChange={handleChange}
               control={
                 <Checkbox 
                   style={{
@@ -66,7 +53,8 @@ const RequestTypeSelector = ({
                     color: type.color,
                     padding: '0 0 0 9px',
                   }}
-                  value={type.typeId}
+                  checked={selectedTypes[type.typeId]}
+                  onChange={() => updateTypesFilter(type.typeId)}
                 />
               }
               label={type.typeName}
@@ -80,7 +68,6 @@ const RequestTypeSelector = ({
             <FormControlLabel
               key={type.typeId}
               classes={classes}
-              onChange={handleChange}
               control={
                 <Checkbox 
                   style={{
@@ -88,7 +75,8 @@ const RequestTypeSelector = ({
                     color: type.color,
                     padding: '0 2px 0 9px',
                   }}
-                  value={type.typeId}
+                  checked={selectedTypes[type.typeId]}
+                  onChange={() => updateTypesFilter(type.typeId)}
                 />
               }
               label={type.typeName}
