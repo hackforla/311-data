@@ -10,6 +10,7 @@ import LocationDetail from './LocationDetail';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
+import { updateNcId } from '@reducers/filters';
 
 import {
   INITIAL_BOUNDS,
@@ -217,6 +218,13 @@ class Map extends React.Component {
       this.setState({ selectedNc: nc });
       return this.ncLayer.selectRegion(selectedNcId);
     }
+
+    if (this.props.ncId !== prevProps.ncId) {
+      const { councils, ncId } = this.props;
+      const nc = councils.find(({ councilId }) => councilId === ncId);
+      this.setState({ selectedNc: nc });
+      return this.ncLayer.selectRegion(ncId);
+    }
   }
 
   initLayers = addListeners => {
@@ -317,7 +325,7 @@ class Map extends React.Component {
       ]
     });
 
-    const { setSelectedNc } = this.props;
+    const { updateNcId } = this.props;
 
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
@@ -326,7 +334,7 @@ class Map extends React.Component {
         switch(feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
-            setSelectedNc(feature.properties.council_id);
+            updateNcId(feature.properties.council_id);
             return this.ncLayer.selectRegion(feature.id);
           case 'cc-fills':
             return this.ccLayer.selectRegion(feature.id);
@@ -349,23 +357,23 @@ class Map extends React.Component {
   };
 
   onGeocoderResult = ({ result }) => {
-    const { getNc, setSelectedNc } = this.props;
+    const { getNc, updateNcId } = this.props;
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
-      setSelectedNc(result.id);
+      updateNcId(result.id);
+    } else {
+      const address = result.place_name
+                        .split(',')
+                        .slice(0, -2)
+                        .join(', ');
+  
+      getNc({ longitude: result.center[0], latitude: result.center[1] });
+  
+      this.setState({
+        address: address,
+      });
+      return this.addressLayer.addMarker([result.center[0], result.center[1]]);
     }
-
-    const address = result.place_name
-                      .split(',')
-                      .slice(0, -2)
-                      .join(', ');
-
-    getNc({ longitude: result.center[0], latitude: result.center[1] });
-
-    this.setState({
-      address: address,
-    });
-    return this.addressLayer.addMarker([result.center[0], result.center[1]]);
   };
 
   zoomOut = () => {
@@ -522,7 +530,7 @@ class Map extends React.Component {
         <div ref={el => this.requestDetail = el}>
           <RequestDetail requestId={selectedRequestId} />
         </div>
-        { this.state.mapReady && (
+        { this.state.mapReady && requestTypes && (
           <>
             {/* <MapOverview
               date={lastUpdated}
@@ -541,7 +549,10 @@ class Map extends React.Component {
                 canReset={!!filterGeo && canReset}
               />
               <FilterMenu />
-              <LocationDetail address={address} nc={selectedNc} />
+              {
+                (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
+              }
+              
             </div>
             {/* <MapLayers
               selectedTypes={selectedTypes}
@@ -565,8 +576,9 @@ class Map extends React.Component {
 Map.propTypes = {
   requests: PropTypes.shape({}),
   position: PropTypes.shape({}),
-  selectedTypes: PropTypes.arrayOf(PropTypes.number),
+  selectedTypes: PropTypes.shape({}),
   getNc: PropTypes.func.isRequired,
+  updateNcId: PropTypes.func.isRequired,
 };
 
 Map.defaultProps = {};
@@ -575,12 +587,13 @@ const mapStateToProps = state => ({
   ncBoundaries: state.metadata.ncGeojson,
   requestTypes: state.metadata.requestTypes,
   councils: state.metadata.councils,
-  selectedNcId: state.data.selectedNcId,
+  selectedNcId: state.filters.councilId,
+  ncId: state.data.selectedNcId,
 });
 
 const mapDispatchToProps = dispatch => ({
   getNc: coords => dispatch(getNcByLngLat(coords)),
-  setSelectedNc: id => dispatch(setSelectedNcId(id)),
+  updateNcId: id => dispatch(updateNcId(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Map));

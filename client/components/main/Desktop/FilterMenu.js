@@ -14,7 +14,8 @@ import Typography from '@material-ui/core/Typography';
 
 import GearButton from '@components/common/GearButton';
 import DateSelector from '@components/DateSelector/DateSelector';
-import RequestTypeSelector from '@components/main/Desktop/RequestTypeSelector';
+import TypeSelector from '@components/main/Desktop/TypeSelector';
+import StatusSelector from '@components/main/Desktop/StatusSelector';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -57,13 +58,15 @@ const useStyles = makeStyles(theme => ({
   selectorWrapper: {
     marginBottom: theme.gaps.md,
   },
+  content: {
+    padding: '6px 14px',
+  },
 }));
 
 const FilterMenu = ({ toggleMenu }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const classes = useStyles();
 
-  // TODO: add basic/advanced toggle switch
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -94,12 +97,15 @@ const FilterMenu = ({ toggleMenu }) => {
         )}
       />
       <Collapse in={expanded}>
-        <CardContent>
-          <div className={classes.selectorWrapper}>
-            <RequestTypeSelector />
-          </div>
+        <CardContent className={classes.content}>
           <div className={classes.selectorWrapper}>
             <DateSelector range />
+          </div>
+          <div className={classes.selectorWrapper}>
+            <TypeSelector />
+          </div>
+          <div className={classes.selectorWrapper}>
+            <StatusSelector />
           </div>
         </CardContent>
       </Collapse>

@@ -1,18 +1,37 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import SelectorBox from '@components/common/SelectorBox';
 import DatePicker from '@components/common/DatePicker';
+import {
+  updateStartDate as reduxUpdateStartDate,
+  updateEndDate as reduxUpdateEndDate,
+} from '@reducers/filters';
+import moment from 'moment';
 import options from './options';
 import useStyles from './useStyles';
 import DateRanges from './DateRanges';
 
-function DateSelector({ onRangeSelect, range, initialDates }) {
+const dateFormat = 'YYYY-MM-DD';
+
+function DateSelector({
+  onRangeSelect,
+  range,
+  initialDates,
+  updateStartDate,
+  updateEndDate,
+}) {
   const [dates, setDates] = useState(initialDates);
   const [expanded, setExpanded] = useState(false);
   const classes = useStyles();
 
   const handleOptionSelect = optionDates => {
+    const formattedStart = moment(optionDates[0]).format(dateFormat);
+    const formattedEnd = moment(optionDates[1]).format(dateFormat);
     setDates(() => optionDates);
+    updateStartDate(formattedStart);
+    updateEndDate(formattedEnd);
+    setExpanded(false);
   };
 
   const handleDateSelect = selectedDays => {
@@ -54,10 +73,19 @@ function DateSelector({ onRangeSelect, range, initialDates }) {
   );
 }
 
+const mapDispatchToProps = dispatch => ({
+  updateStartDate: date => dispatch(reduxUpdateStartDate(date)),
+  updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
+});
+
+export default connect(null, mapDispatchToProps)(DateSelector);
+
 DateSelector.propTypes = {
   range: PropTypes.bool,
   onRangeSelect: PropTypes.func,
   initialDates: PropTypes.arrayOf(Date),
+  updateStartDate: PropTypes.func.isRequired,
+  updateEndDate: PropTypes.func.isRequired,
 };
 
 DateSelector.defaultProps = {
@@ -65,5 +93,3 @@ DateSelector.defaultProps = {
   onRangeSelect: null,
   initialDates: [],
 };
-
-export default DateSelector;
