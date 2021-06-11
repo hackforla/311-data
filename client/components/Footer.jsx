@@ -48,7 +48,7 @@ const Footer = ({ lastUpdated }) => {
 
   return (
     <footer className={classes.footer}>
-      {lastUpdated && (
+      { lastUpdated && (
         <Container maxWidth="lg" className={classes.container}>
           <div className={classes.copyrightContainer}>
             <Typography className={classes.copyright}>
