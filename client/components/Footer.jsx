@@ -44,8 +44,8 @@ const Footer = ({ lastUpdated }) => {
             volunteers from Hack for LA |
           </Typography>
           <Typography className={classes.lastUpdated}>
-            Data Updated Through: &nbsp;
-            {moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
+            Data updated: &nbsp;
+            {moment(lastUpdated).format('MM/DD/YY')}
           </Typography>
         </Container>
       )}
