@@ -218,6 +218,13 @@ class Map extends React.Component {
       this.setState({ selectedNc: nc });
       return this.ncLayer.selectRegion(selectedNcId);
     }
+
+    if (this.props.ncId !== prevProps.ncId) {
+      const { councils, ncId } = this.props;
+      const nc = councils.find(({ councilId }) => councilId === ncId);
+      this.setState({ selectedNc: nc });
+      return this.ncLayer.selectRegion(ncId);
+    }
   }
 
   initLayers = addListeners => {
@@ -523,7 +530,7 @@ class Map extends React.Component {
         <div ref={el => this.requestDetail = el}>
           <RequestDetail requestId={selectedRequestId} />
         </div>
-        { this.state.mapReady && (
+        { this.state.mapReady && requestTypes && (
           <>
             {/* <MapOverview
               date={lastUpdated}
@@ -543,7 +550,7 @@ class Map extends React.Component {
               />
               <FilterMenu />
               {
-                selectedNc && <LocationDetail address={address} nc={selectedNc} />
+                (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
               }
               
             </div>
@@ -581,6 +588,7 @@ const mapStateToProps = state => ({
   requestTypes: state.metadata.requestTypes,
   councils: state.metadata.councils,
   selectedNcId: state.filters.councilId,
+  ncId: state.data.selectedNcId,
 });
 
 const mapDispatchToProps = dispatch => ({
