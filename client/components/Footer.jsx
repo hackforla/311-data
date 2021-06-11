@@ -1,10 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import {
-  Container,
-  Typography,
-} from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 
@@ -22,21 +19,32 @@ const useStyles = makeStyles(theme => ({
     fontSize: '14px',
     fontFamily: 'Roboto',
   },
+  copyright: {
+    fontSize: '14px',
+    lineHeight: theme.footer.height,
+    color: theme.palette.text.dark,
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 }));
 
 // TODO: check with UI/UX re placement of social media, privacy policy links
-const Footer = ({
-  lastUpdated,
-}) => {
+const Footer = ({ lastUpdated }) => {
   const classes = useStyles();
 
   return (
     <footer className={classes.footer}>
-      { lastUpdated && (
-        <Container maxWidth="xs">
+      {lastUpdated && (
+        <Container maxWidth="lg" className={classes.container}>
+          <Typography className={classes.copyright}>
+            &#169;311 Data All Rights Reserved | Privacy Policy | Powered by
+            volunteers from Hack for LA |
+          </Typography>
           <Typography className={classes.lastUpdated}>
-            Data Updated Through:
-            &nbsp;
+            Data Updated Through: &nbsp;
             {moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
           </Typography>
         </Container>
