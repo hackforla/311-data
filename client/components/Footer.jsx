@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import {
-  Container,
-  Typography,
-} from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
+import SocialMediaLinks from './SocialMediaLinks';
 
 const useStyles = makeStyles(theme => ({
   footer: {
@@ -22,22 +21,48 @@ const useStyles = makeStyles(theme => ({
     fontSize: '14px',
     fontFamily: 'Roboto',
   },
+  copyright: {
+    fontSize: '14px',
+    lineHeight: theme.footer.height,
+    color: theme.palette.text.dark,
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  copyrightContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  link: {
+    color: theme.palette.text.dark,
+    textDecoration: 'none',
+  },
 }));
 
 // TODO: check with UI/UX re placement of social media, privacy policy links
-const Footer = ({
-  lastUpdated,
-}) => {
+const Footer = ({ lastUpdated }) => {
   const classes = useStyles();
 
   return (
     <footer className={classes.footer}>
       { lastUpdated && (
-        <Container maxWidth="xs">
+        <Container maxWidth="lg" className={classes.container}>
+          <div className={classes.copyrightContainer}>
+            <Typography className={classes.copyright}>
+              &#169;311 Data &nbsp;&nbsp;All Rights Reserved |&nbsp;
+              <Link to="/privacy" className={classes.link}>
+                Privacy Policy
+              </Link>
+              &nbsp;| Powered by volunteers from Hack for LA |
+            </Typography>
+            <SocialMediaLinks classes={classes} />
+          </div>
           <Typography className={classes.lastUpdated}>
-            Data Updated Through:
-            &nbsp;
-            {moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a')}
+            Data updated: &nbsp;
+            {moment(lastUpdated).format('MM/DD/YY')}
           </Typography>
         </Container>
       )}
