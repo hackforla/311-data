@@ -40,8 +40,8 @@ const RequestTypeSelector = ({
   useEffect(() => {
     if (requestTypes) {
       const mid = Math.ceil(requestTypes.length / 2);
-      const left = requestTypes.splice(0, mid);
-      const right = requestTypes.splice(-mid);
+      const left = requestTypes.slice(0, mid);
+      const right = requestTypes.slice(-mid);
       setLeftCol(left);
       setRightCol(right);
     }
