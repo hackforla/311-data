@@ -50,7 +50,14 @@ const RequestTypeSelector = ({
   return (
     <>
       <div className={headerClass.header}>Request Types</div>
-      <Grid container style={{ margin: 'auto' }}>
+      <Grid container style={{
+        margin: 'auto',
+        backgroundColor: '#192730',
+        borderRadius: '5px',
+        padding: '5px',
+        // paddingTop: '3px',
+        // paddingBottom: '3px',
+      }}>
         <Grid item style={{ width: '50%' }}>
           <FormGroup>
             {leftCol && leftCol.map(type => (
