@@ -169,11 +169,11 @@ class Map extends React.Component {
       }
     }
 
-    if (this.props.requestTypes != prevProps.requestTypes) {
-      this.requestsLayer.init({
-        map: this.map,
-      });
-    }
+    // if (this.props.requestTypes != prevProps.requestTypes) {
+    //   this.requestsLayer.init({
+    //     map: this.map,
+    //   });
+    // }
 
     if (
       this.state.filterGeo !== prevState.filterGeo ||
@@ -245,6 +245,10 @@ class Map extends React.Component {
           : {}
         )
       }),
+    });
+
+    this.requestsLayer.init({
+      map: this.map,
     });
 
     this.ccLayer.init({

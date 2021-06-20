@@ -1,3 +1,5 @@
+import tempTypes from '../tempTypes';
+
 export const types = {
   GET_METADATA_REQUEST: 'GET_METADATA_REQUEST',
   GET_METADATA_SUCCESS: 'GET_METADATA_SUCCESS',
@@ -55,7 +57,7 @@ const initialState = {
   version: null,
   lastPulledUTC: null,
   lastPulledLocal: null,
-  requestTypes: null,
+  requestTypes: tempTypes,
   councils: null,
   regions: null,
   agencies: null,

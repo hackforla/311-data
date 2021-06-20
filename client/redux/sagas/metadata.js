@@ -9,7 +9,7 @@ import {
 import {
   types,
   getMetadataSuccess,
-  getRequestTypesSuccess,
+  // getRequestTypesSuccess,
   getCouncilsSuccess,
   getRegionsSuccess,
   getNcGeojsonSuccess,
@@ -22,7 +22,7 @@ function* getMetadata() {
   try {
     const [
       metadata,
-      requestTypes,
+      // requestTypes,
       councils,
       regions,
       agencies,
@@ -36,7 +36,7 @@ function* getMetadata() {
       call(axios.get, `${baseUrl}/geojson`),
     ]);
     const { data: statusMetadata } = metadata;
-    const { data: typesMetadata } = requestTypes;
+    // const { data: typesMetadata } = requestTypes;
     const { data: councilsMetadata } = councils;
     const { data: regionsMetadata } = regions;
     const { data: agenciesMetadata } = agencies;
@@ -44,7 +44,7 @@ function* getMetadata() {
 
     yield all([
       put(getMetadataSuccess(statusMetadata)),
-      put(getRequestTypesSuccess(typesMetadata)),
+      // put(getRequestTypesSuccess(typesMetadata)),
       put(getCouncilsSuccess(councilsMetadata)),
       put(getRegionsSuccess(regionsMetadata)),
       put(getAgenciesSuccess(agenciesMetadata)),
