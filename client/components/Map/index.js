@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
+import CookieNotice from '../main/CookieNotice';
 // import { MAP_MODES } from '../common/CONSTANTS';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
@@ -102,7 +103,7 @@ class MapContainer extends React.Component {
     const { requests, ncCounts, ccCounts, selectedTypes } = this.state;
     return (
       <div className={classes.root}>
-        <Map
+        {/* <Map
           requests={requests}
           // ncCounts={ncCounts}
           // ccCounts={ccCounts}
@@ -111,7 +112,8 @@ class MapContainer extends React.Component {
           // updatePosition={updatePosition}
           // exportMap={exportMap}
           selectedTypes={selectedTypes}
-        />
+        /> */}
+        <CookieNotice />
       </div>
     );
   }
