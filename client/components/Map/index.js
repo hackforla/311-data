@@ -103,16 +103,16 @@ class MapContainer extends React.Component {
     const { requests, ncCounts, ccCounts, selectedTypes } = this.state;
     return (
       <div className={classes.root}>
-        {/* <Map
+        <Map
           requests={requests}
-          // ncCounts={ncCounts}
-          // ccCounts={ccCounts}
+          ncCounts={ncCounts}
+          ccCounts={ccCounts}
           position={position}
-          // lastUpdated={lastUpdated}
-          // updatePosition={updatePosition}
-          // exportMap={exportMap}
+          lastUpdated={lastUpdated}
+          updatePosition={updatePosition}
+          exportMap={exportMap}
           selectedTypes={selectedTypes}
-        /> */}
+        />
         <CookieNotice />
       </div>
     );

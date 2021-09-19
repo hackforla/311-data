@@ -16,6 +16,10 @@ const useStyles = makeStyles(theme => ({
   root: {
     width: 325,
     backgroundColor: "#29404F",
+    zIndex: 50000,
+    position: "absolute",
+    bottom: 0,
+    right: 0
   },
   title: {
     paddingTop: 16,
@@ -23,19 +27,23 @@ const useStyles = makeStyles(theme => ({
     ...theme.typography.h4
   },
   headStyle: {
-    padding: 10,
+    padding: 8,
     backgroundColor: "#87C8BC",
   },
   iconStyle: {
     verticalAlign: "bottom"
   },
   copyStyle: {
-    paddingTop: 5,
-    fontSize: 12
+    paddingTop: 5, 
+    fontSize: 12,
+    "&:last-child": {
+      paddingBottom: 5
+    }
   },
   buttonStyle: {
     padding: 0,
-    color: "#FFB100"
+    color: "#FFB100",
+    marginLeft: 3
   }
 }));
 
@@ -58,7 +66,7 @@ const CookieNotice = ({
         </div>
       <CardContent className={classes.copyStyle}>
         We use cookies and other tracking technologies to improve your browsing experience and to better understand our website traffic. By browsing our website, you consent to our use of cookies and other tracking technologies.
-        <Button href="#" className={classes.buttonStyle} size="small"> Learn More</Button>
+        <Button href="#" className={classes.buttonStyle} size="small">Learn More</Button>
         <CardActions style={{ justifyContent: "flex-end" }} >
         <Button href="#" variant="outlined">Got it!</Button>
         </CardActions>
@@ -108,3 +116,4 @@ CookieNotice.propTypes = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CookieNotice);
+
