@@ -9,10 +9,10 @@ from config import API_HOST
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 
 # TITLE
-title = "RECENT 311 REQUESTS"
+title = "RECENT 311 REQUESTS *past 30 days*"
 
 # DATA
-start_date = datetime.date.today() - datetime.timedelta(days=15)
+start_date = datetime.date.today() - datetime.timedelta(days=30)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
 
 query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"  # noqa
@@ -69,6 +69,7 @@ apply_figure_style(dow_fig)
 # LAYOUT
 layout = html.Div([
     html.H1(title),
+    html.P("311 Requests over the past 30 days"),
     html.Div([
         html.Div([html.H2(f"{report_df['counts'].sum():,}"), html.Label("Total Requests")], className="stats-label"),  # noqa
         html.Div([html.H2(f"{start_date.strftime('%b %d')}"), html.Label("Report Start Date")], className="stats-label"),  # noqa
