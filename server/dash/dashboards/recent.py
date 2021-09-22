@@ -9,10 +9,10 @@ from config import API_HOST
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 
 # TITLE
-title = "RECENT 311 REQUESTS *past 30 days*"
+title = "RECENT 311 REQUESTS"
 
 # DATA
-start_date = datetime.date.today() - datetime.timedelta(days=30)
+start_date = datetime.date.today() - datetime.timedelta(days=90)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
 
 query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"  # noqa
@@ -69,12 +69,12 @@ apply_figure_style(dow_fig)
 # LAYOUT
 layout = html.Div([
     html.H1(title),
-    html.P("311 Requests over the past 30 days"),
+        html.P("The below charts represent 311 Requests over the past 30 days. Charts are interactive. Hover over the data points for more information. You can control which request types are displayed by clicking on them in the legend.", style={'padding':'20px'}),
     html.Div([
         html.Div([html.H2(f"{report_df['counts'].sum():,}"), html.Label("Total Requests")], className="stats-label"),  # noqa
         html.Div([html.H2(f"{start_date.strftime('%b %d')}"), html.Label("Report Start Date")], className="stats-label"),  # noqa
         html.Div([html.H2(f"{end_date.strftime('%b %d')}"), html.Label("Report End Date")], className="stats-label"),  # noqa
-    ], className="graph-row"),
+    ], className="graph-row", style={'color':'red'}),
     dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
     html.Div([
         dcc.Graph(id='graph3', figure=dow_fig, config=CONFIG_OPTIONS, className="half-graph"),  # noqa
