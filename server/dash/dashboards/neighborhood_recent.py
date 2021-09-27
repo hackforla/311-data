@@ -85,6 +85,7 @@ pie_fig = px.pie(
     values="srnumber",
     color_discrete_sequence=DISCRETE_COLORS,
     labels=LABELS,
+    hole=.3,
 )
 apply_figure_style(pie_fig)
 

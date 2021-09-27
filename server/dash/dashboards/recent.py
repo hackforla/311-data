@@ -5,6 +5,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+
 from config import API_HOST
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 
@@ -12,7 +14,7 @@ from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
 title = "RECENT 311 REQUESTS"
 
 # DATA
-start_date = datetime.date.today() - datetime.timedelta(days=90)
+start_date = datetime.date.today() - datetime.timedelta(days=30)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
 
 query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"  # noqa
@@ -23,6 +25,8 @@ print(" * Dataframe has been loaded")
 # FIGURES
 report_df = df.groupby(['created_date', 'type_name']).agg('sum').reset_index()
 report_df.type_name = report_df.type_name.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
+
+# Line Graph
 fig = px.line(
     report_df,
     x="created_date",
@@ -40,7 +44,7 @@ fig.update_traces(
     mode='markers+lines'
 )  # add markers to lines
 
-
+# Pie Chart
 pie_df = df.groupby(['type_name']).agg('sum').reset_index()
 pie_fig = px.pie(
     pie_df,
@@ -48,8 +52,8 @@ pie_fig = px.pie(
     values="counts",
     color_discrete_sequence=DISCRETE_COLORS,
     labels=LABELS,
+    hole=.3,
 )
-
 
 df['created_date'] = pd.to_datetime(df['created_date'])
 dow_df = df.groupby(['created_date']).agg('sum').reset_index()
@@ -69,12 +73,12 @@ apply_figure_style(dow_fig)
 # LAYOUT
 layout = html.Div([
     html.H1(title),
-        html.P("The below charts represent 311 Requests over the past 30 days. Charts are interactive. Hover over the data points for more information. You can control which request types are displayed by clicking on them in the legend.", style={'padding':'20px'}),
+        html.P("The figures below represent the total number of 311 requests made across LA County over the past 30 days.", style={'padding':'20px', 'font-size':'18px', 'font-style':'italic'}),
     html.Div([
         html.Div([html.H2(f"{report_df['counts'].sum():,}"), html.Label("Total Requests")], className="stats-label"),  # noqa
         html.Div([html.H2(f"{start_date.strftime('%b %d')}"), html.Label("Report Start Date")], className="stats-label"),  # noqa
         html.Div([html.H2(f"{end_date.strftime('%b %d')}"), html.Label("Report End Date")], className="stats-label"),  # noqa
-    ], className="graph-row", style={'color':'red'}),
+    ], className="graph-row", style={'color':'white'}),
     dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
     html.Div([
         dcc.Graph(id='graph3', figure=dow_fig, config=CONFIG_OPTIONS, className="half-graph"),  # noqa
