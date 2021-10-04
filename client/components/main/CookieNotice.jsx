@@ -40,10 +40,11 @@ const useStyles = makeStyles(theme => ({
       paddingBottom: 5
     }
   },
-  buttonStyle: {
+  linkStyle: {
     padding: 0,
     color: "#FFB100",
-    marginLeft: 3
+    marginLeft: 3,
+    textDecoration: "none"
   }
 }));
 
@@ -66,37 +67,13 @@ const CookieNotice = ({
         </div>
       <CardContent className={classes.copyStyle}>
         We use cookies and other tracking technologies to improve your browsing experience and to better understand our website traffic. By browsing our website, you consent to our use of cookies and other tracking technologies.
-        <Button href="#" className={classes.buttonStyle} size="small">Learn More</Button>
-        <CardActions style={{ justifyContent: "flex-end" }} >
-        <Button href="#" variant="outlined">Got it!</Button>
+        <Link className={classes.linkStyle} to="/privacy">Learn more</Link>
+        <CardActions style={{ justifyContent: "flex-end" }}>
+          <Button variant="outlined" handleClick={handleClick} >Got it!</Button>
         </CardActions>
       </CardContent>
   
     </Card>
-
-      // <div className="cookie-notice">
-      //   <div className="cookie-title has-text is-size-6 has-text-weight-bold">
-      //     {/* <Icon
-      //       id="tooltip-icon"
-      //       icon="info-circle"
-      //       size="small"
-      //       style={{ marginRight: '6px' }}
-      //     /> */}
-      //     Cookies and Privacy Policy
-      //   </div>
-      //   <div className="text has-text is-size-7">
-      //     We use cookies and other tracking technologies to improve your browsing experience and to
-      //     better understand our website traffic. By browsing our website, you consent to our use of
-      //     cookies and other tracking technologies.&nbsp;
-      //     <Link to="/privacy">Learn more</Link>
-      //   </div>
-      //   {/* <Button
-      //     id="cookie-notice"
-      //     label="Got it!"
-      //     size="small"
-      //     handleClick={handleClick}
-      //   /> */}
-      // </div>
     );
   }
   return null;
