@@ -2,7 +2,7 @@
 name: New Backend Service request
 about: Describe the inputs and outputs of a frontend request to the backend
 title: "[Service] Enter service name here"
-labels: backend
+labels: ''
 assignees: ''
 
 ---

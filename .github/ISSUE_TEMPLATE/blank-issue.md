@@ -7,8 +7,10 @@ assignees: ''
 
 ---
 
-# Description
+### Overview
+We need to do X for Y reason.
 
-## Action Items
+### Action Items
 
-## Resources
+### Resources/Instructions
+REPLACE THIS TEXT -If there is a website which has documentation that helps with this issue provide the link(s) here.
