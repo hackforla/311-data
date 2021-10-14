@@ -55,7 +55,7 @@ const CookieNotice = ({
   const classes = useStyles();
   const handleClick = () => {
     acceptCookieNotice();
-    sessionStorage.setItem('accept-cookies', true);
+    localStorage.setItem('accept-cookies', true);
   };
 
   if (showCookieNotice) {
@@ -69,7 +69,7 @@ const CookieNotice = ({
         We use cookies and other tracking technologies to improve your browsing experience and to better understand our website traffic. By browsing our website, you consent to our use of cookies and other tracking technologies.
         <Link className={classes.linkStyle} to="/privacy">Learn more</Link>
         <CardActions style={{ justifyContent: "flex-end" }}>
-          <Button variant="outlined" handleClick={handleClick} >Got it!</Button>
+          <Button variant="outlined" onClick={handleClick} >Got it!</Button>
         </CardActions>
       </CardContent>
   
