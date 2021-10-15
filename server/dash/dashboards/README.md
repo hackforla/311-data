@@ -38,7 +38,7 @@ open http://localhost:5500/dashboards/overview
 # when you are done just enter Ctl+C in your terminal to stop the server
 ```
 
-When you have the dashboard completed, you should follow the standard Git workflow of merging, pushing, and issuing a pull request. Note that there are several pre-commit hooks that will run before you can merge. Once your PR is accepted, your changes will automatically be merged to dev and a new Dash Docker image will be published.
+When you have the dashboard completed, you should follow the standard Git workflow of committing, pushing, and issuing a pull request. Note that there are several pre-commit hooks that will run before you can merge. Once your PR is accepted, your changes will automatically be merged to dev and a new Dash Docker image will be published.
 
 ### Git workflow cheat sheet
 
