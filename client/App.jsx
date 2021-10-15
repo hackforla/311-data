@@ -9,6 +9,7 @@ import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Routes from './Routes';
+import RouteChange from './components/main/util/RouteChange';
 
 // const menuStyles = {
 //   swipeAreaOpen: {
@@ -41,6 +42,7 @@ const App = ({
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       {/* <div {...handleSwipeMenu} style={menuStyles.swipeAreaOpen} /> */}
       <Footer />
+      <RouteChange />
     </BrowserRouter>
   );
 };
