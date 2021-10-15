@@ -17,7 +17,7 @@ Feel free to use your own preferred environment or follow this process:
 
 ### Editing a dashboard locally
 
-The best way to develop new dashboards is by using the development Dash image and mounting a local directory on it. This method requires the least amount of configuration so you can spend you time working on dashboards.
+The best way to develop new dashboards is by using the development Dash image and mounting a local directory on it. This method requires the least amount of configuration so you can spend your time working on dashboards.
 
 These instructions assume you already have Docker installed and are on a Mac but should be easily transferrable to PC or Linux. 
 
