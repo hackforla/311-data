@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'proptypes';
+import actions from './routeChangeActions';
 
 class RouteChange extends Component {
   componentDidMount() {
@@ -19,7 +20,6 @@ class RouteChange extends Component {
     const {
       location,
       history,
-      actions,
     } = this.props;
 
     actions.forEach(action => {
@@ -42,5 +42,4 @@ RouteChange.propTypes = {
     push: PropTypes.func.isRequired,
     replace: PropTypes.func.isRequired,
   }).isRequired,
-  actions: PropTypes.arrayOf(PropTypes.func).isRequired,
 };

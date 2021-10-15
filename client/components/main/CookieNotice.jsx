@@ -55,7 +55,7 @@ const CookieNotice = ({
   const classes = useStyles();
   const handleClick = () => {
     acceptCookieNotice();
-    localStorage.setItem('accept-cookies', true);
+    sessionStorage.setItem('accept-cookies', true);
   };
 
   if (showCookieNotice) {
