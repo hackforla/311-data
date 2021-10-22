@@ -135,7 +135,7 @@ apply_figure_style(fig6)
 # LAYOUT
 layout = html.Div([
     html.H1(title),
-    html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high of over 1.4 million requests.", style={'padding':'20px', 'font-size':'18px', 'font-style':'italic'}),
+    html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests.", style={'padding':'20px', 'font-size':'18px', 'font-style':'italic'}),
     html.Div([
         html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label("Total Requests")], className="stats-label"),  # noqa
         html.Div([html.H2(df1.shape[0] - 1), html.Label("Neighborhoods")], className="stats-label"),  # noqa
