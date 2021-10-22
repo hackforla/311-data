@@ -25,37 +25,6 @@ The reports get data using simple pandas get_json calls the API Server. Calls ar
 
 It runs as a single embedded Flask app and routes requests to a specific report based on the query string. The reports themselves are self-contained single files with the data and layouts needed by Dash.
 
-## Creating or Modifying Dashboards
-
-The ```dashboards``` directory has the installed dashboards. Adding new dashboards is as simple as dropping new Plotly Dash python files in this directory.
-
-In order to be included in the 311 Data app, a new version of this project needs to be deployed and the report needs to be referenced in the React client header.
-
-### Editing a dashboard locally
-
-The best way to develop new dashboards is by using the development Dash image and mounting a local directory on it. This method requires the least amount of configuration so you can spend you time working on dashboards.
-
-These instructions assume you already have Docker installed and are on a Mac but should be easily transferrable to PC or Linux.
-
-```zsh
-# first make sure you're in the dash directory
-cd server/dash
-
-# get the latest development version of the dash image
-docker pull la311data/dash-poc:dev
-
-# run the dash container with a local volume
-docker run -p 5500:5500 -v "$(pwd)":/app -e PRELOAD=False la311data/dash-poc 
-
-# view a dashboard in your browser
-open http://localhost:5500/dashboards/overview
-
-# to test the mount is working change the title property in this dashboard and reload (JUST REMEMBER TO REVERT YOUR CHANGE!)
-# when you are done just enter Ctl+C in your terminal to stop the server
-```
-
-When you have the dashboard completed, you should follow the standard Git workflow of merging, pushing, and issuing a pull request. Note that there are several pre-commit hooks that will run before you can merge. Once your PR is accepted, your changes will automatically be merged to dev and a new Dash Docker image will be published.
-
 ## Deploying the Dash Report Server
 
 In production, the server is intended to be run in a container with gunicorn for greater reliability.
@@ -65,6 +34,9 @@ In production, the server is intended to be run in a container with gunicorn for
 There is required configuration variable, `API_HOST`, which needs to be configured to point to the 311 Data API server that will be used as the data source. It defaults to the dev API server.
 
 There is also an optional config setting, `PRELOAD`, which instructs the Dash Report Server to run all the dashboards at startup so that the reports are pre-cached. This should be set to *True* in production environments.
+
+## Creating or Modifying Dashboards
+To create or modify dashboards, please refer to the [documentation](https://github.com/hackforla/311-data/blob/dev/server/dash/dashboards/README.md) in the [dashboard directory](https://github.com/hackforla/311-data/edit/dev/server/dash/dashboards)
 
 <!--
 docker build -t la311data/dash-poc .
