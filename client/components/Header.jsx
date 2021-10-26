@@ -26,6 +26,10 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     color: 'white',
     textDecoration: 'none',
+    '&:hover': {
+      background: '#f00',
+    },
+
   },
   title: {
     ...theme.typography.h1,
