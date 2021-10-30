@@ -72,6 +72,7 @@ const RequestTypeSelector = ({
                       padding: '0 0 0 9px',
                     }}
                     checked={selectedTypes[type.typeId]}
+                    
                     onChange={() => updateTypesFilter(type.typeId)}
                   />
                 }
@@ -94,6 +95,7 @@ const RequestTypeSelector = ({
                       padding: '0 2px 0 9px',
                     }}
                     checked={selectedTypes[type.typeId]}
+                    
                     onChange={() => updateTypesFilter(type.typeId)}
                   />
                 }
