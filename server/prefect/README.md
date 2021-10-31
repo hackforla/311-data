@@ -6,14 +6,14 @@ The pipeline can be used either to initially populate a new database with one or
 
 The steps in the data ingestion/update process:
 
-* Configure and start the flow
-* Download data (by year) from Socrata and save it to CSV files
-* Insert the downloaded data to a temporary table in Postgres
-* Move the data from the temporary to the requests table
-* Update views and vacuum the database
-* Clear the API Server data cache (if configured)
-* Reload the Report Server report data (if configured)
-* Write some metadata about the load (and options post to Slack)
+- Configure and start the flow
+- Download data (by year) from Socrata and save it to CSV files
+- Insert the downloaded data to a temporary table in Postgres
+- Move the data from the temporary to the requests table
+- Update views and vacuum the database
+- Clear the API Server data cache (if configured)
+- Reload the Report Server report data (if configured)
+- Write some metadata about the load (and options post to Slack)
 
 ## Background
 
@@ -33,7 +33,7 @@ In the "Prefect" idiom, there are [tasks](https://docs.prefect.io/core/concepts/
 
 ## Running the Nightly Update
 
-The nightly data loads are run using the Daily_Backend_Update GitHub Actions. The action runs the image using docker compose using a simple ```docker-compose run prefect```.
+The nightly data loads are run using the Daily_Backend_Update GitHub Actions. The action runs the image using docker compose using a simple `docker-compose run prefect`.
 
 Note that the compose file includes the DSN as an environment variable. To do a similar thing in standard Docker you would do the following.
 
@@ -74,10 +74,10 @@ PREFECT__CONTEXT__SECRETS__SLACK_HOOK=https://hooks.slack.com/services/T00000000
 
 To load data into an API database:
 
-* Download this project and cd into the project folder
-* Create a virtual environment for the project (e.g. pipenv --python 3.7)
-* Do a pip install of the dependencies from the requirements.txt
-* Run the flow as follows:
+- Download this project and cd into the project folder
+- Create a virtual environment for the project (e.g. pipenv --python 3.7)
+- Do a pip install of the dependencies from the requirements.txt
+- Run the flow as follows:
 
 ```bash
 export PREFECT__USER_CONFIG_PATH=./config.toml
@@ -87,25 +87,25 @@ python flow.py
 
 ### Configuration
 
-Configuration is done via a TOML file called config.toml in the project root. This uses the Prefect mechanism for [configuration](https://docs.prefect.io/core/concepts/configuration.html#toml). The Prefect default is to look for this file in the USER home directory so a special environment variable (PREFECT__USER_CONFIG_PATH) needs to be set in order to discover this in the project root.
+Configuration is done via a TOML file called config.toml in the project root. This uses the Prefect mechanism for [configuration](https://docs.prefect.io/core/concepts/configuration.html#toml). The Prefect default is to look for this file in the USER home directory so a special environment variable (PREFECT\_\_USER_CONFIG_PATH) needs to be set in order to discover this in the project root.
 
 #### Secrets
 
-The database URL (DSN) secrets are expected to be provided as environment variables. This needs to follow the Prefect convention and be prefixed with 'PREFECT__CONTEXT__SECRETS__' in order for it to be treated by Prefect as a Secret.
+The database URL (DSN) secrets are expected to be provided as environment variables. This needs to follow the Prefect convention and be prefixed with 'PREFECT**CONTEXT**SECRETS\_\_' in order for it to be treated by Prefect as a Secret.
 
 ### Flow configuration
 
-* domain: the path to the Socrata instance (e.g. "data.lacity.org")
-* dask: setting this to True will run the download steps in parallel
-* datasets: a dictionary of available years and Socrata dataset keys
+- domain: the path to the Socrata instance (e.g. "data.lacity.org")
+- dask: setting this to True will run the download steps in parallel
+- datasets: a dictionary of available years and Socrata dataset keys
 
 ### Data configuration
 
-* fields: a dictionary of fields and their Postgres data type (note that this will assume varchar unless specified otherwise)
-* key: the field to be used to manage inserts/updates (e.g. "srnumber")
-* target: the name of the table to be ultimately loaded (e.g. "requests")
-* years: the years to be loaded
-* since: will only load records change since this date (note that if since is specified it will load updated data for ALL years)
+- fields: a dictionary of fields and their Postgres data type (note that this will assume varchar unless specified otherwise)
+- key: the field to be used to manage inserts/updates (e.g. "srnumber")
+- target: the name of the table to be ultimately loaded (e.g. "requests")
+- years: the years to be loaded
+- since: will only load records change since this date (note that if since is specified it will load updated data for ALL years)
 
 ## Troubleshooting
 
@@ -117,7 +117,7 @@ The first thing to look at when running the prefect tasks is you should see an o
 $ docker-compose run prefect python flow.py
 
 Creating 311_data_prefect_run ... done
-[2021-01-20 22:02:11] INFO - prefect | Starting update flow for 2019, 2020, 2021 
+[2021-01-20 22:02:11] INFO - prefect | Starting update flow for 2019, 2020, 2021
 [2021-01-20 22:02:11] INFO - prefect.FlowRunner | Beginning Flow run for 'Loading Socrata data to Postgres'
 [2021-01-20 22:02:11] INFO - prefect.TaskRunner | Task 'get_start_datetime': Starting task run...
 [2021-01-20 22:02:11] INFO - prefect.TaskRunner | Task 'datasets': Starting task run...
@@ -127,7 +127,7 @@ Creating 311_data_prefect_run ... done
 
 ```
 
-In the example above, the ```prefect | Starting update flow``` will show you the years the flow is trying to load and the ```prefect.get_start_datetime``` will show you the date the flow uses as the last modified date for new data to be loaded.
+In the example above, the `prefect | Starting update flow` will show you the years the flow is trying to load and the `prefect.get_start_datetime` will show you the date the flow uses as the last modified date for new data to be loaded.
 
 Other log lines will show the number of records inserted versus updated as well as any errors in the process.
 
@@ -154,7 +154,7 @@ LIMIT 10;
 To clear out the Redis cache of an existing API instance:
 
 ```bash
-curl -X POST "http://localhost:5000/status/reset-cache" -H  "accept: application/json" -d ""
+curl -X POST "http://localhost:5001/status/reset-cache" -H  "accept: application/json" -d ""
 ```
 
 ### Docker commands

@@ -12,6 +12,7 @@ RUN apt-get update \
     && apt-get install -y \
     gcc \
     g++ \
+    libgdal-dev \
     && apt-get clean
 
 # Install pip requirements

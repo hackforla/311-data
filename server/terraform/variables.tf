@@ -46,7 +46,7 @@ variable container_memory {
 
 variable container_port {
   type        = number
-  default     = 5000
+  default     = 5001
 }
 
 variable container_tag {

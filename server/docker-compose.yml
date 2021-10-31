@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -34,7 +34,7 @@ services:
     ports:
       - target: ${APP_PORT}
         published: ${API_HOST_PORT}
-    command: gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker --log-level info -b 0.0.0.0:5000
+    command: gunicorn lacity_data_api.asgi:app -w 4 -k uvicorn.workers.UvicornWorker --log-level info -b 0.0.0.0:5001
     depends_on:
       - db
       - redis
@@ -43,7 +43,7 @@ services:
     container_name: 311-prefect
     build: ./prefect
     env_file: .env
-    environment: 
+    environment:
       PREFECT__CONTEXT__SECRETS__DSN: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
       PREFECT__API_URL: ${APP_PROTOCOL}://${APP_HOST}:${APP_PORT}
     depends_on:

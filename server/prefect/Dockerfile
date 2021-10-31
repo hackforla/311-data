@@ -11,12 +11,13 @@ ENV PYTHONUNBUFFERED 1
 ENV IS_DOCKER = 1
 
 # Install gcc to build psutil wheel used by Dask
-RUN apt-get update -y && apt-get install -y gcc && apt-get install -y curl
+RUN apt-get update -y && apt-get install -y gcc && apt-get install -y curl && apt-get install -y libpq-dev
 
 # download and install chrome for pyppeteer
-RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
-RUN rm google-chrome-stable_current_amd64.deb 
+# RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+# RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+# RUN rm google-chrome-stable_current_amd64.deb 
+RUN apt-get install -y chromium
 
 # Install pip requirements
 ADD requirements.txt .

@@ -31,7 +31,7 @@ async def run_js_page(url: str):
 
     if os.environ.get('IS_DOCKER', False):
         browser = await launch(
-            executablePath='/usr/bin/google-chrome-stable',
+            executablePath='/usr/bin/chromium',
             userDataDir='/app',
             headless=True,
             handleSIGINT=False,

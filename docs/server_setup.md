@@ -2,7 +2,7 @@
 
 The easiest way to get up and running with the 311 API is to build and deploy it locally using Docker.
 
-*Prerequisite:* Docker is the only required dependency for running the server. You can find installation instructions [here](https://docs.docker.com/compose/install/).
+_Prerequisite:_ Docker is the only required dependency for running the server. You can find installation instructions [here](https://docs.docker.com/compose/install/).
 
 ![Releases](images/docker.png)
 
@@ -17,7 +17,7 @@ cp .env.example .env                                   # make loacl copy of the 
 docker-compose up                                      # build and start the containers
 ```
 
-Running ```docker container ls``` should now show 4 containers:
+Running `docker container ls` should now show 4 containers:
 
 1. db: a Postgres database
 2. redis: a redis cache
@@ -34,7 +34,7 @@ docker-compose run api alembic upgrade head    # this will run the API container
 
 The easiest way to seed your local database is using the Prefect container. The prefect flow typically will add new records since the last time it was run, but in this example you'll use it to seed 2 complete years of data.
 
-First uncomment the following 2 lines in your ```.env``` file.
+First uncomment the following 2 lines in your `.env` file.
 
 ```bash
 # PREFECT__MODE=full                # specify a full load (as opposed to an update load)
@@ -55,13 +55,13 @@ The Prefect data loading task will run in interactive mode printing out status i
 
 ## Step 3: Browse the API documentation
 
-The OpenAPI documentation will appear here: http://localhost:5000/docs
+The OpenAPI documentation will appear here: http://localhost:5001/docs
 
 ```bash
-curl -X GET "http://localhost:5000/status/api"      # will show the API version
-curl -X GET "http://localhost:5000/status/cache"    # will show stats for the redis cache
-curl -X GET "http://localhost:5000/status/db"       # will show the number of records loaded to key tables
-curl -X GET "http://localhost:5000/status/log"      # will show results from the prefect data loading task
+curl -X GET "http://localhost:5001/status/api"      # will show the API version
+curl -X GET "http://localhost:5001/status/cache"    # will show stats for the redis cache
+curl -X GET "http://localhost:5001/status/db"       # will show the number of records loaded to key tables
+curl -X GET "http://localhost:5001/status/log"      # will show results from the prefect data loading task
 ```
 
-You can additionally run the ReactJS app with ```npm start``` from /client to make sure front-end works
+You can additionally run the ReactJS app with `npm start` from /client to make sure front-end works
