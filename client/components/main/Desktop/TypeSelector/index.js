@@ -10,6 +10,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 // import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import useToggle from './isToggle.js';
 
 const useStyles = makeStyles(theme => ({
   label: {
@@ -27,6 +28,9 @@ const useHeaderStyles = makeStyles(theme => ({
   }
 }))
 
+
+
+
 const RequestTypeSelector = ({
   requestTypes,
   updateTypesFilter,
@@ -37,6 +41,7 @@ const RequestTypeSelector = ({
   const [items, setCols] = useState();
   const classes = useStyles();
   const headerClass = useHeaderStyles();
+  const [isToggled, toggle] = useToggle(false);
 
   useEffect(() => {
     if (requestTypes) {
@@ -50,6 +55,16 @@ const RequestTypeSelector = ({
       setCols(items);
     }
   }, [requestTypes]);
+
+  const checkAll = (items) => {
+     toggle(!isToggled);
+     if(!isToggled){
+      items.map(type=>selectedTypes[type.typeId] = true);
+     }else{
+      items.map(type=>selectedTypes[type.typeId] = false);
+     }
+  }
+
 
   return (
     <>
@@ -76,8 +91,9 @@ const RequestTypeSelector = ({
                       padding: '0 0 0 9px',
                     }}
                     checked={selectedTypes[type.typeId]}
+                   
                     
-                    onChange={() => updateTypesFilter(type.typeId)}
+                    onChange={() => updateTypesFilter(type.typeId) }
                   />
                 }
                 label={type.typeName}
@@ -96,12 +112,14 @@ const RequestTypeSelector = ({
                       color: 'white',
                       padding: '0 0 0 9px',
                     }}
-                    
+
+                   
+                   onChange={()=>checkAll(items)}
                     
                     
                   />
                 }
-                label='select all'
+                label='Select All'
             />
         </Grid>
        
