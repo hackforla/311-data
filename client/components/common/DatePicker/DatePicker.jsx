@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
   selectorPopUp: {
     position: 'fixed',
+    zIndex: 1,
   },
   button: {
     padding: 0,

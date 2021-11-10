@@ -15,6 +15,7 @@ const Styles = ({ range }) => {
       background: ${theme.palette.primary.dark};
       border-radius: 5px;
       min-width: 268px;
+      z-index: 5000;
     }
 
     .Range .DayPicker-Body {
