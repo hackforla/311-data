@@ -10,6 +10,7 @@ import { trackMapExport } from '@reducers/analytics';
 // import { MAP_MODES } from '../common/CONSTANTS';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
+// import Legend from '../common/Legend';
 
 const styles = theme => ({
   root: {
@@ -102,7 +103,8 @@ class MapContainer extends React.Component {
     const { requests, ncCounts, ccCounts, selectedTypes } = this.state;
     return (
       <div className={classes.root}>
-        <Map
+        {/* <Legend />  */}
+       <Map
           requests={requests}
           // ncCounts={ncCounts}
           // ccCounts={ccCounts}
@@ -112,7 +114,9 @@ class MapContainer extends React.Component {
           // exportMap={exportMap}
           selectedTypes={selectedTypes}
         />
+
       </div>
+
     );
   }
 }

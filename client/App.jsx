@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getMetadataRequest } from '@reducers/metadata';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 // import { useSwipeable } from 'react-swipeable';
-
+import Legend from '@components/common/Legend';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Routes from './Routes';
@@ -36,6 +36,7 @@ const App = ({
   return (
     <BrowserRouter>
       <Header />
+      <Legend />
       <Routes />
       {/* area where you can swipe the menu sidebar */}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}

@@ -65,7 +65,7 @@ const RequestTypeSelector = ({
                 key={type.typeId}
                 classes={classes}
                 control={
-                  <Checkbox 
+                  <Checkbox
                     style={{
                       transform: 'scale(0.8)',
                       color: type.color,
@@ -76,7 +76,7 @@ const RequestTypeSelector = ({
                   />
                 }
                 label={type.typeName}
-              /> 
+              />
             ))}
           </FormGroup>
         </Grid>
@@ -87,7 +87,7 @@ const RequestTypeSelector = ({
                 key={type.typeId}
                 classes={classes}
                 control={
-                  <Checkbox 
+                  <Checkbox
                     style={{
                       transform: 'scale(0.8)',
                       color: type.color,
@@ -98,7 +98,7 @@ const RequestTypeSelector = ({
                   />
                 }
                 label={type.typeName}
-              /> 
+              />
             ))}
           </FormGroup>
         </Grid>

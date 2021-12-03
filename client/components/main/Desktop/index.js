@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
 import MapContainer from '@components/Map';
 import PersistentDrawerLeft from '../shared/PersistentDrawerLeft';
 

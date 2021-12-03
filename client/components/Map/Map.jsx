@@ -370,9 +370,9 @@ class Map extends React.Component {
                         .split(',')
                         .slice(0, -2)
                         .join(', ');
-  
+
       getNc({ longitude: result.center[0], latitude: result.center[1] });
-  
+
       this.setState({
         address: address,
       });
@@ -556,7 +556,7 @@ class Map extends React.Component {
               {
                 (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
               }
-              
+
             </div>
             {/* <MapLayers
               selectedTypes={selectedTypes}
