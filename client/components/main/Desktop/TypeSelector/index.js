@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateRequestTypes } from '@reducers/filters';
+import { updateRequestTypes,} from '@reducers/filters';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -11,6 +11,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 // import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import useToggle from './isToggle.js';
+
 
 const useStyles = makeStyles(theme => ({
   label: {
@@ -36,35 +37,34 @@ const RequestTypeSelector = ({
   updateTypesFilter,
   selectedTypes,
 }) => {
-  // const [leftCol, setLeftCol] = useState();
-  // const [rightCol, setRightCol] = useState();
-  const [items, setCols] = useState();
+  const [leftCol, setLeftCol] = useState();
+  const [rightCol, setRightCol] = useState();
   const classes = useStyles();
   const headerClass = useHeaderStyles();
   const [isToggled, toggle] = useToggle(false);
 
   useEffect(() => {
     if (requestTypes) {
-      // const mid = Math.ceil(requestTypes.length / 2);
-      // const left = requestTypes.slice(0, mid);
-      // const right = requestTypes.slice(-mid);
-      // setLeftCol(left);
-      // setRightCol(right);
-
-      const items = requestTypes;
-      setCols(items);
+      const mid = Math.ceil(requestTypes.length / 2);
+      const left = requestTypes.slice(0, mid);
+      const right = requestTypes.slice(-mid);
+      setLeftCol(left);
+      setRightCol(right);
     }
   }, [requestTypes]);
 
-  const checkAll = (items) => {
-     toggle(!isToggled);
-     if(!isToggled){
-      items.map(type=>selectedTypes[type.typeId] = true);
-     }else{
-      items.map(type=>selectedTypes[type.typeId] = false);
-     }
+  const checkAll = () => {
+    toggle(!isToggled);
+    return !isToggled;
   }
 
+  const updateAll = (value) =>{
+      requestTypes.map(type => {
+        if(selectedTypes[type.typeId] !== value){
+          updateTypesFilter(type.typeId)
+        }
+      })
+  }
 
   return (
     <>
@@ -78,52 +78,8 @@ const RequestTypeSelector = ({
         paddingBottom: '3px',
       }}>
 
-        {items && items.map(type => (
-          <Grid item style = {{width:'50%'}}>
-            <FormControlLabel
-                key={type.typeId}
-                classes={classes}
-                control={
-                  <Checkbox 
-                    style={{
-                      transform: 'scale(0.8)',
-                      color: type.color,
-                      padding: '0 0 0 9px',
-                    }}
-                    checked={selectedTypes[type.typeId]}
-                   
-                    
-                    onChange={() => updateTypesFilter(type.typeId) }
-                  />
-                }
-                label={type.typeName}
-              /> 
-          </Grid>
-        ))}
-
-        <Grid item style={{width: '50%'}}>
-            <FormControlLabel 
-              key={'all'}
-              classes={classes}
-              control={
-                  <Checkbox 
-                    style={{
-                      transform: 'scale(0.8)',
-                      color: 'white',
-                      padding: '0 0 0 9px',
-                    }}
-
-                   
-                   onChange={()=>checkAll(items)}
-                    
-                    
-                  />
-                }
-                label='Select All'
-            />
-        </Grid>
        
-        {/* <Grid item style={{ width: '50%' }}>
+        <Grid item style={{ width: '50%' }}>
           <FormGroup>
             {leftCol && leftCol.map(type => (
               <FormControlLabel
@@ -144,6 +100,21 @@ const RequestTypeSelector = ({
                 label={type.typeName}
               /> 
             ))}
+            <FormControlLabel 
+              key={'all'}
+              classes={classes}
+              control={
+                  <Checkbox 
+                    style={{
+                      transform: 'scale(0.8)',
+                      color: 'white',
+                      padding: '0 0 0 9px',
+                    }}
+                   onChange={()=>updateAll(checkAll())}
+                  />
+                }
+                label='Select All'
+            />
           </FormGroup>
         </Grid>
         <Grid item style={{ width: '50%' }}>
@@ -168,7 +139,7 @@ const RequestTypeSelector = ({
               /> 
             ))}
           </FormGroup>
-        </Grid> */}
+        </Grid>
       </Grid>
     </>
   );

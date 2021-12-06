@@ -13,13 +13,12 @@ const tempTypes = [
   },
   {
     "typeId": 2,
-    "typeName": "Water Waste",
-    "agencyId": 1,
-    "agencyName": "Street Lighting Bureau",
-    "color": "#F58505",
-    "description": "Water runoff, over-watering, incorrect water days, or any other water waste "
+    "typeName": "Homeless Encampment",
+    "agencyId": 2,
+    "agencyName": "Sanitation Bureau",
+    "color": "#15BC76",
+    "description": "Encampments impacting right-of-way or maintenance of clean and sanitary public areas"
   },
-  
   {
     "typeId": 3,
     "typeName": "Animal Remains",
@@ -78,11 +77,11 @@ const tempTypes = [
   },
   {
     "typeId": 10,
-    "typeName": "Homeless Encampment",
-    "agencyId": 2,
-    "agencyName": "Sanitation Bureau",
-    "color": "#15BC76",
-    "description": "Encampments impacting right-of-way or maintenance of clean and sanitary public areas"
+    "typeName": "Water Waste",
+    "agencyId": 1,
+    "agencyName": "Street Lighting Bureau",
+    "color": "#F58505",
+    "description": "Water runoff, over-watering, incorrect water days, or any other water waste "
   },
   {
     "typeId": 11,
@@ -100,7 +99,6 @@ const tempTypes = [
     "color": "#54ABDE",
     "description": "Issues that do not fit into any of the other available types"
   },
-  
 ];
 
 export default tempTypes;
