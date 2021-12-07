@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -26,10 +26,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     color: 'white',
     textDecoration: 'none',
-    '&:hover': {
-      background: '#f00',
-    },
-
   },
   title: {
     ...theme.typography.h1,
@@ -38,7 +34,12 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
     letterSpacing: '4px',
   },
+  
 }));
+
+const activeStyle = {
+ borderBottom: `1px solid yellow`
+};
 
 // TODO: links/routing, mobile
 const Header = () => {
@@ -57,11 +58,11 @@ const Header = () => {
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
         <Typography variant="h1" className={classes.title}>
-          <Link to="/" className={classes.link}>311DATA</Link>
+          <Link to="/" className={classes.link} >311DATA</Link>
         </Typography>
-        <Link className={classes.link} to="/map">
+        <NavLink className={classes.link} to="/map" activeStyle = {activeStyle}>
           <Button className={classes.button}>Map</Button>
-        </Link>
+        </NavLink>
         <Button
           id="report-anchor"
           onClick={handleClick}
@@ -107,18 +108,18 @@ const Header = () => {
             </MenuItem>
           </Link>
         </Menu>
-        <Link to="/faqs" className={classes.link}>
+        <NavLink to="/faqs" className={classes.link} activeStyle = {activeStyle}>
           <Button className={classes.button}>FAQ</Button>
-        </Link>
-        <Link to="/blog" className={classes.link}>
+        </NavLink>
+        <NavLink to="/blog" className={classes.link} activeStyle = {activeStyle}>
           <Button className={classes.button}>Blog</Button>
-        </Link>
-        <Link to="/privacy" className={classes.link}>
+        </NavLink>
+        <NavLink to="/privacy" className={classes.link} activeStyle = {activeStyle}>
           <Button className={classes.button}>Privacy</Button>
-        </Link>
-        <Link to="/contact" className={classes.link}>
+        </NavLink>
+        <NavLink to="/contact" className={classes.link} activeStyle = {activeStyle}>
           <Button className={classes.button}>Contact</Button>
-        </Link>
+        </NavLink>
       </Toolbar>
     </AppBar>
   );
