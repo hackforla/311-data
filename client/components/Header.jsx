@@ -34,11 +34,10 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
     letterSpacing: '4px',
   },
-  
 }));
 
 const activeStyle = {
- borderBottom: `1px solid yellow`
+  borderBottom: '1px solid yellow',
 };
 
 // TODO: links/routing, mobile
@@ -58,9 +57,9 @@ const Header = () => {
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
         <Typography variant="h1" className={classes.title}>
-          <Link to="/" className={classes.link} >311DATA</Link>
+          <Link to="/" className={classes.link}>311DATA</Link>
         </Typography>
-        <NavLink className={classes.link} to="/map" activeStyle = {activeStyle}>
+        <NavLink className={classes.link} to="/map" activeStyle={activeStyle}>
           <Button className={classes.button}>Map</Button>
         </NavLink>
         <Button
@@ -108,16 +107,16 @@ const Header = () => {
             </MenuItem>
           </Link>
         </Menu>
-        <NavLink to="/faqs" className={classes.link} activeStyle = {activeStyle}>
+        <NavLink to="/faqs" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>FAQ</Button>
         </NavLink>
-        <NavLink to="/blog" className={classes.link} activeStyle = {activeStyle}>
+        <NavLink to="/blog" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>Blog</Button>
         </NavLink>
-        <NavLink to="/privacy" className={classes.link} activeStyle = {activeStyle}>
+        <NavLink to="/privacy" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>Privacy</Button>
         </NavLink>
-        <NavLink to="/contact" className={classes.link} activeStyle = {activeStyle}>
+        <NavLink to="/contact" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>Contact</Button>
         </NavLink>
       </Toolbar>
