@@ -101,7 +101,7 @@ const RequestTypeSelector = ({
               /> 
             ))}
             <FormControlLabel 
-              key={'all'}
+              key='all'
               classes={classes}
               control={
                   <Checkbox 
