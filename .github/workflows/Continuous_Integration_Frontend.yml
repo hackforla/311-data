@@ -10,10 +10,13 @@ defaults:
     working-directory: client
 
 jobs:
-  build:
+  ci_frontend_build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 12
     - name: Install Packages
       run: npm install
     - name: Lint
