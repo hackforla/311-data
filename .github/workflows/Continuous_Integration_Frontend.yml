@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'client/**'
+      -'.github/workflows/Continuous_Integration_Frontend.yml'
   workflow_dispatch:
 
 defaults:
