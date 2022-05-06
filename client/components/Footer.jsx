@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
     height: theme.footer.height,
     width: '100%',
     backgroundColor: theme.palette.primary.dark,
+    zIndex: 1,
   },
   lastUpdated: {
     color: theme.palette.text.dark,
