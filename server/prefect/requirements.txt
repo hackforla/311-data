@@ -5,7 +5,7 @@ click==7.1.2
 cloudpickle==1.6.0
 croniter==0.3.37
 dask==2021.3.0
-distributed==2021.3.0
+distributed==2021.10.0
 docker==4.4.4
 HeapDict==1.0.1
 idna==2.10
