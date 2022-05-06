@@ -41,6 +41,6 @@ tornado==6.1
 tqdm==4.59.0
 urllib3==1.26.4
 websocket-client==0.58.0
-websockets==8.1
+websockets==9.1
 zict==2.0.0
 zipp==3.4.1
