@@ -17,7 +17,7 @@ from design import LABELS
 title = "311 DATA OVERVIEW"
 
 # FIGURES
-# council figure
+# council figure 
 print(" * Downloading data for dataframe")
 query_string = "/reports?field=council_name&filter=created_date>=2016-01-01"
 df1 = pd.read_json(API_HOST + query_string)
@@ -28,6 +28,7 @@ fig1 = px.bar(
     y='counts',
     color_discrete_sequence=DISCRETE_COLORS,
     labels=LABELS,
+    title="Total Requests by Neighborhood",
 )
 
 # year totals figure
@@ -41,6 +42,7 @@ fig2 = px.bar(
     y='counts',
     color_discrete_sequence=['#1D6996'],
     labels=LABELS,
+    title="Total Requestes by Year",
 )
 
 # agency figure
@@ -61,6 +63,7 @@ fig5 = px.pie(
     color_discrete_sequence=DISCRETE_COLORS,
     labels=LABELS,
     hole=.3,
+    title="Total Requests by Agency",
 )
 
 # source figure
@@ -78,14 +81,8 @@ fig6 = px.bar(
     y='counts',
     color_discrete_sequence=['#1D6996'],
     labels=LABELS,
+    title="Total Requests by Source",
 )
-# fig6 = px.pie(
-#     df6,
-#     names=df6.index,
-#     values='counts',
-#     color_discrete_sequence=DISCRETE_COLORS,
-#     labels=LABELS,
-# )
 
 # types figure
 print(" * Downloading data for dataframe")
@@ -100,6 +97,7 @@ fig3 = px.pie(
     color_discrete_sequence=DISCRETE_COLORS,
     labels=LABELS,
     hole=.3,
+    title="Total Requests by Type",
 )
 # fig3.update_layout(showlegend=False)
 
@@ -115,13 +113,17 @@ fig4.add_trace(
         median=stas_df['median'],
         q3=stas_df['q3'],
         marker_color='#29404F',
-        fillcolor='#E17C05'
+        fillcolor='#E17C05',
     )
 )
 
 fig4.update_xaxes(
-    title="Median Days to Close",
+    
     dtick=5
+)
+
+fig4.update_layout(
+    title="Total Median Days to Close by Type",
 )
 
 # apply shared styles
@@ -135,7 +137,7 @@ apply_figure_style(fig6)
 # LAYOUT
 layout = html.Div([
     html.H1(title),
-    html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high of over 1.4 million requests.", style={'padding':'20px', 'font-size':'18px', 'font-style':'italic'}),
+    html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests.", style={'padding':'20px', 'font-size':'18px', 'font-style':'italic'}),
     html.Div([
         html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label("Total Requests")], className="stats-label"),  # noqa
         html.Div([html.H2(df1.shape[0] - 1), html.Label("Neighborhoods")], className="stats-label"),  # noqa
