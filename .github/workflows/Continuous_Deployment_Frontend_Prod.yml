@@ -1,22 +1,18 @@
 name: Deploy_Frontend_Prod
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/Continuous_Deployment_Frontend_Prod.yml'
   push:
     branches:
       - master
     paths:
       - 'client/**'
-  workflow_dispatch:
 
 defaults:
   run:
     working-directory: client
 
 jobs:
-  cd_frontend_prod_build:
+  deploy_frontend_prod:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository Code

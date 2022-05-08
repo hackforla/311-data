@@ -1,9 +1,6 @@
 name: Deploy_Frontend_Dev
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/Continuous_Deployment_Frontend_Dev.yml'
   push:
     branches:
       - dev
@@ -16,7 +13,7 @@ defaults:
     working-directory: client
 
 jobs:
-  cd_frontend_dev_build:
+  deploy_frontend_dev:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository Code
