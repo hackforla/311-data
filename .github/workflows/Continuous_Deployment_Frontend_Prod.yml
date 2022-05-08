@@ -12,11 +12,15 @@ defaults:
     working-directory: client
 
 jobs:
-  build:
+  deploy_frontend_prod:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository Code
       uses: actions/checkout@v1
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 12
     - name: Rebuild sass
       run: npm rebuild node-sass
     - name: Install Packages
