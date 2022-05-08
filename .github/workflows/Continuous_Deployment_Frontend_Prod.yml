@@ -1,12 +1,13 @@
 name: Deploy_Frontend_Prod
 
 on:
+  pull_request:
+    - '.github/workflows/Continuous_Deployment_Frontend_Prod.yml'
   push:
     branches:
       - master
     paths:
       - 'client/**'
-      - '.github/workflows/Continuous_Deployment_Frontend_Prod.yml'
   workflow_dispatch:
 
 defaults:
