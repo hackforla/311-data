@@ -85,20 +85,20 @@ const tempTypes = [
   },
   {
     "typeId": 11,
+    "typeName": "Feedback",
+    "agencyId": 0,
+    "agencyName": null,
+    "color": "#F86747",
+    "description": "Either follow up on other issues or something that doesn't fit into the other types"
+  },
+  {
+    "typeId": 12,
     "typeName": "Other",
     "agencyId": 0,
     "agencyName": null,
     "color": "#54ABDE",
     "description": "Issues that do not fit into any of the other available types"
   },
-  {
-    "typeId": 12,
-    "typeName": "Feedback",
-    "agencyId": 0,
-    "agencyName": null,
-    "color": "#F86747",
-    "description": "Either follow up on other issues or something that doesn't fit into the other types"
-  }
 ];
 
 export default tempTypes;
