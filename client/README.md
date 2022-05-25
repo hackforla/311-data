@@ -2,10 +2,12 @@
 
 ### Setting up the project for the first time?
 
-- Install Node 12. You can use [nvm](https://github.com/nvm-sh/nvm) to install this particular version of Node.
+- Install [nvm](https://github.com/nvm-sh/nvm).
+- Install Node 12: `nvm install 12`
+- Switch to using Node 12: `nvm use 12`
 - From this directory, `npm run setup` to install front end dependencies and create an `.env` file
 - get a [Mapbox](https://account.mapbox.com/auth/signin/) API token and add that to your `.env` file as the `MAPBOX_TOKEN`
-- get the `API_URL` from a team member and add that to your `.env` file
+- get the `API_URL` from a team member and add that to your `.env` file. Alternatively, you can [bring up](https://github.com/hackforla/311-data/blob/dev/docs/server_setup.md) your own local server and use that.
 
 Setup complete!
 
