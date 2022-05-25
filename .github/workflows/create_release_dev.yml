@@ -5,6 +5,8 @@ on:
       - dev
     paths:
       - "server/api/**"
+  workflow_dispatch:
+
 jobs:
   build:
     name: Create Docker Image
