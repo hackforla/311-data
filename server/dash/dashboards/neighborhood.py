@@ -55,7 +55,7 @@ def update_figure(selected_council):
     fig = px.line(
         merged_df,
         x="created_date",
-        y=['counts', 'nc_avg'],
+        y=['Counts', 'UNDER INVESTIGATION'],
         color_discrete_sequence=DISCRETE_COLORS,
         labels=LABELS,
         title="Comparison trend for " + selected_council
