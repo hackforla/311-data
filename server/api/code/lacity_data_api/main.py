@@ -28,7 +28,7 @@ if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
     fastapi_logger.handlers = gunicorn_error_logger.handlers
 
 
-def get_app():        
+def get_app():
     app = FastAPI(title="LA 311 Data API", debug=DEBUG)
 
     db.init_app(app)
