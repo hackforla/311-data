@@ -6,30 +6,29 @@ import {
   bbox,
   pointsWithinPolygon,
   booleanPointInPolygon,
-} from '@turf/turf';
+} from "@turf/turf";
 
 export function emptyGeo() {
   return {
     type: "FeatureCollection",
     features: [],
-  }
+  };
 }
 
 // removes holes in a MultiPolygon
 export function removeGeoHoles(feature) {
-  if (feature.geometry.type === 'MultiPolygon')
+  if (feature.geometry.type === "MultiPolygon")
     return {
       ...feature,
       geometry: {
         ...feature.geometry,
-        coordinates: feature.geometry.coordinates.map(poly => [poly[0]])
-      }
+        coordinates: feature.geometry.coordinates.map((poly) => [poly[0]]),
+      },
     };
-  else
-    return feature;
+  else return feature;
 }
 
-export function makeGeoCircle(center, radius=1, opts={ units: 'miles' }) {
+export function makeGeoCircle(center, radius = 1, opts = { units: "miles" }) {
   return circle([center.lng, center.lat], radius, opts);
 }
 
@@ -38,7 +37,13 @@ export function makeGeoMask(poly) {
 }
 
 export function boundingBox(geo) {
-  return bbox(geo);
+  console.log("making bounding box");
+  try {
+    return bbox(geo);
+  } catch (err) {
+    console.log("failed to create bbox!");
+    console.log(err);
+  }
 }
 
 export function pointsWithinGeo(points, geo) {

@@ -1,43 +1,25 @@
 /* eslint-disable */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import homeSVG from '@assets/home-15.svg';
-import {
-  emptyGeo,
-  makeGeoCircle,
-  makeGeoMask,
-  boundingBox,
-} from '../geoUtils';
+import React from "react";
+import PropTypes from "prop-types";
+import homeSVG from "@assets/home-15.svg";
+import { emptyGeo, makeGeoCircle, makeGeoMask, boundingBox } from "../geoUtils";
 
 const FIT_BOUNDS_PADDING = {
   top: 65,
   bottom: 65,
   left: 300,
-  right: 300
+  right: 300,
 };
 
 function getBoundaryColor(boundaryStyle) {
-  return boundaryStyle === 'light'
-    ? '#FFFFFF'
-    : '#27272b';
+  return boundaryStyle === "light" ? "#FFFFFF" : "#27272b";
 }
 
 function getMaskFillOpacity(boundaryStyle) {
-  return boundaryStyle === 'light'
-    ? [
-      'interpolate',
-      ['linear'],
-      ['zoom'],
-      10, 0,
-      13, 0.2
-    ] : [
-      'interpolate',
-      ['linear'],
-      ['zoom'],
-      10, 0,
-      13, 0.5
-    ];
+  return boundaryStyle === "light"
+    ? ["interpolate", ["linear"], ["zoom"], 10, 0, 13, 0.2]
+    : ["interpolate", ["linear"], ["zoom"], 10, 0, 13, 0.5];
 }
 
 class AddressLayer extends React.Component {
@@ -46,8 +28,8 @@ class AddressLayer extends React.Component {
     this.onSelectRegion = onSelectRegion;
     this.canvas = map.getCanvasContainer();
     this.geojson = {
-      "type": "FeatureCollection",
-      "features": [],
+      type: "FeatureCollection",
+      features: [],
     };
     this.addImages();
     this.addSources();
@@ -59,36 +41,40 @@ class AddressLayer extends React.Component {
       this.offset = null;
       this.circle = null;
     }
-  }
+  };
 
   componentDidUpdate(prev) {
     const { visible } = this.props;
-    if (visible !== prev.visible)
-      this.setVisibility(visible);
+    if (visible !== prev.visible) this.setVisibility(visible);
   }
 
   addImages = () => {
     let img = new Image(30, 30);
-    img.onload = () => this.map.addImage('home-icon', img);
+    img.onload = () => this.map.addImage("home-icon", img);
     img.src = homeSVG;
-  }
+  };
 
   addSources = () => {
-    this.map.addSource('point', {
-      "type": "geojson",
-      "data": this.geojson
-    });
+    try {
+      this.map.addSource("point", {
+        type: "geojson",
+        data: this.geojson,
+      });
+    } catch (err) {
+      console.log("failed to add point", this.geojson);
+      console.log(err);
+    }
   };
 
   addLayers = () => {
     this.map.addLayer({
-      id: 'point',
-      type: 'symbol',
-      source: 'point',
+      id: "point",
+      type: "symbol",
+      source: "point",
       layout: {
-        'icon-image': 'home-icon',
+        "icon-image": "home-icon",
       },
-    })
+    });
   };
 
   addListeners = () => {
@@ -99,7 +85,6 @@ class AddressLayer extends React.Component {
     //   });
     //   this.canvas.style.cursor = 'grabbing';
     // };
-
     // const onUp = e => {
     //   this.onSelectRegion({
     //     geo: this.circle,
@@ -109,7 +94,6 @@ class AddressLayer extends React.Component {
     //   this.map.off('touchmove', onMove);
     //   this.canvas.style.cursor = '';
     // }
-
     // this.map.on('mousedown', 'shed-fill', e => {
     //   e.preventDefault();
     //   this.offset = {
@@ -120,22 +104,19 @@ class AddressLayer extends React.Component {
     //   this.map.once('mouseup', onUp);
     //   this.canvas.style.cursor = 'grab';
     // });
-
     // this.map.on('touchstart', 'shed-fill', e => {
     //   if (e.points.length !== 1) return;
     //   e.preventDefault();
     //   this.map.on('touchmove', onMove);
     //   this.map.once('touchend', onUp);
     // });
-
     // this.map.on('mouseenter', 'shed-fill', e => {
     //   this.canvas.style.cursor = 'move';
     // });
-
     // this.map.on('mouseleave', 'shed-fill', e => {
     //   this.canvas.style.cursor = '';
     // });
-  }
+  };
 
   // setVisibility = visible => {
   //   const value = visible ? 'visible' : 'none';
@@ -168,21 +149,31 @@ class AddressLayer extends React.Component {
   //   this.map.once('zoomend', () => this.onSelectRegion({ geo: this.circle }));
   // };
 
-  addMarker = lngLat => {
+  addMarker = (lngLat) => {
     this.geojson.features[0] = {
-      type: 'Feature',
+      type: "Feature",
       geometry: {
-        type: 'Point',
+        type: "Point",
         coordinates: lngLat,
-      }
+      },
+    };
+    try {
+      this.map.getSource("point").setData(this.geojson);
+    } catch (err) {
+      console.log("failed to add marker");
+      console.log(err);
     }
-    this.map.getSource('point').setData(this.geojson)
-  }
+  };
 
   clearMarker = () => {
     this.geojson.features = [];
-    this.map.getSource('point').setData(this.geojson);
-  }
+    try {
+      this.map.getSource("point").setData(this.geojson);
+    } catch (err) {
+      console.log("failed to clear marker");
+      console.log(err);
+    }
+  };
 
   render() {
     return null;

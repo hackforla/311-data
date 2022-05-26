@@ -1,23 +1,23 @@
 /* eslint-disable */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
-import mapboxgl from 'mapbox-gl';
-import FilterMenu from '@components/main/Desktop/FilterMenu';
-import LocationDetail from './LocationDetail';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withStyles } from "@material-ui/core/styles";
+import mapboxgl from "mapbox-gl";
+import FilterMenu from "@components/main/Desktop/FilterMenu";
+import LocationDetail from "./LocationDetail";
 
-import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
-import { updateNcId } from '@reducers/filters';
+import { REQUEST_TYPES } from "@components/common/CONSTANTS";
+import { getNcByLngLat, setSelectedNcId } from "@reducers/data";
+import { updateNcId } from "@reducers/filters";
 
 import {
   INITIAL_BOUNDS,
   INITIAL_LOCATION,
   GEO_FILTER_TYPES,
-  MAP_STYLES
-} from './constants';
+  MAP_STYLES,
+} from "./constants";
 
 import {
   ccBoundaries,
@@ -25,71 +25,71 @@ import {
   ccNameFromId,
   ncInfoFromLngLat,
   // ccNameFromLngLat,
-} from './districts';
+} from "./districts";
 
-import { pointsWithinGeo } from './geoUtils';
+import { pointsWithinGeo } from "./geoUtils";
 
-import RequestsLayer from './layers/RequestsLayer';
-import BoundaryLayer from './layers/BoundaryLayer';
-import AddressLayer from './layers/AddressLayer';
+import RequestsLayer from "./layers/RequestsLayer";
+import BoundaryLayer from "./layers/BoundaryLayer";
+import AddressLayer from "./layers/AddressLayer";
 
 // import MapOverview from './controls/MapOverview';
 
-import MapSearch from './controls/MapSearch';
+import MapSearch from "./controls/MapSearch";
 // import MapLayers from './controls/MapLayers';
 // import MapRegion from './controls/MapRegion';
 // import MapMeta from './controls/MapMeta';
 
-import RequestDetail from './RequestDetail';
+import RequestDetail from "./RequestDetail";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     bottom: 0,
-    width: '100%',
-    margin: '0 auto',
-    '& canvas.mapboxgl-canvas:focus': {
-      outline: 'none',
+    width: "100%",
+    margin: "0 auto",
+    "& canvas.mapboxgl-canvas:focus": {
+      outline: "none",
     },
     // TODO: controls placement
-    '& .mapboxgl-control-container': {
-      display: 'none',
+    "& .mapboxgl-control-container": {
+      display: "none",
     },
-    '& .mapboxgl-popup-content': {
-      width: 'auto',
+    "& .mapboxgl-popup-content": {
+      width: "auto",
       backgroundColor: theme.palette.primary.main,
       borderRadius: 5,
       padding: 10,
     },
-    '& .mapboxgl-popup-close-button': {
+    "& .mapboxgl-popup-close-button": {
       fontSize: 24,
-      color: 'white',
+      color: "white",
       padding: 0,
       marginTop: 5,
       marginRight: 5,
     },
-    '& .mapboxgl-popup': {
-      '&-anchor-bottom .mapboxgl-popup-tip': {
+    "& .mapboxgl-popup": {
+      "&-anchor-bottom .mapboxgl-popup-tip": {
         borderTopColor: theme.palette.primary.main,
       },
-      '&-anchor-top .mapboxgl-popup-tip': {
+      "&-anchor-top .mapboxgl-popup-tip": {
         borderBottomColor: theme.palette.primary.main,
       },
-      '&-anchor-left .mapboxgl-popup-tip': {
+      "&-anchor-left .mapboxgl-popup-tip": {
         borderRightColor: theme.palette.primary.main,
       },
-      '&-anchor-right .mapboxgl-popup-tip': {
+      "&-anchor-right .mapboxgl-popup-tip": {
         borderLeftColor: theme.palette.primary.main,
       },
     },
   },
   menuWrapper: {
-    position: 'absolute',
+    position: "absolute",
     left: 35,
     top: 75,
   },
-})
+});
 
 class Map extends React.Component {
   constructor(props) {
@@ -97,7 +97,7 @@ class Map extends React.Component {
 
     this.state = {
       mapReady: false,
-      activeRequestsLayer: 'points',
+      activeRequestsLayer: "points",
       selectedTypes: props.selectedTypes,
       locationInfo: INITIAL_LOCATION,
       address: null,
@@ -105,8 +105,8 @@ class Map extends React.Component {
       filterGeo: null,
       filteredRequestCounts: {},
       hoveredRegionName: null,
-      colorScheme: 'prism',
-      mapStyle: 'streets',
+      colorScheme: "prism",
+      mapStyle: "streets",
       canReset: true,
       selectedRequestId: null,
       selectedNc: null,
@@ -127,28 +127,36 @@ class Map extends React.Component {
     this.isSubscribed = true;
     mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
-    const map = new mapboxgl.Map({
-      container: this.mapContainer,
-      style: MAP_STYLES[this.state.mapStyle],
-      bounds: INITIAL_BOUNDS,
-      fitBoundsOptions: { padding: 50 },
-      pitchWithRotate: false,
-      dragRotate: false,
-      touchZoomRotate: false
-    });
+    try {
+      console.log("creating map");
+      console.log("initial bounds", INITIAL_BOUNDS);
+      const map = new mapboxgl.Map({
+        container: this.mapContainer,
+        style: MAP_STYLES[this.state.mapStyle],
+        bounds: INITIAL_BOUNDS,
+        fitBoundsOptions: { padding: 50 },
+        pitchWithRotate: false,
+        dragRotate: false,
+        touchZoomRotate: false,
+      });
+      console.log("created map");
 
-    map.on('load', () => {
-      if (this.isSubscribed) {
-        this.initLayers(true);
+      map.on("load", () => {
+        if (this.isSubscribed) {
+          this.initLayers(true);
 
-        map.on('click', this.onClick);
+          map.on("click", this.onClick);
 
-        map.once('idle', e => {
-          this.setState({ mapReady: true });
-        });
-      }
-    });
-    this.map = map;
+          map.once("idle", (e) => {
+            this.setState({ mapReady: true });
+          });
+        }
+      });
+      this.map = map;
+    } catch (err) {
+      console.log("failed to initialize map!");
+      console.log(err);
+    }
   }
 
   componentWillUnmount() {
@@ -162,7 +170,7 @@ class Map extends React.Component {
         this.setState({ requests: this.props.requests });
         // this.map.once('idle', this.setFilteredRequestCounts);
       } else {
-        this.map.once('idle', () => {
+        this.map.once("idle", () => {
           this.setState({ requests: this.props.requests });
           // this.map.once('idle', this.setFilteredRequestCounts);
         });
@@ -178,16 +186,18 @@ class Map extends React.Component {
     if (
       this.state.filterGeo !== prevState.filterGeo ||
       this.state.selectedTypes !== prevState.selectedTypes
-      ) this.map.once('idle', this.setFilteredRequestCounts);
+    ) {
+      this.map.once("idle", this.setFilteredRequestCounts);
+    }
 
     if (this.props.ncBoundaries != prevProps.ncBoundaries) {
       this.ncLayer.init({
         map: this.map,
         addListeners: true,
-        sourceId: 'nc',
+        sourceId: "nc",
         sourceData: this.props.ncBoundaries,
-        idProperty: 'council_id',
-        onSelectRegion: geo => {
+        idProperty: "council_id",
+        onSelectRegion: (geo) => {
           this.setState({
             locationInfo: {
               nc: {
@@ -198,17 +208,15 @@ class Map extends React.Component {
               },
             },
           });
-          this.map.once('zoomend', () => {
+          this.map.once("zoomend", () => {
             this.setState({ filterGeo: geo });
           });
         },
-        onHoverRegion: geo => {
+        onHoverRegion: (geo) => {
           this.setState({
-            hoveredRegionName: geo
-              ? ncNameFromId(geo.properties.nc_id)
-              : null
+            hoveredRegionName: geo ? ncNameFromId(geo.properties.nc_id) : null,
           });
-        }
+        },
       });
     }
 
@@ -227,53 +235,28 @@ class Map extends React.Component {
     }
   }
 
-  initLayers = addListeners => {
-    this.addressLayer.init({
-      map: this.map,
-      addListeners,
-      onSelectRegion: ({ geo, center }) => this.setState({
-        filterGeo: geo,
-        ...(
-          center
-          ? {
-            locationInfo: {
-              location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
-              radius: 1,
-              nc: ncInfoFromLngLat(center),
-            }
-          }
-          : {}
-        )
-      }),
-    });
-
-    this.requestsLayer.init({
-      map: this.map,
-    });
-
+  initLayers = (addListeners) => {
     this.ccLayer.init({
       map: this.map,
       addListeners,
-      sourceId: 'cc',
+      sourceId: "cc",
       sourceData: ccBoundaries,
-      idProperty: 'name',
-      onSelectRegion: geo => {
+      idProperty: "name",
+      onSelectRegion: (geo) => {
         this.setState({
           locationInfo: {
             cc: ccNameFromId(geo.properties.name),
-          }
+          },
         });
-        this.map.once('zoomend', () => {
+        this.map.once("zoomend", () => {
           this.setState({ filterGeo: geo });
         });
       },
-      onHoverRegion: geo => {
+      onHoverRegion: (geo) => {
         this.setState({
-          hoveredRegionName: geo
-            ? ccNameFromId(geo.properties.name)
-            : null
+          hoveredRegionName: geo ? ccNameFromId(geo.properties.name) : null,
         });
-      }
+      },
     });
   };
 
@@ -283,7 +266,7 @@ class Map extends React.Component {
       .setLngLat(coordinates)
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
-  }
+  };
 
   removePopup = () => {
     if (this.popup) {
@@ -295,9 +278,11 @@ class Map extends React.Component {
 
   reset = () => {
     this.zoomOut();
-    this.addressLayer.clearMarker();
+
+    //this.addressLayer.clearMarker();
     this.ncLayer.clearSelectedRegion();
     this.ccLayer.clearSelectedRegion();
+
     this.removePopup();
 
     this.setState({
@@ -307,7 +292,7 @@ class Map extends React.Component {
       selectedNc: null,
     });
 
-    this.map.once('zoomend', () => {
+    this.map.once("zoomend", () => {
       this.setState({
         filterGeo: null,
         canReset: true,
@@ -315,18 +300,11 @@ class Map extends React.Component {
     });
   };
 
-  onClick = e => {
-
-    const hoverables = [
-      'nc-fills',
-      'cc-fills'
-    ];
+  onClick = (e) => {
+    const hoverables = ["nc-fills", "cc-fills"];
 
     const features = this.map.queryRenderedFeatures(e.point, {
-      layers: [
-        'request-circles',
-        ...hoverables
-      ]
+      layers: ["request-circles", ...hoverables],
     });
 
     const { updateNcId } = this.props;
@@ -335,19 +313,19 @@ class Map extends React.Component {
       const feature = features[i];
 
       if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
-        switch(feature.layer.id) {
-          case 'nc-fills':
+        switch (feature.layer.id) {
+          case "nc-fills":
             this.setState({ address: null });
             updateNcId(feature.properties.council_id);
             return this.ncLayer.selectRegion(feature.id);
-          case 'cc-fills':
+          case "cc-fills":
             return this.ccLayer.selectRegion(feature.id);
           default:
             return null;
         }
       }
 
-      if (feature.layer.id === 'request-circles') {
+      if (feature.layer.id === "request-circles") {
         const { coordinates } = feature.geometry;
         const { requestId, typeId } = feature.properties;
         return this.addPopup(coordinates, requestId);
@@ -355,7 +333,7 @@ class Map extends React.Component {
     }
   };
 
-  onChangeSearchTab = tab => {
+  onChangeSearchTab = (tab) => {
     this.setState({ geoFilterType: tab });
     this.reset();
   };
@@ -366,13 +344,10 @@ class Map extends React.Component {
       this.setState({ address: null });
       updateNcId(result.id);
     } else {
-      const address = result.place_name
-                        .split(',')
-                        .slice(0, -2)
-                        .join(', ');
-  
+      const address = result.place_name.split(",").slice(0, -2).join(", ");
+
       getNc({ longitude: result.center[0], latitude: result.center[1] });
-  
+
       this.setState({
         address: address,
       });
@@ -409,16 +384,19 @@ class Map extends React.Component {
   getDistrictCounts = (geoFilterType, filterGeo, selectedTypes) => {
     const { ncCounts, ccCounts } = this.props;
     const { counts, regionId } = (() => {
-      switch(geoFilterType) {
-        case GEO_FILTER_TYPES.nc: return {
-          counts: ncCounts,
-          regionId: filterGeo.properties.nc_id,
-        };
-        case GEO_FILTER_TYPES.cc: return {
-          counts: ccCounts,
-          regionId: filterGeo.properties.name,
-        };
-        default: return {};
+      switch (geoFilterType) {
+        case GEO_FILTER_TYPES.nc:
+          return {
+            counts: ncCounts,
+            regionId: filterGeo.properties.nc_id,
+          };
+        case GEO_FILTER_TYPES.cc:
+          return {
+            counts: ccCounts,
+            regionId: filterGeo.properties.name,
+          };
+        default:
+          return {};
       }
     })();
 
@@ -435,17 +413,16 @@ class Map extends React.Component {
 
     // use pre-calculated values for nc and cc filters if available
     if (
-      filterGeo && (
-        geoFilterType === GEO_FILTER_TYPES.nc && ncCounts ||
-        geoFilterType === GEO_FILTER_TYPES.cc && ccCounts
-      )
+      filterGeo &&
+      ((geoFilterType === GEO_FILTER_TYPES.nc && ncCounts) ||
+        (geoFilterType === GEO_FILTER_TYPES.cc && ccCounts))
     )
       return this.setState({
         filteredRequestCounts: this.getDistrictCounts(
           geoFilterType,
           filterGeo,
-          selectedTypes,
-        )
+          selectedTypes
+        ),
       });
 
     // otherwise, count up the filtered requests
@@ -455,8 +432,9 @@ class Map extends React.Component {
     if (selectedTypes.length < Object.keys(REQUEST_TYPES).length)
       filteredRequests = {
         ...filteredRequests,
-        features: filteredRequests.features
-          .filter(r => selectedTypes.includes(r.properties.type))
+        features: filteredRequests.features.filter((r) =>
+          selectedTypes.includes(r.properties.type)
+        ),
       };
 
     // filter by geo if necessary
@@ -505,36 +483,19 @@ class Map extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root} ref={el => this.mapContainer = el} >
-        <RequestsLayer
-          ref={el => this.requestsLayer = el}
-          requests={requests}
-          activeLayer={activeRequestsLayer}
-          selectedTypes={selectedTypes}
-          colorScheme={colorScheme}
-          requestTypes={requestTypes}
-        />
-        <AddressLayer
-          ref={el => this.addressLayer = el}
-          // visible={geoFilterType === GEO_FILTER_TYPES.address}
-          visible
-          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
-        />
+      <div className={classes.root} ref={(el) => (this.mapContainer = el)}>
         <BoundaryLayer
-          ref={el => this.ncLayer = el}
+          ref={(el) => (this.ncLayer = el)}
           // visible={geoFilterType === GEO_FILTER_TYPES.nc}
           visible
-          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
+          boundaryStyle={mapStyle === "dark" ? "light" : "dark"}
         />
         <BoundaryLayer
-          ref={el => this.ccLayer = el}
+          ref={(el) => (this.ccLayer = el)}
           visible={geoFilterType === GEO_FILTER_TYPES.cc}
-          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
+          boundaryStyle={mapStyle === "dark" ? "light" : "dark"}
         />
-        <div ref={el => this.requestDetail = el}>
-          <RequestDetail requestId={selectedRequestId} />
-        </div>
-        { this.state.mapReady && requestTypes && (
+        {this.state.mapReady && requestTypes && (
           <>
             {/* <MapOverview
               date={lastUpdated}
@@ -553,10 +514,9 @@ class Map extends React.Component {
                 canReset={!!filterGeo && canReset}
               />
               <FilterMenu />
-              {
-                (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
-              }
-              
+              {(selectedNc || address) && (
+                <LocationDetail address={address} nc={selectedNc} />
+              )}
             </div>
             {/* <MapLayers
               selectedTypes={selectedTypes}
@@ -587,7 +547,7 @@ Map.propTypes = {
 
 Map.defaultProps = {};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   ncBoundaries: state.metadata.ncGeojson,
   requestTypes: state.metadata.requestTypes,
   councils: state.metadata.councils,
@@ -595,9 +555,12 @@ const mapStateToProps = state => ({
   ncId: state.data.selectedNcId,
 });
 
-const mapDispatchToProps = dispatch => ({
-  getNc: coords => dispatch(getNcByLngLat(coords)),
-  updateNcId: id => dispatch(updateNcId(id)),
+const mapDispatchToProps = (dispatch) => ({
+  getNc: (coords) => dispatch(getNcByLngLat(coords)),
+  updateNcId: (id) => dispatch(updateNcId(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Map));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Map));
