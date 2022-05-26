@@ -27,7 +27,7 @@ jobs:
           echo GITHUB_PROJECT_URL=${{ secrets.GH_PROJECT_URL }} >> server/api/.env
           echo GITHUB_ISSUES_URL=https://api.github.com/repos/hackforla/311-data-support/issues >> server/api/.env
           echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> server/api/.env
-          echo API_ALLOWED_ORIGINS=[https://311-data.org] >> server/api/.env
+          echo API_ALLOWED_ORIGINS=https://311-data.org >> server/api/.env
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v1
         with:
