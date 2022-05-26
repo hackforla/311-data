@@ -26,7 +26,7 @@ jobs:
           echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> server/api/.env
           echo DEBUG=True >> server/api/.env
           echo DB_ECHO=True >> server/api/.env
-          echo API_ALLOWED_ORIGINS=[https://dev.311-data.org,http://localhost:3000,https://311-data.matt-webster.net] >> server/api/.env
+          echo API_ALLOWED_ORIGINS=[https://dev.311-data.org,http://localhost:3000,http://0.0.0.0:3000,https://311-data.matt-webster.net] >> server/api/.env
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v1
         with:
