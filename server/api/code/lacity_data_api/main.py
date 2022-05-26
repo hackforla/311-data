@@ -44,6 +44,8 @@ def get_app():
     app.include_router(reports.router, prefix="/reports")
     app.include_router(shim.router, include_in_schema=DEBUG)
 
+    app.add_middleware(GZipMiddleware)
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=API_ALLOWED_ORIGINS,
@@ -51,7 +53,5 @@ def get_app():
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-    app.add_middleware(GZipMiddleware)
 
     return app
