@@ -28,7 +28,7 @@ if "gunicorn" in os.environ.get("SERVER_SOFTWARE", ""):
     fastapi_logger.handlers = gunicorn_error_logger.handlers
 
 
-def get_app():
+def get_app():        
     app = FastAPI(title="LA 311 Data API", debug=DEBUG)
 
     db.init_app(app)
@@ -44,14 +44,14 @@ def get_app():
     app.include_router(reports.router, prefix="/reports")
     app.include_router(shim.router, include_in_schema=DEBUG)
 
-    app.add_middleware(GZipMiddleware)
+    app_with_gzip = GZipMiddleware(app)
 
-    app.add_middleware(
-        CORSMiddleware,
+    app_with_cors = CORSMiddleware(
+        app_with_gzip,
         allow_origins=API_ALLOWED_ORIGINS,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
 
-    return app
+    return app_with_cors
