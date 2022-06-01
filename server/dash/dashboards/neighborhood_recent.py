@@ -84,9 +84,9 @@ pie_fig = px.pie(
     figure_df,
     names="typeName",
     values="srnumber",
-    color = 'typeName',
+    color="typeName",
     color_discrete_sequence=DISCRETE_COLORS,
-    color_discrete_map = DISCRETE_COLORS_MAP,
+    color_discrete_map=DISCRETE_COLORS_MAP,
     labels=LABELS,
     hole=.3,
 )
