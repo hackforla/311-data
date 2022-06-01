@@ -66,7 +66,7 @@ fig = px.line(
     y="srnumber",
     color="typeName",
     color_discrete_sequence=DISCRETE_COLORS,
-    color_discrete_map = DISCRETE_COLORS_MAP,
+    color_discrete_map=DISCRETE_COLORS_MAP,
     labels=LABELS,
 )
 
