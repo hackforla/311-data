@@ -140,10 +140,6 @@ apply_figure_style(fig4)
 apply_figure_style(fig5)
 apply_figure_style(fig6)
 
-
-## CHANGE THIS BACK TO just "layout = html.Div" or  layout = html.Div([
-
-
 # LAYOUT
 layout = html.Div([
     html.H1(title),
