@@ -91,7 +91,7 @@ def update_council_figure(selected_council):
         y="counts",
         color="type_name",
         color_discrete_sequence=DISCRETE_COLORS,
-        color_discrete_map = DISCRETE_COLORS_MAP,
+        color_discrete_map=DISCRETE_COLORS_MAP,
         labels=LABELS,
         title="Request type trend for " + selected_council
     )
