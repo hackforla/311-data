@@ -44,6 +44,9 @@ def get_app():
     app.include_router(reports.router, prefix="/reports")
     app.include_router(shim.router, include_in_schema=DEBUG)
 
+    # Note: instead of using `app.add_middleware()`, we need to
+    # use this functional approach. Otherwise, the CORSMiddleware
+    # below does not actually work.
     app_with_gzip = GZipMiddleware(app)
 
     app_with_cors = CORSMiddleware(
