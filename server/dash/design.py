@@ -75,7 +75,7 @@ def apply_figure_style(fig):
         title_yanchor='top',
         font_family="Roboto, Arial",
         font_color="#ECECEC",
-        #colorway=DISCRETE_COLORS,
+        colorway=DISCRETE_COLORS,
         margin_l=10,
         margin_r=10,
         legend_font_size=11,
