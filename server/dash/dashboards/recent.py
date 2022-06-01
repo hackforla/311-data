@@ -8,7 +8,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from config import API_HOST
-from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style, DISCRETE_COLORS_MAP
 
 # TITLE
 title = "RECENT 311 REQUESTS"
@@ -33,6 +33,7 @@ fig = px.line(
     y="counts",
     color="type_name",
     color_discrete_sequence=DISCRETE_COLORS,
+    color_discrete_map = DISCRETE_COLORS_MAP,
     labels=LABELS,
 )
 
@@ -50,7 +51,9 @@ pie_fig = px.pie(
     pie_df,
     names="type_name",
     values="counts",
+    color='type_name',
     color_discrete_sequence=DISCRETE_COLORS,
+    color_discrete_map = DISCRETE_COLORS_MAP,
     labels=LABELS,
     hole=.3,
 )

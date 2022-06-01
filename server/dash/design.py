@@ -47,6 +47,24 @@ CONFIG_OPTIONS = {
 }
 
 
+# TODO: Fixing multiple streetlights and waterwaste color
+# Need to add another discrete color
+DISCRETE_COLORS_MAP = {
+    "Graffiti":"#BF82BA",
+    "Homeless Encampment":"#11975F",
+    "Animal Remains":"#267370",
+    "Bulky Items": "#D05F4E",
+    "Electronic Waste": "#AE3D51",
+    "Illegal Dumping": "#685DB1",
+    "Metal/Appliances": "#8B508B",
+    "Single Streetlight": "#79B74E",
+    "Multiple Streetlights": "#EDAD08",
+    "Water Waste": "#EDAD08",
+     "Other": "#1D6996",
+     "Feedback":  "#E17C05"
+}
+
+
 def apply_figure_style(fig):
 
     fig.update_layout(
@@ -57,7 +75,7 @@ def apply_figure_style(fig):
         title_yanchor='top',
         font_family="Roboto, Arial",
         font_color="#ECECEC",
-        colorway=DISCRETE_COLORS,
+        #colorway=DISCRETE_COLORS,
         margin_l=10,
         margin_r=10,
         legend_font_size=11,

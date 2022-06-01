@@ -9,7 +9,7 @@ import plotly.express as px
 from app import app, batch_get_data
 from config import API_HOST
 from dash.dependencies import Input, Output
-from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style, DISCRETE_COLORS_MAP
 from flask import request
 
 pretty_columns = {
@@ -66,6 +66,7 @@ fig = px.line(
     y="srnumber",
     color="typeName",
     color_discrete_sequence=DISCRETE_COLORS,
+    color_discrete_map = DISCRETE_COLORS_MAP,
     labels=LABELS,
 )
 
@@ -83,7 +84,9 @@ pie_fig = px.pie(
     figure_df,
     names="typeName",
     values="srnumber",
+    color = 'typeName',
     color_discrete_sequence=DISCRETE_COLORS,
+    color_discrete_map = DISCRETE_COLORS_MAP,
     labels=LABELS,
     hole=.3,
 )
