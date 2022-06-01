@@ -1,13 +1,13 @@
 /* eslint-disable */
 
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   emptyGeo,
   removeGeoHoles,
   makeGeoMask,
   boundingBox,
-} from "../geoUtils";
+} from '../geoUtils';
 
 const BOUNDARY_WIDTH = 2;
 
@@ -16,17 +16,30 @@ const FIT_BOUNDS_PADDING = {
   top: 65,
   bottom: 65,
   left: 350,
-  right: 350,
+  right: 350
 };
 
 function getBoundaryColor(boundaryStyle) {
-  return boundaryStyle === "light" ? "#FFFFFF" : "#27272b";
+  return boundaryStyle === 'light'
+    ? '#FFFFFF'
+    : '#27272b';
 }
 
 function getMaskFillOpacity(boundaryStyle) {
-  return boundaryStyle === "light"
-    ? ["interpolate", ["linear"], ["zoom"], 10, 0, 13, 0.3]
-    : ["interpolate", ["linear"], ["zoom"], 10, 0, 13, 0.6];
+  return boundaryStyle === 'light'
+    ? [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      10, 0,
+      13, 0.3
+    ] : [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      10, 0,
+      13, 0.6
+    ];
 }
 
 class BoundaryLayer extends React.Component {
@@ -51,34 +64,27 @@ class BoundaryLayer extends React.Component {
 
     this.addSources();
     this.addLayers();
-    if (addListeners) this.addListeners();
+    if (addListeners)
+      this.addListeners();
   };
 
   componentDidUpdate(prev) {
     const { visible } = this.props;
-    if (visible !== prev.visible) this.setVisibility(visible);
+    if (visible !== prev.visible)
+      this.setVisibility(visible);
   }
 
   addSources = () => {
-    try {
-      this.map.addSource(this.sourceId, {
-        type: "geojson",
-        data: this.sourceData,
-        promoteId: this.idProperty,
-      });
-    } catch (err) {
-      console.log("failed to add sourcedata", this.sourceData);
-      console.log(err);
-    }
-    try {
-      this.map.addSource(`${this.sourceId}-region-mask`, {
-        type: "geojson",
-        data: null,
-      });
-    } catch (err) {
-      console.log("failed to add sourcedata region mask");
-      console.log(err);
-    }
+    this.map.addSource(this.sourceId, {
+      type: 'geojson',
+      data: this.sourceData,
+      promoteId: this.idProperty
+    });
+
+    this.map.addSource(`${this.sourceId}-region-mask`, {
+      type: 'geojson',
+      data: null,
+    });
   };
 
   addLayers = () => {
@@ -87,70 +93,70 @@ class BoundaryLayer extends React.Component {
     this.map.addLayer({
       id: `${this.sourceId}-borders`,
       source: this.sourceId,
-      type: "line",
+      type: 'line',
       layout: {
-        visibility: visible ? "visible" : "none",
+        visibility: visible ? 'visible' : 'none',
       },
       paint: {
-        "line-color": getBoundaryColor(boundaryStyle),
-        "line-width": BOUNDARY_WIDTH,
-      },
+        'line-color': getBoundaryColor(boundaryStyle),
+        'line-width': BOUNDARY_WIDTH,
+      }
     });
 
     this.map.addLayer({
       id: `${this.sourceId}-fills`,
       source: this.sourceId,
-      type: "fill",
+      type: 'fill',
       layout: {
-        visibility: visible ? "visible" : "none",
+        visibility: visible ? 'visible' : 'none',
       },
       paint: {
-        "fill-color": getBoundaryColor(boundaryStyle),
-        "fill-opacity": [
-          "case",
-          [
-            "all",
-            ["boolean", ["feature-state", "hover"], false],
-            ["!", ["boolean", ["feature-state", "selected"], false]],
+        'fill-color': getBoundaryColor(boundaryStyle),
+        'fill-opacity': [
+          'case',
+          ['all',
+            ['boolean', ['feature-state', 'hover'], false],
+            ['!', ['boolean', ['feature-state', 'selected'], false]]
           ],
           0.5,
-          0,
-        ],
-      },
+          0
+        ]
+      }
     });
 
     this.map.addLayer({
       id: `${this.sourceId}-region-mask-fill`,
       source: `${this.sourceId}-region-mask`,
-      type: "fill",
+      type: 'fill',
       layout: {
-        visibility: visible ? "visible" : "none",
+        visibility: visible ? 'visible' : 'none',
       },
       paint: {
-        "fill-color": getBoundaryColor(boundaryStyle),
-        "fill-opacity": getMaskFillOpacity(boundaryStyle),
-      },
+        'fill-color': getBoundaryColor(boundaryStyle),
+        'fill-opacity': getMaskFillOpacity(boundaryStyle),
+      }
     });
   };
 
   addListeners = () => {
-    this.map.on("mousemove", `${this.sourceId}-fills`, (e) => {
+    this.map.on('mousemove', `${this.sourceId}-fills`, e => {
       const region = e.features[0];
-      if (!region || region.id === this.hoveredRegionId) return;
+      if (!region || region.id === this.hoveredRegionId)
+        return;
 
       this.setHoveredRegion(region);
       this.onHoverRegion(region);
 
-      this.map.getCanvas().style.cursor = "pointer";
+      this.map.getCanvas().style.cursor = 'pointer';
     });
 
-    this.map.on("mouseleave", `${this.sourceId}-fills`, () => {
+    this.map.on('mouseleave', `${this.sourceId}-fills`, () => {
       this.clearHoveredRegion();
       this.onHoverRegion(null);
     });
   };
 
-  setHoveredRegion = (region) => {
+  setHoveredRegion = region => {
     if (this.hoveredRegionId) {
       this.map.setFeatureState(
         { source: this.sourceId, id: this.hoveredRegionId },
@@ -174,10 +180,11 @@ class BoundaryLayer extends React.Component {
       );
       this.hoveredRegionId = null;
     }
-  };
+  }
 
-  selectRegion = (regionId) => {
-    if (!regionId || regionId === this.selectedRegionId) return;
+  selectRegion = regionId => {
+    if (!regionId || regionId === this.selectedRegionId)
+      return;
 
     if (this.selectedRegionId)
       this.map.setFeatureState(
@@ -192,19 +199,19 @@ class BoundaryLayer extends React.Component {
       { selected: true }
     );
 
-    this.map.setPaintProperty(`${this.sourceId}-borders`, "line-width", [
-      "case",
-      ["boolean", ["feature-state", "selected"], false],
+    this.map.setPaintProperty(`${this.sourceId}-borders`, 'line-width', [
+      'case',
+      ['boolean', ['feature-state', 'selected'], false],
       BOUNDARY_WIDTH,
-      0,
+      0
     ]);
 
     // get the region geo
     // notice double-equals because id is a number when it comes from CONSTANTS,
     // but a string in the geojson
-    let geo = this.sourceData.features.find(
-      (el) => el.properties[this.idProperty] == this.selectedRegionId
-    );
+    let geo = this.sourceData.features.find(el => (
+      el.properties[this.idProperty] == this.selectedRegionId
+    ));
 
     geo = removeGeoHoles(geo);
 
@@ -212,21 +219,17 @@ class BoundaryLayer extends React.Component {
     this.map.fitBounds(boundingBox(geo), { padding: FIT_BOUNDS_PADDING });
 
     // mask everything else
-    try {
-      this.map
-        .getSource(`${this.sourceId}-region-mask`)
-        .setData(makeGeoMask(geo));
-    } catch (err) {
-      console.log("failed to update region mask");
-      console.log(err);
-    }
+    this.map
+      .getSource(`${this.sourceId}-region-mask`)
+      .setData(makeGeoMask(geo));
 
     // inform main
     this.onSelectRegion(geo);
-  };
+  }
 
   clearSelectedRegion = () => {
-    if (!this.selectedRegionId) return;
+    if (!this.selectedRegionId)
+      return;
 
     this.map.setFeatureState(
       { source: this.sourceId, id: this.selectedRegionId },
@@ -236,29 +239,24 @@ class BoundaryLayer extends React.Component {
     setTimeout(() => {
       this.map.setPaintProperty(
         `${this.sourceId}-borders`,
-        "line-width",
-        BOUNDARY_WIDTH
+        'line-width',
+        BOUNDARY_WIDTH,
       );
     });
 
-    try {
-      this.map.getSource(`${this.sourceId}-region-mask`).setData(emptyGeo());
-    } catch (err) {
-      console.log("failed to clear selected region");
-      console.log(err);
-    }
+    this.map.getSource(`${this.sourceId}-region-mask`).setData(emptyGeo());
 
     this.selectedRegionId = null;
-  };
+  }
 
-  setVisibility = (visible) => {
-    const value = visible ? "visible" : "none";
+  setVisibility = visible => {
+    const value = visible ? 'visible' : 'none';
     [
       `${this.sourceId}-borders`,
       `${this.sourceId}-fills`,
       `${this.sourceId}-region-mask-fill`,
-    ].forEach((layerId) => {
-      this.map.setLayoutProperty(layerId, "visibility", value);
+    ].forEach(layerId => {
+      this.map.setLayoutProperty(layerId, 'visibility', value);
     });
   };
 
@@ -271,10 +269,10 @@ export default BoundaryLayer;
 
 BoundaryLayer.propTypes = {
   visible: PropTypes.bool,
-  boundaryStyle: PropTypes.oneOf(["light", "dark"]),
+  boundaryStyle: PropTypes.oneOf(['light', 'dark']),
 };
 
 BoundaryLayer.defaultProps = {
   visible: false,
-  boundaryStyle: "light",
+  boundaryStyle: 'light',
 };
