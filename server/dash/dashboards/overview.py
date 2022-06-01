@@ -1,9 +1,7 @@
 import textwrap
 
- 
 import dash_core_components as dcc
 import dash_html_components as html
-# from dash import Dash, html, dcc
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -14,12 +12,6 @@ from design import CONFIG_OPTIONS
 from design import DISCRETE_COLORS
 from design import LABELS
 from design import DISCRETE_COLORS_MAP
-
-
-
-#TODO: Remove this after testing
-# app = Dash(__name__)
-
 
 
 # TITLE
@@ -104,11 +96,11 @@ print(df3['type_name'])
 print(" * TESTING IF CHANGES ARE ACTUALLY DEPLOYED ON DOCKER")
 fig3 = px.pie(
     df3,
-    names='type_name',
-    values='counts',
+    names="type_name",
+    values="counts",
     color_discrete_sequence=DISCRETE_COLORS,
-    color = 'type_name',
-    color_discrete_map = DISCRETE_COLORS_MAP,
+    color="type_name",
+    color_discrete_map=DISCRETE_COLORS_MAP,
     labels=LABELS,
     hole=.3,
     title="Total Requests by Type",
@@ -153,7 +145,6 @@ apply_figure_style(fig6)
 
 
 # LAYOUT
-# app.layout = html.Div([
 layout = html.Div([
     html.H1(title),
     html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests.", style={'padding':'20px', 'font-size':'18px', 'font-style':'italic'}),
@@ -205,6 +196,3 @@ layout = html.Div([
         responsive=True,
     ),
 ])
-
-# if __name__ == '__main__':
-#     app.run_server(debug=True)
