@@ -48,7 +48,6 @@ CONFIG_OPTIONS = {
 
 
 # Request Type Color Hex Code Reference: https://github.com/hackforla/311-data/blob/b0717ad25eab4ef25a2f26da187d9d8905ab5f77/server/api/alembic/seeds/types.csv
-# Need to add another discrete color
 DISCRETE_COLORS_MAP = {
     "Graffiti":"#BF82BA",
     "Homeless Encampment":"#11975F",
