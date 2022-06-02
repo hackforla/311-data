@@ -8,6 +8,6 @@ type_id,type_name,agency_id,color,description,data_code
 7,Metal/Appliances,2,#8B508B,"Air conditioners, dryers, refrigerator and more...",Metal/Household Appliances
 8,Single Streetlight,1,#79B74E,"Pole knocked down, streetlight outage on a wooden power pole, or malfunctioning traffic signal",Single Streetlight Issue
 9,Multiple Streetlights,1,#EDAD08,"Multiple poles knocked down, streetlight outages on wooden power poles, or malfunctioning traffic signals",Multiple Streetlight Issue
-10,Water Waste,1,#EDAD08,"Water runoff, over-watering, incorrect water days, or any other water waste ",Report Water Waste
+10,Water Waste,1,#DCED08,"Water runoff, over-watering, incorrect water days, or any other water waste ",Report Water Waste
 11,Other,0,#1D6996,Issues that do not fit into any of the other available types,Other
 12,Feedback,0,#E17C05,Either follow up on other issues or something that doesn't fit into the other types,Feedback
