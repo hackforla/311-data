@@ -90,10 +90,6 @@ print(" * Downloading data for dataframe")
 query_string = "/reports?field=type_name&filter=created_date>=2016-01-01"
 df3 = pd.read_json(API_HOST + query_string)
 df3 = df3.groupby(['type_name'], as_index=False)['counts'].sum()
-#df3 = df3.groupby(['type_name'])['counts'].sum().to_frame()
-#df3.index = df3.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
-print(df3['type_name'])
-print(" * TESTING IF CHANGES ARE ACTUALLY DEPLOYED ON DOCKER")
 fig3 = px.pie(
     df3,
     names="type_name",
