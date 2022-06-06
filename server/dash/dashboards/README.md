@@ -31,10 +31,8 @@ gunicorn --bind 0.0.0.0:5500 --timeout 300 --workers 2 index:server --reload
 # View a dashboard in your browser.
 open http://localhost:5500/dashboards/overview
 
-# To view your changes, edit a file and save it.
-# The server will log something like "Worker reloading: <file> modified."
-# Wait until it says "Report Server ready" again, and
-# then you can refresh the dash webpage and see your changes.
+# To view your changes, edit a file and save it. The server will log something like "Worker reloading: <file> modified."
+# Wait until it says "Report Server ready" again, and then you can refresh the dash webpage and see your changes.
 ```
 
 When you have the dashboard completed, you should follow the standard Git workflow of committing, pushing, and issuing a pull request. Note that there are several pre-commit hooks that will run before you can merge. Once your PR is accepted, your changes will automatically be merged to dev and a new Dash Docker image will be published.
