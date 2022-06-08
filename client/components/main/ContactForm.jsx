@@ -58,7 +58,7 @@ const ContactForm = () => {
           { state.succeeded
               && (
                 <div>
-                  Thank you for signing up! We will get back to you in 2-3 business days.
+                  Thanks for contacting us! We will get back to you in 2-3 business days.
                 </div>
               )}
           { !state.succeeded
