@@ -1,6 +1,10 @@
-# The 311 Data project
+# [311 Data](https://www.311-data.org/)
 
-Empowering Los Angeles neighborhood councils to analyze initiatives using data collected from the city 311 system.
+Each day, Los Angelenos report thousands of 311 requests all across LA to resolve issues such as illegal dumping and graffiti in their neighborhoods. These requests are then received by relevant agencies, such as the Police, Building and Safety, or Department of Transportation. The agency responds to the request, addresses it, and then closes it once it is fixed. Thanks to Mayor Eric Garcetti's [Open Data Initiative](https://data.lacity.org/), the expansive amount of data associated with these 311 requests is available online.
+
+To empower local residents and [Neighborhood Councils](https://empowerla.org/councils/) to make informed decisions about how to improve their communities using an easy-to-use application, [Hack For LA](https://www.hackforla.org/) partnered with [EmpowerLA](https://empowerla.org/) to create the [311 Data project](https://www.hackforla.org/projects/311-data). 311 Data makes navigating the wealth of 311 data easier using an open source application built and maintained by volunteers throughout our community. To that end, 311 Data primarily provides two types of visualization:
+* An interactive map showing where different types of 311 requests are being submitted
+* Dashboards that show what types of requests are being made, how quickly they're being resolved, how different councils compare, and more
 
 ![311 Screenshot](docs/images/screenshot.png)
 
