@@ -60,7 +60,7 @@ DISCRETE_COLORS_MAP = {
     "Metal/Appliances": "#8B508B",
     "Single Streetlight": "#79B74E",
     "Multiple Streetlights": "#EDAD08",
-    "Water Waste": "#DCED08",
+    "Water Waste": "#EDAD08",
      "Other": "#1D6996",
      "Feedback":  "#E17C05"
 }
