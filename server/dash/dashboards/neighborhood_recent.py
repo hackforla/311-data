@@ -103,7 +103,7 @@ layout = html.Div([
         placeholder="Select a neighborhood",
         options=populate_options()
     ),
-    html.Div(f"{selected_council} weekly report ({start_date.strftime('%b %d')} to {end_date.strftime('%b %d')})"),  # noqa
+    html.Div(f"Weekly report ({start_date.strftime('%b %d')} to {end_date.strftime('%b %d')})"),  # noqa
     html.Div([
         html.Div(
             [html.H2(id="created_txt"), html.Label("New Requests")],
