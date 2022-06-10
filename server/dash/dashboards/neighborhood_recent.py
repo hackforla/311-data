@@ -174,7 +174,6 @@ def update_table(selected_council):
     Input("council_list", "value")
 )
 def update_text(selected_council):
-    print(selected_council)
     create_count = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'")['srnumber'].count()  # noqa
     close_count = df.query(f"councilName == '{selected_council}' and closedDate >= '{start_date}'")['srnumber'].count()  # noqa
     return create_count, close_count, create_count - close_count
