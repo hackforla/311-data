@@ -51,30 +51,26 @@ layout = html.Div([
         placeholder="Select a neighborhood",
         options=populate_options()
     ),
-    dcc.Dropdown(
-        id='data_type',
-        clearable=False,
-        placeholder="Select a timeframe",
-        options=[
-            {'label': 'Compare to: Daily Council Average', 'value': 'nc_avg'},
-            {'label': 'Compare to: Weekly Council Average', 'value': 'nc_avg_wk'},
-            {'label': 'Compare to: Monthly Council Average', 'value': 'nc_avg_Mo'},
-        ],
-
-        value='nc_avg'
-    ),
     dcc.Graph(
         id='graph1',
         figure=fig,
         config=CONFIG_OPTIONS
     ),
-
+    dcc.RadioItems(
+        id='data_type',
+        options=[
+            {'label': 'Daily Council Average', 'value': 1},
+            {'label': 'Weekly Council Average', 'value': 7},
+            {'label': 'Monthly Council Average', 'value': 30},
+        ],
+        value=1
+    ),
     dcc.Graph(
         id='graph2',
         figure=fig,
         config=CONFIG_OPTIONS
     )
-], style={'width': '49%', 'display': 'inline-block'})
+],style={'width': '49%', 'display': 'inline-block'})
 
 
 # Define callback to update graph
@@ -85,18 +81,23 @@ layout = html.Div([
 )
 def update_figure(selected_council, select_timeframe):
     neighborhood_sum_df = df[df.council_name == selected_council].groupby(['created_date']).agg('sum').reset_index()  # noqa
-
     total_sum_df = df.groupby(['created_date']).agg('sum').reset_index()
 
-    total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
 
-    total_sum_df["week_n"] = total_sum_df['created_date'].apply(lambda x: str(x.isocalendar()[1]))
-    total_sum_df["month_n"] = total_sum_df['created_date'].dt.month
 
-    total_sum_df['nc_avg_Mo'] = total_sum_df.groupby(['month_n'])['counts'].transform('mean')
-    total_sum_df['nc_avg_Mo'] = total_sum_df['nc_avg_Mo'] / 99
-    total_sum_df['nc_avg_wk'] = total_sum_df.groupby(['week_n'])['counts'].transform('mean')
-    total_sum_df['nc_avg_wk'] = total_sum_df['nc_avg_wk'] / 99
+
+    #total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
+
+    #total_sum_df["week_n"] = total_sum_df['created_date'].apply(lambda x: str(x.isocalendar()[1]))
+    #total_sum_df["month_n"] = total_sum_df['created_date'].dt.month
+
+    #total_sum_df['nc_avg_Mo'] = total_sum_df.groupby(['month_n'])['counts'].transform('mean')
+    #total_sum_df['nc_avg_Mo'] = total_sum_df['nc_avg_Mo'] / 99
+    total_sum_df['nc_ma'] = total_sum_df.counts.rolling(select_timeframe).mean()/99
+    #total_sum_df['nc_avg_wk'] = total_sum_df.groupby(['week_n'])['counts'].transform('mean')
+    #total_sum_df['nc_avg_wk'] = total_sum_df['nc_avg_wk'] / 99
+    neighborhood_sum_df['select_nc_ma'] = neighborhood_sum_df.counts.rolling(select_timeframe).mean()
+    
     merged_df = pd.merge(neighborhood_sum_df, total_sum_df, on=["created_date", "created_date"])
     
 
@@ -104,11 +105,14 @@ def update_figure(selected_council, select_timeframe):
     fig = px.line(
         merged_df,
         x="created_date",
-        y=['counts_x', select_timeframe],
+        y=['select_nc_ma', 'nc_ma'],
         color_discrete_sequence=DISCRETE_COLORS,
         title="Comparison trend for " + selected_council
     )
-    newnames = {"counts_x": "Count of 311 Requests", "nc_avg_Mo": "Monthly Council Average", "nc_avg_wk": "Weekly Council Average", "nc_avg": "Daily Council Average"}
+    newnames = {
+        "select_nc_ma": "Daily 311 Requests (" + selected_council + ")", 
+        "nc_ma": "Average Daily 311 Requests (99 Neighborhood Councils)"
+    }
     fig.for_each_trace(lambda t: t.update(name = newnames[t.name],
                                       legendgroup = newnames[t.name],
                                       hovertemplate = t.hovertemplate.replace(t.name, newnames[t.name])
@@ -119,9 +123,21 @@ def update_figure(selected_council, select_timeframe):
         tickformat="%a\n%m/%d",
     )
 
+    fig.update_yaxes(
+        rangemode="tozero"
+    )
+
     fig.update_traces(
         mode='markers+lines'
     )  # add markers to lines
+
+    fig.update_layout(legend=dict(
+    orientation="h",
+    yanchor="bottom",
+    y=1.12,
+    xanchor="right",
+    x=0.69
+))
 
     apply_figure_style(fig)
 
