@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     height: `calc(100vh - ${theme.header.height} - ${theme.footer.height})`,
     width: '100vw',
-    backgroundColor: 'black',
+    backgroundColor: '#1a1a1a',
   },
   backdrop: {
     position: 'absolute',
