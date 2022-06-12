@@ -83,19 +83,7 @@ def update_figure(selected_council, select_timeframe):
     neighborhood_sum_df = df[df.council_name == selected_council].groupby(['created_date']).agg('sum').reset_index()  # noqa
     total_sum_df = df.groupby(['created_date']).agg('sum').reset_index()
 
-
-
-
-    #total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
-
-    #total_sum_df["week_n"] = total_sum_df['created_date'].apply(lambda x: str(x.isocalendar()[1]))
-    #total_sum_df["month_n"] = total_sum_df['created_date'].dt.month
-
-    #total_sum_df['nc_avg_Mo'] = total_sum_df.groupby(['month_n'])['counts'].transform('mean')
-    #total_sum_df['nc_avg_Mo'] = total_sum_df['nc_avg_Mo'] / 99
     total_sum_df['nc_ma'] = total_sum_df.counts.rolling(select_timeframe).mean()/99
-    #total_sum_df['nc_avg_wk'] = total_sum_df.groupby(['week_n'])['counts'].transform('mean')
-    #total_sum_df['nc_avg_wk'] = total_sum_df['nc_avg_wk'] / 99
     neighborhood_sum_df['select_nc_ma'] = neighborhood_sum_df.counts.rolling(select_timeframe).mean()
     
     merged_df = pd.merge(neighborhood_sum_df, total_sum_df, on=["created_date", "created_date"])
