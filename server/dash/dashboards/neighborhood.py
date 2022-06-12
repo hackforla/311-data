@@ -42,8 +42,6 @@ def populate_options():
         )
     return values
 
-print(populate_options())
-
 layout = html.Div([
     html.H1(title),
     dcc.Dropdown(
@@ -76,7 +74,7 @@ layout = html.Div([
         figure=fig,
         config=CONFIG_OPTIONS
     )
-])
+], style={'width': '49%', 'display': 'inline-block'})
 
 
 # Define callback to update graph
