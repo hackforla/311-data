@@ -59,9 +59,9 @@ layout = html.Div([
     dcc.RadioItems(
         id='data_type',
         options=[
-            {'label': 'Daily Council Average', 'value': 1},
-            {'label': 'Weekly Council Average', 'value': 7},
-            {'label': 'Monthly Council Average', 'value': 30},
+            {'label': '1 Day', 'value': 1},
+            {'label': '7 Day', 'value': 7},
+            {'label': '30 Day', 'value': 30},
         ],
         value=1
     ),
@@ -70,7 +70,7 @@ layout = html.Div([
         figure=fig,
         config=CONFIG_OPTIONS
     )
-],style={'width': '49%', 'display': 'inline-block'})
+]
 
 
 # Define callback to update graph
