@@ -42,36 +42,6 @@ def populate_options():
         )
     return values
 
-layout = html.Div([
-    html.H1(title),
-    dcc.Dropdown(
-        id='council_list',
-        clearable=False,
-        value="Arleta",
-        placeholder="Select a neighborhood",
-        options=populate_options()
-    ),
-    dcc.Graph(
-        id='graph1',
-        figure=fig,
-        config=CONFIG_OPTIONS
-    ),
-    dcc.RadioItems(
-        id='data_type',
-        options=[
-            {'label': '1 Day', 'value': 1},
-            {'label': '7 Day', 'value': 7},
-            {'label': '30 Day', 'value': 30},
-        ],
-        value=1
-    ),
-    dcc.Graph(
-        id='graph2',
-        figure=fig,
-        config=CONFIG_OPTIONS
-    )
-]
-
 
 # Define callback to update graph
 @app.callback(
@@ -88,18 +58,20 @@ def update_figure(selected_council, select_timeframe):
     
     merged_df = pd.merge(neighborhood_sum_df, total_sum_df, on=["created_date", "created_date"])
     
-
-    
     fig = px.line(
         merged_df,
         x="created_date",
         y=['select_nc_ma', 'nc_ma'],
         color_discrete_sequence=DISCRETE_COLORS,
-        title="Comparison trend for " + selected_council
+        labels={
+            "created_date": "311 Request Date",
+            "value": "Total Requests"
+                },
+        title=selected_council + " vs 99 Neighborhood Councils 311 Requests Average"
     )
     newnames = {
-        "select_nc_ma": "Daily 311 Requests (" + selected_council + ")", 
-        "nc_ma": "Average Daily 311 Requests (99 Neighborhood Councils)"
+        "select_nc_ma": selected_council, 
+        "nc_ma": "99 Neighborhood Councils Average"
     }
     fig.for_each_trace(lambda t: t.update(name = newnames[t.name],
                                       legendgroup = newnames[t.name],
@@ -118,14 +90,6 @@ def update_figure(selected_council, select_timeframe):
     fig.update_traces(
         mode='markers+lines'
     )  # add markers to lines
-
-    fig.update_layout(legend=dict(
-    orientation="h",
-    yanchor="bottom",
-    y=1.12,
-    xanchor="right",
-    x=0.69
-))
 
     apply_figure_style(fig)
 
@@ -163,3 +127,52 @@ def update_council_figure(selected_council):
     apply_figure_style(fig)
 
     return fig
+
+
+layout = html.Div(children=[
+    
+    html.Div([
+        html.H1(title),
+        dcc.Dropdown(
+            id='council_list',
+            clearable=False,
+            value="Arleta",
+            placeholder="Select a neighborhood",
+            options=populate_options()
+        ),
+    ]),
+
+    html.Div(children=[
+        dcc.Graph(
+            id='graph1',
+            figure=fig,                
+            config=CONFIG_OPTIONS
+        ),
+    ]),
+
+    html.Div([
+        html.Div(children=[
+            html.Label('Moving Average Time Frame'),
+        ], style={'padding': 10, 'flex': 1}),
+        html.Div(children=[
+            dcc.RadioItems(
+                id='data_type',
+                options=[
+                    {'label': '1 Day', 'value': 1},
+                    {'label': '7 Day', 'value': 7},
+                    {'label': '30 Day', 'value': 30},
+                ],
+                value=1.
+            ),
+        ], style={'padding': 10, 'flex': 1}),
+    ], style={'display': 'flex', 'flex-direction': 'row'}),
+
+    html.Div([
+        dcc.Graph(
+            id='graph2',
+            figure=fig,
+            config=CONFIG_OPTIONS
+        ),
+    ]),
+])
+
