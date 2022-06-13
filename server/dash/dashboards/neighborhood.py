@@ -165,8 +165,8 @@ layout = html.Div(children=[
 
     html.Div([
         html.Div(children=[
-            html.Label('Moving Average Time Frame'),
-        ], style={'padding': 10, 'flex': 1}),
+            html.Label('Moving Average Time Window:'),
+        ], style={'width': "14%", 'display': 'inline-block'}),
         html.Div(children=[
             dcc.RadioItems(
                 id='data_type',
@@ -177,8 +177,8 @@ layout = html.Div(children=[
                 ],
                 value=1.
             ),
-        ], style={'padding': 10, 'flex': 1}),
-    ], style={'display': 'flex', 'flex-direction': 'row'}),
+        ], style={'width': "15%", 'display': 'inline-block'}),
+    ]),
 
     html.Div([
         dcc.Graph(
