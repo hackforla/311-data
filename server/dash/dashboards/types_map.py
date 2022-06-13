@@ -2,18 +2,15 @@ import datetime
 import json
 from urllib.request import urlopen
 
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc, html, callback
 import pandas as pd
 import plotly.express as px
-from dash.dependencies import Input
-from dash.dependencies import Output
+from dash.dependencies import Input, Output
 
-from app import app
+# from app import app
 from config import API_HOST
-from design import apply_figure_style
-from design import CONFIG_OPTIONS
-from design import LABELS
+from design import CONFIG_OPTIONS, LABELS, apply_figure_style
+
 
 
 # TITLE
@@ -43,21 +40,20 @@ def populate_options():
 layout = html.Div([
     html.H1(title),
     dcc.Dropdown(
-        id="types",
+        id="typesMapReqtypes",
         clearable=False,
         value="Illegal Dumping",
         placeholder="Select a type",
         searchable=False,
         options=populate_options(),
     ),
-    dcc.Graph(id="choropleth", config=CONFIG_OPTIONS, className="hidden-graph"),
+    dcc.Graph(id="reqTypeChoroplethGraph", config=CONFIG_OPTIONS, className="hidden-graph"),
 ])
 
 
-@app.callback(
-    Output("choropleth", "figure"),
-    Output("choropleth", "className"),
-    [Input("types", "value")]
+@callback(
+    Output("reqTypeChoroplethGraph", "figure"),
+    [Input("typesMapReqtypes", "value")]
 )
 def display_choropleth(selected_value):
     fig = px.choropleth(
@@ -90,4 +86,4 @@ def display_choropleth(selected_value):
         colorbar_len=0.3,
     )
     apply_figure_style(fig)
-    return fig, "visible-graph"
+    return fig

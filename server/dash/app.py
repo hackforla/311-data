@@ -1,14 +1,12 @@
 import json
 import urllib
 
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import Dash, html, dcc
 import pandas as pd
 
 
 external_stylesheets = ['/static/reports.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 # set up default layout
 app.layout = html.Div([

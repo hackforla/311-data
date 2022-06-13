@@ -1,20 +1,13 @@
 import textwrap
 
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import Dash, dcc, html, callback
 import pandas as pd
 import plotly.express as px
-from dash.dependencies import Input
-from dash.dependencies import Output
+from dash.dependencies import Input, Output
 
-from app import app
+# from app import app
 from config import API_HOST
-from design import apply_figure_style
-from design import CONFIG_OPTIONS
-from design import DISCRETE_COLORS
-from design import DISCRETE_COLORS_MAP
-from design import LABELS
-
+from design import CONFIG_OPTIONS,  DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
 
 # TITLE
 title = "NEIGHBORHOODS"
@@ -41,13 +34,37 @@ def populate_options():
     return values
 
 
+layout = html.Div([
+    html.H1(title),
+    dcc.Dropdown(
+        id='council_list',
+        clearable=False,
+        value="Arleta",
+        placeholder="Select a neighborhood",
+        options=populate_options()
+    ),
+    dcc.Graph(
+        id='ncAvgCompLineChart',
+        figure=fig,
+        config=CONFIG_OPTIONS
+    ),
+    dcc.Graph(
+        id='ncNumReqTypeLineChart',
+        figure=fig,
+        config=CONFIG_OPTIONS
+    )
+])
+
+
+
+
+
 # Define callback to update graph
-@app.callback(
-    Output('graph1', 'figure'),
+@callback(
+    Output('ncAvgCompLineChart', 'figure'),
     [Input("council_list", "value")]
 )
 def update_figure(selected_council):
-
     neighborhood_sum_df = df[df.council_name == selected_council].groupby(['created_date']).agg('sum').reset_index()  # noqa
     total_sum_df = df.groupby(['created_date']).agg('sum').reset_index()
     total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
@@ -59,7 +76,7 @@ def update_figure(selected_council):
         y=['counts', 'nc_avg'],
         color_discrete_sequence=DISCRETE_COLORS,
         labels=LABELS,
-        title="Comparison trend for " + selected_council
+        title= "Number of " + selected_council + " Requests compare with the average of all Neighborhood Councils requests"
     )
 
     fig.update_xaxes(
@@ -76,8 +93,8 @@ def update_figure(selected_council):
 
 
 # Define callback to update graph
-@app.callback(
-    Output('graph2', 'figure'),
+@callback(
+    Output('ncNumReqTypeLineChart', 'figure'),
     [Input("council_list", "value")]
 )
 def update_council_figure(selected_council):
@@ -93,7 +110,7 @@ def update_council_figure(selected_council):
         color_discrete_sequence=DISCRETE_COLORS,
         color_discrete_map=DISCRETE_COLORS_MAP,
         labels=LABELS,
-        title="Request type trend for " + selected_council
+        title="Number of Different Requests Types for " + selected_council
     )
 
     fig.update_xaxes(
@@ -109,23 +126,3 @@ def update_council_figure(selected_council):
     return fig
 
 
-layout = html.Div([
-    html.H1(title),
-    dcc.Dropdown(
-        id='council_list',
-        clearable=False,
-        value="Arleta",
-        placeholder="Select a neighborhood",
-        options=populate_options()
-    ),
-    dcc.Graph(
-        id='graph1',
-        figure=fig,
-        config=CONFIG_OPTIONS
-    ),
-    dcc.Graph(
-        id='graph2',
-        figure=fig,
-        config=CONFIG_OPTIONS
-    )
-])

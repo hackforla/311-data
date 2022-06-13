@@ -1,17 +1,12 @@
 import textwrap
 
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc, html
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
 from config import API_HOST
-from design import apply_figure_style
-from design import CONFIG_OPTIONS
-from design import DISCRETE_COLORS
-from design import LABELS
-from design import DISCRETE_COLORS_MAP
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
 
 
 # TITLE
@@ -23,13 +18,13 @@ print(" * Downloading data for dataframe")
 query_string = "/reports?field=council_name&filter=created_date>=2016-01-01"
 df1 = pd.read_json(API_HOST + query_string)
 df1 = df1.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
-fig1 = px.bar(
+reqByNcBarChart = px.bar(
     df1,
     x=df1.index,
     y='counts',
     color_discrete_sequence=DISCRETE_COLORS,
     labels=LABELS,
-    title="Total Requests by Neighborhood",
+    title="Total Requests by Neighborhood Councils",
 )
 
 # year totals figure
@@ -37,7 +32,7 @@ print(" * Downloading data for dataframe")
 query_string = "/reports?field=created_year&filter=created_date>=2016-01-01"
 df2 = pd.read_json(API_HOST + query_string)
 df2 = df2.groupby(['created_year'])['counts'].sum().to_frame()
-fig2 = px.bar(
+numReqByYearBarChart = px.bar(
     df2,
     x=df2.index,
     y='counts',
@@ -57,7 +52,7 @@ df5.sort_values('counts', ascending=False, inplace=True)
 df5 = df5[:5]
 df5.index = df5.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
 
-fig5 = px.pie(
+shareReqByAgencyPieChart = px.pie(
     df5,
     names=df5.index,
     values='counts',
@@ -76,7 +71,7 @@ df6.sort_values('counts', ascending=False, inplace=True)
 df6.loc['Others'] = df6[4:].sum()
 df6.sort_values('counts', ascending=False, inplace=True)
 df6 = df6[:5]
-fig6 = px.bar(
+reqSourceBarchart = px.bar(
     df6,
     x=df6.index,
     y='counts',
@@ -90,7 +85,7 @@ print(" * Downloading data for dataframe")
 query_string = "/reports?field=type_name&filter=created_date>=2016-01-01"
 df3 = pd.read_json(API_HOST + query_string)
 df3 = df3.groupby(['type_name'], as_index=False)['counts'].sum()
-fig3 = px.pie(
+reqTypeSharePieChart = px.pie(
     df3,
     names="type_name",
     values="counts",
@@ -106,9 +101,9 @@ fig3 = px.pie(
 stas_df = pd.read_json(API_HOST + '/types/stats')
 stas_df = stas_df.sort_values('median', ascending=False)
 
-fig4 = go.Figure()
+medDaysToCloseBoxPlot = go.Figure()
 
-fig4.add_trace(
+medDaysToCloseBoxPlot.add_trace(
     go.Box(
         y=stas_df.type_name,
         q1=stas_df['q1'],
@@ -119,22 +114,22 @@ fig4.add_trace(
     )
 )
 
-fig4.update_xaxes(
+medDaysToCloseBoxPlot.update_xaxes(
     
     dtick=5
 )
 
-fig4.update_layout(
+medDaysToCloseBoxPlot.update_layout(
     title="Total Median Days to Close by Type",
 )
 
 # apply shared styles
-apply_figure_style(fig1)
-apply_figure_style(fig2)
-apply_figure_style(fig3)
-apply_figure_style(fig4)
-apply_figure_style(fig5)
-apply_figure_style(fig6)
+apply_figure_style(reqByNcBarChart)
+apply_figure_style(numReqByYearBarChart)
+apply_figure_style(reqTypeSharePieChart)
+apply_figure_style(medDaysToCloseBoxPlot)
+apply_figure_style(shareReqByAgencyPieChart)
+apply_figure_style(reqSourceBarchart)
 
 # LAYOUT
 layout = html.Div([
@@ -147,43 +142,43 @@ layout = html.Div([
     ], className="graph-row"),
     html.Div([
         dcc.Graph(
-            id='graph2',
-            figure=fig2,
+            id='numReqByYearBarChart',
+            figure=numReqByYearBarChart,
             config=CONFIG_OPTIONS,
             className="half-graph"
         ),
         dcc.Graph(
-            id='graph3',
-            figure=fig3,
+            id='reqTypeSharePieChart',
+            figure=reqTypeSharePieChart,
             config=CONFIG_OPTIONS,
             className="half-graph"
         )],
         className="graph-row"),
     dcc.Graph(
-        id='graph4',
-        figure=fig4,
+        id='medDaysToCloseBoxPlot',
+        figure=medDaysToCloseBoxPlot,
         config=CONFIG_OPTIONS,
         responsive=True,
     ),
     html.Div([
         dcc.Graph(
-            id='graph5',
-            figure=fig5,
+            id='shareReqByAgencyPieChart',
+            figure=shareReqByAgencyPieChart,
             config=CONFIG_OPTIONS,
             className="half-graph",
             responsive=True,
         ),
         dcc.Graph(
-            id='graph6',
-            figure=fig6,
+            id='reqSourceBarchart',
+            figure=reqSourceBarchart,
             config=CONFIG_OPTIONS,
             className="half-graph",
             responsive=True,
         )],
         className="graph-row"),
     dcc.Graph(
-        id='graph1',
-        figure=fig1,
+        id='reqByNcBarChart',
+        figure=reqByNcBarChart,
         config=CONFIG_OPTIONS,
         responsive=True,
     ),

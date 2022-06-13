@@ -1,12 +1,12 @@
 import datetime
 import textwrap
+import json
+import urllib
 
-import dash_core_components as dcc
-import dash_html_components as html
-import dash_table
+from dash import dcc, html, dash_table, callback
 import pandas as pd
 import plotly.express as px
-from app import app, batch_get_data
+#from app import app, batch_get_data
 from config import API_HOST
 from dash.dependencies import Input, Output
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
@@ -31,6 +31,33 @@ title = "NEIGHBORHOOD WEEKLY REPORT"
 # DATA
 df_path = f"/requests/updated?start_date={start_date}&end_date={end_date}"
 print(" * Downloading data for dataframe")
+
+BATCH_SIZE = 10000
+
+def batch_get_data(url):
+    # set up your query
+    if '?' in url:
+        batch_url = f"{url}&limit={BATCH_SIZE}"
+    else:
+        batch_url = f"{url}?limit={BATCH_SIZE}"
+
+    response_size = BATCH_SIZE
+    result_list = []
+    skip = 0
+
+    # loop through query results and add to a list (better performance!)
+    while (response_size == BATCH_SIZE):
+        batch = json.loads(urllib.request.urlopen(f"{batch_url}&skip={skip}").read())
+        result_list.extend(batch)
+        response_size = len(batch)
+        skip = skip + BATCH_SIZE
+
+    # convert JSON object list to dataframe
+    df = pd.DataFrame.from_records(result_list)
+
+    return df
+
+
 df = batch_get_data(API_HOST + df_path)
 df['createdDate'] = pd.to_datetime(
     df['createdDate'], errors='coerce').dt.strftime('%Y-%m-%d')
@@ -106,31 +133,31 @@ layout = html.Div([
     html.Div(f"Weekly report ({start_date.strftime('%b %d')} to {end_date.strftime('%b %d')})"),  # noqa
     html.Div([
         html.Div(
-            [html.H2(id="created_txt"), html.Label("New Requests")],
+            [html.H2(id="numNewRequests"), html.Label("New Requests")],
             className="stats-label"
         ),
         html.Div(
-            [html.H2(id="closed_txt"), html.Label("Closed Requests")],
+            [html.H2(id="numClosedRequests"), html.Label("Closed Requests")],
             className="stats-label"
         ),
         html.Div(
-            [html.H2(id="net_txt"), html.Label("Net Change")],
+            [html.H2(id="closeMinusNew"), html.Label("Net Change")],
             className="stats-label"
         ),
     ], className="graph-row"),
     html.Div([
         html.Div(
-            dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
+            dcc.Graph(id='newRequestsLineChart', figure=fig, config=CONFIG_OPTIONS),
             className="half-graph"
         ),
         html.Div(
-            dcc.Graph(id='pie_graph', figure=pie_fig, config=CONFIG_OPTIONS),
+            dcc.Graph(id='neighRecentReqTypePieChart', figure=pie_fig, config=CONFIG_OPTIONS),
             className="half-graph"
         )
     ]),
     html.Div(
         dash_table.DataTable(
-            id='council_table',
+            id='neighCouncilTbl',
             columns=[
                 {"name": pretty_columns[i], "id": i} for i in table_df.columns
             ],
@@ -156,8 +183,8 @@ layout = html.Div([
 
 
 # Define callback to update graph
-@app.callback(
-    Output("council_table", "data"),
+@callback(
+    Output("neighCouncilTbl", "data"),
     Input("council_list", "value")
 )
 def update_table(selected_council):
@@ -165,11 +192,11 @@ def update_table(selected_council):
     return table_df.to_dict('records')
 
 
-@app.callback(
+@callback(
     [
-        Output("created_txt", "children"),
-        Output("closed_txt", "children"),
-        Output("net_txt", "children"),
+        Output("numNewRequests", "children"),
+        Output("numClosedRequests", "children"),
+        Output("closeMinusNew", "children"),
     ],
     Input("council_list", "value")
 )
@@ -179,8 +206,8 @@ def update_text(selected_council):
     return create_count, close_count, create_count - close_count
 
 
-@app.callback(
-    Output("graph", "figure"),
+@callback(
+    Output("newRequestsLineChart", "figure"),
     Input("council_list", "value")
 )
 def update_figure(selected_council):
@@ -194,7 +221,7 @@ def update_figure(selected_council):
         color="typeName",
         color_discrete_sequence=DISCRETE_COLORS,
         labels=LABELS,
-        title="New Requests"
+        title="Number of new " + selected_council + " Requests"
     )
     fig.update_xaxes(
         tickformat="%a\n%m/%d",
@@ -208,8 +235,8 @@ def update_figure(selected_council):
     return fig
 
 
-@app.callback(
-    Output("pie_graph", "pie_fig"),
+@callback(
+    Output("neighRecentReqTypePieChart", "pie_fig"),
     Input("council_list", "value")
 )
 def update_council_figure(selected_council):
@@ -221,6 +248,7 @@ def update_council_figure(selected_council):
         values="srnumber",
         color_discrete_sequence=DISCRETE_COLORS,
         labels=LABELS,
+        title="Share of new requests types for " + selected_council
     )
 
     apply_figure_style(pie_fig)

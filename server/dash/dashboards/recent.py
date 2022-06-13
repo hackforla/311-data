@@ -1,8 +1,7 @@
 import datetime
 import textwrap
 
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc, html
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -27,7 +26,7 @@ report_df = df.groupby(['created_date', 'type_name']).agg('sum').reset_index()
 report_df.type_name = report_df.type_name.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
 
 # Line Graph
-fig = px.line(
+numCreatedReqLineChart = px.line(
     report_df,
     x="created_date",
     y="counts",
@@ -37,17 +36,17 @@ fig = px.line(
     labels=LABELS,
 )
 
-fig.update_xaxes(
+numCreatedReqLineChart.update_xaxes(
     tickformat="%a\n%m/%d",
 )
 
-fig.update_traces(
+numCreatedReqLineChart.update_traces(
     mode='markers+lines'
 )  # add markers to lines
 
 # Pie Chart
 pie_df = df.groupby(['type_name']).agg('sum').reset_index()
-pie_fig = px.pie(
+recentReqTypeSharePieChart = px.pie(
     pie_df,
     names="type_name",
     values="counts",
@@ -61,7 +60,7 @@ pie_fig = px.pie(
 df['created_date'] = pd.to_datetime(df['created_date'])
 dow_df = df.groupby(['created_date']).agg('sum').reset_index()
 dow_df['day_of_week'] = dow_df['created_date'].dt.day_name()
-dow_fig = px.bar(
+numReqByDayOfWeekBarChart = px.bar(
     dow_df,
     x="day_of_week",
     y="counts",
@@ -69,9 +68,9 @@ dow_fig = px.bar(
     labels=LABELS,
 )
 
-apply_figure_style(fig)
-apply_figure_style(pie_fig)
-apply_figure_style(dow_fig)
+apply_figure_style(numCreatedReqLineChart)
+apply_figure_style(recentReqTypeSharePieChart)
+apply_figure_style(numReqByDayOfWeekBarChart)
 
 # LAYOUT
 layout = html.Div([
@@ -82,9 +81,9 @@ layout = html.Div([
         html.Div([html.H2(f"{start_date.strftime('%b %d')}"), html.Label("Report Start Date")], className="stats-label"),  # noqa
         html.Div([html.H2(f"{end_date.strftime('%b %d')}"), html.Label("Report End Date")], className="stats-label"),  # noqa
     ], className="graph-row", style={'color':'white'}),
-    dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
+    dcc.Graph(id='graph', figure=numCreatedReqLineChart, config=CONFIG_OPTIONS),
     html.Div([
-        dcc.Graph(id='graph3', figure=dow_fig, config=CONFIG_OPTIONS, className="half-graph"),  # noqa
-        dcc.Graph(id='graph2', figure=pie_fig, config=CONFIG_OPTIONS, className="half-graph"),  # noqa
+        dcc.Graph(id='numReqByDayOfWeekBarChart', figure=numReqByDayOfWeekBarChart, config=CONFIG_OPTIONS, className="half-graph"),  # noqa
+        dcc.Graph(id='recentReqTypeSharePieChart', figure=recentReqTypeSharePieChart, config=CONFIG_OPTIONS, className="half-graph"),  # noqa
     ], className="graph-row"),
 ])
