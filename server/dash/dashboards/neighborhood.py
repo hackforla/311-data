@@ -42,42 +42,6 @@ def populate_options():
         )
     return values
 
-print(populate_options())
-
-layout = html.Div([
-    html.H1(title),
-    dcc.Dropdown(
-        id='council_list',
-        clearable=False,
-        value="Arleta",
-        placeholder="Select a neighborhood",
-        options=populate_options()
-    ),
-    dcc.Dropdown(
-        id='data_type',
-        clearable=False,
-        placeholder="Select a timeframe",
-        options=[
-            {'label': 'Compare to: Daily Council Average', 'value': 'nc_avg'},
-            {'label': 'Compare to: Weekly Council Average', 'value': 'nc_avg_wk'},
-            {'label': 'Compare to: Monthly Council Average', 'value': 'nc_avg_Mo'},
-        ],
-
-        value='nc_avg'
-    ),
-    dcc.Graph(
-        id='graph1',
-        figure=fig,
-        config=CONFIG_OPTIONS
-    ),
-
-    dcc.Graph(
-        id='graph2',
-        figure=fig,
-        config=CONFIG_OPTIONS
-    )
-])
-
 
 # Define callback to update graph
 @app.callback(
@@ -85,32 +49,30 @@ layout = html.Div([
     [Input("council_list", "value"),
     Input("data_type", "value")]
 )
-def update_figure(selected_council, select_timeframe):
+def update_figure(selected_council, selected_timeframe):
     neighborhood_sum_df = df[df.council_name == selected_council].groupby(['created_date']).agg('sum').reset_index()  # noqa
-
     total_sum_df = df.groupby(['created_date']).agg('sum').reset_index()
 
-    total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
-
-    total_sum_df["week_n"] = total_sum_df['created_date'].apply(lambda x: str(x.isocalendar()[1]))
-    total_sum_df["month_n"] = total_sum_df['created_date'].dt.month
-
-    total_sum_df['nc_avg_Mo'] = total_sum_df.groupby(['month_n'])['counts'].transform('mean')
-    total_sum_df['nc_avg_Mo'] = total_sum_df['nc_avg_Mo'] / 99
-    total_sum_df['nc_avg_wk'] = total_sum_df.groupby(['week_n'])['counts'].transform('mean')
-    total_sum_df['nc_avg_wk'] = total_sum_df['nc_avg_wk'] / 99
-    merged_df = pd.merge(neighborhood_sum_df, total_sum_df, on=["created_date", "created_date"])
+    total_sum_df['nc_ma'] = total_sum_df.counts.rolling(selected_timeframe, center=True).mean()/99
+    neighborhood_sum_df['select_nc_ma'] = neighborhood_sum_df.counts.rolling(selected_timeframe, center=True).mean()
     
-
+    merged_df = pd.merge(neighborhood_sum_df, total_sum_df, on=["created_date", "created_date"])
     
     fig = px.line(
         merged_df,
         x="created_date",
-        y=['counts_x', select_timeframe],
+        y=['select_nc_ma', 'nc_ma'],
         color_discrete_sequence=DISCRETE_COLORS,
-        title="Comparison trend for " + selected_council
+        labels={
+            "created_date": "311 Request Date",
+            "value": "Total Requests"
+                },
+        title=selected_council + " vs 99 Neighborhood Councils 311 Requests Average"
     )
-    newnames = {"counts_x": "Count of 311 Requests", "nc_avg_Mo": "Monthly Council Average", "nc_avg_wk": "Weekly Council Average", "nc_avg": "Daily Council Average"}
+    newnames = {
+        "select_nc_ma": selected_council, 
+        "nc_ma": "99 Neighborhood Councils Average"
+    }
     fig.for_each_trace(lambda t: t.update(name = newnames[t.name],
                                       legendgroup = newnames[t.name],
                                       hovertemplate = t.hovertemplate.replace(t.name, newnames[t.name])
@@ -121,6 +83,10 @@ def update_figure(selected_council, select_timeframe):
         tickformat="%a\n%m/%d",
     )
 
+    fig.update_yaxes(
+        rangemode="tozero"
+    )
+
     fig.update_traces(
         mode='markers+lines'
     )  # add markers to lines
@@ -128,6 +94,19 @@ def update_figure(selected_council, select_timeframe):
     apply_figure_style(fig)
 
     return fig
+"""Creates comparison graph
+
+
+    Args:
+        selected_council: The selected council from the drop down menu
+        selected_timeframe: radio button selection of time window for computing moving average
+
+
+    Returns:
+        Graph that compares the selected moving average between the chosen council and the moving average of the avg of all
+        the 99 neighborhood councils 
+
+"""
 
 
 # Define callback to update graph
@@ -161,3 +140,52 @@ def update_council_figure(selected_council):
     apply_figure_style(fig)
 
     return fig
+
+
+layout = html.Div(children=[
+    
+    html.Div([
+        html.H1(title),
+        dcc.Dropdown(
+            id='council_list',
+            clearable=False,
+            value="Arleta",
+            placeholder="Select a neighborhood",
+            options=populate_options()
+        ),
+    ]),
+
+    html.Div(children=[
+        dcc.Graph(
+            id='graph1',
+            figure=fig,                
+            config=CONFIG_OPTIONS
+        ),
+    ]),
+
+    html.Div([
+        html.Div(children=[
+            html.Label('Moving Average Time Window:'),
+        ], style={'width': "14%", 'display': 'inline-block'}),
+        html.Div(children=[
+            dcc.RadioItems(
+                id='data_type',
+                options=[
+                    {'label': '1 Day', 'value': 1},
+                    {'label': '7 Day', 'value': 7},
+                    {'label': '30 Day', 'value': 30},
+                ],
+                value=1.
+            ),
+        ], style={'width': "15%", 'display': 'inline-block'}),
+    ]),
+
+    html.Div([
+        dcc.Graph(
+            id='graph2',
+            figure=fig,
+            config=CONFIG_OPTIONS
+        ),
+    ]),
+])
+
