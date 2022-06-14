@@ -11,6 +11,7 @@ from design import apply_figure_style
 from design import CONFIG_OPTIONS
 from design import DISCRETE_COLORS
 from design import LABELS
+from design import DISCRETE_COLORS_MAP
 
 
 # TITLE
@@ -88,13 +89,14 @@ fig6 = px.bar(
 print(" * Downloading data for dataframe")
 query_string = "/reports?field=type_name&filter=created_date>=2016-01-01"
 df3 = pd.read_json(API_HOST + query_string)
-df3 = df3.groupby(['type_name'])['counts'].sum().to_frame()
-df3.index = df3.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
+df3 = df3.groupby(['type_name'], as_index=False)['counts'].sum()
 fig3 = px.pie(
     df3,
-    names=df3.index,
-    values='counts',
+    names="type_name",
+    values="counts",
     color_discrete_sequence=DISCRETE_COLORS,
+    color="type_name",
+    color_discrete_map=DISCRETE_COLORS_MAP,
     labels=LABELS,
     hole=.3,
     title="Total Requests by Type",

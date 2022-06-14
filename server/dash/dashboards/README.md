@@ -22,20 +22,22 @@ The best way to develop new dashboards is by using the development Dash image an
 These instructions assume you already have Docker installed and are on a Mac but should be easily transferrable to PC or Linux. 
 
 ```zsh
-# first make sure you're in the dash directory
+# First make sure you're in the dash directory.
 cd server/dash
 
-# get the latest development version of the dash image
+# Get the latest development version of the dash image.
 docker pull la311data/dash-poc:dev
 
-# run the dash container with a local volume
-docker run -p 5500:5500 -v "$(pwd)":/app -e PRELOAD=False la311data/dash-poc 
+# Run the dash container with a local volume and a custom command that enables reloading in gunicorn.
+docker run -p 5500:5500 -v "$(pwd):/app" -e PRELOAD=False la311data/dash-poc gunicorn --bind 0.0.0.0:5500 --timeout 300 --workers 2 index:server --reload
 
-# view a dashboard in your browser
+# View a dashboard in your browser.
 open http://localhost:5500/dashboards/overview
 
-# to test the mount is working change the title property in this dashboard and reload (JUST REMEMBER TO REVERT YOUR CHANGE!)
-# when you are done just enter Ctl+C in your terminal to stop the server
+# To view your changes, edit a file and save it.
+# The server will log something like "Worker reloading: <file> modified."
+# Wait until it says "Report Server ready" again, and
+# then you can refresh the dash webpage and see your changes.
 ```
 
 When you have the dashboard completed, you should follow the standard Git workflow of committing, pushing, and issuing a pull request. Note that there are several pre-commit hooks that will run before you can merge. Once your PR is accepted, your changes will automatically be merged to dev and a new Dash Docker image will be published.

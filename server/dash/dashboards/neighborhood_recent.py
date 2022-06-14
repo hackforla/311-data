@@ -9,7 +9,7 @@ import plotly.express as px
 from app import app, batch_get_data
 from config import API_HOST
 from dash.dependencies import Input, Output
-from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style
+from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
 from flask import request
 
 pretty_columns = {
@@ -66,6 +66,7 @@ fig = px.line(
     y="srnumber",
     color="typeName",
     color_discrete_sequence=DISCRETE_COLORS,
+    color_discrete_map=DISCRETE_COLORS_MAP,
     labels=LABELS,
 )
 
@@ -83,7 +84,9 @@ pie_fig = px.pie(
     figure_df,
     names="typeName",
     values="srnumber",
+    color="typeName",
     color_discrete_sequence=DISCRETE_COLORS,
+    color_discrete_map=DISCRETE_COLORS_MAP,
     labels=LABELS,
     hole=.3,
 )
@@ -100,7 +103,7 @@ layout = html.Div([
         placeholder="Select a neighborhood",
         options=populate_options()
     ),
-    html.Div(f"{selected_council} weekly report ({start_date.strftime('%b %d')} to {end_date.strftime('%b %d')})"),  # noqa
+    html.Div(f"Weekly report ({start_date.strftime('%b %d')} to {end_date.strftime('%b %d')})"),  # noqa
     html.Div([
         html.Div(
             [html.H2(id="created_txt"), html.Label("New Requests")],
