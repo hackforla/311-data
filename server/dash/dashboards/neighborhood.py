@@ -14,6 +14,7 @@ from design import CONFIG_OPTIONS
 from design import DISCRETE_COLORS
 from design import LABELS
 
+NEIGHBORHOOD_COUNCILS_NUMBER=99 #Number of nc in Los Angeles as of 06.2022
 
 # TITLE
 title = "NEIGHBORHOODS"
@@ -53,7 +54,7 @@ def update_figure(selected_council, selected_timeframe):
     neighborhood_sum_df = df[df.council_name == selected_council].groupby(['created_date']).agg('sum').reset_index()  # noqa
     total_sum_df = df.groupby(['created_date']).agg('sum').reset_index()
 
-    total_sum_df['nc_ma'] = total_sum_df.counts.rolling(selected_timeframe, center=True).mean()/99
+    total_sum_df['nc_ma'] = total_sum_df.counts.rolling(selected_timeframe, center=True).mean()/NEIGHBORHOOD_COUNCILS_NUMBER
     neighborhood_sum_df['select_nc_ma'] = neighborhood_sum_df.counts.rolling(selected_timeframe, center=True).mean()
     
     merged_df = pd.merge(neighborhood_sum_df, total_sum_df, on=["created_date", "created_date"])
