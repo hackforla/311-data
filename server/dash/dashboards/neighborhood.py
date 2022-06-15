@@ -43,19 +43,20 @@ def populate_options():
     [Input("council_list", "value"), Input("data_type", "value")],
 )
 def update_figure(selected_council, selected_timeframe):
-"""Creates comparison graph
-
+    """Creates comparison graph
 
     Args:
-        selected_council: 
-            A string representing the council selected from the drop down menu.
-        selected_timeframe: 
-            An integer representing the number of days around which to compute the moving average. This is selected with radio buttons at the bottom of the graph.
+        selected_council:
+          A string representing the council selected from the drop down menu.
+        selected_timeframe:
+          An integer representing the number of days around which to compute the moving average.
+          This is selected with radio buttons at the bottom of the graph.
 
     Returns:
-        Plotly graph that compares the selected moving average between the chosen council and the moving average of the avg of all the 99 neighborhood councils.
-
-"""
+        fig:
+          Plotly graph that compares the selected moving average between the chosen council
+          and the moving average of the avg of all the 99 neighborhood councils.
+    """
     neighborhood_sum_df = (
         df[df.council_name == selected_council]
         .groupby(["created_date"])
@@ -107,9 +108,6 @@ def update_figure(selected_council, selected_timeframe):
     apply_figure_style(fig)
 
     return fig
-
-
-
 
 
 # Define callback to update graph
