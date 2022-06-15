@@ -1,13 +1,12 @@
 import datetime
-import textwrap
 import json
-import urllib
-
-from dash import dcc, html, dash_table, callback
 import pandas as pd
 import plotly.express as px
-#from app import app, batch_get_data
+import textwrap
+import urllib
+
 from config import API_HOST
+from dash import dash_table, dcc, html ,callback
 from dash.dependencies import Input, Output
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
 from flask import request

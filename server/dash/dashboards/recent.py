@@ -1,11 +1,9 @@
 import datetime
+import pandas as pd
+import plotly.express as px
 import textwrap
 
 from dash import dcc, html
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-
 from config import API_HOST
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
 

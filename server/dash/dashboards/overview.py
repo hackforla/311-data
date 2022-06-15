@@ -1,13 +1,11 @@
-import textwrap
-
-from dash import dcc, html
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import textwrap
 
+from dash import dcc, html
 from config import API_HOST
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
-
 
 # TITLE
 title = "311 DATA OVERVIEW"

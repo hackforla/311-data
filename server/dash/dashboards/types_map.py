@@ -1,16 +1,13 @@
 import datetime
-import json
-from urllib.request import urlopen
-
-from dash import dcc, html, callback
 import pandas as pd
 import plotly.express as px
-from dash.dependencies import Input, Output
+import json
 
-# from app import app
+from dash import dcc, html, callback
+from dash.dependencies import Input, Output
 from config import API_HOST
 from design import CONFIG_OPTIONS, LABELS, apply_figure_style
-
+from urllib.request import urlopen
 
 
 # TITLE
