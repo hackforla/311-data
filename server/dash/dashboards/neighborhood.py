@@ -26,8 +26,6 @@ query_string = "/reports?field=type_name&field=council_name&field=created_date"
 df = pd.read_json(API_HOST + query_string)
 print(" * Dataframe has been loaded")
 
-df["created_date"] = pd.to_datetime(df["created_date"])
-
 fig = px.line()
 apply_figure_style(fig)
 
@@ -45,6 +43,19 @@ def populate_options():
     [Input("council_list", "value"), Input("data_type", "value")],
 )
 def update_figure(selected_council, selected_timeframe):
+"""Creates comparison graph
+
+
+    Args:
+        selected_council: 
+            A string representing the council selected from the drop down menu.
+        selected_timeframe: 
+            An integer representing the number of days around which to compute the moving average. This is selected with radio buttons at the bottom of the graph.
+
+    Returns:
+        Plotly graph that compares the selected moving average between the chosen council and the moving average of the avg of all the 99 neighborhood councils.
+
+"""
     neighborhood_sum_df = (
         df[df.council_name == selected_council]
         .groupby(["created_date"])
@@ -98,19 +109,7 @@ def update_figure(selected_council, selected_timeframe):
     return fig
 
 
-"""Creates comparison graph
 
-
-    Args:
-        selected_council: The selected council from the drop down menu
-        selected_timeframe: radio button selection of time window for computing moving average
-
-
-    Returns:
-        Graph that compares the selected moving average between the chosen council and the moving average of the avg of all
-        the 99 neighborhood councils 
-
-"""
 
 
 # Define callback to update graph
