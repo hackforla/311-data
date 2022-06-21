@@ -34,7 +34,21 @@ print(" * Downloading data for dataframe")
 BATCH_SIZE = 10000
 
 def batch_get_data(url):
-    # set up your query
+    '''Requesting data from specified API endpoint by loading data in chunks.
+    
+    The function concatenates the BATCH_SIZE argument to the specified API endpoint (url), 
+    loads the data in individual chunks, and returns a pandas datafrane. In other words,
+    the function will first store row 1 to row BATCH_SIZE in the first iteration, then 
+    loads row BATCH_SIZE+1 to 2*BATCH_SIZE and so on until all data loaded.
+    By default, BATCH_SIZE is 10000. 
+        
+        Typical Usage Example:
+        
+        API_HOST = "https://dev-api.311-data.org"
+        df_path = f"/requests/updated?start_date={'2022-05-21'}&end_date={'2022-06-21'}"
+        request_df = batch_get_data(API_HOST + df_path)
+    
+    '''
     if '?' in url:
         batch_url = f"{url}&limit={BATCH_SIZE}"
     else:
