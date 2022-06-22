@@ -1,5 +1,5 @@
 import flask
-from dash import Dash, html, dcc
+from dash import Dash, dcc, html
 
 external_stylesheets = ['/static/reports.css']
 server = flask.Flask(__name__) 
