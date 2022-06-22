@@ -5,8 +5,7 @@ import os
 import re
 import signal
 
-from dash import Dash, html, dcc, callback, Input, Output
-# from dash.dependencies import Input, Output
+from dash import callback, Dash, dcc, html, Input, Output
 
 from app import app
 from config import DASH_FILES
