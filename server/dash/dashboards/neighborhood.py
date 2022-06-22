@@ -1,9 +1,10 @@
-import pandas as pd
-import plotly.express as px
 import textwrap
 
-from dash import dcc, html, callback
+import pandas as pd
+import plotly.express as px
+from dash import callback, dcc, html
 from dash.dependencies import Input, Output
+
 from config import API_HOST
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
 
