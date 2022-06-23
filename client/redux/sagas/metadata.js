@@ -29,7 +29,7 @@ function* getMetadata() {
       ncGeojson,
     ] = yield all([
       call(axios.get, `${baseUrl}/status/api`),
-      call(axios.get, `${baseUrl}/types`),
+      // call(axios.get, `${baseUrl}/types`),
       call(axios.get, `${baseUrl}/councils`),
       call(axios.get, `${baseUrl}/regions`),
       call(axios.get, `${baseUrl}/agencies`),

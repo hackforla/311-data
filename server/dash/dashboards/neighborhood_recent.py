@@ -68,12 +68,7 @@ if figure_df.shape[0] == 0:
     table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
     figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'], as_index=False)['srnumber'].count()  # noqa
 
-
-print(figure_df.head())
-
 # Populate the neighborhood dropdown
-
-
 def populate_options():
     council_df_path = '/councils'
     council_df = pd.read_json(API_HOST + council_df_path)
@@ -129,7 +124,7 @@ layout = html.Div([
         placeholder="Select a neighborhood",
         options=populate_options()
     ),
-    html.Div(f"{selected_council} weekly report ({start_date.strftime('%b %d')} to {end_date.strftime('%b %d')})"),  # noqa
+    html.Div(f"Weekly report ({start_date.strftime('%b %d')} to {end_date.strftime('%b %d')})"),  # noqa
     html.Div([
         html.Div(
             [html.H2(id="created_txt"), html.Label("New Requests")],
