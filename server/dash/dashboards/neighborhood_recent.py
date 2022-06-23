@@ -4,13 +4,15 @@ import textwrap
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
+from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.express as px
+from flask import request
+
 from app import app, batch_get_data
 from config import API_HOST
-from dash.dependencies import Input, Output
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, LABELS, apply_figure_style, DISCRETE_COLORS_MAP
-from flask import request
+
 
 pretty_columns = {
     'srnumber': "SR Number",
@@ -44,10 +46,34 @@ except (RuntimeError):
     selected_council = 'Arleta'
 
 table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
-figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'])['srnumber'].count().reset_index()  # noqa
+figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'], as_index=False)['srnumber'].count()  # noqa
 
+# Reload data query from 3 weeks ago if the current dataframe is empty
+if figure_df.shape[0] == 0:
+    start_date = datetime.date.today() - datetime.timedelta(days=28)
+    end_date = datetime.date.today() - datetime.timedelta(days=21)
+    df_path = f"/requests/updated?start_date={start_date}&end_date={end_date}"
+    print(" * Downloading data for dataframe")
+    df = batch_get_data(API_HOST + df_path)
+    df['createdDate'] = pd.to_datetime(
+        df['createdDate'], errors='coerce').dt.strftime('%Y-%m-%d')
+    df['closedDate'] = pd.to_datetime(
+        df['closedDate'], errors='coerce').dt.strftime('%Y-%m-%d')
+    print(" * Dataframe has been loaded")
+    try:
+        selected_council = request.args.get('councilName') or 'Arleta'
+    except (RuntimeError):
+        selected_council = 'Arleta'
+
+    table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
+    figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'], as_index=False)['srnumber'].count()  # noqa
+
+
+print(figure_df.head())
 
 # Populate the neighborhood dropdown
+
+
 def populate_options():
     council_df_path = '/councils'
     council_df = pd.read_json(API_HOST + council_df_path)
@@ -66,8 +92,8 @@ fig = px.line(
     y="srnumber",
     color="typeName",
     color_discrete_sequence=DISCRETE_COLORS,
-    color_discrete_map = DISCRETE_COLORS_MAP,
-    labels=LABELS,
+    color_discrete_map=DISCRETE_COLORS_MAP,
+    labels=LABELS
 )
 
 fig.update_xaxes(
@@ -84,9 +110,9 @@ pie_fig = px.pie(
     figure_df,
     names="typeName",
     values="srnumber",
-    color = 'typeName',
+    color="typeName",
     color_discrete_sequence=DISCRETE_COLORS,
-    color_discrete_map = DISCRETE_COLORS_MAP,
+    color_discrete_map=DISCRETE_COLORS_MAP,
     labels=LABELS,
     hole=.3,
 )
