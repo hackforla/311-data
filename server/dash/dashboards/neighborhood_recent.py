@@ -24,8 +24,8 @@ pretty_columns = {
     'address': "Address"
 }
 
-start_date = datetime.date.today() - datetime.timedelta(days=7)
-end_date = datetime.date.today() - datetime.timedelta(days=1)
+start_date = datetime.date.today() + datetime.timedelta(days=3)
+end_date = datetime.date.today() + datetime.timedelta(days=14)
 
 # TITLE
 title = "NEIGHBORHOOD WEEKLY REPORT"
@@ -46,29 +46,15 @@ except (RuntimeError):
     selected_council = 'Arleta'
 
 table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
-figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'], as_index=False)['srnumber'].count()  # noqa
-
-# Reload data query from 3 weeks ago if the current dataframe is empty
-if figure_df.shape[0] == 0:
-    start_date = datetime.date.today() - datetime.timedelta(days=28)
-    end_date = datetime.date.today() - datetime.timedelta(days=21)
-    df_path = f"/requests/updated?start_date={start_date}&end_date={end_date}"
-    print(" * Downloading data for dataframe")
-    df = batch_get_data(API_HOST + df_path)
-    df['createdDate'] = pd.to_datetime(
-        df['createdDate'], errors='coerce').dt.strftime('%Y-%m-%d')
-    df['closedDate'] = pd.to_datetime(
-        df['closedDate'], errors='coerce').dt.strftime('%Y-%m-%d')
-    print(" * Dataframe has been loaded")
-    try:
-        selected_council = request.args.get('councilName') or 'Arleta'
-    except (RuntimeError):
-        selected_council = 'Arleta'
-
-    table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
-    figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'], as_index=False)['srnumber'].count()  # noqa
+# figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'], as_index=False)['srnumber'].count()  # noqa
 
 # Populate the neighborhood dropdown
+fig = px.line()
+apply_figure_style(fig)
+
+fig2 = px.pie()
+apply_figure_style(fig2)
+
 def populate_options():
     council_df_path = '/councils'
     council_df = pd.read_json(API_HOST + council_df_path)
@@ -79,40 +65,6 @@ def populate_options():
             'value': i
         })
     return values
-
-
-fig = px.line(
-    figure_df,
-    x="createdDate",
-    y="srnumber",
-    color="typeName",
-    color_discrete_sequence=DISCRETE_COLORS,
-    color_discrete_map=DISCRETE_COLORS_MAP,
-    labels=LABELS
-)
-
-fig.update_xaxes(
-    tickformat="%a\n%m/%d",
-)
-
-fig.update_traces(
-    mode='markers+lines'
-)  # add markers to lines
-
-apply_figure_style(fig)
-
-pie_fig = px.pie(
-    figure_df,
-    names="typeName",
-    values="srnumber",
-    color="typeName",
-    color_discrete_sequence=DISCRETE_COLORS,
-    color_discrete_map=DISCRETE_COLORS_MAP,
-    labels=LABELS,
-    hole=.3,
-)
-apply_figure_style(pie_fig)
-
 
 # Layout
 layout = html.Div([
@@ -141,11 +93,11 @@ layout = html.Div([
     ], className="graph-row"),
     html.Div([
         html.Div(
-            dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
+            dcc.Graph(id='graph', figure=fig ,config=CONFIG_OPTIONS),
             className="half-graph"
         ),
         html.Div(
-            dcc.Graph(id='pie_graph', figure=pie_fig, config=CONFIG_OPTIONS),
+            dcc.Graph(id='pie_graph', figure=fig2 , config=CONFIG_OPTIONS),
             className="half-graph"
         )
     ]),
@@ -183,7 +135,11 @@ layout = html.Div([
 )
 def update_table(selected_council):
     table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
-    return table_df.to_dict('records')
+    if table_df.shape[0] == 0:
+        table_df = pd.DataFrame(columns=["Request Type"])
+        table_df.loc[0] = ["There is no data right now"]
+    else:
+        return table_df.to_dict('records')
 
 
 @app.callback(
@@ -197,7 +153,10 @@ def update_table(selected_council):
 def update_text(selected_council):
     create_count = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'")['srnumber'].count()  # noqa
     close_count = df.query(f"councilName == '{selected_council}' and closedDate >= '{start_date}'")['srnumber'].count()  # noqa
-    return create_count, close_count, create_count - close_count
+    if create_count == 0 and close_count == 0:
+        return 0, 0, 0
+    else:
+        return create_count, close_count, create_count - close_count
 
 
 @app.callback(
@@ -207,7 +166,9 @@ def update_text(selected_council):
 def update_figure(selected_council):
     figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'])['srnumber'].count().reset_index()  # noqa
     figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
-
+    if figure_df.shape[0] == 0:
+        figure_df = pd.DataFrame(columns = ['createdDate', "srnumber", "typeName"])
+        figure_df.loc[0] = [start_date, 12345678, "No Request at this time"]
     fig = px.line(
         figure_df,
         x="createdDate",
@@ -235,6 +196,9 @@ def update_figure(selected_council):
 )
 def update_council_figure(selected_council):
     pie_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['typeName']).agg('count').reset_index()  # noqa
+    if pie_df.shape[0] == 0:
+        pie_df = pd.DataFrame(columns = ["srnumber", "typeName"])
+        pie_df.loc[0] = [12345678, "No Request at this time"]
 
     pie_fig = px.pie(
         pie_df,
