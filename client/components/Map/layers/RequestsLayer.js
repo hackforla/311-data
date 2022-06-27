@@ -40,6 +40,7 @@ class RequestsLayer extends React.Component {
   }
 
   componentDidUpdate(prev) {
+    console.log("component did update")
     const {
       activeLayer,
       selectedTypes,
@@ -50,9 +51,10 @@ class RequestsLayer extends React.Component {
     if (activeLayer !== prev.activeLayer)
       this.setActiveLayer(activeLayer);
 
-    if (selectedTypes !== prev.selectedTypes)
+    if (selectedTypes !== prev.selectedTypes) {
+      console.log("selected types changed. new types:" + selectedTypes)
       this.setSelectedTypes(selectedTypes);
-
+    }
     if (requests !== prev.requests && this.ready)
       this.setRequests(requests);
 
@@ -94,7 +96,7 @@ class RequestsLayer extends React.Component {
         'circle-color': circleColors(requestTypes),
         'circle-opacity': 0.8,
       },
-      // filter: typeFilter(selectedTypes),
+      filter: typeFilter(selectedTypes),
     }, BEFORE_ID);
 
     // this.map.addLayer({
@@ -112,7 +114,7 @@ class RequestsLayer extends React.Component {
   };
 
   setActiveLayer = activeLayer => {
-    switch(activeLayer) {
+    switch (activeLayer) {
       case 'points':
         this.map.setLayoutProperty('request-circles', 'visibility', 'visible');
         // this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
@@ -129,6 +131,7 @@ class RequestsLayer extends React.Component {
   };
 
   setSelectedTypes = selectedTypes => {
+    console.log("setting new requested types")
     this.map.setFilter('request-circles', typeFilter(selectedTypes));
     this.map.setFilter('request-heatmap', typeFilter(selectedTypes));
   };
