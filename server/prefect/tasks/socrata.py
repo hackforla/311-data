@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 import csv
 import os
 import requests
@@ -6,6 +6,9 @@ import requests
 from sodapy import Socrata
 import prefect
 from prefect.utilities.tasks import task
+
+
+DATE_SPEC = "%Y-%m-%d"
 
 """
 This task will call Socrata and output the returned data in CSV format.
@@ -22,18 +25,24 @@ More information about how to use SoQL (the Socrata query language) is here:
 @task(max_retries=3, retry_delay=timedelta(seconds=10))
 def download_dataset(
         dataset,
-        since: datetime = None,
+        start_datetime: datetime = None,
+        end_datetime: datetime = None,
         max_rows: int = 2000000,
-        batch_size: int = 100000
+        batch_size: int = 100000,
+        output_dir: str = "output"
 ):
 
     # config for run
     logger = prefect.context.get("logger")
     fieldnames = list(prefect.config.data.fields.keys())
-    temp_folder = prefect.config.temp_folder or "output"
     offset = 0
-    where = None if since is None else f"updateddate > '{since.isoformat()}'"
-    output_file = os.path.join(temp_folder, f"{dataset}-{prefect.context.today}.csv")
+
+    where = None if start_datetime is None else f"updateddate > '{start_datetime.isoformat()}'"
+    if end_datetime:
+        where += f" and updateddate < '{end_datetime.isoformat()}'"
+
+    output_file = os.path.join(
+        output_dir, f"{dataset}-start-{start_datetime.strftime(DATE_SPEC)}-end-{end_datetime.strftime(DATE_SPEC)}.csv")
 
     # create Socrata client
     client = Socrata(
