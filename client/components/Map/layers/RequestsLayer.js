@@ -2,6 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 // put layer underneath this layer (from original mapbox tiles)
 // so you don't cover up important labels
@@ -19,10 +20,13 @@ function circleColors(requestTypes) {
 }
 
 function typeFilter(selectedTypes) {
+  // selectedTypes maps ints (in string form) to booleans, indicating whether the type is selected.
+  // Get an array of int typeIds that only includes typeIds whose corresponding value is true in selectedTypes.
+  var trueTypes = Object.keys(selectedTypes).map((type) => parseInt(type)).filter((type) => selectedTypes[type]);
   return [
     'in',
-    ['get', 'type'],
-    ['literal', selectedTypes],
+    ['get', 'typeId'],
+    ['literal', trueTypes]
   ];
 }
 
@@ -40,7 +44,6 @@ class RequestsLayer extends React.Component {
   }
 
   componentDidUpdate(prev) {
-    console.log("component did update")
     const {
       activeLayer,
       selectedTypes,
@@ -52,7 +55,6 @@ class RequestsLayer extends React.Component {
       this.setActiveLayer(activeLayer);
 
     if (selectedTypes !== prev.selectedTypes) {
-      console.log("selected types changed. new types:" + selectedTypes)
       this.setSelectedTypes(selectedTypes);
     }
     if (requests !== prev.requests && this.ready)
@@ -131,9 +133,9 @@ class RequestsLayer extends React.Component {
   };
 
   setSelectedTypes = selectedTypes => {
-    console.log("setting new requested types")
     this.map.setFilter('request-circles', typeFilter(selectedTypes));
-    this.map.setFilter('request-heatmap', typeFilter(selectedTypes));
+    // Currently, we do not support heatmap. If we did, we'd want to update
+    // its filter here as well.
   };
 
   setRequests = requests => {
@@ -153,8 +155,6 @@ class RequestsLayer extends React.Component {
   }
 }
 
-export default RequestsLayer;
-
 RequestsLayer.propTypes = {
   activeLayer: PropTypes.oneOf(['points', 'heatmap']),
   selectedTypes: PropTypes.shape({}),
@@ -168,3 +168,12 @@ RequestsLayer.defaultProps = {
   requests: {},
   colorScheme: '',
 };
+
+const mapStateToProps = state => ({
+  selectedTypes: state.filters.requestTypes
+});
+
+// We need to specify forwardRef to allow refs on connected components.
+// See https://github.com/reduxjs/react-redux/issues/1291#issuecomment-494185126
+// for more info.
+export default connect(mapStateToProps, null, null, { forwardRef: true })(RequestsLayer);
