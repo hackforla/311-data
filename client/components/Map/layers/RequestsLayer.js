@@ -21,7 +21,7 @@ function circleColors(requestTypes) {
 
 function typeFilter(selectedTypes) {
   // selectedTypes maps ints (in string form) to booleans, indicating whether the type is selected.
-  // Get an array of int typeIds that only includes typeIds whose corresponding value is true in selectedTypes.
+  // Get an array of int typeIds corresponding value in selectedTypes is true.
   var trueTypes = Object.keys(selectedTypes).map((type) => parseInt(type)).filter((type) => selectedTypes[type]);
   return [
     'in',
