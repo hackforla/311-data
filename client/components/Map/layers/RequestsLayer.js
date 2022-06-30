@@ -2,6 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 // put layer underneath this layer (from original mapbox tiles)
 // so you don't cover up important labels
@@ -19,10 +20,13 @@ function circleColors(requestTypes) {
 }
 
 function typeFilter(selectedTypes) {
+  // selectedTypes maps ints (in string form) to booleans, indicating whether the type is selected.
+  // Get an array of int typeIds corresponding value in selectedTypes is true.
+  var trueTypes = Object.keys(selectedTypes).map((type) => parseInt(type)).filter((type) => selectedTypes[type]);
   return [
     'in',
-    ['get', 'type'],
-    ['literal', selectedTypes],
+    ['get', 'typeId'],
+    ['literal', trueTypes]
   ];
 }
 
@@ -50,9 +54,9 @@ class RequestsLayer extends React.Component {
     if (activeLayer !== prev.activeLayer)
       this.setActiveLayer(activeLayer);
 
-    if (selectedTypes !== prev.selectedTypes)
+    if (selectedTypes !== prev.selectedTypes) {
       this.setSelectedTypes(selectedTypes);
-
+    }
     if (requests !== prev.requests && this.ready)
       this.setRequests(requests);
 
@@ -94,7 +98,7 @@ class RequestsLayer extends React.Component {
         'circle-color': circleColors(requestTypes),
         'circle-opacity': 0.8,
       },
-      // filter: typeFilter(selectedTypes),
+      filter: typeFilter(selectedTypes),
     }, BEFORE_ID);
 
     // this.map.addLayer({
@@ -112,7 +116,7 @@ class RequestsLayer extends React.Component {
   };
 
   setActiveLayer = activeLayer => {
-    switch(activeLayer) {
+    switch (activeLayer) {
       case 'points':
         this.map.setLayoutProperty('request-circles', 'visibility', 'visible');
         // this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
@@ -130,7 +134,8 @@ class RequestsLayer extends React.Component {
 
   setSelectedTypes = selectedTypes => {
     this.map.setFilter('request-circles', typeFilter(selectedTypes));
-    this.map.setFilter('request-heatmap', typeFilter(selectedTypes));
+    // Currently, we do not support heatmap. If we did, we'd want to update
+    // its filter here as well.
   };
 
   setRequests = requests => {
@@ -150,8 +155,6 @@ class RequestsLayer extends React.Component {
   }
 }
 
-export default RequestsLayer;
-
 RequestsLayer.propTypes = {
   activeLayer: PropTypes.oneOf(['points', 'heatmap']),
   selectedTypes: PropTypes.shape({}),
@@ -165,3 +168,12 @@ RequestsLayer.defaultProps = {
   requests: {},
   colorScheme: '',
 };
+
+const mapStateToProps = state => ({
+  selectedTypes: state.filters.requestTypes
+});
+
+// We need to specify forwardRef to allow refs on connected components.
+// See https://github.com/reduxjs/react-redux/issues/1291#issuecomment-494185126
+// for more info.
+export default connect(mapStateToProps, null, null, { forwardRef: true })(RequestsLayer);
