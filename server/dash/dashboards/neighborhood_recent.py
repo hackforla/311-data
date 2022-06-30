@@ -137,7 +137,9 @@ def update_table(selected_council):
     table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
     if table_df.shape[0] == 0:
         table_df = pd.DataFrame(columns=["Request Type"])
-        table_df.loc[0] = ["There is no data right now"]
+        #table_df.loc[0] = ["There is no data right now"]
+        for i in range(len(DISCRETE_COLORS_MAP.keys())):
+            table_df.loc[i] = [list(DISCRETE_COLORS_MAP.keys())[i]]
     else:
         return table_df.to_dict('records')
 
@@ -168,7 +170,9 @@ def update_figure(selected_council):
     figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
     if figure_df.shape[0] == 0:
         figure_df = pd.DataFrame(columns = ['createdDate', "srnumber", "typeName"])
-        figure_df.loc[0] = [start_date, 12345678, "No Request at this time"]
+        for i in range(len(DISCRETE_COLORS_MAP.keys())):
+            figure_df.loc[i] = [start_date + datetime.timedelta(days=i), 12345678, list(DISCRETE_COLORS_MAP.keys())[i]]
+        #figure_df.loc[0] = [start_date, 12345678, "No Request at this time"]
     fig = px.line(
         figure_df,
         x="createdDate",
@@ -191,15 +195,19 @@ def update_figure(selected_council):
 
 
 @app.callback(
-    Output("pie_graph", "pie_fig"),
+    Output("pie_graph", "figure"),
     Input("council_list", "value")
 )
 def update_council_figure(selected_council):
     pie_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['typeName']).agg('count').reset_index()  # noqa
+    print(pie_df.shape)
+    print(pie_df.shape[0] == 0)
     if pie_df.shape[0] == 0:
         pie_df = pd.DataFrame(columns = ["srnumber", "typeName"])
         pie_df.loc[0] = [12345678, "No Request at this time"]
-
+        for i in range(len(DISCRETE_COLORS_MAP.keys())):
+            pie_df.loc[i] = [12345678, list(DISCRETE_COLORS_MAP.keys())[i]]
+    print(pie_df.head())
     pie_fig = px.pie(
         pie_df,
         names="typeName",
