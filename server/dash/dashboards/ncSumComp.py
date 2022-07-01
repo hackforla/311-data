@@ -7,15 +7,15 @@ import plotly.graph_objects as go
 import requests as re
 
 from config import API_HOST
-from design import  apply_figure_style
+from design import  DISCRETE_COLORS, LABELS, apply_figure_style
 from dash import dcc, html, callback
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
 
 # Setting 1 week worth of data
-start_date = datetime.date.today() - datetime.timedelta(days=200)
-end_date = datetime.date.today() - datetime.timedelta(days=100)
-
+start_date = datetime.date.today() - datetime.timedelta(days=300)
+end_date = datetime.date.today() - datetime.timedelta(days=200)
+ 
 df_path = f"/requests/updated?start_date={start_date}&end_date={end_date}"
 results = re.get(API_HOST + df_path)
 data_json = results.json()
@@ -42,7 +42,7 @@ layout = html.Div([
         html.Div(html.Br(), style={"height":"0.5vh"}),
 
         # Line Chart for Number of Request throughout the day
-        html.Div(dcc.Graph(id='numReqLineChart', style={"height":"40vh", 'width':'97.4vw'}), style={"border":"0.5px black solid", "height":"40vh", 'width':'97.4vw'}),
+        html.Div(dcc.Graph(id='ncAvgCompLineChart', style={"height":"40vh", 'width':'97.4vw'}), style={"border":"0.5px black solid", "height":"40vh", 'width':'97.4vw'}),
        
         html.Div(html.Br(), style={"height":"1vh"}),
        
@@ -190,6 +190,7 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, dataQuality
     # Replace negative values
     # TODO: figure out what to do when there is no data avaialble
     df = df[df['timeToClose'] > 0]
+    print(df.shape)
     if df.shape[0] == 0:
         raise PreventUpdate()
     else:
@@ -257,7 +258,7 @@ def generate_nc_comparison_charts(nc_comp_dropdown, nc_comp_dropdown2):
     else:
         df_nc2 = data_2020[data_2020['councilName'] == nc_comp_dropdown2]
     
-    
+    print(df_nc1.shape)
     df_nc1.loc[:, 'createDateDT'] = pd.to_datetime(df_nc1.loc[:, 'createdDate'].str[:-4].str.split("T").str.join(" "))
     df_nc2.loc[:, 'createDateDT'] = pd.to_datetime(df_nc2.loc[:, 'createdDate'].str[:-4].str.split("T").str.join(" "))
 
@@ -307,3 +308,36 @@ def generate_nc_comparison_charts(nc_comp_dropdown, nc_comp_dropdown2):
 
 
 
+# Define callback to update graph
+@callback(
+    Output('ncAvgCompLineChart', 'figure'),
+    [Input("nc_dropdown", "value")]
+)
+def update_figure(nc_dropdown):
+    if not nc_dropdown:
+        df = data_2020
+    neighborhood_sum_df = df[df.council_name == nc_dropdown].groupby(['created_date']).agg('sum').reset_index()  # noqa
+    total_sum_df = df.groupby(['created_date']).agg('sum').reset_index()
+    total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
+    merged_df = neighborhood_sum_df.merge(total_sum_df["nc_avg"].to_frame(), left_index=True, right_index=True)  # noqa
+
+    fig = px.line(
+        merged_df,
+        x="created_date",
+        y=['counts', 'nc_avg'],
+        color_discrete_sequence=DISCRETE_COLORS,
+        labels=LABELS,
+        title= "Number of " + nc_dropdown + " Requests compare with the average of all Neighborhood Councils requests"
+    )
+
+    fig.update_xaxes(
+        tickformat="%a\n%m/%d",
+    )
+
+    fig.update_traces(
+        mode='markers+lines'
+    )  # add markers to lines
+
+    apply_figure_style(fig)
+
+    return fig
