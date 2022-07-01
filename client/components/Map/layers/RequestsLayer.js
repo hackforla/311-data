@@ -33,18 +33,16 @@ function typeFilter(selectedTypes) {
 function statusFilter(requestStatus) {
   // requestStatus is an object with keys "open" and "closed", and boolean values.
   if (requestStatus.open && requestStatus.closed) {
-    console.log("both");
-    return null;
+    // Hack to allow ALL requests.
+    return ['==', ['literal', "a"], ['literal', "a"]];
   }
   if (!requestStatus.open && !requestStatus.closed) {
-    console.log("neither");
+    // Hack to filter ALL requests.
     return ['==', ['literal', "a"], ['literal', "b"]];
   }
   if (requestStatus.open) {
-    console.log("open only");
     return ['==', ['get', 'closedDate'], ['literal', null]];
   }
-  console.log("closed only")
   return ['!=', ['get', 'closedDate'], ['literal', null]];
 }
 
@@ -73,12 +71,13 @@ class RequestsLayer extends React.Component {
     if (activeLayer !== prev.activeLayer)
       this.setActiveLayer(activeLayer);
 
-    if (selectedTypes !== prev.selectedTypes) {
-      console.log("change selected types");
-      this.setSelectedTypes(selectedTypes);
-    }
-    if (requestStatus.open !== prev.requestStatus.open || requestStatus.closed !== prev.requestStatus.closed) {
-      this.setRequestStatus(requestStatus);
+    // Check if the selected types OR the request status has changed.
+    // These filters need to be updated together, since they are
+    // actually composed into a single filter.
+    if (selectedTypes !== prev.selectedTypes ||
+      requestStatus.open !== prev.requestStatus.open ||
+      requestStatus.closed !== prev.requestStatus.closed) {
+      this.setFilters(selectedTypes, requestStatus);
     }
     if (requests !== prev.requests && this.ready) {
       console.log("got new requests");
@@ -158,14 +157,9 @@ class RequestsLayer extends React.Component {
     }
   };
 
-  setSelectedTypes = selectedTypes => {
-    this.map.setFilter('request-circles', typeFilter(selectedTypes));
-    // Currently, we do not support heatmap. If we did, we'd want to update
-    // its filter here as well.
-  };
-
-  setRequestStatus = requestStatus => {
-    this.map.setFilter('request-circles', statusFilter(requestStatus));
+  setFilters = (selectedTypes, requestStatus) => {
+    this.map.setFilter('request-circles',
+      ['all', typeFilter(selectedTypes), statusFilter(requestStatus)]);
     // Currently, we do not support heatmap. If we did, we'd want to update
     // its filter here as well.
   };
@@ -204,6 +198,7 @@ RequestsLayer.defaultProps = {
 const mapStateToProps = state => ({
   selectedTypes: state.filters.requestTypes,
   requestStatus: state.filters.requestStatus,
+  requests: state.data.requests,
 });
 
 // We need to specify forwardRef to allow refs on connected components.
