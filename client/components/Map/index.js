@@ -13,6 +13,8 @@ import CookieNotice from '../main/CookieNotice';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
 
+const REQUEST_BATCH_SIZE = 5000;
+
 const styles = theme => ({
   root: {
     height: `calc(100vh - ${theme.header.height} - ${theme.footer.height})`,
@@ -54,8 +56,9 @@ class MapContainer extends React.Component {
 
   getAllRequests = async () => {
     // TODO: add date specification. See https://dev-api.311-data.org/docs#/default/get_all_service_requests_requests_get.
-    // By default, this will only get the 1000 most recent requests.
-    const url = `${process.env.API_URL}/requests`;
+    const url = new URL(`${process.env.API_URL}/requests`);
+    url.searchParams.append("limit", `${REQUEST_BATCH_SIZE}`);
+    console.log(url);
     const { data } = await axios.get(url);
     this.rawRequests = data;
   };
