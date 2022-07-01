@@ -30,6 +30,24 @@ function typeFilter(selectedTypes) {
   ];
 }
 
+function statusFilter(requestStatus) {
+  // requestStatus is an object with keys "open" and "closed", and boolean values.
+  if (requestStatus.open && requestStatus.closed) {
+    console.log("both");
+    return null;
+  }
+  if (!requestStatus.open && !requestStatus.closed) {
+    console.log("neither");
+    return ['==', ['literal', "a"], ['literal', "b"]];
+  }
+  if (requestStatus.open) {
+    console.log("open only");
+    return ['==', ['get', 'closedDate'], ['literal', null]];
+  }
+  console.log("closed only")
+  return ['!=', ['get', 'closedDate'], ['literal', null]];
+}
+
 class RequestsLayer extends React.Component {
   constructor(props) {
     super(props);
@@ -47,6 +65,7 @@ class RequestsLayer extends React.Component {
     const {
       activeLayer,
       selectedTypes,
+      requestStatus,
       requests,
       colorScheme,
     } = this.props;
@@ -55,13 +74,20 @@ class RequestsLayer extends React.Component {
       this.setActiveLayer(activeLayer);
 
     if (selectedTypes !== prev.selectedTypes) {
+      console.log("change selected types");
       this.setSelectedTypes(selectedTypes);
     }
-    if (requests !== prev.requests && this.ready)
+    if (requestStatus.open !== prev.requestStatus.open || requestStatus.closed !== prev.requestStatus.closed) {
+      this.setRequestStatus(requestStatus);
+    }
+    if (requests !== prev.requests && this.ready) {
+      console.log("got new requests");
+      console.log(requests);
       this.setRequests(requests);
-
-    if (colorScheme !== prev.colorScheme)
+    }
+    if (colorScheme !== prev.colorScheme) {
       this.setColorScheme(colorScheme);
+    }
   }
 
   addSources = () => {
@@ -138,6 +164,12 @@ class RequestsLayer extends React.Component {
     // its filter here as well.
   };
 
+  setRequestStatus = requestStatus => {
+    this.map.setFilter('request-circles', statusFilter(requestStatus));
+    // Currently, we do not support heatmap. If we did, we'd want to update
+    // its filter here as well.
+  };
+
   setRequests = requests => {
     this.map.getSource('requests').setData(requests);
   };
@@ -170,7 +202,8 @@ RequestsLayer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  selectedTypes: state.filters.requestTypes
+  selectedTypes: state.filters.requestTypes,
+  requestStatus: state.filters.requestStatus,
 });
 
 // We need to specify forwardRef to allow refs on connected components.
