@@ -8,14 +8,25 @@ import { connect } from 'react-redux';
 // so you don't cover up important labels
 const BEFORE_ID = 'poi-label';
 
+// Key for type id in store.data.requests.
+const TYPE_ID = 'typeId';
+// Key for closed date in store.data.requests.
+const CLOSED_DATE = 'closedDate';
+
+// Constants required for Mapbox filtering.
+const LITERAL = 'literal';
+const GET = 'get';
+
+const WHITE_HEX = '#FFFFFF';
+
 function circleColors(requestTypes) {
   const colors = [];
   requestTypes.forEach(type => colors.push(type.typeId, type.color))
   return [
     'match',
-    ['get', 'typeId'],
+    [GET, TYPE_ID],
     ...colors,
-    '#FFFFFF',
+    WHITE_HEX,
   ];
 }
 
@@ -25,8 +36,8 @@ function typeFilter(selectedTypes) {
   var trueTypes = Object.keys(selectedTypes).map((type) => parseInt(type)).filter((type) => selectedTypes[type]);
   return [
     'in',
-    ['get', 'typeId'],
-    ['literal', trueTypes]
+    [GET, TYPE_ID],
+    [LITERAL, trueTypes]
   ];
 }
 
@@ -34,16 +45,16 @@ function statusFilter(requestStatus) {
   // requestStatus is an object with keys "open" and "closed", and boolean values.
   if (requestStatus.open && requestStatus.closed) {
     // Hack to allow ALL requests.
-    return ['==', ['literal', "a"], ['literal', "a"]];
+    return ['==', [LITERAL, 'a'], [LITERAL, 'a']];
   }
   if (!requestStatus.open && !requestStatus.closed) {
     // Hack to filter ALL requests.
-    return ['==', ['literal', "a"], ['literal', "b"]];
+    return ['==', [LITERAL, 'a'], [LITERAL, 'b']];
   }
   if (requestStatus.open) {
-    return ['==', ['get', 'closedDate'], ['literal', null]];
+    return ['==', [GET, CLOSED_DATE], [LITERAL, null]];
   }
-  return ['!=', ['get', 'closedDate'], ['literal', null]];
+  return ['!=', [GET, CLOSED_DATE], [LITERAL, null]];
 }
 
 class RequestsLayer extends React.Component {
