@@ -5,6 +5,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import { getDataRequestSuccess } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 import CookieNotice from '../main/CookieNotice';
@@ -23,7 +24,6 @@ class MapContainer extends React.Component {
     super(props)
 
     this.state = {
-      requests: this.convertRequests([]),
       ncCounts: null,
       ccCounts: null,
       position: props.position,
@@ -31,19 +31,20 @@ class MapContainer extends React.Component {
       selectedTypes: this.getSelectedTypes(),
     }
 
-    this.openRequests = null;
+    // We store the raw requests from the API call here, but eventually they are
+    // converted and stored in the Redux store.
+    this.rawRequests = null;
     this.isSubscribed = null;
   }
 
   componentDidMount() {
-    // TODO: redux-saga, add to store instead of local state
     this.isSubscribed = true;
     this.setData();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.activeMode !== this.props.activeMode ||
-        prevProps.pins !== this.props.pins)
+      prevProps.pins !== this.props.pins)
       this.setData();
   }
 
@@ -51,23 +52,24 @@ class MapContainer extends React.Component {
     this.isSubscribed = false;
   }
 
-  getOpenRequests = async () => {
-    const url = `${process.env.API_URL}/requests/pins/open`;
+  getAllRequests = async () => {
+    // TODO: add date specification. See https://dev-api.311-data.org/docs#/default/get_all_service_requests_requests_get.
+    // By default, this will only get the 1000 most recent requests.
+    const url = `${process.env.API_URL}/requests`;
     const { data } = await axios.get(url);
-    this.openRequests = data;
+    this.rawRequests = data;
   };
 
   setData = async () => {
     const { pins } = this.props;
 
-    if (!this.openRequests) {
-      await this.getOpenRequests();
+    if (!this.rawRequests) {
+      await this.getAllRequests();
     }
 
     if (this.isSubscribed) {
-      return this.setState({
-        requests: this.convertRequests(this.openRequests),
-      });
+      const { getDataSuccess } = this.props;
+      getDataSuccess(this.convertRequests(this.rawRequests));
     }
   };
 
@@ -78,6 +80,7 @@ class MapContainer extends React.Component {
       properties: {
         requestId: request.requestId,
         typeId: request.typeId,
+        closedDate: request.closedDate,
       },
       geometry: {
         type: 'Point',
@@ -99,8 +102,8 @@ class MapContainer extends React.Component {
   };
 
   render() {
-    const { position, lastUpdated, updatePosition, exportMap, classes } = this.props;
-    const { requests, ncCounts, ccCounts, selectedTypes } = this.state;
+    const { position, lastUpdated, updatePosition, exportMap, classes, requests } = this.props;
+    const { ncCounts, ccCounts, selectedTypes } = this.state;
     return (
       <div className={classes.root}>
         <Map
@@ -125,11 +128,13 @@ const mapStateToProps = state => ({
   lastUpdated: state.metadata.lastPulledLocal,
   activeMode: state.ui.map.activeMode,
   requestTypes: state.filters.requestTypes,
+  requests: state.data.requests
 });
 
 const mapDispatchToProps = dispatch => ({
   updatePosition: position => dispatch(updateMapPosition(position)),
   exportMap: () => dispatch(trackMapExport()),
+  getDataSuccess: data => dispatch(getDataRequestSuccess(data)),
 });
 
 MapContainer.propTypes = {};
