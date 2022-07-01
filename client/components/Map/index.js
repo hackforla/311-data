@@ -31,6 +31,9 @@ class MapContainer extends React.Component {
       selectedTypes: this.getSelectedTypes(),
     }
 
+    // We store the raw requests from the API call here, but eventually they are
+    // converted and stored in the Redux store.
+    this.rawRequests = null;
     this.isSubscribed = null;
   }
 
@@ -49,23 +52,24 @@ class MapContainer extends React.Component {
     this.isSubscribed = false;
   }
 
-  getOpenRequests = async () => {
+  getAllRequests = async () => {
     // TODO: add date specification. See https://dev-api.311-data.org/docs#/default/get_all_service_requests_requests_get.
+    // By default, this will only get the 1000 most recent requests.
     const url = `${process.env.API_URL}/requests`;
     const { data } = await axios.get(url);
-    this.openRequests = data;
+    this.rawRequests = data;
   };
 
   setData = async () => {
     const { pins } = this.props;
 
-    if (!this.openRequests) {
-      await this.getOpenRequests();
+    if (!this.rawRequests) {
+      await this.getAllRequests();
     }
 
     if (this.isSubscribed) {
       const { getDataSuccess } = this.props;
-      getDataSuccess(this.convertRequests(this.openRequests));
+      getDataSuccess(this.convertRequests(this.rawRequests));
     }
   };
 
