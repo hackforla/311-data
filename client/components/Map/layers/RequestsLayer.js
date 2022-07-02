@@ -91,8 +91,6 @@ class RequestsLayer extends React.Component {
       this.setFilters(selectedTypes, requestStatus);
     }
     if (requests !== prev.requests && this.ready) {
-      console.log("got new requests");
-      console.log(requests);
       this.setRequests(requests);
     }
     if (colorScheme !== prev.colorScheme) {
@@ -114,6 +112,7 @@ class RequestsLayer extends React.Component {
       selectedTypes,
       colorScheme,
       requestTypes,
+      requestStatus,
     } = this.props;
 
     this.map.addLayer({
@@ -134,7 +133,7 @@ class RequestsLayer extends React.Component {
         'circle-color': circleColors(requestTypes),
         'circle-opacity': 0.8,
       },
-      filter: typeFilter(selectedTypes),
+      filter: this.getFilterSpec(selectedTypes, requestStatus),
     }, BEFORE_ID);
 
     // this.map.addLayer({
@@ -168,9 +167,13 @@ class RequestsLayer extends React.Component {
     }
   };
 
+  getFilterSpec = (selectedTypes, requestStatus) => {
+    return ['all', typeFilter(selectedTypes), statusFilter(requestStatus)];
+  };
+
   setFilters = (selectedTypes, requestStatus) => {
     this.map.setFilter('request-circles',
-      ['all', typeFilter(selectedTypes), statusFilter(requestStatus)]);
+      this.getFilterSpec(selectedTypes, requestStatus));
     // Currently, we do not support heatmap. If we did, we'd want to update
     // its filter here as well.
   };
@@ -194,15 +197,11 @@ class RequestsLayer extends React.Component {
 
 RequestsLayer.propTypes = {
   activeLayer: PropTypes.oneOf(['points', 'heatmap']),
-  selectedTypes: PropTypes.shape({}),
-  requests: PropTypes.shape({}),
   colorScheme: PropTypes.string,
 };
 
 RequestsLayer.defaultProps = {
   activeLayer: 'points',
-  selectedTypes: {},
-  requests: {},
   colorScheme: '',
 };
 

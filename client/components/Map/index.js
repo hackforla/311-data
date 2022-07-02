@@ -9,9 +9,10 @@ import { getDataRequestSuccess } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 import CookieNotice from '../main/CookieNotice';
-// import { MAP_MODES } from '../common/CONSTANTS';
+import { DATE_SPEC } from '../common/CONSTANTS';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
+import moment from 'moment';
 
 const REQUEST_BATCH_SIZE = 5000;
 
@@ -35,7 +36,7 @@ class MapContainer extends React.Component {
 
     // We store the raw requests from the API call here, but eventually they are
     // converted and stored in the Redux store.
-    this.rawRequests = null;
+    this.rawRequests = [];
     this.isSubscribed = null;
   }
 
@@ -55,18 +56,27 @@ class MapContainer extends React.Component {
   }
 
   getAllRequests = async () => {
-    // TODO: add date specification. See https://dev-api.311-data.org/docs#/default/get_all_service_requests_requests_get.
+    const { startDate, endDate } = this.props;
     const url = new URL(`${process.env.API_URL}/requests`);
+    url.searchParams.append("start_date", moment(startDate, DATE_SPEC).format('YYYY-MM-DD'));
+    url.searchParams.append("end_date", moment(endDate, DATE_SPEC).format('YYYY-MM-DD'));
     url.searchParams.append("limit", `${REQUEST_BATCH_SIZE}`);
-    console.log(url);
-    const { data } = await axios.get(url);
-    this.rawRequests = data;
+    var returned_length = REQUEST_BATCH_SIZE;
+    var skip = 0;
+    while (returned_length === REQUEST_BATCH_SIZE) {
+      url.searchParams.append("skip", `${skip}`);
+      const { data } = await axios.get(url);
+      returned_length = data.length;
+      skip += returned_length;
+      this.rawRequests.push(...data);
+      url.searchParams.delete("skip");
+    }
   };
 
   setData = async () => {
     const { pins } = this.props;
 
-    if (!this.rawRequests) {
+    if (this.rawRequests.length === 0) {
       await this.getAllRequests();
     }
 
@@ -131,6 +141,8 @@ const mapStateToProps = state => ({
   lastUpdated: state.metadata.lastPulledLocal,
   activeMode: state.ui.map.activeMode,
   requestTypes: state.filters.requestTypes,
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
   requests: state.data.requests
 });
 

@@ -1,3 +1,5 @@
+import { DATE_RANGES } from '@components/common/CONSTANTS';
+
 export const types = {
   UPDATE_START_DATE: 'UPDATE_START_DATE',
   UPDATE_END_DATE: 'UPDATE_END_DATE',
@@ -35,8 +37,8 @@ export const updateRequestStatus = status => ({
 
 const initialState = {
   // dateRange: null,
-  startDate: null,
-  endDate: null,
+  startDate: DATE_RANGES[0].startDate,
+  endDate: DATE_RANGES[0].endDate,
   councilId: null,
   requestTypes: {
     1: false,

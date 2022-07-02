@@ -118,6 +118,8 @@ const initialState = {
   pins: [],
   pinsInfo: {},
   selectedNcId: null,
+  // Empty GeoJSON object.
+  requests: { type: 'FeatureCollection', features: [] },
 };
 
 export default (state = initialState, action) => {
