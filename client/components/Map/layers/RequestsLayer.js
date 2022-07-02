@@ -8,14 +8,25 @@ import { connect } from 'react-redux';
 // so you don't cover up important labels
 const BEFORE_ID = 'poi-label';
 
+// Key for type id in store.data.requests.
+const TYPE_ID = 'typeId';
+// Key for closed date in store.data.requests.
+const CLOSED_DATE = 'closedDate';
+
+// Constants required for Mapbox filtering.
+const LITERAL = 'literal';
+const GET = 'get';
+
+const WHITE_HEX = '#FFFFFF';
+
 function circleColors(requestTypes) {
   const colors = [];
   requestTypes.forEach(type => colors.push(type.typeId, type.color))
   return [
     'match',
-    ['get', 'typeId'],
+    [GET, TYPE_ID],
     ...colors,
-    '#FFFFFF',
+    WHITE_HEX,
   ];
 }
 
@@ -25,9 +36,25 @@ function typeFilter(selectedTypes) {
   var trueTypes = Object.keys(selectedTypes).map((type) => parseInt(type)).filter((type) => selectedTypes[type]);
   return [
     'in',
-    ['get', 'typeId'],
-    ['literal', trueTypes]
+    [GET, TYPE_ID],
+    [LITERAL, trueTypes]
   ];
+}
+
+function statusFilter(requestStatus) {
+  // requestStatus is an object with keys "open" and "closed", and boolean values.
+  if (requestStatus.open && requestStatus.closed) {
+    // Hack to allow ALL requests.
+    return ['==', [LITERAL, 'a'], [LITERAL, 'a']];
+  }
+  if (!requestStatus.open && !requestStatus.closed) {
+    // Hack to filter ALL requests.
+    return ['==', [LITERAL, 'a'], [LITERAL, 'b']];
+  }
+  if (requestStatus.open) {
+    return ['==', [GET, CLOSED_DATE], [LITERAL, null]];
+  }
+  return ['!=', [GET, CLOSED_DATE], [LITERAL, null]];
 }
 
 class RequestsLayer extends React.Component {
@@ -47,6 +74,7 @@ class RequestsLayer extends React.Component {
     const {
       activeLayer,
       selectedTypes,
+      requestStatus,
       requests,
       colorScheme,
     } = this.props;
@@ -54,14 +82,22 @@ class RequestsLayer extends React.Component {
     if (activeLayer !== prev.activeLayer)
       this.setActiveLayer(activeLayer);
 
-    if (selectedTypes !== prev.selectedTypes) {
-      this.setSelectedTypes(selectedTypes);
+    // Check if the selected types OR the request status has changed.
+    // These filters need to be updated together, since they are
+    // actually composed into a single filter.
+    if (selectedTypes !== prev.selectedTypes ||
+      requestStatus.open !== prev.requestStatus.open ||
+      requestStatus.closed !== prev.requestStatus.closed) {
+      this.setFilters(selectedTypes, requestStatus);
     }
-    if (requests !== prev.requests && this.ready)
+    if (requests !== prev.requests && this.ready) {
+      console.log("got new requests");
+      console.log(requests);
       this.setRequests(requests);
-
-    if (colorScheme !== prev.colorScheme)
+    }
+    if (colorScheme !== prev.colorScheme) {
       this.setColorScheme(colorScheme);
+    }
   }
 
   addSources = () => {
@@ -132,8 +168,9 @@ class RequestsLayer extends React.Component {
     }
   };
 
-  setSelectedTypes = selectedTypes => {
-    this.map.setFilter('request-circles', typeFilter(selectedTypes));
+  setFilters = (selectedTypes, requestStatus) => {
+    this.map.setFilter('request-circles',
+      ['all', typeFilter(selectedTypes), statusFilter(requestStatus)]);
     // Currently, we do not support heatmap. If we did, we'd want to update
     // its filter here as well.
   };
@@ -170,7 +207,9 @@ RequestsLayer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  selectedTypes: state.filters.requestTypes
+  selectedTypes: state.filters.requestTypes,
+  requestStatus: state.filters.requestStatus,
+  requests: state.data.requests,
 });
 
 // We need to specify forwardRef to allow refs on connected components.

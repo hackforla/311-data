@@ -486,7 +486,6 @@ class Map extends React.Component {
     } = this.props;
 
     const {
-      requests,
       geoFilterType,
       locationInfo,
       // filteredRequestCounts,
@@ -508,7 +507,6 @@ class Map extends React.Component {
       <div className={classes.root} ref={el => this.mapContainer = el} >
         <RequestsLayer
           ref={el => this.requestsLayer = el}
-          requests={requests}
           activeLayer={activeRequestsLayer}
           selectedTypes={selectedTypes}
           colorScheme={colorScheme}
