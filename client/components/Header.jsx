@@ -110,8 +110,8 @@ const Header = () => {
         <NavLink to="/faqs" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>FAQ</Button>
         </NavLink>
-        <NavLink to="/blog" className={classes.link} activeStyle={activeStyle}>
-          <Button className={classes.button}>Blog</Button>
+        <NavLink to="/about" className={classes.link} activeStyle={activeStyle}>
+          <Button className={classes.button}>About</Button>
         </NavLink>
         <NavLink to="/privacy" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>Privacy</Button>
