@@ -1,7 +1,8 @@
 body {
-  color: #ececec;
-  background-color: #0f181f;
-  font-family: 'Robota, Gill Sans', 'Gill Sans MT', sans-serif;
+  /* color: #ececec; */
+  /* background-color: #0f181f; */
+  /* font-family: 'Robota, Gill Sans', 'Gill Sans MT', sans-serif; */
+  font-family: 'Open Sans', sans-serif;;
   font-size: 1em;
   font-weight: 300;
 }
@@ -47,8 +48,8 @@ h1 {
 }
 .stats-label h2 {
   font-size: 2em;
-  margin-bottom: 3pt;
-  margin-top: 3pt;
+  margin-bottom: 1pt;
+  margin-top: 1pt;
 }
 .stats-label label {
   color: #999999;

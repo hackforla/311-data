@@ -35,17 +35,16 @@ query_string = "/reports?field=type_name&filter=created_date>=2016-01-01"
 df3 = pd.read_json(API_HOST + query_string)
 df3 = df3.groupby(['type_name'], as_index=False)['counts'].sum()
 
-# Loading the total number of requests
-# start_date = datetime.date.today() - datetime.timedelta(days=200)
-# df_path = f"/requests/updated?start_date={start_date}"
-# df4 = pd.read_json(df_path)
-# df4.loc[:, 'createDateDT'] = pd.to_datetime(
-#     df4.loc[:, 'createdDate'].str[:-4].str.split("T").str.join(" "))
-# df4.loc[:, 'closeDateDT'] = pd.to_datetime(
-#     df4.loc[:, 'closedDate'].str[:-4].str.split("T").str.join(" "))
-# df4.loc[:, 'timeToClose'] = (df4.loc[:, 'closeDateDT'] - df4.loc[:, 'createDateDT']).dt.days
-# df4.loc[:, "timeToClose"] = df4.loc[:, "timeToClose"].fillna(0.0000001)
+# Loading the total number of request source
+print(" * Downloading data for dataframe")
+query_string = "/reports?field=source_name&filter=created_date>=2016-01-01"
+df6 = pd.read_json(API_HOST + query_string)
+reqSourceLab = df6.groupby(['source_name'])['counts'].sum()
 
+# Loading the number of Request Agencies
+query_string = "/reports?field=agency_name&filter=created_date>=2016-01-01"
+df5 = pd.read_json(API_HOST + query_string)
+reqAgency = df5.groupby(['agency_name'])['counts'].sum()
 
 # Request Share by Agency Pie Chart
 print(" * Downloading data for dataframe")
@@ -62,14 +61,11 @@ shareReqByAgencyPieChart = px.pie(
     df5,
     names=df5.index,
     values='counts',
-    color_discrete_sequence=DISCRETE_COLORS,
     labels=LABELS,
     hole=.3,
     title="Total Requests by Agency",
 )
-shareReqByAgencyPieChart.update_layout(margin=dict(l=125, r=125, b=125, t=125))
-apply_figure_style(shareReqByAgencyPieChart)
-
+shareReqByAgencyPieChart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
 
 # Request Type by Source Bar Chart
 print(" * Downloading data for dataframe")
@@ -84,13 +80,9 @@ reqSourceBarchart = px.bar(
     df6,
     y=df6.index,
     x='counts',
-    color_discrete_sequence=['#1D6996'],
-    labels=LABELS,
     title="Total Requests by Source",
     orientation='h'
 )
-apply_figure_style(reqSourceBarchart)
-
 
 # Median Request Days to Close Box Plot
 stas_df = pd.read_json(API_HOST + '/types/stats')
@@ -113,54 +105,74 @@ medDaysToCloseBoxPlot.update_xaxes(
 medDaysToCloseBoxPlot.update_layout(
     title="Total Median Days to Close by Type",
 )
-apply_figure_style(medDaysToCloseBoxPlot)
+
+# Day of Week Bar Chart:
+start_date = datetime.date.today() - datetime.timedelta(days=30)
+end_date = datetime.date.today() - datetime.timedelta(days=1)
+query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"  # noqa
+print(" * Downloading data for dataframe")
+df = pd.read_json(API_HOST + query_string)
+df['created_date'] = pd.to_datetime(df['created_date'])
+dow_df = df.groupby(['created_date']).agg('sum').reset_index()
+dow_df['day_of_week'] = dow_df['created_date'].dt.day_name()
+numReqByDayOfWeekBarChart = px.bar(
+    dow_df,
+    x="day_of_week",
+    y="counts",
+    labels=LABELS,
+)
+numReqByDayOfWeekBarChart.update_xaxes(categoryorder='array', categoryarray= ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
+
+# Total Request by NC
+print(" * Downloading data for dataframe")
+query_string = "/reports?field=council_name&filter=created_date>=2016-01-01"
+df1 = pd.read_json(API_HOST + query_string)
+df1 = df1.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
+reqByNcBarChart = px.bar(
+    df1,
+    x=df1.index,
+    y='counts',
+    labels=LABELS,
+    title="Total Requests by Neighborhood Councils",
+)
+reqByNcBarChart.update_layout(font=dict(size=12))
 
 # LAYOUT
 layout = html.Div([
     # Page 2 with Cards + Stuf
-    html.H1(title),
+    html.H1(title + " Pt. 1"),
     html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests.",
-           style={ 'font-size': '18px', 'font-style': 'italic'}),
-    html.Div(children=[
-        html.Div([
-            html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label(
-                "Total Requests")], style={"text-align": 'center', "border": "#666666 1px solid", 'width': '18vw'}),
-            html.Div([html.H2(df1.shape[0] - 1), html.Label("Neighborhoods")],
-                     style={"text-align": 'center', "border": "#666666 1px solid", 'width': '18vw'}),
-            html.Div([html.H2(df3.shape[0]), html.Label("Request Types")], style={"text-align": 'center', "border": "#666666 1px solid", 'width': '18vw'})],
-            style={"width": "57vw", 'display': 'flex', "justify-content": "space-between"})
+           style={'font-size': '18px', 'font-style': 'italic'}),
 
-        # ,
-        # html.Div([dcc.Graph(
-        #     id='reqSourceBarchart',
-        #     figure=reqSourceBarchart,
-        #     config=CONFIG_OPTIONS,
-        #     className="half-graph",
-        #     responsive=True,
-        #     style={"width":"35vw", "height":"50vh","text-align":'center'}
-        # )])
-
-    ], style={'display': 'flex', "justify-content": "space-between"}
-        # , className="graph-row"
-    ),
     html.Div([
-        dcc.Graph(
-            id='medDaysToCloseBoxPlot',
-            figure=medDaysToCloseBoxPlot,
-            config=CONFIG_OPTIONS,
-            responsive=True,
-            style={"width": "57vw", "height": "70vh"}
-        ),
-        dcc.Graph(
-            id='shareReqByAgencyPieChart',
-            figure=shareReqByAgencyPieChart,
-            config=CONFIG_OPTIONS,
-            className="half-graph",
-            responsive=True,
-            style={"width": "35vw", "height": "70vh"}
-        )
+        html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label(
+            "Total Requests")], style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
+        html.Div([html.H2(df1.shape[0] - 1), html.Label("Neighborhoods")],
+                    style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
+        html.Div([html.H2(df3.shape[0]), html.Label("Request Types")], style={
+                 "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
+        html.Div([html.H2(reqSourceLab.shape[0]), html.Label("Request Source")], style={
+                 "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
+        html.Div([html.H2(reqAgency.shape[0]), html.Label("Request Agency")], style={
+                 "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'})
+        ], style={'display': 'flex', "justify-content": "space-between"}),
 
-    ], className="graph-row")
-
+    html.Div(html.Br(), style={"height": "3vh"}),
+    html.Div([
+        html.Div(dcc.Graph(id='medDaysToCloseBoxPlot', figure=medDaysToCloseBoxPlot, responsive=True, style={
+                 "width": "60vw", "height": "60vh"}), style={"border": "0.5px black solid"}),
+        html.Div(dcc.Graph(id='shareReqByAgencyPieChart', figure=shareReqByAgencyPieChart, className="half-graph",
+                 responsive=True, style={"width": "35vw", "height": "60vh"}), style={"border": "0.5px black solid"})
+    ], className="graph-row", style={'display': 'flex', "justify-content": "space-between"}),
+    html.Div(html.Br(), style={"height": "2vh"}),
+    html.H1(title + " Pt. 2"),
+    html.Div([
+        html.Div(dcc.Graph(id='numReqByDayOfWeekBarChart', figure=numReqByDayOfWeekBarChart, className="half-graph", style={"width": "48vw", "height": "40vh"}), style={"border": "0.5px black solid"}),   # noqa
+        html.Div(dcc.Graph(id='reqSourceBarchart', figure=reqSourceBarchart, className="half-graph",
+                 responsive=True, style={"width": "48vw", "height": "40vh"}), style={"border": "0.5px black solid"})
+    ], className="graph-row", style={'display': 'flex', "justify-content": "space-between"}),
+    html.Div(html.Br(), style={"height": "2vh"}),
+    html.Div(dcc.Graph(id='reqByNcBarChart', figure=reqByNcBarChart, responsive=True,
+             style={"height": "45vh"}), style={"border": "0.5px black solid"})
 
 ])
