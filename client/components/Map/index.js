@@ -54,7 +54,13 @@ class MapContainer extends React.Component {
   componentWillUnmount() {
     this.isSubscribed = false;
   }
-
+  /**
+   * Gets all requests over the time range specified in the Redux store.
+   * 
+   * Since the server is slow to retrieve all the requests at once, we need to
+   * make multiple API calls, using `skip` and `limit` to retrieve consecutive
+   * chunks of data.
+   */
   getAllRequests = async () => {
     const { startDate, endDate } = this.props;
     const url = new URL(`${process.env.API_URL}/requests`);

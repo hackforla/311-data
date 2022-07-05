@@ -30,8 +30,15 @@ function circleColors(requestTypes) {
   ];
 }
 
+/**
+ * Gets a MapBox GL JS filter specification to filter request types.
+ * 
+ * @param {Object} selectedTypes A mapping of k:v, where k is an str request
+ * type, and v is a boolean indicating whether the request type is selected.
+ * @return {Array} A Mapbox GL JS filter specification that filters out the
+ * unselected types.
+ */
 function typeFilter(selectedTypes) {
-  // selectedTypes maps ints (in string form) to booleans, indicating whether the type is selected.
   // Get an array of int typeIds corresponding value in selectedTypes is true.
   var trueTypes = Object.keys(selectedTypes).map((type) => parseInt(type)).filter((type) => selectedTypes[type]);
   return [
@@ -41,8 +48,16 @@ function typeFilter(selectedTypes) {
   ];
 }
 
+/**
+ * Gets a MapBox GL JS filter specification to filter request statuses.
+ * 
+ * @param {Object} requestStatus A mapping of k:v, where k is a request status
+ * (either open or closed), and v is a boolean indicating whether the request
+ * status is selected.
+ * @return {Array} A Mapbox GL JS filter specification that filters out the
+ * unselected statuses.
+ */
 function statusFilter(requestStatus) {
-  // requestStatus is an object with keys "open" and "closed", and boolean values.
   if (requestStatus.open && requestStatus.closed) {
     // Hack to allow ALL requests.
     return ['==', [LITERAL, 'a'], [LITERAL, 'a']];
@@ -167,6 +182,17 @@ class RequestsLayer extends React.Component {
     }
   };
 
+  /**
+   * Gets a MapBox GL JS filter specification.
+   * 
+   * @param {Object} selectedTypes A mapping of k:v, where k is an int request
+   * type, and v is a boolean indicating whether the request type is selected.
+   * @param {Object} requestStatus A mapping of k:v, where k is a request status
+   * (either open or closed), and v is a boolean indicating whether the request
+   * status is selected.
+   * @return {Array} A Mapbox GL JS filter specification that filters out the
+   * unselected types and statuses.
+   */
   getFilterSpec = (selectedTypes, requestStatus) => {
     return ['all', typeFilter(selectedTypes), statusFilter(requestStatus)];
   };
