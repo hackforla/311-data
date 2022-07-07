@@ -9,7 +9,6 @@ import { getDataRequestSuccess } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 import CookieNotice from '../main/CookieNotice';
-import { DATE_SPEC } from '../common/CONSTANTS';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
 import moment from 'moment';
@@ -64,8 +63,8 @@ class MapContainer extends React.Component {
   getAllRequests = async () => {
     const { startDate, endDate } = this.props;
     const url = new URL(`${process.env.API_URL}/requests`);
-    url.searchParams.append("start_date", moment(startDate, DATE_SPEC).format('YYYY-MM-DD'));
-    url.searchParams.append("end_date", moment(endDate, DATE_SPEC).format('YYYY-MM-DD'));
+    url.searchParams.append("start_date", startDate);
+    url.searchParams.append("end_date", endDate);
     url.searchParams.append("limit", `${REQUEST_BATCH_SIZE}`);
     var returned_length = REQUEST_BATCH_SIZE;
     var skip = 0;
@@ -100,6 +99,9 @@ class MapContainer extends React.Component {
         requestId: request.requestId,
         typeId: request.typeId,
         closedDate: request.closedDate,
+        // Store this in milliseconds so that it's easy to do date comparisons
+        // using Mapbox GL JS filters.
+        createdDateMs: moment(request.createdDate).valueOf(),
       },
       geometry: {
         type: 'Point',
