@@ -8,12 +8,15 @@ import axios from 'axios';
 import { getDataRequestSuccess } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
+import { INTERNAL_DATE_SPEC } from '../common/CONSTANTS';
 import CookieNotice from '../main/CookieNotice';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
 import moment from 'moment';
 
-const REQUEST_BATCH_SIZE = 5000;
+// We make API requests on a per-day basis. On average, there are about 4k
+// requests per day, so 10k is a large safety margin.
+const REQUEST_LIMIT = 10000;
 
 const styles = theme => ({
   root: {
@@ -53,29 +56,45 @@ class MapContainer extends React.Component {
   componentWillUnmount() {
     this.isSubscribed = false;
   }
+  
+  /**
+   * Gets all the dates within a given date range.
+   * @param {string} startDate A date in INTERNAL_DATE_SPEC format.
+   * @param {string} endDate A date in INTERNAL_DATE_SPEC format.
+   * @returns An array of string dates in INTERNAL_DATE_SPEC format, including
+   * the end date.
+   */
+  getDatesInRange = (startDate, endDate) => {
+    var dateArray = [];
+    var currentDateMoment = moment(startDate, INTERNAL_DATE_SPEC);
+    const endDateMoment = moment(endDate, INTERNAL_DATE_SPEC);
+    while (currentDateMoment <= endDateMoment) {
+        dateArray.push(currentDateMoment.format(INTERNAL_DATE_SPEC));
+        currentDateMoment = currentDateMoment.add(1, 'days');
+    }
+    return dateArray;
+  }
+
   /**
    * Gets all requests over the time range specified in the Redux store.
    * 
    * Since the server is slow to retrieve all the requests at once, we need to
-   * make multiple API calls, using `skip` and `limit` to retrieve consecutive
-   * chunks of data.
+   * make multiple API calls, one for each day.
    */
   getAllRequests = async () => {
     const { startDate, endDate } = this.props;
-    const url = new URL(`${process.env.API_URL}/requests`);
-    url.searchParams.append("start_date", startDate);
-    url.searchParams.append("end_date", endDate);
-    url.searchParams.append("limit", `${REQUEST_BATCH_SIZE}`);
-    var returned_length = REQUEST_BATCH_SIZE;
-    var skip = 0;
-    while (returned_length === REQUEST_BATCH_SIZE) {
-      url.searchParams.append("skip", `${skip}`);
-      const { data } = await axios.get(url);
-      returned_length = data.length;
-      skip += returned_length;
-      this.rawRequests.push(...data);
-      url.searchParams.delete("skip");
+    const datesInRange = this.getDatesInRange(startDate, endDate);
+    var requests = [];
+    for (let i in datesInRange){
+      const url = new URL(`${process.env.API_URL}/requests`);
+      url.searchParams.append("start_date", datesInRange[i]);
+      url.searchParams.append("end_date", datesInRange[i]);
+      url.searchParams.append("limit", `${REQUEST_LIMIT}`);
+      requests.push(axios.get(url));
     }
+    await Promise.all(requests).then(responses => {
+      responses.forEach(response => this.rawRequests.push(...response.data))
+    });
   };
 
   setData = async () => {
