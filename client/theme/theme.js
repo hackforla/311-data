@@ -28,7 +28,7 @@ const theme = createMuiTheme({
       light: colorTextSecondaryLight,
     },
     background: {
-      default: '#1A1A1A',
+      default: '#0f181f',
     },
     text: {
       dark: '#C4C4C4',
