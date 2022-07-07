@@ -84,6 +84,7 @@ function statusFilter(requestStatus) {
  */
 function dateFilter(startDate, endDate) {
   const startDateMs = moment(startDate, INTERNAL_DATE_SPEC).valueOf();
+  // Make the end date inclusive by adding 1 day.
   const endDateMs = moment(endDate, INTERNAL_DATE_SPEC).add(1, 'days').valueOf();
   const afterStartDate = ['>=', [GET, 'createdDateMs'], [LITERAL, startDateMs]];
   const beforeEndDate = ['<=', [GET, 'createdDateMs'], [LITERAL, endDateMs]];
