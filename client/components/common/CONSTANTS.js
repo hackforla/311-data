@@ -829,9 +829,11 @@ export const MAP_DATE_RANGES = (() => {
   ];
 })();
 
+export const DATE_SPEC = 'MM/DD/YYYY';
+
 export const DATE_RANGES = (() => {
-  const endDate = moment().format('MM/DD/YYYY');
-  const priorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format('MM/DD/YYYY');
+  const endDate = moment().format(DATE_SPEC);
+  const priorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format(DATE_SPEC);
 
   return [
     {
@@ -873,7 +875,7 @@ export const DATE_RANGES = (() => {
     {
       id: 'YEAR_TO_DATE',
       label: 'Year to Date',
-      startDate: moment().startOf('year').format('MM/DD/YYYY'),
+      startDate: moment().startOf('year').format(DATE_SPEC),
       endDate,
     },
     {
