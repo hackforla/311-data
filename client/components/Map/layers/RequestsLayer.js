@@ -2,28 +2,74 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 // put layer underneath this layer (from original mapbox tiles)
 // so you don't cover up important labels
 const BEFORE_ID = 'poi-label';
+
+// Key for type id in store.data.requests.
+const TYPE_ID = 'typeId';
+// Key for closed date in store.data.requests.
+const CLOSED_DATE = 'closedDate';
+
+// Constants required for Mapbox filtering.
+const LITERAL = 'literal';
+const GET = 'get';
+
+const WHITE_HEX = '#FFFFFF';
 
 function circleColors(requestTypes) {
   const colors = [];
   requestTypes.forEach(type => colors.push(type.typeId, type.color))
   return [
     'match',
-    ['get', 'typeId'],
+    [GET, TYPE_ID],
     ...colors,
-    '#FFFFFF',
+    WHITE_HEX,
   ];
 }
 
+/**
+ * Gets a MapBox GL JS filter specification to filter request types.
+ * 
+ * @param {Object} selectedTypes A mapping of k:v, where k is an str request
+ * type, and v is a boolean indicating whether the request type is selected.
+ * @return {Array} A Mapbox GL JS filter specification that filters out the
+ * unselected types.
+ */
 function typeFilter(selectedTypes) {
+  // Get an array of int typeIds corresponding value in selectedTypes is true.
+  var trueTypes = Object.keys(selectedTypes).map((type) => parseInt(type)).filter((type) => selectedTypes[type]);
   return [
     'in',
-    ['get', 'type'],
-    ['literal', selectedTypes],
+    [GET, TYPE_ID],
+    [LITERAL, trueTypes]
   ];
+}
+
+/**
+ * Gets a MapBox GL JS filter specification to filter request statuses.
+ * 
+ * @param {Object} requestStatus A mapping of k:v, where k is a request status
+ * (either open or closed), and v is a boolean indicating whether the request
+ * status is selected.
+ * @return {Array} A Mapbox GL JS filter specification that filters out the
+ * unselected statuses.
+ */
+function statusFilter(requestStatus) {
+  if (requestStatus.open && requestStatus.closed) {
+    // Hack to allow ALL requests.
+    return ['==', [LITERAL, 'a'], [LITERAL, 'a']];
+  }
+  if (!requestStatus.open && !requestStatus.closed) {
+    // Hack to filter ALL requests.
+    return ['==', [LITERAL, 'a'], [LITERAL, 'b']];
+  }
+  if (requestStatus.open) {
+    return ['==', [GET, CLOSED_DATE], [LITERAL, null]];
+  }
+  return ['!=', [GET, CLOSED_DATE], [LITERAL, null]];
 }
 
 class RequestsLayer extends React.Component {
@@ -43,6 +89,7 @@ class RequestsLayer extends React.Component {
     const {
       activeLayer,
       selectedTypes,
+      requestStatus,
       requests,
       colorScheme,
     } = this.props;
@@ -50,14 +97,20 @@ class RequestsLayer extends React.Component {
     if (activeLayer !== prev.activeLayer)
       this.setActiveLayer(activeLayer);
 
-    if (selectedTypes !== prev.selectedTypes)
-      this.setSelectedTypes(selectedTypes);
-
-    if (requests !== prev.requests && this.ready)
+    // Check if the selected types OR the request status has changed.
+    // These filters need to be updated together, since they are
+    // actually composed into a single filter.
+    if (selectedTypes !== prev.selectedTypes ||
+      requestStatus.open !== prev.requestStatus.open ||
+      requestStatus.closed !== prev.requestStatus.closed) {
+      this.setFilters(selectedTypes, requestStatus);
+    }
+    if (requests !== prev.requests && this.ready) {
       this.setRequests(requests);
-
-    if (colorScheme !== prev.colorScheme)
+    }
+    if (colorScheme !== prev.colorScheme) {
       this.setColorScheme(colorScheme);
+    }
   }
 
   addSources = () => {
@@ -74,6 +127,7 @@ class RequestsLayer extends React.Component {
       selectedTypes,
       colorScheme,
       requestTypes,
+      requestStatus,
     } = this.props;
 
     this.map.addLayer({
@@ -94,7 +148,7 @@ class RequestsLayer extends React.Component {
         'circle-color': circleColors(requestTypes),
         'circle-opacity': 0.8,
       },
-      // filter: typeFilter(selectedTypes),
+      filter: this.getFilterSpec(selectedTypes, requestStatus),
     }, BEFORE_ID);
 
     // this.map.addLayer({
@@ -112,7 +166,7 @@ class RequestsLayer extends React.Component {
   };
 
   setActiveLayer = activeLayer => {
-    switch(activeLayer) {
+    switch (activeLayer) {
       case 'points':
         this.map.setLayoutProperty('request-circles', 'visibility', 'visible');
         // this.map.setLayoutProperty('request-heatmap', 'visibility', 'none');
@@ -128,9 +182,26 @@ class RequestsLayer extends React.Component {
     }
   };
 
-  setSelectedTypes = selectedTypes => {
-    this.map.setFilter('request-circles', typeFilter(selectedTypes));
-    this.map.setFilter('request-heatmap', typeFilter(selectedTypes));
+  /**
+   * Gets a MapBox GL JS filter specification.
+   * 
+   * @param {Object} selectedTypes A mapping of k:v, where k is an int request
+   * type, and v is a boolean indicating whether the request type is selected.
+   * @param {Object} requestStatus A mapping of k:v, where k is a request status
+   * (either open or closed), and v is a boolean indicating whether the request
+   * status is selected.
+   * @return {Array} A Mapbox GL JS filter specification that filters out the
+   * unselected types and statuses.
+   */
+  getFilterSpec = (selectedTypes, requestStatus) => {
+    return ['all', typeFilter(selectedTypes), statusFilter(requestStatus)];
+  };
+
+  setFilters = (selectedTypes, requestStatus) => {
+    this.map.setFilter('request-circles',
+      this.getFilterSpec(selectedTypes, requestStatus));
+    // Currently, we do not support heatmap. If we did, we'd want to update
+    // its filter here as well.
   };
 
   setRequests = requests => {
@@ -150,18 +221,23 @@ class RequestsLayer extends React.Component {
   }
 }
 
-export default RequestsLayer;
-
 RequestsLayer.propTypes = {
   activeLayer: PropTypes.oneOf(['points', 'heatmap']),
-  selectedTypes: PropTypes.shape({}),
-  requests: PropTypes.shape({}),
   colorScheme: PropTypes.string,
 };
 
 RequestsLayer.defaultProps = {
   activeLayer: 'points',
-  selectedTypes: {},
-  requests: {},
   colorScheme: '',
 };
+
+const mapStateToProps = state => ({
+  selectedTypes: state.filters.requestTypes,
+  requestStatus: state.filters.requestStatus,
+  requests: state.data.requests,
+});
+
+// We need to specify forwardRef to allow refs on connected components.
+// See https://github.com/reduxjs/react-redux/issues/1291#issuecomment-494185126
+// for more info.
+export default connect(mapStateToProps, null, null, { forwardRef: true })(RequestsLayer);
