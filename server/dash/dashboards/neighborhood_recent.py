@@ -140,8 +140,10 @@ def update_table(selected_council):
     # The following check is to ensure Dash graphs are populate with dummy data when query returns empty dataframe
     if table_df.shape[0] == 0:
         table_df = pd.DataFrame(columns=["Request Type"])
-        for i in range(len(DISCRETE_COLORS_MAP.keys())):
-            table_df.loc[i] = [list(DISCRETE_COLORS_MAP.keys())[i]]
+        i = 0
+        for request_type in DISCRETE_COLORS_MAP:
+            table_df.loc[i] = [request_type]
+            i += 1
     return table_df.to_dict('records')
 
 
@@ -172,7 +174,7 @@ def update_figure(selected_council):
     #The following check is to ensure Dash graphs are populate with dummy data when query returns empty dataframe
     if figure_df.shape[0] == 0:
         figure_df = pd.DataFrame(columns=['createdDate', "srnumber", "typeName"])
-        for j in range(len(DISCRETE_COLORS_MAP.keys())):
+        for j in range(START_DATE_DELTA):
             for i in range(len(DISCRETE_COLORS_MAP.keys())):
                 figure_df.loc[figure_df.shape[0]] = [start_date +
                     datetime.timedelta(days=j), 0, list(DISCRETE_COLORS_MAP.keys())[i]]
@@ -205,9 +207,10 @@ def update_council_figure(selected_council):
     pie_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['typeName']).agg('count').reset_index()  # noqa
     if pie_df.shape[0] == 0:
         pie_df = pd.DataFrame(columns=["srnumber", "typeName"])
-        pie_df.loc[0] = [12345678, "No Request at this time"]
-        for i in range(len(DISCRETE_COLORS_MAP.keys())):
-            pie_df.loc[i] = [12345678, list(DISCRETE_COLORS_MAP.keys())[i]]
+        i = 0
+        for request_type in DISCRETE_COLORS_MAP:
+            pie_df.loc[i] = [12345678, request_type]
+            i += 1
     pie_fig = px.pie(
         pie_df,
         names="typeName",
