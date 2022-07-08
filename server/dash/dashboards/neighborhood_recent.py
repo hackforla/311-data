@@ -48,7 +48,6 @@ except (RuntimeError):
     selected_council = 'Arleta'
 
 table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
-# figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'], as_index=False)['srnumber'].count()  # noqa
 
 req_type_line_base_graph = px.line()
 apply_figure_style(req_type_line_base_graph)
@@ -138,12 +137,12 @@ layout = html.Div([
 )
 def update_table(selected_council):
     table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
+    # The following check is to ensure Dash graphs are populate with dummy data when query returns empty dataframe
     if table_df.shape[0] == 0:
         table_df = pd.DataFrame(columns=["Request Type"])
         for i in range(len(DISCRETE_COLORS_MAP.keys())):
             table_df.loc[i] = [list(DISCRETE_COLORS_MAP.keys())[i]]
-    else:
-        return table_df.to_dict('records')
+    return table_df.to_dict('records')
 
 
 @app.callback(
@@ -170,6 +169,7 @@ def update_text(selected_council):
 def update_figure(selected_council):
     figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'])['srnumber'].count().reset_index()  # noqa
     figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
+    #The following check is to ensure Dash graphs are populate with dummy data when query returns empty dataframe
     if figure_df.shape[0] == 0:
         figure_df = pd.DataFrame(columns=['createdDate', "srnumber", "typeName"])
         for j in range(len(DISCRETE_COLORS_MAP.keys())):
