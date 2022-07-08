@@ -50,14 +50,13 @@ except (RuntimeError):
 table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
 # figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'], as_index=False)['srnumber'].count()  # noqa
 
+req_type_line_base_graph = px.line()
+apply_figure_style(req_type_line_base_graph)
+
+req_type_pie_base_graph = px.pie()
+apply_figure_style(req_type_pie_base_graph)
+
 # Populate the neighborhood dropdown
-fig = px.line()
-apply_figure_style(fig)
-
-fig2 = px.pie()
-apply_figure_style(fig2)
-
-
 def populate_options():
     council_df_path = '/councils'
     council_df = pd.read_json(API_HOST + council_df_path)
@@ -97,11 +96,11 @@ layout = html.Div([
     ], className="graph-row"),
     html.Div([
         html.Div(
-            dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
+            dcc.Graph(id='graph', figure=req_type_line_base_graph, config=CONFIG_OPTIONS),
             className="half-graph"
         ),
         html.Div(
-            dcc.Graph(id='pie_graph', figure=fig2, config=CONFIG_OPTIONS),
+            dcc.Graph(id='pie_graph', figure=req_type_pie_base_graph, config=CONFIG_OPTIONS),
             className="half-graph"
         )
     ]),
