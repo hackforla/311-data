@@ -5,7 +5,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import { getDataRequestSuccess } from '@reducers/data';
+import { getDataRequestSuccess, updateDateRanges } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 import { INTERNAL_DATE_SPEC } from '../common/CONSTANTS';
@@ -48,15 +48,81 @@ class MapContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.activeMode !== this.props.activeMode ||
-      prevProps.pins !== this.props.pins)
+    const { activeMode, pins, startDate, endDate } = this.props;
+    if (prevProps.activeMode !== activeMode || prevProps.pins !== pins ||
+      prevProps.startDate != startDate || prevProps.endDate != endDate) {
       this.setData();
+    }
   }
 
   componentWillUnmount() {
     this.isSubscribed = false;
   }
   
+  getNonOverlappingRanges = (startA, endA, startB, endB) => {
+    var leftOverlap = null;
+    var rightOverlap = null;
+    if (startA < startB){
+      leftOverlap = [startA, startB];
+    }
+    if (endB < endA){
+      rightOverlap = [endB, endA];
+    }
+    return [leftOverlap, rightOverlap];
+  }
+
+  getMissingDateRanges = (startDate, endDate) => {
+    const {dateRangesWithRequests} = this.props;
+    var missingDateRanges = [];
+    var currentStartDate = startDate;
+    var currentEndDate = endDate;
+    for (let dateRange of dateRangesWithRequests.values()){
+      const nonOverlappingRanges = this.getNonOverlappingRanges(currentStartDate,
+        currentEndDate, dateRange[0], dateRange[1]);
+      if (nonOverlappingRanges[0] !== null){
+        missingDateRanges.push(nonOverlappingRanges[0]);
+      }
+      if (nonOverlappingRanges[1] === null){
+        return missingDateRanges;
+      }
+      currentStartDate = nonOverlappingRanges[1][0];
+      currentEndDate = nonOverlappingRanges[1][1];
+    }
+    missingDateRanges.push([currentStartDate, currentEndDate]);
+    return missingDateRanges;
+  }
+
+  resolveDateRanges = (startDate, endDate) => {
+    const {dateRangesWithRequests} = this.props;
+    if (dateRangesWithRequests.length === 0){
+      return [[startDate, endDate]];
+    }
+    var newDateRanges = [];
+    var currentStartDate = startDate;
+    var currentEndDate = endDate;
+    for (let dateRange of dateRangesWithRequests.values()){
+      const nonOverlappingRanges = this.getNonOverlappingRanges(currentStartDate,
+        currentEndDate, dateRange[0], dateRange[1]);
+      const leftOverlap = nonOverlappingRanges[0];
+      const rightOverlap = nonOverlappingRanges[1];
+      if (leftOverlap === null && rightOverlap === null){
+        newDateRanges.push([dateRange]);
+      }
+      if (leftOverlap !== null){
+        currentStartDate = leftOverlap[0];
+      }
+      if (rightOverlap === null){
+        currentEndDate = dateRange[1];
+        newDateRanges.push([currentStartDate, currentEndDate]);
+      }
+    }
+    // Only sometimes need to add this...
+    newDateRanges.push([currentStartDate, currentEndDate]);
+    // Sort newDateRanges by startDate.
+    // Merge adjacent date ranges.
+    return newDateRanges;
+  }
+
   /**
    * Gets all the dates within a given date range.
    * @param {string} startDate A date in INTERNAL_DATE_SPEC format.
@@ -81,8 +147,7 @@ class MapContainer extends React.Component {
    * Since the server is slow to retrieve all the requests at once, we need to
    * make multiple API calls, one for each day.
    */
-  getAllRequests = async () => {
-    const { startDate, endDate } = this.props;
+  getAllRequests = async (startDate, endDate) => {
     const datesInRange = this.getDatesInRange(startDate, endDate);
     var requests = [];
     for (let i in datesInRange){
@@ -98,15 +163,21 @@ class MapContainer extends React.Component {
   };
 
   setData = async () => {
-    const { pins } = this.props;
+    const { startDate, endDate } = this.props;
 
-    if (this.rawRequests.length === 0) {
-      await this.getAllRequests();
+    const missingDateRanges = this.getMissingDateRanges(startDate, endDate);
+    if (missingDateRanges.length !== 0){
+      this.rawRequests = [];
+      for (let i in missingDateRanges){
+        await this.getAllRequests(missingDateRanges[i][0], missingDateRanges[i][1]);
+      }
     }
 
     if (this.isSubscribed) {
-      const { getDataSuccess } = this.props;
+      const { getDataSuccess, updateDateRangesWithRequests } = this.props;
       getDataSuccess(this.convertRequests(this.rawRequests));
+      const newDateRangesWithRequests = this.resolveDateRanges(startDate, endDate);
+      updateDateRangesWithRequests(newDateRangesWithRequests);
     }
   };
 
@@ -170,13 +241,15 @@ const mapStateToProps = state => ({
   requestTypes: state.filters.requestTypes,
   startDate: state.filters.startDate,
   endDate: state.filters.endDate,
-  requests: state.data.requests
+  requests: state.data.requests,
+  dateRangesWithRequests: state.data.dateRangesWithRequests,
 });
 
 const mapDispatchToProps = dispatch => ({
   updatePosition: position => dispatch(updateMapPosition(position)),
   exportMap: () => dispatch(trackMapExport()),
   getDataSuccess: data => dispatch(getDataRequestSuccess(data)),
+  updateDateRangesWithRequests: dateRanges => dispatch(updateDateRanges(dateRanges)),
 });
 
 MapContainer.propTypes = {};
