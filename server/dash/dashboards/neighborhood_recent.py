@@ -160,6 +160,7 @@ def update_table(selected_council):
 def update_text(selected_council):
     create_count = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'")['srnumber'].count()  # noqa
     close_count = df.query(f"councilName == '{selected_council}' and closedDate >= '{start_date}'")['srnumber'].count()  # noqa
+    # This check is to ensure data quality issues doesn't flow downstream to the dashboard (closed request exist without new request)
     if create_count == 0 and close_count > 0:
         return 0, 0, 0
     else:
