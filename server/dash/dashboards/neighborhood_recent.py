@@ -212,7 +212,7 @@ def update_council_figure(selected_council):
         pie_df = pd.DataFrame(columns=["srnumber", "typeName"])
         i = 0
         for request_type in DISCRETE_COLORS_MAP:
-            pie_df.loc[i] = [12345678, request_type]
+            pie_df.loc[i] = [0, request_type]
             i += 1
     pie_fig = px.pie(
         pie_df,
