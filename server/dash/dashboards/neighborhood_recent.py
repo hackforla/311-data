@@ -56,6 +56,8 @@ req_type_pie_base_graph = px.pie()
 apply_figure_style(req_type_pie_base_graph)
 
 # Populate the neighborhood dropdown
+
+
 def populate_options():
     council_df_path = '/councils'
     council_df = pd.read_json(API_HOST + council_df_path)
@@ -158,7 +160,7 @@ def update_table(selected_council):
 def update_text(selected_council):
     create_count = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'")['srnumber'].count()  # noqa
     close_count = df.query(f"councilName == '{selected_council}' and closedDate >= '{start_date}'")['srnumber'].count()  # noqa
-    if create_count == 0 and close_count == 0:
+    if create_count == 0 and close_count > 0:
         return 0, 0, 0
     else:
         return create_count, close_count, create_count - close_count
@@ -170,14 +172,14 @@ def update_text(selected_council):
 )
 def update_figure(selected_council):
     figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'])['srnumber'].count().reset_index()  # noqa
-    figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
-    #The following check is to ensure Dash graphs are populate with dummy data when query returns empty dataframe
+    # The following check is to ensure Dash graphs are populate with dummy data when query returns empty dataframe
     if figure_df.shape[0] == 0:
-        figure_df = pd.DataFrame(columns=['createdDate', "srnumber", "typeName"])
+        figure_df = pd.DataFrame(columns=["createdDate", "srnumber", "typeName"])
         for j in range(START_DATE_DELTA):
-            for i in range(len(DISCRETE_COLORS_MAP.keys())):
-                figure_df.loc[figure_df.shape[0]] = [start_date +
-                    datetime.timedelta(days=j), 0, list(DISCRETE_COLORS_MAP.keys())[i]]
+            for request_type in DISCRETE_COLORS_MAP:
+                figure_df.loc[figure_df.shape[0]] = [
+                    start_date + datetime.timedelta(days=j), 0, request_type]
+    figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
     fig = px.line(
         figure_df,
         x="createdDate",
