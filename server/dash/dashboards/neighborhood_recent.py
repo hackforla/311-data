@@ -7,7 +7,6 @@ import dash_table
 from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.express as px
-from flask import request
 
 from app import app, batch_get_data
 from config import API_HOST
@@ -24,8 +23,10 @@ pretty_columns = {
     'address': "Address"
 }
 
-start_date = datetime.date.today() + datetime.timedelta(days=3)
-end_date = datetime.date.today() + datetime.timedelta(days=14)
+START_DATE_DELTA = 7
+END_DATE_DELTA = 1
+start_date = datetime.date.today() - datetime.timedelta(days=START_DATE_DELTA)
+end_date = datetime.date.today() - datetime.timedelta(days=END_DATE_DELTA)
 
 # TITLE
 title = "NEIGHBORHOOD WEEKLY REPORT"
