@@ -56,6 +56,7 @@ apply_figure_style(fig)
 fig2 = px.pie()
 apply_figure_style(fig2)
 
+
 def populate_options():
     council_df_path = '/councils'
     council_df = pd.read_json(API_HOST + council_df_path)
@@ -66,6 +67,7 @@ def populate_options():
             'value': i
         })
     return values
+
 
 # Layout
 layout = html.Div([
@@ -94,11 +96,11 @@ layout = html.Div([
     ], className="graph-row"),
     html.Div([
         html.Div(
-            dcc.Graph(id='graph', figure=fig ,config=CONFIG_OPTIONS),
+            dcc.Graph(id='graph', figure=fig, config=CONFIG_OPTIONS),
             className="half-graph"
         ),
         html.Div(
-            dcc.Graph(id='pie_graph', figure=fig2 , config=CONFIG_OPTIONS),
+            dcc.Graph(id='pie_graph', figure=fig2, config=CONFIG_OPTIONS),
             className="half-graph"
         )
     ]),
@@ -138,7 +140,6 @@ def update_table(selected_council):
     table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
     if table_df.shape[0] == 0:
         table_df = pd.DataFrame(columns=["Request Type"])
-        #table_df.loc[0] = ["There is no data right now"]
         for i in range(len(DISCRETE_COLORS_MAP.keys())):
             table_df.loc[i] = [list(DISCRETE_COLORS_MAP.keys())[i]]
     else:
@@ -170,10 +171,11 @@ def update_figure(selected_council):
     figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'])['srnumber'].count().reset_index()  # noqa
     figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
     if figure_df.shape[0] == 0:
-        figure_df = pd.DataFrame(columns = ['createdDate', "srnumber", "typeName"])
+        figure_df = pd.DataFrame(columns=['createdDate', "srnumber", "typeName"])
         for j in range(len(DISCRETE_COLORS_MAP.keys())):
             for i in range(len(DISCRETE_COLORS_MAP.keys())):
-                figure_df.loc[figure_df.shape[0]] = [start_date + datetime.timedelta(days=j), 0, list(DISCRETE_COLORS_MAP.keys())[i]]
+                figure_df.loc[figure_df.shape[0]] = [start_date +
+                    datetime.timedelta(days=j), 0, list(DISCRETE_COLORS_MAP.keys())[i]]
     fig = px.line(
         figure_df,
         x="createdDate",
@@ -202,7 +204,7 @@ def update_figure(selected_council):
 def update_council_figure(selected_council):
     pie_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['typeName']).agg('count').reset_index()  # noqa
     if pie_df.shape[0] == 0:
-        pie_df = pd.DataFrame(columns = ["srnumber", "typeName"])
+        pie_df = pd.DataFrame(columns=["srnumber", "typeName"])
         pie_df.loc[0] = [12345678, "No Request at this time"]
         for i in range(len(DISCRETE_COLORS_MAP.keys())):
             pie_df.loc[i] = [12345678, list(DISCRETE_COLORS_MAP.keys())[i]]
