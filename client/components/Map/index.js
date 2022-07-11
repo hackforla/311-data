@@ -59,18 +59,42 @@ class MapContainer extends React.Component {
     this.isSubscribed = false;
   }
   
+  /**
+   * Returns the non-overlapping date ranges of A before and after B.
+   * @param {string} startA The start date of range A in INTERNAL_DATE_SPEC format.
+   * @param {string} endA The end date of range A in INTERNAL_DATE_SPEC format.
+   * @param {string} startB The start date of range B in INTERNAL_DATE_SPEC format.
+   * @param {string} endB The end date of range B in INTERNAL_DATE_SPEC format.
+   * @returns An array of two elements: the first element is the non-overlapping
+   * range of A before B; the second is the non-overlapping range of A after B.
+   * Each element can be null if there is no non-overlappping range.
+   */
   getNonOverlappingRanges = (startA, endA, startB, endB) => {
     var leftOverlap = null;
     var rightOverlap = null;
-    if (startA < startB){
-      leftOverlap = [startA, startB];
+    if (moment(startA) < moment(startB)){
+      leftOverlap = [startA, moment(startB).subtract(1, 'days').format(INTERNAL_DATE_SPEC)];
     }
-    if (endB < endA){
-      rightOverlap = [endB, endA];
+    if (moment(endB) < moment(endA)){
+      rightOverlap = [moment(endB).add(1, 'days').format(INTERNAL_DATE_SPEC), endA];
     }
     return [leftOverlap, rightOverlap];
   }
 
+  /**
+   * Returns the missing date ranges of a new date range against the existing
+   * date ranges in the Redux store.
+   * 
+   * In our Redux store, we keep track of date ranges that we already have 311
+   * requests for. When the user changes the date range, we need to check
+   * whether we need to retrieve more data; if we do, we only want to pull the
+   * data from the date ranges that aren't already in the store.
+   * 
+   * @param {*} startDate The start date in INTERNAL_DATE_SPEC format. 
+   * @param {*} endDate The end date in INTERNAL_DATE_SPEC format.
+   * @returns An array of date ranges, where each date range is represented as
+   * an array of string start and end dates.
+   */
   getMissingDateRanges = (startDate, endDate) => {
     const {dateRangesWithRequests} = this.props;
     var missingDateRanges = [];
@@ -92,35 +116,44 @@ class MapContainer extends React.Component {
     return missingDateRanges;
   }
 
-  resolveDateRanges = (startDate, endDate) => {
+  /**
+   * Returns the updated date ranges given the date ranges that we just pulled
+   * data for.
+   * @param {Array} newDateRanges The new date ranges that we just pulled data for.
+   * @returns The updated, complete array of date ranges for which we have data
+   * in the Redux store.
+   */
+  resolveDateRanges = (newDateRanges) => {
     const {dateRangesWithRequests} = this.props;
-    if (dateRangesWithRequests.length === 0){
-      return [[startDate, endDate]];
+    var allDateRanges = dateRangesWithRequests.concat(newDateRanges);
+    // Sort date ranges by startDate. Since newDateRanges was retrieved using
+    // getMissingDateRanges, there should be no overlapping date ranges in the
+    // allDateRanges.
+    const sortedDateRanges = allDateRanges.sort(function(dateRangeA, dateRangeB){
+      return moment(dateRangeA[0]) - moment(dateRangeB[0])});
+    var resolvedDateRanges = [];
+    var currentStart = null;
+    var currentEnd = null;
+    for (const dateRange of sortedDateRanges){
+      if (currentStart === null){
+        currentStart = dateRange[0];
+        currentEnd = dateRange[1];
+        continue;
+      }
+      // Check if the current date range is adjacent to the next date range.
+      if (moment(currentEnd).add(1, 'days').valueOf() === moment(dateRange[0]).valueOf()){
+        // Extend the current date range to include the next date range.
+        currentEnd = dateRange[1];
+      } else {
+        resolvedDateRanges.push([currentStart, currentEnd]);
+        currentStart = null;
+        currentEnd = null;
+      }
     }
-    var newDateRanges = [];
-    var currentStartDate = startDate;
-    var currentEndDate = endDate;
-    for (let dateRange of dateRangesWithRequests.values()){
-      const nonOverlappingRanges = this.getNonOverlappingRanges(currentStartDate,
-        currentEndDate, dateRange[0], dateRange[1]);
-      const leftOverlap = nonOverlappingRanges[0];
-      const rightOverlap = nonOverlappingRanges[1];
-      if (leftOverlap === null && rightOverlap === null){
-        newDateRanges.push([dateRange]);
-      }
-      if (leftOverlap !== null){
-        currentStartDate = leftOverlap[0];
-      }
-      if (rightOverlap === null){
-        currentEndDate = dateRange[1];
-        newDateRanges.push([currentStartDate, currentEndDate]);
-      }
+    if (currentStart !== null){
+      resolvedDateRanges.push([currentStart, currentEnd]);
     }
-    // Only sometimes need to add this...
-    newDateRanges.push([currentStartDate, currentEndDate]);
-    // Sort newDateRanges by startDate.
-    // Merge adjacent date ranges.
-    return newDateRanges;
+    return resolvedDateRanges;
   }
 
   /**
@@ -147,43 +180,46 @@ class MapContainer extends React.Component {
    * Since the server is slow to retrieve all the requests at once, we need to
    * make multiple API calls, one for each day.
    */
-  getAllRequests = async (startDate, endDate) => {
+  getAllRequests = (startDate, endDate) => {
     const datesInRange = this.getDatesInRange(startDate, endDate);
     var requests = [];
-    for (let i in datesInRange){
+    for (const date of datesInRange){
       const url = new URL(`${process.env.API_URL}/requests`);
-      url.searchParams.append("start_date", datesInRange[i]);
-      url.searchParams.append("end_date", datesInRange[i]);
+      url.searchParams.append("start_date", date);
+      url.searchParams.append("end_date", date);
       url.searchParams.append("limit", `${REQUEST_LIMIT}`);
       requests.push(axios.get(url));
     }
-    await Promise.all(requests).then(responses => {
-      responses.forEach(response => this.rawRequests.push(...response.data))
-    });
+    return requests;
   };
 
   setData = async () => {
     const { startDate, endDate } = this.props;
 
     const missingDateRanges = this.getMissingDateRanges(startDate, endDate);
-    if (missingDateRanges.length !== 0){
-      this.rawRequests = [];
-      for (let i in missingDateRanges){
-        await this.getAllRequests(missingDateRanges[i][0], missingDateRanges[i][1]);
-      }
+    if (missingDateRanges.length === 0){
+      return;
     }
+    this.rawRequests = [];
+    var allRequestPromises = [];
+    for (const missingDateRange of missingDateRanges){
+      const requestPromises = this.getAllRequests(missingDateRange[0],
+        missingDateRange[1]);
+      allRequestPromises.push(...requestPromises);    
+    }
+    await Promise.all(allRequestPromises).then(responses => {
+      responses.forEach(response => this.rawRequests.push(...response.data))
+    });
 
     if (this.isSubscribed) {
       const { getDataSuccess, updateDateRangesWithRequests } = this.props;
       getDataSuccess(this.convertRequests(this.rawRequests));
-      const newDateRangesWithRequests = this.resolveDateRanges(startDate, endDate);
+      const newDateRangesWithRequests = this.resolveDateRanges(missingDateRanges);
       updateDateRangesWithRequests(newDateRangesWithRequests);
     }
   };
 
-  convertRequests = requests => ({
-    type: 'FeatureCollection',
-    features: requests.map(request => ({
+  convertRequests = requests => (requests.map(request => ({
       type: 'Feature',
       properties: {
         requestId: request.requestId,
@@ -201,7 +237,7 @@ class MapContainer extends React.Component {
         ]
       }
     }))
-  });
+  );
 
   // TODO: fix this
   getSelectedTypes = () => {

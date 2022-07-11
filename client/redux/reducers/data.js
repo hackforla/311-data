@@ -137,11 +137,16 @@ export default (state = initialState, action) => {
         isMapLoading: true,
         isVisLoading: true,
       };
-    case types.GET_DATA_REQUEST_SUCCESS:
+    case types.GET_DATA_REQUEST_SUCCESS: {
+      const newRequests = {
+        type: 'FeatureCollection',
+        features: [...state.requests.features, ...action.payload],
+      };
       return {
         ...state,
-        requests: action.payload,
+        requests: newRequests,
       };
+    }
     case types.UPDATE_DATE_RANGES:
       return {
         ...state,
