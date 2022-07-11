@@ -3,6 +3,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { INTERNAL_DATE_SPEC } from '../../common/CONSTANTS';
+import moment from 'moment';
 
 // put layer underneath this layer (from original mapbox tiles)
 // so you don't cover up important labels
@@ -72,6 +74,23 @@ function statusFilter(requestStatus) {
   return ['!=', [GET, CLOSED_DATE], [LITERAL, null]];
 }
 
+/**
+ * Gets a MapBox GL JS filter specification to filter requests by date range.
+ * 
+ * @param {string} startDate The start date, in YYYY-MM-DD format.
+ * @param {string} endDate The end date, in YYYY-MM-DD format.
+ * @return {Array} A Mapbox GL JS filter specification that filters out
+ * requests outside of the date range.
+ */
+function dateFilter(startDate, endDate) {
+  const startDateMs = moment(startDate, INTERNAL_DATE_SPEC).valueOf();
+  // Make the end date inclusive by adding 1 day.
+  const endDateMs = moment(endDate, INTERNAL_DATE_SPEC).add(1, 'days').valueOf();
+  const afterStartDate = ['>=', [GET, 'createdDateMs'], [LITERAL, startDateMs]];
+  const beforeEndDate = ['<=', [GET, 'createdDateMs'], [LITERAL, endDateMs]];
+  return ['all', afterStartDate, beforeEndDate];
+}
+
 class RequestsLayer extends React.Component {
   constructor(props) {
     super(props);
@@ -92,18 +111,23 @@ class RequestsLayer extends React.Component {
       requestStatus,
       requests,
       colorScheme,
+      startDate,
+      endDate,
     } = this.props;
 
     if (activeLayer !== prev.activeLayer)
       this.setActiveLayer(activeLayer);
 
-    // Check if the selected types OR the request status has changed.
+    // Check if the selected types OR the request status OR the date range has
+    // changed.
     // These filters need to be updated together, since they are
     // actually composed into a single filter.
     if (selectedTypes !== prev.selectedTypes ||
       requestStatus.open !== prev.requestStatus.open ||
-      requestStatus.closed !== prev.requestStatus.closed) {
-      this.setFilters(selectedTypes, requestStatus);
+      requestStatus.closed !== prev.requestStatus.closed ||
+      startDate != prev.startDate ||
+      endDate != prev.endDate) {
+      this.setFilters(selectedTypes, requestStatus, startDate, endDate);
     }
     if (requests !== prev.requests && this.ready) {
       this.setRequests(requests);
@@ -128,6 +152,8 @@ class RequestsLayer extends React.Component {
       colorScheme,
       requestTypes,
       requestStatus,
+      startDate,
+      endDate,
     } = this.props;
 
     this.map.addLayer({
@@ -148,7 +174,8 @@ class RequestsLayer extends React.Component {
         'circle-color': circleColors(requestTypes),
         'circle-opacity': 0.8,
       },
-      filter: this.getFilterSpec(selectedTypes, requestStatus),
+      filter: this.getFilterSpec(selectedTypes, requestStatus, startDate,
+        endDate),
     }, BEFORE_ID);
 
     // this.map.addLayer({
@@ -190,16 +217,19 @@ class RequestsLayer extends React.Component {
    * @param {Object} requestStatus A mapping of k:v, where k is a request status
    * (either open or closed), and v is a boolean indicating whether the request
    * status is selected.
-   * @return {Array} A Mapbox GL JS filter specification that filters out the
+   * @param {string} startDate The start date, in YYYY-MM-DD format.
+   * @param {string} endDate The end date, in YYYY-MM-DD format.
+    * @return {Array} A Mapbox GL JS filter specification that filters out the
    * unselected types and statuses.
    */
-  getFilterSpec = (selectedTypes, requestStatus) => {
-    return ['all', typeFilter(selectedTypes), statusFilter(requestStatus)];
+  getFilterSpec = (selectedTypes, requestStatus, startDate, endDate) => {
+    return ['all', typeFilter(selectedTypes), statusFilter(requestStatus),
+      dateFilter(startDate, endDate)];
   };
 
-  setFilters = (selectedTypes, requestStatus) => {
+  setFilters = (selectedTypes, requestStatus, startDate, endDate) => {
     this.map.setFilter('request-circles',
-      this.getFilterSpec(selectedTypes, requestStatus));
+      this.getFilterSpec(selectedTypes, requestStatus, startDate, endDate));
     // Currently, we do not support heatmap. If we did, we'd want to update
     // its filter here as well.
   };
@@ -235,6 +265,8 @@ const mapStateToProps = state => ({
   selectedTypes: state.filters.requestTypes,
   requestStatus: state.filters.requestStatus,
   requests: state.data.requests,
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
 });
 
 // We need to specify forwardRef to allow refs on connected components.
