@@ -59,6 +59,19 @@ apply_figure_style(req_type_pie_base_graph)
 
 
 def populate_options():
+    """Function to populate the dropdown menu with a list of neighborhood councils.
+
+    This function calls the councils API to get a list of neighborhood council and 
+    return a unique list of council as a dictionary sorted in ascending order of requests.
+
+        Typical usage example:
+
+        dcc.Dropdown(
+            ...
+            options=populate_options()
+            ...
+        )
+    """
     council_df_path = '/councils'
     council_df = pd.read_json(API_HOST + council_df_path)
     values = []
@@ -138,7 +151,21 @@ layout = html.Div([
     Input("council_list", "value")
 )
 def update_table(selected_council):
+    """Dash Callback Function to update the LA 311 request data table at the bottom of the dashboard.
+
+    This function takes the selected neighborhood council (nc) value from the "council_list" dropdown and 
+    outputs a list of requests associated with that nc as a data table in dictionary form 
+    with id "council_table" in the layout. 
+
+    Typical usage example:
+
+        dash_table.DataTable(
+            id='council_table',
+            ...
+        )
+    """
     table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
+
     # The following check is to ensure Dash graphs are populated with dummy data when query returns empty dataframe.
     if table_df.shape[0] == 0:
         table_df = pd.DataFrame(columns=["Request Type"])
@@ -156,8 +183,23 @@ def update_table(selected_council):
     Input("council_list", "value")
 )
 def update_text(selected_council):
+    """Dash Callback Function to update the indicator cards at the top of the dashboard.
+
+    This function takes the selected neighborhood council (nc) value from the "council_list" dropdown and 
+    outputs the values for the number of new requests, number of closed requests, and net change in requests
+    (i.e. # closed requests - # new requests) for visualizations on the indicator visuals in the layout. The 
+    corresponding IDs of the indicator visuals are "created_txt", "closed_txt", and "net_txt".
+
+    Typical usage example (using net_txt as example, created_txt and closed_txt are similar):
+
+        html.Div(
+            [html.H2(id="net_txt"), html.Label("Net Change")],
+            className="stats-label"
+        )    
+    """
     create_count = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'")['srnumber'].count()  # noqa
     close_count = df.query(f"councilName == '{selected_council}' and closedDate >= '{start_date}'")['srnumber'].count()  # noqa
+
     # This check is to ensure data quality issues don't flow downstream to the dashboard (i.e., closed requests exist without any new requests).
     if create_count == 0 and close_count > 0:
         return 0, 0, 0
@@ -170,7 +212,22 @@ def update_text(selected_council):
     Input("council_list", "value")
 )
 def update_figure(selected_council):
+    """Dash Callback Function to update the Request Type Line Chart at the middle of the dashboard.
+
+    This function takes the selected neighborhood council (nc) value from the "council_list" dropdown and 
+    outputs the request type line chart that shows the trend of of different requests types over
+    the time range of the data available in the selected neighborhood conucil. The line chart will
+    show up inside dcc.Graph object as long as id "graph" is passed in.
+
+    Typical usage example:
+
+        html.Div(
+                    dcc.Graph(id='graph', 
+                    ...
+                )
+    """
     figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'])['srnumber'].count().reset_index()  # noqa
+
     # The following check is to ensure Dash graphs are populated with dummy data when query returns empty dataframe.
     if figure_df.shape[0] == 0:
         figure_df = pd.DataFrame(columns=["createdDate", "srnumber", "typeName"])
@@ -204,7 +261,22 @@ def update_figure(selected_council):
     Input("council_list", "value")
 )
 def update_council_figure(selected_council):
+    """Dash Callback Function to update the Request Type Pie Chart at the middle of the dashboard.
+
+    This function takes the selected neighborhood council (nc) value from the "council_list" dropdown and 
+    outputs the the pie chart showing the share of each request types. The pie chart will
+    show up inside dcc.Graph object as long as id "pie_graph" is passed in.
+
+    Typical usage example:
+
+        html.Div(
+                    dcc.Graph(id='pie_graph', 
+                    ...
+                )
+    """
     pie_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['typeName']).agg('count').reset_index()  # noqa
+
+    # The following check is to ensure Dash graphs are populated with dummy data when query returns empty dataframe.
     if pie_df.shape[0] == 0:
         pie_df = pd.DataFrame(columns=["srnumber", "typeName"])
         for i, request_type in enumerate(DISCRETE_COLORS_MAP):
