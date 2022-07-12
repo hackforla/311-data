@@ -139,13 +139,11 @@ layout = html.Div([
 )
 def update_table(selected_council):
     table_df = df.query(f"councilName == '{selected_council}'")[['srnumber', 'createdDate', 'closedDate', 'typeName', 'agencyName', 'sourceName', 'address']]  # noqa
-    # The following check is to ensure Dash graphs are populate with dummy data when query returns empty dataframe
+    # The following check is to ensure Dash graphs are populated with dummy data when query returns empty dataframe.
     if table_df.shape[0] == 0:
         table_df = pd.DataFrame(columns=["Request Type"])
-        i = 0
-        for request_type in DISCRETE_COLORS_MAP:
+        for i, request_type in enumerate(DISCRETE_COLORS_MAP):
             table_df.loc[i] = [request_type]
-            i += 1
     return table_df.to_dict('records')
 
 
@@ -160,7 +158,7 @@ def update_table(selected_council):
 def update_text(selected_council):
     create_count = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'")['srnumber'].count()  # noqa
     close_count = df.query(f"councilName == '{selected_council}' and closedDate >= '{start_date}'")['srnumber'].count()  # noqa
-    # This check is to ensure data quality issues doesn't flow downstream to the dashboard (closed request exist without new request)
+    # This check is to ensure data quality issues don't flow downstream to the dashboard (i.e., closed requests exist without any new requests).
     if create_count == 0 and close_count > 0:
         return 0, 0, 0
     else:
@@ -173,13 +171,12 @@ def update_text(selected_council):
 )
 def update_figure(selected_council):
     figure_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['createdDate', 'typeName'])['srnumber'].count().reset_index()  # noqa
-    # The following check is to ensure Dash graphs are populate with dummy data when query returns empty dataframe
+    # The following check is to ensure Dash graphs are populated with dummy data when query returns empty dataframe.
     if figure_df.shape[0] == 0:
         figure_df = pd.DataFrame(columns=["createdDate", "srnumber", "typeName"])
         for j in range(START_DATE_DELTA):
             for request_type in DISCRETE_COLORS_MAP:
-                figure_df.loc[figure_df.shape[0]] = [
-                    start_date + datetime.timedelta(days=j), 0, request_type]
+                figure_df.loc[j] = [start_date + datetime.timedelta(days=j), 0, request_type]
     figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
     fig = px.line(
         figure_df,
@@ -210,10 +207,8 @@ def update_council_figure(selected_council):
     pie_df = df.query(f"councilName == '{selected_council}' and createdDate >= '{start_date}'").groupby(['typeName']).agg('count').reset_index()  # noqa
     if pie_df.shape[0] == 0:
         pie_df = pd.DataFrame(columns=["srnumber", "typeName"])
-        i = 0
-        for request_type in DISCRETE_COLORS_MAP:
+        for i, request_type in enumerate(DISCRETE_COLORS_MAP):
             pie_df.loc[i] = [0, request_type]
-            i += 1
     pie_fig = px.pie(
         pie_df,
         names="typeName",
