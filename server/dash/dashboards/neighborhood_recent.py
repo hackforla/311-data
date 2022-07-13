@@ -56,8 +56,6 @@ req_type_pie_base_graph = px.pie()
 apply_figure_style(req_type_pie_base_graph)
 
 # Populate the neighborhood dropdown
-
-
 def populate_options():
     """Function to populate the dropdown menu with a list of neighborhood councils.
 
@@ -233,7 +231,7 @@ def update_figure(selected_council):
         figure_df = pd.DataFrame(columns=["createdDate", "srnumber", "typeName"])
         for j in range(START_DATE_DELTA):
             for request_type in DISCRETE_COLORS_MAP:
-                figure_df.loc[j] = [start_date + datetime.timedelta(days=j), 0, request_type]
+                figure_df.loc[figure_df.shape[0]] = [start_date + datetime.timedelta(days=j), 0, request_type]
     figure_df.typeName = figure_df.typeName.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))  # noqa
     fig = px.line(
         figure_df,
@@ -280,7 +278,7 @@ def update_council_figure(selected_council):
     if pie_df.shape[0] == 0:
         pie_df = pd.DataFrame(columns=["srnumber", "typeName"])
         for i, request_type in enumerate(DISCRETE_COLORS_MAP):
-            pie_df.loc[i] = [0, request_type]
+            pie_df.loc[i] = [1, request_type]
     pie_fig = px.pie(
         pie_df,
         names="typeName",
