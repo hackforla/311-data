@@ -70,15 +70,21 @@ class MapContainer extends React.Component {
    * Each element can be null if there is no non-overlappping range.
    */
   getNonOverlappingRanges = (startA, endA, startB, endB) => {
-    var leftOverlap = null;
-    var rightOverlap = null;
+    var leftNonOverlap = null;
+    var rightNonOverlap = null;
+    // If date range A starts before date range B, then it has a subrange that
+    // does not overlap with B.
     if (moment(startA) < moment(startB)){
-      leftOverlap = [startA, moment(startB).subtract(1, 'days').format(INTERNAL_DATE_SPEC)];
+      leftNonOverlap = [startA,
+        moment(startB).subtract(1, 'days').format(INTERNAL_DATE_SPEC)];
     }
+    // If date range A ends after date range B, then it has a subrange that does
+    // not overlap with B.
     if (moment(endB) < moment(endA)){
-      rightOverlap = [moment(endB).add(1, 'days').format(INTERNAL_DATE_SPEC), endA];
+      rightNonOverlap = [moment(endB).add(1, 'days').format(INTERNAL_DATE_SPEC),
+        endA];
     }
-    return [leftOverlap, rightOverlap];
+    return [leftNonOverlap, rightNonOverlap];
   }
 
   /**
@@ -90,8 +96,8 @@ class MapContainer extends React.Component {
    * whether we need to retrieve more data; if we do, we only want to pull the
    * data from the date ranges that aren't already in the store.
    * 
-   * @param {*} startDate The start date in INTERNAL_DATE_SPEC format. 
-   * @param {*} endDate The end date in INTERNAL_DATE_SPEC format.
+   * @param {string} startDate The start date in INTERNAL_DATE_SPEC format. 
+   * @param {string} endDate The end date in INTERNAL_DATE_SPEC format.
    * @returns An array of date ranges, where each date range is represented as
    * an array of string start and end dates.
    */
@@ -100,6 +106,16 @@ class MapContainer extends React.Component {
     var missingDateRanges = [];
     var currentStartDate = startDate;
     var currentEndDate = endDate;
+    // Compare the input date range with each date range with requests, which
+    // are ordered chronologically from first to last. Every left non-overlapping
+    // date range (i.e., a portion of the input date range that comes before the
+    // existing date range with requests) is immediately added to the list of
+    // missing date ranges. Otherwise, if there is overlap on the left (i.e.,
+    // the input range is covered on the left side by the date range with
+    // requests), we push the start date for our input range forward to the end
+    // of the date range with requests. The process continues for every date
+    // range with requests.
+    // It stops when the input date range is covered on the right side.
     for (let dateRange of dateRangesWithRequests.values()){
       const nonOverlappingRanges = this.getNonOverlappingRanges(currentStartDate,
         currentEndDate, dateRange[0], dateRange[1]);
@@ -179,6 +195,11 @@ class MapContainer extends React.Component {
    * 
    * Since the server is slow to retrieve all the requests at once, we need to
    * make multiple API calls, one for each day.
+   * 
+   * @param {string} startDate A date in INTERNAL_DATE_SPEC format.
+   * @param {string} endDate A date in INTERNAL_DATE_SPEC format.
+   * @returns An array of Promises, each representing an API request for a
+   * particular day in the input date range.
    */
   getAllRequests = (startDate, endDate) => {
     const datesInRange = this.getDatesInRange(startDate, endDate);
