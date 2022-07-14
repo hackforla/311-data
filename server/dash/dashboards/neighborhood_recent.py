@@ -57,12 +57,22 @@ apply_figure_style(req_type_pie_base_graph)
 
 # Populate the neighborhood dropdown
 def populate_options():
-    """Function to populate the dropdown menu with a list of neighborhood councils.
+    """Gets a list of neighborhood councils to populate the dropdown menu.
 
     This function calls the councils API to get a list of neighborhood council and 
     return a unique list of council as a dictionary sorted in ascending order of requests.
+    
+    Returns:
+        A list of dictionary mapping label and value to corresponding councilName ordered by the 
+        total number of requests. For example:
 
-        Typical usage example:
+        [
+            {'label': 'Arleta', 'value': 'Arleta'},
+            {'label': 'Arroyo Seco', 'value': 'Arroyo Seco'},
+            ...
+        ]
+    
+    Typical usage example:
 
         dcc.Dropdown(
             ...
@@ -149,12 +159,19 @@ layout = html.Div([
     Input("council_list", "value")
 )
 def update_table(selected_council):
-    """Dash Callback Function to update the LA 311 request data table at the bottom of the dashboard.
+    """Filters the LA 311 request data table based on selected_council.
 
     This function takes the selected neighborhood council (nc) value from the "council_list" dropdown and 
     outputs a list of requests associated with that nc as a data table in dictionary form 
     with id "council_table" in the layout. 
 
+    Args:
+        selected_council:
+            A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
+
+    Returns:
+        A list of dictionary mapping column names to values. For example: [{'srnumber':1234567}, {'createdDate':'2022-07-11'}, {'closeDate':'2022-07-14'}...]
+    
     Typical usage example:
 
         dash_table.DataTable(
@@ -181,13 +198,25 @@ def update_table(selected_council):
     Input("council_list", "value")
 )
 def update_text(selected_council):
-    """Dash Callback Function to update the indicator cards at the top of the dashboard.
+    """Updates the indicator cards based on data filtered by selected_council.
 
     This function takes the selected neighborhood council (nc) value from the "council_list" dropdown and 
     outputs the values for the number of new requests, number of closed requests, and net change in requests
     (i.e. # closed requests - # new requests) for visualizations on the indicator visuals in the layout. The 
     corresponding IDs of the indicator visuals are "created_txt", "closed_txt", and "net_txt".
 
+    Args:
+        selected_council:
+            A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
+    
+    Returns:
+        created_txt:
+            Integer for the number of new requests created since the start date.
+        closed_txt:
+            Integer for the number of close requests since the start date.
+        net_txt:
+            Integer for the difference in close requests and new requests since the start date.
+    
     Typical usage example (using net_txt as example, created_txt and closed_txt are similar):
 
         html.Div(
@@ -202,7 +231,7 @@ def update_text(selected_council):
     if create_count == 0 and close_count > 0:
         return 0, 0, 0
     else:
-        return create_count, close_count, create_count - close_count
+        return create_count, close_count, close_count - create_count 
 
 
 @app.callback(
@@ -210,13 +239,21 @@ def update_text(selected_council):
     Input("council_list", "value")
 )
 def update_figure(selected_council):
-    """Dash Callback Function to update the Request Type Line Chart at the middle of the dashboard.
+    """Updates the Request Type Line Chart based on data filtered by selected_council.
 
     This function takes the selected neighborhood council (nc) value from the "council_list" dropdown and 
     outputs the request type line chart that shows the trend of of different requests types over
     the time range of the data available in the selected neighborhood conucil. The line chart will
     show up inside dcc.Graph object as long as id "graph" is passed in.
 
+    Args:
+        selected_council:
+            A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
+    
+    Returns:
+        graph:
+            Plotly line chart of the total number of requests over time (createdDate) separated by request type.
+    
     Typical usage example:
 
         html.Div(
@@ -259,11 +296,19 @@ def update_figure(selected_council):
     Input("council_list", "value")
 )
 def update_council_figure(selected_council):
-    """Dash Callback Function to update the Request Type Pie Chart at the middle of the dashboard.
+    """Updates the Request Type Pie Chart based on data filtered by selected_council.
 
     This function takes the selected neighborhood council (nc) value from the "council_list" dropdown and 
     outputs the the pie chart showing the share of each request types. The pie chart will
     show up inside dcc.Graph object as long as id "pie_graph" is passed in.
+
+    Args:
+        selected_council:
+            A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
+    
+    Returns:
+        pie_graph
+            Plotly pie chart for the share of different request types.
 
     Typical usage example:
 
