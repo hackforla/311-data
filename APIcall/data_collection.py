@@ -1,46 +1,18 @@
-import json
-import urllib
-
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
 import pandas as pd
+import requests
+from datetime import date
 
-
-external_stylesheets = ['/static/reports.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
-# set up default layout
-app.layout = html.Div([
-    dcc.Location(id='url', refresh=False),
-    html.Div(id='page-content')
-])
-
-server = app.server
-app.config.suppress_callback_exceptions = True
-
-BATCH_SIZE = 10000
-
-
-def batch_get_data(url):
-    # set up your query
-    if '?' in url:
-        batch_url = f"{url}&limit={BATCH_SIZE}"
-    else:
-        batch_url = f"{url}?limit={BATCH_SIZE}"
-
-    response_size = BATCH_SIZE
-    result_list = []
-    skip = 0
-
-    # loop through query results and add to a list (better performance!)
-    while (response_size == BATCH_SIZE):
-        batch = json.loads(urllib.request.urlopen(f"{batch_url}&skip={skip}").read())
-        result_list.extend(batch)
-        response_size = len(batch)
-        skip = skip + BATCH_SIZE
-
-    # convert JSON object list to dataframe
-    df = pd.DataFrame.from_records(result_list)
-
-    return df
+def api_311(start_date, end_date, skip, limit):
+    skip=0
+    limit=10000
+    data_year= []
+    while True:
+        url=f'https://dev-api.311-data.org/requests?start_date={start_date}&end_date={end_date}&skip={skip}&limit={limit}'
+        print('Requesting url:', url)
+        response=requests.get(url)
+        data=response.json()
+        if data==[]:
+            break   
+        data_year.extend(data)
+        skip=skip+limit
+    return data_year
