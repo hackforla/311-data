@@ -63,7 +63,7 @@ def populate_options():
     return a unique list of council as a dictionary sorted in ascending order of requests.
     
     Returns:
-        A list of dictionary mapping label and value to corresponding councilName ordered by the 
+        A list of dictionaries mapping label and value to corresponding councilName ordered by the 
         total number of requests. For example:
 
         [
@@ -166,11 +166,10 @@ def update_table(selected_council):
     with id "council_table" in the layout. 
 
     Args:
-        selected_council:
-            A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
+        selected_council: A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
 
-    Returns:
-        A list of dictionary mapping column names to values. For example: [{'srnumber':1234567}, {'createdDate':'2022-07-11'}, {'closeDate':'2022-07-14'}...]
+    Returns: 
+        A list of dictionaries mapping column names to values. For example: [{'srnumber':1234567, 'createdDate':'2022-07-11', 'closeDate':'2022-07-14'...}, {...}, ... ]
     
     Typical usage example:
 
@@ -206,16 +205,13 @@ def update_text(selected_council):
     corresponding IDs of the indicator visuals are "created_txt", "closed_txt", and "net_txt".
 
     Args:
-        selected_council:
-            A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
+        selected_council: a string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
     
     Returns:
-        created_txt:
-            Integer for the number of new requests created since the start date.
-        closed_txt:
-            Integer for the number of close requests since the start date.
-        net_txt:
-            Integer for the difference in close requests and new requests since the start date.
+        A tuple containing three integers:
+            1) Integer for the number of new requests created since the start date.
+            2) Integer for the number of close requests since the start date.
+            3) Integer for the difference in close requests and new requests since the start date.
     
     Typical usage example (using net_txt as example, created_txt and closed_txt are similar):
 
@@ -247,12 +243,10 @@ def update_figure(selected_council):
     show up inside dcc.Graph object as long as id "graph" is passed in.
 
     Args:
-        selected_council:
-            A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
+        selected_council: a string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
     
     Returns:
-        graph:
-            Plotly line chart of the total number of requests over time (createdDate) separated by request type.
+        Plotly line chart of the total number of requests over time (createdDate) separated by request type.
     
     Typical usage example:
 
@@ -303,12 +297,10 @@ def update_council_figure(selected_council):
     show up inside dcc.Graph object as long as id "pie_graph" is passed in.
 
     Args:
-        selected_council:
-            A string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
+        selected_council: a string argument automatically detected by Dash callback function when "council_list" element is selected in the layout.
     
     Returns:
-        pie_graph
-            Plotly pie chart for the share of different request types.
+        Plotly pie chart for the share of different request types.
 
     Typical usage example:
 
