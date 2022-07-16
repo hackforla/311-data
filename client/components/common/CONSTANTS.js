@@ -829,11 +829,17 @@ export const MAP_DATE_RANGES = (() => {
   ];
 })();
 
-export const DATE_SPEC = 'MM/DD/YYYY';
+// The user gets this date format since it's used most commonly in the US.
+export const USER_DATE_SPEC = 'MM/DD/YYYY';
+// Internally, we use this date spec. This is what our server expects when we
+// request data from a certain date range.
+export const INTERNAL_DATE_SPEC = 'YYYY-MM-DD';
 
 export const DATE_RANGES = (() => {
-  const endDate = moment().format(DATE_SPEC);
-  const priorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format(DATE_SPEC);
+  const endDate = moment().format(USER_DATE_SPEC);
+  function priorDate(num, timeInterval) {
+    return moment().subtract(num, timeInterval).format(USER_DATE_SPEC);
+  }
 
   return [
     {
@@ -875,7 +881,7 @@ export const DATE_RANGES = (() => {
     {
       id: 'YEAR_TO_DATE',
       label: 'Year to Date',
-      startDate: moment().startOf('year').format(DATE_SPEC),
+      startDate: moment().startOf('year').format(USER_DATE_SPEC),
       endDate,
     },
     {

@@ -1,10 +1,18 @@
+import 'react-day-picker/lib/style.css';
+
+import {
+  updateEndDate as reduxUpdateEndDate,
+  updateStartDate as reduxUpdateStartDate,
+} from '@reducers/filters';
+import moment from 'moment';
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import { INTERNAL_DATE_SPEC } from '../CONSTANTS';
 import Styles from './Styles';
 import WeekDay from './Weekday';
-
-import 'react-day-picker/lib/style.css';
 
 const getInitialState = initialDates => {
   const [from, to] = initialDates;
@@ -17,7 +25,10 @@ const getInitialState = initialDates => {
 
 const defaultState = { from: null, to: null };
 
-function ReactDayPicker({ onChange, initialDates, range }) {
+function ReactDayPicker({
+  onChange, initialDates, range, updateStartDate,
+  updateEndDate,
+}) {
   const [state, setState] = useState(getInitialState(initialDates));
 
   const isSelectingFirstDay = (from, to, day) => {
@@ -37,6 +48,7 @@ function ReactDayPicker({ onChange, initialDates, range }) {
       to: null,
       enteredTo: null,
     }));
+    updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
     onChange([day]);
   };
 
@@ -46,6 +58,7 @@ function ReactDayPicker({ onChange, initialDates, range }) {
       to: day,
       enteredTo: day,
     }));
+    updateEndDate(moment(day).format(INTERNAL_DATE_SPEC));
     onChange([state.from, day]);
   };
 
@@ -106,12 +119,21 @@ ReactDayPicker.propTypes = {
   range: PropTypes.bool,
   onChange: PropTypes.func,
   initialDates: PropTypes.arrayOf(Date),
+  updateStartDate: PropTypes.func,
+  updateEndDate: PropTypes.func,
 };
 
 ReactDayPicker.defaultProps = {
   range: false,
   onChange: null,
   initialDates: [],
+  updateStartDate: null,
+  updateEndDate: null,
 };
 
-export default ReactDayPicker;
+const mapDispatchToProps = dispatch => ({
+  updateStartDate: date => dispatch(reduxUpdateStartDate(date)),
+  updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
+});
+
+export default connect(null, mapDispatchToProps)(ReactDayPicker);
