@@ -178,7 +178,7 @@ class Map extends React.Component {
     if (
       this.state.filterGeo !== prevState.filterGeo ||
       this.state.selectedTypes !== prevState.selectedTypes
-      ) this.map.once('idle', this.setFilteredRequestCounts);
+    ) this.map.once('idle', this.setFilteredRequestCounts);
 
     if (this.props.ncBoundaries != prevProps.ncBoundaries) {
       this.ncLayer.init({
@@ -235,14 +235,14 @@ class Map extends React.Component {
         filterGeo: geo,
         ...(
           center
-          ? {
-            locationInfo: {
-              location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
-              radius: 1,
-              nc: ncInfoFromLngLat(center),
+            ? {
+              locationInfo: {
+                location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
+                radius: 1,
+                nc: ncInfoFromLngLat(center),
+              }
             }
-          }
-          : {}
+            : {}
         )
       }),
     });
@@ -335,7 +335,7 @@ class Map extends React.Component {
       const feature = features[i];
 
       if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
-        switch(feature.layer.id) {
+        switch (feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
             updateNcId(feature.properties.council_id);
@@ -367,12 +367,12 @@ class Map extends React.Component {
       updateNcId(result.id);
     } else {
       const address = result.place_name
-                        .split(',')
-                        .slice(0, -2)
-                        .join(', ');
-  
+        .split(',')
+        .slice(0, -2)
+        .join(', ');
+
       getNc({ longitude: result.center[0], latitude: result.center[1] });
-  
+
       this.setState({
         address: address,
       });
@@ -409,7 +409,7 @@ class Map extends React.Component {
   getDistrictCounts = (geoFilterType, filterGeo, selectedTypes) => {
     const { ncCounts, ccCounts } = this.props;
     const { counts, regionId } = (() => {
-      switch(geoFilterType) {
+      switch (geoFilterType) {
         case GEO_FILTER_TYPES.nc: return {
           counts: ncCounts,
           regionId: filterGeo.properties.nc_id,
@@ -486,7 +486,6 @@ class Map extends React.Component {
     } = this.props;
 
     const {
-      requests,
       geoFilterType,
       locationInfo,
       // filteredRequestCounts,
@@ -508,7 +507,6 @@ class Map extends React.Component {
       <div className={classes.root} ref={el => this.mapContainer = el} >
         <RequestsLayer
           ref={el => this.requestsLayer = el}
-          requests={requests}
           activeLayer={activeRequestsLayer}
           selectedTypes={selectedTypes}
           colorScheme={colorScheme}
@@ -534,7 +532,7 @@ class Map extends React.Component {
         <div ref={el => this.requestDetail = el}>
           <RequestDetail requestId={selectedRequestId} />
         </div>
-        { this.state.mapReady && requestTypes && (
+        {this.state.mapReady && requestTypes && (
           <>
             {/* <MapOverview
               date={lastUpdated}
@@ -556,7 +554,7 @@ class Map extends React.Component {
               {
                 (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
               }
-              
+
             </div>
             {/* <MapLayers
               selectedTypes={selectedTypes}
@@ -600,4 +598,7 @@ const mapDispatchToProps = dispatch => ({
   updateNcId: id => dispatch(updateNcId(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Map));
+// We need to specify forwardRef to allow refs on connected components.
+// See https://github.com/reduxjs/react-redux/issues/1291#issuecomment-494185126
+// for more info.
+export default connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(withStyles(styles)(Map));

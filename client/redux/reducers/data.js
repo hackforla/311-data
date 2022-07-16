@@ -1,5 +1,7 @@
 export const types = {
   GET_DATA_REQUEST: 'GET_DATA_REQUEST',
+  GET_DATA_REQUEST_SUCCESS: 'GET_DATA_REQUEST_SUCCESS',
+  UPDATE_DATE_RANGES: 'UPDATE_DATE_RANGES',
   GET_PINS_SUCCESS: 'GET_PINS_SUCCESS',
   GET_PINS_FAILURE: 'GET_PINS_FAILURE',
   GET_OPEN_REQUESTS: 'GET_OPEN_REQUESTS',
@@ -23,6 +25,16 @@ export const types = {
 
 export const getDataRequest = () => ({
   type: types.GET_DATA_REQUEST,
+});
+
+export const getDataRequestSuccess = response => ({
+  type: types.GET_DATA_REQUEST_SUCCESS,
+  payload: response,
+});
+
+export const updateDateRanges = dateRanges => ({
+  type: types.UPDATE_DATE_RANGES,
+  payload: dateRanges,
 });
 
 export const getPinsSuccess = response => ({
@@ -112,6 +124,9 @@ const initialState = {
   pins: [],
   pinsInfo: {},
   selectedNcId: null,
+  // Empty GeoJSON object.
+  requests: { type: 'FeatureCollection', features: [] },
+  dateRangesWithRequests: [],
 };
 
 export default (state = initialState, action) => {
@@ -121,6 +136,21 @@ export default (state = initialState, action) => {
         ...state,
         isMapLoading: true,
         isVisLoading: true,
+      };
+    case types.GET_DATA_REQUEST_SUCCESS: {
+      const newRequests = {
+        type: 'FeatureCollection',
+        features: [...state.requests.features, ...action.payload],
+      };
+      return {
+        ...state,
+        requests: newRequests,
+      };
+    }
+    case types.UPDATE_DATE_RANGES:
+      return {
+        ...state,
+        dateRangesWithRequests: action.payload,
       };
     case types.GET_PINS_SUCCESS:
       return {

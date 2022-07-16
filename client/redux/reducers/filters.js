@@ -1,3 +1,6 @@
+import { DATE_RANGES, INTERNAL_DATE_SPEC, USER_DATE_SPEC } from '@components/common/CONSTANTS';
+import moment from 'moment';
+
 export const types = {
   UPDATE_START_DATE: 'UPDATE_START_DATE',
   UPDATE_END_DATE: 'UPDATE_END_DATE',
@@ -35,8 +38,9 @@ export const updateRequestStatus = status => ({
 
 const initialState = {
   // dateRange: null,
-  startDate: null,
-  endDate: null,
+  // Always store dates using the INTERNAL_DATE_SPEC.
+  startDate: moment(DATE_RANGES[0].startDate, USER_DATE_SPEC).format(INTERNAL_DATE_SPEC),
+  endDate: moment(DATE_RANGES[0].endDate, USER_DATE_SPEC).format(INTERNAL_DATE_SPEC),
   councilId: null,
   requestTypes: {
     1: false,
