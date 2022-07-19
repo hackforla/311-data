@@ -14,13 +14,15 @@ from design import CONFIG_OPTIONS
 from design import DISCRETE_COLORS
 from design import LABELS
 
-NEIGHBORHOOD_COUNCILS_NUMBER = 99  # Number of nc in Los Angeles as of 06.2022
+NEIGHBORHOOD_COUNCILS_NUMBER = 99  # Number of nc in Los Angeles as of 06.2022.
+TOT_POP = 3814700
 
 # TITLE
 title = "NEIGHBORHOODS"
 
-
 # DATA
+pop = pd.read_csv("NC_pop_2020.csv")  # NC population data.
+
 print(" * Downloading data for dataframe")
 query_string = "/reports?field=type_name&field=council_name&field=created_date"
 df = pd.read_json(API_HOST + query_string)
@@ -37,42 +39,62 @@ def populate_options():
     return values
 
 
+# looks good, need to clean the code and add also territory size as well as density
+
 # Define callback to update graph
 @app.callback(
     Output("graph1", "figure"),
     [Input("council_list", "value"), Input("data_type", "value")],
 )
 def update_figure(selected_council, selected_timeframe):
-    """Creates comparison graph
+    """Creates comparison graph.
 
     Args:
-        selected_council:
-          A string representing the council selected from the drop down menu.
-        selected_timeframe:
-          An integer representing the number of days around which to compute the moving average.
-          This is selected with radio buttons at the bottom of the graph.
+        selected_council: A string representing the council selected
+          from the drop down menu.
+        selected_timeframe: An integer representing the number of days around which to
+          compute the moving average. This is selected with radio buttons at
+          the bottom of the graph.
 
     Returns:
-        fig:
-          Plotly graph that compares the selected moving average between the chosen council
-          and the moving average of the avg of all the 99 neighborhood councils.
+        Plotly graph that compares the selected moving average between the
+          chosen council and the moving average of the avg of all the 99 neighborhood councils.
     """
+    NC_POP = int(
+        pop[pop.council_name == selected_council].sum_pop20
+    )  # population of selected council.
+
+    NC_MOVING_AVERAGE_KEY = (
+        "nc_ma"  # Key for neighborhood council moving average in dataframe (total/99).
+    )
+    NC_POP_MOVING_AVERAGE_KEY = "nc_ma_pop"  # Key for neighborhood council moving average adjusted to per 10,000 people.
+    SELECT_NC_MOVING_AVERAGE_KEY = "select_nc_ma"  # Key for selected neighborhood council moving average in dataframe.
+    SELECT_NC_POP_MOVING_AVERAGE_KEY = "select_nc_ma_pop"  # Key for selected neighborhood council moving average in dataframe adjusted to per 10,000 people.
+
     neighborhood_sum_df = (
         df[df.council_name == selected_council]
         .groupby(["created_date"])
         .agg("sum")
         .reset_index()
     )  # noqa
+
     total_sum_df = df.groupby(["created_date"]).agg("sum").reset_index()
 
-    total_sum_df["nc_ma"] = (
+    total_sum_df[NC_MOVING_AVERAGE_KEY] = (
         total_sum_df.counts.rolling(selected_timeframe, center=True).mean()
         / NEIGHBORHOOD_COUNCILS_NUMBER
     )
-    neighborhood_sum_df["select_nc_ma"] = neighborhood_sum_df.counts.rolling(
-        selected_timeframe, center=True
-    ).mean()
-
+    total_sum_df[NC_POP_MOVING_AVERAGE_KEY] = (
+        total_sum_df.counts.rolling(selected_timeframe, center=True).mean()
+        / TOT_POP
+        * 10000
+    )
+    neighborhood_sum_df[
+        SELECT_NC_MOVING_AVERAGE_KEY
+    ] = neighborhood_sum_df.counts.rolling(selected_timeframe, center=True).mean()
+    neighborhood_sum_df[SELECT_NC_POP_MOVING_AVERAGE_KEY] = (
+        neighborhood_sum_df.select_nc_ma / NC_POP * 10000
+    )
     merged_df = pd.merge(
         neighborhood_sum_df, total_sum_df, on=["created_date", "created_date"]
     )
@@ -80,20 +102,27 @@ def update_figure(selected_council, selected_timeframe):
     fig = px.line(
         merged_df,
         x="created_date",
-        y=["select_nc_ma", "nc_ma"],
+        y=[
+            SELECT_NC_MOVING_AVERAGE_KEY,
+            SELECT_NC_POP_MOVING_AVERAGE_KEY,
+            NC_MOVING_AVERAGE_KEY,
+            NC_POP_MOVING_AVERAGE_KEY,
+        ],
         color_discrete_sequence=DISCRETE_COLORS,
-        labels={"created_date": "311 Request Date", "value": "Total Requests"},
-        title=selected_council + " vs 99 Neighborhood Councils 311 Requests Average",
+        labels={"created_date": "Request Date", "value": "Total Requests"},
+        title=selected_council + " vs Neighborhood Councils Average",
     )
-    newnames = {
-        "select_nc_ma": selected_council,
-        "nc_ma": "99 Neighborhood Councils Average",
+    new_names = {
+        SELECT_NC_MOVING_AVERAGE_KEY: selected_council,
+        NC_MOVING_AVERAGE_KEY: "Neighborhood Councils Average",
+        SELECT_NC_POP_MOVING_AVERAGE_KEY: selected_council + "council adjusted",
+        NC_POP_MOVING_AVERAGE_KEY: "Neighborhood Councils Average Adjusted",
     }
     fig.for_each_trace(
         lambda t: t.update(
-            name=newnames[t.name],
-            legendgroup=newnames[t.name],
-            hovertemplate=t.hovertemplate.replace(t.name, newnames[t.name]),
+            name=new_names[t.name],
+            legendgroup=new_names[t.name],
+            hovertemplate=t.hovertemplate.replace(t.name, new_names[t.name]),
         )
     )
 
@@ -103,7 +132,7 @@ def update_figure(selected_council, selected_timeframe):
 
     fig.update_yaxes(rangemode="tozero")
 
-    fig.update_traces(mode="markers+lines")  # add markers to lines
+    fig.update_traces(mode="markers+lines")  # add markers to lines.
 
     apply_figure_style(fig)
 
