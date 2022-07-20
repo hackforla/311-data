@@ -18,10 +18,12 @@ start_date = datetime.date.today() - datetime.timedelta(days=300)
 end_date = datetime.date.today() - datetime.timedelta(days=200)
 
 # Loading the dataframe with the 311 Data API
+print(" * Downloading data for dataframe")
 df_path = f"/requests/updated?start_date={start_date}&end_date={end_date}"
 results = re.get(API_HOST + df_path)
 data_json = results.json()
 data_2020 = pd.json_normalize(data_json)
+print(" * Loading complete dataframe")
 
 layout = html.Div([
 
@@ -183,7 +185,7 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, dataQuality
         numReqLineChart: line chart showing the number of requests throughout the day.
         dataQualityOutput: A string stating the status of the data quality filter ("Quality Filter: On" or "Quality Filter: Off").
     """
-
+    print(" * Generating summary visualizations")
     # NC Dropdown
     if not nc_dropdown:
         df = data_2020
@@ -196,6 +198,7 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, dataQuality
         df = df[df['typeName'].isin(nc_dropdown_filter)]
 
     # Pie Chart for the distribution of Request Types
+    print(" * Generating requests types pie chart")
     rtype = pd.DataFrame(df['typeName'].value_counts())
     rtype = rtype.reset_index()
     reqTypePieChart = px.pie(rtype, values="typeName", names="index",
@@ -246,11 +249,13 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, dataQuality
         dataQualityOutput = "Quality Filter: Off"
 
     # Distribution for the total number of requests
+    print(" * Generating requests time to close histogram")
     timeCloseHist = px.histogram(df, x="timeToClose", title="Distribution of Time to Close Request", nbins=numBins, range_x=[min(
         df.loc[:, 'timeToClose']), max(df.loc[:, 'timeToClose'])], labels={"timeToClose": "Request Duration", "count": "Frequency"})
     timeCloseHist.update_layout(margin=dict(l=50, r=50, b=50, t=50), font=dict(size=9))
 
     # Time Series for the Total Number of Requests
+    print(" * Generating number of requests line chart")
     rtime = pd.DataFrame(df.groupby('createDateDT', as_index=False)['srnumber'].count())
     numReqLineChart = px.line(rtime, x="createDateDT", y='srnumber', title="Total Number of 311 Requests Overtime", labels={
                               "createDateDT": "DateTime", "srnumber": "Frequency"})

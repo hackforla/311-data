@@ -39,7 +39,6 @@ if PRELOAD:
 def display_page(pathname):
 
     last_part = re.search("([\w]*)$", pathname).group(1)  # noqa
-    print(last_part)
     # run the dashboard
     if last_part in available_dashboards:
         logger.log(logging.INFO, f"Running dashboard: {last_part}")
