@@ -67,7 +67,6 @@ The following is a list of Los Angeles datasets that could be used in combinatio
 | File Formats | csv, tsv, xml | 
 | Variables List | report id, report type, arrest date, time, area ID, area name, reporting district, age, sex code, descent code (different ethnic codes), charge group code (different arrest charge types), charge group description, disposition description, address, cross street, latitude, longitude, location, booking date, booking time, booking location, booking location code |
 
-
 * [LAPD Crime Reports from 2010 Forward](https://data.lacity.org/A-Safe-City/Crime-Data-from-2010-to-Present/63jg-8b9z)
 
 | Field | Description |
@@ -182,8 +181,17 @@ The following is a list of Los Angeles datasets that could be used in combinatio
 | File Formats | csv, kml, shapefile, geojson | 
 | Variables List | area_acres, park_id, cd_real, address, region, name, park_class, cd_new, tooltip, acres |
 
-* [Los Angeles Tree Canopy Raster - 2006](https://egis3.lacounty.gov/dataportal/2010/12/23/tree-canopy-raster-2006-data/)
-* [Los Angeles Trees - Point Data](http://geohub.lacity.org/datasets/city-furniture/data)
+* [Los Angeles Trees - Point Data](https://geohub.lacity.org/datasets/lahub::trees-bureau-of-street-services/about)
+
+| Field | Description |
+-------- | ---------------------
+| Title | Trees |
+| Creator | Bureau of Street Services |
+| Attribution | N/A  |
+| Dates | Published Date: Nov 19, 2020; Updated Date: Nov 19, 2020 |
+| Location | Los Angeles |
+| File Formats | csv, kml, shapefile, geojson | 
+| Variables List | tree id, type, description, tooltip (includes location), navigate la url |
 
 * [City Furniture - Public Benches, etc...](http://geohub.lacity.org/datasets/city-furniture/data)
 
