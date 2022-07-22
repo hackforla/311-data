@@ -1,9 +1,5 @@
-# List of additional datasets for comparisons
-
-The following is a list of Los Angeles datasets that could be used in combination with or in addition to 311 Data for analysis that would be relevant to Neighborhood Councils.
-
 ## LA 311 Data
-* [Los Angeles 311 Data by Year](https://data.lacity.org/City-Infrastructure-Service-Requests/MyLA311-Service-Request-Data-2022/i5ke-k6by)
+* [Los Angeles 311 Data (2022)](https://data.lacity.org/City-Infrastructure-Service-Requests/MyLA311-Service-Request-Data-2022/i5ke-k6by)
 
 | Field | Description |
 -------- | --------------------
@@ -14,6 +10,10 @@ The following is a list of Los Angeles datasets that could be used in combinatio
 | Location | Los Angeles |
 | File Formats | csv, kml, shapefile, geojson | 
 | Variables List | request number, request created date, request update date, action taken, request owner, request type, request status, request source, request user organization, request mobile os, anonymous flag, request department assignment, request service date, request closed date,request address verification flag, request approximate address, address,house number, direction, street name, suffix, zip code, latitude, longitude, tbm page, tbm row,  area planning commission, apc code, cd member, neighbood council name, nc code,police precint  |
+
+# List of additional datasets for comparisons
+
+The following is a list of Los Angeles datasets that could be used in combination with or in addition to 311 Data for analysis that would be relevant to Neighborhood Councils.
 
 ## Municipal Data
 
