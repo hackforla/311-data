@@ -64,7 +64,7 @@
     "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
     "check-env": "node ./utils/checkEnv",
-    "postinstall": "sh -c \"are-you-es5 check -r . | tail -n 2 | head -n 1 > ./node_modules_non_es5 \""
+    "postinstall": ""
   },
   "husky": {
     "hooks": {
