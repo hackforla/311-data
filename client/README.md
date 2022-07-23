@@ -8,9 +8,6 @@
 - From this directory, `npm run setup` to install front end dependencies and create an `.env` file
 - get a [Mapbox](https://account.mapbox.com/auth/signin/) API token and add that to your `.env` file as the `MAPBOX_TOKEN`
 - get the `API_URL` from a team member and add that to your `.env` file. Alternatively, you can [bring up](https://github.com/hackforla/311-data/blob/dev/docs/server_setup.md) your own local server and use that.
-- please replace `"postinstall": "sh -c \"are-you-es5 check -r . | tail -n 2 | head -n 1 > ./node_modules_non_es5 \""` from line 67 
-to: `"postinstall": ""` in package.json in order for the server to start succesfully. 
-
 
 
 Setup complete!
