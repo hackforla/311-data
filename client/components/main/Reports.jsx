@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     top: theme.header.height,
     bottom: theme.footer.height,
     height: `calc(100vh - ${theme.header.height} - ${theme.footer.height})`,
-    backgroundColor: '#0f181f',
+    backgroundColor: 'black',
   },
 }));
 
