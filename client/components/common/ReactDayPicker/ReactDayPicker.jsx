@@ -26,9 +26,10 @@ const getInitialState = initialDates => {
 const defaultState = { from: null, to: null };
 
 function ReactDayPicker({
-  onChange, initialDates, range, updateStartDate,
+  initialDates, range, updateStartDate,
   updateEndDate,
 }) {
+  // TODO: consider getting rid of this local date state in favor of Redux.
   const [state, setState] = useState(getInitialState(initialDates));
 
   const isSelectingFirstDay = (from, to, day) => {
@@ -39,7 +40,6 @@ function ReactDayPicker({
 
   const resetDays = () => {
     setState(defaultState);
-    onChange([]);
   };
 
   const setFromDay = day => {
@@ -49,7 +49,6 @@ function ReactDayPicker({
       enteredTo: null,
     }));
     updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
-    onChange([day]);
   };
 
   const setFromToDay = day => {
@@ -59,7 +58,6 @@ function ReactDayPicker({
       enteredTo: day,
     }));
     updateEndDate(moment(day).format(INTERNAL_DATE_SPEC));
-    onChange([state.from, day]);
   };
 
   const handleDayClick = day => {
@@ -117,7 +115,6 @@ function ReactDayPicker({
 
 ReactDayPicker.propTypes = {
   range: PropTypes.bool,
-  onChange: PropTypes.func,
   initialDates: PropTypes.arrayOf(Date),
   updateStartDate: PropTypes.func,
   updateEndDate: PropTypes.func,
@@ -125,7 +122,6 @@ ReactDayPicker.propTypes = {
 
 ReactDayPicker.defaultProps = {
   range: false,
-  onChange: null,
   initialDates: [],
   updateStartDate: null,
   updateEndDate: null,
