@@ -26,15 +26,15 @@ print(" * Dataframe has been loaded from API path: " + NC_REQ_COUNT_DATA_API_PAT
 # Loading the data for the number of new requests
 NEW_REQ_COUNT_DATA_API_PATH = "/reports?field=created_year&filter=created_date>=2016-01-01"
 print(" * Downloading data from API path: " + NEW_REQ_COUNT_DATA_API_PATH)
-df2 = pd.read_json(API_HOST + NEW_REQ_COUNT_DATA_API_PATH)
-df2 = df2.groupby(['created_year'])['counts'].sum().to_frame()
+new_req_count_df = pd.read_json(API_HOST + NEW_REQ_COUNT_DATA_API_PATH)
+new_req_count_df = new_req_count_df.groupby(['created_year'])['counts'].sum().to_frame()
 print(" * Dataframe has been loaded from API path: " + NEW_REQ_COUNT_DATA_API_PATH)
 
 # Loading the count of each request types overall
 REQ_COUNT_DATA_API_PATH = "/reports?field=type_name&filter=created_date>=2016-01-01"
 print(" * Downloading data from API path: " + REQ_COUNT_DATA_API_PATH)
-df3 = pd.read_json(API_HOST + REQ_COUNT_DATA_API_PATH)
-df3 = df3.groupby(['type_name'], as_index=False)['counts'].sum()
+req_count_df = pd.read_json(API_HOST + REQ_COUNT_DATA_API_PATH)
+req_count = req_count_df.groupby(['type_name'], as_index=False)['counts'].sum()
 print(" * Dataframe has been loaded from API path: " + REQ_COUNT_DATA_API_PATH)
 
 # Loading the total number of request source
@@ -60,7 +60,7 @@ req_agency_count_df = req_agency_count_df[:5]
 req_agency_count_df.index = req_agency_count_df.index.map(
     lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
 
-shareReqByAgencyPieChart = px.pie(
+req_share_by_agency_pie_chart = px.pie(
     req_agency_count_df,
     names=req_agency_count_df.index,
     values='counts',
@@ -68,7 +68,7 @@ shareReqByAgencyPieChart = px.pie(
     hole=.3,
     TITLE="Total Requests by Agency",
 )
-shareReqByAgencyPieChart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
+req_share_by_agency_pie_chart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
 
 # Request Type by Source Bar Chart
 req_source_count_df = req_source_count.to_frame()
@@ -77,7 +77,7 @@ req_source_count_df.loc['Others'] = req_source_count_df[4:].sum()
 req_source_count_df.sort_values('counts', ascending=False, inplace=True)
 req_source_count_df = req_source_count_df[:5]
 
-reqSourceBarchart = px.bar(
+req_source_bar_chart = px.bar(
     req_source_count_df,
     y=req_source_count_df.index,
     x='counts',
@@ -89,8 +89,8 @@ reqSourceBarchart = px.bar(
 stats_df = pd.read_json(API_HOST + '/types/stats')
 stats_df = stats_df.sort_values('median', ascending=False)
 
-medDaysToCloseBoxPlot = go.Figure()
-medDaysToCloseBoxPlot.add_trace(
+med_days_to_close_box_plot = go.Figure()
+med_days_to_close_box_plot.add_trace(
     go.Box(
         y=stats_df.type_name,
         q1=stats_df['q1'],
@@ -100,10 +100,10 @@ medDaysToCloseBoxPlot.add_trace(
         fillcolor='#E17C05',
     )
 )
-medDaysToCloseBoxPlot.update_xaxes(
+med_days_to_close_box_plot.update_xaxes(
     dtick=5
 )
-medDaysToCloseBoxPlot.update_layout(
+med_days_to_close_box_plot.update_layout(
     TITLE="Total Median Days to Close by Type",
 )
 
@@ -118,24 +118,24 @@ df['created_date'] = pd.to_datetime(df['created_date'])
 dow_df = df.groupby(['created_date']).agg('sum').reset_index()
 dow_df['day_of_week'] = dow_df['created_date'].dt.day_name()
 
-numReqByDayOfWeekBarChart = px.bar(
+num_req_by_day_bar_chart = px.bar(
     dow_df,
     x="day_of_week",
     y="counts",
     labels=LABELS,
 )
-numReqByDayOfWeekBarChart.update_xaxes(categoryorder='array', categoryarray=[
+num_req_by_day_bar_chart.update_xaxes(categoryorder='array', categoryarray=[
                                        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
 
 # Total Request by NC
-reqByNcBarChart = px.bar(
+req_by_nc_bar_chart = px.bar(
     nc_req_count_df,
     x=nc_req_count_df.index,
     y='counts',
     labels=LABELS,
     TITLE="Total Requests by Neighborhood Councils",
 )
-reqByNcBarChart.update_layout(font=dict(size=12))
+req_by_nc_bar_chart.update_layout(font=dict(size=12))
 
 # LAYOUT
 layout = html.Div([
@@ -145,11 +145,11 @@ layout = html.Div([
            style={'font-size': '18px', 'font-style': 'italic'}),
 
     html.Div([
-        html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label(
+        html.Div([html.H2(f"{new_req_count_df['counts'].sum():,}"), html.Label(
             "Total Requests")], style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
         html.Div([html.H2(nc_req_count_df.shape[0] - 1), html.Label("Neighborhoods")],
                     style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
-        html.Div([html.H2(df3.shape[0]), html.Label("Request Types")], style={
+        html.Div([html.H2(req_count_df.shape[0]), html.Label("Request Types")], style={
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
         html.Div([html.H2(req_source_count.shape[0]), html.Label("Request Source")], style={
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
@@ -159,20 +159,20 @@ layout = html.Div([
 
     html.Div(html.Br(), style={"height": "3vh"}),
     html.Div([
-        html.Div(dcc.Graph(id='medDaysToCloseBoxPlot', figure=medDaysToCloseBoxPlot, responsive=True, style={
+        html.Div(dcc.Graph(id='med_days_to_close_box_plot', figure=med_days_to_close_box_plot, responsive=True, style={
                  "width": "60vw", "height": "60vh"}), style={"border": "0.5px black solid"}),
-        html.Div(dcc.Graph(id='shareReqByAgencyPieChart', figure=shareReqByAgencyPieChart, className="half-graph",
+        html.Div(dcc.Graph(id='req_share_by_agency_pie_chart', figure=req_share_by_agency_pie_chart, className="half-graph",
                  responsive=True, style={"width": "35vw", "height": "60vh"}), style={"border": "0.5px black solid"})
     ], className="graph-row", style={'display': 'flex', "justify-content": "space-between"}),
     html.Div(html.Br(), style={"height": "2vh"}),
     html.H1(TITLE + " Pt. 2"),
     html.Div([
-        html.Div(dcc.Graph(id='numReqByDayOfWeekBarChart', figure=numReqByDayOfWeekBarChart, className="half-graph", style={"width": "48vw", "height": "40vh"}), style={"border": "0.5px black solid"}),   # noqa
-        html.Div(dcc.Graph(id='reqSourceBarchart', figure=reqSourceBarchart, className="half-graph",
+        html.Div(dcc.Graph(id='num_req_by_day_bar_chart', figure=num_req_by_day_bar_chart, className="half-graph", style={"width": "48vw", "height": "40vh"}), style={"border": "0.5px black solid"}),   # noqa
+        html.Div(dcc.Graph(id='req_source_bar_chart', figure=req_source_bar_chart, className="half-graph",
                  responsive=True, style={"width": "48vw", "height": "40vh"}), style={"border": "0.5px black solid"})
     ], className="graph-row", style={'display': 'flex', "justify-content": "space-between"}),
     html.Div(html.Br(), style={"height": "2vh"}),
-    html.Div(dcc.Graph(id='reqByNcBarChart', figure=reqByNcBarChart, responsive=True,
+    html.Div(dcc.Graph(id='req_by_nc_bar_chart', figure=req_by_nc_bar_chart, responsive=True,
              style={"height": "45vh"}), style={"border": "0.5px black solid"})
 
 ])
