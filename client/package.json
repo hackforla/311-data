@@ -64,7 +64,6 @@
     "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
     "check-env": "node ./utils/checkEnv",
-    "postinstall": ""
   },
   "husky": {
     "hooks": {
