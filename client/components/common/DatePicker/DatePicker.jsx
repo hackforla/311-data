@@ -1,6 +1,8 @@
 import React, {
   useRef, useState, useEffect, useCallback,
 } from 'react';
+import { connect } from 'react-redux';
+import moment from 'moment';
 import ReactDayPicker from '@components/common/ReactDayPicker';
 import PropTypes from 'prop-types';
 import CalendarIcon from '@material-ui/icons/CalendarToday';
@@ -52,9 +54,9 @@ const renderSelectedDays = (dates, classes, range) => {
 
   if (isBothSelected) {
     selectedDaysElements.push(
-      <span key="from">{from.toLocaleDateString('en-US')}</span>,
+      <span key="from">{moment(from).format('L')}</span>,
       <span key="delimiter"> - </span>,
-      <span key="to">{to.toLocaleDateString('en-US')}</span>,
+      <span key="to">{moment(to).format('L')}</span>,
     );
     return selectedDaysElements;
   }
@@ -62,7 +64,7 @@ const renderSelectedDays = (dates, classes, range) => {
     selectedDaysElements.push(
       <span key="from">
         {' '}
-        {from.toLocaleDateString('en-US')}
+        {moment(from).format('L')}
         {' '}
       </span>,
     );
@@ -79,9 +81,8 @@ const renderSelectedDays = (dates, classes, range) => {
 };
 
 const DatePicker = ({
-  dates, onSelect, open, onToggle, range,
+  open, onToggle, range, startDate, endDate,
 }) => {
-  const [selectedDays, setSelectedDays] = useState(() => dates);
   const [showCalendar, setShowCalendar] = useState(() => open);
   const classes = useStyles();
 
@@ -92,10 +93,6 @@ const DatePicker = ({
   useEffect(() => {
     setShowCalendar(false);
   }, [open]);
-
-  useEffect(() => {
-    setSelectedDays(() => dates);
-  }, [dates]);
 
   const getCoordinates = () => {
     if (ref.current) {
@@ -113,15 +110,9 @@ const DatePicker = ({
     setShowCalendar(prevState => !prevState);
     if (onToggle) onToggle();
   };
-
-  const handleDateChage = incomingDates => {
-    setSelectedDays(() => incomingDates);
-    if (onSelect) onSelect(incomingDates);
-  };
-
   return (
     <div ref={ref} className={classes.selector}>
-      <div>{renderSelectedDays(selectedDays, classes, range)}</div>
+      <div>{renderSelectedDays([startDate, endDate], classes, range)}</div>
       <IconButton
         className={classes.button}
         aria-label="toggle calendar datepicker"
@@ -135,8 +126,6 @@ const DatePicker = ({
         {showCalendar ? (
           <ReactDayPicker
             range={range}
-            initialDates={selectedDays}
-            onChange={handleDateChage}
           />
         ) : null}
       </div>
@@ -145,19 +134,24 @@ const DatePicker = ({
 };
 
 DatePicker.propTypes = {
-  onSelect: PropTypes.func,
   range: PropTypes.bool,
   open: PropTypes.bool,
   onToggle: PropTypes.func,
-  dates: PropTypes.arrayOf(Date),
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
 };
 
 DatePicker.defaultProps = {
   open: false,
   range: false,
   onToggle: null,
-  onSelect: null,
-  dates: [],
+  startDate: null,
+  endDate: null,
 };
 
-export default DatePicker;
+const mapStateToProps = state => ({
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
+});
+
+export default connect(mapStateToProps)(DatePicker);
