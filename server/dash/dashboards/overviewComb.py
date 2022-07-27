@@ -47,24 +47,21 @@ print(" * Dataframe has been loaded from API path: " + REQ_SOURCE_COUNT_DATA_API
 # Loading the number of Request Agencies
 REQ_AGENCY_COUNT_DATA_API_PATH = "/reports?field=agency_name&filter=created_date>=2016-01-01"
 print(" * Downloading data from API path: " + REQ_AGENCY_COUNT_DATA_API_PATH)
-df5 = pd.read_json(API_HOST + REQ_AGENCY_COUNT_DATA_API_PATH)
-reqAgency = df5.groupby(['agency_name'])['counts'].sum()
+req_agency_count_df = pd.read_json(API_HOST + REQ_AGENCY_COUNT_DATA_API_PATH)
+agency_count = req_agency_count_df.groupby(['agency_name'])['counts'].sum()
 print(" * Dataframe has been loaded from API path: " + REQ_AGENCY_COUNT_DATA_API_PATH)
 
 # Request Share by Agency Pie Chart
-print(" * Downloading data for dataframe")
-query_string = "/reports?field=agency_name&filter=created_date>=2016-01-01"
-df5 = pd.read_json(API_HOST + query_string)
-df5 = df5.groupby(['agency_name'])['counts'].sum().to_frame()
-df5.sort_values('counts', ascending=False, inplace=True)
-df5.loc['Others'] = df5[4:].sum()
-df5.sort_values('counts', ascending=False, inplace=True)
-df5 = df5[:5]
-df5.index = df5.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
+req_agency_count_df = agency_count.to_frame()
+req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
+req_agency_count_df.loc['Others'] = req_agency_count_df[4:].sum()
+req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
+req_agency_count_df = req_agency_count_df[:5]
+req_agency_count_df.index = req_agency_count_df.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
 
 shareReqByAgencyPieChart = px.pie(
-    df5,
-    names=df5.index,
+    req_agency_count_df,
+    names=req_agency_count_df.index,
     values='counts',
     labels=LABELS,
     hole=.3,
@@ -158,7 +155,7 @@ layout = html.Div([
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
         html.Div([html.H2(reqSourceLab.shape[0]), html.Label("Request Source")], style={
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
-        html.Div([html.H2(reqAgency.shape[0]), html.Label("Request Agency")], style={
+        html.Div([html.H2(agency_count.shape[0]), html.Label("Request Agency")], style={
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'})
         ], style={'display': 'flex', "justify-content": "space-between"}),
 
