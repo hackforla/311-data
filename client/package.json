@@ -34,6 +34,7 @@
     "mapbox-gl": "^1.12.0",
     "mixpanel-browser": "^2.36.0",
     "moment": "^2.24.0",
+    "mui-image": "^1.0.7",
     "prop-types": "^15.7.2",
     "proptypes": "^1.1.0",
     "query-string": "^5.1.1",
