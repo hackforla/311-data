@@ -14,49 +14,22 @@ import { INTERNAL_DATE_SPEC } from '../CONSTANTS';
 import Styles from './Styles';
 import WeekDay from './Weekday';
 
-const getInitialState = initialDates => {
-  const [from, to] = initialDates;
-  return {
-    from,
-    to,
-    enteredTo: to, // Keep track of the last day for mouseEnter.
-  };
-};
-
-const defaultState = { from: null, to: null };
-
 function ReactDayPicker({
-  initialDates, range, updateStartDate,
-  updateEndDate,
+  range, updateStartDate, updateEndDate, startDate, endDate,
 }) {
-  // TODO: consider getting rid of this local date state in favor of Redux.
-  const [state, setState] = useState(getInitialState(initialDates));
-
+  const [enteredTo, setEnteredTo] = useState(endDate);
   const isSelectingFirstDay = (from, to, day) => {
-    const isBeforeFirstDay = from && DateUtils.isDayBefore(day, from);
+    const isBeforeFirstDay = from && DateUtils.isDayBefore(moment(day).toDate(),
+      moment(from).toDate());
     const isRangeSelected = from && to;
     return !from || isBeforeFirstDay || isRangeSelected;
   };
 
-  const resetDays = () => {
-    setState(defaultState);
-  };
-
   const setFromDay = day => {
-    setState(() => ({
-      from: day,
-      to: null,
-      enteredTo: null,
-    }));
     updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
 
   const setFromToDay = day => {
-    setState(prevState => ({
-      ...prevState,
-      to: day,
-      enteredTo: day,
-    }));
     updateEndDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
 
@@ -66,16 +39,14 @@ function ReactDayPicker({
       return;
     }
 
-    const { from, to } = state;
-    const dayIsInSelectedRange = from && to && day >= from && day <= to;
-    const sameDaySelected = from ? day.getTime() === from.getTime() : false;
-
-    if (dayIsInSelectedRange || sameDaySelected) {
-      resetDays();
+    if (startDate && endDate) {
+      setFromDay(day);
+      updateEndDate(null);
+      setEnteredTo(null);
       return;
     }
 
-    if (isSelectingFirstDay(from, to, day)) {
+    if (isSelectingFirstDay(startDate, endDate, day)) {
       setFromDay(day);
     } else {
       setFromToDay(day);
@@ -84,17 +55,12 @@ function ReactDayPicker({
 
   const handleDayMouseEnter = day => {
     if (!range) return;
-    const { from, to } = state;
-    if (!isSelectingFirstDay(from, to, day)) {
-      setState(prevState => ({
-        ...prevState,
-        enteredTo: day,
-      }));
+    if (!isSelectingFirstDay(startDate, endDate, day)) {
+      setEnteredTo(day);
     }
   };
-
-  const { from, enteredTo } = state;
-
+  const from = moment(startDate).toDate();
+  const enteredToDate = moment(enteredTo).toDate();
   return (
     <>
       <Styles range={range} />
@@ -102,9 +68,9 @@ function ReactDayPicker({
         className="Range"
         numberOfMonths={1}
         fromMonth={from}
-        selectedDays={[from, { from, to: enteredTo }]}
+        selectedDays={[from, { from, to: enteredToDate }]}
         disabledDays={{ ...(range && { before: from }) }}
-        modifiers={{ start: from, end: enteredTo }}
+        modifiers={{ start: from, end: enteredToDate }}
         onDayClick={handleDayClick}
         onDayMouseEnter={handleDayMouseEnter}
         weekdayElement={<WeekDay />}
@@ -115,16 +81,18 @@ function ReactDayPicker({
 
 ReactDayPicker.propTypes = {
   range: PropTypes.bool,
-  initialDates: PropTypes.arrayOf(Date),
   updateStartDate: PropTypes.func,
   updateEndDate: PropTypes.func,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
 };
 
 ReactDayPicker.defaultProps = {
   range: false,
-  initialDates: [],
   updateStartDate: null,
   updateEndDate: null,
+  startDate: null,
+  endDate: null,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -132,4 +100,9 @@ const mapDispatchToProps = dispatch => ({
   updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
 });
 
-export default connect(null, mapDispatchToProps)(ReactDayPicker);
+const mapStateToProps = state => ({
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReactDayPicker);
