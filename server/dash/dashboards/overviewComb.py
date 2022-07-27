@@ -40,8 +40,8 @@ print(" * Dataframe has been loaded from API path: " + REQ_COUNT_DATA_API_PATH)
 # Loading the total number of request source
 REQ_SOURCE_COUNT_DATA_API_PATH = "/reports?field=source_name&filter=created_date>=2016-01-01"
 print(" * Downloading data from API path: " + REQ_SOURCE_COUNT_DATA_API_PATH)
-df6 = pd.read_json(API_HOST + REQ_SOURCE_COUNT_DATA_API_PATH)
-reqSourceLab = df6.groupby(['source_name'])['counts'].sum()
+req_source_count_df = pd.read_json(API_HOST + REQ_SOURCE_COUNT_DATA_API_PATH)
+req_source_count = req_source_count_df.groupby(['source_name'])['counts'].sum()
 print(" * Dataframe has been loaded from API path: " + REQ_SOURCE_COUNT_DATA_API_PATH)
 
 # Loading the number of Request Agencies
@@ -70,17 +70,15 @@ shareReqByAgencyPieChart = px.pie(
 shareReqByAgencyPieChart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
 
 # Request Type by Source Bar Chart
-print(" * Downloading data for dataframe")
-query_string = "/reports?field=source_name&filter=created_date>=2016-01-01"
-df6 = pd.read_json(API_HOST + query_string)
-df6 = df6.groupby(['source_name'])['counts'].sum().to_frame()
-df6.sort_values('counts', ascending=False, inplace=True)
-df6.loc['Others'] = df6[4:].sum()
-df6.sort_values('counts', ascending=False, inplace=True)
-df6 = df6[:5]
+req_source_count_df = req_source_count.to_frame()
+req_source_count_df.sort_values('counts', ascending=False, inplace=True)
+req_source_count_df.loc['Others'] = req_source_count_df[4:].sum()
+req_source_count_df.sort_values('counts', ascending=False, inplace=True)
+req_source_count_df = req_source_count_df[:5]
+
 reqSourceBarchart = px.bar(
-    df6,
-    y=df6.index,
+    req_source_count_df,
+    y=req_source_count_df.index,
     x='counts',
     TITLE="Total Requests by Source",
     orientation='h'
@@ -153,7 +151,7 @@ layout = html.Div([
                     style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
         html.Div([html.H2(df3.shape[0]), html.Label("Request Types")], style={
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
-        html.Div([html.H2(reqSourceLab.shape[0]), html.Label("Request Source")], style={
+        html.Div([html.H2(req_source_count.shape[0]), html.Label("Request Source")], style={
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
         html.Div([html.H2(agency_count.shape[0]), html.Label("Request Agency")], style={
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'})
