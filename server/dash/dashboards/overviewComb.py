@@ -142,7 +142,9 @@ INDICATOR_CARD_STYLE = {"text-align": 'center',
     "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}
 BORDER_STYLE = {"border": "0.5px black solid"}
 EQUAL_SPACE_BOX_STYLE = {'display': 'flex', "justify-content": "space-between"}
+TWO_CHART_STYLE = {"width": "48vw", "height": "40vh"}
 DASHBOARD_OUTLINE = "The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests."
+
 
 # LAYOUT
 layout = html.Div([
@@ -179,9 +181,9 @@ layout = html.Div([
     html.H1(TITLE + " Pt. 2"),
     html.Div([
         html.Div(dcc.Graph(id='num_req_by_day_bar_chart', figure=num_req_by_day_bar_chart, className="half-graph",
-        style={"width": "48vw", "height": "40vh"}), style=BORDER_STYLE),   # noqa
+        style=TWO_CHART_STYLE), style=BORDER_STYLE),   # noqa
         html.Div(dcc.Graph(id='req_source_bar_chart', figure=req_source_bar_chart, className="half-graph",
-                 responsive=True, style={"width": "48vw", "height": "40vh"}), style=BORDER_STYLE)
+                 responsive=True, style=TWO_CHART_STYLE), style=BORDER_STYLE)
     ], className="graph-row", style=EQUAL_SPACE_BOX_STYLE),
 
     html.Div(html.Br(), style={"height": "2vh"}),
