@@ -9,7 +9,7 @@ from dash.dependencies import Input, Output
 from config import API_HOST
 from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
 
-title = "OVERVIEW COMBINED DASHBOARD"
+TITLE = "OVERVIEW COMBINED DASHBOARD"
 
 # DATA
 print(" * Downloading data for dataframe")
@@ -63,7 +63,7 @@ shareReqByAgencyPieChart = px.pie(
     values='counts',
     labels=LABELS,
     hole=.3,
-    title="Total Requests by Agency",
+    TITLE="Total Requests by Agency",
 )
 shareReqByAgencyPieChart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
 
@@ -80,7 +80,7 @@ reqSourceBarchart = px.bar(
     df6,
     y=df6.index,
     x='counts',
-    title="Total Requests by Source",
+    TITLE="Total Requests by Source",
     orientation='h'
 )
 
@@ -103,7 +103,7 @@ medDaysToCloseBoxPlot.update_xaxes(
     dtick=5
 )
 medDaysToCloseBoxPlot.update_layout(
-    title="Total Median Days to Close by Type",
+    TITLE="Total Median Days to Close by Type",
 )
 
 # Day of Week Bar Chart:
@@ -133,14 +133,14 @@ reqByNcBarChart = px.bar(
     x=df1.index,
     y='counts',
     labels=LABELS,
-    title="Total Requests by Neighborhood Councils",
+    TITLE="Total Requests by Neighborhood Councils",
 )
 reqByNcBarChart.update_layout(font=dict(size=12))
 
 # LAYOUT
 layout = html.Div([
     # Page 2 with Cards + Stuf
-    html.H1(title + " Pt. 1"),
+    html.H1(TITLE + " Pt. 1"),
     html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests.",
            style={'font-size': '18px', 'font-style': 'italic'}),
 
@@ -165,7 +165,7 @@ layout = html.Div([
                  responsive=True, style={"width": "35vw", "height": "60vh"}), style={"border": "0.5px black solid"})
     ], className="graph-row", style={'display': 'flex', "justify-content": "space-between"}),
     html.Div(html.Br(), style={"height": "2vh"}),
-    html.H1(title + " Pt. 2"),
+    html.H1(TITLE + " Pt. 2"),
     html.Div([
         html.Div(dcc.Graph(id='numReqByDayOfWeekBarChart', figure=numReqByDayOfWeekBarChart, className="half-graph", style={"width": "48vw", "height": "40vh"}), style={"border": "0.5px black solid"}),   # noqa
         html.Div(dcc.Graph(id='reqSourceBarchart', figure=reqSourceBarchart, className="half-graph",
