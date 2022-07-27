@@ -11,10 +11,6 @@ from design import LABELS
 TITLE = "OVERVIEW COMBINED DASHBOARD"
 
 # DATA
-NC_REQ_TYPE_DATA_API_PATH = '/reports?field=type_name&field=council_name&field=created_date'
-print(" * Downloading data from API path: " + NC_REQ_TYPE_DATA_API_PATH)
-df = pd.read_json(API_HOST + NC_REQ_TYPE_DATA_API_PATH)
-print(" * Dataframe has been loaded from API path: " + NC_REQ_TYPE_DATA_API_PATH)
 
 # Loading the dataframe for the NCs and correspoding requests
 NC_REQ_COUNT_DATA_API_PATH = "/reports?field=council_name&filter=created_date>=2016-01-01"
@@ -112,14 +108,14 @@ start_date = datetime.date.today() - datetime.timedelta(days=30)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
 DATE_RANGE_REQ_DATA_API_PATH = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"  # noqa
 print(" * Downloading data for dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
-df = pd.read_json(API_HOST + DATE_RANGE_REQ_DATA_API_PATH)
+date_range_req_df = pd.read_json(API_HOST + DATE_RANGE_REQ_DATA_API_PATH)
 print(" * Dataframe has been loaded from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
-df['created_date'] = pd.to_datetime(df['created_date'])
-dow_df = df.groupby(['created_date']).agg('sum').reset_index()
-dow_df['day_of_week'] = dow_df['created_date'].dt.day_name()
+date_range_req_df['created_date'] = pd.to_datetime(date_range_req_df['created_date'])
+day_of_week_df = date_range_req_df.groupby(['created_date']).agg('sum').reset_index()
+day_of_week_df['day_of_week'] = day_of_week_df['created_date'].dt.day_name()
 
 num_req_by_day_bar_chart = px.bar(
-    dow_df,
+    day_of_week_df,
     x="day_of_week",
     y="counts",
     labels=LABELS,
@@ -144,7 +140,6 @@ BORDER_STYLE = {"border": "0.5px black solid"}
 EQUAL_SPACE_BOX_STYLE = {'display': 'flex', "justify-content": "space-between"}
 TWO_CHART_STYLE = {"width": "48vw", "height": "40vh"}
 DASHBOARD_OUTLINE = "The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests."
-
 
 # LAYOUT
 layout = html.Div([
