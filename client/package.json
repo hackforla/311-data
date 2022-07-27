@@ -63,7 +63,7 @@
     "lint:fix": "eslint --fix \"./**/*.js*\"",
     "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
-    "check-env": "node ./utils/checkEnv",
+    "check-env": "node ./utils/checkEnv"
   },
   "husky": {
     "hooks": {
