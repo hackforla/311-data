@@ -68,7 +68,7 @@ req_share_by_agency_pie_chart = px.pie(
     values='counts',
     labels=LABELS,
     hole=.3,
-    TITLE="Total Requests by Agency",
+    title="Total Requests by Agency",
 )
 req_share_by_agency_pie_chart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
 
@@ -83,7 +83,7 @@ req_source_bar_chart = px.bar(
     req_source_count_df,
     y=req_source_count_df.index,
     x='counts',
-    TITLE="Total Requests by Source",
+    title="Total Requests by Source",
     orientation='h'
 )
 
@@ -109,14 +109,14 @@ med_days_to_close_box_plot.update_xaxes(
     dtick=5
 )
 med_days_to_close_box_plot.update_layout(
-    TITLE="Total Median Days to Close by Type",
+    title="Total Median Days to Close by Type",
 )
 
 # Day of Week Bar Chart:
-start_date = datetime.date.today() - datetime.timedelta(days=30)
+start_date = datetime.date.today() - datetime.timedelta(days=365)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
 date_range_req_data_params = {'filter':f"created_date>={start_date}", 'filter':f"created_date<={end_date}"}
-DATE_RANGE_REQ_DATA_API_PATH = REPORT_API_PATH_ROOT + + urllib.parse.urlencode(date_range_req_data_params)
+DATE_RANGE_REQ_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(date_range_req_data_params)
 print(" * Downloading data for dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
 date_range_req_df = pd.read_json(API_HOST + DATE_RANGE_REQ_DATA_API_PATH)
 print(" * Dataframe has been loaded from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
@@ -139,7 +139,7 @@ req_by_nc_bar_chart = px.bar(
     x=nc_req_count_df.index,
     y='counts',
     labels=LABELS,
-    TITLE="Total Requests by Neighborhood Councils",
+    title="Total Requests by Neighborhood Councils",
 )
 req_by_nc_bar_chart.update_layout(font=dict(size=12))
 
