@@ -26,10 +26,11 @@ data_2020 = pd.json_normalize(data_json)
 print(" * Loading complete dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
 
 # LAYOUT VARIABLES
+BORDER_STYLE = {"border": "0.5px black solid"}
+CENTER_ALIGN_STYLE = {"text-align": 'center'}
 DIVIDER_STYLE = {"height": "1vh"}
 EQUAL_SPACE_STYLE = {'display': 'flex', "justify-content": "space-between"}
 INLINE_STYLE = {'display': 'inline-block'}
-BORDER_STYLE = {"border": "0.5px black solid"}
 CHART_OUTLINE_STYLE = INLINE_STYLE.update(BORDER_STYLE)
 SUMMARY_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Summary Dashboard"
 COMPARISON_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Comparison Dashboard"
@@ -80,7 +81,7 @@ layout = html.Div([
     html.Div(html.Br(), style=DIVIDER_STYLE),
 
     # Neighborhood Council Summarization Dashboard
-    html.Div(children=[html.H2(COMPARISON_DASHBOARD_TITLE)], style={'textAlign': 'center', 'height': '5vh'}),
+    html.Div(children=[html.H2(COMPARISON_DASHBOARD_TITLE)], style=CENTER_ALIGN_STYLE.update({'height': '5vh'})),
 
     # Comparison Dropdowns
     html.Div(children=[
@@ -98,12 +99,12 @@ layout = html.Div([
 
             # Indicator Visuals for Total number of requests and the number of days the data spans across
             html.Div([
-                html.H6("Total Number of Requests", style={"text-align": 'center'}),
-                html.H1(id='total_req_card', style={"text-align": 'center'})],
+                html.H6("Total Number of Requests", style=CENTER_ALIGN_STYLE),
+                html.H1(id='total_req_card', style=CENTER_ALIGN_STYLE)],
                 style=CHART_OUTLINE_STYLE.update({'width': '24vw', 'height': '16vh'})),
             html.Div([
-                html.H6("Number of Days", style={"text-align": 'center'}),
-                html.H1(id='num_days_card', style={"text-align": 'center'})],
+                html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
+                html.H1(id='num_days_card', style=CENTER_ALIGN_STYLE)],
                 style=CHART_OUTLINE_STYLE.update({'width': '24vw', 'height': '16vh'}))
 
         ], style=EQUAL_SPACE_STYLE.update({'width': '48.5vw'})),
@@ -111,12 +112,12 @@ layout = html.Div([
         # Indicator Visuals for Total number of requests and the number of days the data spans across
         html.Div(children=[
             html.Div([
-                html.H6("Total Number of Requests", style={"text-align": 'center'}),
-                html.H1(id='total_req_card2', style={"text-align": 'center'})],
+                html.H6("Total Number of Requests", style=CENTER_ALIGN_STYLE),
+                html.H1(id='total_req_card2', style=CENTER_ALIGN_STYLE)],
                 style=CHART_OUTLINE_STYLE.update({'width': '24vw', 'height': '16vh'})),
             html.Div([
-                html.H6("Number of Days", style={"text-align": 'center'}),
-                html.H1(id='num_days_card2', style={"text-align": 'center'})],
+                html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
+                html.H1(id='num_days_card2', style=CENTER_ALIGN_STYLE)],
                 style=CHART_OUTLINE_STYLE.update({'width': '24vw', 'height': '16vh'}))
 
         ], style=EQUAL_SPACE_STYLE.update({ 'width': '48.5vw'}))
@@ -207,9 +208,9 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, data_qualit
 
     # Pie Chart for the distribution of Request Types
     print(" * Generating requests types pie chart")
-    rtype = pd.DataFrame(df['typeName'].value_counts())
-    rtype = rtype.reset_index()
-    req_type_pie_chart = px.pie(rtype, values="typeName", names="index",
+    req_type = pd.DataFrame(df['typeName'].value_counts())
+    req_type = req_type.reset_index()
+    req_type_pie_chart = px.pie(req_type, values="typeName", names="index",
                              title="Share of each Request Type")
     req_type_pie_chart.update_layout(margin=dict(l=50, r=50, b=50, t=50),
                                   legend_title=dict(font=dict(size=10)), font=dict(size=9))
@@ -386,7 +387,7 @@ def update_figure(nc_dropdown):
     total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
     merged_df = neighborhood_sum_df.merge(total_sum_df["nc_avg"].to_frame(), left_index=True, right_index=True)  # noqa
 
-    fig = px.line(
+    nc_avg_comp_line_chart = px.line(
         merged_df,
         x="created_date",
         y=['counts', 'nc_avg'],
@@ -395,14 +396,12 @@ def update_figure(nc_dropdown):
         title="Number of " + nc_dropdown + " Requests compare with the average of all Neighborhood Councils requests"
     )
 
-    fig.update_xaxes(
+    nc_avg_comp_line_chart.update_xaxes(
         tickformat="%a\n%m/%d",
     )
 
-    fig.update_traces(
+    nc_avg_comp_line_chart.update_traces(
         mode='markers+lines'
     )  # add markers to lines
 
-    apply_figure_style(fig)
-
-    return fig
+    return nc_avg_comp_line_chart
