@@ -125,7 +125,7 @@ num_req_by_day_bar_chart = px.bar(
     labels=LABELS,
 )
 num_req_by_day_bar_chart.update_xaxes(categoryorder='array', categoryarray=[
-                                       "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
 
 # Total Request by NC
 req_by_nc_bar_chart = px.bar(
@@ -137,6 +137,10 @@ req_by_nc_bar_chart = px.bar(
 )
 req_by_nc_bar_chart.update_layout(font=dict(size=12))
 
+# LAYOUT VARIABLES
+INDICATOR_CARD_STYLE = {"text-align": 'center',
+    "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}
+
 # LAYOUT
 layout = html.Div([
     # Page 2 with Cards + Stuf
@@ -144,17 +148,18 @@ layout = html.Div([
     html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests.",
            style={'font-size': '18px', 'font-style': 'italic'}),
 
+
     html.Div([
         html.Div([html.H2(f"{new_req_count_df['counts'].sum():,}"), html.Label(
-            "Total Requests")], style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
+            "Total Requests")], style=INDICATOR_CARD_STYLE),
         html.Div([html.H2(nc_req_count_df.shape[0] - 1), html.Label("Neighborhoods")],
-                    style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
-        html.Div([html.H2(req_count_df.shape[0]), html.Label("Request Types")], style={
-                 "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
-        html.Div([html.H2(req_source_count.shape[0]), html.Label("Request Source")], style={
-                 "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
-        html.Div([html.H2(agency_count.shape[0]), html.Label("Request Agency")], style={
-                 "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'})
+                    style=INDICATOR_CARD_STYLE),
+        html.Div([html.H2(req_count_df.shape[0]), html.Label(
+            "Request Types")], style=INDICATOR_CARD_STYLE),
+        html.Div([html.H2(req_source_count.shape[0]), html.Label(
+            "Request Source")], style=INDICATOR_CARD_STYLE),
+        html.Div([html.H2(agency_count.shape[0]), html.Label(
+            "Request Agency")], style=INDICATOR_CARD_STYLE)
         ], style={'display': 'flex', "justify-content": "space-between"}),
 
     html.Div(html.Br(), style={"height": "3vh"}),
