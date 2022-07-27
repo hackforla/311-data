@@ -140,6 +140,7 @@ req_by_nc_bar_chart.update_layout(font=dict(size=12))
 # LAYOUT VARIABLES
 INDICATOR_CARD_STYLE = {"text-align": 'center',
     "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}
+BORDER_STYLE = {"border": "0.5px black solid"}  
 
 # LAYOUT
 layout = html.Div([
@@ -165,19 +166,19 @@ layout = html.Div([
     html.Div(html.Br(), style={"height": "3vh"}),
     html.Div([
         html.Div(dcc.Graph(id='med_days_to_close_box_plot', figure=med_days_to_close_box_plot, responsive=True, style={
-                 "width": "60vw", "height": "60vh"}), style={"border": "0.5px black solid"}),
+                 "width": "60vw", "height": "60vh"}), style=BORDER_STYLE),
         html.Div(dcc.Graph(id='req_share_by_agency_pie_chart', figure=req_share_by_agency_pie_chart, className="half-graph",
-                 responsive=True, style={"width": "35vw", "height": "60vh"}), style={"border": "0.5px black solid"})
+                 responsive=True, style={"width": "35vw", "height": "60vh"}), style=BORDER_STYLE)
     ], className="graph-row", style={'display': 'flex', "justify-content": "space-between"}),
     html.Div(html.Br(), style={"height": "2vh"}),
     html.H1(TITLE + " Pt. 2"),
     html.Div([
-        html.Div(dcc.Graph(id='num_req_by_day_bar_chart', figure=num_req_by_day_bar_chart, className="half-graph", style={"width": "48vw", "height": "40vh"}), style={"border": "0.5px black solid"}),   # noqa
+        html.Div(dcc.Graph(id='num_req_by_day_bar_chart', figure=num_req_by_day_bar_chart, className="half-graph", style={"width": "48vw", "height": "40vh"}), style=BORDER_STYLE),   # noqa
         html.Div(dcc.Graph(id='req_source_bar_chart', figure=req_source_bar_chart, className="half-graph",
-                 responsive=True, style={"width": "48vw", "height": "40vh"}), style={"border": "0.5px black solid"})
+                 responsive=True, style={"width": "48vw", "height": "40vh"}), style=BORDER_STYLE)
     ], className="graph-row", style={'display': 'flex', "justify-content": "space-between"}),
     html.Div(html.Br(), style={"height": "2vh"}),
     html.Div(dcc.Graph(id='req_by_nc_bar_chart', figure=req_by_nc_bar_chart, responsive=True,
-             style={"height": "45vh"}), style={"border": "0.5px black solid"})
+             style={"height": "45vh"}), style=BORDER_STYLE)
 
 ])
