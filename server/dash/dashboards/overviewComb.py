@@ -85,21 +85,20 @@ reqSourceBarchart = px.bar(
 )
 
 # Median Request Days to Close Box Plot
-stas_df = pd.read_json(API_HOST + '/types/stats')
-stas_df = stas_df.sort_values('median', ascending=False)
+stats_df = pd.read_json(API_HOST + '/types/stats')
+stats_df = stats_df.sort_values('median', ascending=False)
 medDaysToCloseBoxPlot = go.Figure()
 medDaysToCloseBoxPlot.add_trace(
     go.Box(
-        y=stas_df.type_name,
-        q1=stas_df['q1'],
-        median=stas_df['median'],
-        q3=stas_df['q3'],
+        y=stats_df.type_name,
+        q1=stats_df['q1'],
+        median=stats_df['median'],
+        q3=stats_df['q3'],
         marker_color='#29404F',
         fillcolor='#E17C05',
     )
 )
 medDaysToCloseBoxPlot.update_xaxes(
-
     dtick=5
 )
 medDaysToCloseBoxPlot.update_layout(
