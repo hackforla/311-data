@@ -141,15 +141,15 @@ req_by_nc_bar_chart.update_layout(font=dict(size=12))
 INDICATOR_CARD_STYLE = {"text-align": 'center',
     "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}
 BORDER_STYLE = {"border": "0.5px black solid"}
-EQUAL_SPACE_BOX_STYLE = {'display': 'flex', "justify-content": "space-between"}  
+EQUAL_SPACE_BOX_STYLE = {'display': 'flex', "justify-content": "space-between"}
+DASHBOARD_OUTLINE = "The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests."
 
 # LAYOUT
 layout = html.Div([
-    # Page 2 with Cards + Stuf
-    html.H1(TITLE + " Pt. 1"),
-    html.P("The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests.",
-           style={'font-size': '18px', 'font-style': 'italic'}),
 
+    # Part 1 of dashboard
+    html.H1(TITLE + " Pt. 1"),
+    html.P(DASHBOARD_OUTLINE, style={'font-size': '18px', 'font-style': 'italic'}),
 
     html.Div([
         html.Div([html.H2(f"{new_req_count_df['counts'].sum():,}"), html.Label(
@@ -165,20 +165,27 @@ layout = html.Div([
         ], style=EQUAL_SPACE_BOX_STYLE),
 
     html.Div(html.Br(), style={"height": "3vh"}),
+
     html.Div([
         html.Div(dcc.Graph(id='med_days_to_close_box_plot', figure=med_days_to_close_box_plot, responsive=True, style={
                  "width": "60vw", "height": "60vh"}), style=BORDER_STYLE),
         html.Div(dcc.Graph(id='req_share_by_agency_pie_chart', figure=req_share_by_agency_pie_chart, className="half-graph",
                  responsive=True, style={"width": "35vw", "height": "60vh"}), style=BORDER_STYLE)
     ], className="graph-row", style=EQUAL_SPACE_BOX_STYLE),
+
     html.Div(html.Br(), style={"height": "2vh"}),
+
+    # Part 2 of dashboard
     html.H1(TITLE + " Pt. 2"),
     html.Div([
-        html.Div(dcc.Graph(id='num_req_by_day_bar_chart', figure=num_req_by_day_bar_chart, className="half-graph", style={"width": "48vw", "height": "40vh"}), style=BORDER_STYLE),   # noqa
+        html.Div(dcc.Graph(id='num_req_by_day_bar_chart', figure=num_req_by_day_bar_chart, className="half-graph",
+        style={"width": "48vw", "height": "40vh"}), style=BORDER_STYLE),   # noqa
         html.Div(dcc.Graph(id='req_source_bar_chart', figure=req_source_bar_chart, className="half-graph",
                  responsive=True, style={"width": "48vw", "height": "40vh"}), style=BORDER_STYLE)
     ], className="graph-row", style=EQUAL_SPACE_BOX_STYLE),
+
     html.Div(html.Br(), style={"height": "2vh"}),
+
     html.Div(dcc.Graph(id='req_by_nc_bar_chart', figure=req_by_nc_bar_chart, responsive=True,
              style={"height": "45vh"}), style=BORDER_STYLE)
 
