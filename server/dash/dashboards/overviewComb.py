@@ -3,48 +3,53 @@ import datetime
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dash import callback, dcc, html
-from dash.dependencies import Input, Output
+from dash import dcc, html
 
 from config import API_HOST
-from design import CONFIG_OPTIONS, DISCRETE_COLORS, DISCRETE_COLORS_MAP, LABELS, apply_figure_style
+from design import LABELS
 
 TITLE = "OVERVIEW COMBINED DASHBOARD"
 
 # DATA
-print(" * Downloading data for dataframe")
-query_string = '/reports?field=type_name&field=council_name&field=created_date'
-df = pd.read_json(API_HOST + query_string)
-print(" * Dataframe has been loaded")
+NC_REQ_TYPE_DATA_API_PATH = '/reports?field=type_name&field=council_name&field=created_date'
+print(" * Downloading data from API path: " + NC_REQ_TYPE_DATA_API_PATH)
+df = pd.read_json(API_HOST + NC_REQ_TYPE_DATA_API_PATH)
+print(" * Dataframe has been loaded from API path: " + NC_REQ_TYPE_DATA_API_PATH)
 
 # Loading the dataframe for the NCs and correspoding requests
-print(" * Downloading data for dataframe")
-query_string = "/reports?field=council_name&filter=created_date>=2016-01-01"
-df1 = pd.read_json(API_HOST + query_string)
+NC_REQ_COUNT_DATA_API_PATH = "/reports?field=council_name&filter=created_date>=2016-01-01"
+print(" * Downloading data from API path: " + NC_REQ_COUNT_DATA_API_PATH)
+df1 = pd.read_json(API_HOST + NC_REQ_COUNT_DATA_API_PATH)
 df1 = df1.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
+print(" * Dataframe has been loaded from API path: " + NC_REQ_COUNT_DATA_API_PATH)
 
 # Loading the data for the number of new requests
-print(" * Downloading data for dataframe")
-query_string = "/reports?field=created_year&filter=created_date>=2016-01-01"
-df2 = pd.read_json(API_HOST + query_string)
+NEW_REQ_COUNT_DATA_API_PATH = "/reports?field=created_year&filter=created_date>=2016-01-01"
+print(" * Downloading data from API path: " + NEW_REQ_COUNT_DATA_API_PATH)
+df2 = pd.read_json(API_HOST + NEW_REQ_COUNT_DATA_API_PATH)
 df2 = df2.groupby(['created_year'])['counts'].sum().to_frame()
+print(" * Dataframe has been loaded from API path: " + NEW_REQ_COUNT_DATA_API_PATH)
 
 # Loading the count of each request types overall
-print(" * Downloading data for dataframe")
-query_string = "/reports?field=type_name&filter=created_date>=2016-01-01"
-df3 = pd.read_json(API_HOST + query_string)
+REQ_COUNT_DATA_API_PATH = "/reports?field=type_name&filter=created_date>=2016-01-01"
+print(" * Downloading data from API path: " + REQ_COUNT_DATA_API_PATH)
+df3 = pd.read_json(API_HOST + REQ_COUNT_DATA_API_PATH)
 df3 = df3.groupby(['type_name'], as_index=False)['counts'].sum()
+print(" * Dataframe has been loaded from API path: " + REQ_COUNT_DATA_API_PATH)
 
 # Loading the total number of request source
-print(" * Downloading data for dataframe")
-query_string = "/reports?field=source_name&filter=created_date>=2016-01-01"
-df6 = pd.read_json(API_HOST + query_string)
+REQ_SOURCE_COUNT_DATA_API_PATH = "/reports?field=source_name&filter=created_date>=2016-01-01"
+print(" * Downloading data from API path: " + REQ_SOURCE_COUNT_DATA_API_PATH)
+df6 = pd.read_json(API_HOST + REQ_SOURCE_COUNT_DATA_API_PATH)
 reqSourceLab = df6.groupby(['source_name'])['counts'].sum()
+print(" * Dataframe has been loaded from API path: " + REQ_SOURCE_COUNT_DATA_API_PATH)
 
 # Loading the number of Request Agencies
-query_string = "/reports?field=agency_name&filter=created_date>=2016-01-01"
-df5 = pd.read_json(API_HOST + query_string)
+REQ_AGENCY_COUNT_DATA_API_PATH = "/reports?field=agency_name&filter=created_date>=2016-01-01"
+print(" * Downloading data from API path: " + REQ_AGENCY_COUNT_DATA_API_PATH)
+df5 = pd.read_json(API_HOST + REQ_AGENCY_COUNT_DATA_API_PATH)
 reqAgency = df5.groupby(['agency_name'])['counts'].sum()
+print(" * Dataframe has been loaded from API path: " + REQ_AGENCY_COUNT_DATA_API_PATH)
 
 # Request Share by Agency Pie Chart
 print(" * Downloading data for dataframe")
