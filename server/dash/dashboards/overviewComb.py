@@ -57,7 +57,8 @@ req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
 req_agency_count_df.loc['Others'] = req_agency_count_df[4:].sum()
 req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
 req_agency_count_df = req_agency_count_df[:5]
-req_agency_count_df.index = req_agency_count_df.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
+req_agency_count_df.index = req_agency_count_df.index.map(
+    lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
 
 shareReqByAgencyPieChart = px.pie(
     req_agency_count_df,
@@ -87,6 +88,7 @@ reqSourceBarchart = px.bar(
 # Median Request Days to Close Box Plot
 stats_df = pd.read_json(API_HOST + '/types/stats')
 stats_df = stats_df.sort_values('median', ascending=False)
+
 medDaysToCloseBoxPlot = go.Figure()
 medDaysToCloseBoxPlot.add_trace(
     go.Box(
@@ -108,19 +110,22 @@ medDaysToCloseBoxPlot.update_layout(
 # Day of Week Bar Chart:
 start_date = datetime.date.today() - datetime.timedelta(days=30)
 end_date = datetime.date.today() - datetime.timedelta(days=1)
-query_string = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"  # noqa
-print(" * Downloading data for dataframe")
-df = pd.read_json(API_HOST + query_string)
+DATE_RANGE_REQ_DATA_API_PATH = f"/reports?filter=created_date>={start_date}&filter=created_date<={end_date}"  # noqa
+print(" * Downloading data for dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
+df = pd.read_json(API_HOST + DATE_RANGE_REQ_DATA_API_PATH)
+print(" * Dataframe has been loaded from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
 df['created_date'] = pd.to_datetime(df['created_date'])
 dow_df = df.groupby(['created_date']).agg('sum').reset_index()
 dow_df['day_of_week'] = dow_df['created_date'].dt.day_name()
+
 numReqByDayOfWeekBarChart = px.bar(
     dow_df,
     x="day_of_week",
     y="counts",
     labels=LABELS,
 )
-numReqByDayOfWeekBarChart.update_xaxes(categoryorder='array', categoryarray= ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
+numReqByDayOfWeekBarChart.update_xaxes(categoryorder='array', categoryarray=[
+                                       "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
 
 # Total Request by NC
 reqByNcBarChart = px.bar(
