@@ -19,8 +19,8 @@ print(" * Dataframe has been loaded from API path: " + NC_REQ_TYPE_DATA_API_PATH
 # Loading the dataframe for the NCs and correspoding requests
 NC_REQ_COUNT_DATA_API_PATH = "/reports?field=council_name&filter=created_date>=2016-01-01"
 print(" * Downloading data from API path: " + NC_REQ_COUNT_DATA_API_PATH)
-df1 = pd.read_json(API_HOST + NC_REQ_COUNT_DATA_API_PATH)
-df1 = df1.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
+nc_req_count_df = pd.read_json(API_HOST + NC_REQ_COUNT_DATA_API_PATH)
+nc_req_count_df = nc_req_count_df.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
 print(" * Dataframe has been loaded from API path: " + NC_REQ_COUNT_DATA_API_PATH)
 
 # Loading the data for the number of new requests
@@ -123,13 +123,9 @@ numReqByDayOfWeekBarChart = px.bar(
 numReqByDayOfWeekBarChart.update_xaxes(categoryorder='array', categoryarray= ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
 
 # Total Request by NC
-print(" * Downloading data for dataframe")
-query_string = "/reports?field=council_name&filter=created_date>=2016-01-01"
-df1 = pd.read_json(API_HOST + query_string)
-df1 = df1.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
 reqByNcBarChart = px.bar(
-    df1,
-    x=df1.index,
+    nc_req_count_df,
+    x=nc_req_count_df.index,
     y='counts',
     labels=LABELS,
     TITLE="Total Requests by Neighborhood Councils",
@@ -146,7 +142,7 @@ layout = html.Div([
     html.Div([
         html.Div([html.H2(f"{df2['counts'].sum():,}"), html.Label(
             "Total Requests")], style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
-        html.Div([html.H2(df1.shape[0] - 1), html.Label("Neighborhoods")],
+        html.Div([html.H2(nc_req_count_df.shape[0] - 1), html.Label("Neighborhoods")],
                     style={"text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
         html.Div([html.H2(df3.shape[0]), html.Label("Request Types")], style={
                  "text-align": 'center', "border": "0.5px black solid", 'width': '18vw', 'display': 'inline-block'}),
