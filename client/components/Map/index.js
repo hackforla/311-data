@@ -49,8 +49,11 @@ class MapContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { activeMode, pins, startDate, endDate } = this.props;
+    // Note: we are only checking if the endDate has changed, not the startDate.
+    // This is so that we don't attempt to get new data until the user has
+    // selected an endDate.
     if (prevProps.activeMode !== activeMode || prevProps.pins !== pins ||
-      prevProps.startDate != startDate || prevProps.endDate != endDate) {
+      prevProps.endDate != endDate && endDate != null) {
       this.setData();
     }
   }
@@ -72,16 +75,26 @@ class MapContainer extends React.Component {
   getNonOverlappingRanges = (startA, endA, startB, endB) => {
     var leftNonOverlap = null;
     var rightNonOverlap = null;
+    const momentStartA = moment(startA);
+    const momentEndA = moment(endA);
+    const momentStartB = moment(startB);
+    const momentEndB = moment(endB);
+
     // If date range A starts before date range B, then it has a subrange that
     // does not overlap with B.
-    if (moment(startA) < moment(startB)){
+    if (momentStartA < momentStartB){
+      // For the left side, we want to choose the earlier of (startB, endA).
+      // If startB is earlier than endA, that means A and B overlap, so we
+      // subtract 1 day from startB, since it's already included in A.
+      const leftNonOverlapEnd = momentStartB < momentEndA ? momentStartB.subtract(1, 'days') : momentEndA;
       leftNonOverlap = [startA,
-        moment(startB).subtract(1, 'days').format(INTERNAL_DATE_SPEC)];
+        leftNonOverlapEnd.format(INTERNAL_DATE_SPEC)];
     }
     // If date range A ends after date range B, then it has a subrange that does
     // not overlap with B.
-    if (moment(endB) < moment(endA)){
-      rightNonOverlap = [moment(endB).add(1, 'days').format(INTERNAL_DATE_SPEC),
+    if (momentEndB < momentEndA){
+      var rightNonOverlapStart = momentEndB < momentStartA ? momentStartA : momentEndB.add(1, 'days'); 
+      rightNonOverlap = [rightNonOverlapStart.format(INTERNAL_DATE_SPEC),
         endA];
     }
     return [leftNonOverlap, rightNonOverlap];
@@ -162,8 +175,8 @@ class MapContainer extends React.Component {
         currentEnd = dateRange[1];
       } else {
         resolvedDateRanges.push([currentStart, currentEnd]);
-        currentStart = null;
-        currentEnd = null;
+        currentStart = dateRange[0];
+        currentEnd = dateRange[1];
       }
     }
     if (currentStart !== null){
