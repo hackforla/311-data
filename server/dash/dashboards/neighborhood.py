@@ -38,7 +38,8 @@ def populate_options():
 
 NC_POP_MOVING_AVERAGE_KEY = "nc_ma_pop"  # Key for neighborhood council moving average adjusted to per 10,000 people.
 SELECT_NC_POP_MOVING_AVERAGE_KEY = "select_nc_ma_pop"  # Key for selected neighborhood council moving average in dataframe adjusted to per 10,000 people.
-TOT_POP = 3814700
+TOT_POP = int(pop.population.sum())  # total population for all NCs
+POP_NORM = 10000  # normalizing data by Requests/10,000 places requests number within an intutitive range on graph
 
 # Define callback to update graph
 @app.callback(
@@ -59,7 +60,7 @@ def update_figure(selected_council, selected_timeframe):
         Plotly graph that compares the selected moving average between the
           chosen council and the moving average of the avg of all the 99 neighborhood councils.
     """
-    NC_POP = int(
+    nc_pop = int(
         pop[pop.council_name == selected_council].population
     )  # population of selected council.
 
@@ -80,7 +81,7 @@ def update_figure(selected_council, selected_timeframe):
 
     neighborhood_sum_df[SELECT_NC_POP_MOVING_AVERAGE_KEY] = (
         neighborhood_sum_df.counts.rolling(selected_timeframe, center=True).mean()
-        / NC_POP
+        / nc_pop
         * 10000
     )
 
