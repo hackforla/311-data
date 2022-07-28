@@ -7,29 +7,25 @@ import {
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import DayPicker, { DateUtils } from 'react-day-picker';
+import DayPicker from 'react-day-picker';
 import { connect } from 'react-redux';
 
 import { INTERNAL_DATE_SPEC } from '../CONSTANTS';
 import Styles from './Styles';
 import WeekDay from './Weekday';
 
+/** A wrapper around react-day-picker that selects a date range. */
 function ReactDayPicker({
   range, updateStartDate, updateEndDate, startDate, endDate,
 }) {
+  // enteredTo represents the day that the user is currently hovering over.
   const [enteredTo, setEnteredTo] = useState(endDate);
-  const isSelectingFirstDay = (from, to, day) => {
-    const isBeforeFirstDay = from && DateUtils.isDayBefore(moment(day).toDate(),
-      moment(from).toDate());
-    const isRangeSelected = from && to;
-    return !from || isBeforeFirstDay || isRangeSelected;
-  };
 
   const setFromDay = day => {
     updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
 
-  const setFromToDay = day => {
+  const setToDay = day => {
     updateEndDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
 
@@ -39,28 +35,28 @@ function ReactDayPicker({
       return;
     }
 
-    if (startDate && endDate) {
-      setFromDay(day);
-      updateEndDate(null);
-      setEnteredTo(null);
+    // Our date range selection logic is very simple: the user is selecting the
+    // first day in their date range if from and to are set, or if they're both
+    // unset. Otherwise, they are selecting the last day.
+    if (!(startDate && endDate)) {
+      setToDay(day);
       return;
     }
-
-    if (isSelectingFirstDay(startDate, endDate, day)) {
-      setFromDay(day);
-    } else {
-      setFromToDay(day);
-    }
+    setFromDay(day);
+    updateEndDate(null);
+    setEnteredTo(null);
   };
 
   const handleDayMouseEnter = day => {
     if (!range) return;
-    if (!isSelectingFirstDay(startDate, endDate, day)) {
+    if (startDate && !endDate) {
       setEnteredTo(day);
     }
   };
+
   const from = moment(startDate).toDate();
   const enteredToDate = moment(enteredTo).toDate();
+
   return (
     <>
       <Styles range={range} />
@@ -69,7 +65,6 @@ function ReactDayPicker({
         numberOfMonths={1}
         fromMonth={from}
         selectedDays={[from, { from, to: enteredToDate }]}
-        disabledDays={{ ...(range && { before: from }) }}
         modifiers={{ start: from, end: enteredToDate }}
         onDayClick={handleDayClick}
         onDayMouseEnter={handleDayMouseEnter}
