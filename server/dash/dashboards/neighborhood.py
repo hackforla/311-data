@@ -14,9 +14,6 @@ from design import CONFIG_OPTIONS
 from design import DISCRETE_COLORS
 from design import LABELS
 
-NEIGHBORHOOD_COUNCILS_NUMBER = 99  # Number of nc in Los Angeles as of 06.2022.
-TOT_POP = 3814700
-
 # TITLE
 title = "NEIGHBORHOODS"
 
@@ -39,7 +36,9 @@ def populate_options():
     return values
 
 
-# looks good, need to clean the code and add also territory size as well as density
+NC_POP_MOVING_AVERAGE_KEY = "nc_ma_pop"  # Key for neighborhood council moving average adjusted to per 10,000 people.
+SELECT_NC_POP_MOVING_AVERAGE_KEY = "select_nc_ma_pop"  # Key for selected neighborhood council moving average in dataframe adjusted to per 10,000 people.
+TOT_POP = 3814700
 
 # Define callback to update graph
 @app.callback(
@@ -64,13 +63,6 @@ def update_figure(selected_council, selected_timeframe):
         pop[pop.council_name == selected_council].population
     )  # population of selected council.
 
-    NC_MOVING_AVERAGE_KEY = (
-        "nc_ma"  # Key for neighborhood council moving average in dataframe (total/99).
-    )
-    NC_POP_MOVING_AVERAGE_KEY = "nc_ma_pop"  # Key for neighborhood council moving average adjusted to per 10,000 people.
-    SELECT_NC_MOVING_AVERAGE_KEY = "select_nc_ma"  # Key for selected neighborhood council moving average in dataframe.
-    SELECT_NC_POP_MOVING_AVERAGE_KEY = "select_nc_ma_pop"  # Key for selected neighborhood council moving average in dataframe adjusted to per 10,000 people.
-
     neighborhood_sum_df = (
         df[df.council_name == selected_council]
         .groupby(["created_date"])
@@ -80,21 +72,18 @@ def update_figure(selected_council, selected_timeframe):
 
     total_sum_df = df.groupby(["created_date"]).agg("sum").reset_index()
 
-    total_sum_df[NC_MOVING_AVERAGE_KEY] = (
-        total_sum_df.counts.rolling(selected_timeframe, center=True).mean()
-        / NEIGHBORHOOD_COUNCILS_NUMBER
-    )
     total_sum_df[NC_POP_MOVING_AVERAGE_KEY] = (
         total_sum_df.counts.rolling(selected_timeframe, center=True).mean()
         / TOT_POP
         * 10000
     )
-    neighborhood_sum_df[
-        SELECT_NC_MOVING_AVERAGE_KEY
-    ] = neighborhood_sum_df.counts.rolling(selected_timeframe, center=True).mean()
+
     neighborhood_sum_df[SELECT_NC_POP_MOVING_AVERAGE_KEY] = (
-        neighborhood_sum_df.select_nc_ma / NC_POP * 10000
+        neighborhood_sum_df.counts.rolling(selected_timeframe, center=True).mean()
+        / NC_POP
+        * 10000
     )
+
     merged_df = pd.merge(
         neighborhood_sum_df, total_sum_df, on=["created_date", "created_date"]
     )
@@ -103,20 +92,16 @@ def update_figure(selected_council, selected_timeframe):
         merged_df,
         x="created_date",
         y=[
-            SELECT_NC_MOVING_AVERAGE_KEY,
             SELECT_NC_POP_MOVING_AVERAGE_KEY,
-            NC_MOVING_AVERAGE_KEY,
             NC_POP_MOVING_AVERAGE_KEY,
         ],
         color_discrete_sequence=DISCRETE_COLORS,
         labels={"created_date": "Request Date", "value": "Total Requests"},
-        title=selected_council + " vs Neighborhood Councils Average",
+        title="311 Requests Moving Average (per 10,000 people)",
     )
     new_names = {
-        SELECT_NC_MOVING_AVERAGE_KEY: selected_council,
-        NC_MOVING_AVERAGE_KEY: "Neighborhood Councils Average",
-        SELECT_NC_POP_MOVING_AVERAGE_KEY: selected_council + "council adjusted",
-        NC_POP_MOVING_AVERAGE_KEY: "Neighborhood Councils Average Adjusted",
+        SELECT_NC_POP_MOVING_AVERAGE_KEY: selected_council,
+        NC_POP_MOVING_AVERAGE_KEY: "All neighborhood councils",
     }
     fig.for_each_trace(
         lambda t: t.update(
