@@ -61,7 +61,7 @@ def update_figure(selected_council, selected_timeframe):
           chosen council and the moving average of the avg of all the 99 neighborhood councils.
     """
     NC_POP = int(
-        pop[pop.council_name == selected_council].sum_pop20
+        pop[pop.council_name == selected_council].population
     )  # population of selected council.
 
     NC_MOVING_AVERAGE_KEY = (
