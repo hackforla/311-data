@@ -1,4 +1,3 @@
-import flask
 from dash import Dash, dcc, html
 
 external_stylesheets = ['/static/reports.css']
