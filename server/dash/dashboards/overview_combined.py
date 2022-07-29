@@ -15,8 +15,18 @@ CREATED_DATE_FILTER = 'created_date>=2016-01-01'
 # DATA
 
 def generate_dataframe_from_api(api_params, group_by_col, sort_values=False):
-    """
+    """Generates the dataframe output from the reports API.
+
+    This function takes the "api_params" dictionary and "group_by_col" string and outputs the relevant fields
+    in the raw dataframe and groupby dataframe from the reports API.
     
+    Args:
+        api_params: a dictionary of parameters for calling the API.
+        group_by_col: the column name we use to groupby and output the result_df_gb dataframe.
+    
+    Returns: 
+        result_df: the raw dataframe from calling the api with parameters from "api_params".
+        result_df_gb: dataframe output from result_df group by the column "group_by_col" and aggregating the sum.
     """
     DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(api_params)
     print(" * Downloading data from API path: " + DATA_API_PATH)
