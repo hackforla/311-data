@@ -11,10 +11,10 @@ from design import LABELS
 
 # COMMON VARIABLES.
 CREATED_DATE_FILTER = 'created_date>=2016-01-01'
+NON_TOP4_INDEX_START = 4
 REPORT_API_PATH_ROOT = "/reports?"
 REQ_TYPE_STATS_API_PATH  = '/types/stats'
 TITLE = "OVERVIEW COMBINED DASHBOARD"
-NON_TOP4_INDEX_START = 4
 
 # HELPER FUNCTIONS.
 def generate_dataframe_from_api(api_params, group_by_col):
