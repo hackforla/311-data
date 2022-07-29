@@ -9,11 +9,14 @@ from dash import dcc, html
 from config import API_HOST
 from design import LABELS
 
-TITLE = "OVERVIEW COMBINED DASHBOARD"
-REPORT_API_PATH_ROOT = "/reports?"
+# COMMON VARIABLES.
 CREATED_DATE_FILTER = 'created_date>=2016-01-01'
-# DATA
+REPORT_API_PATH_ROOT = "/reports?"
+REQ_TYPE_STATS_API_PATH  = '/types/stats'
+TITLE = "OVERVIEW COMBINED DASHBOARD"
+NON_TOP4_INDEX_START = 4
 
+# HELPER FUNCTIONS.
 def generate_dataframe_from_api(api_params, group_by_col):
     """Generates the dataframe output from the reports API.
 
@@ -34,6 +37,8 @@ def generate_dataframe_from_api(api_params, group_by_col):
     result_df_gb = result_df.groupby([group_by_col])['counts'].sum().sort_values().to_frame()
     print(" * Dataframe has been loaded from API path: " + DATA_API_PATH)
     return result_df, result_df_gb
+
+# DATA
 
 # Loading the dataframe for the NCs and corresponding requests.
 nc_req_count_api_params = {'field': 'council_name', 'filter': CREATED_DATE_FILTER}
@@ -58,9 +63,9 @@ req_agency_count_df, agency_count = generate_dataframe_from_api(req_agency_count
 # Request Share by Agency Pie Chart.
 req_agency_count_df = agency_count
 req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
-req_agency_count_df.loc['Others'] = req_agency_count_df[4:].sum()
+req_agency_count_df.loc['Others'] = req_agency_count_df[NON_TOP4_INDEX_START:].sum()
 req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
-req_agency_count_df = req_agency_count_df[:5]
+req_agency_count_df = req_agency_count_df[:NON_TOP4_INDEX_START + 1]
 req_agency_count_df.index = req_agency_count_df.index.map(lambda x: '<br>'.join(textwrap.wrap(x, width=16)))
 
 req_share_by_agency_pie_chart = px.pie(
@@ -76,9 +81,9 @@ req_share_by_agency_pie_chart.update_layout(margin=dict(l=100, r=100, b=100, t=1
 # Request Type by Source Bar Chart.
 req_source_count_df = req_source_count
 req_source_count_df.sort_values('counts', ascending=False, inplace=True)
-req_source_count_df.loc['Others'] = req_source_count_df[4:].sum()
+req_source_count_df.loc['Others'] = req_source_count_df[NON_TOP4_INDEX_START:].sum()
 req_source_count_df.sort_values('counts', ascending=False, inplace=True)
-req_source_count_df = req_source_count_df[:5]
+req_source_count_df = req_source_count_df[:NON_TOP4_INDEX_START + 1]
 
 req_source_bar_chart = px.bar(
     req_source_count_df,
@@ -89,7 +94,6 @@ req_source_bar_chart = px.bar(
 )
 
 # Median Request Days to Close Box Plot.
-REQ_TYPE_STATS_API_PATH  = '/types/stats'
 print(" * Downloading data from API path: " + REQ_TYPE_STATS_API_PATH)
 stats_df = pd.read_json(API_HOST + REQ_TYPE_STATS_API_PATH)
 stats_df = stats_df.sort_values('median', ascending=False)
