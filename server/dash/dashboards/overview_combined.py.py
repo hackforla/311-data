@@ -149,7 +149,8 @@ INDICATOR_CARD_STYLE = {"text-align": 'center',
 BORDER_STYLE = {"border": "0.5px black solid"}
 EQUAL_SPACE_BOX_STYLE = {'display': 'flex', "justify-content": "space-between"}
 TWO_CHART_STYLE = {"width": "48vw", "height": "40vh"}
-DASHBOARD_OUTLINE = "The figures below represent the total number of 311 requests made across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests."
+DASHBOARD_OUTLINE = """The figures below represent the total number of 311 requests made 
+across LA County from 2016-2021. In 2020, we saw an all-time high with more than 1.4 million requests."""
 
 # LAYOUT.
 layout = html.Div([
