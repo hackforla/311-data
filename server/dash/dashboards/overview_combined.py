@@ -14,48 +14,66 @@ REPORT_API_PATH_ROOT = "/reports?"
 CREATED_DATE_FILTER = 'created_date>=2016-01-01'
 # DATA
 
+def generate_dataframe_from_api(api_params, group_by_col, sort_values=False):
+    """
+    
+    """
+    DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(api_params)
+    print(" * Downloading data from API path: " + DATA_API_PATH)
+    result_df = pd.read_json(API_HOST + DATA_API_PATH)
+    result_df_gb = result_df.groupby([group_by_col])['counts'].sum().sort_values().to_frame()
+    print(" * Dataframe has been loaded from API path: " + DATA_API_PATH)
+    return result_df, result_df_gb
+
+
+
 # Loading the dataframe for the NCs and corresponding requests.
-nc_req_count_api_params = {'field':'council_name', 'filter':CREATED_DATE_FILTER}
-NC_REQ_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(nc_req_count_api_params)
-print(" * Downloading data from API path: " + NC_REQ_COUNT_DATA_API_PATH)
-nc_req_count_df = pd.read_json(API_HOST + NC_REQ_COUNT_DATA_API_PATH)
-nc_req_count_df = nc_req_count_df.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
-print(" * Dataframe has been loaded from API path: " + NC_REQ_COUNT_DATA_API_PATH)
+nc_req_count_api_params = {'field': 'council_name', 'filter': CREATED_DATE_FILTER}
+_, nc_req_count_df = generate_dataframe_from_api(nc_req_count_api_params, nc_req_count_api_params['field'])
+# NC_REQ_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(nc_req_count_api_params)
+# print(" * Downloading data from API path: " + NC_REQ_COUNT_DATA_API_PATH)
+# nc_req_count_df = pd.read_json(API_HOST + NC_REQ_COUNT_DATA_API_PATH)
+# nc_req_count_df = nc_req_count_df.groupby(['council_name'])['counts'].sum().sort_values().to_frame()
+# print(" * Dataframe has been loaded from API path: " + NC_REQ_COUNT_DATA_API_PATH)
 
 # Loading the data for the number of new requests.
-new_req_count_api_params = {'field':'created_year', 'filter':CREATED_DATE_FILTER}
-NEW_REQ_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(new_req_count_api_params)
-print(" * Downloading data from API path: " + NEW_REQ_COUNT_DATA_API_PATH)
-new_req_count_df = pd.read_json(API_HOST + NEW_REQ_COUNT_DATA_API_PATH)
-new_req_count_df = new_req_count_df.groupby(['created_year'])['counts'].sum().to_frame()
-print(" * Dataframe has been loaded from API path: " + NEW_REQ_COUNT_DATA_API_PATH)
+new_req_count_api_params = {'field': 'created_year', 'filter': CREATED_DATE_FILTER}
+_, new_req_count_df = generate_dataframe_from_api(new_req_count_api_params, new_req_count_api_params['field'])
+# NEW_REQ_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(new_req_count_api_params)
+# print(" * Downloading data from API path: " + NEW_REQ_COUNT_DATA_API_PATH)
+# new_req_count_df = pd.read_json(API_HOST + NEW_REQ_COUNT_DATA_API_PATH)
+# new_req_count_df = new_req_count_df.groupby(['created_year'])['counts'].sum().to_frame()
+# print(" * Dataframe has been loaded from API path: " + NEW_REQ_COUNT_DATA_API_PATH)
 
 # Loading the count of each request types overall.
-req_count_api_params = {'field':'type_name', 'filter':CREATED_DATE_FILTER}
-REQ_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(req_count_api_params)
-print(" * Downloading data from API path: " + REQ_COUNT_DATA_API_PATH)
-req_count_df = pd.read_json(API_HOST + REQ_COUNT_DATA_API_PATH)
-req_count = req_count_df.groupby(['type_name'], as_index=False)['counts'].sum()
-print(" * Dataframe has been loaded from API path: " + REQ_COUNT_DATA_API_PATH)
+req_count_api_params = {'field': 'type_name', 'filter': CREATED_DATE_FILTER}
+req_count_df, req_count = generate_dataframe_from_api(new_req_count_api_params, new_req_count_api_params['field'])
+# REQ_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(req_count_api_params)
+# print(" * Downloading data from API path: " + REQ_COUNT_DATA_API_PATH)
+# req_count_df = pd.read_json(API_HOST + REQ_COUNT_DATA_API_PATH)
+# req_count = req_count_df.groupby(['type_name'], as_index=False)['counts'].sum()
+# print(" * Dataframe has been loaded from API path: " + REQ_COUNT_DATA_API_PATH)
 
 # Loading the total number of request source.
-req_source_count_api_params = {'field':'source_name', 'filter':CREATED_DATE_FILTER}
-REQ_SOURCE_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(req_source_count_api_params)
-print(" * Downloading data from API path: " + REQ_SOURCE_COUNT_DATA_API_PATH)
-req_source_count_df = pd.read_json(API_HOST + REQ_SOURCE_COUNT_DATA_API_PATH)
-req_source_count = req_source_count_df.groupby(['source_name'])['counts'].sum()
-print(" * Dataframe has been loaded from API path: " + REQ_SOURCE_COUNT_DATA_API_PATH)
+req_source_count_api_params = {'field': 'source_name', 'filter': CREATED_DATE_FILTER}
+req_source_count_df, req_source_count = generate_dataframe_from_api(req_source_count_api_params, req_source_count_api_params['field'])
+# REQ_SOURCE_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(req_source_count_api_params)
+# print(" * Downloading data from API path: " + REQ_SOURCE_COUNT_DATA_API_PATH)
+# req_source_count_df = pd.read_json(API_HOST + REQ_SOURCE_COUNT_DATA_API_PATH)
+# req_source_count = req_source_count_df.groupby(['source_name'])['counts'].sum()
+# print(" * Dataframe has been loaded from API path: " + REQ_SOURCE_COUNT_DATA_API_PATH)
 
 # Loading the number of Request Agencies.
-req_agency_count_api_params = {'field':'agency_name', 'filter':CREATED_DATE_FILTER}
-REQ_AGENCY_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(req_agency_count_api_params)
-print(" * Downloading data from API path: " + REQ_AGENCY_COUNT_DATA_API_PATH)
-req_agency_count_df = pd.read_json(API_HOST + REQ_AGENCY_COUNT_DATA_API_PATH)
-agency_count = req_agency_count_df.groupby(['agency_name'])['counts'].sum()
-print(" * Dataframe has been loaded from API path: " + REQ_AGENCY_COUNT_DATA_API_PATH)
+req_agency_count_api_params = {'field': 'agency_name', 'filter': CREATED_DATE_FILTER}
+req_agency_count_df, agency_count = generate_dataframe_from_api(req_agency_count_api_params, req_agency_count_api_params['field'])
+# REQ_AGENCY_COUNT_DATA_API_PATH = REPORT_API_PATH_ROOT + urllib.parse.urlencode(req_agency_count_api_params)
+# print(" * Downloading data from API path: " + REQ_AGENCY_COUNT_DATA_API_PATH)
+# req_agency_count_df = pd.read_json(API_HOST + REQ_AGENCY_COUNT_DATA_API_PATH)
+# agency_count = req_agency_count_df.groupby(['agency_name'])['counts'].sum()
+# print(" * Dataframe has been loaded from API path: " + REQ_AGENCY_COUNT_DATA_API_PATH)
 
 # Request Share by Agency Pie Chart.
-req_agency_count_df = agency_count.to_frame()
+# req_agency_count_df = agency_count.to_frame()
 req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
 req_agency_count_df.loc['Others'] = req_agency_count_df[4:].sum()
 req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
@@ -74,7 +92,7 @@ req_share_by_agency_pie_chart = px.pie(
 req_share_by_agency_pie_chart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
 
 # Request Type by Source Bar Chart.
-req_source_count_df = req_source_count.to_frame()
+# req_source_count_df = req_source_count.to_frame()
 req_source_count_df.sort_values('counts', ascending=False, inplace=True)
 req_source_count_df.loc['Others'] = req_source_count_df[4:].sum()
 req_source_count_df.sort_values('counts', ascending=False, inplace=True)
