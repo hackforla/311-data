@@ -49,11 +49,13 @@ class MapContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { activeMode, pins, startDate, endDate } = this.props;
-    // Note: we are only checking if the endDate has changed, not the startDate.
-    // This is so that we don't attempt to get new data until the user has
-    // selected an endDate.
+    function didDateRangeChange() {
+      // Check that endDate is not null since we only want to retrieve data
+      // when both the startDate and endDate are selected.
+      return (prevProps.startDate != startDate || prevProps.endDate != endDate) && endDate != null;
+    }
     if (prevProps.activeMode !== activeMode || prevProps.pins !== pins ||
-      prevProps.endDate != endDate && endDate != null) {
+      didDateRangeChange()) {
       this.setData();
     }
   }
