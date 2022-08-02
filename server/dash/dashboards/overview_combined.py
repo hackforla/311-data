@@ -21,8 +21,7 @@ SOURCE_NAME_FIELD = 'source_name'
 TITLE = "OVERVIEW COMBINED DASHBOARD"
 TYPE_NAME_FIELD = 'type_name'
 
-
-# HELPER FUNCTIONS.
+# API HELPER FUNCTION.
 def generate_dataframe_from_api(api_params, group_by_col):
     """Generates the dataframe output from the reports API.
 
@@ -44,7 +43,7 @@ def generate_dataframe_from_api(api_params, group_by_col):
     print(" * Dataframe has been loaded from API path: " + DATA_API_PATH)
     return result_df, result_counts_df
 
-# DATA
+# DATAFRAMES
 
 # Loading the dataframe for the NCs and corresponding requests.
 nc_req_count_api_params = {'field': 'council_name', 'filter': CREATED_DATE_FILTER}
@@ -67,6 +66,28 @@ req_source_count_df, req_source_count = generate_dataframe_from_api(
 req_agency_count_api_params = {'field': 'agency_name', 'filter': CREATED_DATE_FILTER}
 req_agency_count_df, agency_count = generate_dataframe_from_api(
     req_agency_count_api_params, AGENCY_NAME_FIELD)
+
+# VISUALS HELPER FUNCTIONS.
+
+# Compute values for the indicator visuals.
+def get_counts_dict():
+    """Compute values for the indicator visuals.
+
+    This function compute the summary statistics including number of new requests, number of neighborhood
+    councils, number of requests, number of request sources, number of request agencies, and store them
+    in a dictionary.
+
+    Returns: 
+        indicator_count_dict: dictionary storing the summary statistics for indicator visuals.
+    """
+    indicator_count_dict = {}
+    indicator_count_dict['new_req_count'] = new_req_count_df['counts'].sum()
+    indicator_count_dict['nc_count'] = nc_req_count_df.shape[0] - 1
+    indicator_count_dict['req_count'] = req_count_df.shape[0]
+    indicator_count_dict['source_count'] = req_source_count.shape[0]
+    indicator_count_dict['agency_count'] = agency_count.shape[0]
+
+    return indicator_count_dict
 
 # Request Share by Agency Pie Chart.
 def make_agency_pie_chart(agency_count):
@@ -100,9 +121,6 @@ def make_agency_pie_chart(agency_count):
     req_share_by_agency_pie_chart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
     return req_share_by_agency_pie_chart
 
-
-req_share_by_agency_pie_chart = make_agency_pie_chart(agency_count)
-
 # Request Type by Source Bar Chart.
 def make_req_type_source_bar_chart(req_source_count):
     """Generates the request type by source bar chart.
@@ -131,9 +149,6 @@ def make_req_type_source_bar_chart(req_source_count):
         orientation='h'
     )
     return req_source_bar_chart
-
-
-req_source_bar_chart = make_req_type_source_bar_chart(req_source_count)
 
 # Median Request Days to Close Box Plot.
 def make_days_to_close_box_plot():
@@ -169,9 +184,6 @@ def make_days_to_close_box_plot():
     )
     return med_days_to_close_box_plot
 
-
-med_days_to_close_box_plot = make_days_to_close_box_plot()
-
 # Day of Week Bar Chart.
 def make_day_of_week_bar_chart():
     """Generates the day of week bar chart.
@@ -202,9 +214,6 @@ def make_day_of_week_bar_chart():
         "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
     return num_req_by_day_bar_chart
 
-num_req_by_day_bar_chart = make_day_of_week_bar_chart()
-
-
 # Total Request by NC.
 def make_req_by_nc_bar_chart(nc_req_count_df):
     """Generates the total request by nc bar chart.
@@ -228,9 +237,12 @@ def make_req_by_nc_bar_chart(nc_req_count_df):
     req_by_nc_bar_chart.update_layout(font=dict(size=12))
     return req_by_nc_bar_chart
 
-# GRAPHS
-
-
+# VISUALS.
+indicator_count_dict = get_counts_dict()
+req_share_by_agency_pie_chart = make_agency_pie_chart(agency_count)
+req_source_bar_chart = make_req_type_source_bar_chart(req_source_count)
+med_days_to_close_box_plot = make_days_to_close_box_plot()
+num_req_by_day_bar_chart = make_day_of_week_bar_chart()
 req_by_nc_bar_chart = make_req_by_nc_bar_chart(nc_req_count_df)
 
 # LAYOUT VARIABLES.
@@ -250,15 +262,15 @@ layout = html.Div([
     html.P(DASHBOARD_OUTLINE, style={'font-size': '18px', 'font-style': 'italic'}),
 
     html.Div([
-        html.Div([html.H2(f"{new_req_count_df['counts'].sum():,}"), html.Label(
+        html.Div([html.H2(f"{indicator_count_dict['new_req_count']:,}"), html.Label(
             "Total Requests")], style=INDICATOR_CARD_STYLE),
-        html.Div([html.H2(nc_req_count_df.shape[0] - 1), html.Label("Neighborhoods")],
+        html.Div([html.H2(indicator_count_dict['nc_count']), html.Label("Neighborhoods")],
                     style=INDICATOR_CARD_STYLE),
-        html.Div([html.H2(req_count_df.shape[0]), html.Label(
+        html.Div([html.H2(indicator_count_dict['req_count']), html.Label(
             "Request Types")], style=INDICATOR_CARD_STYLE),
-        html.Div([html.H2(req_source_count.shape[0]), html.Label(
+        html.Div([html.H2(indicator_count_dict['source_count']), html.Label(
             "Request Source")], style=INDICATOR_CARD_STYLE),
-        html.Div([html.H2(agency_count.shape[0]), html.Label(
+        html.Div([html.H2(indicator_count_dict['agency_count']), html.Label(
             "Request Agency")], style=INDICATOR_CARD_STYLE)
         ], style=EQUAL_SPACE_BOX_STYLE),
 
