@@ -55,7 +55,7 @@ _, new_req_count_df = generate_dataframe_from_api(new_req_count_api_params, CREA
 
 # Loading the count of each request types overall.
 req_count_api_params = {'field': 'type_name', 'filter': CREATED_DATE_FILTER}
-req_count_df, req_count = generate_dataframe_from_api(new_req_count_api_params, TYPE_NAME_FIELD)
+req_count_df, req_count = generate_dataframe_from_api(req_count_api_params, TYPE_NAME_FIELD)
 
 # Loading the total number of request source.
 req_source_count_api_params = {'field': 'source_name', 'filter': CREATED_DATE_FILTER}
