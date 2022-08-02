@@ -10,11 +10,17 @@ from config import API_HOST
 from design import LABELS
 
 # COMMON VARIABLES.
+AGENCY_NAME_FIELD = 'agency_name'
+COUNCIL_NAME_FIELD = 'council_name'
 CREATED_DATE_FILTER = 'created_date>=2016-01-01'
+CREATED_YEAR_FIELD = 'created_year'
 NON_TOP4_INDEX_START = 4
 REPORT_API_PATH_ROOT = "/reports?"
 REQ_TYPE_STATS_API_PATH  = '/types/stats'
+SOURCE_NAME_FIELD = 'source_name'
 TITLE = "OVERVIEW COMBINED DASHBOARD"
+TYPE_NAME_FIELD = 'type_name'
+
 
 # HELPER FUNCTIONS.
 def generate_dataframe_from_api(api_params, group_by_col):
@@ -42,23 +48,23 @@ def generate_dataframe_from_api(api_params, group_by_col):
 
 # Loading the dataframe for the NCs and corresponding requests.
 nc_req_count_api_params = {'field': 'council_name', 'filter': CREATED_DATE_FILTER}
-_, nc_req_count_df = generate_dataframe_from_api(nc_req_count_api_params, nc_req_count_api_params['field'])
+_, nc_req_count_df = generate_dataframe_from_api(nc_req_count_api_params, COUNCIL_NAME_FIELD)
 
 # Loading the data for the number of new requests.
 new_req_count_api_params = {'field': 'created_year', 'filter': CREATED_DATE_FILTER}
-_, new_req_count_df = generate_dataframe_from_api(new_req_count_api_params, new_req_count_api_params['field'])
+_, new_req_count_df = generate_dataframe_from_api(new_req_count_api_params, CREATED_YEAR_FIELD)
 
 # Loading the count of each request types overall.
 req_count_api_params = {'field': 'type_name', 'filter': CREATED_DATE_FILTER}
-req_count_df, req_count = generate_dataframe_from_api(new_req_count_api_params, new_req_count_api_params['field'])
+req_count_df, req_count = generate_dataframe_from_api(new_req_count_api_params, TYPE_NAME_FIELD)
 
 # Loading the total number of request source.
 req_source_count_api_params = {'field': 'source_name', 'filter': CREATED_DATE_FILTER}
-req_source_count_df, req_source_count = generate_dataframe_from_api(req_source_count_api_params, req_source_count_api_params['field'])
+req_source_count_df, req_source_count = generate_dataframe_from_api(req_source_count_api_params, SOURCE_NAME_FIELD)
 
 # Loading the number of Request Agencies.
 req_agency_count_api_params = {'field': 'agency_name', 'filter': CREATED_DATE_FILTER}
-req_agency_count_df, agency_count = generate_dataframe_from_api(req_agency_count_api_params, req_agency_count_api_params['field'])
+req_agency_count_df, agency_count = generate_dataframe_from_api(req_agency_count_api_params, AGENCY_NAME_FIELD)
 
 # Request Share by Agency Pie Chart.
 req_agency_count_df = agency_count
