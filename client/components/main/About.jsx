@@ -4,7 +4,7 @@ import {
   Container,
   Grid,
 } from '@material-ui/core';
-import Image from 'mui-image';
+import Image from 'material-ui-image';
 
 const useStyles = makeStyles({
   root: {
@@ -43,7 +43,7 @@ const About = () => {
           <Grid item xs={6} md={12}>
             <h1 align="center">
               About
-              <span style={{ color: '#FFB100' }}>311</span>
+              <span style={{ color: '#FFB100' }}> 311</span>
               <span style={{ color: '#87C8BC' }}>DATA</span>
             </h1>
             <p>
@@ -78,7 +78,7 @@ const About = () => {
       <Container maxWidth="md" component="main">
         <Grid container spacing={5} alignItems="flex-end">
           <Grid item xs={6} sm={3}>
-            <Image src="../Partners_icon_1.png" duration={0} />
+            <Image src="assets../Partners_icon_1.png" animationDuration={0} />
           </Grid>
         </Grid>
       </Container>
