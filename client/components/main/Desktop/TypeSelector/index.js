@@ -110,7 +110,8 @@ const RequestTypeSelector = ({
                       color: 'white',
                       padding: '0 0 0 9px',
                     }}
-                   onChange={()=>updateAll(checkAll())}
+                  checked={Object.values(selectedTypes).every(val => val) } 
+                  onChange={()=>updateAll(checkAll())}
                   />
                 }
                 label='Select All'
