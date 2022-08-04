@@ -78,7 +78,7 @@ def get_counts_dict():
     in a dictionary.
 
     Returns: 
-        indicator_count_dict: dictionary storing the summary statistics for indicator visualization.
+        A dictionary storing the summary statistics for indicator visualization.
     """
     indicator_count_dict = {}
     indicator_count_dict['new_req_count'] = new_req_count_df['counts'].sum()
@@ -100,7 +100,7 @@ def make_agency_pie_chart(agency_count):
         agency_count: a pandas dataframe with the different agencies and corresopnding request counts.
 
     Returns: 
-        req_share_by_agency_pie_chart: a pie chart showing the share of requests by agencies.
+        A pie chart showing the share of requests by agencies.
     """
     req_agency_count_df = agency_count
     req_agency_count_df.sort_values('counts', ascending=False, inplace=True)
@@ -133,7 +133,7 @@ def make_req_type_source_bar_chart(req_source_count):
         req_source_count: a pandas dataframe with the different request sources and corresopnding request counts.
 
     Returns: 
-        req_source_bar_chart: a horizontal bar chart showing the share of requests by sources.
+        A horizontal bar chart showing the share of requests by sources.
     """
     req_source_count_df = req_source_count
     req_source_count_df.sort_values('counts', ascending=False, inplace=True)
@@ -158,7 +158,7 @@ def make_days_to_close_box_plot():
     time to close, and generates a box plot to visualize median request day to close box plot.
 
     Returns: 
-        med_days_to_close_box_plot: a box plot showing the median day to close for each request type.
+        A box plot showing the median day to close for each request type.
     """
     print(" * Downloading data from API path: " + REQ_TYPE_STATS_API_PATH)
     stats_df = pd.read_json(API_HOST + REQ_TYPE_STATS_API_PATH)
@@ -188,12 +188,11 @@ def make_days_to_close_box_plot():
 def make_day_of_week_bar_chart():
     """Generates the day of week bar chart.
 
-    This function calls the reports api , retrieves 1 year worth of request data, and generates
+    This function calls the reports api, retrieves 1 year worth of request data, and generates
     a vertical bar chart showing the number of requests for every day of the week.
 
     Returns: 
-        num_req_by_day_bar_chart: a bar chart showing the total number of requests for every day 
-        of the week throughout the past year.
+        A bar chart showing the total number of requests for every day of the week throughout the past year.
     """
     start_date = datetime.date.today() - datetime.timedelta(days=365)
     end_date = datetime.date.today() - datetime.timedelta(days=1)
@@ -225,7 +224,7 @@ def make_req_by_nc_bar_chart(nc_req_count_df):
         nc_req_count_df: a pandas dataframe with the different NCs and corresopnding request counts.
 
     Returns: 
-        req_source_bar_chart: a horizontal bar chart showing the share of requests by sources.
+        A horizontal bar chart showing the share of requests by sources.
     """
     req_by_nc_bar_chart = px.bar(
         nc_req_count_df,
