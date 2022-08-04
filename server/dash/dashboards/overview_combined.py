@@ -67,18 +67,18 @@ req_agency_count_api_params = {'field': 'agency_name', 'filter': CREATED_DATE_FI
 req_agency_count_df, agency_count = generate_dataframe_from_api(
     req_agency_count_api_params, AGENCY_NAME_FIELD)
 
-# VISUALS HELPER FUNCTIONS.
+# VISUALIZATION HELPER FUNCTIONS.
 
-# Compute values for the indicator visuals.
+# Compute values for the indicator visualization.
 def get_counts_dict():
-    """Compute values for the indicator visuals.
+    """Compute values for the indicator visualization.
 
     This function compute the summary statistics including number of new requests, number of neighborhood
     councils, number of requests, number of request sources, number of request agencies, and store them
     in a dictionary.
 
     Returns: 
-        indicator_count_dict: dictionary storing the summary statistics for indicator visuals.
+        indicator_count_dict: dictionary storing the summary statistics for indicator visualization.
     """
     indicator_count_dict = {}
     indicator_count_dict['new_req_count'] = new_req_count_df['counts'].sum()
@@ -237,7 +237,7 @@ def make_req_by_nc_bar_chart(nc_req_count_df):
     req_by_nc_bar_chart.update_layout(font=dict(size=12))
     return req_by_nc_bar_chart
 
-# VISUALS.
+# VISUALIZATION.
 indicator_count_dict = get_counts_dict()
 req_share_by_agency_pie_chart = make_agency_pie_chart(agency_count)
 req_source_bar_chart = make_req_type_source_bar_chart(req_source_count)
