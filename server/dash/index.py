@@ -5,10 +5,7 @@ import os
 import re
 import signal
 
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Input
-from dash.dependencies import Output
+from dash import callback, Dash, dcc, html, Input, Output
 
 from app import app
 from config import DASH_FILES
@@ -37,12 +34,11 @@ if PRELOAD:
 
 
 # callback to handle requests
-@app.callback(Output('page-content', 'children'),
+@callback(Output('page-content', 'children'),
               Input('url', 'pathname'))
 def display_page(pathname):
 
     last_part = re.search("([\w]*)$", pathname).group(1)  # noqa
-
     # run the dashboard
     if last_part in available_dashboards:
         logger.log(logging.INFO, f"Running dashboard: {last_part}")
