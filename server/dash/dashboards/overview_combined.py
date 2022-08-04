@@ -69,7 +69,6 @@ req_agency_count_df, agency_count = generate_dataframe_from_api(
 
 # VISUALIZATION HELPER FUNCTIONS.
 
-# Compute values for the indicator visualization.
 def get_counts_dict():
     """Compute values for the indicator visualization.
 
@@ -89,7 +88,6 @@ def get_counts_dict():
 
     return indicator_count_dict
 
-# Request Share by Agency Pie Chart.
 def make_agency_pie_chart(agency_count):
     """Generates the request share by agency pie chart.
 
@@ -121,7 +119,6 @@ def make_agency_pie_chart(agency_count):
     req_share_by_agency_pie_chart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
     return req_share_by_agency_pie_chart
 
-# Request Type by Source Bar Chart.
 def make_req_type_source_bar_chart(req_source_count):
     """Generates the request type by source bar chart.
 
@@ -150,7 +147,6 @@ def make_req_type_source_bar_chart(req_source_count):
     )
     return req_source_bar_chart
 
-# Median Request Days to Close Box Plot.
 def make_days_to_close_box_plot():
     """Generates the request days to close box plot.
 
@@ -184,7 +180,6 @@ def make_days_to_close_box_plot():
     )
     return med_days_to_close_box_plot
 
-# Day of Week Bar Chart.
 def make_day_of_week_bar_chart():
     """Generates the day of week bar chart.
 
@@ -213,7 +208,6 @@ def make_day_of_week_bar_chart():
         "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
     return num_req_by_day_bar_chart
 
-# Total Request by NC.
 def make_req_by_nc_bar_chart(nc_req_count_df):
     """Generates the total request by nc bar chart.
 
