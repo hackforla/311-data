@@ -49,22 +49,14 @@ def generate_dataframe_from_api(api_params, group_by_col):
 nc_req_count_api_params = {'field': 'council_name', 'filter': CREATED_DATE_FILTER}
 _, nc_req_count_df = generate_dataframe_from_api(nc_req_count_api_params, COUNCIL_NAME_FIELD)
 
-# Loading the data for the number of new requests.
-new_req_count_api_params = {'field': 'created_year', 'filter': CREATED_DATE_FILTER}
-_, new_req_count_df = generate_dataframe_from_api(new_req_count_api_params, CREATED_YEAR_FIELD)
-
-# Loading the count of each request types overall.
-req_count_api_params = {'field': 'type_name', 'filter': CREATED_DATE_FILTER}
-req_count_df, req_count = generate_dataframe_from_api(req_count_api_params, TYPE_NAME_FIELD)
-
 # Loading the total number of request source.
 req_source_count_api_params = {'field': 'source_name', 'filter': CREATED_DATE_FILTER}
-req_source_count_df, req_source_count = generate_dataframe_from_api(
+_, req_source_count = generate_dataframe_from_api(
     req_source_count_api_params, SOURCE_NAME_FIELD)
 
 # Loading the number of Request Agencies.
 req_agency_count_api_params = {'field': 'agency_name', 'filter': CREATED_DATE_FILTER}
-req_agency_count_df, agency_count = generate_dataframe_from_api(
+_, agency_count = generate_dataframe_from_api(
     req_agency_count_api_params, AGENCY_NAME_FIELD)
 
 # VISUALIZATION HELPER FUNCTIONS.
@@ -80,6 +72,15 @@ def get_counts_dict():
         A dictionary storing the summary statistics for indicator visualization.
     """
     indicator_count_dict = {}
+
+    # Loading the data for the number of new requests.
+    new_req_count_api_params = {'field': 'created_year', 'filter': CREATED_DATE_FILTER}
+    _, new_req_count_df = generate_dataframe_from_api(new_req_count_api_params, CREATED_YEAR_FIELD)
+
+    # Loading the count of each request types overall.
+    req_count_api_params = {'field': 'type_name', 'filter': CREATED_DATE_FILTER}
+    req_count_df, _ = generate_dataframe_from_api(req_count_api_params, TYPE_NAME_FIELD)
+
     indicator_count_dict['new_req_count'] = new_req_count_df['counts'].sum()
     indicator_count_dict['nc_count'] = nc_req_count_df.shape[0] - 1
     indicator_count_dict['req_count'] = req_count_df.shape[0]
