@@ -301,7 +301,6 @@ def generate_time_to_close_histogram(nc_dropdown, nc_dropdown_filter=None, data_
         data_quality_output: A string stating the status of the data quality filter ("Quality Filter: On" or "Quality Filter: Off").
     """ 
     df = generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter)
-    
     df, num_bins, data_quality_output = filter_bad_quality_data(df, data_quality_switch)
 
     # Distribution for the total number of requests.
@@ -429,7 +428,43 @@ def generate_nc_comparison_charts(nc_comp_dropdown, nc_comp_dropdown2):
     overlay_req_time_line_chart.update_layout(title="Number of Request Throughout the Day", margin=dict(l=25, r=25, b=35, t=50), xaxis_range=[min(
         min(req_time["createDateDT"]), min(req_time2["createDateDT"])), max(max(req_time["createDateDT"]), max(req_time2["createDateDT"]))], font=dict(size=9))
 
-    return req_source_bar_chart, req_source_bar_chart2, total_req_card, total_req_card2, num_days_card, num_days_card2, overlay_req_time_line_chart
+    return req_source_bar_chart, req_source_bar_chart2, total_req_card, total_req_card2, num_days_card, num_days_card2
+
+@callback(
+    Output("overlay_req_time_line_chart", "figure"),
+    Input("nc_comp_dropdown", "value"),
+    Input("nc_comp_dropdown2", "value"),
+    prevent_initial_call=True
+)
+def generate_overlay_line_chart(df_nc1, df_nc2):
+    """Generates the overlapping line chart based on selected filters.
+
+    This function takes the the two neighborhood council (nc) value from the "nc_comp_dropdown" dropdown and second selected neighborhood council value from "nc_comp_dropdown2"
+    dropdown and outputs a overlapping line chart.
+
+    Args:
+        nc_comp_dropdown: A string argument automatically detected by Dash callback function when "nc_comp_dropdown" element is selected in the layout.
+        nc_comp_dropdown2: A string argument automatically detected by Dash callback function when "nc_comp_dropdown2" element is selected in the layout.
+
+    Returns: 
+        Line chart showing the number of requests throughout the day for both first and second selected neighborhood council.
+    """
+    # Overlapping line chart for number of request throughout the day for both first and second neighborhood council.
+    req_time = pd.DataFrame(df_nc1.groupby("createDateDT", as_index=False)["srnumber"].count())
+    req_time2 = pd.DataFrame(df_nc2.groupby("createDateDT", as_index=False)["srnumber"].count())
+    overlay_req_time_line_chart = go.Figure()
+    overlay_req_time_line_chart.add_trace(go.Scatter(
+        x=req_time["createDateDT"], y=req_time["srnumber"], mode="lines", name="NC1"))
+    overlay_req_time_line_chart.add_trace(go.Scatter(
+        x=req_time2["createDateDT"], y=req_time2["srnumber"], mode="lines", name="NC2"))
+
+    overlay_req_time_line_chart.update_layout(title="Number of Request Throughout the Day", margin=dict(l=25, r=25, b=35, t=50), xaxis_range=[min(
+        min(req_time["createDateDT"]), min(req_time2["createDateDT"])), max(max(req_time["createDateDT"]), max(req_time2["createDateDT"]))], font=dict(size=9))
+    return overlay_req_time_line_chart
+
+
+
+
 
 @callback(
     Output("nc_avg_comp_line_chart", "figure"),
