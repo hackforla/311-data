@@ -13,9 +13,8 @@ from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
 
 # Setting 1 week worth of data
-# TODO: reset back to 1 week worth of data
-start_date = datetime.date.today() - datetime.timedelta(days=300)
-end_date = datetime.date.today() - datetime.timedelta(days=200)
+start_date = datetime.date.today() - datetime.timedelta(days=8)
+end_date = datetime.date.today() - datetime.timedelta(days=1)
 
 # Loading the dataframe with the 311 Data API. 
 DATE_RANGE_REQ_DATA_API_PATH = f"/requests/updated?start_date={start_date}&end_date={end_date}"
@@ -221,7 +220,6 @@ def filter_bad_quality_data(df, data_quality_switch=True):
     df.loc[:, "timeToClose"] = df.loc[:, "timeToClose"].fillna(0.0000001)
 
     # Replace negative values
-    # TODO: figure out what to do when there is no data avaialble. 
     df = df[df["timeToClose"] > 0]
     if df.shape[0] == 0:
         raise PreventUpdate()
@@ -240,7 +238,6 @@ def filter_bad_quality_data(df, data_quality_switch=True):
 
     # Data Quality switch to remove outliers as defined by Median +- 1.5*IQR.
     if data_quality_switch:
-        # TODO: figure out what happens when the filtering mechanism output no data at all.
         temp = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(df.loc[:, "logTimeToClose"])) &
                    (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(df.loc[:, "logTimeToClose"]))]
         if temp.shape[0] > 0:
