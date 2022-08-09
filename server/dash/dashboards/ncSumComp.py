@@ -345,7 +345,7 @@ def generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2):
     """Generates the dataframes based on selected filters.
 
     This function takes the first selected neighborhood council (nc) value from the "nc_comp_dropdown" dropdown and second selected neighborhood council value from "nc_comp_dropdown2"
-    dropdown and outputs two dataframes corresponding to their neighorhood council.
+    dropdown and outputs two dataframes corresponding to their neighorhood council with additional datetime columns.
 
     Args:
         data_2020: full 311-request data directly access from the 311 data API.
@@ -366,6 +366,11 @@ def generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2):
         df_nc2 = data_2020
     else:
         df_nc2 = data_2020[data_2020["councilName"] == nc_comp_dropdown2]
+    
+    df_nc1.loc[:, "createDateDT"] = pd.to_datetime(
+        df_nc1.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
+    df_nc2.loc[:, "createDateDT"] = pd.to_datetime(
+        df_nc2.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
 
     return df_nc1, df_nc2
 
@@ -376,11 +381,11 @@ def generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2):
     Input("nc_comp_dropdown2", "value"),
     prevent_initial_call=True
 )
-def generate_nc_comparison_charts(nc_comp_dropdown, nc_comp_dropdown2):
-    """Generates the comparison visualizations for LA 311 requests data based on the two selected neighborhood conucils.
+def generate_req_source_bar_charts(nc_comp_dropdown, nc_comp_dropdown2):
+    """Generates a pair of request source bar chart based on the two neighborhood council dropdown.
 
     This function takes the first selected neighborhood council (nc) value from the "nc_comp_dropdown" dropdown and second selected neighborhood council value from "nc_comp_dropdown2"
-    dropdown and output 3 sets of comparison visuals and 1 overlapping visual.
+    dropdown and output a pair of request_source bar charts.
 
     Args:
         nc_comp_dropdown: A string argument automatically detected by Dash callback function when "nc_comp_dropdown" element is selected in the layout.
@@ -390,24 +395,7 @@ def generate_nc_comparison_charts(nc_comp_dropdown, nc_comp_dropdown2):
         req_source_bar_chart: bar chart showing the number of request from each source for the first neighborhood council (e.g. mobile, app, self-report...etc).
         req_source_bar_chart2: bar chart showing the number of request from each source for the second neighborhood council (e.g. mobile, app, self-report...etc).
     """
-    # Check if the neighborhood council dropdown is selected or not, else use all data.
-    if not nc_comp_dropdown:
-        df_nc1 = data_2020
-    else:
-        df_nc1 = data_2020[data_2020["councilName"] == nc_comp_dropdown]
-
-    # Check if the second neighborhood council dropdown is selected or not, else use all data.
-    if not nc_comp_dropdown2:
-        df_nc2 = data_2020
-    else:
-        df_nc2 = data_2020[data_2020["councilName"] == nc_comp_dropdown2]
-
-    # Convert the strings into datetime
-    df_nc1.loc[:, "createDateDT"] = pd.to_datetime(
-        df_nc1.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
-    df_nc2.loc[:, "createDateDT"] = pd.to_datetime(
-        df_nc2.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
-
+    df_nc1, df_nc2 = generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2)
     # Bar chart of different Request Type Sources for first selected neigbhorhood council.
     req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
     req_source = req_source.reset_index()
@@ -496,10 +484,6 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
     overlay_req_time_line_chart.update_layout(title="Number of Request Throughout the Day", margin=dict(l=25, r=25, b=35, t=50), xaxis_range=[min(
         min(req_time["createDateDT"]), min(req_time2["createDateDT"])), max(max(req_time["createDateDT"]), max(req_time2["createDateDT"]))], font=dict(size=9))
     return overlay_req_time_line_chart
-
-
-
-
 
 @callback(
     Output("nc_avg_comp_line_chart", "figure"),
