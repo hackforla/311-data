@@ -168,8 +168,64 @@ def generate_dynamic_filter(nc_dropdown):
     req_types = sorted([n for n in set(df["typeName"])])
     return req_types, " "
 
+def generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter):
+    """Outputs the filtered dataframe based on the selected filters
+
+    This functions takes the original dataframe "data_2020", selected neighborhood council "nc_dropdown",
+    as well as the selected request type "nc_dropdown_filter" to output a dataframe with matching records.
+    
+    Args:
+        data_2020: full 311-request data directly access from the 311 data API.
+        nc_dropdown: A string argument automatically detected by Dash callback function when "nc_dropdown" element is selected in the layout.
+        nc_dropdown_filter: A list of strings automatically detected by Dash callback function when "nc_dropdown_filter" element is selected in the layout, default None.
+    Returns:
+        pandas dataframe filtered by selected neighborhood council and request types
+    """
+    print(" * Generating summary visualizations")
+    if not nc_dropdown:
+        df = data_2020
+    else:
+        df = data_2020[data_2020["councilName"] == nc_dropdown]
+    # Filter as per selection on Reqquest Type Dropdown.
+    if not nc_dropdown_filter and not nc_dropdown:
+        df = data_2020
+    elif nc_dropdown_filter:
+        df = df[df["typeName"].isin(nc_dropdown_filter)]
+    return df
+
 @callback(
     Output("req_type_pie_chart", "figure"),
+    Input("nc_dropdown", "value"),
+    [Input("nc_dropdown_filter", "value")]
+)
+def generate_req_type_pie_chart(nc_dropdown, nc_dropdown_filter=None):
+    """Generates the request type pie chart based on selected filters.
+
+    This callback function takes the selected neighborhood council (nc) value from the "nc_dropdown" dropdown, selected request type from "nc_dropdown_filter"
+    dropdown to output a pie chart showing the share of request types.
+    
+    Args:
+        nc_dropdown: A string argument automatically detected by Dash callback function when "nc_dropdown" element is selected in the layout.
+        nc_dropdown_filter: A list of strings automatically detected by Dash callback function when "nc_dropdown_filter" element is selected in the layout, default None.
+    Returns:
+        pie chart showing the share of each request type.
+    """ 
+    df = generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter)
+
+    # Pie Chart for the distribution of Request Types.
+    print(" * Generating requests types pie chart")
+    req_type = pd.DataFrame(df["typeName"].value_counts())
+    req_type = req_type.reset_index()
+    req_type_pie_chart = px.pie(req_type, values="typeName", names="index",
+                             title="Share of each Request Type")
+    req_type_pie_chart.update_layout(margin=dict(l=50, r=50, b=50, t=50),
+                                  legend_title=dict(font=dict(size=10)), font=dict(size=9))
+    return req_type_pie_chart
+
+
+
+
+@callback(
     Output("time_close_histogram", "figure"),
     Output("num_req_line_chart", "figure"),
     Output("data_quality_output", "children"),
@@ -194,17 +250,7 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, data_qualit
         num_req_line_chart: line chart showing the number of requests throughout the day.
         data_quality_output: A string stating the status of the data quality filter ("Quality Filter: On" or "Quality Filter: Off").
     """
-    print(" * Generating summary visualizations")
-    # NC Dropdown.
-    if not nc_dropdown:
-        df = data_2020
-    else:
-        df = data_2020[data_2020["councilName"] == nc_dropdown]
-    # Filter as per selection on Reqquest Type Dropdown.
-    if not nc_dropdown_filter and not nc_dropdown:
-        df = data_2020
-    elif nc_dropdown_filter:
-        df = df[df["typeName"].isin(nc_dropdown_filter)]
+    df = generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter)
 
     # Pie Chart for the distribution of Request Types.
     print(" * Generating requests types pie chart")
