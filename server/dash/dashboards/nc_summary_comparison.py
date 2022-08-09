@@ -21,7 +21,7 @@ DATE_RANGE_REQ_DATA_API_PATH = f"/requests/updated?start_date={start_date}&end_d
 print(" * Downloading data for dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
 results = re.get(API_HOST + DATE_RANGE_REQ_DATA_API_PATH)
 data_json = results.json()
-data_2020 = pd.json_normalize(data_json)
+api_data_df = pd.json_normalize(data_json)
 print(" * Loading complete dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
 
 # LAYOUT VARIABLES.
@@ -47,7 +47,7 @@ layout = html.Div([
         "height": "5vh", "width": "97.5vw"})),
         # Summary Dropdown.
         html.Div(children=[
-            html.Div(dcc.Dropdown(sorted([n for n in set(data_2020["councilName"])]),
+            html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
              " ", id="nc_dropdown",
                      placeholder="Select a Neighborhood Council..."), 
                      style=INLINE_STYLE.update({"width": "48.5vw"})),
@@ -84,11 +84,11 @@ layout = html.Div([
              style=CENTER_ALIGN_STYLE.update({"height": "5vh"})),
     # Comparison Dropdowns.
     html.Div(children=[
-        html.Div(dcc.Dropdown(sorted([n for n in set(data_2020["councilName"])]),
+        html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
          " ", id="nc_comp_dropdown",
                  placeholder="Select a Neighborhood Council..."), 
                  style=INLINE_STYLE.update({"width": "48.5vw"})),
-        html.Div(dcc.Dropdown(sorted([n for n in set(data_2020["councilName"])]),
+        html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
          " ", id="nc_comp_dropdown2",
                  placeholder="Select a Neighborhood Council..."), 
                  style=INLINE_STYLE.update({"width": "48.5vw"})),
@@ -160,24 +160,24 @@ def generate_dynamic_filter(nc_dropdown):
     """
     # If no neighborhood council is selected, use all data.
     if not nc_dropdown:
-        df = data_2020
+        df = api_data_df
     else:
-        df = data_2020[data_2020["councilName"] == nc_dropdown]
+        df = api_data_df[api_data_df["councilName"] == nc_dropdown]
 
     req_types = sorted([n for n in set(df["typeName"])])
     return req_types
 
 
-def generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter):
+def generate_filtered_dataframe(api_data_df, nc_dropdown, nc_dropdown_filter):
     """Outputs the filtered dataframe based on the selected filters
 
-    This functions takes the original dataframe "data_2020", selected neighborhood
+    This functions takes the original dataframe "api_data_df", selected neighborhood
      council "nc_dropdown",
     as well as the selected request type "nc_dropdown_filter" to output a dataframe
      with matching records.
 
     Args:
-        data_2020: full 311-request data directly access from the 311 data API.
+        api_data_df: full 311-request data directly access from the 311 data API.
         nc_dropdown: A string argument automatically detected by Dash callback 
         function when "nc_dropdown" element is selected in the layout.
         nc_dropdown_filter: A list of strings automatically detected by Dash 
@@ -188,12 +188,12 @@ def generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter):
     """
     print(" * Generating summary visualizations")
     if not nc_dropdown:
-        df = data_2020
+        df = api_data_df
     else:
-        df = data_2020[data_2020["councilName"] == nc_dropdown]
+        df = api_data_df[api_data_df["councilName"] == nc_dropdown]
     # Filter as per selection on Request Type Dropdown.
     if not nc_dropdown_filter and not nc_dropdown:
-        df = data_2020
+        df = api_data_df
     elif nc_dropdown_filter:
         df = df[df["typeName"].isin(nc_dropdown_filter)]
     return df
@@ -281,7 +281,7 @@ def generate_req_type_pie_chart(nc_dropdown, nc_dropdown_filter=None):
     Returns:
         pie chart showing the share of each request type.
     """
-    df = generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter)
+    df = generate_filtered_dataframe(api_data_df, nc_dropdown, nc_dropdown_filter)
 
     # Pie Chart for the distribution of Request Types.
     print(" * Generating requests types pie chart")
@@ -323,7 +323,7 @@ data_quality_switch=True):
         data_quality_output: A string stating the status of the data quality filter 
             ("Quality Filter: On" or "Quality Filter: Off").
     """
-    df = generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter)
+    df = generate_filtered_dataframe(api_data_df, nc_dropdown, nc_dropdown_filter)
     df, num_bins, data_quality_output = filter_bad_quality_data(df, data_quality_switch)
 
     # Distribution for the total number of requests.
@@ -366,7 +366,7 @@ data_quality_switch=True):
     Returns: 
         Line chart showing the number of requests throughout the day.
     """
-    df = generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter)
+    df = generate_filtered_dataframe(api_data_df, nc_dropdown, nc_dropdown_filter)
     df, _, _ = filter_bad_quality_data(df, data_quality_switch)
 
     # Time Series for the Total Number of Requests.
@@ -380,7 +380,7 @@ data_quality_switch=True):
     return num_req_line_chart
 
 
-def generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2):
+def generate_two_filtered_df(api_data_df, nc_comp_dropdown, nc_comp_dropdown2):
     """Generates the dataframes based on selected filters.
 
     This function takes the first selected neighborhood council (nc) value from 
@@ -389,7 +389,7 @@ def generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2):
     corresponding to their neighorhood council with additional datetime columns.
 
     Args:
-        data_2020: full 311-request data directly access from the 311 data API.
+        api_data_df: full 311-request data directly access from the 311 data API.
         nc_comp_dropdown: A string argument automatically detected by Dash callback
          function when "nc_comp_dropdown" element is selected in the layout.
         nc_comp_dropdown2: A string argument automatically detected by Dash callback
@@ -400,15 +400,15 @@ def generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2):
     """
     # Check if the neighborhood council dropdown is selected or not, else use all data.
     if not nc_comp_dropdown:
-        df_nc1 = data_2020
+        df_nc1 = api_data_df
     else:
-        df_nc1 = data_2020[data_2020["councilName"] == nc_comp_dropdown]
+        df_nc1 = api_data_df[api_data_df["councilName"] == nc_comp_dropdown]
 
     # Check if the second neighborhood council dropdown is selected or not, else use all data.
     if not nc_comp_dropdown2:
-        df_nc2 = data_2020
+        df_nc2 = api_data_df
     else:
-        df_nc2 = data_2020[data_2020["councilName"] == nc_comp_dropdown2]
+        df_nc2 = api_data_df[api_data_df["councilName"] == nc_comp_dropdown2]
 
     df_nc1.loc[:, "createDateDT"] = pd.to_datetime(
         df_nc1.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
@@ -450,7 +450,7 @@ def generate_req_source_bar_charts(nc_comp_dropdown, nc_comp_dropdown2):
          from each source for the second neighborhood council
           (e.g. mobile, app, self-report...etc).
     """
-    df_nc1, df_nc2 = generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2)
+    df_nc1, df_nc2 = generate_two_filtered_df(api_data_df, nc_comp_dropdown, nc_comp_dropdown2)
     # Bar chart of different Request Type Sources for first selected neigbhorhood council.
     req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
     req_source = req_source.reset_index()
@@ -505,7 +505,7 @@ def generate_indicator_visuals(nc_comp_dropdown, nc_comp_dropdown2):
         num_days_card2: integer for the total number of days the data
             available in second selected neighborhood council span.
     """
-    df_nc1, df_nc2 = generate_two_filtered_df(data_2020, nc_comp_dropdown,
+    df_nc1, df_nc2 = generate_two_filtered_df(api_data_df, nc_comp_dropdown,
      nc_comp_dropdown2)
     # Total number of requests for first neigbhorhood council.
     total_req_card = df_nc1.shape[0]
@@ -550,7 +550,7 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
         Line chart showing the number of requests throughout the 
         day for both first and second selected neighborhood council.
     """
-    df_nc1, df_nc2 = generate_two_filtered_df(data_2020, nc_comp_dropdown,
+    df_nc1, df_nc2 = generate_two_filtered_df(api_data_df, nc_comp_dropdown,
      nc_comp_dropdown2)
     # Overlapping line chart for number of request throughout the day 
     # for both first and second neighborhood council.
@@ -592,7 +592,7 @@ def update_figure(nc_dropdown):
     """
     # If dropdown value is empty, use all data available.
     if not nc_dropdown:
-        df = data_2020
+        df = api_data_df
 
     # Calculating the average number of requests throughout the day.
     neighborhood_sum_df = df[df.council_name == nc_dropdown].groupby(["created_date"]).agg("sum").reset_index()  # noqa
