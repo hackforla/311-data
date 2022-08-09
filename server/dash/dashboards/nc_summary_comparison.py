@@ -36,9 +36,7 @@ COMPARISON_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Comparison 
 
 # LAYOUT.
 layout = html.Div([
-
     html.Div(children=[
-
         # Neighborhood Council Dashboard.
         html.Div(children=[
             html.H2(SUMMARY_DASHBOARD_TITLE, style={"vertical-align": "middle"}),
@@ -47,27 +45,22 @@ layout = html.Div([
             html.Div(id="data_quality_output")], style={"font-family": "Open Sans"})
         ], style=EQUAL_SPACE_STYLE.update({"vertical-align": "middle", 
         "height": "5vh", "width": "97.5vw"})),
-
         # Summary Dropdown.
         html.Div(children=[
             html.Div(dcc.Dropdown(sorted([n for n in set(data_2020["councilName"])]),
              " ", id="nc_dropdown",
                      placeholder="Select a Neighborhood Council..."), 
                      style=INLINE_STYLE.update({"width": "48.5vw"})),
-            html.Div(dcc.Dropdown(id="nc_dropdown_filter", multi=True, 
+            html.Div(dcc.Dropdown(" ", id="nc_dropdown_filter", multi=True, 
             placeholder="Select a Request Type..."),
             style=INLINE_STYLE.update({"width": "48.5vw"}))
         ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw", "height": "10vh"})),
-
         html.Div(html.Br(), style={"height": "0.5vh"}),
-
         # Line Chart for Number of Request throughout the day.
         html.Div(dcc.Graph(id="nc_avg_comp_line_chart", style={"height": "40vh",
          "width": "97.4vw"}),
         style=BORDER_STYLE.update({"height": "40vh", "width": "97.4vw"})),
-
         html.Div(html.Br(), style=DIVIDER_STYLE),
-
         html.Div(children=[
             html.Div(
                 # Pie Chart for the share of request type.
@@ -84,15 +77,11 @@ layout = html.Div([
                 ), style=CHART_OUTLINE_STYLE.update({"width": "48vw",
                  "height": "40vh"}))
         ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw"}))
-
     ]),
-
     html.Div(html.Br(), style=DIVIDER_STYLE),
-
     # Neighborhood Council Summarization Dashboard.
     html.Div(children=[html.H2(COMPARISON_DASHBOARD_TITLE)],
              style=CENTER_ALIGN_STYLE.update({"height": "5vh"})),
-
     # Comparison Dropdowns.
     html.Div(children=[
         html.Div(dcc.Dropdown(sorted([n for n in set(data_2020["councilName"])]),
@@ -104,13 +93,10 @@ layout = html.Div([
                  placeholder="Select a Neighborhood Council..."), 
                  style=INLINE_STYLE.update({"width": "48.5vw"})),
     ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw", "height": "12vh"})),
-
     html.Div(html.Br(), style=DIVIDER_STYLE),
-
     # NC Comparison - Indicator Visuals.
     html.Div(children=[
         html.Div(children=[
-
             # Indicator Visuals for Total number of requests and the number of 
             # days the data spans across.
             html.Div([
@@ -121,9 +107,7 @@ layout = html.Div([
                 html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
                 html.H1(id="num_days_card", style=CENTER_ALIGN_STYLE)],
                 style=CHART_OUTLINE_STYLE.update({"width": "24vw", "height": "16vh"}))
-
         ], style=EQUAL_SPACE_STYLE.update({"width": "48.5vw"})),
-
         # Indicator Visuals for Total number of requests and the number of days 
         # the data spans across.
         html.Div(children=[
@@ -135,12 +119,9 @@ layout = html.Div([
                 html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
                 html.H1(id="num_days_card2", style=CENTER_ALIGN_STYLE)],
                 style=CHART_OUTLINE_STYLE.update({"width": "24vw", "height": "16vh"}))
-
         ], style=EQUAL_SPACE_STYLE.update({"width": "48.5vw"}))
     ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw"})),
-
     html.Div(html.Br(), style=DIVIDER_STYLE),
-
     # NC Comparison -  Request Source Bar Charts.
     html.Div(children=[
         html.Div(dcc.Graph(id="req_source_bar_chart", style={"height": "30vh"}),
@@ -150,9 +131,7 @@ layout = html.Div([
          style=CHART_OUTLINE_STYLE.update({
                  "width": "48.5vw", "margin-left": "10px", "height": "30vh"}))
     ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw"})),
-
     html.Div(html.Br(), style=DIVIDER_STYLE),
-
     # NC Comparison - Number of Requests per day Overlapping line chart.
     html.Div(dcc.Graph(id="overlay_req_time_line_chart", style={"height": "32vh",
      "width": "97.5vw"}), style=BORDER_STYLE.update({
@@ -160,11 +139,8 @@ layout = html.Div([
 ])
 
 # CALLBACK FUNCTIONS.
-
-
 @callback(
-    [Output("nc_dropdown_filter", "options"),
-     Output("nc_dropdown_filter", "value")],
+    [Output("nc_dropdown_filter", "options")],
     Input("nc_dropdown", "value")
 )
 def generate_dynamic_filter(nc_dropdown):
@@ -181,8 +157,6 @@ def generate_dynamic_filter(nc_dropdown):
     Returns: 
         nc_dropdown_filter: a list of request types available from the selected 
         neigbhorhood council.
-        nc_dropdown_filter: placeholder value for the dropdown when nothing is 
-        selected.
     """
     # If no neighborhood council is selected, use all data.
     if not nc_dropdown:
@@ -191,7 +165,7 @@ def generate_dynamic_filter(nc_dropdown):
         df = data_2020[data_2020["councilName"] == nc_dropdown]
 
     req_types = sorted([n for n in set(df["typeName"])])
-    return req_types, " "
+    return req_types
 
 
 def generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter):
