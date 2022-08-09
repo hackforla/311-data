@@ -193,6 +193,62 @@ def generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter):
         df = df[df["typeName"].isin(nc_dropdown_filter)]
     return df
 
+def filter_bad_quality_data(df, data_quality_switch=True):
+    """Filters the dataframe based on pre-defined data quality filters.
+
+    This functions takes the original dataframe "df" and filters out records with an outlier amount 
+    of request time to close based on the Freedman-Diaconis Rule.
+    
+    Args:
+        df: 311-request data accessed from the API.
+        data_quality_switch: A string argument automatically detected by Dash callback function when "data_quality_switch" toggle element is selected in layout.
+        nc_dropdown_filter: A list of strings automatically detected by Dash callback function when "nc_dropdown_filter" element is selected in the layout, default None.
+    Returns:
+        df: filtered dataframe excluding outliers.
+        num_bins: the number of bins that will be used to plot histogram.
+        data_quality_output: a string being displayed on whether the data quality switch is on or off.
+    """
+    df.loc[:, "createDateDT"] = pd.to_datetime(
+        df.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
+    df.loc[:, "closeDateDT"] = pd.to_datetime(
+        df.loc[:, "closedDate"].str[:-4].str.split("T").str.join(" "))
+    df.loc[:, "timeToClose"] = (df.loc[:, "closeDateDT"] - df.loc[:, "createDateDT"]).dt.days
+
+    # Calculate the Optimal number of bins based on Freedman-Diaconis Rule.
+
+    # Replace empty rows with 0.0000001 To avoid log(0) error later.
+    df.loc[:, "timeToClose"] = df.loc[:, "timeToClose"].fillna(0.0000001)
+
+    # Replace negative values
+    # TODO: figure out what to do when there is no data avaialble. 
+    df = df[df["timeToClose"] > 0]
+    if df.shape[0] == 0:
+        raise PreventUpdate()
+    else:
+        q3, q1 = np.percentile(df.loc[:, "timeToClose"].astype(int), [75, 25])
+        iqr = q3 - q1
+        if not iqr:
+            num_bins = 100
+        else:
+            num_bins = int((2 * iqr) / (df.shape[0]**(1 / 3)))
+
+        # Log Transform, Compute IQR, then exclude outliers.
+        df.loc[:, "logTimeToClose"] = np.log(df.loc[:, "timeToClose"])
+        log_q3, log_q1 = np.percentile(df.loc[:, "logTimeToClose"], [75, 25])
+        log_iqr = log_q3 - log_q1
+
+    # Data Quality switch to remove outliers as defined by Median +- 1.5*IQR.
+    if data_quality_switch:
+        # TODO: figure out what happens when the filtering mechanism output no data at all.
+        temp = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(df.loc[:, "logTimeToClose"])) &
+                   (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(df.loc[:, "logTimeToClose"]))]
+        if temp.shape[0] > 0:
+            df = temp
+        data_quality_output = "Quality Filter: On"
+    else:
+        data_quality_output = "Quality Filter: Off"
+    return df, num_bins, data_quality_output
+
 @callback(
     Output("req_type_pie_chart", "figure"),
     Input("nc_dropdown", "value"),
@@ -251,16 +307,6 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, data_qualit
         data_quality_output: A string stating the status of the data quality filter ("Quality Filter: On" or "Quality Filter: Off").
     """
     df = generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter)
-
-    # Pie Chart for the distribution of Request Types.
-    print(" * Generating requests types pie chart")
-    req_type = pd.DataFrame(df["typeName"].value_counts())
-    req_type = req_type.reset_index()
-    req_type_pie_chart = px.pie(req_type, values="typeName", names="index",
-                             title="Share of each Request Type")
-    req_type_pie_chart.update_layout(margin=dict(l=50, r=50, b=50, t=50),
-                                  legend_title=dict(font=dict(size=10)), font=dict(size=9))
-
     # Distribution of Time to Close Date of each request.
     # Calculate the Time to Closed.
     df.loc[:, "createDateDT"] = pd.to_datetime(
@@ -316,7 +362,7 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, data_qualit
                               "createDateDT": "DateTime", "srnumber": "Frequency"})
     num_req_line_chart.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
 
-    return req_type_pie_chart, time_close_histogram, num_req_line_chart, data_quality_output
+    return time_close_histogram, num_req_line_chart, data_quality_output
 
 @callback(
     Output("req_source_bar_chart", "figure"),
