@@ -286,7 +286,7 @@ def generate_req_type_pie_chart(nc_dropdown, nc_dropdown_filter=None):
     [Input("nc_dropdown_filter", "value")],
     Input("data_quality_switch", "value")
 )
-def generate_time_to_close_histogram(nc_dropdown, nc_dropdown_filter, data_quality_switch=True):
+def generate_time_to_close_histogram(nc_dropdown, nc_dropdown_filter=None, data_quality_switch=True):
     """Generates the request type pie chart based on selected filters.
 
     This callback function takes the selected neighborhood council (nc) value from the "nc_dropdown" dropdown, selected request type from "nc_dropdown_filter"
@@ -313,12 +313,11 @@ def generate_time_to_close_histogram(nc_dropdown, nc_dropdown_filter, data_quali
 
 @callback(
     Output("num_req_line_chart", "figure"),
-    Output("data_quality_output", "children"),
     Input("nc_dropdown", "value"),
     [Input("nc_dropdown_filter", "value")],
     Input("data_quality_switch", "value")
 )
-def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, data_quality_switch=True):
+def generate_overlap_req_line_charts(nc_dropdown, nc_dropdown_filter=None, data_quality_switch=True):
     """Generates the summary visualizations for LA 311 requests data based on selected neighborhood conucil, request types, and data quality switch.
 
     This function takes the selected neighborhood council (nc) value from the "nc_dropdown" dropdown, selected request type from "nc_dropdown_filter"
@@ -328,16 +327,11 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, data_qualit
         nc_dropdown: A string argument automatically detected by Dash callback function when "nc_dropdown" element is selected in the layout.
         nc_dropdown_filter: A list of strings automatically detected by Dash callback function when "nc_dropdown_filter" element is selected in the layout, default None.
         data_quality_switch: A boolean for data quality filter automatically detected by Dash callback function when "data_quality_switch" element is selected in the layout, default True.
-
     Returns: 
-        req_type_pie_chart: pie chart that shows the share of request types out of all requests.
-        time_close_histogram: histogram showing the distribution of time it takes for requests to close.
-        num_req_line_chart: line chart showing the number of requests throughout the day.
-        data_quality_output: A string stating the status of the data quality filter ("Quality Filter: On" or "Quality Filter: Off").
+        Line chart showing the number of requests throughout the day.
     """
     df = generate_filtered_dataframe(data_2020, nc_dropdown, nc_dropdown_filter)
-    
-    df, num_bins, data_quality_output = filter_bad_quality_data(df, data_quality_switch)
+    df, _, _ = filter_bad_quality_data(df, data_quality_switch)
 
     # Time Series for the Total Number of Requests.
     print(" * Generating number of requests line chart")
@@ -346,7 +340,7 @@ def generate_nc_summary_charts(nc_dropdown, nc_dropdown_filter=None, data_qualit
                               "createDateDT": "DateTime", "srnumber": "Frequency"})
     num_req_line_chart.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
 
-    return num_req_line_chart, data_quality_output
+    return num_req_line_chart
 
 @callback(
     Output("req_source_bar_chart", "figure"),
