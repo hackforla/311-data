@@ -341,14 +341,37 @@ def generate_overlap_req_line_charts(nc_dropdown, nc_dropdown_filter=None, data_
 
     return num_req_line_chart
 
+def generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2):
+    """Generates the dataframes based on selected filters.
+
+    This function takes the first selected neighborhood council (nc) value from the "nc_comp_dropdown" dropdown and second selected neighborhood council value from "nc_comp_dropdown2"
+    dropdown and outputs two dataframes corresponding to their neighorhood council.
+
+    Args:
+        data_2020: full 311-request data directly access from the 311 data API.
+        nc_comp_dropdown: A string argument automatically detected by Dash callback function when "nc_comp_dropdown" element is selected in the layout.
+        nc_comp_dropdown2: A string argument automatically detected by Dash callback function when "nc_comp_dropdown2" element is selected in the layout.
+    Returns: 
+        df_nc1: pandas dataframe with requests from the nc selected by nc_comp_dropdown.
+        df_nc2: pandas dataframe with requests from the nc selected by nc_comp_dropdown2.
+    """
+    # Check if the neighborhood council dropdown is selected or not, else use all data.
+    if not nc_comp_dropdown:
+        df_nc1 = data_2020
+    else:
+        df_nc1 = data_2020[data_2020["councilName"] == nc_comp_dropdown]
+
+    # Check if the second neighborhood council dropdown is selected or not, else use all data.
+    if not nc_comp_dropdown2:
+        df_nc2 = data_2020
+    else:
+        df_nc2 = data_2020[data_2020["councilName"] == nc_comp_dropdown2]
+
+    return df_nc1, df_nc2
+
 @callback(
     Output("req_source_bar_chart", "figure"),
     Output("req_source_bar_chart2", "figure"),
-    Output("total_req_card", "children"),
-    Output("total_req_card2", "children"),
-    Output("num_days_card", "children"),
-    Output("num_days_card2", "children"),
-    Output("overlay_req_time_line_chart", "figure"),
     Input("nc_comp_dropdown", "value"),
     Input("nc_comp_dropdown2", "value"),
     prevent_initial_call=True
@@ -366,11 +389,6 @@ def generate_nc_comparison_charts(nc_comp_dropdown, nc_comp_dropdown2):
     Returns: 
         req_source_bar_chart: bar chart showing the number of request from each source for the first neighborhood council (e.g. mobile, app, self-report...etc).
         req_source_bar_chart2: bar chart showing the number of request from each source for the second neighborhood council (e.g. mobile, app, self-report...etc).
-        total_req_card: integer for the the total number of request in first selected neigborhood council.
-        total_req_card2: integer for the total number of requests in the second selected neighborhood council.
-        num_days_card: integer for the total number of days the data available in first selected neighborhood council span.
-        num_days_card2: integer for the total number of days the data available in second selected neighborhood council span.
-        overlay_req_time_line_chart: line chart showing the number of requests throughout the day for both first and second selected neighborhood council.
     """
     # Check if the neighborhood council dropdown is selected or not, else use all data.
     if not nc_comp_dropdown:
@@ -404,6 +422,34 @@ def generate_nc_comparison_charts(nc_comp_dropdown, nc_comp_dropdown2):
                                 "index": "Request Source", "sourceName": "Frequency"})
     req_source_bar_chart2.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
 
+    return req_source_bar_chart, req_source_bar_chart2
+
+@callback(
+    Output("total_req_card", "children"),
+    Output("total_req_card2", "children"),
+    Output("num_days_card", "children"),
+    Output("num_days_card2", "children"),
+    Input("nc_comp_dropdown", "value"),
+    Input("nc_comp_dropdown2", "value"),
+    prevent_initial_call=True
+)
+def generate_indicator_visuals(nc_comp_dropdown, nc_comp_dropdown2):
+    """Generates the overlapping line chart based on selected filters.
+
+    This function takes the the two neighborhood council (nc) value from the "nc_comp_dropdown" dropdown and second selected neighborhood council value from "nc_comp_dropdown2"
+    dropdown and outputs indicator visuals for the two nc's.
+
+    Args:
+        nc_comp_dropdown: A string argument automatically detected by Dash callback function when "nc_comp_dropdown" element is selected in the layout.
+        nc_comp_dropdown2: A string argument automatically detected by Dash callback function when "nc_comp_dropdown2" element is selected in the layout.
+
+    Returns: 
+        total_req_card: integer for the the total number of request in first selected neigborhood council.
+        total_req_card2: integer for the total number of requests in the second selected neighborhood council.
+        num_days_card: integer for the total number of days the data available in first selected neighborhood council span.
+        num_days_card2: integer for the total number of days the data available in second selected neighborhood council span.
+    """
+    df_nc1, df_nc2 = generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2)
     # Total number of requests for first neigbhorhood council.
     total_req_card = df_nc1.shape[0]
 
@@ -416,27 +462,15 @@ def generate_nc_comparison_charts(nc_comp_dropdown, nc_comp_dropdown2):
     # Total number of days the available requests in second neigbhorhood council span.
     num_days_card2 = np.max(df_nc2["createDateDT"].dt.day) - np.min(df_nc2["createDateDT"].dt.day) + 1
 
-    # Overlapping line chart for number of request throughout the day for both first and second neighborhood council.
-    req_time = pd.DataFrame(df_nc1.groupby("createDateDT", as_index=False)["srnumber"].count())
-    req_time2 = pd.DataFrame(df_nc2.groupby("createDateDT", as_index=False)["srnumber"].count())
-    overlay_req_time_line_chart = go.Figure()
-    overlay_req_time_line_chart.add_trace(go.Scatter(
-        x=req_time["createDateDT"], y=req_time["srnumber"], mode="lines", name="NC1"))
-    overlay_req_time_line_chart.add_trace(go.Scatter(
-        x=req_time2["createDateDT"], y=req_time2["srnumber"], mode="lines", name="NC2"))
-
-    overlay_req_time_line_chart.update_layout(title="Number of Request Throughout the Day", margin=dict(l=25, r=25, b=35, t=50), xaxis_range=[min(
-        min(req_time["createDateDT"]), min(req_time2["createDateDT"])), max(max(req_time["createDateDT"]), max(req_time2["createDateDT"]))], font=dict(size=9))
-
-    return req_source_bar_chart, req_source_bar_chart2, total_req_card, total_req_card2, num_days_card, num_days_card2
-
+    return total_req_card, total_req_card2, num_days_card, num_days_card2
+    
 @callback(
     Output("overlay_req_time_line_chart", "figure"),
     Input("nc_comp_dropdown", "value"),
     Input("nc_comp_dropdown2", "value"),
     prevent_initial_call=True
 )
-def generate_overlay_line_chart(df_nc1, df_nc2):
+def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
     """Generates the overlapping line chart based on selected filters.
 
     This function takes the the two neighborhood council (nc) value from the "nc_comp_dropdown" dropdown and second selected neighborhood council value from "nc_comp_dropdown2"
@@ -449,6 +483,7 @@ def generate_overlay_line_chart(df_nc1, df_nc2):
     Returns: 
         Line chart showing the number of requests throughout the day for both first and second selected neighborhood council.
     """
+    df_nc1, df_nc2 = generate_two_filtered_df(data_2020, nc_comp_dropdown, nc_comp_dropdown2)
     # Overlapping line chart for number of request throughout the day for both first and second neighborhood council.
     req_time = pd.DataFrame(df_nc1.groupby("createDateDT", as_index=False)["srnumber"].count())
     req_time2 = pd.DataFrame(df_nc2.groupby("createDateDT", as_index=False)["srnumber"].count())
