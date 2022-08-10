@@ -24,121 +24,341 @@ data_json = results.json()
 api_data_df = pd.json_normalize(data_json)
 print(" * Loading complete dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
 
+def merge_dict(d1, d2):
+    """Merges two dictionary and return the results.
+
+    This function takes in two dictionary and return
+    the result of merging the two.
+
+    Args:
+        d1: first dictionary.
+        d2: second dictionary.
+    Return:
+        a dictionary containing all key-value pairs from d1 and d2.
+    """
+    res = {**d1, **d2}
+    return res
+
+
 # LAYOUT VARIABLES.
 BORDER_STYLE = {"border": "0.5px black solid"}
 CENTER_ALIGN_STYLE = {"text-align": "center"}
 DIVIDER_STYLE = {"height": "1vh"}
 EQUAL_SPACE_STYLE = {"display": "flex", "justify-content": "space-between"}
 INLINE_STYLE = {"display": "inline-block"}
-CHART_OUTLINE_STYLE = INLINE_STYLE.update(BORDER_STYLE)
+CHART_OUTLINE_STYLE = merge_dict(INLINE_STYLE, BORDER_STYLE)
 SUMMARY_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Summary Dashboard"
 COMPARISON_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Comparison Dashboard"
+
+
+def generate_summary_header():
+    """Generates the header for the summary dashboard.
+
+    This functions generates the html elements for the 
+    title and data quality toggle for summary dashboard.
+
+    Return:
+        Dash html div element containing title and data 
+        quality toggle.
+    """
+    header = html.Div(children=[
+        html.H2(SUMMARY_DASHBOARD_TITLE, style={"vertical-align": "middle"}),
+        html.Div([daq.ToggleSwitch(id="data_quality_switch", value=True,
+            style={"height": "0.5vh"}, size=35),
+            html.Div(id="data_quality_output")], style={"font-family": "Open Sans"})
+    ], style=merge_dict(EQUAL_SPACE_STYLE, {"vertical-align": "middle",
+        "height": "5vh", "width": "97.5vw"}))
+    return header
+
+
+def generate_summary_dropdowns():
+    """Generates the dropdowns for the summary dashboard.
+
+    This functions generates the html elements for the 
+    neighborhood council and request type dropdowns for summary dashboard.
+
+    Return:
+        Dash html div element containing nc and request type dropdowns.
+    """
+    dropdowns = html.Div(children=[
+        html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
+                " ", id="nc_dropdown",
+                        placeholder="Select a Neighborhood Council..."),
+                        style=merge_dict(INLINE_STYLE, {"width": "48.5vw"})),
+                html.Div(dcc.Dropdown(" ", id="nc_dropdown_filter", multi=True,
+                placeholder="Select a Request Type..."),
+                style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
+    ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw", "height": "10vh"}))
+
+    return dropdowns
+
+
+def generate_summary_line_chart():
+    """Generates the line chart for the summary dashboard.
+
+    This functions generates the html elements for the 
+    number of request line chart for summary dashboard.
+
+    Return:
+        Dash html div element containing overlapping line chart.
+    """
+    graph = html.Div(dcc.Graph(id="nc_avg_comp_line_chart", style={"height": "40vh",
+         "width": "97.4vw"}),
+        style=merge_dict(BORDER_STYLE, {"height": "40vh", "width": "97.4vw"}))
+    return graph
+
+
+def generate_summary_pie_chart():
+    """Generates the pie chart for the summary dashboard.
+
+    This functions generates the html elements for the 
+    request type pie chart for summary dashboard.
+
+    Return:
+        Dash html div element containing request type pie chart.
+    """
+    pie_chart = html.Div(
+        # Pie Chart for the share of request type.
+        dcc.Graph(
+            id="req_type_pie_chart", style={"height": "40vh",
+                            "width": "48.5vw"}
+        ), style=merge_dict(CHART_OUTLINE_STYLE, {"width": "48.5vw",
+                        "height": "40vh"})),  # for border-radius , add stuff later
+    return pie_chart
+
+
+def generate_summary_histogram():
+    """Generates the histogram for the summary dashboard.
+
+    This functions generates the html elements for the 
+    request time to close histogram for summary dashboard.
+
+    Return:
+        Dash html div element containing request time to close histogram.
+    """
+    histogram = html.Div(
+        # Histogram for the request timeToClose.
+        dcc.Graph(
+            id="time_close_histogram", style={"height": "40vh",
+                     "width": "48vw"}
+        ), style=merge_dict(CHART_OUTLINE_STYLE, {"width": "48vw",
+                 "height": "40vh"}))
+    return histogram
+
+
+def generate_council_name_dropdown():
+    """Generates the neighborhood council (nc) dropdown for the 
+    comparison dashboard.
+
+    This functions generates the html elements for the 
+    nc dropdown for the left side of the comparison dashboard.
+
+    Return:
+        Dash html div element containing nc drop down for left pane filtering.
+    """
+    dropdown = html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
+         " ", id="nc_comp_dropdown",
+                 placeholder="Select a Neighborhood Council..."),
+                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"})),
+    return dropdown
+
+
+def generate_council_name_dropdown2():
+    """Generates the neighborhood council (nc) dropdown for the 
+    comparison dashboard.
+
+    This functions generates the html elements for the 
+    nc dropdown for the right side of the comparison dashboard.
+
+    Return:
+        Dash html div element containing nc drop down for right pane filtering.
+    """
+    dropdown = html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
+         " ", id="nc_comp_dropdown2",
+                 placeholder="Select a Neighborhood Council..."),
+                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
+    return dropdown
+
+
+def generate_comparison_total_req():
+    """Generates the indicator visual for the 
+    total number of requests.
+
+    This functions generates the html elements for the 
+    total number of requests for the left side of the 
+    comparison dashboard.
+
+    Return:
+        Dash html div element containing label and indicator visual.
+    """
+    total_req = html.Div([
+        html.H6("Total Number of Requests", style=CENTER_ALIGN_STYLE),
+        html.H1(id="total_req_card", style=CENTER_ALIGN_STYLE)],
+        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
+    return total_req
+
+
+def generate_comparison_num_days():
+    """Generates the indicator visual for the 
+    total number of days request spans.
+
+    This functions generates the html elements for the 
+    total number of days request spans for the left side of the 
+    comparison dashboard.
+
+    Return:
+        Dash html div element containing label and indicator visual.
+    """
+    num_days = html.Div([
+        html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
+        html.H1(id="num_days_card", style=CENTER_ALIGN_STYLE)],
+        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
+    return num_days
+
+
+def generate_comparison_total_req2():
+    """Generates the indicator visual for the 
+    total number of requests.
+
+    This functions generates the html elements for the 
+    total number of requests for the right side of the 
+    comparison dashboard.
+
+    Return:
+        Dash html div element containing label and indicator visual.
+    """
+    num_req = html.Div([
+        html.H6("Total Number of Requests", style=CENTER_ALIGN_STYLE),
+        html.H1(id="total_req_card2", style=CENTER_ALIGN_STYLE)],
+        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
+    return num_req
+
+
+def generate_comparison_num_days2():
+    """Generates the indicator visual for the 
+    total number of days request spans.
+
+    This functions generates the html elements for the 
+    total number of days request spans for the right side of the 
+    comparison dashboard.
+
+    Return:
+        Dash html div element containing label and indicator visual.
+    """
+    num_days = html.Div([
+        html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
+        html.H1(id="num_days_card2", style=CENTER_ALIGN_STYLE)],
+        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
+    return num_days
+
+
+def generate_comparison_req_source_bar1():
+    """Generates the bar chart visual for the 
+    request source in comparison dashboard.
+
+    This functions generates the html elements for the 
+    bar chart of request sources on the left side of the 
+    comparison dashboard.
+
+    Return:
+        Dash html div element containing request source bar chart.
+    """
+    bar_chart = html.Div(dcc.Graph(id="req_source_bar_chart", style={"height": "30vh"}),
+         style=merge_dict(CHART_OUTLINE_STYLE, {
+             "width": "48.5vw", "height": "30vh"}))
+    return bar_chart
+
+
+def generate_comparison_req_source_bar2():
+    """Generates the bar chart visual for the 
+    request source in comparison dashboard.
+
+    This functions generates the html elements for the 
+    bar chart of request sources on the right side of the 
+    comparison dashboard.
+
+    Return:
+        Dash html div element containing request source bar chart.
+    """
+    bar_chart = html.Div(dcc.Graph(id="req_source_bar_chart2", style={"height": "30vh"}),
+         style=merge_dict(CHART_OUTLINE_STYLE, {
+             "width": "48.5vw", "margin-left": "10px", "height": "30vh"}))
+    return bar_chart
+
+
+def generate_comparison_line_chart():
+    """Generates the line chart visual for the 
+    number of requests in comparison dashboard.
+
+    This functions generates the html elements for the 
+    overlapping line chart for number of requests on the 
+    bottom of the comparison dashboard.
+
+    Return:
+        Dash html div element containing overlapping line chart.
+    """
+    line_chart = html.Div(dcc.Graph(id="overlay_req_time_line_chart", style={"height": "32vh",
+     "width": "97.5vw"}), style=merge_dict(BORDER_STYLE, {
+         "height": "32vh", "width": "97.5vw"}))
+    return line_chart
+
 
 # LAYOUT.
 layout = html.Div([
     html.Div(children=[
         # Neighborhood Council Dashboard.
-        html.Div(children=[
-            html.H2(SUMMARY_DASHBOARD_TITLE, style={"vertical-align": "middle"}),
-            html.Div([daq.ToggleSwitch(id="data_quality_switch", value=True, 
-            style={"height": "0.5vh"}, size=35),
-            html.Div(id="data_quality_output")], style={"font-family": "Open Sans"})
-        ], style=EQUAL_SPACE_STYLE.update({"vertical-align": "middle", 
-        "height": "5vh", "width": "97.5vw"})),
+        generate_summary_header(),
+
         # Summary Dropdown.
-        html.Div(children=[
-            html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
-             " ", id="nc_dropdown",
-                     placeholder="Select a Neighborhood Council..."), 
-                     style=INLINE_STYLE.update({"width": "48.5vw"})),
-            html.Div(dcc.Dropdown(" ", id="nc_dropdown_filter", multi=True, 
-            placeholder="Select a Request Type..."),
-            style=INLINE_STYLE.update({"width": "48.5vw"}))
-        ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw", "height": "10vh"})),
+        generate_summary_dropdowns(),
         html.Div(html.Br(), style={"height": "0.5vh"}),
         # Line Chart for Number of Request throughout the day.
-        html.Div(dcc.Graph(id="nc_avg_comp_line_chart", style={"height": "40vh",
-         "width": "97.4vw"}),
-        style=BORDER_STYLE.update({"height": "40vh", "width": "97.4vw"})),
+        generate_summary_line_chart(),
         html.Div(html.Br(), style=DIVIDER_STYLE),
         html.Div(children=[
-            html.Div(
-                # Pie Chart for the share of request type.
-                dcc.Graph(
-                    id="req_type_pie_chart", style={"height": "40vh",
-                     "width": "48.5vw"}
-                ), style=CHART_OUTLINE_STYLE.update({"width": "48.5vw",
-                 "height": "40vh"})),  # for border-radius , add stuff later
-            html.Div(
-                # Histogram for the request timeToClose.
-                dcc.Graph(
-                    id="time_close_histogram", style={"height": "40vh",
-                     "width": "48vw"}
-                ), style=CHART_OUTLINE_STYLE.update({"width": "48vw",
-                 "height": "40vh"}))
-        ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw"}))
+            generate_summary_pie_chart(),
+            generate_summary_histogram()
+        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"}))
     ]),
     html.Div(html.Br(), style=DIVIDER_STYLE),
     # Neighborhood Council Summarization Dashboard.
     html.Div(children=[html.H2(COMPARISON_DASHBOARD_TITLE)],
-             style=CENTER_ALIGN_STYLE.update({"height": "5vh"})),
+             style=merge_dict(CENTER_ALIGN_STYLE, {"height": "5vh"})),
     # Comparison Dropdowns.
     html.Div(children=[
-        html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
-         " ", id="nc_comp_dropdown",
-                 placeholder="Select a Neighborhood Council..."), 
-                 style=INLINE_STYLE.update({"width": "48.5vw"})),
-        html.Div(dcc.Dropdown(sorted([n for n in set(api_data_df["councilName"])]),
-         " ", id="nc_comp_dropdown2",
-                 placeholder="Select a Neighborhood Council..."), 
-                 style=INLINE_STYLE.update({"width": "48.5vw"})),
-    ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw", "height": "12vh"})),
+        generate_council_name_dropdown(),
+        generate_council_name_dropdown2()
+    ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw", "height": "12vh"})),
     html.Div(html.Br(), style=DIVIDER_STYLE),
     # NC Comparison - Indicator Visuals.
     html.Div(children=[
         html.Div(children=[
-            # Indicator Visuals for Total number of requests and the number of 
+            # Indicator Visuals for Total number of requests and the number of
             # days the data spans across.
-            html.Div([
-                html.H6("Total Number of Requests", style=CENTER_ALIGN_STYLE),
-                html.H1(id="total_req_card", style=CENTER_ALIGN_STYLE)],
-                style=CHART_OUTLINE_STYLE.update({"width": "24vw", "height": "16vh"})),
-            html.Div([
-                html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
-                html.H1(id="num_days_card", style=CENTER_ALIGN_STYLE)],
-                style=CHART_OUTLINE_STYLE.update({"width": "24vw", "height": "16vh"}))
-        ], style=EQUAL_SPACE_STYLE.update({"width": "48.5vw"})),
-        # Indicator Visuals for Total number of requests and the number of days 
+            generate_comparison_total_req(),
+            generate_comparison_num_days()
+        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "48.5vw"})),
+        # Indicator Visuals for Total number of requests and the number of days
         # the data spans across.
         html.Div(children=[
-            html.Div([
-                html.H6("Total Number of Requests", style=CENTER_ALIGN_STYLE),
-                html.H1(id="total_req_card2", style=CENTER_ALIGN_STYLE)],
-                style=CHART_OUTLINE_STYLE.update({"width": "24vw", "height": "16vh"})),
-            html.Div([
-                html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
-                html.H1(id="num_days_card2", style=CENTER_ALIGN_STYLE)],
-                style=CHART_OUTLINE_STYLE.update({"width": "24vw", "height": "16vh"}))
-        ], style=EQUAL_SPACE_STYLE.update({"width": "48.5vw"}))
-    ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw"})),
+            generate_comparison_total_req2(),
+            generate_comparison_num_days2()
+        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "48.5vw"}))
+    ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"})),
     html.Div(html.Br(), style=DIVIDER_STYLE),
     # NC Comparison -  Request Source Bar Charts.
     html.Div(children=[
-        html.Div(dcc.Graph(id="req_source_bar_chart", style={"height": "30vh"}),
-         style=CHART_OUTLINE_STYLE.update({
-                 "width": "48.5vw", "height": "30vh"})),
-        html.Div(dcc.Graph(id="req_source_bar_chart2", style={"height": "30vh"}),
-         style=CHART_OUTLINE_STYLE.update({
-                 "width": "48.5vw", "margin-left": "10px", "height": "30vh"}))
-    ], style=EQUAL_SPACE_STYLE.update({"width": "97.5vw"})),
+        generate_comparison_req_source_bar1(),
+        generate_comparison_req_source_bar2()
+    ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"})),
     html.Div(html.Br(), style=DIVIDER_STYLE),
     # NC Comparison - Number of Requests per day Overlapping line chart.
-    html.Div(dcc.Graph(id="overlay_req_time_line_chart", style={"height": "32vh",
-     "width": "97.5vw"}), style=BORDER_STYLE.update({
-        "height": "32vh", "width": "97.5vw"}))
+    generate_comparison_line_chart()
 ])
 
 # CALLBACK FUNCTIONS.
+
+
 @callback(
     [Output("nc_dropdown_filter", "options")],
     Input("nc_dropdown", "value")
@@ -251,8 +471,8 @@ def filter_bad_quality_data(df, data_quality_switch=True):
     if data_quality_switch:
         temp = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(
             df.loc[:, "logTimeToClose"])) &
-                   (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(
-                    df.loc[:, "logTimeToClose"]))]
+            (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(
+                df.loc[:, "logTimeToClose"]))]
         if temp.shape[0] > 0:
             df = temp
         data_quality_output = "Quality Filter: On"
@@ -301,7 +521,7 @@ def generate_req_type_pie_chart(nc_dropdown, nc_dropdown_filter=None):
     [Input("nc_dropdown_filter", "value")],
     Input("data_quality_switch", "value")
 )
-def generate_time_to_close_histogram(nc_dropdown, nc_dropdown_filter=None, 
+def generate_time_to_close_histogram(nc_dropdown, nc_dropdown_filter=None,
 data_quality_switch=True):
     """Generates the request type pie chart based on selected filters.
 
@@ -328,11 +548,11 @@ data_quality_switch=True):
 
     # Distribution for the total number of requests.
     print(" * Generating requests time to close histogram")
-    time_close_histogram = px.histogram(df, x="timeToClose", 
+    time_close_histogram = px.histogram(df, x="timeToClose",
     title="Distribution of Time to Close Request",
      nbins=num_bins, range_x=[min(
-        df.loc[:, "timeToClose"]), max(df.loc[:, "timeToClose"])],
-         labels={"timeToClose": "Request Duration",
+         df.loc[:, "timeToClose"]), max(df.loc[:, "timeToClose"])],
+        labels={"timeToClose": "Request Duration",
          "count": "Frequency"})
     time_close_histogram.update_layout(margin=dict(l=50, r=50, b=50, t=50), font=dict(size=9))
     return time_close_histogram, data_quality_output
@@ -344,7 +564,7 @@ data_quality_switch=True):
     [Input("nc_dropdown_filter", "value")],
     Input("data_quality_switch", "value")
 )
-def generate_overlap_req_line_charts(nc_dropdown, nc_dropdown_filter=None, 
+def generate_overlap_req_line_charts(nc_dropdown, nc_dropdown_filter=None,
 data_quality_switch=True):
     """Generates the summary visualizations for LA 311 requests data based 
     on selected neighborhood conucil, request types, and data quality switch.
@@ -372,7 +592,7 @@ data_quality_switch=True):
     # Time Series for the Total Number of Requests.
     print(" * Generating number of requests line chart")
     req_time = pd.DataFrame(df.groupby("createDateDT", as_index=False)["srnumber"].count())
-    num_req_line_chart = px.line(req_time, x="createDateDT", y="srnumber", 
+    num_req_line_chart = px.line(req_time, x="createDateDT", y="srnumber",
     title="Total Number of 311 Requests Overtime", labels={
         "createDateDT": "DateTime", "srnumber": "Frequency"})
     num_req_line_chart.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
@@ -454,7 +674,7 @@ def generate_req_source_bar_charts(nc_comp_dropdown, nc_comp_dropdown2):
     # Bar chart of different Request Type Sources for first selected neigbhorhood council.
     req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
     req_source = req_source.reset_index()
-    req_source_bar_chart = px.bar(req_source, x="sourceName", y="index", 
+    req_source_bar_chart = px.bar(req_source, x="sourceName", y="index",
     orientation="h", title="Number of Requests by Source", labels={
         "index": "Request Source", "sourceName": "Frequency"})
     req_source_bar_chart.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
@@ -462,7 +682,7 @@ def generate_req_source_bar_charts(nc_comp_dropdown, nc_comp_dropdown2):
     # Bar chart of different Request Type Sources for second selected neigbhorhood council.
     req_source2 = pd.DataFrame(df_nc2["sourceName"].value_counts())
     req_source2 = req_source2.reset_index()
-    req_source_bar_chart2 = px.bar(req_source2, x="sourceName", y="index", 
+    req_source_bar_chart2 = px.bar(req_source2, x="sourceName", y="index",
     orientation="h", title="Number of Requests by Source", labels={
         "index": "Request Source", "sourceName": "Frequency"})
     req_source_bar_chart2.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
@@ -552,7 +772,7 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
     """
     df_nc1, df_nc2 = generate_two_filtered_df(api_data_df, nc_comp_dropdown,
      nc_comp_dropdown2)
-    # Overlapping line chart for number of request throughout the day 
+    # Overlapping line chart for number of request throughout the day
     # for both first and second neighborhood council.
     req_time = pd.DataFrame(df_nc1.groupby("createDateDT", as_index=False)["srnumber"].count())
     req_time2 = pd.DataFrame(df_nc2.groupby("createDateDT", as_index=False)["srnumber"].count())
@@ -564,8 +784,8 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
 
     overlay_req_time_line_chart.update_layout(title="Number of Request Throughout the Day",
      margin=dict(l=25, r=25, b=35, t=50), xaxis_range=[min(
-        min(req_time["createDateDT"]), min(req_time2["createDateDT"])), 
-        max(max(req_time["createDateDT"]), max(req_time2["createDateDT"]))], font=dict(size=9))
+         min(req_time["createDateDT"]), min(req_time2["createDateDT"])),
+         max(max(req_time["createDateDT"]), max(req_time2["createDateDT"]))], font=dict(size=9))
     return overlay_req_time_line_chart
 
 
@@ -607,7 +827,7 @@ def update_figure(nc_dropdown):
         y=["counts", "nc_avg"],
         color_discrete_sequence=DISCRETE_COLORS,
         labels=LABELS,
-        title="Number of " + nc_dropdown + 
+        title="Number of " + nc_dropdown +
         " Requests compare with the average of all Neighborhood Councils requests"
     )
 
