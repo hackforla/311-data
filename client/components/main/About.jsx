@@ -5,6 +5,9 @@ import {
   Grid,
 } from '@material-ui/core';
 import Image from 'material-ui-image';
+import partner1 from '@assets/Partners_icon_1.png';
+import partner2 from '@assets/Partners_icon_2.png';
+import partner3 from '@assets/Partners_icon_3.png';
 
 const useStyles = makeStyles({
   root: {
@@ -40,7 +43,7 @@ const About = () => {
     <>
       <Container disableGutters component="main" className={classes.root} maxWidth="md">
         <Grid container>
-          <Grid item xs={6} md={12}>
+          <Grid item xs={12}>
             <h1 align="center">
               About
               <span style={{ color: '#FFB100' }}> 311</span>
@@ -74,14 +77,19 @@ const About = () => {
             </p>
           </Grid>
         </Grid>
-      </Container>
-      <Container maxWidth="md" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
-          <Grid item xs={6} sm={3}>
-            <Image src="assets../Partners_icon_1.png" animationDuration={0} />
+        <Grid container>
+          <Grid item xs={12} sm={3}>
+            <Image src={partner1} animationDuration={0} width={378} />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Image src={partner2} animationDuration={0} width={97} />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Image src={partner3} animationDuration={0} width={218} />
           </Grid>
         </Grid>
       </Container>
+    
     </>
   );
 };
