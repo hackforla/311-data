@@ -89,7 +89,6 @@ const About = () => {
           </Grid>
         </Grid>
       </Container>
-    
     </>
   );
 };
