@@ -347,6 +347,7 @@ def filter_bad_quality_data(df, data_quality_switch=True):
 
     This function takes the original dataframe "df" and filters out records 
     with an outlier amount of request time to close based on the Freedman-Diaconis Rule.
+    Generally 10% of data is excluded.
 
     Args:
         df: 311-request data accessed from the API.
@@ -390,12 +391,12 @@ def filter_bad_quality_data(df, data_quality_switch=True):
 
     # Data Quality switch to remove outliers as defined by Median +- 1.5*IQR.
     if data_quality_switch:
-        temp = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(
+        filtered_df = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(
             df.loc[:, "logTimeToClose"])) and
             (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(
                 df.loc[:, "logTimeToClose"]))]
-        if temp.shape[0] > 0:
-            df = temp
+        if filtered_df.shape[0] > 0:
+            df = filtered_df
         data_quality_output = "Quality Filter: On"
     else:
         data_quality_output = "Quality Filter: Off"
