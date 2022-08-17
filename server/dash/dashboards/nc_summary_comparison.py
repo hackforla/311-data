@@ -374,18 +374,18 @@ def filter_bad_quality_data(df, data_quality_switch=True):
     df = df[df["timeToClose"] > 0]
     if df.shape[0] == 0:
         raise PreventUpdate()
-    else:
-        q3, q1 = np.percentile(df.loc[:, "timeToClose"].astype(int), [75, 25])
-        iqr = q3 - q1
-        if not iqr:
-            num_bins = 100
-        else:
-            num_bins = int((2 * iqr) / (df.shape[0]**(1 / 3)))
 
-        # Log Transform, Compute IQR, then exclude outliers.
-        df.loc[:, "logTimeToClose"] = np.log(df.loc[:, "timeToClose"])
-        log_q3, log_q1 = np.percentile(df.loc[:, "logTimeToClose"], [75, 25])
-        log_iqr = log_q3 - log_q1
+    q3, q1 = np.percentile(df.loc[:, "timeToClose"].astype(int), [75, 25])
+    iqr = q3 - q1
+    if not iqr:
+        num_bins = 100
+    else:
+        num_bins = int((2 * iqr) / (df.shape[0]**(1 / 3)))
+
+    # Log Transform, Compute IQR, then exclude outliers.
+    df.loc[:, "logTimeToClose"] = np.log(df.loc[:, "timeToClose"])
+    log_q3, log_q1 = np.percentile(df.loc[:, "logTimeToClose"], [75, 25])
+    log_iqr = log_q3 - log_q1
 
     # Data Quality switch to remove outliers as defined by Median +- 1.5*IQR.
     if data_quality_switch:
