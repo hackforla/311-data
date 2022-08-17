@@ -537,41 +537,27 @@ data_quality_switch=True):
     return num_req_line_chart
 
 
-def generate_two_filtered_df(api_data_df, nc_comp_dropdown, nc_comp_dropdown2):
-    """Generates the dataframes based on selected filters.
+def generate_comparison_filtered_df(api_data_df, selected_nc):
+    """Generates the dataframe based on selected neighborhood council.
 
-    This function takes the first selected neighborhood council (nc) value from 
-    the "nc_comp_dropdown" dropdown and second selected neighborhood council 
-    value from "nc_comp_dropdown2" dropdown and outputs two dataframes 
-    corresponding to their neighorhood council with additional datetime columns.
+    This function takes the selected neighborhood council (nc) value from 
+    the "selected_nc" dropdown and outputs a dataframe 
+    corresponding to their neighorhood council with additional datetime column.
 
     Args:
         api_data_df: full 311-request data directly access from the 311 data API.
-        nc_comp_dropdown: A string argument automatically detected by Dash callback
+        selected_nc: A string argument automatically detected by Dash callback
          function when "nc_comp_dropdown" element is selected in the layout.
-        nc_comp_dropdown2: A string argument automatically detected by Dash callback
-         function when "nc_comp_dropdown2" element is selected in the layout.
+
     Returns: 
-        df_nc1: pandas dataframe with requests from the nc selected by nc_comp_dropdown.
-        df_nc2: pandas dataframe with requests from the nc selected by nc_comp_dropdown2.
+        Pandas dataframe with requests from the nc selected by nc_comp_dropdown.
     """
-    # Check if the neighborhood council dropdown is selected or not, else use all data.
-    if not nc_comp_dropdown:
-        df_nc1 = api_data_df
+    if not selected_nc:
+        df = api_data_df
     else:
-        df_nc1 = api_data_df[api_data_df["councilName"] == nc_comp_dropdown]
-
-    # Check if the second neighborhood council dropdown is selected or not, else use all data.
-    if not nc_comp_dropdown2:
-        df_nc2 = api_data_df
-    else:
-        df_nc2 = api_data_df[api_data_df["councilName"] == nc_comp_dropdown2]
-
-    df_nc1 = add_datetime_column(df_nc1, "createdDate")
-    df_nc2 = add_datetime_column(df_nc2, "createdDate")
-
-    return df_nc1, df_nc2
-
+        df = df[df["councilName"] == selected_nc]
+    df = add_datetime_column(df, "createdDate")
+    return df
 
 @callback(
     Output("req_source_bar_chart", "figure"),
@@ -605,7 +591,8 @@ def generate_req_source_bar_charts(nc_comp_dropdown, nc_comp_dropdown2):
          from each source for the second neighborhood council
           (e.g. mobile, app, self-report...etc).
     """
-    df_nc1, df_nc2 = generate_two_filtered_df(api_data_df, nc_comp_dropdown, nc_comp_dropdown2)
+    df_nc1 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    df_nc2 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
     # Bar chart of different Request Type Sources for first selected neigbhorhood council.
     req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
     req_source = req_source.reset_index()
@@ -660,8 +647,8 @@ def generate_indicator_visuals(nc_comp_dropdown, nc_comp_dropdown2):
         num_days_card2: integer for the total number of days the data
             available in second selected neighborhood council span.
     """
-    df_nc1, df_nc2 = generate_two_filtered_df(api_data_df, nc_comp_dropdown,
-     nc_comp_dropdown2)
+    df_nc1 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    df_nc2 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
     # Total number of requests for first neigbhorhood council.
     total_req_card = df_nc1.shape[0]
 
@@ -705,8 +692,8 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
         Line chart showing the number of requests throughout the 
         day for both first and second selected neighborhood council.
     """
-    df_nc1, df_nc2 = generate_two_filtered_df(api_data_df, nc_comp_dropdown,
-     nc_comp_dropdown2)
+    df_nc1 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    df_nc2 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
     # Overlapping line chart for number of request throughout the day
     # for both first and second neighborhood council.
     req_time = pd.DataFrame(df_nc1.groupby("createDateDT", as_index=False)["srnumber"].count())
