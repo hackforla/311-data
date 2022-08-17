@@ -567,10 +567,8 @@ def generate_two_filtered_df(api_data_df, nc_comp_dropdown, nc_comp_dropdown2):
     else:
         df_nc2 = api_data_df[api_data_df["councilName"] == nc_comp_dropdown2]
 
-    df_nc1.loc[:, "createDateDT"] = pd.to_datetime(
-        df_nc1.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
-    df_nc2.loc[:, "createDateDT"] = pd.to_datetime(
-        df_nc2.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
+    df_nc1 = add_datetime_column(df_nc1, "createdDate")
+    df_nc2 = add_datetime_column(df_nc2, "createdDate")
 
     return df_nc1, df_nc2
 
