@@ -377,7 +377,8 @@ def filter_bad_quality_data(df, data_quality_switch=True):
 
     q3, q1 = np.percentile(df.loc[:, "timeToClose"].astype(int), [75, 25])
     iqr = q3 - q1
-    if not iqr:
+    # IQR might be 0 when q3 and q1 are the same value due to narrow distribution or lack of data. 
+    if iqr == 0:
         num_bins = 100
     else:
         num_bins = int((2 * iqr) / (df.shape[0]**(1 / 3)))
