@@ -341,6 +341,24 @@ def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types
         df = df[df["typeName"].isin(selected_request_types)]
     return df
 
+def add_datetime_column(df, colname):
+    """Adds a datetime column to a dataframe.
+
+    This function takes a datetime column 'colname' in string type, remove the last 4 characters,
+    split date and time by character 'T', and finally combine date and time into a single string again.
+    The function then converts the string using pandas's to_datetime function.
+
+    Args:
+        df: dataframe to add the datetime column to.
+        colname: the datetime column that is in string type.
+    
+    Return:
+        A dataframe with new column 'colnameDT' that is in datetime type.
+    
+    """
+    df.loc[:, colname+"DT"] = pd.to_datetime(
+        df.loc[:, colname].str[:-4].str.split("T").str.join(" "))
+    return df
 
 def filter_bad_quality_data(df, data_quality_switch=True):
     """Filters the dataframe based on pre-defined data quality filters.
@@ -360,10 +378,8 @@ def filter_bad_quality_data(df, data_quality_switch=True):
         data_quality_output: a string being displayed on whether the data quality switch is on or off.
     """
     print("* Getting quality data.")
-    df.loc[:, "createDateDT"] = pd.to_datetime(
-        df.loc[:, "createdDate"].str[:-4].str.split("T").str.join(" "))
-    df.loc[:, "closeDateDT"] = pd.to_datetime(
-        df.loc[:, "closedDate"].str[:-4].str.split("T").str.join(" "))
+    df = add_datetime_column(df, "createdDate")
+    df = add_datetime_column(df, "closeDate")
     df.loc[:, "timeToClose"] = (df.loc[:, "closeDateDT"] - df.loc[:, "createDateDT"]).dt.days
 
     # Calculate the Optimal number of bins based on Freedman-Diaconis Rule.
