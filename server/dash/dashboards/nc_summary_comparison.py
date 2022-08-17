@@ -80,10 +80,10 @@ def generate_summary_dropdowns():
     """
     return html.Div(children=[
         html.Div(dcc.Dropdown(sorted(list(set(api_data_df["councilName"]))),
-                placeholder=" ", id="nc_dropdown",
+                value=" ", id="nc_dropdown",
                         placeholder="Select a Neighborhood Council..."),
                         style=merge_dict(INLINE_STYLE, {"width": "48.5vw"})),
-                html.Div(dcc.Dropdown(placeholder=" ", id="selected_request_types", multi=True,
+                html.Div(dcc.Dropdown(value=" ", id="selected_request_types", multi=True,
                 placeholder="Select a Request Type..."),
                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
     ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw", "height": "10vh"}))
@@ -151,7 +151,7 @@ def generate_council_name_dropdown(output_id):
         Dash html div element containing nc drop down for left pane filtering.
     """
     return html.Div(dcc.Dropdown(sorted(list(set(api_data_df["councilName"]))),
-         placeholder=" ", id=output_id,
+         value=" ", id=output_id,
                  placeholder="Select a Neighborhood Council..."),
                  style=merge_dict(INLINE_STYLE, {"width": "48.5vw"})),
 
