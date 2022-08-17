@@ -391,7 +391,7 @@ def filter_bad_quality_data(df, data_quality_switch=True):
     # Data Quality switch to remove outliers as defined by Median +- 1.5*IQR.
     if data_quality_switch:
         temp = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(
-            df.loc[:, "logTimeToClose"])) &
+            df.loc[:, "logTimeToClose"])) and
             (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(
                 df.loc[:, "logTimeToClose"]))]
         if temp.shape[0] > 0:
