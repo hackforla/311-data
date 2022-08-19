@@ -19,6 +19,15 @@ Your browser should open to `0.0.0.0:3000` and the site should render. Webpack w
 
 Stop webpack dev server with `Ctrl-C`.
 
+### Making new code changes?
+Whenever new code changes are made to the client, developers should consider running a Lighthouse audit in Google Chrome to identify and resolve any potential issues. A Lighthouse audit will offer ways to improve site quality, performance, accessibility, search engine optimization and end user experience. 
+
+To run Lighthouse:
+- Open Google Chrome and navigate to the site containing your code
+- Inspect the site either by pressing `f12` or `Right-click > Inspect`
+- At the top of the Inspect window, select the 'Lighthouse' panel ('Lighthouse' may be hidden so you may need to click `>>` to see more)
+- Customize your report and click `Analyze page load`
+
 ### Useful commands
 
 ```
