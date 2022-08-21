@@ -743,7 +743,7 @@ def update_figure(selected_nc):
         color_discrete_sequence=DISCRETE_COLORS,
         labels=LABELS,
         title="Number of " + selected_nc +
-        " Requests compare with the average of all Neighborhood Councils requests"
+        " Requests compared with the average Neighborhood Council"
     )
 
     nc_avg_comp_line_chart.update_xaxes(
