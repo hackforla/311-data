@@ -708,7 +708,7 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
     Output("nc_avg_comp_line_chart", "figure"),
     [Input("selected_nc", "value")]
 )
-def update_figure(selected_nc):
+def update_line_chart(selected_nc):
     """Generates a line chart visualizations for LA 311 requests data
      based on the two selected neighborhood conucils.
 
