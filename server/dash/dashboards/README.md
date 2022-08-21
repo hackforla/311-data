@@ -29,10 +29,10 @@ cd server/dash
 docker pull la311data/dash-poc:dev
 
 # Run the dash container with a local volume and a custom command that enables reloading in gunicorn.
-docker run -p 5500:5500 -v "$(pwd):/app" -e PRELOAD=False la311data/dash-poc gunicorn --bind 0.0.0.0:5500 --timeout 300 --workers 2 index:server --reload
+docker run -p 5500:5500 -v "$(pwd):/app" -e PRELOAD=False la311data/dash-poc:dev gunicorn --bind 0.0.0.0:5500 --timeout 300 --workers 2 index:server --reload
 
 # View a dashboard in your browser.
-open http://localhost:5500/dashboards/overview
+open http://localhost:5500/dashboards/overview_combined
 
 # To view your changes, edit a file and save it.
 # The server will log something like "Worker reloading: <file> modified."
