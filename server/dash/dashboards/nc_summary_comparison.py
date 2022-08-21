@@ -354,7 +354,6 @@ def add_datetime_column(df, colname):
     
     Return:
         A dataframe with new column 'colnameDT' that is in datetime type.
-    
     """
     df.loc[:, colname+"DT"] = pd.to_datetime(
         df.loc[:, colname].str[:-4].str.split("T").str.join(" "))
