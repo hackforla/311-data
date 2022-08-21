@@ -119,7 +119,6 @@ export const gitResponseFailure = error => ({
 
 const initialState = {
   isMapLoading: false,
-  isVisLoading: false,
   error: null,
   pins: [],
   pinsInfo: {},
@@ -135,7 +134,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isMapLoading: true,
-        isVisLoading: true,
       };
     case types.GET_DATA_REQUEST_SUCCESS: {
       const newRequests = {
@@ -145,6 +143,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         requests: newRequests,
+        isMapLoading: false,
       };
     }
     case types.UPDATE_DATE_RANGES:

@@ -5,7 +5,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import { getDataRequestSuccess, updateDateRanges } from '@reducers/data';
+import { getDataRequest, getDataRequestSuccess, updateDateRanges } from '@reducers/data';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 import { INTERNAL_DATE_SPEC } from '../common/CONSTANTS';
@@ -13,6 +13,7 @@ import CookieNotice from '../main/CookieNotice';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
 import moment from 'moment';
+import { CircularProgress } from '@material-ui/core';
 
 // We make API requests on a per-day basis. On average, there are about 4k
 // requests per day, so 10k is a large safety margin.
@@ -49,8 +50,13 @@ class MapContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { activeMode, pins, startDate, endDate } = this.props;
+    function didDateRangeChange() {
+      // Check that endDate is not null since we only want to retrieve data
+      // when both the startDate and endDate are selected.
+      return (prevProps.startDate != startDate || prevProps.endDate != endDate) && endDate != null;
+    }
     if (prevProps.activeMode !== activeMode || prevProps.pins !== pins ||
-      prevProps.startDate != startDate || prevProps.endDate != endDate) {
+      didDateRangeChange()) {
       this.setData();
     }
   }
@@ -72,16 +78,26 @@ class MapContainer extends React.Component {
   getNonOverlappingRanges = (startA, endA, startB, endB) => {
     var leftNonOverlap = null;
     var rightNonOverlap = null;
+    const momentStartA = moment(startA);
+    const momentEndA = moment(endA);
+    const momentStartB = moment(startB);
+    const momentEndB = moment(endB);
+
     // If date range A starts before date range B, then it has a subrange that
     // does not overlap with B.
-    if (moment(startA) < moment(startB)){
+    if (momentStartA < momentStartB){
+      // For the left side, we want to choose the earlier of (startB, endA).
+      // If startB is earlier than endA, that means A and B overlap, so we
+      // subtract 1 day from startB, since it's already included in A.
+      const leftNonOverlapEnd = momentStartB < momentEndA ? momentStartB.subtract(1, 'days') : momentEndA;
       leftNonOverlap = [startA,
-        moment(startB).subtract(1, 'days').format(INTERNAL_DATE_SPEC)];
+        leftNonOverlapEnd.format(INTERNAL_DATE_SPEC)];
     }
     // If date range A ends after date range B, then it has a subrange that does
     // not overlap with B.
-    if (moment(endB) < moment(endA)){
-      rightNonOverlap = [moment(endB).add(1, 'days').format(INTERNAL_DATE_SPEC),
+    if (momentEndB < momentEndA){
+      var rightNonOverlapStart = momentEndB < momentStartA ? momentStartA : momentEndB.add(1, 'days'); 
+      rightNonOverlap = [rightNonOverlapStart.format(INTERNAL_DATE_SPEC),
         endA];
     }
     return [leftNonOverlap, rightNonOverlap];
@@ -162,8 +178,8 @@ class MapContainer extends React.Component {
         currentEnd = dateRange[1];
       } else {
         resolvedDateRanges.push([currentStart, currentEnd]);
-        currentStart = null;
-        currentEnd = null;
+        currentStart = dateRange[0];
+        currentEnd = dateRange[1];
       }
     }
     if (currentStart !== null){
@@ -215,12 +231,13 @@ class MapContainer extends React.Component {
   };
 
   setData = async () => {
-    const { startDate, endDate } = this.props;
+    const { startDate, endDate, getDataRedux } = this.props;
 
     const missingDateRanges = this.getMissingDateRanges(startDate, endDate);
     if (missingDateRanges.length === 0){
       return;
     }
+    getDataRedux();
     this.rawRequests = [];
     var allRequestPromises = [];
     for (const missingDateRange of missingDateRanges){
@@ -270,7 +287,8 @@ class MapContainer extends React.Component {
   };
 
   render() {
-    const { position, lastUpdated, updatePosition, exportMap, classes, requests } = this.props;
+    const { position, lastUpdated, updatePosition, exportMap, classes, requests,
+    isMapLoading } = this.props;
     const { ncCounts, ccCounts, selectedTypes } = this.state;
     return (
       <div className={classes.root}>
@@ -285,6 +303,7 @@ class MapContainer extends React.Component {
           selectedTypes={selectedTypes}
         />
         <CookieNotice />
+        {isMapLoading && <CircularProgress />}
       </div>
     );
   }
@@ -300,11 +319,13 @@ const mapStateToProps = state => ({
   endDate: state.filters.endDate,
   requests: state.data.requests,
   dateRangesWithRequests: state.data.dateRangesWithRequests,
+  isMapLoading: state.data.isMapLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
   updatePosition: position => dispatch(updateMapPosition(position)),
   exportMap: () => dispatch(trackMapExport()),
+  getDataRedux: () => dispatch(getDataRequest()),
   getDataSuccess: data => dispatch(getDataRequestSuccess(data)),
   updateDateRangesWithRequests: dateRanges => dispatch(updateDateRanges(dateRanges)),
 });

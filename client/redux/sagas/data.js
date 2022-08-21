@@ -12,7 +12,6 @@ import { COUNCILS, REQUEST_TYPES } from '@components/common/CONSTANTS';
 
 import {
   types,
-  getDataRequest,
   getPinsSuccess,
   getPinsFailure,
   getPinInfoSuccess,
@@ -147,7 +146,6 @@ function* getNcByLngLat(action) {
 }
 
 export default function* rootSaga() {
-  yield takeLatest(types.GET_DATA_REQUEST, getMapData);
   yield takeLatest(mapFiltersTypes.UPDATE_MAP_DATE_RANGE, getMapData);
   yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat)
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
