@@ -22,6 +22,7 @@ psutil==5.8.0
 psycopg2-binary==2.8.6
 pyee==8.1.0
 pyppeteer==0.2.5
+pytest==7.1.2
 python-box==5.3.0
 python-dateutil==2.8.1
 python-slugify==4.0.1
@@ -44,4 +45,3 @@ websocket-client==0.58.0
 websockets==8.1
 zict==2.0.0
 zipp==3.4.1
-pytest==7.1.2
