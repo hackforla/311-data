@@ -4,10 +4,9 @@ import {
   Container,
   Grid,
 } from '@material-ui/core';
-import Image from 'material-ui-image';
-import partner1 from '@assets/Partners_icon_1.png';
-import partner2 from '@assets/Partners_icon_2.png';
-import partner3 from '@assets/Partners_icon_3.png';
+import partner1 from '@assets/empower_la_logo.png';
+import partner2 from '@assets/hackforla_logo.png';
+import partner3 from '@assets/codeforamerica.png';
 
 const useStyles = makeStyles({
   root: {
@@ -25,19 +24,19 @@ const useStyles = makeStyles({
     '& img': {
       maxWidth: '100%',
       height: 'auto',
-      display: 'block',
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      display: 'inline-block',
     },
+  },
+  gridItem: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: '4em',
+    paddingBottom: '6em',
   },
 });
 
 const About = () => {
   const classes = useStyles();
-
-  // React.useEffect(() => {
-  //   if (errors) console.log(errors);
-  // }, [errors]);
 
   return (
     <>
@@ -78,14 +77,14 @@ const About = () => {
           </Grid>
         </Grid>
         <Grid container>
-          <Grid item xs={12} sm={3}>
-            <Image src={partner1} animationDuration={0} width={378} />
+          <Grid item sm={12} md={4} className={classes.gridItem}>
+            <img src={partner1} width={362} alt="Empower LA" />
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <Image src={partner2} animationDuration={0} width={97} />
+          <Grid item sm={12} md={4} className={classes.gridItem}>
+            <img src={partner2} width={81} alt="Hack for LA" />
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <Image src={partner3} animationDuration={0} width={218} />
+          <Grid item sm={12} md={4} className={classes.gridItem}>
+            <img src={partner3} width={202} alt="Code for America" />
           </Grid>
         </Grid>
       </Container>
