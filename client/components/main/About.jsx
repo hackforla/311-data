@@ -4,9 +4,9 @@ import {
   Container,
   Grid,
 } from '@material-ui/core';
-import partner1 from '@assets/empower_la_logo.png';
-import partner2 from '@assets/hackforla_logo.png';
-import partner3 from '@assets/codeforamerica.png';
+import empowerLaLogo from '@assets/empower_la_logo.png';
+import hackForLaLogo from '@assets/hack_for_la_logo.png';
+import codeForAmericaLogo from '@assets/code_for_america_logo.png';
 
 const useStyles = makeStyles({
   root: {
@@ -30,6 +30,7 @@ const useStyles = makeStyles({
   gridItem: {
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: '4em',
     paddingBottom: '6em',
   },
@@ -78,13 +79,13 @@ const About = () => {
         </Grid>
         <Grid container>
           <Grid item sm={12} md={4} className={classes.gridItem}>
-            <img src={partner1} width={362} alt="Empower LA" />
+            <img src={empowerLaLogo} width={362} alt="Empower LA" />
           </Grid>
           <Grid item sm={12} md={4} className={classes.gridItem}>
-            <img src={partner2} width={81} alt="Hack for LA" />
+            <img src={hackForLaLogo} width={97} alt="Hack for LA" />
           </Grid>
           <Grid item sm={12} md={4} className={classes.gridItem}>
-            <img src={partner3} width={202} alt="Code for America" />
+            <img src={codeForAmericaLogo} width={202} alt="Code for America" />
           </Grid>
         </Grid>
       </Container>
