@@ -18,12 +18,15 @@ import {
   getPinInfoFailure,
   getNcByLngLatSuccess,
   getNcByLngLatFailure,
+  gitResponseSuccess,
+  gitResponseFailure
 } from '../reducers/data';
 
 import {
   types as uiTypes,
   setErrorModal,
   showDataCharts,
+  showFeedbackSuccess
 } from '../reducers/ui';
 
 import {
@@ -58,6 +61,15 @@ function* fetchNcByLngLat({ longitude, latitude }) {
   const { data } = yield call(axios.get, geocodeUrl);
 
   return data;
+}
+
+/* //// OTHER //// */
+
+function* postFeedback(message) {
+  const contactURL = `${BASE_URL}/feedback`;
+
+  const response = yield call(axios.post, contactURL, message);
+  return response;
 }
 
 /* ////////////////// FILTERS //////////////// */
