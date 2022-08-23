@@ -145,8 +145,21 @@ function* getNcByLngLat(action) {
   }
 }
 
+function* sendContactData(action) {
+  try {
+    const message = action.payload;
+    const data = yield call(postFeedback, message);
+    yield put(gitResponseSuccess(data));
+    yield put(showFeedbackSuccess(true));
+  } catch (e) {
+    yield put(gitResponseFailure(e));
+    yield put(setErrorModal(true));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(mapFiltersTypes.UPDATE_MAP_DATE_RANGE, getMapData);
   yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat)
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
+  yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
 }
