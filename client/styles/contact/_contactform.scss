@@ -1,0 +1,51 @@
+.feedback-form {
+  width: 50%;
+  margin: 50px auto;
+  text-align: center;
+
+  .column {
+    padding-bottom: 0;
+  }
+  
+  label {
+    font-weight: bold;
+    display: block;
+    text-align: left;
+  }
+
+  #btn-contact-submit {
+    background-color: $brand-cta1-color;
+    color: $brand-text-color;
+    min-width: 250px;
+    font-weight: bold;
+    font-family: $brand-heading-family;
+    font-size: 18px;
+    margin-top: 25px;
+
+    &:after {
+      color: $brand-text-color;
+    }
+  }
+
+  .loader-container {
+    position: absolute;
+    top: 80vh;
+  }
+
+  .data-request-error {
+    border-radius: 5px;
+    background: rgba(153, 153, 153, 0.7);
+    padding: 10px 35px;
+    margin: 0 10em;
+  }
+}
+
+.contact-success-popup {
+  border-radius: 5px;
+  background-color: $brand-bg-color;
+  padding: 20px 35px;
+  margin: 0 10em;
+  button {
+    min-width: 100px;
+  }
+}

@@ -1,0 +1,25 @@
+.contact-cover {
+    height: 55vh;
+    background-image: url('../assets/contact_bg.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+
+  
+  .overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: $brand-heading-family;
+  
+    .text-contact {
+      color: $brand-bg-color;
+    }
+  }
+}
+  
