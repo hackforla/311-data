@@ -10,13 +10,6 @@ from pendulum import parse
 from tasks import postgres, socrata
 
 
-def test_last_updated():
-    runner = TaskRunner(task=postgres.get_last_updated)
-    state = runner.run()
-    assert state.is_successful()
-    assert state.result > parse('2020-01-01', tz=None)
-
-
 def test_download_data():
     with prefect.context(today=datetime.today().strftime('%Y-%m-%d')):
         new_state = TaskRunner(
