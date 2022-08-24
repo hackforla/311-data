@@ -56,12 +56,15 @@ function ReactDayPicker({
 
   const from = moment(startDate).toDate();
   const enteredToDate = moment(enteredTo).toDate();
+  const today = new Date();
+  const lastThreeMonths = new Date(today.getFullYear(),today.getMonth()-3,today.getDate());
 
   return (
     <>
       <Styles range={range} />
       <DayPicker
         className="Range"
+        disabledDays={{ before: lastThreeMonths, after: today }}
         numberOfMonths={1}
         fromMonth={from}
         selectedDays={[from, { from, to: enteredToDate }]}
