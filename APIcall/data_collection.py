@@ -16,8 +16,8 @@ def api_311(start_date, end_date, skip, limit):
         data_year.extend(data)
         skip = skip + limit
         data_final = pd.DataFrame(data_year) 
-        data_final.sort_values(by='createdDate')
-        data_final.reset_index(drop=True)
+        data_final.sort_values(by='createdDate', inplace = True, ignore_index = True)
+        data_final.to_csv('data_final.csv')
     return data_final
 
 def main():
