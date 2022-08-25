@@ -12,7 +12,7 @@ import { CssBaseline } from '@material-ui/core';
 import store from './redux/store';
 import App from './App';
 import theme from './theme/theme';
-// import '@styles/styles.scss';
+import '@styles/styles.scss';
 
 Sentry.init({
   dsn: process.env.SENTRY_CLIENT_DSN,

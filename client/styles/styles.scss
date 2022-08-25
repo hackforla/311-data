@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 @import './variables';
-@import './bulma';
+// @import './bulma';
 // @import './base';
 
 // @import './accessibility/accessiblefocus';
@@ -42,7 +42,7 @@
 // @import './about/howitworks';
 
 // @import './contact/contact';
-// @import './contact/contactimage';
+@import './contact/contactimage';
 // @import './contact/contactintro';
 // @import './contact/contactform';
 
