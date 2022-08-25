@@ -12,7 +12,7 @@ import ContactForm from './ContactForm';
 // );
 
 const Contact = () => (
-  <div id="contact-container">
+  <div>
     <ContactImage />
     <ContactIntro />
     <ContactForm />
