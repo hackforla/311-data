@@ -4,48 +4,11 @@ import { sendGitRequest } from '@reducers/data';
 // import clx from 'classnames';
 
 import {
-  makeStyles,
   Container,
   Grid,
   Button,
   TextField,
 } from '@material-ui/core';
-
-// const useStyles = makeStyles({
-//     root: {
-//         display: 'flex',
-//         '& h1': {
-//             fontSize: '2.5em'
-//         },
-//         '& img': {
-//             maxWidth: '100%',
-//             height: 'auto',
-//             display: 'block',
-//             marginLeft: 'auto',
-//             marginRight: 'auto'
-//         },
-//         '& label': {
-//             marginTop: '1em',
-//             fontWeight: 500,
-//             display: 'block',
-//             width: '20em'
-//         },
-//         '& input': {
-//             width: '40em',
-//             padding: '0.5em'
-//         },
-//         '& textarea': {
-//             width: '40em',
-//             padding: '0.5em'
-//         }
-//     }
-// });
-
-const useStyles = makeStyles({
-  addBottomSpacing: {
-    paddingBottom: '4px',
-  },
-});
 
 const initialFormValues = {
   firstName: '',
@@ -64,8 +27,6 @@ const initialFormValues = {
 };
 
 const ContactForm = () => {
-  const classes = useStyles();
-
   const [formValues, setFormValues] = useState(initialFormValues);
 
   function clearFields() {
@@ -117,6 +78,21 @@ const ContactForm = () => {
     setFormValues(prevState => ({ ...prevState, [name]: value }));
   }
 
+  function clearErrors() {
+    setFormValues(prevState => ({
+      ...prevState,
+      ...{
+        errors: {
+          missingFirstName: false,
+          missingLastName: false,
+          missingEmail: false,
+          invalidEmail: false,
+          missingMessage: false,
+        },
+      },
+    }));
+  }
+
   // define a method, `callSendGitRequest`, to dispatch an action to redux using
   // `useDipatch()` hook (notice there is no need to use `connect` or
   // `mapStateToProps` anymore)
@@ -150,28 +126,35 @@ const ContactForm = () => {
   return (
     <Container maxWidth="sm">
       <form id="contact-form" onSubmit={handleSubmit}>
-        <Grid container alignItems="center" justify="center" direction="column">
+        <Grid container alignItems="center" justify="center" direction="column" style={{ gap: '10px' }}>
           <Grid container alignItems="center" justify="center" direction="row" spacing={2}>
             <Grid item xs={6}>
               <TextField
                 id="contact-firstname"
                 name="firstName"
-                label="First Name"
+                label="First Name *"
                 type="text"
-                fullWidth
                 value={formValues.firstName}
                 onChange={onInputChange}
+                onFocus={clearErrors}
+                error={formValues.errors.missingFirstName}
+                helperText={formValues.errors.missingFirstName ? 'Please provide a first name.' : ''}
+                fullWidth
               />
+
             </Grid>
             <Grid item xs={6}>
               <TextField
                 id="contact-lastname"
                 name="lastName"
-                label="Last Name"
+                label="Last Name *"
                 type="text"
-                fullWidth
                 value={formValues.lastName}
                 onChange={onInputChange}
+                onFocus={clearErrors}
+                error={formValues.errors.missingLastName}
+                helperText={formValues.errors.missingLastName ? 'Please provide a last name.' : ''}
+                fullWidth
               />
             </Grid>
           </Grid>
@@ -180,11 +163,14 @@ const ContactForm = () => {
               <TextField
                 id="contact-email"
                 name="email"
-                label="Email"
+                label="Email *"
                 type="text"
-                fullWidth
                 value={formValues.email}
                 onChange={onInputChange}
+                onFocus={clearErrors}
+                error={formValues.errors.missingEmail || formValues.errors.invalidEmail}
+                helperText={formValues.errors.missingEmail || formValues.errors.invalidEmail ? 'Please provide a valid email address.' : ''}
+                fullWidth
               />
             </Grid>
             <Grid item xs={12}>
@@ -193,29 +179,30 @@ const ContactForm = () => {
                 name="association"
                 label="Association"
                 type="text"
-                className={classes.addBottomSpacing}
-                fullWidth
                 value={formValues.association}
                 onChange={onInputChange}
+                fullWidth
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{ paddingTop: '8px' }}>
               <TextField
                 id="contact-message"
                 name="message"
-                label="Message"
+                label="Message *"
                 type="text"
                 variant="outlined"
-                className={classes.addBottomSpacing}
-                fullWidth
-                multiline
                 rows={4}
                 value={formValues.message}
                 onChange={onInputChange}
+                onFocus={clearErrors}
+                error={formValues.errors.missingMessage}
+                helperText={formValues.errors.missingMessage ? 'Please provide a message.' : ''}
+                fullWidth
+                multiline
               />
             </Grid>
           </Grid>
-          <Grid container direction="column">
+          <Grid container direction="column" style={{ paddingTop: '8px' }}>
             <Button variant="contained" color="primary" type="submit">
               Submit
             </Button>
