@@ -12,7 +12,6 @@ import Privacy from '@components/main/Privacy';
 import Faqs from '@components/main/Faqs';
 import About from '@components/main/About';
 import Blog from '@components/main/Blog';
-// import ContactForm from '@components/main/ContactForm';
 import Contact from '@components/contact/Contact';
 
 export default function Routes() {
