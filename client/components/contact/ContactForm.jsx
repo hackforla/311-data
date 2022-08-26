@@ -49,6 +49,7 @@ const ContactForm = () => {
     });
   }
 
+  // initialize component
   useEffect(() => {
     // componentDidMount code goes here...
     clearFields();
@@ -84,6 +85,22 @@ const ContactForm = () => {
     };
   }, [callShowErrorModal, callShowFeedbackSuccess, displayFeedbackSuccess, openErrorModal]);
 
+  // helper methods
+  function clearErrors() {
+    setFormValues(prevState => ({
+      ...prevState,
+      ...{
+        errors: {
+          missingFirstName: false,
+          missingLastName: false,
+          missingEmail: false,
+          invalidEmail: false,
+          missingMessage: false,
+        },
+      },
+    }));
+  }
+
   function validateEmail(emailAddress) {
     // eslint-disable-next-line
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailAddress)) {
@@ -117,25 +134,11 @@ const ContactForm = () => {
     return false;
   }
 
+  // event handlers
   function onInputChange(event) {
     event.preventDefault();
     const { name, value } = event.target;
     setFormValues(prevState => ({ ...prevState, [name]: value }));
-  }
-
-  function clearErrors() {
-    setFormValues(prevState => ({
-      ...prevState,
-      ...{
-        errors: {
-          missingFirstName: false,
-          missingLastName: false,
-          missingEmail: false,
-          invalidEmail: false,
-          missingMessage: false,
-        },
-      },
-    }));
   }
 
   function handleSubmit(event) {
@@ -246,7 +249,6 @@ const ContactForm = () => {
             </Grid>
           </Grid>
           <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: '8px' }}>
-            {console.log('formValues.loading:', formValues.loading)}
             <CircularProgress style={{ display: formValues.loading === true ? 'block' : 'none' }} />
             <Button variant="contained" color="primary" type="submit" style={{ display: formValues.loading === false ? 'block' : 'none' }}>
               Submit
