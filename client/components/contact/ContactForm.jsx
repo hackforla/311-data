@@ -36,9 +36,11 @@ const ContactForm = () => {
   const callShowFeedbackSuccess = useCallback(o => dispatch(showFeedbackSuccess(o)), [dispatch]);
   const callShowErrorModal = useCallback(obj => dispatch(setErrorModal(obj)), [dispatch]);
 
-  const [formValues, setFormValues] = useState(initialFormValues);
+  // mapStateToProps equivalent
   const displayFeedbackSuccess = useSelector(state => state.ui.displayFeedbackSuccess);
   const openErrorModal = useSelector(state => state.ui.error.isOpen);
+
+  const [formValues, setFormValues] = useState(initialFormValues);
 
   function clearFields() {
     setFormValues({
@@ -49,8 +51,29 @@ const ContactForm = () => {
   useEffect(() => {
     // componentDidMount code goes here...
     clearFields();
-    if (!!displayFeedbackSuccess === true) { toast('We received your message. Our team will contact you at the email address provided.'); }
-    if (!!openErrorModal === true) { toast('We failed to process your message. Please try again later.'); }
+    if (!!displayFeedbackSuccess === true) {
+      toast.success('We received your message. Our team will contact you at the email address provided.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+
+    if (!!openErrorModal === true) {
+      toast.error('We failed to process your message. Please try again later.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
 
     return () => {
       // componentWillUnmount code goes here...

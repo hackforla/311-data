@@ -9,7 +9,17 @@ import 'react-toastify/dist/ReactToastify.css';
 const Contact = () => (
   <>
     <div>
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
     <div>
       <ContactImage>Contact Us</ContactImage>
