@@ -11,6 +11,7 @@ import {
   Grid,
   Button,
   TextField,
+  CircularProgress,
 } from '@material-ui/core';
 
 const initialFormValues = {
@@ -149,15 +150,15 @@ const ContactForm = () => {
                 `Message: ${formValues.message}`,
       ].join('\n');
 
-      // dispatch action to redux with payload
-      callSendGitRequest({ title: formValues.email, body });
-
       setFormValues(prevState => ({
         ...prevState,
         ...{
           loading: true,
         },
       }));
+
+      // dispatch action to redux with payload
+      callSendGitRequest({ title: formValues.email, body });
     }
   }
 
@@ -244,8 +245,10 @@ const ContactForm = () => {
               />
             </Grid>
           </Grid>
-          <Grid container direction="column" style={{ paddingTop: '8px' }}>
-            <Button variant="contained" color="primary" type="submit">
+          <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: '8px' }}>
+            {console.log('formValues.loading:', formValues.loading)}
+            <CircularProgress style={{ display: formValues.loading === true ? 'block' : 'none' }} />
+            <Button variant="contained" color="primary" type="submit" style={{ display: formValues.loading === false ? 'block' : 'none' }}>
               Submit
             </Button>
           </Grid>
