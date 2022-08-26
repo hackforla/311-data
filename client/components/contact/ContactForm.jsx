@@ -179,7 +179,6 @@ const ContactForm = () => {
                 helperText={formValues.errors.missingFirstName ? 'Please provide a first name.' : ''}
                 fullWidth
               />
-
             </Grid>
             <Grid item xs={6}>
               <TextField
@@ -245,7 +244,6 @@ const ContactForm = () => {
               Submit
             </Button>
           </Grid>
-
         </Grid>
       </form>
     </Container>
