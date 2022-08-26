@@ -1,22 +1,22 @@
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
 import ContactImage from './ContactImage';
 import ContactIntro from './ContactIntro';
 import ContactForm from './ContactForm';
 
-// const Contact = () => (
-//   <div className="contact-311">
-//     <ContactImage />
-//     <ContactIntro />
-//     <ContactForm />
-//   </div>
-// );
+import 'react-toastify/dist/ReactToastify.css';
 
 const Contact = () => (
-  <div>
-    <ContactImage />
-    <ContactIntro />
-    <ContactForm />
-  </div>
+  <>
+    <div>
+      <ToastContainer />
+    </div>
+    <div>
+      <ContactImage>Contact Us</ContactImage>
+      <ContactIntro />
+      <ContactForm />
+    </div>
+  </>
 );
 
 export default Contact;

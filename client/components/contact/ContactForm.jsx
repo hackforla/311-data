@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sendGitRequest } from '@reducers/data';
-// import clx from 'classnames';
+import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
+import { toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
   Container,
@@ -27,7 +30,15 @@ const initialFormValues = {
 };
 
 const ContactForm = () => {
+  // define the methods to dispatch redux actions
+  const dispatch = useDispatch();
+  const callSendGitRequest = useCallback(obj => dispatch(sendGitRequest(obj)), [dispatch]);
+  const callShowFeedbackSuccess = useCallback(o => dispatch(showFeedbackSuccess(o)), [dispatch]);
+  const callShowErrorModal = useCallback(obj => dispatch(setErrorModal(obj)), [dispatch]);
+
   const [formValues, setFormValues] = useState(initialFormValues);
+  const displayFeedbackSuccess = useSelector(state => state.ui.displayFeedbackSuccess);
+  const openErrorModal = useSelector(state => state.ui.error.isOpen);
 
   function clearFields() {
     setFormValues({
@@ -36,8 +47,18 @@ const ContactForm = () => {
   }
 
   useEffect(() => {
+    // componentDidMount code goes here...
     clearFields();
-  }, []);
+    if (!!displayFeedbackSuccess === true) { toast('We received your message. Our team will contact you at the email address provided.'); }
+    if (!!openErrorModal === true) { toast('We failed to process your message. Please try again later.'); }
+
+    return () => {
+      // componentWillUnmount code goes here...
+      callShowFeedbackSuccess(false);
+      callShowErrorModal(false);
+      clearFields();
+    };
+  }, [callShowErrorModal, callShowFeedbackSuccess, displayFeedbackSuccess, openErrorModal]);
 
   function validateEmail(emailAddress) {
     // eslint-disable-next-line
@@ -92,12 +113,6 @@ const ContactForm = () => {
       },
     }));
   }
-
-  // define a method, `callSendGitRequest`, to dispatch an action to redux using
-  // `useDipatch()` hook (notice there is no need to use `connect` or
-  // `mapStateToProps` anymore)
-  const dispatch = useDispatch();
-  const callSendGitRequest = useCallback(obj => dispatch(sendGitRequest(obj)), [dispatch]);
 
   function handleSubmit(event) {
     event.preventDefault();
