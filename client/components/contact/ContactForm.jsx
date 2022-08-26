@@ -172,6 +172,7 @@ const ContactForm = () => {
                 name="firstName"
                 label="First Name *"
                 type="text"
+                autoComplete="off"
                 value={formValues.firstName}
                 onChange={onInputChange}
                 onFocus={clearErrors}
@@ -186,6 +187,7 @@ const ContactForm = () => {
                 name="lastName"
                 label="Last Name *"
                 type="text"
+                autoComplete="off"
                 value={formValues.lastName}
                 onChange={onInputChange}
                 onFocus={clearErrors}
@@ -202,6 +204,7 @@ const ContactForm = () => {
                 name="email"
                 label="Email *"
                 type="text"
+                autoComplete="off"
                 value={formValues.email}
                 onChange={onInputChange}
                 onFocus={clearErrors}
@@ -216,6 +219,7 @@ const ContactForm = () => {
                 name="association"
                 label="Association"
                 type="text"
+                autoComplete="off"
                 value={formValues.association}
                 onChange={onInputChange}
                 fullWidth
@@ -229,6 +233,7 @@ const ContactForm = () => {
                 type="text"
                 variant="outlined"
                 rows={4}
+                autoComplete="off"
                 value={formValues.message}
                 onChange={onInputChange}
                 onFocus={clearErrors}
