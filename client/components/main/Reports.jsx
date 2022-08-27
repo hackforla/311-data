@@ -1,4 +1,3 @@
-/* eslint-disable react/self-closing-comp */
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -28,7 +27,6 @@ const Reports = () => {
   reportPath = location.pathname.slice(8);
   const reportRef = React.useRef(reportPath);
 
-  /* eslint-disable consistent-return */
   React.useEffect(() => {
     if (reportPath !== reportRef.current) {
       setIsLoading(true);
@@ -39,6 +37,10 @@ const Reports = () => {
       return () => clearTimeout(timer);
     }
     reportRef.current = reportPath;
+
+    return () => {
+      // componentWillUnmount code goes here...
+    };
   }, [reportPath, isLoading]);
 
   return (
@@ -59,8 +61,7 @@ const Reports = () => {
         frameBorder="0"
         allowFullScreen
         style={{ width: '100%', height: '100%' }}
-      >
-      </iframe>
+      />
     </div>
   );
 };
