@@ -1,8 +1,7 @@
-/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateRequestTypes,} from '@reducers/filters';
+import { updateRequestTypes } from '@reducers/filters';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -10,10 +9,9 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 // import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import useToggle from './isToggle.js';
+import useToggle from './isToggle';
 
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   label: {
     display: 'flex',
     alignItems: 'center',
@@ -21,16 +19,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const useHeaderStyles = makeStyles(theme => ({
+const useHeaderStyles = makeStyles(() => ({
   header: {
     marginBottom: 5,
     display: 'inline-block',
     fontFamily: 'Roboto',
-  }
-}))
-
-
-
+  },
+}));
 
 const RequestTypeSelector = ({
   requestTypes,
@@ -56,65 +51,65 @@ const RequestTypeSelector = ({
   const checkAll = () => {
     toggle(!isToggled);
     return !isToggled;
-  }
+  };
 
-  const updateAll = (value) =>{
-      requestTypes.map(type => {
-        if(selectedTypes[type.typeId] !== value){
-          updateTypesFilter(type.typeId)
-        }
-      })
-  }
+  const updateAll = value => requestTypes.map(type => {
+    if (selectedTypes[type.typeId] !== value) {
+      updateTypesFilter(type.typeId);
+    }
+    return null;
+  });
 
   return (
     <>
       <div className={headerClass.header}>Request Types</div>
-      <Grid container style={{
-        margin: 'auto',
-        backgroundColor: '#192730',
-        borderRadius: '5px',
-        padding: '5px',
-        paddingTop: '3px',
-        paddingBottom: '3px',
-      }}>
+      <Grid
+        container
+        style={{
+          margin: 'auto',
+          backgroundColor: '#192730',
+          borderRadius: '5px',
+          padding: '5px',
+          paddingTop: '3px',
+          paddingBottom: '3px',
+        }}
+      >
 
-       
         <Grid item style={{ width: '50%' }}>
           <FormGroup>
             {leftCol && leftCol.map(type => (
               <FormControlLabel
                 key={type.typeId}
                 classes={classes}
-                control={
-                  <Checkbox 
+                control={(
+                  <Checkbox
                     style={{
                       transform: 'scale(0.8)',
                       color: type.color,
                       padding: '0 0 0 9px',
                     }}
                     checked={selectedTypes[type.typeId]}
-                    
                     onChange={() => updateTypesFilter(type.typeId)}
                   />
-                }
+                )}
                 label={type.typeName}
-              /> 
+              />
             ))}
-            <FormControlLabel 
-              key='all'
+            <FormControlLabel
+              key="all"
               classes={classes}
-              control={
-                  <Checkbox 
-                    style={{
-                      transform: 'scale(0.8)',
-                      color: 'white',
-                      padding: '0 0 0 9px',
-                    }}
-                  checked={Object.values(selectedTypes).every(val => val) } 
-                  onChange={()=>updateAll(checkAll())}
-                  />
-                }
-                label='Select All'
+              control={(
+                <Checkbox
+                  style={{
+                    transform: 'scale(0.8)',
+                    color: 'white',
+                    padding: '0 0 0 9px',
+                  }}
+                  checked={Object.values(selectedTypes).every(val => val)}
+                  onChange={() => updateAll(checkAll())}
+                />
+              )}
+              label="Select All"
             />
           </FormGroup>
         </Grid>
@@ -124,20 +119,19 @@ const RequestTypeSelector = ({
               <FormControlLabel
                 key={type.typeId}
                 classes={classes}
-                control={
-                  <Checkbox 
+                control={(
+                  <Checkbox
                     style={{
                       transform: 'scale(0.8)',
                       color: type.color,
                       padding: '0 2px 0 9px',
                     }}
                     checked={selectedTypes[type.typeId]}
-                    
                     onChange={() => updateTypesFilter(type.typeId)}
                   />
-                }
+                )}
                 label={type.typeName}
-              /> 
+              />
             ))}
           </FormGroup>
         </Grid>
