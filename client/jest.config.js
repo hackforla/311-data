@@ -1,6 +1,8 @@
 /** @type {import('jest').Config} */
 const config = {
   verbose: true,
+  collectCoverage: true,
+  collectCoverageFrom: ['./components/**'],
   transform: {
     '^.+\\.[t|j]sx?$': 'babel-jest',
   },

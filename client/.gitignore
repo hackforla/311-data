@@ -12,3 +12,4 @@ webpack-stats.json
 
 # testing
 __snapshots__
+/coverage/
