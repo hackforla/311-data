@@ -14,10 +14,10 @@ describe("ContactForm", ()=>{
             expect(tree.toJSON()).toMatchSnapshot();
         })
 
-        test('should initialize with expected values',()=>{})
-        test('should not be able to submit a blank form',()=>{})
+        test.skip('should initialize with expected values',()=>{})
+        test.skip('should not be able to submit a blank form',()=>{})
     })
-    describe("Validation",()=>{
+    describe.skip("Validation",()=>{
         test('should not be able to submit without a first name',()=>{})
         test('should not be able to submit without a last name',()=>{})
         test('should be able to submit without an association',()=>{})
@@ -27,7 +27,7 @@ describe("ContactForm", ()=>{
         test('should not be able to submit with a blank email',()=>{})
         test('should submit when email is formatted correctly',()=>{})
     })
-    describe("Workflow",()=>{
+    describe.skip("Workflow",()=>{
         test('should return the correct loading status upon successful submission',()=>{})
         test('should hide submit button upon sucessful submission',()=>{})
         test('should display a CircularProgress element upon successful submission',()=>{})
@@ -36,7 +36,7 @@ describe("ContactForm", ()=>{
         test('should hide CircularProgress element upon confirmation of successful submission',()=>{})
         test('should show submit button upon confirmation of successful submission',()=>{})
     })
-    describe("Helpers",()=>{
+    describe.skip("Helpers",()=>{
         test('validateEmail(email) should return true if a valid email is provided',()=>{})
         test('validateEmail(email) should return false if an invalid email is provided',()=>{})
         test('clearErrors() should reset formValues back to intialFormValues',()=>{})
