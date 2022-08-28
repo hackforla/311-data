@@ -86,7 +86,15 @@ const ContactForm = () => {
   }, [callShowErrorModal, callShowFeedbackSuccess, displayFeedbackSuccess, openErrorModal]);
 
   // helper methods
-  function clearErrors() {
+  function validateEmail(emailAddress) {
+    // eslint-disable-next-line
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailAddress)) {
+      return true;
+    }
+    return false;
+  }
+
+  const clearErrors = useCallback(() => {
     setFormValues(prevState => ({
       ...prevState,
       ...{
@@ -99,17 +107,9 @@ const ContactForm = () => {
         },
       },
     }));
-  }
+  }, []);
 
-  function validateEmail(emailAddress) {
-    // eslint-disable-next-line
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailAddress)) {
-      return true;
-    }
-    return false;
-  }
-
-  function validateForm() {
+  const validateForm = useCallback(() => {
     const noFirstName = formValues.firstName.trim().length === 0;
     const noLastName = formValues.lastName.trim().length === 0;
     const noEmail = formValues.email.trim().length === 0;
@@ -132,16 +132,16 @@ const ContactForm = () => {
       },
     }));
     return false;
-  }
+  }, [formValues]);
 
   // event handlers
-  function onInputChange(event) {
+  const onInputChange = useCallback(event => {
     event.preventDefault();
     const { name, value } = event.target;
     setFormValues(prevState => ({ ...prevState, [name]: value }));
-  }
+  }, []);
 
-  function handleSubmit(event) {
+  const handleSubmit = useCallback(event => {
     event.preventDefault();
 
     if (validateForm()) {
@@ -163,7 +163,13 @@ const ContactForm = () => {
       // dispatch action to redux with payload
       callSendGitRequest({ title: formValues.email, body });
     }
-  }
+  }, [callSendGitRequest,
+    formValues.association,
+    formValues.email,
+    formValues.firstName,
+    formValues.lastName,
+    formValues.message,
+    validateForm]);
 
   return (
     <Container maxWidth="sm">
