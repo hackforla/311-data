@@ -61,7 +61,7 @@
     "build": "webpack --config webpack.prod.js",
     "lint": "eslint \"./**/*.js*\"",
     "lint:fix": "eslint --fix \"./**/*.js*\"",
-    "test": "jest",
+    "test": "jest --silent",
     "predeploy": "npm run build",
     "check-env": "node ./utils/checkEnv"
   },
