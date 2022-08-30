@@ -3,9 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sendGitRequest } from '@reducers/data';
 import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
 import { toast } from 'react-toastify';
-
-import 'react-toastify/dist/ReactToastify.css';
-
 import {
   Container,
   Grid,
@@ -13,6 +10,8 @@ import {
   TextField,
   CircularProgress,
 } from '@material-ui/core';
+import contactSettings from './settings';
+import 'react-toastify/dist/ReactToastify.css';
 
 const initialFormValues = {
   firstName: '',
@@ -31,13 +30,13 @@ const initialFormValues = {
 };
 
 const ContactForm = () => {
-  // define the methods to dispatch redux actions
+  // Define the methods to dispatch redux actions.
   const dispatch = useDispatch();
   const callSendGitRequest = useCallback(obj => dispatch(sendGitRequest(obj)), [dispatch]);
   const callShowFeedbackSuccess = useCallback(o => dispatch(showFeedbackSuccess(o)), [dispatch]);
   const callShowErrorModal = useCallback(obj => dispatch(setErrorModal(obj)), [dispatch]);
 
-  // mapStateToProps equivalent
+  // mapStateToProps equivalent.
   const displayFeedbackSuccess = useSelector(state => state.ui.displayFeedbackSuccess);
   const openErrorModal = useSelector(state => state.ui.error.isOpen);
 
@@ -49,49 +48,31 @@ const ContactForm = () => {
     });
   }
 
-  // initialize component
+  // Initialize component.
   useEffect(() => {
-    // componentDidMount code goes here...
+    // ComponentDidMount code goes here...
     clearFields();
     if (!!displayFeedbackSuccess === true) {
-      toast.success('We received your message. Our team will contact you at the email address provided.', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.success('We received your message. Our team will contact you at the email address provided.', contactSettings.toast.dark);
     }
 
     if (!!openErrorModal === true) {
-      toast.error('We failed to process your message. Please try again later.', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error('We failed to process your message. Please try again later.', contactSettings.toast.dark);
     }
 
     return () => {
-      // componentWillUnmount code goes here...
+      // ComponentWillUnmount code goes here...
       callShowFeedbackSuccess(false);
       callShowErrorModal(false);
       clearFields();
     };
   }, [callShowErrorModal, callShowFeedbackSuccess, displayFeedbackSuccess, openErrorModal]);
 
-  // helper methods
+  // Helper methods.
   function validateEmail(emailAddress) {
-    // eslint-disable-next-line
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailAddress)) {
-      return true;
-    }
-    return false;
+    // A regular expression checking for a valid email format.
+    const VALID_EMAIL_FORMAT_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    return VALID_EMAIL_FORMAT_REGEX.test(emailAddress);
   }
 
   const clearErrors = useCallback(() => {
@@ -134,7 +115,7 @@ const ContactForm = () => {
     return false;
   }, [formValues]);
 
-  // event handlers
+  // Event handlers.
   const onInputChange = useCallback(event => {
     event.preventDefault();
     const { name, value } = event.target;
@@ -146,11 +127,11 @@ const ContactForm = () => {
 
     if (validateForm()) {
       const body = [
-                `First name: ${formValues.firstName}`,
-                `Last name: ${formValues.lastName}`,
-                `Email: ${formValues.email}`,
-                `Association: ${formValues.association || 'Not provided'}`,
-                `Message: ${formValues.message}`,
+                `First name: ${formValues.firstName.trim()}`,
+                `Last name: ${formValues.lastName.trim()}`,
+                `Email: ${formValues.email.trim()}`,
+                `Association: ${formValues.association.trim() || 'Not provided'}`,
+                `Message: ${formValues.message.trim()}`,
       ].join('\n');
 
       setFormValues(prevState => ({
@@ -160,7 +141,7 @@ const ContactForm = () => {
         },
       }));
 
-      // dispatch action to redux with payload
+      // Dispatch action to redux with payload.
       callSendGitRequest({ title: formValues.email, body });
     }
   }, [callSendGitRequest,
