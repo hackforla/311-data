@@ -1,6 +1,7 @@
 import { create } from 'react-test-renderer'
 import { Provider } from 'react-redux';
 import store from '@root/redux/store';
+import {render, screen} from '@utils/test-utils'
 import ContactForm from '@components/contact/ContactForm'
 
 describe("ContactForm", ()=>{
@@ -13,9 +14,22 @@ describe("ContactForm", ()=>{
             )
             expect(tree.toJSON()).toMatchSnapshot();
         })
-
-        test.skip('should initialize with expected values',()=>{})
-        test.skip('should not be able to submit a blank form',()=>{})
+        test('should display a contact form with all labels', ()=>{
+            render(<ContactForm />)
+            expect(screen.getByLabelText('First Name *')).toBeTruthy()
+            expect(screen.getByLabelText('Last Name *')).toBeTruthy()
+            expect(screen.getByLabelText('Email *')).toBeTruthy()
+            expect(screen.getByLabelText('Association')).toBeTruthy()
+            expect(screen.getByLabelText('Message *')).toBeTruthy()
+        })
+        test('should initialize with expected values',()=>{
+            render(<ContactForm />)
+            expect(screen.getByLabelText('First Name *').value).toBe("")
+            expect(screen.getByLabelText('Last Name *').value).toBe("")
+            expect(screen.getByLabelText('Email *').value).toBe("")
+            expect(screen.getByLabelText('Association').value).toBe("")
+            expect(screen.getByLabelText('Message *').value).toBe("") 
+        })
     })
     describe.skip("Validation",()=>{
         test('should not be able to submit without a first name',()=>{})
@@ -35,6 +49,7 @@ describe("ContactForm", ()=>{
         test('should return the proper toast message upon confirmation of failed form submission',()=>{})        
         test('should hide CircularProgress element upon confirmation of successful submission',()=>{})
         test('should show submit button upon confirmation of successful submission',()=>{})
+        test.skip('should not be able to submit a blank form',()=>{})
     })
     describe.skip("Helpers",()=>{
         test('validateEmail(email) should return true if a valid email is provided',()=>{})

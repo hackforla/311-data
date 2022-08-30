@@ -18,6 +18,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
+      '@root': __dirname,
       '@components': path.resolve(__dirname, 'components'),
       '@reducers': path.resolve(__dirname, 'redux/reducers'),
       '@styles': path.resolve(__dirname, 'styles'),

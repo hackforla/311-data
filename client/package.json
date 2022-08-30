@@ -13,6 +13,7 @@
     "@react-pdf/renderer": "^1.6.8",
     "@sentry/react": "^6.2.2",
     "@sentry/tracing": "^6.2.2",
+    "@testing-library/react": "^12.1.5",
     "@turf/turf": "^5.1.6",
     "axios": "^0.21.1",
     "babel-jest": "^24.9.0",
@@ -61,7 +62,7 @@
     "build": "webpack --config webpack.prod.js",
     "lint": "eslint \"./**/*.js*\"",
     "lint:fix": "eslint --fix \"./**/*.js*\"",
-    "test": "jest --silent",
+    "test": "jest",
     "predeploy": "npm run build",
     "check-env": "node ./utils/checkEnv"
   },
