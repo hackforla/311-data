@@ -80,26 +80,6 @@ function* getFilters() {
   };
 }
 
-// function* getMapFilters() {
-//   const {
-//     startDate,
-//     endDate,
-//     councils,
-//     requestTypes,
-//   } = yield select(getState, 'mapFilters');
-
-//   const convertCouncilNameToID = ncList => (
-//     ncList.map(name => COUNCILS.find(nc => nc.name === name)?.id)
-//   );
-
-//   return {
-//     startDate,
-//     endDate,
-//     ncList: convertCouncilNameToID(councils),
-//     requestTypes: Object.keys(requestTypes).filter(req => req !== 'All' && requestTypes[req]),
-//   };
-// }
-
 /* /////////////////// SAGAS ///////////////// */
 
 function* getMapData() {
