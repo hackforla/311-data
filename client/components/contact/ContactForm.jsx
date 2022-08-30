@@ -117,8 +117,8 @@ const ContactForm = () => {
 
   // Event handlers.
   const onInputChange = useCallback(event => {
-    event.preventDefault();
     const { name, value } = event.target;
+    console.log('onInputChange cancelable?:', event.cancelable);
     setFormValues(prevState => ({ ...prevState, [name]: value }));
   }, []);
 
