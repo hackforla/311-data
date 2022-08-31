@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import axios from 'axios';
 import {
   takeLatest,
@@ -8,7 +6,7 @@ import {
   put,
   select,
 } from 'redux-saga/effects';
-import { COUNCILS, REQUEST_TYPES } from '@components/common/CONSTANTS';
+import { COUNCILS } from '@components/common/CONSTANTS';
 
 import {
   types,
@@ -21,9 +19,7 @@ import {
 } from '../reducers/data';
 
 import {
-  types as uiTypes,
   setErrorModal,
-  showDataCharts,
 } from '../reducers/ui';
 
 import {
@@ -84,26 +80,6 @@ function* getFilters() {
   };
 }
 
-function* getMapFilters() {
-  const {
-    startDate,
-    endDate,
-    councils,
-    requestTypes,
-  } = yield select(getState, 'mapFilters');
-
-  const convertCouncilNameToID = ncList => (
-    ncList.map(name => COUNCILS.find(nc => nc.name === name)?.id)
-  );
-
-  return {
-    startDate,
-    endDate,
-    ncList: convertCouncilNameToID(councils),
-    requestTypes: Object.keys(requestTypes).filter(req => req !== 'All' && requestTypes[req]),
-  };
-}
-
 /* /////////////////// SAGAS ///////////////// */
 
 function* getMapData() {
@@ -121,7 +97,6 @@ function* getMapData() {
   } catch (e) {
     yield put(getPinsFailure(e));
     yield put(setErrorModal(true));
-    return;
   }
 }
 
@@ -138,7 +113,7 @@ function* getPinData(action) {
 
 function* getNcByLngLat(action) {
   try {
-    const data = yield call(fetchNcByLngLat, action.payload)
+    const data = yield call(fetchNcByLngLat, action.payload);
     yield put(getNcByLngLatSuccess(data));
   } catch (e) {
     yield put(getNcByLngLatFailure(e));
@@ -147,6 +122,6 @@ function* getNcByLngLat(action) {
 
 export default function* rootSaga() {
   yield takeLatest(mapFiltersTypes.UPDATE_MAP_DATE_RANGE, getMapData);
-  yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat)
+  yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat);
   yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
 }
