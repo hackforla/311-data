@@ -53,9 +53,9 @@ const RequestTypeSelector = ({
     return !isToggled;
   };
 
-  function updateAll(value) {
+  function updateAll(isSelected) {
     requestTypes.forEach(type => {
-      if (selectedTypes[type.typeId] !== value) {
+      if (selectedTypes[type.typeId] !== isSelected) {
         updateTypesFilter(type.typeId);
       }
     });
