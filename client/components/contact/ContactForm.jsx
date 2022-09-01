@@ -52,11 +52,11 @@ const ContactForm = () => {
   useEffect(() => {
     // ComponentDidMount code goes here...
     clearFields();
-    if (!!displayFeedbackSuccess === true) {
+    if (displayFeedbackSuccess === true) {
       toast.success('We received your message. Our team will contact you at the email address provided.', contactSettings.toast.dark);
     }
 
-    if (!!openErrorModal === true) {
+    if (openErrorModal === true) {
       toast.error('We failed to process your message. Please try again later.', contactSettings.toast.dark);
     }
 
