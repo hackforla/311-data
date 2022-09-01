@@ -234,7 +234,7 @@ const ContactForm = () => {
           </Grid>
           <Grid container direction="column" alignItems="center" justifyContent="center" style={{ paddingTop: '8px' }}>
             <CircularProgress style={{ display: formValues.loading ? 'block' : 'none' }} />
-            <Button variant="contained" color="primary" type="submit" style={{ display: formValues.loading === false ? 'block' : 'none' }}>
+            <Button variant="contained" color="primary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
               Submit
             </Button>
           </Grid>
