@@ -50,7 +50,7 @@ const ContactForm = () => {
 
   // Initialize component.
   useEffect(() => {
-    // ComponentDidMount code goes here...
+    // componentDidMount code goes here...
     clearFields();
     if (displayFeedbackSuccess === true) {
       toast.success('We received your message. Our team will contact you at the email address provided.', contactSettings.toast.dark);
@@ -61,7 +61,7 @@ const ContactForm = () => {
     }
 
     return () => {
-      // ComponentWillUnmount code goes here...
+      // componentWillUnmount code goes here...
       callShowFeedbackSuccess(false);
       callShowErrorModal(false);
       clearFields();
@@ -124,25 +124,29 @@ const ContactForm = () => {
   const handleSubmit = useCallback(event => {
     event.preventDefault();
 
-    if (validateForm()) {
-      const body = [
-                `First name: ${formValues.firstName.trim()}`,
-                `Last name: ${formValues.lastName.trim()}`,
-                `Email: ${formValues.email.trim()}`,
-                `Association: ${formValues.association.trim() || 'Not provided'}`,
-                `Message: ${formValues.message.trim()}`,
-      ].join('\n');
-
-      setFormValues(prevState => ({
-        ...prevState,
-        ...{
-          loading: true,
-        },
-      }));
-
-      // Dispatch action to redux with payload.
-      callSendGitRequest({ title: formValues.email, body });
+    if (!validateForm()) {
+      return false;
     }
+
+    const body = [
+              `First name: ${formValues.firstName.trim()}`,
+              `Last name: ${formValues.lastName.trim()}`,
+              `Email: ${formValues.email.trim()}`,
+              `Association: ${formValues.association.trim() || 'Not provided'}`,
+              `Message: ${formValues.message.trim()}`,
+    ].join('\n');
+
+    setFormValues(prevState => ({
+      ...prevState,
+      ...{
+        loading: true,
+      },
+    }));
+
+    // Dispatch action to redux with payload.
+    callSendGitRequest({ title: formValues.email, body });
+
+    return true;
   }, [callSendGitRequest,
     formValues.association,
     formValues.email,
