@@ -30,11 +30,7 @@ const initialFormValues = {
 };
 
 const ContactForm = () => {
-  // Define the methods to dispatch redux actions.
   const dispatch = useDispatch();
-  const callSendGitRequest = useCallback(obj => dispatch(sendGitRequest(obj)), [dispatch]);
-  const callShowFeedbackSuccess = useCallback(o => dispatch(showFeedbackSuccess(o)), [dispatch]);
-  const callShowErrorModal = useCallback(obj => dispatch(setErrorModal(obj)), [dispatch]);
 
   // mapStateToProps equivalent.
   const displayFeedbackSuccess = useSelector(state => state.ui.displayFeedbackSuccess);
@@ -62,11 +58,11 @@ const ContactForm = () => {
 
     return () => {
       // componentWillUnmount code goes here...
-      callShowFeedbackSuccess(false);
-      callShowErrorModal(false);
+      dispatch(showFeedbackSuccess(false));
+      dispatch(setErrorModal(false));
       clearFields();
     };
-  }, [callShowErrorModal, callShowFeedbackSuccess, displayFeedbackSuccess, openErrorModal]);
+  }, [dispatch, displayFeedbackSuccess, openErrorModal]);
 
   // Helper methods.
   function validateEmail(emailAddress) {
@@ -144,8 +140,8 @@ const ContactForm = () => {
     }));
 
     // Dispatch action to redux with payload.
-    callSendGitRequest({ title: formValues.email, body });
-  }, [callSendGitRequest,
+    dispatch(sendGitRequest({ title: formValues.email, body }));
+  }, [dispatch,
     formValues.association,
     formValues.email,
     formValues.firstName,
