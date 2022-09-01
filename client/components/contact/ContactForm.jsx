@@ -125,7 +125,7 @@ const ContactForm = () => {
     event.preventDefault();
 
     if (!validateForm()) {
-      return false;
+      return;
     }
 
     const body = [
@@ -145,8 +145,6 @@ const ContactForm = () => {
 
     // Dispatch action to redux with payload.
     callSendGitRequest({ title: formValues.email, body });
-
-    return true;
   }, [callSendGitRequest,
     formValues.association,
     formValues.email,
