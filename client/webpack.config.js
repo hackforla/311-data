@@ -18,6 +18,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
+      '@root': __dirname,
       '@components': path.resolve(__dirname, 'components'),
       '@reducers': path.resolve(__dirname, 'redux/reducers'),
       '@styles': path.resolve(__dirname, 'styles'),
@@ -27,6 +28,11 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      },
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
