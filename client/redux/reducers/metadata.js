@@ -98,8 +98,9 @@ export default (state = initialState, action) => {
       };
     case types.GET_METADATA_FAILURE: {
       const {
-        response: { status },
-        message,
+        // response: { status },
+        status,
+        status: { message },
       } = action.payload;
 
       return {

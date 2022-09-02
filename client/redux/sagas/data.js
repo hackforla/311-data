@@ -25,7 +25,6 @@ import {
 import {
   types as uiTypes,
   setErrorModal,
-  showDataCharts,
   showFeedbackSuccess
 } from '../reducers/ui';
 
@@ -67,7 +66,7 @@ function* fetchNcByLngLat({ longitude, latitude }) {
 
 function* postFeedback(message) {
   const contactURL = `${BASE_URL}/feedback`;
-
+ 
   const response = yield call(axios.post, contactURL, message);
   return response;
 }

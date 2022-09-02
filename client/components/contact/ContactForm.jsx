@@ -44,23 +44,32 @@ const ContactForm = () => {
     });
   }
 
+  function setLoading(isLoading) {
+    setFormValues(prevState => ({
+      ...prevState,
+      ...{
+        loading: isLoading,
+      },
+    }));
+  }
+
   // Initialize component.
   useEffect(() => {
     // componentDidMount code goes here...
-    clearFields();
-    if (displayFeedbackSuccess === true) {
+    if (displayFeedbackSuccess) {
       toast.success('We received your message. Our team will contact you at the email address provided.', contactSettings.toast.dark);
+      clearFields();
     }
 
-    if (openErrorModal === true) {
+    if (openErrorModal) {
       toast.error('We failed to process your message. Please try again later.', contactSettings.toast.dark);
+      setLoading(false);
     }
 
     return () => {
       // componentWillUnmount code goes here...
       dispatch(showFeedbackSuccess(false));
       dispatch(setErrorModal(false));
-      clearFields();
     };
   }, [dispatch, displayFeedbackSuccess, openErrorModal]);
 
@@ -132,12 +141,7 @@ const ContactForm = () => {
               `Message: ${formValues.message.trim()}`,
     ].join('\n');
 
-    setFormValues(prevState => ({
-      ...prevState,
-      ...{
-        loading: true,
-      },
-    }));
+    setLoading(true);
 
     // Dispatch action to redux with payload.
     dispatch(sendGitRequest({ title: formValues.email, body }));
