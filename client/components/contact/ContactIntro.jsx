@@ -7,7 +7,7 @@ const ContactIntro = () => (
   <Grid container alignItems="center" justify="center" direction="column">
     <Grid item style={{ width: '45%' }}>
       <h1 style={{ textAlign: 'center' }}>
-        Don&apos;t See What You Need?
+        {'Don\'t See What You Need?'}
       </h1>
       <p>
         We want to build a tool that works for you. We are open to suggestions and

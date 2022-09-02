@@ -17,13 +17,12 @@ import {
   getNcByLngLatSuccess,
   getNcByLngLatFailure,
   gitResponseSuccess,
-  gitResponseFailure
+  gitResponseFailure,
 } from '../reducers/data';
 
 import {
   setErrorModal,
-  showDataCharts,
-  showFeedbackSuccess
+  showFeedbackSuccess,
 } from '../reducers/ui';
 
 import {
