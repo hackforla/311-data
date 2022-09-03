@@ -51,7 +51,7 @@ function* getMetadata() {
       put(getNcGeojsonSuccess(ncGeojsonMetadata)),
     ]);
   } catch (e) {
-    yield put(getMetadataFailure({ status: e }));
+    yield put(getMetadataFailure(e));
   }
 }
 
