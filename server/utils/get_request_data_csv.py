@@ -2,20 +2,33 @@ import pandas as pd
 import requests
 import argparse
 
+REQUESTS_BATCH_SIZE = 10000
+
 def get_311_request_data(start_date, end_date):
+    """Fetches 311 request from the 311 data server. 
+    
+    Retreives 311 requests from the 311 data server for a given start_date and end_date.
+    
+    Args:
+        start_date: The date from which the 311 request data have to be collected. Datatype: Datetime. 
+        end_date: The date upto which the 311 request data have to be fetched. Datatype: Datetime.  
+        
+    Return:    
+        Dataframe data_final is returned with 15 columns. The dataframe is saved as a CSV file ('data_final.csv') in the current directory.
+    """
+    
     skip = 0
-    limit = 10000
     all_requests = []
     while True:
-        url=f'https://dev-api.311-data.org/requests?start_date={start_date}&end_date={end_date}&skip={skip}&limit={limit}'
+        url=f'https://dev-api.311-data.org/requests?start_date={start_date}&end_date={end_date}&skip={skip}&limit={REQUESTS_BATCH_SIZE}'
         response = requests.get(url)
         data = response.json()
-        if data == []:
-            break   
         all_requests.extend(data)
-        skip += limit
-        data_final = pd.DataFrame(all_requests) 
-        data_final.sort_values(by='createdDate', inplace = True, ignore_index = True)
+        skip += REQUESTS_BATCH_SIZE
+        if len(data) < skip:
+            break   
+    data_final = pd.DataFrame(all_requests) 
+    data_final.sort_values(by='createdDate', inplace = True, ignore_index = True)
     data_final.to_csv('data_final.csv')
     return data_final
 
@@ -31,8 +44,3 @@ def main():
     
 if __name__  == "__main__":
     main()
-    
-    
-    
-    
-                     
