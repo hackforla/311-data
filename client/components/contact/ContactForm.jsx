@@ -10,7 +10,6 @@ import {
   TextField,
   CircularProgress,
 } from '@material-ui/core';
-import contactSettings from './settings';
 import 'react-toastify/dist/ReactToastify.css';
 
 const initialFormValues = {
@@ -27,6 +26,16 @@ const initialFormValues = {
     missingMessage: false,
   },
   loading: false,
+};
+
+const toastEmitterSettings = {
+  position: 'top-right',
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
 };
 
 const ContactForm = () => {
@@ -57,12 +66,12 @@ const ContactForm = () => {
   useEffect(() => {
     // componentDidMount code goes here...
     if (displayFeedbackSuccess) {
-      toast.success('We received your message. Our team will contact you at the email address provided.', contactSettings.toast.dark);
+      toast.success('We received your message. Our team will contact you at the email address provided.', toastEmitterSettings);
       clearFields();
     }
 
     if (openErrorModal) {
-      toast.error('We failed to process your message. Please try again later.', contactSettings.toast.dark);
+      toast.error('We failed to process your message. Please try again later.', toastEmitterSettings);
       setLoading(false);
     }
 
