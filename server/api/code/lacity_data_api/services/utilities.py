@@ -23,20 +23,13 @@ async def build_cache():
     #     await council.get_open_request_counts(i)
 
     # get results for past week
-    await service_request.get_filtered_requests(
-        date.today() - timedelta(days=7.0),
-        date.today(),
-        list(types),
-        list(councils),
-    )
-
-    # get results for past month
-    await service_request.get_filtered_requests(
-        date.today() - relativedelta(months=1),
-        date.today(),
-        list(types),
-        list(councils),
-    )
+    for day in range(7):
+        await service_request.get_filtered_requests(
+            date.today() - timedelta(days=day),
+            date.today(),
+            list(types),
+            list(councils),
+        )
 
     # delete any cached CSV files
     for file in os.scandir(DATA_DIR):
