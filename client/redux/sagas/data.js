@@ -17,12 +17,12 @@ import {
   getNcByLngLatSuccess,
   getNcByLngLatFailure,
   gitResponseSuccess,
-  gitResponseFailure
+  gitResponseFailure,
 } from '../reducers/data';
 
 import {
   setErrorModal,
-  showFeedbackSuccess
+  showFeedbackSuccess,
 } from '../reducers/ui';
 
 import {
@@ -63,7 +63,7 @@ function* fetchNcByLngLat({ longitude, latitude }) {
 
 function* postFeedback(message) {
   const contactURL = `${BASE_URL}/feedback`;
- 
+
   const response = yield call(axios.post, contactURL, message);
   return response;
 }
