@@ -1,7 +1,7 @@
 # import hashlib
 import os
 from datetime import date, timedelta
-from dateutil.relativedelta import relativedelta
+# from dateutil.relativedelta import relativedelta
 
 from ..config import DATA_DIR
 from ..models import (
