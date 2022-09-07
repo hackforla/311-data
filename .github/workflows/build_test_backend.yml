@@ -29,6 +29,8 @@ jobs:
       - name: Seed the test database
         run: docker-compose run -e TESTING=True api alembic upgrade head
       - name: Run unit tests
-        run: docker-compose run api pytest
+        run: |
+          docker-compose run api pytest
+          docker-compose run prefect pytest
       # - name: Run Postman tests
       #   run: chmod +x postman/test.sh && postman/test.sh
