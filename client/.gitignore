@@ -9,3 +9,7 @@ node_modules_non_es5
 dist/
 
 webpack-stats.json
+
+# testing
+__snapshots__
+/coverage/
