@@ -1,11 +1,11 @@
-import pandas as pd
+import pandas 
 import requests
 import argparse
 
 REQUESTS_BATCH_SIZE = 10000
 
 def get_311_request_data(start_date, end_date):
-    """Fetches 311 request from the 311 data server. 
+    """Fetches 311 requests from the 311 data server. 
     
     Retreives 311 requests from the 311 data server for a given start_date and end_date.
     
@@ -27,12 +27,14 @@ def get_311_request_data(start_date, end_date):
         skip += REQUESTS_BATCH_SIZE
         if len(data) < skip:
             break   
-    data_final = pd.DataFrame(all_requests) 
+    data_final = pandas.DataFrame(all_requests) 
     data_final.sort_values(by='createdDate', inplace = True, ignore_index = True)
-    data_final.to_csv('data_final.csv')
     return data_final
 
 def main():
+    """Prints out the preview of the dataframe data_final in the command line. The result is written to a csv file and saved in the current working directory of the user.
+    """
+    
     parser = argparse.ArgumentParser(description='Gets 311 request data from the server')
     parser.add_argument('start_date', type=str,  help='The start date that has to be entered')
     parser.add_argument('end_date', type=str, help='The end data that has to be entered')
@@ -40,6 +42,7 @@ def main():
     start_date = args.start_date
     end_date = args.end_date
     data_final = get_311_request_data(start_date, end_date) 
+    data_final.to_csv('data_final.csv')
     print(data_final)   
     
 if __name__  == "__main__":
