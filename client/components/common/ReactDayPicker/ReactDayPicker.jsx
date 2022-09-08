@@ -57,7 +57,7 @@ function ReactDayPicker({
   const from = moment(startDate).toDate();
   const enteredToDate = moment(enteredTo).toDate();
   const today = new Date();
-  const lastThreeMonths = new Date(today.getFullYear(),today.getMonth()-3,today.getDate());
+  const lastThreeMonths = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
 
   return (
     <>
