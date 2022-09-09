@@ -1,13 +1,12 @@
 # import hashlib
 import os
 from datetime import date, timedelta
-# from dateutil.relativedelta import relativedelta
-
 from ..config import DATA_DIR
 from ..models import (
     request_type, council, region, service_request
 )
 
+GET_FILTERED_REQUESTS_LIMIT = 10000
 
 async def build_cache():
     from ..models.geometry import Geometry  # avoiding circular imports
@@ -27,8 +26,7 @@ async def build_cache():
         await service_request.get_filtered_requests(
             date.today() - timedelta(days=day),
             date.today() - timedelta(days=day),
-            list(types),
-            list(councils),
+            limit=GET_FILTERED_REQUESTS_LIMIT
         )
 
     # delete any cached CSV files
