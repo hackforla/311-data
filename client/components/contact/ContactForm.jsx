@@ -260,7 +260,10 @@ const ContactForm = () => {
               Submit
             </Button>
           </Grid>
-          <Grid container direction="column" alignItems="center" justifyContent="center" className={classes.footer} />
+          <Grid container className={classes.footer}>
+            {/*  an empty grid container with footer height to prevent
+              *  fixed positioned footer from obscuring submit button */}
+          </Grid>
         </Grid>
       </form>
     </Container>
