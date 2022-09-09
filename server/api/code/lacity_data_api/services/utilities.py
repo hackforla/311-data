@@ -26,7 +26,7 @@ async def build_cache():
     for day in range(7):
         await service_request.get_filtered_requests(
             date.today() - timedelta(days=day),
-            date.today(),
+            date.today() - timedelta(days=day),
             list(types),
             list(councils),
         )
