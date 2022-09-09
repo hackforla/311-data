@@ -9,8 +9,15 @@ import {
   Button,
   TextField,
   CircularProgress,
+  makeStyles,
 } from '@material-ui/core';
 import 'react-toastify/dist/ReactToastify.css';
+
+const useStyles = makeStyles(theme => ({
+  footer: {
+    height: theme.footer.height,
+  },
+}));
 
 const initialFormValues = {
   firstName: '',
@@ -39,6 +46,8 @@ const toastEmitterSettings = {
 };
 
 const ContactForm = () => {
+  const classes = useStyles();
+
   const dispatch = useDispatch();
 
   // mapStateToProps equivalent.
@@ -250,6 +259,10 @@ const ContactForm = () => {
             <Button variant="contained" color="primary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
               Submit
             </Button>
+          </Grid>
+          <Grid container className={classes.footer}>
+            {/*  an empty grid container with footer height to prevent
+              *  fixed positioned footer from obscuring submit button */}
           </Grid>
         </Grid>
       </form>
