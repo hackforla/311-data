@@ -9,7 +9,7 @@ import SocialMediaLinks from './SocialMediaLinks';
 
 const useStyles = makeStyles(theme => ({
   footer: {
-    position: 'sticky',
+    position: 'fixed',
     bottom: 0,
     height: theme.footer.height,
     width: '100%',
