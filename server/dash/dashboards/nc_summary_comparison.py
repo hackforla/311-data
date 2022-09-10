@@ -117,7 +117,7 @@ def generate_summary_pie_chart():
             id="req_type_pie_chart", style={"height": "40vh",
                             "width": "48.5vw"}
         ), style=merge_dict(CHART_OUTLINE_STYLE, {"width": "48.5vw",
-                        "height": "40vh"})),  # for border-radius , add stuff later
+                        "height": "40vh"}))  # for border-radius , add stuff later
 
 
 def generate_summary_histogram():
@@ -153,7 +153,7 @@ def generate_council_name_dropdown(output_id):
     return html.Div(dcc.Dropdown(sorted(list(set(api_data_df["councilName"]))),
          value=" ", id=output_id,
                  placeholder="Select a Neighborhood Council..."),
-                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"})),
+                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
 
 def generate_comparison_total_req(output_id):
     """Generates the indicator visual for the 
