@@ -81,29 +81,14 @@ const Header = () => {
             horizontal: 'left',
           }}
         >
-          <Link to="/reports/dashboards/overview" className={classes.link}>
+          <Link to="/reports/dashboards/overview_combined" className={classes.link}>
             <MenuItem onClick={handleClose} button className={classes.button}>
               Overview
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/recent" className={classes.link}>
+          <Link to="/reports/dashboards/nc_summary_comparison" className={classes.link}>
             <MenuItem onClick={handleClose} button className={classes.button}>
-              Recent
-            </MenuItem>
-          </Link>
-          <Link to="/reports/dashboards/neighborhood" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
-              Neighborhood
-            </MenuItem>
-          </Link>
-          <Link to="/reports/dashboards/neighborhood_recent" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
-              Neighborhood Recent
-            </MenuItem>
-          </Link>
-          <Link to="/reports/dashboards/types_map" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
-              Request Type Map
+              Compare Two Neighborhoods
             </MenuItem>
           </Link>
         </Menu>
