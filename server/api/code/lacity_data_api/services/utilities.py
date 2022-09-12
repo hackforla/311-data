@@ -1,12 +1,12 @@
 # import hashlib
 import os
 from datetime import date, timedelta
-from dateutil.relativedelta import relativedelta
-
 from ..config import DATA_DIR
 from ..models import (
     request_type, council, region, service_request
 )
+
+GET_FILTERED_REQUESTS_LIMIT = 10000
 
 
 async def build_cache():
@@ -23,20 +23,12 @@ async def build_cache():
     #     await council.get_open_request_counts(i)
 
     # get results for past week
-    await service_request.get_filtered_requests(
-        date.today() - timedelta(days=7.0),
-        date.today(),
-        list(types),
-        list(councils),
-    )
-
-    # get results for past month
-    await service_request.get_filtered_requests(
-        date.today() - relativedelta(months=1),
-        date.today(),
-        list(types),
-        list(councils),
-    )
+    for day in range(7):
+        await service_request.get_filtered_requests(
+            date.today() - timedelta(days=day),
+            date.today() - timedelta(days=day),
+            limit=GET_FILTERED_REQUESTS_LIMIT
+        )
 
     # delete any cached CSV files
     for file in os.scandir(DATA_DIR):
