@@ -162,7 +162,6 @@ async def get_open_request_counts():
     return result
 
 
-@cached(alias="default")
 async def get_filtered_requests(
         start_date: datetime.date = None,
         end_date: datetime.date = None,
