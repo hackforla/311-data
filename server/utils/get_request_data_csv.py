@@ -1,6 +1,6 @@
-import pandas 
-import requests
 import argparse
+import requests
+import pandas as pd
 
 REQUESTS_BATCH_SIZE = 10000
 
@@ -27,12 +27,13 @@ def get_311_request_data(start_date, end_date):
         skip += REQUESTS_BATCH_SIZE
         if len(data) < skip:
             break   
-    data_final = pandas.DataFrame(all_requests) 
+    data_final = pd.DataFrame(all_requests) 
     data_final.sort_values(by='createdDate', inplace = True, ignore_index = True)
     return data_final
 
 def main():
-    """Prints out the preview of the dataframe data_final in the command line. The result is written to a csv file and saved in the current working directory of the user.
+    """Prints out the preview of the dataframe data_final in the command line. 
+    The result is written to a csv file and saved in the current working directory of the user.
     """
     
     parser = argparse.ArgumentParser(description='Gets 311 request data from the server')
