@@ -19,10 +19,14 @@ end_date = datetime.date.today() - datetime.timedelta(days=1)
 # Loading the dataframe with the 311 Data API.
 DATE_RANGE_REQ_DATA_API_PATH = f"/requests/updated?start_date={start_date}&end_date={end_date}"
 print(" * Downloading data for dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
+REPORT_API_PATH = '/reports?field=type_name&field=council_name&field=created_date'
+print(" * Downloading data for dataframe from API path: " + REPORT_API_PATH)
 results = re.get(API_HOST + DATE_RANGE_REQ_DATA_API_PATH)
 data_json = results.json()
 api_data_df = pd.json_normalize(data_json)
 print(" * Loading complete dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
+report_json = pd.read_json(API_HOST + REPORT_API_PATH)
+print(" * Loading complete dataframe from API path: " + REPORT_API_PATH)
 
 def merge_dict(d1, d2):
     """Merges two dictionary and return the results.
@@ -80,10 +84,10 @@ def generate_summary_dropdowns():
     """
     return html.Div(children=[
         html.Div(dcc.Dropdown(sorted(list(set(api_data_df["councilName"]))),
-                value=" ", id="selected_nc",
+                ' ', id="selected_nc",
                         placeholder="Select a Neighborhood Council..."),
                         style=merge_dict(INLINE_STYLE, {"width": "48.5vw"})),
-                html.Div(dcc.Dropdown(value=" ", id="selected_request_types", multi=True,
+                html.Div(dcc.Dropdown(id="selected_request_types", multi=True,
                 placeholder="Select a Request Type..."),
                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
     ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw", "height": "10vh"}))
@@ -117,7 +121,7 @@ def generate_summary_pie_chart():
             id="req_type_pie_chart", style={"height": "40vh",
                             "width": "48.5vw"}
         ), style=merge_dict(CHART_OUTLINE_STYLE, {"width": "48.5vw",
-                        "height": "40vh"})),  # for border-radius , add stuff later
+                        "height": "40vh"}))  # for border-radius , add stuff later
 
 
 def generate_summary_histogram():
@@ -153,7 +157,7 @@ def generate_council_name_dropdown(output_id):
     return html.Div(dcc.Dropdown(sorted(list(set(api_data_df["councilName"]))),
          value=" ", id=output_id,
                  placeholder="Select a Neighborhood Council..."),
-                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"})),
+                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
 
 def generate_comparison_total_req(output_id):
     """Generates the indicator visual for the 
@@ -285,7 +289,8 @@ layout = html.Div([
 
 
 @callback(
-    [Output("selected_request_types", "options")],
+    [Output("selected_request_types", "options"), 
+    Output("selected_request_types", "value")],
     Input("selected_nc", "value")
 )
 def generate_dynamic_filter(selected_nc):
@@ -310,7 +315,7 @@ def generate_dynamic_filter(selected_nc):
         df = api_data_df[api_data_df["councilName"] == selected_nc]
 
     req_types = sorted(list(set(df["typeName"])))
-    return req_types
+    return req_types, ' '
 
 
 def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types):
@@ -378,8 +383,8 @@ def filter_bad_quality_data(df, data_quality_switch=True):
     """
     print("* Getting quality data.")
     df = add_datetime_column(df, "createdDate")
-    df = add_datetime_column(df, "closeDate")
-    df.loc[:, "timeToClose"] = (df.loc[:, "closeDateDT"] - df.loc[:, "createDateDT"]).dt.days
+    df = add_datetime_column(df, "closedDate")
+    df.loc[:, "timeToClose"] = (df.loc[:, "closedDateDT"] - df.loc[:, "createdDateDT"]).dt.days
 
     # Calculate the Optimal number of bins based on Freedman-Diaconis Rule.
 
@@ -399,14 +404,14 @@ def filter_bad_quality_data(df, data_quality_switch=True):
         df.loc[:, "logTimeToClose"] = np.log(df.loc[:, "timeToClose"])
         log_q3, log_q1 = np.percentile(df.loc[:, "logTimeToClose"], [75, 25])
         log_iqr = log_q3 - log_q1
-        filtered_df = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(
-            df.loc[:, "logTimeToClose"])) and
-            (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(
-                df.loc[:, "logTimeToClose"]))]
+        filtered_df = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(df.loc[:, "logTimeToClose"])) &
+            (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(df.loc[:, "logTimeToClose"]))]
         if filtered_df.shape[0] > 0:
             df = filtered_df
         data_quality_output = "Quality Filter: On"
     else:
+        num_bins = 10
+        
         data_quality_output = "Quality Filter: Off"
     return df, num_bins, data_quality_output
 
@@ -521,10 +526,10 @@ data_quality_switch=True):
 
     # Time Series for the Total Number of Requests.
     print(" * Generating number of requests line chart")
-    req_time = pd.DataFrame(df.groupby("createDateDT", as_index=False)["srnumber"].count())
-    num_req_line_chart = px.line(req_time, x="createDateDT", y="srnumber",
+    req_time = pd.DataFrame(df.groupby("createdDateDT", as_index=False)["srnumber"].count())
+    num_req_line_chart = px.line(req_time, x="createdDateDT", y="srnumber",
     title="Total Number of 311 Requests Overtime", labels={
-        "createDateDT": "DateTime", "srnumber": "Frequency"})
+        "createdDateDT": "DateTime", "srnumber": "Frequency"})
     num_req_line_chart.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
     return num_req_line_chart
 
@@ -547,7 +552,7 @@ def generate_comparison_filtered_df(api_data_df, selected_nc):
     if not selected_nc:
         df = api_data_df
     else:
-        df = df[df["councilName"] == selected_nc]
+        df = api_data_df[api_data_df["councilName"] == selected_nc]
     df = add_datetime_column(df, "createdDate")
     return df
 
@@ -648,12 +653,12 @@ def generate_indicator_visuals(nc_comp_dropdown, nc_comp_dropdown2):
     total_req_card2 = df_nc2.shape[0]
 
     # Total number of days the available requests in first neigbhorhood council span.
-    num_days_card = np.max(df_nc1["createDateDT"].dt.day) - \
-                           np.min(df_nc1["createDateDT"].dt.day) + 1
+    num_days_card = np.max(df_nc1["createdDateDT"].dt.day) - \
+                           np.min(df_nc1["createdDateDT"].dt.day) + 1
 
     # Total number of days the available requests in second neigbhorhood council span.
-    num_days_card2 = np.max(df_nc2["createDateDT"].dt.day) - \
-                            np.min(df_nc2["createDateDT"].dt.day) + 1
+    num_days_card2 = np.max(df_nc2["createdDateDT"].dt.day) - \
+                            np.min(df_nc2["createdDateDT"].dt.day) + 1
 
     return total_req_card, total_req_card2, num_days_card, num_days_card2
 
@@ -688,18 +693,18 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
     df_nc2 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
     # Overlapping line chart for number of request throughout the day
     # for both first and second neighborhood council.
-    req_time = pd.DataFrame(df_nc1.groupby("createDateDT", as_index=False)["srnumber"].count())
-    req_time2 = pd.DataFrame(df_nc2.groupby("createDateDT", as_index=False)["srnumber"].count())
+    req_time = pd.DataFrame(df_nc1.groupby("createdDateDT", as_index=False)["srnumber"].count())
+    req_time2 = pd.DataFrame(df_nc2.groupby("createdDateDT", as_index=False)["srnumber"].count())
     overlay_req_time_line_chart = go.Figure()
     overlay_req_time_line_chart.add_trace(go.Scatter(
-        x=req_time["createDateDT"], y=req_time["srnumber"], mode="lines", name="NC1"))
+        x=req_time["createdDateDT"], y=req_time["srnumber"], mode="lines", name="NC1"))
     overlay_req_time_line_chart.add_trace(go.Scatter(
-        x=req_time2["createDateDT"], y=req_time2["srnumber"], mode="lines", name="NC2"))
+        x=req_time2["createdDateDT"], y=req_time2["srnumber"], mode="lines", name="NC2"))
 
     overlay_req_time_line_chart.update_layout(title="Number of Request Throughout the Day",
      margin=dict(l=25, r=25, b=35, t=50), xaxis_range=[min(
-         min(req_time["createDateDT"]), min(req_time2["createDateDT"])),
-         max(max(req_time["createDateDT"]), max(req_time2["createDateDT"]))], font=dict(size=9))
+         min(req_time["createdDateDT"]), min(req_time2["createdDateDT"])),
+         max(max(req_time["createdDateDT"]), max(req_time2["createdDateDT"]))], font=dict(size=9))
     return overlay_req_time_line_chart
 
 
@@ -726,12 +731,16 @@ def update_line_chart(selected_nc):
     """
     # If dropdown value is empty, use all data available.
     if not selected_nc:
-        df = api_data_df
+        df = report_json
+        selected_nc = 'Total'
+    else:
+        df = report_json[report_json.council_name == selected_nc]
 
     # Calculating the average number of requests throughout the day.
-    neighborhood_sum_df = df[df.council_name == selected_nc].groupby(["created_date"]).agg("sum").reset_index()  # noqa
-    total_sum_df = df.groupby(["created_date"]).agg("sum").reset_index()
+    neighborhood_sum_df = df.groupby(["created_date"]).agg("sum").reset_index()  # noqa
+    total_sum_df = report_json.groupby(["created_date"]).agg("sum").reset_index()
     total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
+    print(total_sum_df)
     merged_df = neighborhood_sum_df.merge(total_sum_df["nc_avg"].to_frame(),
      left_index=True, right_index=True)  # noqa
 
