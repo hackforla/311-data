@@ -13,6 +13,7 @@ import publishIcon from '@assets/publish_icon.png';
 import upliftIcon from '@assets/uplift_icon.png';
 import visualizeIcon from '@assets/visualize_icon.png';
 
+// TODO: Revisit adding shared standard styles once those are decided.
 const useStyles = makeStyles({
   root: {
     color: 'black',
@@ -31,9 +32,6 @@ const useStyles = makeStyles({
       display: 'block',
       margin: '0 auto',
     },
-  },
-  gridContain: {
-    justifyContent: 'space-between',
   },
 });
 
@@ -78,7 +76,7 @@ const About = () => {
             </p>
           </Grid>
         </Grid>
-        <Grid container style={{ paddingBottom: '6rem' }} className={classes.gridContain}>
+        <Grid container style={{ paddingBottom: '6rem' }} justify="space-between">
           <Grid item xs={12} md={4}>
             <img src={empowerLaLogo} width={362} alt="Empower LA" />
           </Grid>
@@ -91,15 +89,15 @@ const About = () => {
         </Grid>
         <h2 style={{ color: '#1D6996', textAlign: 'center' }}>How it works</h2>
 
-        <Grid container style={{ paddingBottom: '4rem' }} className={classes.gridContain}>
-          <Grid item sm={12} md={2} style={{ textAlign: 'center' }}>
+        <Grid container style={{ paddingBottom: '4rem' }} justify="space-between">
+          <Grid item sm={12} md={2} align="center">
             <img src={mobileAppIcon} width={75} alt="Mobile App" />
             <p>
               You and other members of your community post reports via
               the City’s easy-to-use mobile application.
             </p>
           </Grid>
-          <Grid item sm={12} md={2} style={{ textAlign: 'center' }}>
+          <Grid item sm={12} md={2} align="center">
             <img src={databaseIcon} width={75} alt="Mobile App" />
             <p>
               Your reports are consolidated by the City and entered into
@@ -107,21 +105,21 @@ const About = () => {
               appropriate department to resolve.
             </p>
           </Grid>
-          <Grid item sm={12} md={2} style={{ textAlign: 'center' }}>
+          <Grid item sm={12} md={2} align="center">
             <img src={publishIcon} width={75} alt="Mobile App" />
             <p>
               Once data from each department is sorted,  the City then
               publishes it as raw information.
             </p>
           </Grid>
-          <Grid item sm={12} md={2} style={{ textAlign: 'center' }}>
+          <Grid item sm={12} md={2} align="center">
             <img src={visualizeIcon} width={75} alt="Mobile App" />
             <p>
               Our site draws data from the City’s database to create
               easy-to-view visualizations and files to export.
             </p>
           </Grid>
-          <Grid item sm={12} md={2} style={{ textAlign: 'center' }}>
+          <Grid item sm={12} md={2} align="center">
             <img src={upliftIcon} width={75} alt="Mobile App" />
             <p>
               You now have access to digestable data. Communities
