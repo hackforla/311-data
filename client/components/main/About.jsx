@@ -7,32 +7,31 @@ import {
 import empowerLaLogo from '@assets/empower_la_logo.png';
 import hackForLaLogo from '@assets/hack_for_la_logo.png';
 import codeForAmericaLogo from '@assets/code_for_america_logo.png';
+import mobileAppIcon from '@assets/mobile_app_icon.png';
+import databaseIcon from '@assets/database_icon.png';
+import publishIcon from '@assets/publish_icon.png';
+import upliftIcon from '@assets/uplift_icon.png';
+import visualizeIcon from '@assets/visualize_icon.png';
 
+// TODO: Revisit adding shared standard styles once those are decided.
 const useStyles = makeStyles({
   root: {
     color: 'black',
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '2em',
+    padding: '2rem',
     '& h1': {
-      fontSize: '2.5em',
+      fontSize: '2.5rem',
     },
     '& h2': {
-      fontSize: '2.25em',
+      fontSize: '2.25rem',
     },
     '& img': {
       maxWidth: '100%',
-      height: 'auto',
-      display: 'inline-block',
+      display: 'block',
+      margin: '0 auto',
     },
-  },
-  gridItem: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: '4em',
-    paddingBottom: '6em',
   },
 });
 
@@ -64,28 +63,68 @@ const About = () => {
               the expansive amount of data associated with these 311
               requests is available online. The mayor has encouraged
               us to create apps with this data, and that&apos;s where
-              this project comes in.
+              this project comes&nbsp;in.
             </p>
             <h2 style={{ color: '#1D6996', textAlign: 'center' }}>Partners</h2>
-            <p>
+            <p style={{ paddingBottom: '1.625rem' }}>
               To empower local residents and Neighborhood Councils to
               make informed decisions about how to improve their communities
               using an easy-to-use application, EmpowerLA partnered with Hack
               For LA  to create the 311 Data project. The 311 Data project makes
               navigating the wealth of 311 data easier using an open source
-              application built and maintained by volunteers throughout our community.
+              application built and maintained by volunteers throughout our&nbsp;community.
             </p>
           </Grid>
         </Grid>
-        <Grid container>
-          <Grid item sm={12} md={4} className={classes.gridItem}>
+        <Grid container style={{ paddingBottom: '6rem' }} justify="space-between">
+          <Grid item xs={12} md={4}>
             <img src={empowerLaLogo} width={362} alt="Empower LA" />
           </Grid>
-          <Grid item sm={12} md={4} className={classes.gridItem}>
+          <Grid item xs={12} md={4}>
             <img src={hackForLaLogo} width={97} alt="Hack for LA" />
           </Grid>
-          <Grid item sm={12} md={4} className={classes.gridItem}>
+          <Grid item xs={12} md={4}>
             <img src={codeForAmericaLogo} width={202} alt="Code for America" />
+          </Grid>
+        </Grid>
+        <h2 style={{ color: '#1D6996', textAlign: 'center' }}>How it works</h2>
+
+        <Grid container style={{ paddingBottom: '4rem' }} justify="space-between">
+          <Grid item sm={12} md={2} align="center">
+            <img src={mobileAppIcon} width={75} alt="Mobile App" />
+            <p>
+              You and other members of your community post reports via
+              the City’s easy-to-use mobile application.
+            </p>
+          </Grid>
+          <Grid item sm={12} md={2} align="center">
+            <img src={databaseIcon} width={75} alt="Mobile App" />
+            <p>
+              Your reports are consolidated by the City and entered into
+              a central database. All requests are assigned to the
+              appropriate department to resolve.
+            </p>
+          </Grid>
+          <Grid item sm={12} md={2} align="center">
+            <img src={publishIcon} width={75} alt="Mobile App" />
+            <p>
+              Once data from each department is sorted,  the City then
+              publishes it as raw information.
+            </p>
+          </Grid>
+          <Grid item sm={12} md={2} align="center">
+            <img src={visualizeIcon} width={75} alt="Mobile App" />
+            <p>
+              Our site draws data from the City’s database to create
+              easy-to-view visualizations and files to export.
+            </p>
+          </Grid>
+          <Grid item sm={12} md={2} align="center">
+            <img src={upliftIcon} width={75} alt="Mobile App" />
+            <p>
+              You now have access to digestable data. Communities
+              are empowered and equipped to identify areas of improvement to uplift and thrive.
+            </p>
           </Grid>
         </Grid>
       </Container>
