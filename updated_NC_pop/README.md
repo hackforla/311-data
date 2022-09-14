@@ -4,10 +4,9 @@
   
 ### Have calculated the population of LA city neighborhood councils using the updated NC shape file, Census tracts data-2020 and 2020-ACS (5 year estimate) demographics data. The notebook- NC_pop_recent.ipynb outlines the detailed steps involved to evaluate the populataion, area (in square miles) and population density of the 99 NCs. 
 
-### The movtivation behind this analysis stems from the fact that the latest available population data for the NCs have been estimated using older census  population/demographics data approximated from block groups to LA NCs (97 NCs). The boundary of NC has been modified around 2018- adding 2 more NCs- Arts District Little Tokyo NC (also known as Historic Cultural) and Westwood NC. 
+### The movtivation behind this analysis stems from the fact that the latest available population data for the NCs have been estimated using older census population/demographics data approximated from block groups to LA NCs (97 NCs). The boundary of NC has been modified around 2018- adding 2 more NCs- Arts District Little Tokyo NC (also known as Historic Cultural) and Westwood NC. 
 
-### How to use this repo:
-- #### NC_pop_recent_no_filter.ipynb- This notebook computes the population of the 99 NCs without any filter. Therefore the total population of the LA city NCs is inflated. 
+### How to use this tool:
 - #### NC_pop_recent.ipynb- This notebook is an updated version of NC_pop_recent_no_filter.ipynb, where in, area and population filter have been introduced to address the inflated LA city NCs value in comparison to the one reported in the Census Bureau [website](https://www.census.gov/quickfacts/losangelescitycalifornia?).
   #### The following files have been used in this notebook:
    * #### tl_2020_06037_tract20.shp from tl_2020_06037_tract20 folder - Census Tracts 2020 Tigershape file. 
