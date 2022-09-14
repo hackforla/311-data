@@ -2,7 +2,7 @@
   
 # **Updated population density of the LA city neighborhood councils (NCs).**
   
-### Have calculated the population of LA city neighborhood councils using the updated NC shape file, Census tracts data-2020 and 2020-ACS (5 year estimate) demographics data. The notebook- NC_pop_recent.ipynb outlines the detailed steps involved to evaluate the populataion, area (in square miles) and population density of the 99 NCs. 
+### Have calculated the population of LA city neighborhood councils using the updated NC shape file, Census tracts data-2020 and 2020-ACS (5 year estimate) demographics data. The notebook- NC_pop_recent.ipynb outlines the detailed steps involved to evaluate the population, area (in square miles) and population density of the 99 NCs. 
 
 ### The movtivation behind this analysis stems from the fact that the latest available population data for the NCs have been estimated using older census population/demographics data approximated from block groups to LA NCs (97 NCs). The boundary of NC has been modified around 2018- adding 2 more NCs- Arts District Little Tokyo NC (also known as Historic Cultural) and Westwood NC. 
 
