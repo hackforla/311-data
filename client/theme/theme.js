@@ -1,4 +1,6 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import {
+  createMuiTheme,
+} from '@material-ui/core/styles';
 import {
   colorPrimaryFocus,
   colorPrimaryDark,
@@ -11,7 +13,34 @@ import gaps from './gaps';
 import borderRadius from './borderRadius';
 import typography from './typography';
 
-const theme = createMuiTheme({
+const isLightTheme = true;
+
+const lightTheme = createMuiTheme({
+  gaps,
+  borderRadius,
+  typography,
+  palette: {
+    type: 'light',
+    selected: { primary: 'rgba(129, 123, 123, 0.3)' },
+    primary: {
+      main: '#002449',
+    },
+    secondary: {
+      main: '#ffb100',
+    },
+    text: {
+      primary: '#002449',
+    },
+  },
+  header: {
+    height: '62px',
+  },
+  footer: {
+    height: '40px',
+  },
+});
+
+const darkTheme = createMuiTheme({
   gaps,
   borderRadius,
   typography,
@@ -45,5 +74,7 @@ const theme = createMuiTheme({
     height: '40px',
   },
 });
+
+const theme = isLightTheme ? lightTheme : darkTheme;
 
 export default theme;
