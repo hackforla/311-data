@@ -12,9 +12,10 @@ import { GEO_FILTER_TYPES } from '../constants';
 const TABS = Object.values(GEO_FILTER_TYPES);
 
 const styles = theme => ({
+  // Note: Colors for FilterMenu "Enter address" input box defined below.
   geocoder: {
     width: 325,
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.background.default,
     borderTopRightRadius: '10px',
     padding: '10px 15px 10px 15px',
     '& div.mapboxgl-ctrl': {
@@ -26,11 +27,11 @@ const styles = theme => ({
         fill: theme.palette.primary.focus,
       },
       '& button.mapboxgl-ctrl-geocoder--button': {
-        backgroundColor: theme.palette.primary.dark,
+        // backgroundColor: theme.palette.primary.dark,
       },
       '& input': {
-        backgroundColor: theme.palette.primary.dark,
-        color: theme.palette.text.secondaryLight,
+        // backgroundColor: theme.palette.primary.dark,
+        // color: theme.palette.text.secondaryLight,
         '&::placeholder': {
           ...theme.typography.body2,
           color: theme.palette.text.secondaryDark,
@@ -46,14 +47,15 @@ const styles = theme => ({
       borderRadius: '0 10px 0 0',
     },
   },
+  // Note: Colors for FilterMenu "Address" and "Council" tabs defined below.
   button: {
-    backgroundColor: '#0F181F',
-    color: theme.palette.secondary.main,
+    // backgroundColor: '#0F181F',
+    // color: theme.palette.secondary.main,
     ...theme.typography.body2,
   },
   active: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.text.secondaryLight,
+    // backgroundColor: theme.palette.primary.main,
+    // color: theme.palette.text.secondaryLight,
   },
 });
 

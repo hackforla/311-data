@@ -21,6 +21,8 @@ import Radio from '@material-ui/core/Radio';
 
 const drawerWidth = 275;
 
+// Note: Colors for persistent drawer, which opens to left of map
+// when gear icon is clicked from the FilterMenu, is defined below.
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -38,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: '#2A404E',
+    // backgroundColor: '#2A404E',
   },
   content: {
     flexGrow: 1,

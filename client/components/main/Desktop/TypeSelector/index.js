@@ -64,11 +64,12 @@ const RequestTypeSelector = ({
   return (
     <>
       <div className={headerClass.header}>Request Types</div>
+      {/* // Note: Background color for the "Request Types" area defined below. */}
       <Grid
         container
         style={{
           margin: 'auto',
-          backgroundColor: '#192730',
+          // backgroundColor: '#192730',
           borderRadius: '5px',
           padding: '5px',
           paddingTop: '3px',

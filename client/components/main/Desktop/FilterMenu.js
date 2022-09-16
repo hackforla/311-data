@@ -17,17 +17,18 @@ import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/main/Desktop/TypeSelector';
 import StatusSelector from '@components/main/Desktop/StatusSelector';
 
+// Note: Colors affecting the main FilterMenu are defined below.
 const useStyles = makeStyles(theme => ({
   card: {
     width: 325,
-    backgroundColor: theme.palette.primary.main,
+    // backgroundColor: theme.palette.primary.main,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     borderBottomLeftRadius: theme.borderRadius.md,
     borderBottomRightRadius: theme.borderRadius.md,
   },
   header: {
-    color: theme.palette.text.cyan,
+    // color: theme.palette.text.cyan,
     padding: theme.gaps.xs,
     paddingRight: 0,
   },
@@ -47,9 +48,9 @@ const useStyles = makeStyles(theme => ({
   button: {
     padding: theme.gaps.xs,
     paddingRight: 0,
-    color: theme.palette.text.dark,
+    // color: theme.palette.text.dark,
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
+      // backgroundColor: theme.palette.primary.main,
     },
     '& svg': {
       fontSize: 30,

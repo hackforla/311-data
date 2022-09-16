@@ -10,14 +10,16 @@ import Box from '@material-ui/core/Box';
 import CollapseMUI from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/core/styles';
 
+// Note: Colors for the date range box below "Date Range" on the FilterMenu are defined below.
+//       Colors defined in DatePicker.jsx also affects this area.
 const useStyles = makeStyles(theme => ({
   card: {
-    backgroundColor: theme.palette.primary.main,
+    // backgroundColor: theme.palette.primary.main,
     boxShadow: 'none',
   },
   header: {
-    backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.text.primary,
+    // backgroundColor: theme.palette.primary.dark,
+    // color: theme.palette.text.primary,
     padding: theme.gaps.xs,
     paddingLeft: theme.gaps.sm,
     marginBottom: 2,
@@ -25,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: theme.palette.primary.dark,
+    // backgroundColor: theme.palette.primary.dark,
     padding: theme.gaps.sm,
   },
   headerAction: {
@@ -34,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   button: {
     padding: '0 0 0 5px',
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      // backgroundColor: theme.palette.primary.dark,
     },
     '& svg': {
       fontSize: 30,

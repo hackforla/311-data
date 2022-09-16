@@ -23,16 +23,17 @@ const useStyles = makeStyles(theme => ({
     borderRight: `1.5px solid ${theme.palette.text.secondaryLight}`,
     height: '1.2rem',
   },
+  // Note: "Last Week", "Last Month" and Last 3 Months colors are defined in option.
   option: {
     cursor: 'pointer',
     padding: 6,
     margin: '2px 0',
     fontFamily: 'Roboto',
     width: '100%',
-    backgroundColor: theme.palette.primary.dark,
+    // backgroundColor: theme.palette.primary.dark,
     border: 'none',
     textAlign: 'left',
-    color: theme.palette.text.secondaryLight,
+    // color: theme.palette.text.secondaryLight,
     '&:hover': {
       backgroundColor: theme.palette.selected.primary,
     },

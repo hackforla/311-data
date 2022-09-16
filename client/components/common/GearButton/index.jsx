@@ -4,10 +4,11 @@ import { IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SettingsSharpIcon from '@material-ui/icons/SettingsSharp';
 
-const useStyles = makeStyles(theme => ({
+// Note: Colors for gear icon in FilterMenu defined below.
+const useStyles = makeStyles(() => ({
   gearIcon: {
-    color: theme.palette.text.dark,
-    background: '#29404F',
+    // color: theme.palette.text.dark,
+    // background: '#29404F',
     borderRadius: '12px',
     height: '33px',
     width: '33px',

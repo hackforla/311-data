@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 const Styles = ({ range }) => {
   const theme = useTheme();
 
+  // Note: Colors for the pop-up calendar of the date picker are defined below.
   return (
     <style>
       {`
@@ -12,7 +13,7 @@ const Styles = ({ range }) => {
 
     .DayPicker.Range {
       font-family: Roboto;
-      background: ${theme.palette.primary.dark};
+      background: ${theme.palette.background.default};
       border-radius: 5px;
       min-width: 268px;
     }
@@ -30,7 +31,7 @@ const Styles = ({ range }) => {
 
     .Range .DayPicker-Weekdays .DayPicker-Weekday {
       font-size: 0.7rem;
-      color: white;
+      // color: white;
     }
 
     .DayPicker-Caption {
@@ -41,20 +42,20 @@ const Styles = ({ range }) => {
     /* Selected range without start and end dates */ 
 
     .Range .DayPicker-Day--selected:not(.DayPicker-Day--outside) {
-      background-color: ${theme.palette.selected.primary} !important;
+      // background-color: ${theme.palette.selected.primary} !important;
     }
 
     /* Disabled cell */
     
     .Range .DayPicker-Day--disabled {
-      color: #a8a8a8;
+      // color: #a8a8a8;
     }
 
     /* Day cell hover */
 
     .DayPicker:not(.DayPicker--interactionDisabled)
       .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
-      background-color:  ${theme.palette.selected.primary};
+      // background-color:  ${theme.palette.selected.primary};
       border-radius: 50% !important;
     }
 
@@ -71,7 +72,7 @@ const Styles = ({ range }) => {
 
     .Range .DayPicker-Day.DayPicker-Day--selected.DayPicker-Day--today,
     .Range .DayPicker-Day--today {
-      color: ${theme.palette.primary.focus};
+      // color: ${theme.palette.primary.focus};
     }
 
     /* Selected start and end days  */
@@ -102,7 +103,7 @@ const Styles = ({ range }) => {
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: -1;
-      background: ${theme.palette.selected.primary};
+      // background: ${theme.palette.selected.primary};
     }
 
     ${

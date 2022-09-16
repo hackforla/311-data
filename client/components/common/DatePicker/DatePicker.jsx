@@ -12,21 +12,23 @@ import { makeStyles } from '@material-ui/core';
 
 // TODO: Apply gaps (margin, padding) from theme
 
-const useStyles = makeStyles(theme => ({
+// Note: Colors for the date range box under "Date Range" are defined here.
+//       Colors defined in SelectorBox.jsx also affects this area.
+const useStyles = makeStyles(() => ({
   selector: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
     maxWidth: 268,
-    backgroundColor: theme.palette.primary.dark,
+    // backgroundColor: theme.palette.primary.dark,
     padding: 10,
     borderRadius: 5,
     fontSize: 14,
-    color: theme.palette.text.secondaryLight,
+    // color: theme.palette.text.secondaryLight,
   },
   placeholder: {
-    color: theme.palette.text.secondaryDark,
+    // color: theme.palette.text.secondaryDark,
   },
   selectorPopUp: {
     position: 'fixed',
@@ -34,13 +36,13 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     padding: 0,
-    color: theme.palette.text.dark,
+    // color: theme.palette.text.dark,
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      // backgroundColor: theme.palette.primary.dark,
     },
     '& svg': {
       fontSize: 20,
-      fill: theme.palette.text.secondaryLight,
+      // fill: theme.palette.text.secondaryLight,
     },
   },
 }));
