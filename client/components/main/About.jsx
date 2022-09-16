@@ -16,8 +16,6 @@ import visualizeIcon from '@assets/visualize_icon.png';
 // TODO: Revisit adding shared standard styles once those are decided.
 const useStyles = makeStyles({
   root: {
-    color: 'black',
-    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '2rem',
