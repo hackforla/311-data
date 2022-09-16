@@ -174,8 +174,8 @@ const ContactForm = () => {
   return (
     <Container maxWidth="sm">
       <form id="contact-form" onSubmit={handleSubmit}>
-        <Grid container alignItems="center" justifyContent="center" direction="column" style={{ gap: '10px' }}>
-          <Grid container alignItems="center" justifyContent="center" direction="row" spacing={2}>
+        <Grid container alignItems="center" justify="center" direction="column" style={{ gap: '10px' }}>
+          <Grid container alignItems="center" justify="center" direction="row" spacing={2}>
             <Grid item xs={6}>
               <TextField
                 id="contact-firstname"
@@ -207,7 +207,7 @@ const ContactForm = () => {
               />
             </Grid>
           </Grid>
-          <Grid container alignItems="center" justifyContent="center" direction="row">
+          <Grid container alignItems="center" justify="center" direction="row">
             <Grid item xs={12}>
               <TextField
                 id="contact-email"
@@ -254,7 +254,7 @@ const ContactForm = () => {
               />
             </Grid>
           </Grid>
-          <Grid container direction="column" alignItems="center" justifyContent="center" style={{ paddingTop: '8px' }}>
+          <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: '8px' }}>
             <CircularProgress style={{ display: formValues.loading ? 'block' : 'none' }} />
             <Button variant="contained" color="primary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
               Submit
