@@ -5,6 +5,9 @@ import {
   Redirect,
   useLocation,
 } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { darkTheme, lightTheme } from '@theme/theme';
+import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Desktop from '@components/main/Desktop';
 import Reports from '@components/main/Reports';
@@ -19,20 +22,30 @@ export default function Routes() {
 
   return (
     <>
-      <Box visibility={pathname !== '/map' ? 'hidden' : 'visible'}>
-        <Desktop />
-      </Box>
-      <Switch>
-        <Route path="/reports" component={Reports} />
-        <Route path="/privacy" component={Privacy} />
-        <Route path="/faqs" component={Faqs} />
-        <Route path="/about" component={About} />
-        <Route path="/blog" component={Blog} />
-        <Route path="/contact" component={Contact} />
-        <Route path="/">
-          <Redirect to="map" />
-        </Route>
-      </Switch>
+      {/* Dark Theme - Map. */}
+      <ThemeProvider theme={darkTheme}>
+        <Box visibility={pathname !== '/map' ? 'hidden' : 'visible'}>
+          <Desktop />
+        </Box>
+      </ThemeProvider>
+
+      {/* Light Theme - Everything else. */}
+      <ThemeProvider theme={lightTheme}>
+        <Paper elevation={0}>
+          <Switch>
+
+            <Route path="/reports" component={Reports} />
+            <Route path="/privacy" component={Privacy} />
+            <Route path="/faqs" component={Faqs} />
+            <Route path="/about" component={About} />
+            <Route path="/blog" component={Blog} />
+            <Route path="/contact" component={Contact} />
+            <Route path="/">
+              <Redirect to="map" />
+            </Route>
+          </Switch>
+        </Paper>
+      </ThemeProvider>
     </>
   );
 }
