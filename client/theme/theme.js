@@ -13,7 +13,7 @@ import gaps from './gaps';
 import borderRadius from './borderRadius';
 import typography from './typography';
 
-const isLightTheme = true;
+const isLightTheme = false;
 
 const lightTheme = createMuiTheme({
   gaps,
@@ -77,4 +77,8 @@ const darkTheme = createMuiTheme({
 
 const theme = isLightTheme ? lightTheme : darkTheme;
 
-export default theme;
+export {
+  lightTheme,
+  darkTheme,
+  theme as default,
+};
