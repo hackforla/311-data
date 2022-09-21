@@ -6,7 +6,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { darkTheme, lightTheme } from '@theme/theme';
+import theme, { darkTheme } from '@theme/theme';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Desktop from '@components/main/Desktop';
@@ -29,8 +29,8 @@ export default function Routes() {
         </Box>
       </ThemeProvider>
 
-      {/* Light Theme - Everything else. */}
-      <ThemeProvider theme={lightTheme}>
+      {/* Default theme - Everything else. */}
+      <ThemeProvider theme={theme}>
         <Paper elevation={0}>
           <Switch>
 
