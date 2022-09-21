@@ -15,10 +15,20 @@ import typography from './typography';
 
 const isLightTheme = true;
 
-const lightTheme = createMuiTheme({
+const commonThemeItems = {
   gaps,
   borderRadius,
   typography,
+  header: {
+    height: '62px',
+  },
+  footer: {
+    height: '40px',
+  },
+};
+
+const lightTheme = createMuiTheme({
+  ...commonThemeItems,
   palette: {
     type: 'light',
     selected: { primary: 'rgba(129, 123, 123, 0.3)' },
@@ -32,18 +42,10 @@ const lightTheme = createMuiTheme({
       primary: '#002449',
     },
   },
-  header: {
-    height: '62px',
-  },
-  footer: {
-    height: '40px',
-  },
 });
 
 const darkTheme = createMuiTheme({
-  gaps,
-  borderRadius,
-  typography,
+  ...commonThemeItems,
   palette: {
     type: 'dark',
     primary: {
@@ -66,12 +68,6 @@ const darkTheme = createMuiTheme({
       secondaryDark: colorTextSecondaryDark,
       secondaryLight: colorTextSecondaryLight,
     },
-  },
-  header: {
-    height: '62px',
-  },
-  footer: {
-    height: '40px',
   },
 });
 

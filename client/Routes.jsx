@@ -24,9 +24,11 @@ export default function Routes() {
     <>
       {/* Dark Theme - Map. */}
       <ThemeProvider theme={darkTheme}>
-        <Box visibility={pathname !== '/map' ? 'hidden' : 'visible'}>
-          <Desktop />
-        </Box>
+        <Paper elevation={0}>
+          <Box visibility={pathname !== '/map' ? 'hidden' : 'visible'}>
+            <Desktop />
+          </Box>
+        </Paper>
       </ThemeProvider>
 
       {/* Default theme - Everything else. */}
