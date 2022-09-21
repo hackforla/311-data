@@ -21,7 +21,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-// Expose theme to debugging console like on mui.com
+// Expose theme to debugging console like on mui.com.
 // https://v4.mui.com/customization/typography/#default-values
 window.theme = theme;
 
