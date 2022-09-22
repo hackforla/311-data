@@ -18,7 +18,7 @@ export default {
     illegalDumping: '#A49FD1',
     metalHouseholdAppliance: '#C056C8',
     multiStreetlight: '#EDAD08',
-    singleStreetlight: '#79B74Es',
+    singleStreetlight: '#79B74E',
     waterWaste: '#54ABDE',
     feedback: '#F86747',
     other: '#F58505',
