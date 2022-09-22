@@ -9,6 +9,7 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
+import colors from '@theme/colors';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -16,15 +17,15 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.main,
   },
   link: {
-    color: 'white',
+    color: colors.textPrimaryLight,
     textDecoration: 'none',
   },
   button: {
+    color: colors.textPrimaryLight,
     textTransform: 'none',
     fontFamily: 'Roboto',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    color: 'white',
     textDecoration: 'none',
   },
   title: {
@@ -81,13 +82,13 @@ const Header = () => {
             horizontal: 'left',
           }}
         >
-          <Link to="/reports/dashboards/overview_combined" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
+          <Link to="/reports/dashboards/overview_combined">
+            <MenuItem onClick={handleClose}>
               Overview
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/nc_summary_comparison" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
+          <Link to="/reports/dashboards/nc_summary_comparison">
+            <MenuItem onClick={handleClose}>
               Compare Two Neighborhoods
             </MenuItem>
           </Link>
