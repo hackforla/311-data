@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
   },
   title: {
-    ...theme.typography.h1,
+    ...theme.typography.h3,
     flexGrow: 1,
     fontSize: '30px',
     fontWeight: 'bold',
@@ -56,7 +56,7 @@ const Header = () => {
   return (
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
-        <Typography variant="h1" className={classes.title}>
+        <Typography variant="h3" className={classes.title}>
           <Link to="/" className={classes.link}>311DATA</Link>
         </Typography>
         <NavLink className={classes.link} to="/map" activeStyle={activeStyle}>
