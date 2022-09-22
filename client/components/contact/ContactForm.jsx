@@ -174,7 +174,7 @@ const ContactForm = () => {
   return (
     <Container maxWidth="sm">
       <form id="contact-form" onSubmit={handleSubmit}>
-        <Grid container alignItems="center" justify="center" direction="column" style={{ gap: '10px' }}>
+        <Grid container alignItems="center" justify="center" direction="column">
           <Grid container alignItems="center" justify="center" direction="row" spacing={2}>
             <Grid item xs={6}>
               <TextField
@@ -235,14 +235,14 @@ const ContactForm = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} style={{ paddingTop: '8px' }}>
+            <Grid item xs={12} style={{ paddingTop: '12px' }}>
               <TextField
                 id="contact-message"
                 name="message"
                 label="Message *"
                 type="text"
                 variant="outlined"
-                rows={4}
+                rows={8}
                 autoComplete="off"
                 value={formValues.message}
                 onChange={onInputChange}
@@ -254,9 +254,9 @@ const ContactForm = () => {
               />
             </Grid>
           </Grid>
-          <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: '8px' }}>
+          <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: '20px' }}>
             <CircularProgress style={{ display: formValues.loading ? 'block' : 'none' }} />
-            <Button variant="contained" color="primary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
+            <Button variant="contained" color="secondary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
               Submit
             </Button>
           </Grid>
