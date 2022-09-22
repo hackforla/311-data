@@ -1,14 +1,7 @@
 import {
   createMuiTheme,
 } from '@material-ui/core/styles';
-import {
-  colorPrimaryFocus,
-  colorPrimaryDark,
-  colorTextSecondaryDark,
-  colorTextSecondaryLight,
-  colorSecondaryFocus,
-  colorTextPrimaryDark,
-} from './colors';
+import colors from '@theme/colors';
 import gaps from './gaps';
 import borderRadius from './borderRadius';
 import typography from './typography';
@@ -49,24 +42,24 @@ const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: colorPrimaryDark,
+      main: colors.primaryDark,
       dark: '#192730',
-      focus: colorPrimaryFocus,
+      focus: colors.primaryFocus,
     },
     selected: { primary: 'rgba(129, 123, 123, 0.3)' },
     secondary: {
-      main: colorTextSecondaryDark,
-      light: colorTextSecondaryLight,
+      main: colors.textSecondaryDark,
+      light: colors.textSecondaryLight,
     },
     background: {
       default: '#0F181F',
     },
     text: {
       dark: '#C4C4C4',
-      cyan: colorSecondaryFocus,
-      primaryDark: colorTextPrimaryDark,
-      secondaryDark: colorTextSecondaryDark,
-      secondaryLight: colorTextSecondaryLight,
+      cyan: colors.secondaryFocus,
+      primaryDark: colors.textPrimaryDark,
+      secondaryDark: colors.textSecondaryDark,
+      secondaryLight: colors.textSecondaryLight,
     },
   },
 });

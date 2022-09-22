@@ -1,4 +1,5 @@
 import DataFrame from 'dataframe-js';
+import colors from '@theme/colors';
 
 const dataResources = {
   2019: 'pvft-t768',
@@ -13,36 +14,31 @@ export function getDataResources() {
 }
 
 export function getColorMap(discrete) {
+  const discreteItems = [
+    { title: 'Dead Animal Removal', color: colors.requestTypes.animalRemains },
+    { title: 'Other', color: colors.requestTypes.other },
+    { title: 'Homeless Encampment', color: colors.requestTypes.eWaste },
+    { title: 'Single Streetlight Issue', color: colors.requestTypes.singleStreetlight },
+    { title: 'Electronic Waste', color: colors.requestTypes.eWaste },
+    { title: 'Feedback', color: colors.requestTypes.feedback },
+    { title: 'Graffiti Removal', color: colors.requestTypes.graffiti },
+    { title: 'Multiple Streetlight Issue', color: colors.requestTypes.multiStreetlight },
+    { title: 'Metal/Household Appliances', color: colors.requestTypes.metalHouseholdAppliance },
+    { title: 'Illegal Dumping Pickup', color: colors.requestTypes.illegalDumping },
+    { title: 'Bulky Items', color: colors.requestTypes.bulkyItems },
+    { title: 'Report Water Waste', color: colors.requestTypes.waterWaste },
+  ];
+
   if (discrete) {
-    return [
-      { title: 'Dead Animal Removal', color: '#3b69a6' },
-      { title: 'Other', color: '#0dd311' },
-      { title: 'Homeless Encampment', color: '#c1614e' },
-      { title: 'Single Streetlight Issue', color: '#304bb5' },
-      { title: 'Electronic Waste', color: '#41a84b' },
-      { title: 'Feedback', color: '#c2f961' },
-      { title: 'Graffiti Removal', color: '#4d6173' },
-      { title: 'Multiple Streetlight Issue', color: '#9f2826' },
-      { title: 'Metal/Household Appliances', color: '#306088' },
-      { title: 'Illegal Dumping Pickup', color: '#b6d4df' },
-      { title: 'Bulky Items', color: '#7f2a10' },
-      { title: 'Report Water Waste', color: '#f7a6ce' },
-    ];
+    return discreteItems;
   }
-  return {
-    'Dead Animal Removal': '#3b69a6',
-    Other: '#0dd311',
-    'Homeless Encampment': '#c1614e',
-    'Single Streetlight Issue': '#304bb5',
-    'Electronic Waste': '#41a84b',
-    Feedback: '#c2f961',
-    'Graffiti Removal': '#4d6173',
-    'Multiple Streetlight Issue': '#9f2826',
-    'Metal/Household Appliances': '#306088',
-    'Illegal Dumping Pickup': '#b6d4df',
-    'Bulky Items': '#7f2a10',
-    'Report Water Waste': '#f7a6ce',
-  };
+
+  const nonDiscreteItems = {};
+  Object.values(discreteItems).forEach(item => {
+    nonDiscreteItems[`'${item.title}'`] = item.color;
+  });
+
+  return nonDiscreteItems;
 }
 
 export function getBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadDataReady) {
