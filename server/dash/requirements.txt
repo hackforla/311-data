@@ -20,6 +20,7 @@ zipp==3.8.0
 # Other dependencies
 future==0.18.2
 gunicorn==20.0.4
+waitress==2.1.2
 numpy==1.19.5
 pandas==1.1.5
 python-dateutil==2.8.1
