@@ -45,13 +45,13 @@ const About = () => {
 
   return (
     <>
-      <TextHeading className={classes.contentMarginTop}>
+      <TextHeading>
         About 311DATA
       </TextHeading>
 
-      <Grid container alignItems="center" justify="center" direction="column">
+      <Grid container className={classes.contentMarginTop} alignItems="center" justify="center" direction="column">
         <Grid item>
-          <Container component="main" className={classes.contentIntroBody} maxWidth="md">
+          <Container component="main" maxWidth="md">
             <Grid container alignItems="center" justify="center" direction="column">
               <Grid item>
                 <div className={classes.contentIntroBody}>
