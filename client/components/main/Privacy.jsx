@@ -2,7 +2,6 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-// import { makeStyles } from '@material-ui/core';
 import sharedLayout from '@theme/layout';
 import TextHeading from '@components/common/TextHeading';
 import ContentBody from '@components/common/ContentBody';
@@ -18,24 +17,6 @@ const query = `
     }
   }
 `;
-
-// const useStyles = makeStyles({
-//   root: {
-//     color: 'black',
-//     backgroundColor: 'white',
-//     padding: '2em',
-//     '& h1': {
-//       fontSize: '2.5em',
-//     },
-//     '& img': {
-//       maxWidth: '100%',
-//       height: 'auto',
-//       display: 'block',
-//       marginLeft: 'auto',
-//       marginRight: 'auto',
-//     },
-//   },
-// });
 
 const Privacy = () => {
   const { data, errors } = useContentful(query);

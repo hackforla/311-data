@@ -1,13 +1,11 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import {
-  makeStyles,
-  Container,
-  Box,
-  Grid,
-  List,
-  ListItem,
-} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import useContentful from '../../hooks/useContentful';
 
 const query = `
