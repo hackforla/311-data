@@ -73,21 +73,22 @@ const About = () => {
                     this project comes&nbsp;in.
                   </Typography>
                 </div>
-                {/* <h2 style={{ color: '#1D6996', textAlign: 'center' }}>Partners</h2> */}
-                <div align="center">
-                  <Typography style={{ color: colors.primaryDark }}>Partners</Typography>
+                <div className={classes.contentMarginTop} align="center">
+                  <Typography variant="h2" style={{ color: colors.primaryDark }}>Partners</Typography>
                 </div>
-                <p style={{ paddingBottom: '1.625rem' }}>
+                <Typography variant="body1" className={classes.contentIntroBody}>
                   To empower local residents and Neighborhood Councils to
                   make informed decisions about how to improve their communities
                   using an easy-to-use application, EmpowerLA partnered with Hack
                   For LA  to create the 311 Data project. The 311 Data project makes
                   navigating the wealth of 311 data easier using an open source
                   application built and maintained by volunteers throughout our&nbsp;community.
-                </p>
+                </Typography>
               </Grid>
             </Grid>
-            <Grid container style={{ paddingBottom: '6rem' }} justify="space-between">
+
+            {/* Inserting 3 images horizontally here  */}
+            <Grid container className={classes.contentIntroBody} justify="space-between">
               <Grid item xs={12} md={4}>
                 <img src={empowerLaLogo} width={362} alt="Empower LA" />
               </Grid>

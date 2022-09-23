@@ -39,11 +39,12 @@ export default {
     fontWeight: robotoBold,
   },
   body1: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: robotoRegular,
   },
   body2: {
     fontSize: 16,
+    fontWeight: robotoRegular,
   },
   body3: {
     fontSize: 14,
