@@ -19,12 +19,6 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
     padding: '2rem',
-    '& h1': {
-      fontSize: '2.5rem',
-    },
-    '& h2': {
-      fontSize: '2.25rem',
-    },
     '& img': {
       maxWidth: '100%',
       display: 'block',

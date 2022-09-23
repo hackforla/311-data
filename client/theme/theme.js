@@ -2,9 +2,9 @@ import {
   createMuiTheme,
 } from '@material-ui/core/styles';
 import colors from '@theme/colors';
-import gaps from './gaps';
-import borderRadius from './borderRadius';
-import typography from './typography';
+import gaps from '@theme/gaps';
+import borderRadius from '@theme/borderRadius';
+import typography from '@theme/typography';
 
 const isLightTheme = true;
 
