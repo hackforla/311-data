@@ -1,6 +1,7 @@
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import TextHeading from '@components/common/TextHeading';
+import ContentBody from '@components/common/ContentBody';
 import ContactIntro from './ContactIntro';
 import ContactForm from './ContactForm';
 
@@ -23,8 +24,10 @@ const Contact = () => (
     </div>
     <div>
       <TextHeading>Contact Us</TextHeading>
-      <ContactIntro />
-      <ContactForm />
+      <ContentBody maxWidth="sm">
+        <ContactIntro />
+        <ContactForm />
+      </ContentBody>
     </div>
   </>
 );
