@@ -16,6 +16,7 @@ import Faqs from '@components/main/Faqs';
 import About from '@components/main/About';
 import Blog from '@components/main/Blog';
 import Contact from '@components/contact/Contact';
+import ContentBottom from '@components/common/ContentBottom';
 
 export default function Routes() {
   const { pathname } = useLocation();
@@ -35,7 +36,6 @@ export default function Routes() {
       <ThemeProvider theme={theme}>
         <Paper elevation={0}>
           <Switch>
-
             <Route path="/reports" component={Reports} />
             <Route path="/privacy" component={Privacy} />
             <Route path="/faqs" component={Faqs} />
@@ -46,6 +46,7 @@ export default function Routes() {
               <Redirect to="map" />
             </Route>
           </Switch>
+          <ContentBottom />
         </Paper>
       </ThemeProvider>
     </>

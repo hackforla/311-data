@@ -63,7 +63,9 @@ const About = () => {
               </Typography>
             </div>
             <div className={classes.contentMarginTop} align="center">
-              <Typography variant="h2" style={{ color: colors.primaryDark }}>Partners</Typography>
+              <Typography variant="h2" style={{ color: colors.primaryDark }}>
+                Partners
+              </Typography>
             </div>
             <Typography variant="body1" className={classes.contentIntroBody}>
               To empower local residents and Neighborhood Councils to
@@ -78,54 +80,58 @@ const About = () => {
 
         {/* Inserting 3 images horizontally here  */}
         <Grid container className={classes.contentIntroBody} justify="space-between">
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} align="left">
             <img src={empowerLaLogo} width={362} alt="Empower LA" />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} align="right">
             <img src={hackForLaLogo} width={97} alt="Hack for LA" />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} align="right">
             <img src={codeForAmericaLogo} width={202} alt="Code for America" />
           </Grid>
         </Grid>
-        <h2 style={{ color: '#1D6996', textAlign: 'center' }}>How it works</h2>
+        <div className={classes.contentMarginTop} align="center">
+          <Typography variant="h2" style={{ color: colors.primaryDark }}>
+            How it works
+          </Typography>
+        </div>
 
-        <Grid container style={{ paddingBottom: '4rem' }} justify="space-between">
+        <Grid container className={classes.contentMarginTop} justify="space-between">
           <Grid item sm={12} md={2} align="center">
             <img src={mobileAppIcon} width={75} alt="Mobile App" />
-            <p>
+            <Typography variant="body1">
               You and other members of your community post reports via
               the City’s easy-to-use mobile application.
-            </p>
+            </Typography>
           </Grid>
           <Grid item sm={12} md={2} align="center">
             <img src={databaseIcon} width={75} alt="Mobile App" />
-            <p>
+            <Typography variant="body1">
               Your reports are consolidated by the City and entered into
               a central database. All requests are assigned to the
               appropriate department to resolve.
-            </p>
+            </Typography>
           </Grid>
           <Grid item sm={12} md={2} align="center">
             <img src={publishIcon} width={75} alt="Mobile App" />
-            <p>
+            <Typography variant="body1">
               Once data from each department is sorted,  the City then
               publishes it as raw information.
-            </p>
+            </Typography>
           </Grid>
           <Grid item sm={12} md={2} align="center">
             <img src={visualizeIcon} width={75} alt="Mobile App" />
-            <p>
+            <Typography variant="body1">
               Our site draws data from the City’s database to create
               easy-to-view visualizations and files to export.
-            </p>
+            </Typography>
           </Grid>
           <Grid item sm={12} md={2} align="center">
             <img src={upliftIcon} width={75} alt="Mobile App" />
-            <p>
+            <Typography variant="body1">
               You now have access to digestable data. Communities
               are empowered and equipped to identify areas of improvement to uplift and thrive.
-            </p>
+            </Typography>
           </Grid>
         </Grid>
       </ContentBody>
