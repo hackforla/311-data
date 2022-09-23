@@ -4,6 +4,7 @@
 
 import colors from '@theme/colors';
 
+// Note: Colors defined here will render as the fill color in each of `Request Types` checkboxes.
 const tempTypes = [
   {
     "typeId": 1,
