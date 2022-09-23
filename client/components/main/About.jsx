@@ -1,9 +1,8 @@
 import React from 'react';
-import {
-  makeStyles,
-  Container,
-  Grid,
-} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import empowerLaLogo from '@assets/empower_la_logo.png';
 import hackForLaLogo from '@assets/hack_for_la_logo.png';
 import codeForAmericaLogo from '@assets/code_for_america_logo.png';
@@ -35,11 +34,13 @@ const About = () => {
       <Container disableGutters component="main" className={classes.root} maxWidth="md">
         <Grid container>
           <Grid item xs={12}>
-            <h1 align="center">
+            {/* <h1 align="center"> */}
+            <Typography variant="h1">
               About
               <span style={{ color: '#FFB100' }}> 311</span>
               <span style={{ color: '#87C8BC' }}>DATA</span>
-            </h1>
+            </Typography>
+            {/* </h1> */}
             <p>
               Each day, Los Angelenos report thousands of 311
               requests all across LA to resolve issues such as

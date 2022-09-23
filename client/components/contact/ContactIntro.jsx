@@ -11,8 +11,8 @@ const ContactIntro = () => {
     <Container maxWidth="sm">
       <Grid container alignItems="center" justify="center" direction="column">
         <Grid item>
-          <div className={classes.contentMarginTop}>
-            <Typography variant="subtitle1" align="left">
+          <div className={classes.contentMarginTop} align="left">
+            <Typography variant="subtitle1">
               {'Don\'t See What You Need?'}
             </Typography>
           </div>
