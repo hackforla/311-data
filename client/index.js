@@ -8,8 +8,8 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import theme from '@theme/theme';
-import store from './redux/store';
-import App from './App';
+import store from '@root/redux/store';
+import App from '@root/App';
 
 Sentry.init({
   dsn: process.env.SENTRY_CLIENT_DSN,
