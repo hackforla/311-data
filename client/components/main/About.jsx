@@ -63,7 +63,7 @@ const About = () => {
               </Typography>
             </div>
             <div className={classes.contentMarginTop} align="center">
-              <Typography variant="h2" style={{ color: colors.primaryDark }}>
+              <Typography variant="h2" style={{ color: colors.primaryDarkMain }}>
                 Partners
               </Typography>
             </div>
@@ -91,7 +91,7 @@ const About = () => {
           </Grid>
         </Grid>
         <div className={classes.contentMarginTop} align="center">
-          <Typography variant="h2" style={{ color: colors.primaryDark }}>
+          <Typography variant="h2" style={{ color: colors.primaryDarkMain }}>
             How it works
           </Typography>
         </div>
