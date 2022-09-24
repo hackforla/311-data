@@ -7,9 +7,9 @@ import { Integrations } from '@sentry/tracing';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
+import theme from '@theme/theme';
 import store from './redux/store';
 import App from './App';
-import theme from './theme/theme';
 
 Sentry.init({
   dsn: process.env.SENTRY_CLIENT_DSN,
@@ -20,6 +20,10 @@ Sentry.init({
   // We recommend adjusting this value in production
   tracesSampleRate: 1.0,
 });
+
+// Expose theme to debugging console like on mui.com.
+// https://v4.mui.com/customization/typography/#default-values
+window.theme = theme;
 
 ReactDOM.render(
   <Provider store={store}>
