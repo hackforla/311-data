@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import { Container, Typography } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
@@ -15,6 +16,9 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     backgroundColor: theme.palette.primary.dark,
     zIndex: 1,
+  },
+  footerSpacing: {
+    height: theme.footer.height,
   },
   lastUpdated: {
     color: theme.palette.text.dark,
@@ -57,7 +61,7 @@ const Footer = ({ lastUpdated }) => {
               <Link to="/privacy" className={classes.link}>
                 Privacy Policy
               </Link>
-              &nbsp;| Powered by volunteers from Hack for LA |
+                &nbsp;| Powered by volunteers from Hack for LA |
             </Typography>
             <SocialMediaLinks classes={classes} />
           </div>

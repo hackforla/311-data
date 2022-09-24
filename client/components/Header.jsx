@@ -9,6 +9,7 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
+import colors from '@theme/colors';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -16,19 +17,19 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.main,
   },
   link: {
-    color: 'white',
+    color: colors.textPrimaryLight,
     textDecoration: 'none',
   },
   button: {
+    color: colors.textPrimaryLight,
     textTransform: 'none',
     fontFamily: 'Roboto',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    color: 'white',
     textDecoration: 'none',
   },
   title: {
-    ...theme.typography.h1,
+    ...theme.typography.h3,
     flexGrow: 1,
     fontSize: '30px',
     fontWeight: 'bold',
@@ -56,7 +57,7 @@ const Header = () => {
   return (
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
-        <Typography variant="h1" className={classes.title}>
+        <Typography variant="h3" className={classes.title}>
           <Link to="/" className={classes.link}>311DATA</Link>
         </Typography>
         <NavLink className={classes.link} to="/map" activeStyle={activeStyle}>
@@ -81,13 +82,13 @@ const Header = () => {
             horizontal: 'left',
           }}
         >
-          <Link to="/reports/dashboards/overview_combined" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
+          <Link to="/reports/dashboards/overview_combined">
+            <MenuItem onClick={handleClose}>
               Overview
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/nc_summary_comparison" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
+          <Link to="/reports/dashboards/nc_summary_comparison">
+            <MenuItem onClick={handleClose}>
               Compare Two Neighborhoods
             </MenuItem>
           </Link>
@@ -97,9 +98,6 @@ const Header = () => {
         </NavLink>
         <NavLink to="/about" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>About</Button>
-        </NavLink>
-        <NavLink to="/blog" className={classes.link} activeStyle={activeStyle}>
-          <Button className={classes.button}>Blog</Button>
         </NavLink>
         <NavLink to="/privacy" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>Privacy</Button>
