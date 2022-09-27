@@ -2,7 +2,7 @@ export default {
   primaryDark: '#192730',
   primaryDarkMain: '#29404F',
   primaryFocus: '#FFB100',
-  primaryLight: '#29404F',
+  primaryLight: '#002449',
   secondaryDark: '#0F181F',
   secondaryFocus: '#87C8BC',
   selectedPrimary: 'rgba(129, 123, 123, 0.3)',
