@@ -24,15 +24,15 @@ const lightTheme = createMuiTheme({
   ...commonThemeItems,
   palette: {
     type: 'light',
-    selected: { primary: 'rgba(129, 123, 123, 0.3)' },
+    selected: { primary: colors.selectedPrimary },
     primary: {
-      main: '#002449',
+      main: colors.primaryLight,
     },
     secondary: {
-      main: '#ffb100',
+      main: colors.primaryFocus,
     },
     text: {
-      primary: '#002449',
+      primary: colors.primaryLight,
     },
   },
 });
@@ -42,20 +42,20 @@ const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: colors.primaryDark,
-      dark: '#192730',
+      main: colors.primaryDarkMain,
+      dark: colors.primaryDark,
       focus: colors.primaryFocus,
     },
-    selected: { primary: 'rgba(129, 123, 123, 0.3)' },
+    selected: { primary: colors.selectedPrimary },
     secondary: {
       main: colors.textSecondaryDark,
       light: colors.textSecondaryLight,
     },
     background: {
-      default: '#0F181F',
+      default: colors.secondaryDark,
     },
     text: {
-      dark: '#C4C4C4',
+      dark: colors.textDark,
       cyan: colors.secondaryFocus,
       primaryDark: colors.textPrimaryDark,
       secondaryDark: colors.textSecondaryDark,
