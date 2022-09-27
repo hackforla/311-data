@@ -32,7 +32,7 @@ const lightTheme = createMuiTheme({
       main: colors.primaryFocus,
     },
     text: {
-      primary: colors.primaryLight,
+      primary: colors.textPrimaryLight,
     },
   },
 });

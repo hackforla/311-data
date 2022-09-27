@@ -9,7 +9,6 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
-import colors from '@theme/colors';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -17,11 +16,11 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.main,
   },
   link: {
-    color: colors.textPrimaryLight,
+    color: 'white',
     textDecoration: 'none',
   },
   button: {
-    color: colors.textPrimaryLight,
+    color: 'white',
     textTransform: 'none',
     fontFamily: 'Roboto',
     marginLeft: theme.spacing(1),

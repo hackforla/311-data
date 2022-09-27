@@ -8,7 +8,7 @@ export default {
   selectedPrimary: 'rgba(129, 123, 123, 0.3)',
   textDark: '#C4C4C4',
   textPrimaryDark: '#0F181F',
-  textPrimaryLight: '#FFFFFF',
+  textPrimaryLight: '#29404F',
   textSecondaryDark: '#A8A8A8',
   textSecondaryLight: '#ECECEC',
   textFocus: '#87C8BC',
