@@ -31,8 +31,6 @@ const useStyles = makeStyles(theme => ({
   title: {
     ...theme.typography.h3,
     flexGrow: 1,
-    fontSize: '30px',
-    fontWeight: 'bold',
     letterSpacing: '4px',
   },
 }));

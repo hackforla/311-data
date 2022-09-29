@@ -1,58 +1,57 @@
 const roboto = ['Roboto', 'sans-serif'];
 const oswald = ['Oswald', 'sans-serif'];
 
-const robotoMedium = 500;
-const robotoRegular = 400;
-const robotoBold = 700;
-const semiBold = 600;
+const medium = 500;
+const regular = 400;
+const bold = 700;
 
 export default {
   button: {
     textTransform: 'none',
   },
   fontFamily: roboto,
-  fontWeight: robotoRegular,
+  fontWeight: regular,
   h1: {
     fontFamily: roboto,
     fontSize: 40,
-    fontWeight: robotoMedium,
+    fontWeight: medium,
   },
   h2: {
     fontSize: 32,
-    fontWeight: robotoMedium,
+    fontWeight: medium,
   },
   h3: {
     fontFamily: oswald,
-    fontSize: 21,
-    fontWeight: semiBold,
+    fontSize: 30,
+    fontWeight: bold,
   },
   h4: {
     fontSize: 17,
-    fontWeight: robotoBold,
+    fontWeight: bold,
   },
   h5: {
     fontSize: 16,
-    fontWeight: robotoMedium,
+    fontWeight: medium,
   },
   h6: {
     fontSize: 16,
-    fontWeight: robotoBold,
+    fontWeight: bold,
   },
   body1: {
     fontSize: 16,
-    fontWeight: robotoRegular,
+    fontWeight: regular,
   },
   body2: {
     fontSize: 16,
-    fontWeight: robotoRegular,
+    fontWeight: regular,
   },
   body3: {
     fontSize: 14,
-    fontWeight: robotoMedium,
+    fontWeight: medium,
   },
   subtitle1: {
     fontSize: 16,
-    fontWeight: robotoBold,
+    fontWeight: bold,
   },
   subtitle2: {
     fontSize: 21,
