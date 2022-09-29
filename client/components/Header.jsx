@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 
+// Header should make use of style overrides to look the same regardless of light/dark theme
 const useStyles = makeStyles(theme => ({
   appBar: {
     height: theme.header.height,

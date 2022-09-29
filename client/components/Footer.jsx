@@ -7,6 +7,7 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import SocialMediaLinks from './SocialMediaLinks';
 
+// Footer should make use of style overrides to look the same regardless of light/dark theme
 const useStyles = makeStyles(theme => ({
   footer: {
     position: 'fixed',
