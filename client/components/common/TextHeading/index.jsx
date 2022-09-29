@@ -28,7 +28,7 @@ const TextHeading = ({ children }) => {
   return (
     <div className={classes.headingBackground}>
       <div className={classes.headingOverlayText}>
-        <Typography variant="jumbo">{children}</Typography>
+        <Typography variant="h1">{children}</Typography>
       </div>
     </div>
   );

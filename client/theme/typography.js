@@ -15,7 +15,7 @@ export default {
   h1: {
     fontFamily: roboto,
     fontSize: 40,
-    fontWeight: robotoBold,
+    fontWeight: robotoMedium,
   },
   h2: {
     fontSize: 32,
@@ -56,10 +56,5 @@ export default {
   },
   subtitle2: {
     fontSize: 21,
-  },
-  jumbo: {
-    fontFamily: roboto,
-    fontSize: 46,
-    fontWeight: robotoMedium,
   },
 };
