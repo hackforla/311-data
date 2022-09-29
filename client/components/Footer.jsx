@@ -47,6 +47,7 @@ const useStyles = makeStyles(theme => ({
 // TODO: check with UI/UX re placement of social media, privacy policy links
 const Footer = ({ lastUpdated }) => {
   const classes = useStyles();
+  const currentDate = new Date();
 
   return (
     <footer className={classes.footer}>
@@ -54,7 +55,9 @@ const Footer = ({ lastUpdated }) => {
         <div className={classes.container}>
           <div className={classes.copyrightContainer}>
             <Typography variant="body3" className={classes.copyright}>
-              &#169;311 Data&nbsp;&nbsp;|&nbsp;&nbsp;All Rights Reserved&nbsp;&nbsp;|&nbsp;&nbsp;
+              &#169;
+              {currentDate.getFullYear()}
+&nbsp;311 Data&nbsp;&nbsp;|&nbsp;&nbsp;All Rights Reserved&nbsp;&nbsp;|&nbsp;&nbsp;
               <Link to="/privacy" className={classes.link}>
                 Privacy Policy
               </Link>
