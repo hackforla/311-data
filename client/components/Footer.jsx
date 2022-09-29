@@ -54,7 +54,7 @@ const Footer = ({ lastUpdated }) => {
   return (
     <footer className={classes.footer}>
       { lastUpdated && (
-        <Container maxWidth="lg" className={classes.container}>
+        <Container className={classes.container}>
           <div className={classes.copyrightContainer}>
             <Typography className={classes.copyright}>
               &#169;311 Data &nbsp;&nbsp;All Rights Reserved |&nbsp;
