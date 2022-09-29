@@ -1,8 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import colors from '@theme/colors';
 import sharedLayout from '@theme/layout';
 import TextHeading from '@components/common/TextHeading';
 import ContentBody from '@components/common/ContentBody';
@@ -17,22 +15,8 @@ import publishIcon from '@assets/publish_icon.png';
 import upliftIcon from '@assets/uplift_icon.png';
 import visualizeIcon from '@assets/visualize_icon.png';
 
-// TODO: Revisit adding shared standard styles once those are decided.
-const useStyles = makeStyles({
-  root: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '2rem',
-    '& img': {
-      maxWidth: '100%',
-      display: 'block',
-      margin: '0 auto',
-    },
-  },
-});
-
 const About = () => {
-  const classes = { ...useStyles(), ...sharedLayout() };
+  const classes = sharedLayout();
 
   return (
     <>
@@ -61,7 +45,7 @@ const About = () => {
               this project comes&nbsp;in.
             </Typography>
             <div className={classes.contentMarginTop} align="center">
-              <Typography variant="h2" style={{ color: colors.primaryDark }}>
+              <Typography variant="h1" className={classes.contentHeader}>
                 Partners
               </Typography>
             </div>
@@ -89,7 +73,7 @@ const About = () => {
           </Grid>
         </Grid>
         <div className={classes.contentMarginTop} align="center">
-          <Typography variant="h2" style={{ color: colors.primaryDark }}>
+          <Typography variant="h1" className={classes.contentHeader}>
             How it works
           </Typography>
         </div>
