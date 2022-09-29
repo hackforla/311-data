@@ -1,5 +1,6 @@
 import {
   createMuiTheme,
+  responsiveFontSizes,
 } from '@material-ui/core/styles';
 import colors from '@theme/colors';
 import gaps from '@theme/gaps';
@@ -20,7 +21,7 @@ const commonThemeItems = {
   },
 };
 
-const lightTheme = createMuiTheme({
+const lightTheme = responsiveFontSizes(createMuiTheme({
   ...commonThemeItems,
   palette: {
     type: 'light',
@@ -36,9 +37,9 @@ const lightTheme = createMuiTheme({
       dark: colors.textDark,
     },
   },
-});
+}));
 
-const darkTheme = createMuiTheme({
+const darkTheme = responsiveFontSizes(createMuiTheme({
   ...commonThemeItems,
   palette: {
     type: 'dark',
@@ -63,7 +64,7 @@ const darkTheme = createMuiTheme({
       secondaryLight: colors.textSecondaryLight,
     },
   },
-});
+}));
 
 const theme = isLightTheme ? lightTheme : darkTheme;
 
