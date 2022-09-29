@@ -8,9 +8,12 @@ import requests as re
 
 from config import API_HOST
 from design import DISCRETE_COLORS, LABELS
+import dash
 from dash import dcc, html, callback
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
+
+dash.register_page(__name__)
 
 # Setting 1 week worth of data.
 start_date = datetime.date.today() - datetime.timedelta(days=8)
@@ -27,8 +30,6 @@ api_data_df = pd.json_normalize(data_json)
 print(" * Loading complete dataframe from API path: " + DATE_RANGE_REQ_DATA_API_PATH)
 report_json = pd.read_json(API_HOST + REPORT_API_PATH)
 print(" * Loading complete dataframe from API path: " + REPORT_API_PATH)
-
-print("wtf")
 
 
 def merge_dict(d1, d2):
@@ -76,13 +77,7 @@ def generate_summary_dropdowns():
 # LAYOUT.
 layout = html.Div([
     html.Div(children=[
-        # Neighborhood Council Dashboard.
-        # generate_summary_header(),
-        # Summary Dropdown.
         generate_summary_dropdowns(),
-        # html.Div(html.Br(), style={"height": "0.5vh"}),
-        # Line Chart for Number of Request throughout the day.
-        # generate_summary_line_chart(),
     ]),
 ])
 
