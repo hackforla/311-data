@@ -22,11 +22,8 @@ const useStyles = makeStyles(theme => ({
   lastUpdated: {
     color: theme.palette.text.dark,
     lineHeight: theme.footer.height,
-    fontSize: '14px',
-    fontFamily: 'Roboto',
   },
   copyright: {
-    fontSize: '14px',
     lineHeight: theme.footer.height,
     color: theme.palette.text.dark,
   },
@@ -56,19 +53,23 @@ const Footer = ({ lastUpdated }) => {
       { lastUpdated && (
         <div className={classes.container}>
           <div className={classes.copyrightContainer}>
-            <Typography className={classes.copyright}>
-              &#169;311 Data &nbsp;&nbsp;All Rights Reserved |&nbsp;
+            <Typography variant="body3" className={classes.copyright}>
+              &#169;311 Data &nbsp; | &nbsp;All Rights Reserved |&nbsp;
               <Link to="/privacy" className={classes.link}>
                 Privacy Policy
               </Link>
-                &nbsp;| Powered by volunteers from Hack for LA |
+                &nbsp;| Powered by volunteers from Hack for LA
             </Typography>
+          </div>
+          <div>
+            <Typography variant="body3" className={classes.lastUpdated}>
+              Data last updated: &nbsp;
+              {moment(lastUpdated).format('MM/DD/YY')}
+            </Typography>
+          </div>
+          <div>
             <SocialMediaLinks classes={classes} />
           </div>
-          <Typography className={classes.lastUpdated}>
-            Data updated: &nbsp;
-            {moment(lastUpdated).format('MM/DD/YY')}
-          </Typography>
         </div>
       )}
     </footer>
