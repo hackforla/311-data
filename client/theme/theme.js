@@ -33,6 +33,7 @@ const lightTheme = createMuiTheme({
     },
     text: {
       primary: colors.textPrimaryLight,
+      dark: colors.textDark,
     },
   },
 });

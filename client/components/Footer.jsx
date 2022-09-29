@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
@@ -35,6 +34,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    margin: theme.spacing(0, 2, 0),
   },
   copyrightContainer: {
     display: 'flex',
@@ -54,7 +54,7 @@ const Footer = ({ lastUpdated }) => {
   return (
     <footer className={classes.footer}>
       { lastUpdated && (
-        <Container className={classes.container}>
+        <div className={classes.container}>
           <div className={classes.copyrightContainer}>
             <Typography className={classes.copyright}>
               &#169;311 Data &nbsp;&nbsp;All Rights Reserved |&nbsp;
@@ -69,7 +69,7 @@ const Footer = ({ lastUpdated }) => {
             Data updated: &nbsp;
             {moment(lastUpdated).format('MM/DD/YY')}
           </Typography>
-        </Container>
+        </div>
       )}
     </footer>
   );
