@@ -54,16 +54,16 @@ const Footer = ({ lastUpdated }) => {
         <div className={classes.container}>
           <div className={classes.copyrightContainer}>
             <Typography variant="body3" className={classes.copyright}>
-              &#169;311 Data &nbsp; | &nbsp;All Rights Reserved |&nbsp;
+              &#169;311 Data&nbsp;&nbsp;|&nbsp;&nbsp;All Rights Reserved&nbsp;&nbsp;|&nbsp;&nbsp;
               <Link to="/privacy" className={classes.link}>
                 Privacy Policy
               </Link>
-                &nbsp;| Powered by volunteers from Hack for LA
+              &nbsp;&nbsp;|&nbsp;&nbsp;Powered by volunteers from Hack for LA
             </Typography>
           </div>
           <div>
             <Typography variant="body3" className={classes.lastUpdated}>
-              Data last updated: &nbsp;
+              Data last updated&nbsp;
               {moment(lastUpdated).format('MM/DD/YY')}
             </Typography>
           </div>
