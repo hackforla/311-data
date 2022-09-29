@@ -1,17 +1,19 @@
+"""Dash page that drills deeper into an NC and compares two NCs."""
 import datetime
+import requests as re
+
+import dash
+from dash import dcc, html, callback
+from dash.dependencies import Input, Output
+from dash.exceptions import PreventUpdate
 import dash_daq as daq
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import requests as re
 
 from config import API_HOST
 from design import DISCRETE_COLORS, LABELS
-import dash
-from dash import dcc, html, callback
-from dash.dependencies import Input, Output
-from dash.exceptions import PreventUpdate
 
 dash.register_page(__name__)
 

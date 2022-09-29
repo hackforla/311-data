@@ -1,11 +1,13 @@
-import textwrap
+"""Dash page that provides an overview of 311 requests across NCs."""
 import datetime
+import textwrap
 import urllib.parse
+
+import dash
+from dash import dcc, html
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import dash
-from dash import dcc, html
 
 from config import API_HOST
 from design import LABELS

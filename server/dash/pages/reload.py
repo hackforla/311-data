@@ -1,3 +1,4 @@
+"""Dash page that reloads Gunicorn workers when visited."""
 import logging
 import os
 import signal
@@ -7,6 +8,8 @@ from dash import html, callback, Input, Output
 
 dash.register_page(__name__)
 
+# This is the reloading message that our Prefect data pipeline expects to see
+# when the Dash server is successfully reloaded.
 RELOADING_MESSAGE = "Reloading..."
 
 logger = logging.getLogger("gunicorn.error")
