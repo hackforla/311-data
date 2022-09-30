@@ -19,9 +19,6 @@ const useStyles = makeStyles(theme => ({
   contentQuestion: {
     fontWeight: theme.typography.fontWeightMedium,
   },
-  contentAnswer: {
-
-  },
 }));
 
 const query = `
@@ -68,11 +65,9 @@ const Faqs = () => {
                       <Typography variant="h6" className={classes.contentQuestion}>
                         {item.question}
                       </Typography>
-                      {/* <Typography variant="body1" className={classes.contentAnswer}> */}
                       <ReactMarkdown>
                         {item.answer}
                       </ReactMarkdown>
-                      {/* </Typography> */}
                     </Box>
                   ))}
                 </div>
