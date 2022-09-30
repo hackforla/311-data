@@ -57,6 +57,119 @@ CHART_OUTLINE_STYLE = merge_dict(INLINE_STYLE, BORDER_STYLE)
 SUMMARY_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Summary Dashboard"
 COMPARISON_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Comparison Dashboard"
 
+
+## Helper Functions
+
+def add_datetime_column(df, colname):
+    """Adds a datetime column to a dataframe.
+    This function takes a datetime column 'colname' in string type, remove the last 4 characters,
+    split date and time by character 'T', and finally combine date and time into a single string again.
+    The function then converts the string using pandas's to_datetime function.
+    Args:
+        df: dataframe to add the datetime column to.
+        colname: the datetime column that is in string type.
+    
+    Return:
+        A dataframe with new column 'colnameDT' that is in datetime type.
+    """
+    df.loc[:, colname+"DT"] = pd.to_datetime(
+        df.loc[:, colname].str[:-4].str.split("T").str.join(" "))
+    return df
+
+def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types):
+    """Outputs the filtered dataframe based on the selected filters
+    This function takes the original dataframe "api_data_df", selected neighborhood
+    council "selected_nc", as well as the selected request type "selected_request_types" 
+    to output a dataframe with matching records.
+    Args:
+        api_data_df: full 311-request data directly access from the 311 data API.
+        selected_nc: A string argument automatically detected by Dash callback 
+        function when "selected_nc" element is selected in the layout.
+        selected_request_types: A list of strings automatically detected by Dash 
+        callback function when "selected_request_types" element is selected in the
+         layout, default None.
+    Returns:
+        pandas dataframe filtered by selected neighborhood council and request types
+    """
+    if (not selected_request_types or selected_request_types == ' ') and not selected_nc:
+        df = api_data_df  
+    elif selected_nc and (not selected_request_types or selected_request_types == ' '):
+        df = api_data_df[api_data_df["councilName"] == selected_nc]
+    elif selected_request_types != ' ':
+        df = df[df["typeName"].isin(selected_request_types)]
+    else:
+        df = api_data_df
+    return df
+
+
+def filter_bad_quality_data(df, data_quality_switch=True):
+    """Filters the dataframe based on pre-defined data quality filters.
+    This function takes the original dataframe "df" and filters out records 
+    with an outlier amount of request time to close based on the Freedman-Diaconis Rule.
+    Generally 10% of data is excluded.
+    Args:
+        df: 311-request data accessed from the API.
+        data_quality_switch: A boolean argument automatically detected by Dash. 
+            callback function when "data_quality_switch" toggle element is selected in layout.
+        
+    Returns:
+        df: filtered dataframe excluding outliers.
+        num_bins: the number of bins that will be used to plot histogram.
+        data_quality_output: a string being displayed on whether the data quality switch is on or off.
+    """
+    print("* Getting quality data.")
+    df = add_datetime_column(df, "createdDate")
+    df = add_datetime_column(df, "closedDate")
+    df.loc[:, "timeToClose"] = (df.loc[:, "closedDateDT"] - df.loc[:, "createdDateDT"]).dt.days
+    # Calculate the Optimal number of bins based on Freedman-Diaconis Rule.
+
+    # Replace empty rows with 0.0000001 To avoid log(0) error later.
+    df.loc[:, "timeToClose"] = df.loc[:, "timeToClose"].fillna(0.0000001)
+
+    # Replace negative values
+    df = df[df["timeToClose"] > 0]
+    if df.shape[0] == 0:
+        raise PreventUpdate()
+
+    # Data Quality switch to remove outliers as defined by Median +- 1.5*IQR.
+    if data_quality_switch:
+        num_bins = len(np.histogram_bin_edges(df.loc[:, "timeToClose"], bins='fd'))-1
+
+        # Log Transform, Compute IQR, then exclude outliers.
+        df.loc[:, "logTimeToClose"] = np.log(df.loc[:, "timeToClose"])
+        log_q3, log_q1 = np.percentile(df.loc[:, "logTimeToClose"], [75, 25])
+        log_iqr = log_q3 - log_q1
+        filtered_df = df[(df.loc[:, "logTimeToClose"] > log_q1 - 1.5 * log_iqr) &
+            (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + log_q3)]
+        if filtered_df.shape[0] > 0:
+            df = filtered_df
+        data_quality_output = "Quality Filter: On"
+    else:
+        num_bins = 10
+        data_quality_output = "Quality Filter: Off"
+
+    return df, num_bins, data_quality_output
+
+def generate_comparison_filtered_df(api_data_df, selected_nc):
+    """Generates the dataframe based on selected neighborhood council.
+    This function takes the selected neighborhood council (nc) value from 
+    the "selected_nc" dropdown and outputs a dataframe 
+    corresponding to their neighorhood council with additional datetime column.
+    Args:
+        api_data_df: full 311-request data directly access from the 311 data API.
+        selected_nc: A string argument automatically detected by Dash callback
+         function when "nc_comp_dropdown" element is selected in the layout.
+    Returns: 
+        Pandas dataframe with requests from the nc selected by nc_comp_dropdown.
+    """
+    if not selected_nc:
+        df = api_data_df
+    else:
+        df = api_data_df[api_data_df["councilName"] == selected_nc]
+    df = add_datetime_column(df, "createdDate")
+    return df
+
+# Layout Helper Functions 
 def generate_summary_header():
     """Generates the header for the summary dashboard.
     This function generates the html elements for the 
@@ -148,33 +261,41 @@ def generate_council_name_dropdown(output_id):
                  placeholder="Select a Neighborhood Council..."),
                  style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
 
-# LAYOUT.
-layout = html.Div([
-    html.Div(children=[
-        generate_summary_header(),
-        generate_summary_dropdowns(),
-        html.Div(html.Br(), style={"height": "0.5vh"}),
-        generate_summary_line_chart(),
-        html.Div(html.Br(), style=DIVIDER_STYLE),
-        html.Div(children=[
-            generate_summary_pie_chart(),
-            generate_summary_histogram()
-        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"})),
-        html.Div(html.Br(), style=DIVIDER_STYLE),
-        # Neighborhood Council Summarization Dashboard.
-        html.Div(children=[html.H2(COMPARISON_DASHBOARD_TITLE)],
-                style=merge_dict(CENTER_ALIGN_STYLE, {"height": "5vh"})),
-        # Comparison Dropdowns.
-        html.Div(children=[
-            generate_council_name_dropdown('nc_comp_dropdown'),
-            generate_council_name_dropdown('nc_comp_dropdown2')
-        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw", "height": "12vh"})),
-        html.Div(html.Br(), style=DIVIDER_STYLE),
-        ]),
-])
+def generate_comparison_total_req(output_id):
+    """Generates the indicator visual for the 
+    total number of requests.
+    This function generates the html elements for the 
+    indicator visual with matching output_id showing the total number of 
+    requests for the comparison dashboard.
+    Args:
+        output_id: the id corresponding to the dash element in the layout.
+    Return:
+        Dash html div element containing label and indicator visual.
+    """
+    return html.Div([
+        html.H6("Total Number of Requests", style=CENTER_ALIGN_STYLE),
+        html.H1(id=output_id, style=CENTER_ALIGN_STYLE)],
+        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
+
+
+def generate_comparison_num_days(output_id):
+    """Generates the indicator visual for the 
+    total number of days request spans.
+    This function generates the html elements for the 
+    indicator visual with matching output_id showing the 
+    total number of days request spans for the 
+    comparison dashboard.
+    Args:
+        output_id: the id corresponding to the dash element in the layout.
+    Return:
+        Dash html div element containing label and indicator visual.
+    """
+    return html.Div([
+        html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
+        html.H1(id=output_id, style=CENTER_ALIGN_STYLE)],
+        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
 
 # CALLBACK FUNCTIONS.
-
 
 @callback(
     [Output("selected_request_types", "options"),
@@ -328,94 +449,147 @@ data_quality_switch=True):
     time_close_histogram.update_layout(margin=dict(l=50, r=50, b=50, t=50), font=dict(size=9))
     return time_close_histogram, data_quality_output
 
-## Helper Functions
-
-def add_datetime_column(df, colname):
-    """Adds a datetime column to a dataframe.
-    This function takes a datetime column 'colname' in string type, remove the last 4 characters,
-    split date and time by character 'T', and finally combine date and time into a single string again.
-    The function then converts the string using pandas's to_datetime function.
+@callback(
+    Output("total_req_card", "children"),
+    Output("total_req_card2", "children"),
+    Output("num_days_card", "children"),
+    Output("num_days_card2", "children"),
+    Input("nc_comp_dropdown", "value"),
+    Input("nc_comp_dropdown2", "value"),
+    prevent_initial_call=True
+)
+def generate_indicator_visuals(nc_comp_dropdown, nc_comp_dropdown2):
+    """Generates the overlapping line chart based on selected filters.
+    This function takes the the two neighborhood council (nc) value from 
+    the "nc_comp_dropdown" dropdown and second selected neighborhood 
+    council value from "nc_comp_dropdown2"
+    dropdown and outputs indicator visuals for the two nc's.
     Args:
-        df: dataframe to add the datetime column to.
-        colname: the datetime column that is in string type.
-    
+        nc_comp_dropdown: A string argument automatically detected by 
+        Dash callback function when "nc_comp_dropdown" element is 
+        selected in the layout.
+        nc_comp_dropdown2: A string argument automatically detected by
+         Dash callback function when "nc_comp_dropdown2" element is 
+         selected in the layout.
+    Returns: 
+        total_req_card: integer for the the total number of request 
+            in first selected neigborhood council.
+        total_req_card2: integer for the total number of requests 
+            in the second selected neighborhood council.
+        num_days_card: integer for the total number of days the data 
+            available in first selected neighborhood council span.
+        num_days_card2: integer for the total number of days the data
+            available in second selected neighborhood council span.
+    """
+    df_nc1 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    df_nc2 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
+    # Total number of requests for first neigbhorhood council.
+    total_req_card = df_nc1.shape[0]
+
+    # Total number of requests for second neigbhorhood council.
+    total_req_card2 = df_nc2.shape[0]
+
+    # Total number of days the available requests in first neigbhorhood council span.
+    num_days_card = np.max(df_nc1["createdDateDT"].dt.day) - \
+                           np.min(df_nc1["createdDateDT"].dt.day) + 1
+
+    # Total number of days the available requests in second neigbhorhood council span.
+    num_days_card2 = np.max(df_nc2["createdDateDT"].dt.day) - \
+                            np.min(df_nc2["createdDateDT"].dt.day) + 1
+
+    return total_req_card, total_req_card2, num_days_card, num_days_card2
+
+
+def generate_comparison_num_days(output_id):
+    """Generates the indicator visual for the 
+    total number of days request spans.
+    This function generates the html elements for the 
+    indicator visual with matching output_id showing the 
+    total number of days request spans for the 
+    comparison dashboard.
+    Args:
+        output_id: the id corresponding to the dash element in the layout.
     Return:
-        A dataframe with new column 'colnameDT' that is in datetime type.
+        Dash html div element containing label and indicator visual.
     """
-    df.loc[:, colname+"DT"] = pd.to_datetime(
-        df.loc[:, colname].str[:-4].str.split("T").str.join(" "))
-    return df
+    return html.Div([
+        html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
+        html.H1(id=output_id, style=CENTER_ALIGN_STYLE)],
+        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
 
-def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types):
-    """Outputs the filtered dataframe based on the selected filters
-    This function takes the original dataframe "api_data_df", selected neighborhood
-    council "selected_nc", as well as the selected request type "selected_request_types" 
-    to output a dataframe with matching records.
+def generate_comparison_req_source_bar(output_id):
+    """Generates the bar chart visual for the 
+    request source in comparison dashboard.
+    This function generates the html elements for the 
+    bar chart of request sources with matching output_id 
+    on the comparison dashboard.
     Args:
-        api_data_df: full 311-request data directly access from the 311 data API.
-        selected_nc: A string argument automatically detected by Dash callback 
-        function when "selected_nc" element is selected in the layout.
-        selected_request_types: A list of strings automatically detected by Dash 
-        callback function when "selected_request_types" element is selected in the
-         layout, default None.
-    Returns:
-        pandas dataframe filtered by selected neighborhood council and request types
+        output_id: the id corresponding to the dash element in the layout.
+    Return:
+        Dash html div element containing request source bar chart.
     """
-    if (not selected_request_types or selected_request_types == ' ') and not selected_nc:
-        df = api_data_df  
-    elif selected_nc and (not selected_request_types or selected_request_types == ' '):
-        df = api_data_df[api_data_df["councilName"] == selected_nc]
-    elif selected_request_types != ' ':
-        df = df[df["typeName"].isin(selected_request_types)]
-    else:
-        df = api_data_df
-    return df
+    return html.Div(dcc.Graph(id=output_id, style={"height": "30vh"}),
+         style=merge_dict(CHART_OUTLINE_STYLE, {
+             "width": "48.5vw", "height": "30vh"}))
 
-
-def filter_bad_quality_data(df, data_quality_switch=True):
-    """Filters the dataframe based on pre-defined data quality filters.
-    This function takes the original dataframe "df" and filters out records 
-    with an outlier amount of request time to close based on the Freedman-Diaconis Rule.
-    Generally 10% of data is excluded.
-    Args:
-        df: 311-request data accessed from the API.
-        data_quality_switch: A boolean argument automatically detected by Dash. 
-            callback function when "data_quality_switch" toggle element is selected in layout.
-        
-    Returns:
-        df: filtered dataframe excluding outliers.
-        num_bins: the number of bins that will be used to plot histogram.
-        data_quality_output: a string being displayed on whether the data quality switch is on or off.
+def generate_comparison_line_chart():
+    """Generates the line chart visual for the 
+    number of requests in comparison dashboard.
+    This function generates the html elements for the 
+    overlapping line chart for number of requests on the 
+    bottom of the comparison dashboard.
+    Return:
+        Dash html div element containing overlapping line chart.
     """
-    print("* Getting quality data.")
-    df = add_datetime_column(df, "createdDate")
-    df = add_datetime_column(df, "closedDate")
-    df.loc[:, "timeToClose"] = (df.loc[:, "closedDateDT"] - df.loc[:, "createdDateDT"]).dt.days
-    # Calculate the Optimal number of bins based on Freedman-Diaconis Rule.
-
-    # Replace empty rows with 0.0000001 To avoid log(0) error later.
-    df.loc[:, "timeToClose"] = df.loc[:, "timeToClose"].fillna(0.0000001)
-
-    # Replace negative values
-    df = df[df["timeToClose"] > 0]
-    if df.shape[0] == 0:
-        raise PreventUpdate()
-
-    # Data Quality switch to remove outliers as defined by Median +- 1.5*IQR.
-    if data_quality_switch:
-        num_bins = len(np.histogram_bin_edges(df.loc[:, "timeToClose"], bins='fd'))-1
-
-        # Log Transform, Compute IQR, then exclude outliers.
-        df.loc[:, "logTimeToClose"] = np.log(df.loc[:, "timeToClose"])
-        log_q3, log_q1 = np.percentile(df.loc[:, "logTimeToClose"], [75, 25])
-        log_iqr = log_q3 - log_q1
-        filtered_df = df[(df.loc[:, "logTimeToClose"] > log_q1 - 1.5 * log_iqr) &
-            (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + log_q3)]
-        if filtered_df.shape[0] > 0:
-            df = filtered_df
-        data_quality_output = "Quality Filter: On"
-    else:
-        num_bins = 10
-        data_quality_output = "Quality Filter: Off"
-
-    return df, num_bins, data_quality_output
+    return html.Div(dcc.Graph(id="overlay_req_time_line_chart", style={"height": "32vh",
+     "width": "97.5vw"}), style=merge_dict(BORDER_STYLE, {
+         "height": "32vh", "width": "97.5vw"}))
+    
+# LAYOUT.
+layout = html.Div([
+    html.Div(children=[
+        generate_summary_header(),
+        generate_summary_dropdowns(),
+        html.Div(html.Br(), style={"height": "0.5vh"}),
+        generate_summary_line_chart(),
+        html.Div(html.Br(), style=DIVIDER_STYLE),
+        html.Div(children=[
+            generate_summary_pie_chart(),
+            generate_summary_histogram()
+        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"}))
+    ]),
+    html.Div(html.Br(), style=DIVIDER_STYLE),
+    # Neighborhood Council Summarization Dashboard.
+    html.Div(children=[html.H2(COMPARISON_DASHBOARD_TITLE)],
+            style=merge_dict(CENTER_ALIGN_STYLE, {"height": "5vh"})),
+    # Comparison Dropdowns.
+    html.Div(children=[
+        generate_council_name_dropdown('nc_comp_dropdown'),
+        generate_council_name_dropdown('nc_comp_dropdown2')
+    ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw", "height": "12vh"})),
+    html.Div(html.Br(), style=DIVIDER_STYLE),
+        html.Div(children=[
+        html.Div(children=[
+            # Indicator Visuals for Total number of requests and the number of
+            # days the data spans across.
+            generate_comparison_total_req("total_req_card"),
+            generate_comparison_num_days("num_days_card")
+        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "48.5vw"})),
+        # Indicator Visuals for Total number of requests and the number of days
+        # the data spans across.
+        html.Div(children=[
+            generate_comparison_total_req("total_req_card2"),
+            generate_comparison_num_days("num_days_card2")
+        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "48.5vw"}))
+    ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"})),
+    html.Div(html.Br(), style=DIVIDER_STYLE),
+    # NC Comparison -  Request Source Bar Charts.
+    html.Div(children=[
+        generate_comparison_req_source_bar("req_source_bar_chart"),
+        generate_comparison_req_source_bar("req_source_bar_chart2")
+    ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"})),
+    html.Div(html.Br(), style=DIVIDER_STYLE),
+    # NC Comparison - Number of Requests per day Overlapping line chart.
+    generate_comparison_line_chart()
+    
+])
