@@ -169,7 +169,6 @@ def generate_dynamic_filter(selected_nc):
         neigbhorhood council.
     """
     # If no neighborhood council is selected, use all data.
-    print("got new selected_nc ", selected_nc)
     if not selected_nc:
         df = api_data_df
     else:
@@ -337,19 +336,14 @@ def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types
     Returns:
         pandas dataframe filtered by selected neighborhood council and request types
     """
-    print(selected_request_types)
-    print(type(selected_request_types))
-    print(selected_request_types is None)
-    print(selected_request_types == ' ')
-    if not selected_nc:
-        df = api_data_df
-    else:
+    if (not selected_request_types or selected_request_types == ' ') and not selected_nc:
+        df = api_data_df  
+    elif selected_nc and (not selected_request_types or selected_request_types == ' '):
         df = api_data_df[api_data_df["councilName"] == selected_nc]
-    # Filter as per selection on Request Type Dropdown.
-    if not selected_request_types and not selected_nc:
-        df = api_data_df
     elif selected_request_types != ' ':
         df = df[df["typeName"].isin(selected_request_types)]
+    else:
+        df = api_data_df
     return df
 
 
@@ -372,7 +366,6 @@ def filter_bad_quality_data(df, data_quality_switch=True):
     df = add_datetime_column(df, "createdDate")
     df = add_datetime_column(df, "closedDate")
     df.loc[:, "timeToClose"] = (df.loc[:, "closedDateDT"] - df.loc[:, "createdDateDT"]).dt.days
-
     # Calculate the Optimal number of bins based on Freedman-Diaconis Rule.
 
     # Replace empty rows with 0.0000001 To avoid log(0) error later.
@@ -391,13 +384,13 @@ def filter_bad_quality_data(df, data_quality_switch=True):
         df.loc[:, "logTimeToClose"] = np.log(df.loc[:, "timeToClose"])
         log_q3, log_q1 = np.percentile(df.loc[:, "logTimeToClose"], [75, 25])
         log_iqr = log_q3 - log_q1
-        filtered_df = df[(df.loc[:, "logTimeToClose"] > 1.5 * log_iqr - np.median(df.loc[:, "logTimeToClose"])) &
-            (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + np.median(df.loc[:, "logTimeToClose"]))]
+        filtered_df = df[(df.loc[:, "logTimeToClose"] > log_q1 - 1.5 * log_iqr) &
+            (df.loc[:, "logTimeToClose"] < 1.5 * log_iqr + log_q3)]
         if filtered_df.shape[0] > 0:
             df = filtered_df
         data_quality_output = "Quality Filter: On"
     else:
         num_bins = 10
-        
         data_quality_output = "Quality Filter: Off"
+
     return df, num_bins, data_quality_output
