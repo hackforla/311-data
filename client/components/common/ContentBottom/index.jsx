@@ -8,6 +8,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// ContentBottom is used to provide the necessary amount of bottom margin on
+// all content pages to prevent the fixed footer from covering the
+// bottom of the content pages. This component is utilized at the bottom of the
+// component page <Switch> of Routes.jsx
+
 const ContentBottom = () => {
   const classes = useStyles();
   return (
