@@ -9,8 +9,9 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
+import fonts from '@theme/fonts';
 
-// Header should make use of style overrides to look the same regardless of light/dark theme
+// Header should make use of style overrides to look the same regardless of light/dark theme.
 const useStyles = makeStyles(theme => ({
   appBar: {
     height: theme.header.height,
@@ -23,17 +24,17 @@ const useStyles = makeStyles(theme => ({
   button: {
     color: 'white',
     textTransform: 'none',
-    fontFamily: 'Roboto',
+    fontFamily: fonts.family.roboto,
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     textDecoration: 'none',
   },
   title: {
     ...theme.typography.h4,
-    fontFamily: ['Oswald', 'sans-serif'],
+    fontFamily: fonts.family.oswald,
     fontSize: '30px',
     letterSpacing: '0.13em',
-    fontWeight: 700,
+    fontWeight: theme.typography.fontWeightBold,
     flexGrow: 1,
   },
 }));

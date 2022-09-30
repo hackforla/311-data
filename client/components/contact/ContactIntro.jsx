@@ -1,16 +1,23 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import sharedLayout from '@theme/layout';
 
+const useStyles = makeStyles(theme => ({
+  contentTitle: {
+    fontWeight: theme.typography.fontWeightBold,
+  },
+}));
+
 const ContactIntro = () => {
-  const classes = sharedLayout();
+  const classes = { ...useStyles(), ...sharedLayout() };
 
   return (
     <Grid container alignItems="center" justify="center" direction="column">
       <Grid item>
-        <div align="left">
-          <Typography variant="subtitle1">
+        <div align="center">
+          <Typography variant="body2" className={classes.contentTitle}>
             {'Don\'t See What You Need?'}
           </Typography>
         </div>

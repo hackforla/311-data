@@ -3,8 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import sharedLayout from '@theme/layout';
 import fonts from '@theme/fonts';
+import sharedLayout from '@theme/layout';
 import TextHeading from '@components/common/TextHeading';
 import ContentBody from '@components/common/ContentBody';
 
@@ -18,10 +18,10 @@ import publishIcon from '@assets/publish_icon.png';
 import upliftIcon from '@assets/uplift_icon.png';
 import visualizeIcon from '@assets/visualize_icon.png';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   contentTitle: {
     fontSize: fonts.size.jumbo,
-    fontWeight: fonts.weight.medium,
+    fontWeight: theme.typography.fontWeightMedium,
   },
 }));
 

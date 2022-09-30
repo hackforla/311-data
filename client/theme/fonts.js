@@ -1,26 +1,14 @@
 export default {
   family: {
-    oswald: {
-      fontFamily: ['Oswald', 'sans-serif'],
-    },
-    roboto: {
-      fontFamily: ['Roboto', 'sans-serif'],
-    },
+    oswald: ['Oswald', 'sans-serif'],
+    roboto: ['Roboto', 'sans-serif'],
   },
   weight: {
-    medium: {
-      fontWeight: 500,
-    },
-    regular: {
-      fontWeight: 400,
-    },
-    bold: {
-      fontWeight: 700,
-    },
+    medium: 500,
+    regular: 400,
+    bold: 700,
   },
   size: {
-    jumbo: {
-      fontSize: '46px',
-    },
+    jumbo: '46px',
   },
 };

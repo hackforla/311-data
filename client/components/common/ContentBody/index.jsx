@@ -19,11 +19,12 @@ const ContentBody = ({ children, maxWidth }) => {
 };
 
 ContentBody.defaultProps = {
+  children: {},
   maxWidth: 'md',
 };
 
 ContentBody.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   maxWidth: PropTypes.string,
 };
 

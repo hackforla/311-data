@@ -2,13 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import fonts from '@theme/fonts';
 
 const useStyles = makeStyles(theme => ({
   headingBackground: {
     background: theme.palette.primary.main,
     backgroundPosition: 'top',
-    height: '15vh',
+    height: '20vh',
     position: 'relative',
   },
   headingOverlayText: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     transform: 'translate(-50%, -70%)',
   },
   contentHeading: {
-    fontWeight: fonts.weight.bold,
+    fontWeight: theme.typography.fontWeightBold,
   },
 }));
 

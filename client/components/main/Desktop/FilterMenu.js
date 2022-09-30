@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
   headerTitle: {
     ...theme.typography.h5,
-    fontWeight: 600,
+    fontWeight: theme.typography.fontWeightMedium,
     letterSpacing: '2px',
     marginLeft: theme.gaps.xs,
   },

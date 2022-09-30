@@ -11,6 +11,15 @@ const sharedLayout = makeStyles(theme => createStyles({
   marginTopSmall: {
     marginTop: theme.spacing(1),
   },
+  marginBottomLarge: {
+    marginBottom: theme.spacing(5),
+  },
+  marginBottomMedium: {
+    marginBottom: theme.spacing(3),
+  },
+  marginBottomSmall: {
+    marginBottom: theme.spacing(1),
+  },
 }));
 
 export default sharedLayout;
