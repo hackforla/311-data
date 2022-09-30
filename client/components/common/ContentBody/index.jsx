@@ -4,6 +4,9 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import sharedLayout from '@theme/layout';
 
+// ContentBody keeps the body of all content pages centered
+// with a customizable maxWidth container that defaults to 'md'.
+
 const ContentBody = ({ children, maxWidth }) => {
   const classes = sharedLayout();
 

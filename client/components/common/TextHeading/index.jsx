@@ -23,6 +23,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// TextHeading provides a standardized heading area and custom title
+// below the Header on all content pages.
+
 const TextHeading = ({ children }) => {
   const classes = useStyles();
 
