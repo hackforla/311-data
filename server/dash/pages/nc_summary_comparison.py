@@ -58,8 +58,7 @@ SUMMARY_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Summary Dashbo
 COMPARISON_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Comparison Dashboard"
 
 
-## Helper Functions
-
+## DATA WRANGLING HELPER FUNCTIONS.
 def add_datetime_column(df, colname):
     """Adds a datetime column to a dataframe.
     This function takes a datetime column 'colname' in string type, remove the last 4 characters,
@@ -169,7 +168,7 @@ def generate_comparison_filtered_df(api_data_df, selected_nc):
     df = add_datetime_column(df, "createdDate")
     return df
 
-# Layout Helper Functions 
+# VISUALS HELPER FUNCTIONS.
 def generate_summary_header():
     """Generates the header for the summary dashboard.
     This function generates the html elements for the 
@@ -295,8 +294,52 @@ def generate_comparison_num_days(output_id):
         html.H1(id=output_id, style=CENTER_ALIGN_STYLE)],
         style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
 
-# CALLBACK FUNCTIONS.
+def generate_comparison_num_days(output_id):
+    """Generates the indicator visual for the 
+    total number of days request spans.
+    This function generates the html elements for the 
+    indicator visual with matching output_id showing the 
+    total number of days request spans for the 
+    comparison dashboard.
+    Args:
+        output_id: the id corresponding to the dash element in the layout.
+    Return:
+        Dash html div element containing label and indicator visual.
+    """
+    return html.Div([
+        html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
+        html.H1(id=output_id, style=CENTER_ALIGN_STYLE)],
+        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
 
+def generate_comparison_req_source_bar(output_id):
+    """Generates the bar chart visual for the 
+    request source in comparison dashboard.
+    This function generates the html elements for the 
+    bar chart of request sources with matching output_id 
+    on the comparison dashboard.
+    Args:
+        output_id: the id corresponding to the dash element in the layout.
+    Return:
+        Dash html div element containing request source bar chart.
+    """
+    return html.Div(dcc.Graph(id=output_id, style={"height": "30vh"}),
+         style=merge_dict(CHART_OUTLINE_STYLE, {
+             "width": "48.5vw", "height": "30vh"}))
+
+def generate_comparison_line_chart():
+    """Generates the line chart visual for the 
+    number of requests in comparison dashboard.
+    This function generates the html elements for the 
+    overlapping line chart for number of requests on the 
+    bottom of the comparison dashboard.
+    Return:
+        Dash html div element containing overlapping line chart.
+    """
+    return html.Div(dcc.Graph(id="overlay_req_time_line_chart", style={"height": "32vh",
+     "width": "97.5vw"}), style=merge_dict(BORDER_STYLE, {
+         "height": "32vh", "width": "97.5vw"}))
+    
+# CALLBACK FUNCTIONS.
 @callback(
     [Output("selected_request_types", "options"),
     Output("selected_request_types", "value")],
@@ -589,51 +632,6 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
          max(max(req_time["createdDateDT"]), max(req_time2["createdDateDT"]))], font=dict(size=9))
     return 
 
-def generate_comparison_num_days(output_id):
-    """Generates the indicator visual for the 
-    total number of days request spans.
-    This function generates the html elements for the 
-    indicator visual with matching output_id showing the 
-    total number of days request spans for the 
-    comparison dashboard.
-    Args:
-        output_id: the id corresponding to the dash element in the layout.
-    Return:
-        Dash html div element containing label and indicator visual.
-    """
-    return html.Div([
-        html.H6("Number of Days", style=CENTER_ALIGN_STYLE),
-        html.H1(id=output_id, style=CENTER_ALIGN_STYLE)],
-        style=merge_dict(CHART_OUTLINE_STYLE, {"width": "24vw", "height": "16vh"}))
-
-def generate_comparison_req_source_bar(output_id):
-    """Generates the bar chart visual for the 
-    request source in comparison dashboard.
-    This function generates the html elements for the 
-    bar chart of request sources with matching output_id 
-    on the comparison dashboard.
-    Args:
-        output_id: the id corresponding to the dash element in the layout.
-    Return:
-        Dash html div element containing request source bar chart.
-    """
-    return html.Div(dcc.Graph(id=output_id, style={"height": "30vh"}),
-         style=merge_dict(CHART_OUTLINE_STYLE, {
-             "width": "48.5vw", "height": "30vh"}))
-
-def generate_comparison_line_chart():
-    """Generates the line chart visual for the 
-    number of requests in comparison dashboard.
-    This function generates the html elements for the 
-    overlapping line chart for number of requests on the 
-    bottom of the comparison dashboard.
-    Return:
-        Dash html div element containing overlapping line chart.
-    """
-    return html.Div(dcc.Graph(id="overlay_req_time_line_chart", style={"height": "32vh",
-     "width": "97.5vw"}), style=merge_dict(BORDER_STYLE, {
-         "height": "32vh", "width": "97.5vw"}))
-    
 # LAYOUT.
 layout = html.Div([
     html.Div(children=[
