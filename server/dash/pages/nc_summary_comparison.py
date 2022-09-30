@@ -133,6 +133,21 @@ def generate_summary_histogram():
                  "height": "40vh"}))
 
 
+def generate_council_name_dropdown(output_id):
+    """Generates the neighborhood council (nc) dropdown for the 
+    comparison dashboard.
+    This function generates the html elements for the 
+    nc dropdown for the comparison dashboard.
+    Args:
+        output_id: the id corresponding to the dash element in the layout.
+    Return:
+        Dash html div element containing nc drop down for left pane filtering.
+    """
+    return html.Div(dcc.Dropdown(sorted(list(set(api_data_df["councilName"]))),
+         value=" ", id=output_id,
+                 placeholder="Select a Neighborhood Council..."),
+                 style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
+
 # LAYOUT.
 layout = html.Div([
     html.Div(children=[
@@ -144,8 +159,18 @@ layout = html.Div([
         html.Div(children=[
             generate_summary_pie_chart(),
             generate_summary_histogram()
-        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"}))
-    ]),
+        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw"})),
+        html.Div(html.Br(), style=DIVIDER_STYLE),
+        # Neighborhood Council Summarization Dashboard.
+        html.Div(children=[html.H2(COMPARISON_DASHBOARD_TITLE)],
+                style=merge_dict(CENTER_ALIGN_STYLE, {"height": "5vh"})),
+        # Comparison Dropdowns.
+        html.Div(children=[
+            generate_council_name_dropdown('nc_comp_dropdown'),
+            generate_council_name_dropdown('nc_comp_dropdown2')
+        ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw", "height": "12vh"})),
+        html.Div(html.Br(), style=DIVIDER_STYLE),
+        ]),
 ])
 
 # CALLBACK FUNCTIONS.
