@@ -35,7 +35,7 @@ const Privacy = () => {
       <ContentBody maxWidth="md">
         { data
         && (
-          <Grid container className={classes.contentIntroBody}>
+          <Grid container className={classes.marginTopSmall}>
             <Grid item>
               <Typography variant="h6">
                 {data.simplePageCollection.items[0].title}

@@ -8,7 +8,7 @@ const ContentBody = ({ children, maxWidth }) => {
   const classes = sharedLayout();
 
   return (
-    <Grid container className={classes.topMargin5} alignItems="center" justify="center" direction="column">
+    <Grid container className={classes.marginTopLarge} alignItems="center" justify="center" direction="column">
       <Grid item>
         <Container component="main" maxWidth={maxWidth}>
           {children}

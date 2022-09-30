@@ -1,19 +1,15 @@
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
+// Standard vertical spacing between content sections.
 const sharedLayout = makeStyles(theme => createStyles({
-  // Content pages: Vertical margin just below the TextHeading.
-  topMargin5: {
+  marginTopLarge: {
     marginTop: theme.spacing(5),
   },
-  topMargin2: {
-    marginTop: theme.spacing(2),
+  marginTopMedium: {
+    marginTop: theme.spacing(3),
   },
-  topMargin1: {
+  marginTopSmall: {
     marginTop: theme.spacing(1),
-  },
-  // Content pages: Vertical margin added to separate content body.
-  contentIntroBody: {
-    margin: theme.spacing(1, 0),
   },
 }));
 

@@ -14,7 +14,7 @@ const ContactIntro = () => {
             {'Don\'t See What You Need?'}
           </Typography>
         </div>
-        <div className={classes.contentIntroBody}>
+        <div className={classes.marginTopSmall}>
           <Typography variant="body1">
             We want to build a tool that works for you. We are open to suggestions and
             feedback and would love the opportunity to get connected. Feel free to input

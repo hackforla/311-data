@@ -1,9 +1,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import sharedLayout from '@theme/layout';
-import sharedFontStyles from '@theme/fonts';
+import fonts from '@theme/fonts';
 import TextHeading from '@components/common/TextHeading';
 import ContentBody from '@components/common/ContentBody';
 
@@ -17,8 +18,15 @@ import publishIcon from '@assets/publish_icon.png';
 import upliftIcon from '@assets/uplift_icon.png';
 import visualizeIcon from '@assets/visualize_icon.png';
 
+const useStyles = makeStyles(() => ({
+  contentTitle: {
+    fontSize: fonts.size.jumbo,
+    fontWeight: fonts.weight.medium,
+  },
+}));
+
 const About = () => {
-  const classes = { ...sharedLayout(), ...sharedFontStyles() };
+  const classes = { ...sharedLayout(), ...useStyles() };
 
   return (
     <>
@@ -46,12 +54,12 @@ const About = () => {
               us to create apps with this data, and that&apos;s where
               this project comes&nbsp;in.
             </Typography>
-            <div className={classes.topMargin5} align="center">
-              <Typography variant="h3" className={clsx(classes.contentHeader, classes.medium)}>
+            <div className={classes.marginTopLarge} align="center">
+              <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
                 Partners
               </Typography>
             </div>
-            <div className={classes.topMargin2}>
+            <div className={classes.marginTopMedium}>
               <Typography variant="body1" paragraph="true">
                 To empower local residents and Neighborhood Councils to
                 make informed decisions about how to improve their communities
@@ -65,7 +73,7 @@ const About = () => {
         </Grid>
 
         {/* Inserting 3 images horizontally here  */}
-        <Grid container className={classes.contentIntroBody} justify="space-between">
+        <Grid container className={classes.marginTopSmall} justify="space-between">
           <Grid item xs={12} md={4} align="left">
             <img src={empowerLaLogo} width={362} alt="Empower LA" />
           </Grid>
@@ -76,13 +84,13 @@ const About = () => {
             <img src={codeForAmericaLogo} width={202} alt="Code for America" />
           </Grid>
         </Grid>
-        <div className={classes.topMargin5} align="center">
-          <Typography variant="h3" className={clsx(classes.contentHeader, classes.medium)}>
+        <div className={classes.marginTopLarge} align="center">
+          <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
             How it works
           </Typography>
         </div>
 
-        <Grid container className={classes.topMargin5} justify="space-between">
+        <Grid container className={classes.marginTopLarge} justify="space-between">
           <Grid item sm={12} md={2} align="center">
             <img src={mobileAppIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph="true">

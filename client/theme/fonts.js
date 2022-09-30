@@ -1,24 +1,26 @@
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-
-const sharedFontStyles = makeStyles(() => createStyles({
-  oswald: {
-    fontFamily: ['Oswald', 'sans-serif'],
+export default {
+  family: {
+    oswald: {
+      fontFamily: ['Oswald', 'sans-serif'],
+    },
+    roboto: {
+      fontFamily: ['Roboto', 'sans-serif'],
+    },
   },
-  roboto: {
-    fontFamily: ['Roboto', 'sans-serif'],
+  weight: {
+    medium: {
+      fontWeight: 500,
+    },
+    regular: {
+      fontWeight: 400,
+    },
+    bold: {
+      fontWeight: 700,
+    },
   },
-  medium: {
-    fontWeight: 500,
+  size: {
+    jumbo: {
+      fontSize: '46px',
+    },
   },
-  regular: {
-    fontWeight: 400,
-  },
-  bold: {
-    fontWeight: 700,
-  },
-  jumbo: {
-    fontSize: '46px',
-  },
-}));
-
-export default sharedFontStyles;
+};
