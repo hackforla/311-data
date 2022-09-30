@@ -76,10 +76,26 @@ def generate_summary_dropdowns():
     ], style=merge_dict(EQUAL_SPACE_STYLE, {"width": "97.5vw", "height": "10vh"}))
 
 
+def generate_summary_line_chart():
+    """Generates the line chart for the summary dashboard.
+    This function generates the html elements for the 
+    number of requests line chart for summary dashboard.
+    Return:
+        Dash html div element containing overlapping line chart.
+    """
+    return html.Div(dcc.Graph(id="nc_avg_comp_line_chart", style={"height": "40vh",
+         "width": "97.4vw"}),
+        style=merge_dict(BORDER_STYLE, {"height": "40vh", "width": "97.4vw"}))
+
+
+
+
 # LAYOUT.
 layout = html.Div([
     html.Div(children=[
         generate_summary_dropdowns(),
+        html.Div(html.Br(), style={"height": "0.5vh"}),
+        generate_summary_line_chart()
     ]),
 ])
 
@@ -112,3 +128,55 @@ def generate_dynamic_filter(selected_nc):
 
     req_types = sorted(list(set(df["typeName"])))
     return req_types, ' '
+
+
+@callback(
+    Output("nc_avg_comp_line_chart", "figure"),
+    [Input("selected_nc", "value")]
+)
+def update_line_chart(selected_nc):
+    """Generates a line chart visualizations for LA 311 requests data
+     based on the two selected neighborhood conucils.
+    This function takes the selected neighborhood council (nc) value
+     from the "selected_nc" dropdown and output a line chart showing 
+    the number of requests throughout the day and the average number 
+    of requests throughout the day (total number of requests / all 99 neighborhood councils).
+    Args:
+        selected_nc: A string argument automatically detected by Dash 
+        callback function when "selected_nc" element is selected in the layout.
+    Returns: 
+        nc_avg_comp_line_chart: line chart showing the number of requests
+         throughout the day for the selected neighborhood council and average
+    """
+    # If dropdown value is empty, use all data available.
+    if not selected_nc:
+        df = api_data_df
+    else:
+        df = api_data_df[api_data_df.council_name == selected_nc]
+
+    # Calculating the average number of requests throughout the day.
+    neighborhood_sum_df = df.groupby(["created_date"]).agg("sum").reset_index()  # noqa
+    total_sum_df = api_data_df.groupby(["created_date"]).agg("sum").reset_index()
+    total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
+    merged_df = neighborhood_sum_df.merge(total_sum_df["nc_avg"].to_frame(),
+     left_index=True, right_index=True)  # noqa
+
+    nc_avg_comp_line_chart = px.line(
+        merged_df,
+        x="created_date",
+        y=["counts", "nc_avg"],
+        color_discrete_sequence=DISCRETE_COLORS,
+        labels=LABELS,
+        title="Number of " + selected_nc +
+        " Requests compared with the average Neighborhood Council"
+    )
+
+    nc_avg_comp_line_chart.update_xaxes(
+        tickformat="%a\n%m/%d",
+    )
+
+    nc_avg_comp_line_chart.update_traces(
+        mode="markers+lines"
+    )  # add markers to lines.
+
+    return nc_avg_comp_line_chart
