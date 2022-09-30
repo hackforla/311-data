@@ -30,8 +30,11 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     ...theme.typography.h4,
+    fontFamily: ['Oswald', 'sans-serif'],
+    fontSize: '30px',
+    letterSpacing: '0.13em',
+    fontWeight: 700,
     flexGrow: 1,
-    letterSpacing: '4px',
   },
 }));
 

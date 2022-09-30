@@ -2,8 +2,14 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 const sharedLayout = makeStyles(theme => createStyles({
   // Content pages: Vertical margin just below the TextHeading.
-  contentMarginTop: {
-    margin: theme.spacing(5, 0, 1, 0),
+  topMargin5: {
+    marginTop: theme.spacing(5),
+  },
+  topMargin2: {
+    marginTop: theme.spacing(2),
+  },
+  topMargin1: {
+    marginTop: theme.spacing(1),
   },
   // Content pages: Vertical margin added to separate content body.
   contentIntroBody: {

@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto',
   },
   headerTitle: {
-    ...theme.typography.h1,
+    ...theme.typography.h5,
     fontWeight: 600,
     letterSpacing: '2px',
     marginLeft: theme.gaps.xs,

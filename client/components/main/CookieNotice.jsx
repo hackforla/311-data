@@ -21,16 +21,18 @@ const useStyles = makeStyles(theme => ({
     right: 0,
   },
   title: {
+    ...theme.typography.body1,
+    fontSize: '17px',
+    fontWeight: 700,
     paddingTop: 16,
     paddingLeft: 16,
-    ...theme.typography.h4,
   },
   headStyle: {
     padding: 8,
     backgroundColor: '#87C8BC',
   },
   iconStyle: {
-    verticalAlign: 'bottom',
+    verticalAlign: 'text-top',
   },
   copyStyle: {
     paddingTop: 5,

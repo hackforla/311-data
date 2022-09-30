@@ -46,19 +46,21 @@ const About = () => {
               us to create apps with this data, and that&apos;s where
               this project comes&nbsp;in.
             </Typography>
-            <div className={classes.contentMarginTop} align="center">
-              <Typography variant="h3" className={clsx(classes.contentHeader, classes.roboto, classes.jumbo, classes.medium)}>
+            <div className={classes.topMargin5} align="center">
+              <Typography variant="h3" className={clsx(classes.contentHeader, classes.medium)}>
                 Partners
               </Typography>
             </div>
-            <Typography variant="body1" paragraph="true">
-              To empower local residents and Neighborhood Councils to
-              make informed decisions about how to improve their communities
-              using an easy-to-use application, EmpowerLA partnered with Hack
-              For LA  to create the 311 Data project. The 311 Data project makes
-              navigating the wealth of 311 data easier using an open source
-              application built and maintained by volunteers throughout our&nbsp;community.
-            </Typography>
+            <div className={classes.topMargin2}>
+              <Typography variant="body1" paragraph="true">
+                To empower local residents and Neighborhood Councils to
+                make informed decisions about how to improve their communities
+                using an easy-to-use application, EmpowerLA partnered with Hack
+                For LA  to create the 311 Data project. The 311 Data project makes
+                navigating the wealth of 311 data easier using an open source
+                application built and maintained by volunteers throughout our&nbsp;community.
+              </Typography>
+            </div>
           </Grid>
         </Grid>
 
@@ -74,13 +76,13 @@ const About = () => {
             <img src={codeForAmericaLogo} width={202} alt="Code for America" />
           </Grid>
         </Grid>
-        <div className={classes.contentMarginTop} align="center">
-          <Typography variant="h3" className={clsx(classes.contentHeader, classes.roboto, classes.jumbo, classes.medium)}>
+        <div className={classes.topMargin5} align="center">
+          <Typography variant="h3" className={clsx(classes.contentHeader, classes.medium)}>
             How it works
           </Typography>
         </div>
 
-        <Grid container className={classes.contentMarginTop} justify="space-between">
+        <Grid container className={classes.topMargin5} justify="space-between">
           <Grid item sm={12} md={2} align="center">
             <img src={mobileAppIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph="true">

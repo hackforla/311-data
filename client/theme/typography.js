@@ -1,5 +1,4 @@
 const roboto = ['Roboto', 'sans-serif'];
-const oswald = ['Oswald', 'sans-serif'];
 
 const regular = 400;
 const medium = 500;
@@ -23,14 +22,11 @@ export default {
     fontWeight: medium,
   },
   h3: {
-    fontFamily: oswald,
-    // fontSize: 30,
     fontSize: 46,
-    fontWeight: bold,
   },
   h4: {
     // fontSize: 17,
-    fontSize: 30,
+    fontSize: 36,
     fontWeight: bold,
   },
   h5: {
@@ -38,7 +34,8 @@ export default {
     fontWeight: medium,
   },
   h6: {
-    fontSize: 16,
+    // fontSize: 18,
+    fontSize: 18,
     fontWeight: bold,
   },
   body1: {

@@ -42,7 +42,7 @@ const Faqs = () => {
                   Frequently Asked Questions
                 </Typography>
 
-                <div className={classes.contentMarginTop}>
+                <div className={classes.marginTop5}>
                   { data.faqCollection.items.map(item => (
                     <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
                       <Typography variant="h2" id={item.question}>
