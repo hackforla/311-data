@@ -28,8 +28,8 @@ layout = html.Div([
 )
 def reload_page(url):
     """Reloads the workers when this page is accessed."""
-    # Since are reloading the workers when this page is accessed, we don't need
-    # to consider any inputs. This callback takes "url" as input solely to
+    # Since we want the workers to reload when this page is accessed, we don't
+    # need to consider any inputs. This callback takes "url" as input solely to
     # trigger on page load.
     del url
     logger.log(logging.WARNING, "Report Server reload requested")
