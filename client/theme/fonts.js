@@ -1,3 +1,4 @@
+// Define standard font constants.
 export default {
   family: {
     oswald: ['Oswald', 'sans-serif'],

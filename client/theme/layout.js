@@ -1,6 +1,6 @@
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-// Standard vertical spacing between content sections.
+// Define standard layout spacing and export as makeStyles hook.
 const sharedLayout = makeStyles(theme => createStyles({
   marginTopLarge: {
     marginTop: theme.spacing(5),

@@ -1,3 +1,4 @@
+// Define standard color constants.
 export default {
   primaryDark: '#192730',
   primaryDarkMain: '#29404F',
