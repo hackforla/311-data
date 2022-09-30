@@ -28,4 +28,7 @@ USER appuser
 ENV PRELOAD=True
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["python", "app.py"]
+CMD ["gunicorn", "--timeout", "3000", "index:server"]
+
+
+# CMD ["waitress-serve", "--host", , "0.0.0.0", "app:app.server", "-b", "0.0.0.0:5500", "--timeout", "200"]
