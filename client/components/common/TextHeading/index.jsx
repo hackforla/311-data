@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import sharedFontStyles from '@theme/fonts';
 
 const useStyles = makeStyles(theme => ({
   headingBackground: {
@@ -13,8 +15,6 @@ const useStyles = makeStyles(theme => ({
   headingOverlayText: {
     left: '50%',
     color: 'white',
-    fontSize: '40px',
-    fontWeight: 'bold',
     position: 'absolute',
     textAlign: 'center',
     top: '50%',
@@ -23,12 +23,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TextHeading = ({ children }) => {
-  const classes = useStyles();
+  const classes = { ...useStyles(), ...sharedFontStyles() };
 
   return (
     <div className={classes.headingBackground}>
       <div className={classes.headingOverlayText}>
-        <Typography variant="h1">{children}</Typography>
+        <Typography variant="h3" className={clsx(classes.roboto, classes.bold, classes.jumbo)}>
+          {children}
+        </Typography>
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ const Privacy = () => {
         && (
           <Grid container className={classes.contentIntroBody}>
             <Grid item>
-              <Typography variant="h1">
+              <Typography variant="h3">
                 {data.simplePageCollection.items[0].title}
               </Typography>
               <ReactMarkdown>

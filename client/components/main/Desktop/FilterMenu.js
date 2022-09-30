@@ -79,7 +79,7 @@ const FilterMenu = ({ toggleMenu }) => {
         title={(
           <div className={classes.headerContent}>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
-            <Typography className={classes.headerTitle} variant="h1">
+            <Typography className={classes.headerTitle} variant="h5">
               FILTERS
             </Typography>
           </div>

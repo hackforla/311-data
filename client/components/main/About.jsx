@@ -1,7 +1,9 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import clsx from 'clsx';
 import sharedLayout from '@theme/layout';
+import sharedFontStyles from '@theme/fonts';
 import TextHeading from '@components/common/TextHeading';
 import ContentBody from '@components/common/ContentBody';
 
@@ -16,7 +18,7 @@ import upliftIcon from '@assets/uplift_icon.png';
 import visualizeIcon from '@assets/visualize_icon.png';
 
 const About = () => {
-  const classes = sharedLayout();
+  const classes = { ...sharedLayout(), ...sharedFontStyles() };
 
   return (
     <>
@@ -45,7 +47,7 @@ const About = () => {
               this project comes&nbsp;in.
             </Typography>
             <div className={classes.contentMarginTop} align="center">
-              <Typography variant="h1" className={classes.contentHeader}>
+              <Typography variant="h3" className={clsx(classes.contentHeader, classes.roboto, classes.jumbo, classes.medium)}>
                 Partners
               </Typography>
             </div>
@@ -73,7 +75,7 @@ const About = () => {
           </Grid>
         </Grid>
         <div className={classes.contentMarginTop} align="center">
-          <Typography variant="h1" className={classes.contentHeader}>
+          <Typography variant="h3" className={clsx(classes.contentHeader, classes.roboto, classes.jumbo, classes.medium)}>
             How it works
           </Typography>
         </div>

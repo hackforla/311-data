@@ -1,6 +1,6 @@
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-export default makeStyles(theme => createStyles({
+const sharedLayout = makeStyles(theme => createStyles({
   // Content pages: Vertical margin just below the TextHeading.
   contentMarginTop: {
     margin: theme.spacing(5, 0, 1, 0),
@@ -10,3 +10,5 @@ export default makeStyles(theme => createStyles({
     margin: theme.spacing(1, 0),
   },
 }));
+
+export default sharedLayout;

@@ -21,6 +21,7 @@
     "chartjs-chart-box-and-violin-plot": "^2.2.0",
     "chartjs-plugin-datalabels": "^0.7.0",
     "classnames": "^2.2.6",
+    "clsx": "^1.2.1",
     "core-js": "^3.6.5",
     "dataframe-js": "^1.4.3",
     "dfa": "1.1.0",
