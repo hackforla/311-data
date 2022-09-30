@@ -1,6 +1,16 @@
 import fonts from '@theme/fonts';
 
-export default {
+// Note to future maintainers...
+
+// Ideally, define only font-size in the typography object below.
+
+// Modifiers like font-weight and font-family, are component specific.
+// Therefore, consider defining them in the className property of the
+// <Typography> component via makeStyles().
+
+// Example: <Typography variant="h1" className={classes.robotoBold}>
+
+const typography = {
   button: {
     textTransform: 'none',
   },
@@ -43,3 +53,5 @@ export default {
     fontSize: 21,
   },
 };
+
+export default typography;
