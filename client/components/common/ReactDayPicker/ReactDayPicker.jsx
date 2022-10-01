@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
       marginRight: 'auto',
       marginLeft: 'auto',
     },
+    '& DayPicker-Month': {
+      margin: '0 11px',
+    },
     '& .DayPicker-Body': {
       fontSize: '0.9rem',
     },
