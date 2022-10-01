@@ -41,9 +41,6 @@ const typography = {
     fontSize: 16,
   },
   body2: {
-    fontSize: 16,
-  },
-  body3: {
     fontSize: 14,
   },
   subtitle1: {
