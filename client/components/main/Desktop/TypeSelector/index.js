@@ -75,9 +75,29 @@ const RequestTypeSelector = ({
           paddingBottom: '3px',
         }}
       >
-
+        {/* Request Types - Left Column */}
         <Grid item style={{ width: '50%' }}>
           <FormGroup>
+
+            {/* Select All */}
+            <FormControlLabel
+              key="all"
+              classes={classes}
+              control={(
+                <Checkbox
+                  style={{
+                    transform: 'scale(0.8)',
+                    color: 'white',
+                    padding: '0 0 0 9px',
+                  }}
+                  checked={Object.values(selectedTypes).every(val => val)}
+                  onChange={() => updateAll(checkAll())}
+                />
+              )}
+              label="Select All/ Deselect All"
+            />
+
+            {/* Left Column Request Types */}
             {leftCol && leftCol.map(type => (
               <FormControlLabel
                 key={type.typeId}
@@ -96,26 +116,15 @@ const RequestTypeSelector = ({
                 label={type.typeName}
               />
             ))}
-            <FormControlLabel
-              key="all"
-              classes={classes}
-              control={(
-                <Checkbox
-                  style={{
-                    transform: 'scale(0.8)',
-                    color: 'white',
-                    padding: '0 0 0 9px',
-                  }}
-                  checked={Object.values(selectedTypes).every(val => val)}
-                  onChange={() => updateAll(checkAll())}
-                />
-              )}
-              label="Select All"
-            />
+
           </FormGroup>
         </Grid>
+
+        {/* Request Types - Right Column */}
         <Grid item style={{ width: '50%' }}>
           <FormGroup>
+
+            {/* Right Column Request Types */}
             {rightCol && rightCol.map(type => (
               <FormControlLabel
                 key={type.typeId}
