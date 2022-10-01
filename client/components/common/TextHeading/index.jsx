@@ -40,8 +40,12 @@ const TextHeading = ({ children }) => {
   );
 };
 
+TextHeading.defaultProps = {
+  children: {},
+};
+
 TextHeading.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 export default TextHeading;
