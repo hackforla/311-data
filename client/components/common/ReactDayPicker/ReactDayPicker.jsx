@@ -23,8 +23,8 @@ const useStyles = makeStyles(theme => ({
     fontFamily: fonts.family.roboto,
     background: theme.palette.primary.dark,
     borderRadius: '5px',
-    minWidth: '268px',
-    '& .DayPicker-Month': {
+    minWidth: '297px',
+    '& .DayPicker-Months': {
       display: 'block',
       width: '83%',
       marginRight: 'auto',
