@@ -81,6 +81,9 @@ const useStyles = makeStyles(theme => ({
     },
 
     /* next and prev arrows */
+    '& .DayPicker-NavButton.DayPicker-NavButton': {
+      top: 0,
+    },
 
     '& .DayPicker-NavButton.DayPicker-NavButton--prev': {
       left: '1.5rem',
