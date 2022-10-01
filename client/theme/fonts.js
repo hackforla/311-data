@@ -7,6 +7,7 @@ export default {
   weight: {
     medium: 500,
     regular: 400,
+    semiBold: 600,
     bold: 700,
   },
   size: {
