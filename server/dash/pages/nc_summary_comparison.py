@@ -630,7 +630,7 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
      margin=dict(l=25, r=25, b=35, t=50), xaxis_range=[min(
          min(req_time["createdDateDT"]), min(req_time2["createdDateDT"])),
          max(max(req_time["createdDateDT"]), max(req_time2["createdDateDT"]))], font=dict(size=9))
-    return 
+    return overlay_req_time_line_chart
 
 # LAYOUT.
 layout = html.Div([
