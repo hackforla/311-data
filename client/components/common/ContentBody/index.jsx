@@ -14,7 +14,9 @@ const ContentBody = ({ children, maxWidth }) => {
     <Grid container className={classes.marginTopLarge} alignItems="center" justify="center" direction="column">
       <Grid item>
         <Container component="main" maxWidth={maxWidth}>
-          {children}
+          <div>
+            {children}
+          </div>
         </Container>
       </Grid>
     </Grid>

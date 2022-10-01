@@ -33,7 +33,9 @@ const TextHeading = ({ children }) => {
     <div className={classes.headingBackground}>
       <div className={classes.headingOverlayText}>
         <Typography variant="h3" className={classes.contentHeading}>
-          {children}
+          <div>
+            {children}
+          </div>
         </Typography>
       </div>
     </div>
