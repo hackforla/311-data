@@ -57,7 +57,7 @@ const Footer = ({ lastUpdated }) => {
       { lastUpdated && (
         <div className={classes.container}>
           <div className={classes.copyrightContainer}>
-            <Typography variant="body3" className={classes.copyright}>
+            <Typography variant="body2" className={classes.copyright}>
               &#169;
               {currentDate.getFullYear()}
 &nbsp;311 Data&nbsp;&nbsp;|&nbsp;&nbsp;All Rights Reserved&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -68,7 +68,7 @@ const Footer = ({ lastUpdated }) => {
             </Typography>
           </div>
           <div>
-            <Typography variant="body3" className={classes.lastUpdated}>
+            <Typography variant="body2" className={classes.lastUpdated}>
               Data last updated&nbsp;
               {moment(lastUpdated).format('MM/DD/YY')}
             </Typography>

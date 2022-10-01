@@ -37,7 +37,7 @@ const About = () => {
       <ContentBody maxWidth="md">
         <Grid container alignItems="center" justify="center" direction="column">
           <Grid item>
-            <Typography variant="body1" paragraph="true">
+            <Typography variant="body1" paragraph>
               Each day, Los Angelenos report thousands of 311
               requests all across LA to resolve issues such as
               illegal dumping and homeless encampments in their
@@ -60,7 +60,7 @@ const About = () => {
               </Typography>
             </div>
             <div className={classes.marginTopMedium}>
-              <Typography variant="body1" paragraph="true">
+              <Typography variant="body1" paragraph>
                 To empower local residents and Neighborhood Councils to
                 make informed decisions about how to improve their communities
                 using an easy-to-use application, EmpowerLA partnered with Hack
@@ -93,14 +93,14 @@ const About = () => {
         <Grid container className={classes.marginTopLarge} justify="space-between">
           <Grid item sm={12} md={2} align="center">
             <img src={mobileAppIcon} width={75} alt="Mobile App" />
-            <Typography variant="body1" paragraph="true">
+            <Typography variant="body1" paragraph>
               You and other members of your community post reports via
               the City’s easy-to-use mobile application.
             </Typography>
           </Grid>
           <Grid item sm={12} md={2} align="center">
             <img src={databaseIcon} width={75} alt="Mobile App" />
-            <Typography variant="body1" paragraph="true">
+            <Typography variant="body1" paragraph>
               Your reports are consolidated by the City and entered into
               a central database. All requests are assigned to the
               appropriate department to resolve.
@@ -108,21 +108,21 @@ const About = () => {
           </Grid>
           <Grid item sm={12} md={2} align="center">
             <img src={publishIcon} width={75} alt="Mobile App" />
-            <Typography variant="body1" paragraph="true">
+            <Typography variant="body1" paragraph>
               Once data from each department is sorted,  the City then
               publishes it as raw information.
             </Typography>
           </Grid>
           <Grid item sm={12} md={2} align="center">
             <img src={visualizeIcon} width={75} alt="Mobile App" />
-            <Typography variant="body1" paragraph="true">
+            <Typography variant="body1" paragraph>
               Our site draws data from the City’s database to create
               easy-to-view visualizations and files to export.
             </Typography>
           </Grid>
           <Grid item sm={12} md={2} align="center">
             <img src={upliftIcon} width={75} alt="Mobile App" />
-            <Typography variant="body1" paragraph="true">
+            <Typography variant="body1" paragraph>
               You now have access to digestable data. Communities
               are empowered and equipped to identify areas of improvement to uplift and thrive.
             </Typography>

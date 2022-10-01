@@ -123,6 +123,7 @@ const useStyles = makeStyles(theme => ({
 
     '& .DayPicker-Weekday': {
       display: 'block',
+      fontSize: '12px',
     },
   },
   hasRange: {

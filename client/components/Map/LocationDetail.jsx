@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     letterSpacing: '2px',
   },
   subheader: {
-    ...theme.typography.body2,
+    ...theme.typography.body1,
     color: '#A8A8A8',
   },
   link: {

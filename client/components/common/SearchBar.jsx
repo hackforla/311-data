@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.dark,
     color: theme.palette.text.secondaryLight,
     '&::placeholder': {
-      ...theme.typography.body2,
+      ...theme.typography.body1,
       color: theme.palette.text.secondaryDark,
     },
     paddingLeft: theme.gaps.xs,
