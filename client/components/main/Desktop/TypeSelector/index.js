@@ -94,7 +94,7 @@ const RequestTypeSelector = ({
                   onChange={() => updateAll(checkAll())}
                 />
               )}
-              label="Select All/ Deselect All"
+              label="Select/Deselect All"
             />
 
             {/* Left Column Request Types */}
