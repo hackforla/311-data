@@ -91,14 +91,14 @@ const About = () => {
         </div>
 
         <Grid container className={classes.marginTopLarge} justify="space-between">
-          <Grid item sm={12} md={2} align="center">
+          <Grid item sm={12} md={2}>
             <img src={mobileAppIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               You and other members of your community post reports via
               the City’s easy-to-use mobile application.
             </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
+          <Grid item sm={12} md={2}>
             <img src={databaseIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               Your reports are consolidated by the City and entered into
@@ -106,21 +106,21 @@ const About = () => {
               appropriate department to resolve.
             </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
+          <Grid item sm={12} md={2}>
             <img src={publishIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               Once data from each department is sorted,  the City then
               publishes it as raw information.
             </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
+          <Grid item sm={12} md={2}>
             <img src={visualizeIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               Our site draws data from the City’s database to create
               easy-to-view visualizations and files to export.
             </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
+          <Grid item sm={12} md={2}>
             <img src={upliftIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               You now have access to digestable data. Communities
