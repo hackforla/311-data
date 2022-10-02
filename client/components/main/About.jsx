@@ -23,6 +23,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: fonts.size.jumbo,
     fontWeight: theme.typography.fontWeightMedium,
   },
+  imageStyle: {
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
 }));
 
 const About = () => {
@@ -89,39 +94,41 @@ const About = () => {
             How it works
           </Typography>
         </div>
+      </ContentBody>
 
+      <ContentBody maxWidth="lg" hasTopMargin={false}>
         <Grid container className={classes.marginTopLarge} justify="space-between">
-          <Grid item sm={12} md={2} align="center">
-            <img src={mobileAppIcon} width={75} alt="Mobile App" />
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={mobileAppIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               You and other members of your community post reports via
               the City’s easy-to-use mobile application.
             </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
-            <img src={databaseIcon} width={75} alt="Mobile App" />
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={databaseIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               Your reports are consolidated by the City and entered into
               a central database. All requests are assigned to the
               appropriate department to resolve.
             </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
-            <img src={publishIcon} width={75} alt="Mobile App" />
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={publishIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               Once data from each department is sorted,  the City then
               publishes it as raw information.
             </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
-            <img src={visualizeIcon} width={75} alt="Mobile App" />
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={visualizeIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               Our site draws data from the City’s database to create
               easy-to-view visualizations and files to export.
             </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
-            <img src={upliftIcon} width={75} alt="Mobile App" />
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={upliftIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
               You now have access to digestable data. Communities
               are empowered and equipped to identify areas of improvement to uplift and thrive.
