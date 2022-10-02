@@ -3,27 +3,32 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateRequestTypes } from '@reducers/filters';
 import { makeStyles } from '@material-ui/core/styles';
-
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Tooltip from '@material-ui/core/Tooltip';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 // import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import sharedLayout from '@theme/layout';
 import useToggle from './isToggle';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
+  iconStyle: {
+    verticalAlign: 'middle',
+  },
+  header: {
+    fontSize: '12.47px',
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+}));
+
+const formStyles = makeStyles(() => ({
   label: {
     display: 'flex',
     alignItems: 'center',
     fontSize: '12px',
-  },
-}));
-
-const useHeaderStyles = makeStyles(() => ({
-  header: {
-    marginBottom: 5,
-    display: 'inline-block',
-    fontFamily: 'Roboto',
   },
 }));
 
@@ -34,9 +39,13 @@ const RequestTypeSelector = ({
 }) => {
   const [leftCol, setLeftCol] = useState();
   const [rightCol, setRightCol] = useState();
-  const classes = useStyles();
-  const headerClass = useHeaderStyles();
   const [isToggled, toggle] = useToggle(false);
+
+  // FormControlLabel related classes.
+  const formClasses = formStyles();
+
+  // All other classes.
+  const classes = { ...useStyles(), ...sharedLayout() };
 
   useEffect(() => {
     if (requestTypes) {
@@ -63,87 +72,98 @@ const RequestTypeSelector = ({
 
   return (
     <>
-      <div className={headerClass.header}>Request Types</div>
-      <Grid
-        container
-        style={{
-          margin: 'auto',
-          backgroundColor: '#192730',
-          borderRadius: '5px',
-          padding: '5px',
-          paddingTop: '3px',
-          paddingBottom: '3px',
-        }}
-      >
-        {/* Request Types - Left Column */}
-        <Grid item style={{ width: '50%' }}>
-          <FormGroup>
-
-            {/* Select All */}
-            <FormControlLabel
-              key="all"
-              classes={classes}
-              control={(
-                <Checkbox
-                  style={{
-                    transform: 'scale(0.8)',
-                    color: 'white',
-                    padding: '0 0 0 9px',
-                  }}
-                  checked={Object.values(selectedTypes).every(val => val)}
-                  onChange={() => updateAll(checkAll())}
-                />
-              )}
-              label="Select/Deselect All"
-            />
-
-            {/* Left Column Request Types */}
-            {leftCol && leftCol.map(type => (
-              <FormControlLabel
-                key={type.typeId}
-                classes={classes}
-                control={(
-                  <Checkbox
-                    style={{
-                      transform: 'scale(0.8)',
-                      color: type.color,
-                      padding: '0 0 0 9px',
-                    }}
-                    checked={selectedTypes[type.typeId]}
-                    onChange={() => updateTypesFilter(type.typeId)}
-                  />
-                )}
-                label={type.typeName}
-              />
-            ))}
-
-          </FormGroup>
+      <Grid container direction="column">
+        <Grid item>
+          <Typography variant="body2" className={classes.header}>
+            Request&nbsp;Types&nbsp;
+            <Tooltip title="Info">
+              <InfoOutlinedIcon className={classes.iconStyle} fontSize="inherit" />
+            </Tooltip>
+          </Typography>
         </Grid>
+        <Grid item className={classes.marginTopSmall}>
+          <Grid
+            container
+            style={{
+              margin: 'auto',
+              backgroundColor: '#192730',
+              borderRadius: '5px',
+              padding: '5px',
+              paddingTop: '3px',
+              paddingBottom: '3px',
+            }}
+          >
+            {/* Request Types - Left Column */}
+            <Grid item style={{ width: '50%' }}>
+              <FormGroup>
 
-        {/* Request Types - Right Column */}
-        <Grid item style={{ width: '50%' }}>
-          <FormGroup>
+                {/* Select All */}
+                <FormControlLabel
+                  key="all"
+                  classes={formClasses}
+                  control={(
+                    <Checkbox
+                      style={{
+                        transform: 'scale(0.8)',
+                        color: 'white',
+                        padding: '0 0 0 9px',
+                      }}
+                      checked={Object.values(selectedTypes).every(val => val)}
+                      onChange={() => updateAll(checkAll())}
+                    />
+                  )}
+                  label="Select/Deselect All"
+                />
 
-            {/* Right Column Request Types */}
-            {rightCol && rightCol.map(type => (
-              <FormControlLabel
-                key={type.typeId}
-                classes={classes}
-                control={(
-                  <Checkbox
-                    style={{
-                      transform: 'scale(0.8)',
-                      color: type.color,
-                      padding: '0 2px 0 9px',
-                    }}
-                    checked={selectedTypes[type.typeId]}
-                    onChange={() => updateTypesFilter(type.typeId)}
+                {/* Left Column Request Types */}
+                {leftCol && leftCol.map(type => (
+                  <FormControlLabel
+                    key={type.typeId}
+                    classes={formClasses}
+                    control={(
+                      <Checkbox
+                        style={{
+                          transform: 'scale(0.8)',
+                          color: type.color,
+                          padding: '0 0 0 9px',
+                        }}
+                        checked={selectedTypes[type.typeId]}
+                        onChange={() => updateTypesFilter(type.typeId)}
+                      />
+                    )}
+                    label={type.typeName}
                   />
-                )}
-                label={type.typeName}
-              />
-            ))}
-          </FormGroup>
+                ))}
+
+              </FormGroup>
+            </Grid>
+
+            {/* Request Types - Right Column */}
+            <Grid item style={{ width: '50%' }}>
+              <FormGroup>
+
+                {/* Right Column Request Types */}
+                {rightCol && rightCol.map(type => (
+                  <FormControlLabel
+                    key={type.typeId}
+                    classes={formClasses}
+                    control={(
+                      <Checkbox
+                        style={{
+                          transform: 'scale(0.8)',
+                          color: type.color,
+                          padding: '0 2px 0 9px',
+                        }}
+                        checked={selectedTypes[type.typeId]}
+                        onChange={() => updateTypesFilter(type.typeId)}
+                      />
+                    )}
+                    label={type.typeName}
+                  />
+                ))}
+              </FormGroup>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </>
