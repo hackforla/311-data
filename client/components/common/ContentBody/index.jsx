@@ -1,52 +1,39 @@
+import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  Switch,
-  Route,
-  Redirect,
-  useLocation,
-} from 'react-router-dom';
-import { ThemeProvider } from '@material-ui/core/styles';
-import theme, { darkTheme } from '@theme/theme';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import Desktop from '@components/main/Desktop';
-import Reports from '@components/main/Reports';
-import Privacy from '@components/main/Privacy';
-import Faqs from '@components/main/Faqs';
-import About from '@components/main/About';
-import Contact from '@components/contact/Contact';
-import ContentBottom from '@components/common/ContentBottom';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import sharedLayout from '@theme/layout';
+import clsx from 'clsx';
 
-export default function Routes() {
-  const { pathname } = useLocation();
+// ContentBody keeps the body of all content pages centered
+// with a customizable maxWidth container that defaults to 'md'.
+
+const ContentBody = ({ children, maxWidth, hasTopMargin }) => {
+  const classes = sharedLayout();
 
   return (
-    <>
-      {/* Dark Theme - Map. */}
-      <ThemeProvider theme={darkTheme}>
-        <Paper elevation={0}>
-          <Box visibility={pathname !== '/map' ? 'hidden' : 'visible'}>
-            <Desktop />
-          </Box>
-        </Paper>
-      </ThemeProvider>
-
-      {/* Default theme - Everything else. */}
-      <ThemeProvider theme={theme}>
-        <Paper elevation={0}>
-          <Switch>
-            <Route path="/reports" component={Reports} />
-            <Route path="/privacy" component={Privacy} />
-            <Route path="/faqs" component={Faqs} />
-            <Route path="/about" component={About} />
-            <Route path="/contact" component={Contact} />
-            <Route path="/">
-              <Redirect to="map" />
-            </Route>
-          </Switch>
-          <ContentBottom />
-        </Paper>
-      </ThemeProvider>
-    </>
+    <Grid container className={clsx(hasTopMargin && classes.marginTopLarge)} alignItems="center" justify="center" direction="column">
+      <Grid item>
+        <Container component="main" maxWidth={maxWidth}>
+          <div>
+            {children}
+          </div>
+        </Container>
+      </Grid>
+    </Grid>
   );
-}
+};
+
+ContentBody.defaultProps = {
+  children: {},
+  maxWidth: 'md',
+  hasTopMargin: true,
+};
+
+ContentBody.propTypes = {
+  children: PropTypes.node,
+  maxWidth: PropTypes.string,
+  hasTopMargin: PropTypes.bool,
+};
+
+export default ContentBody;
