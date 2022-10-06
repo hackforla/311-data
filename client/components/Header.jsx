@@ -9,7 +9,9 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
+import fonts from '@theme/fonts';
 
+// Header should make use of style overrides to look the same regardless of light/dark theme.
 const useStyles = makeStyles(theme => ({
   appBar: {
     height: theme.header.height,
@@ -20,19 +22,20 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
   },
   button: {
+    color: 'white',
     textTransform: 'none',
-    fontFamily: 'Roboto',
+    fontFamily: fonts.family.roboto,
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    color: 'white',
     textDecoration: 'none',
   },
   title: {
-    ...theme.typography.h1,
-    flexGrow: 1,
+    ...theme.typography.h4,
+    fontFamily: fonts.family.oswald,
     fontSize: '30px',
-    fontWeight: 'bold',
-    letterSpacing: '4px',
+    letterSpacing: '0.13em',
+    fontWeight: theme.typography.fontWeightBold,
+    flexGrow: 1,
   },
 }));
 
@@ -56,7 +59,7 @@ const Header = () => {
   return (
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
-        <Typography variant="h1" className={classes.title}>
+        <Typography variant="h4" className={classes.title}>
           <Link to="/" className={classes.link}>311DATA</Link>
         </Typography>
         <NavLink className={classes.link} to="/map" activeStyle={activeStyle}>
@@ -81,13 +84,13 @@ const Header = () => {
             horizontal: 'left',
           }}
         >
-          <Link to="/reports/dashboards/overview_combined" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
+          <Link to="/reports/dashboards/overview_combined">
+            <MenuItem onClick={handleClose}>
               Overview
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/nc_summary_comparison" className={classes.link}>
-            <MenuItem onClick={handleClose} button className={classes.button}>
+          <Link to="/reports/dashboards/nc_summary_comparison">
+            <MenuItem onClick={handleClose}>
               Compare Two Neighborhoods
             </MenuItem>
           </Link>
@@ -97,9 +100,6 @@ const Header = () => {
         </NavLink>
         <NavLink to="/about" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>About</Button>
-        </NavLink>
-        <NavLink to="/blog" className={classes.link} activeStyle={activeStyle}>
-          <Button className={classes.button}>Blog</Button>
         </NavLink>
         <NavLink to="/privacy" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>Privacy</Button>
