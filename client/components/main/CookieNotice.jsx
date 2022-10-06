@@ -10,27 +10,30 @@ import CardContent from '@material-ui/core/CardContent';
 import { CardHeader } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import colors from '@theme/colors';
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: 325,
-    backgroundColor: '#29404F',
+    backgroundColor: colors.primaryLight,
     zIndex: 50000,
     position: 'absolute',
     bottom: 0,
     right: 0,
   },
   title: {
+    ...theme.typography.body1,
+    fontSize: '17px',
+    fontWeight: 700,
     paddingTop: 16,
     paddingLeft: 16,
-    ...theme.typography.h4,
   },
   headStyle: {
     padding: 8,
-    backgroundColor: '#87C8BC',
+    backgroundColor: colors.secondaryFocus,
   },
   iconStyle: {
-    verticalAlign: 'bottom',
+    verticalAlign: 'text-top',
   },
   copyStyle: {
     paddingTop: 5,
@@ -41,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   },
   linkStyle: {
     padding: 0,
-    color: '#FFB100',
+    color: colors.primaryFocus,
     marginLeft: 3,
     textDecoration: 'none',
   },
