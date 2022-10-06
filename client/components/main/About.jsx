@@ -1,9 +1,14 @@
 import React from 'react';
-import {
-  makeStyles,
-  Container,
-  Grid,
-} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import fonts from '@theme/fonts';
+import sharedLayout from '@theme/layout';
+import TextHeading from '@components/common/TextHeading';
+import ContentBody from '@components/common/ContentBody';
+
+// Images
 import empowerLaLogo from '@assets/empower_la_logo.png';
 import hackForLaLogo from '@assets/hack_for_la_logo.png';
 import codeForAmericaLogo from '@assets/code_for_america_logo.png';
@@ -13,42 +18,31 @@ import publishIcon from '@assets/publish_icon.png';
 import upliftIcon from '@assets/uplift_icon.png';
 import visualizeIcon from '@assets/visualize_icon.png';
 
-// TODO: Revisit adding shared standard styles once those are decided.
-const useStyles = makeStyles({
-  root: {
-    color: 'black',
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '2rem',
-    '& h1': {
-      fontSize: '2.5rem',
-    },
-    '& h2': {
-      fontSize: '2.25rem',
-    },
-    '& img': {
-      maxWidth: '100%',
-      display: 'block',
-      margin: '0 auto',
-    },
+const useStyles = makeStyles(theme => ({
+  contentTitle: {
+    fontSize: fonts.size.jumbo,
+    fontWeight: theme.typography.fontWeightMedium,
   },
-});
+  imageStyle: {
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+}));
 
 const About = () => {
-  const classes = useStyles();
+  const classes = { ...sharedLayout(), ...useStyles() };
 
   return (
     <>
-      <Container disableGutters component="main" className={classes.root} maxWidth="md">
-        <Grid container>
-          <Grid item xs={12}>
-            <h1 align="center">
-              About
-              <span style={{ color: '#FFB100' }}> 311</span>
-              <span style={{ color: '#87C8BC' }}>DATA</span>
-            </h1>
-            <p>
+      <TextHeading>
+        About 311DATA
+      </TextHeading>
+
+      <ContentBody maxWidth="md">
+        <Grid container alignItems="center" justify="center" direction="column">
+          <Grid item>
+            <Typography variant="body1" paragraph>
               Each day, Los Angelenos report thousands of 311
               requests all across LA to resolve issues such as
               illegal dumping and homeless encampments in their
@@ -64,70 +58,84 @@ const About = () => {
               requests is available online. The mayor has encouraged
               us to create apps with this data, and that&apos;s where
               this project comes&nbsp;in.
-            </p>
-            <h2 style={{ color: '#1D6996', textAlign: 'center' }}>Partners</h2>
-            <p style={{ paddingBottom: '1.625rem' }}>
-              To empower local residents and Neighborhood Councils to
-              make informed decisions about how to improve their communities
-              using an easy-to-use application, EmpowerLA partnered with Hack
-              For LA  to create the 311 Data project. The 311 Data project makes
-              navigating the wealth of 311 data easier using an open source
-              application built and maintained by volunteers throughout our&nbsp;community.
-            </p>
+            </Typography>
+            <div className={classes.marginTopLarge} align="center">
+              <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
+                Partners
+              </Typography>
+            </div>
+            <div className={classes.marginTopMedium}>
+              <Typography variant="body1" paragraph>
+                To empower local residents and Neighborhood Councils to
+                make informed decisions about how to improve their communities
+                using an easy-to-use application, EmpowerLA partnered with Hack
+                For LA  to create the 311 Data project. The 311 Data project makes
+                navigating the wealth of 311 data easier using an open source
+                application built and maintained by volunteers throughout our&nbsp;community.
+              </Typography>
+            </div>
           </Grid>
         </Grid>
-        <Grid container style={{ paddingBottom: '6rem' }} justify="space-between">
-          <Grid item xs={12} md={4}>
+
+        {/* Inserting 3 images horizontally here  */}
+        <Grid container className={classes.marginTopSmall} justify="space-between">
+          <Grid item xs={12} md={4} align="left">
             <img src={empowerLaLogo} width={362} alt="Empower LA" />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} align="right">
             <img src={hackForLaLogo} width={97} alt="Hack for LA" />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} align="right">
             <img src={codeForAmericaLogo} width={202} alt="Code for America" />
           </Grid>
         </Grid>
-        <h2 style={{ color: '#1D6996', textAlign: 'center' }}>How it works</h2>
+        <div className={classes.marginTopLarge} align="center">
+          <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
+            How it works
+          </Typography>
+        </div>
+      </ContentBody>
 
-        <Grid container style={{ paddingBottom: '4rem' }} justify="space-between">
-          <Grid item sm={12} md={2} align="center">
-            <img src={mobileAppIcon} width={75} alt="Mobile App" />
-            <p>
+      <ContentBody maxWidth="lg" hasTopMargin={false}>
+        <Grid container className={classes.marginTopLarge} justify="space-between">
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={mobileAppIcon} width={75} alt="Mobile App" />
+            <Typography variant="body1" paragraph>
               You and other members of your community post reports via
               the City’s easy-to-use mobile application.
-            </p>
+            </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
-            <img src={databaseIcon} width={75} alt="Mobile App" />
-            <p>
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={databaseIcon} width={75} alt="Mobile App" />
+            <Typography variant="body1" paragraph>
               Your reports are consolidated by the City and entered into
               a central database. All requests are assigned to the
               appropriate department to resolve.
-            </p>
+            </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
-            <img src={publishIcon} width={75} alt="Mobile App" />
-            <p>
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={publishIcon} width={75} alt="Mobile App" />
+            <Typography variant="body1" paragraph>
               Once data from each department is sorted,  the City then
               publishes it as raw information.
-            </p>
+            </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
-            <img src={visualizeIcon} width={75} alt="Mobile App" />
-            <p>
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={visualizeIcon} width={75} alt="Mobile App" />
+            <Typography variant="body1" paragraph>
               Our site draws data from the City’s database to create
               easy-to-view visualizations and files to export.
-            </p>
+            </Typography>
           </Grid>
-          <Grid item sm={12} md={2} align="center">
-            <img src={upliftIcon} width={75} alt="Mobile App" />
-            <p>
+          <Grid item sm={12} md={2}>
+            <img className={classes.imageStyle} src={upliftIcon} width={75} alt="Mobile App" />
+            <Typography variant="body1" paragraph>
               You now have access to digestable data. Communities
               are empowered and equipped to identify areas of improvement to uplift and thrive.
-            </p>
+            </Typography>
           </Grid>
         </Grid>
-      </Container>
+      </ContentBody>
     </>
   );
 };
