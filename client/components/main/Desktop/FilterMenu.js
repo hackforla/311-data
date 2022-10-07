@@ -11,6 +11,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
+import fonts from '@theme/fonts';
 
 import GearButton from '@components/common/GearButton';
 import DateSelector from '@components/DateSelector/DateSelector';
@@ -36,7 +37,8 @@ const useStyles = makeStyles(theme => ({
   },
   headerTitle: {
     ...theme.typography.h5,
-    fontWeight: theme.typography.fontWeightMedium,
+    fontFamily: fonts.family.oswald,
+    fontWeight: fonts.weight.semiBold,
     letterSpacing: '2px',
     marginLeft: theme.gaps.xs,
   },
@@ -80,7 +82,7 @@ const FilterMenu = ({ toggleMenu }) => {
           <div className={classes.headerContent}>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
             <Typography className={classes.headerTitle} variant="h5">
-              FILTERS
+              FILTERS&nbsp;&&nbsp;SETTINGS
             </Typography>
           </div>
         )}

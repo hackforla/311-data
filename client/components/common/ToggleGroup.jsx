@@ -25,7 +25,7 @@ export default function ToggleGroup({
       },
       regular: {
         ...borderRadius,
-        ...theme.typography.body2,
+        ...theme.typography.body1,
         padding: theme.gaps.sm,
         backgroundColor: theme.palette.primary.dark,
         height: rounded ? 25 : 'auto',
