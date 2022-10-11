@@ -543,7 +543,6 @@ data_quality_switch=True):
     Output("total_req_card", "children"),
     Output("num_days_card", "children"),
     Input("nc_comp_dropdown", "value"),
-    prevent_initial_call=True
 )
 def generate_indicator_visuals_for_nc1(nc_comp_dropdown):
     """Generates the overlapping line chart based on selected filters.
@@ -569,7 +568,6 @@ def generate_indicator_visuals_for_nc1(nc_comp_dropdown):
     Output("total_req_card2", "children"),
     Output("num_days_card2", "children"),
     Input("nc_comp_dropdown2", "value"),
-    prevent_initial_call=True
 )
 def generate_indicator_visuals_for_nc2(nc_comp_dropdown2):
     """Generates the overlapping line chart based on selected filters.
@@ -594,7 +592,6 @@ def generate_indicator_visuals_for_nc2(nc_comp_dropdown2):
 @callback(
     Output("req_source_bar_chart", "figure"),
     Input("nc_comp_dropdown", "value"),
-    prevent_initial_call=True
 )
 def generate_req_source_bar_charts(nc_comp_dropdown):
     """Generates a request source bar chart based on the 
@@ -618,7 +615,6 @@ def generate_req_source_bar_charts(nc_comp_dropdown):
 @callback(
     Output("req_source_bar_chart2", "figure"),
     Input("nc_comp_dropdown2", "value"),
-    prevent_initial_call=True
 )
 def generate_req_source_bar_charts2(nc_comp_dropdown2):
     """Generates a request source bar chart based on the 
@@ -644,7 +640,6 @@ def generate_req_source_bar_charts2(nc_comp_dropdown2):
     Output("overlay_req_time_line_chart", "figure"),
     Input("nc_comp_dropdown", "value"),
     Input("nc_comp_dropdown2", "value"),
-    prevent_initial_call=True
 )
 def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
     """Generates the overlapping line chart based on selected filters.
