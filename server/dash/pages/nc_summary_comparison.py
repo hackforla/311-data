@@ -56,6 +56,7 @@ INLINE_STYLE = {"display": "inline-block"}
 CHART_OUTLINE_STYLE = merge_dict(INLINE_STYLE, BORDER_STYLE)
 SUMMARY_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Summary Dashboard"
 COMPARISON_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Comparison Dashboard"
+NUM_NEIGHBORHOOD_COUNCILS = 99
 
 
 ## DATA WRANGLING HELPER FUNCTIONS.
@@ -381,7 +382,9 @@ def update_line_chart(selected_nc):
     This function takes the selected neighborhood council (nc) value
      from the "selected_nc" dropdown and output a line chart showing 
     the number of requests throughout the day and the average number 
-    of requests throughout the day (total number of requests / all 99 neighborhood councils).
+    of requests throughout the day (total number of requests / number of 
+    neighborhood councils).
+    
     Args:
         selected_nc: A string argument automatically detected by Dash 
         callback function when "selected_nc" element is selected in the layout.
@@ -399,7 +402,7 @@ def update_line_chart(selected_nc):
     # Calculating the average number of requests throughout the day.
     neighborhood_sum_df = df.groupby(["created_date"]).agg("sum").reset_index()  # noqa
     total_sum_df = report_json.groupby(["created_date"]).agg("sum").reset_index()
-    total_sum_df["nc_avg"] = total_sum_df["counts"] / 99
+    total_sum_df["nc_avg"] = total_sum_df["counts"] / NUM_NEIGHBORHOOD_COUNCILS
     merged_df = neighborhood_sum_df.merge(total_sum_df["nc_avg"].to_frame(),
      left_index=True, right_index=True)  # noqa
 
@@ -575,7 +578,7 @@ def generate_req_source_bar_charts(nc_comp_dropdown, nc_comp_dropdown2):
          from each source for the second neighborhood council
           (e.g. mobile, app, self-report...etc).
     """
-    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    df_nc1, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
     df_nc2, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
     # Bar chart of different Request Type Sources for first selected neigbhorhood council.
     req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
