@@ -69,11 +69,12 @@ def add_datetime_column(df, colname):
         colname: the datetime column that is in string type.
     
     Return:
-        A dataframe with new column 'colnameDT' that is in datetime type.
+        df: A dataframe with new column 'colnameDT' that is in datetime type.
+        colname: String that represents the new column name.
     """
-    df.loc[:, colname+"DT"] = pd.to_datetime(
+    df.loc[:, colname+"_dt"] = pd.to_datetime(
         df.loc[:, colname].str[:-4].str.split("T").str.join(" "))
-    return df
+    return df, colname + "_dt"
 
 def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types):
     """Outputs the filtered dataframe based on the selected filters
@@ -118,15 +119,15 @@ def filter_bad_quality_data(df, data_quality_switch=True):
         data_quality_output: a string being displayed on whether the data quality switch is on or off.
     """
     print("* Getting quality data.")
-    df = add_datetime_column(df, "createdDate")
-    df = add_datetime_column(df, "closedDate")
-    df.loc[:, "timeToClose"] = (df.loc[:, "closedDateDT"] - df.loc[:, "createdDateDT"]).dt.days
+    df, create_dt_col_name = add_datetime_column(df, "createdDate")
+    df, close_dt_col_name = add_datetime_column(df, "closedDate")
+    df.loc[:, "timeToClose"] = (df.loc[:, close_dt_col_name] - df.loc[:, create_dt_col_name]).dt.days
     # Calculate the Optimal number of bins based on Freedman-Diaconis Rule.
 
     # Replace empty rows with 0.0000001 To avoid log(0) error later.
     df.loc[:, "timeToClose"] = df.loc[:, "timeToClose"].fillna(0.0000001)
 
-    # Replace negative values
+    # Removing negative request time to close values. 
     df = df[df["timeToClose"] > 0]
     if df.shape[0] == 0:
         raise PreventUpdate()
@@ -166,7 +167,7 @@ def generate_comparison_filtered_df(api_data_df, selected_nc):
         df = api_data_df
     else:
         df = api_data_df[api_data_df["councilName"] == selected_nc]
-    df = add_datetime_column(df, "createdDate")
+    df, _ = add_datetime_column(df, "createdDate")
     return df
 
 # VISUALS HELPER FUNCTIONS.
