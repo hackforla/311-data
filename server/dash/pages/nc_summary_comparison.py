@@ -90,9 +90,10 @@ def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types
     Returns:
         pandas dataframe filtered by selected neighborhood council and request types
     """
-    if (not selected_request_types or selected_request_types == ' ') and not selected_nc:
+    no_req_type_selected = (not selected_request_types or selected_request_types == ' ')
+    if no_req_type_selected and not selected_nc:
         df = api_data_df  
-    elif selected_nc and (not selected_request_types or selected_request_types == ' '):
+    elif selected_nc and no_req_type_selected:
         df = api_data_df[api_data_df["councilName"] == selected_nc]
     elif selected_request_types != ' ':
         df = df[df["typeName"].isin(selected_request_types)]
@@ -255,8 +256,8 @@ def generate_council_name_dropdown(output_id):
     Return:
         Dash html div element containing nc drop down for left pane filtering.
     """
-    return html.Div(dcc.Dropdown(sorted(list(set(api_data_df["councilName"]))),
-         value=" ", id=output_id,
+    councils = sorted(list(set(api_data_df["councilName"])))
+    return html.Div(dcc.Dropdown(councils, councils[0], id=output_id,
                  placeholder="Select a Neighborhood Council..."),
                  style=merge_dict(INLINE_STYLE, {"width": "48.5vw"}))
 
