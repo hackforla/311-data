@@ -72,7 +72,7 @@ def add_datetime_column(df, colname):
         df: A dataframe with new column 'colnameDT' that is in datetime type.
         new_col_name: String that represents the new column name.
     """
-    new_col_name = colname+"_dt"
+    new_col_name = colname + "_dt"
     df.loc[:, new_col_name] = pd.to_datetime(
         df.loc[:, colname].str[:-4].str.split("T").str.join(" "))
     return df, new_col_name
@@ -162,14 +162,15 @@ def generate_comparison_filtered_df(api_data_df, selected_nc):
         selected_nc: A string argument automatically detected by Dash callback
          function when "nc_comp_dropdown" element is selected in the layout.
     Returns: 
-        Pandas dataframe with requests from the nc selected by nc_comp_dropdown.
+        df: Pandas dataframe with requests from the nc selected by nc_comp_dropdown.
+        create_dt_col_name: String column name of the new datetime column.
     """
     if not selected_nc:
         df = api_data_df
     else:
         df = api_data_df[api_data_df["councilName"] == selected_nc]
-    df, _ = add_datetime_column(df, "createdDate")
-    return df
+    df, create_dt_col_name = add_datetime_column(df, "createdDate")
+    return df, create_dt_col_name
 
 # VISUALS HELPER FUNCTIONS.
 def generate_summary_header():
@@ -527,8 +528,8 @@ def generate_indicator_visuals(nc_comp_dropdown, nc_comp_dropdown2):
         num_days_card2: integer for the total number of days the data
             available in second selected neighborhood council span.
     """
-    df_nc1 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
-    df_nc2 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
+    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    df_nc2, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
     # Total number of requests for first neigbhorhood council.
     total_req_card = df_nc1.shape[0]
 
@@ -536,12 +537,12 @@ def generate_indicator_visuals(nc_comp_dropdown, nc_comp_dropdown2):
     total_req_card2 = df_nc2.shape[0]
 
     # Total number of days the available requests in first neigbhorhood council span.
-    num_days_card = np.max(df_nc1["createdDateDT"].dt.day) - \
-                           np.min(df_nc1["createdDateDT"].dt.day) + 1
+    num_days_card = np.max(df_nc1[create_dt_col_name].dt.day) - \
+                           np.min(df_nc1[create_dt_col_name].dt.day) + 1
 
     # Total number of days the available requests in second neigbhorhood council span.
-    num_days_card2 = np.max(df_nc2["createdDateDT"].dt.day) - \
-                            np.min(df_nc2["createdDateDT"].dt.day) + 1
+    num_days_card2 = np.max(df_nc2[create_dt_col_name].dt.day) - \
+                            np.min(df_nc2[create_dt_col_name].dt.day) + 1
 
     return total_req_card, total_req_card2, num_days_card, num_days_card2
 
@@ -574,8 +575,8 @@ def generate_req_source_bar_charts(nc_comp_dropdown, nc_comp_dropdown2):
          from each source for the second neighborhood council
           (e.g. mobile, app, self-report...etc).
     """
-    df_nc1 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
-    df_nc2 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
+    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    df_nc2, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
     # Bar chart of different Request Type Sources for first selected neigbhorhood council.
     req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
     req_source = req_source.reset_index()
@@ -617,22 +618,22 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
         Line chart showing the number of requests throughout the 
         day for both first and second selected neighborhood council.
     """
-    df_nc1 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
-    df_nc2 = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
+    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    df_nc2, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
     # Overlapping line chart for number of request throughout the day
     # for both first and second neighborhood council.
-    req_time = pd.DataFrame(df_nc1.groupby("createdDateDT", as_index=False)["srnumber"].count())
-    req_time2 = pd.DataFrame(df_nc2.groupby("createdDateDT", as_index=False)["srnumber"].count())
+    req_time = pd.DataFrame(df_nc1.groupby(create_dt_col_name, as_index=False)["srnumber"].count())
+    req_time2 = pd.DataFrame(df_nc2.groupby(create_dt_col_name, as_index=False)["srnumber"].count())
     overlay_req_time_line_chart = go.Figure()
     overlay_req_time_line_chart.add_trace(go.Scatter(
-        x=req_time["createdDateDT"], y=req_time["srnumber"], mode="lines", name="NC1"))
+        x=req_time[create_dt_col_name], y=req_time["srnumber"], mode="lines", name="NC1"))
     overlay_req_time_line_chart.add_trace(go.Scatter(
-        x=req_time2["createdDateDT"], y=req_time2["srnumber"], mode="lines", name="NC2"))
+        x=req_time2[create_dt_col_name], y=req_time2["srnumber"], mode="lines", name="NC2"))
 
     overlay_req_time_line_chart.update_layout(title="Number of Request Throughout the Day",
      margin=dict(l=25, r=25, b=35, t=50), xaxis_range=[min(
-         min(req_time["createdDateDT"]), min(req_time2["createdDateDT"])),
-         max(max(req_time["createdDateDT"]), max(req_time2["createdDateDT"]))], font=dict(size=9))
+         min(req_time[create_dt_col_name]), min(req_time2[create_dt_col_name])),
+         max(max(req_time[create_dt_col_name]), max(req_time2[create_dt_col_name]))], font=dict(size=9))
     return overlay_req_time_line_chart
 
 # LAYOUT.
