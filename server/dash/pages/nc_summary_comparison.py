@@ -99,7 +99,7 @@ def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types
     elif selected_nc and no_req_type_selected:
         df = api_data_df[api_data_df["councilName"] == selected_nc]
     elif selected_request_types != ' ':
-        df = df[df["typeName"].isin(selected_request_types)]
+        df = api_data_df[api_data_df["typeName"].isin(selected_request_types)]
     else:
         df = api_data_df
     return df
@@ -172,6 +172,25 @@ def generate_comparison_filtered_df(api_data_df, selected_nc):
         df = api_data_df[api_data_df["councilName"] == selected_nc]
     df, create_dt_col_name = add_datetime_column(df, "createdDate")
     return df, create_dt_col_name
+
+def generate_summary_statistics(nc_comp_dropdown):
+    """Generates the summary statistics for neighborhood council
+    comparisons.
+
+    Args:
+        nc_comp_dropdown: name of the selected neighborhood council.
+
+    Returns:
+        total_req_card: integer for the the total number of request 
+            in first selected neigborhood council.
+        num_days_card: integer for the total number of days the data 
+            available in first selected neighborhood council span.
+    """
+    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    total_req_card = df_nc1.shape[0]
+    num_days_card = np.max(df_nc1[create_dt_col_name].dt.day) - \
+                           np.min(df_nc1[create_dt_col_name].dt.day) + 1
+    return total_req_card, num_days_card
 
 # VISUALS HELPER FUNCTIONS.
 def generate_summary_header():
@@ -498,78 +517,57 @@ data_quality_switch=True):
     time_close_histogram.update_layout(margin=dict(l=50, r=50, b=50, t=50), font=dict(size=9))
     return time_close_histogram, data_quality_output
 
-
-## TODO: Make a helper function that can both indicator callback can call
-def generate_summary_statistics(nc_comp_dropdown):
-    """Generates the summary statistics for neighborhood council
-    comparisons.
-
-    Args:
-        nc_comp_dropdown: name of the selected neighborhood council.
-
-    Returns:
-        total_req_card: integer for the the total number of request 
-            in first selected neigborhood council.
-        num_days_card: integer for the total number of days the data 
-            available in first selected neighborhood council span.
-    """
-    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
-    total_req_card = df_nc1.shape[0]
-    num_days_card = np.max(df_nc1[create_dt_col_name].dt.day) - \
-                           np.min(df_nc1[create_dt_col_name].dt.day) + 1
-    return total_req_card, num_days_card
-
-## TODO: Break the callback function into two callbacks, each calling one helper function
-
 @callback(
     Output("total_req_card", "children"),
-    Output("total_req_card2", "children"),
     Output("num_days_card", "children"),
-    Output("num_days_card2", "children"),
     Input("nc_comp_dropdown", "value"),
-    Input("nc_comp_dropdown2", "value"),
     prevent_initial_call=True
 )
-def generate_indicator_visuals(nc_comp_dropdown, nc_comp_dropdown2):
+def generate_indicator_visuals_for_nc1(nc_comp_dropdown):
     """Generates the overlapping line chart based on selected filters.
-    This function takes the the two neighborhood council (nc) value from 
-    the "nc_comp_dropdown" dropdown and second selected neighborhood 
-    council value from "nc_comp_dropdown2"
-    dropdown and outputs indicator visuals for the two nc's.
+    This function takes the neighborhood council (nc) value from 
+    the "nc_comp_dropdown" dropdown and outputs indicator 
+    visuals for the nc.
+
     Args:
         nc_comp_dropdown: A string argument automatically detected by 
         Dash callback function when "nc_comp_dropdown" element is 
         selected in the layout.
-        nc_comp_dropdown2: A string argument automatically detected by
-         Dash callback function when "nc_comp_dropdown2" element is 
-         selected in the layout.
+
     Returns: 
         total_req_card: integer for the the total number of request 
             in first selected neigborhood council.
-        total_req_card2: integer for the total number of requests 
-            in the second selected neighborhood council.
         num_days_card: integer for the total number of days the data 
             available in first selected neighborhood council span.
-        num_days_card2: integer for the total number of days the data
+    """
+    total_req_card, num_days_card = generate_summary_statistics(nc_comp_dropdown)
+    return total_req_card, num_days_card
+
+@callback(
+    Output("total_req_card2", "children"),
+    Output("num_days_card2", "children"),
+    Input("nc_comp_dropdown2", "value"),
+    prevent_initial_call=True
+)
+def generate_indicator_visuals_for_nc2(nc_comp_dropdown2):
+    """Generates the overlapping line chart based on selected filters.
+    This function takes the neighborhood council (nc) value from 
+    the "nc_comp_dropdown2" dropdown and outputs indicator 
+    visuals for the nc.
+
+    Args:
+        nc_comp_dropdown2: A string argument automatically detected by 
+        Dash callback function when "nc_comp_dropdown2" element is 
+        selected in the layout.
+
+    Returns: 
+        total_req_card: integer for the the total number of request 
+            in second selected neigborhood council.
+        num_days_card: integer for the total number of days the data 
             available in second selected neighborhood council span.
     """
-    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
-    df_nc2, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
-    # Total number of requests for first neigbhorhood council.
-    total_req_card = df_nc1.shape[0]
-
-    # Total number of requests for second neigbhorhood council.
-    total_req_card2 = df_nc2.shape[0]
-
-    # Total number of days the available requests in first neigbhorhood council span.
-    num_days_card = np.max(df_nc1[create_dt_col_name].dt.day) - \
-                           np.min(df_nc1[create_dt_col_name].dt.day) + 1
-
-    # Total number of days the available requests in second neigbhorhood council span.
-    num_days_card2 = np.max(df_nc2[create_dt_col_name].dt.day) - \
-                            np.min(df_nc2[create_dt_col_name].dt.day) + 1
-
-    return total_req_card, total_req_card2, num_days_card, num_days_card2
+    total_req_card, num_days_card = generate_summary_statistics(nc_comp_dropdown2)
+    return total_req_card, num_days_card
 
 @callback(
     Output("req_source_bar_chart", "figure"),
