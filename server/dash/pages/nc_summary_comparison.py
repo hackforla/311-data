@@ -498,6 +498,29 @@ data_quality_switch=True):
     time_close_histogram.update_layout(margin=dict(l=50, r=50, b=50, t=50), font=dict(size=9))
     return time_close_histogram, data_quality_output
 
+
+## TODO: Make a helper function that can both indicator callback can call
+def generate_summary_statistics(nc_comp_dropdown):
+    """Generates the summary statistics for neighborhood council
+    comparisons.
+
+    Args:
+        nc_comp_dropdown: name of the selected neighborhood council.
+
+    Returns:
+        total_req_card: integer for the the total number of request 
+            in first selected neigborhood council.
+        num_days_card: integer for the total number of days the data 
+            available in first selected neighborhood council span.
+    """
+    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    total_req_card = df_nc1.shape[0]
+    num_days_card = np.max(df_nc1[create_dt_col_name].dt.day) - \
+                           np.min(df_nc1[create_dt_col_name].dt.day) + 1
+    return total_req_card, num_days_card
+
+## TODO: Break the callback function into two callbacks, each calling one helper function
+
 @callback(
     Output("total_req_card", "children"),
     Output("total_req_card2", "children"),
