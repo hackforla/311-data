@@ -384,7 +384,7 @@ def update_line_chart(selected_nc):
     the number of requests throughout the day and the average number 
     of requests throughout the day (total number of requests / number of 
     neighborhood councils).
-    
+
     Args:
         selected_nc: A string argument automatically detected by Dash 
         callback function when "selected_nc" element is selected in the layout.
@@ -412,8 +412,7 @@ def update_line_chart(selected_nc):
         y=["counts", "nc_avg"],
         color_discrete_sequence=DISCRETE_COLORS,
         labels=LABELS,
-        title="Number of " + selected_nc +
-        " Requests compared with the average Neighborhood Council"
+        title="Number of {} Requests compared with the average Neighborhood Council".format(selected_nc)
     )
 
     nc_avg_comp_line_chart.update_xaxes(
