@@ -70,11 +70,12 @@ def add_datetime_column(df, colname):
     
     Return:
         df: A dataframe with new column 'colnameDT' that is in datetime type.
-        colname: String that represents the new column name.
+        new_col_name: String that represents the new column name.
     """
-    df.loc[:, colname+"_dt"] = pd.to_datetime(
+    new_col_name = colname+"_dt"
+    df.loc[:, new_col_name] = pd.to_datetime(
         df.loc[:, colname].str[:-4].str.split("T").str.join(" "))
-    return df, colname + "_dt"
+    return df, new_col_name
 
 def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types):
     """Outputs the filtered dataframe based on the selected filters
