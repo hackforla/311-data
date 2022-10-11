@@ -192,6 +192,28 @@ def generate_summary_statistics(nc_comp_dropdown):
                            np.min(df_nc1[create_dt_col_name].dt.day) + 1
     return total_req_card, num_days_card
 
+def req_source_helper(nc_comp_dropdown):
+    """Generates a request source bar chart based on selected neighborhood council.
+
+    Args:
+        nc_comp_dropdown: A string argument automatically detected 
+            by Dash callback function when "nc_comp_dropdown" element 
+            is selected in the layout.
+    
+    Returns:
+        req_source_bar_chart: bar chart showing the number of request
+                    from each source for the first neighborhood council 
+                    (e.g. mobile, app, self-report...etc).
+    """
+    df_nc1, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
+    req_source = req_source.reset_index()
+    req_source_bar_chart = px.bar(req_source, x="sourceName", y="index",
+    orientation="h", title="Number of Requests by Source", labels={
+        "index": "Request Source", "sourceName": "Frequency"})
+    req_source_bar_chart.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
+    return req_source_bar_chart
+
 # VISUALS HELPER FUNCTIONS.
 def generate_summary_header():
     """Generates the header for the summary dashboard.
@@ -571,52 +593,52 @@ def generate_indicator_visuals_for_nc2(nc_comp_dropdown2):
 
 @callback(
     Output("req_source_bar_chart", "figure"),
-    Output("req_source_bar_chart2", "figure"),
     Input("nc_comp_dropdown", "value"),
-    Input("nc_comp_dropdown2", "value"),
     prevent_initial_call=True
 )
-def generate_req_source_bar_charts(nc_comp_dropdown, nc_comp_dropdown2):
-    """Generates a pair of request source bar chart based on the two
+def generate_req_source_bar_charts(nc_comp_dropdown):
+    """Generates a request source bar chart based on the 
      neighborhood council dropdown.
+
     This function takes the first selected neighborhood council (nc)
-     value from the "nc_comp_dropdown" dropdown and second selected 
-     neighborhood council value from "nc_comp_dropdown2"
-    dropdown and output a pair of request_source bar charts.
+     value from the "nc_comp_dropdown" dropdown and output a pair 
+     of request_source bar charts.
+
     Args:
         nc_comp_dropdown: A string argument automatically detected 
             by Dash callback function when "nc_comp_dropdown" element 
             is selected in the layout.
-        nc_comp_dropdown2: A string argument automatically detected by
-         Dash callback function when "nc_comp_dropdown2" element is 
-         selected in the layout.
     Returns: 
         req_source_bar_chart: bar chart showing the number of request
              from each source for the first neighborhood council 
              (e.g. mobile, app, self-report...etc).
-        req_source_bar_chart2: bar chart showing the number of request
+    """
+    return req_source_helper(nc_comp_dropdown)
+
+@callback(
+    Output("req_source_bar_chart2", "figure"),
+    Input("nc_comp_dropdown2", "value"),
+    prevent_initial_call=True
+)
+def generate_req_source_bar_charts2(nc_comp_dropdown2):
+    """Generates a request source bar chart based on the 
+     neighborhood council dropdown.
+
+    This function takes the second selected neighborhood council 
+    value from "nc_comp_dropdown2" dropdown and output a pair of 
+    request_source bar charts.
+
+    Args:
+        nc_comp_dropdown2: A string argument automatically detected by
+         Dash callback function when "nc_comp_dropdown2" element is 
+         selected in the layout.
+    Returns: 
+        bar chart showing the number of request
          from each source for the second neighborhood council
           (e.g. mobile, app, self-report...etc).
     """
-    df_nc1, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
-    df_nc2, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown2)
-    # Bar chart of different Request Type Sources for first selected neigbhorhood council.
-    req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
-    req_source = req_source.reset_index()
-    req_source_bar_chart = px.bar(req_source, x="sourceName", y="index",
-    orientation="h", title="Number of Requests by Source", labels={
-        "index": "Request Source", "sourceName": "Frequency"})
-    req_source_bar_chart.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
+    return req_source_helper(nc_comp_dropdown2)
 
-    # Bar chart of different Request Type Sources for second selected neigbhorhood council.
-    req_source2 = pd.DataFrame(df_nc2["sourceName"].value_counts())
-    req_source2 = req_source2.reset_index()
-    req_source_bar_chart2 = px.bar(req_source2, x="sourceName", y="index",
-    orientation="h", title="Number of Requests by Source", labels={
-        "index": "Request Source", "sourceName": "Frequency"})
-    req_source_bar_chart2.update_layout(margin=dict(l=25, r=25, b=25, t=50), font=dict(size=9))
-
-    return req_source_bar_chart, req_source_bar_chart2
 
 @callback(
     Output("overlay_req_time_line_chart", "figure"),
