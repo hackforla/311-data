@@ -3,14 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sendGitRequest } from '@reducers/data';
 import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
 import { toast } from 'react-toastify';
-import {
-  Container,
-  Grid,
-  Button,
-  TextField,
-  CircularProgress,
-} from '@material-ui/core';
-import contactSettings from './settings';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import 'react-toastify/dist/ReactToastify.css';
 
 const initialFormValues = {
@@ -29,6 +25,16 @@ const initialFormValues = {
   loading: false,
 };
 
+const toastEmitterSettings = {
+  position: 'bottom-right',
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+};
+
 const ContactForm = () => {
   const dispatch = useDispatch();
 
@@ -44,23 +50,32 @@ const ContactForm = () => {
     });
   }
 
+  function setLoading(isLoading) {
+    setFormValues(prevState => ({
+      ...prevState,
+      ...{
+        loading: isLoading,
+      },
+    }));
+  }
+
   // Initialize component.
   useEffect(() => {
     // componentDidMount code goes here...
-    clearFields();
-    if (displayFeedbackSuccess === true) {
-      toast.success('We received your message. Our team will contact you at the email address provided.', contactSettings.toast.dark);
+    if (displayFeedbackSuccess) {
+      toast.success('We received your message. Our team will contact you at the email address provided.', toastEmitterSettings);
+      clearFields();
     }
 
-    if (openErrorModal === true) {
-      toast.error('We failed to process your message. Please try again later.', contactSettings.toast.dark);
+    if (openErrorModal) {
+      toast.error('We failed to process your message. Please try again later.', toastEmitterSettings);
+      setLoading(false);
     }
 
     return () => {
       // componentWillUnmount code goes here...
       dispatch(showFeedbackSuccess(false));
       dispatch(setErrorModal(false));
-      clearFields();
     };
   }, [dispatch, displayFeedbackSuccess, openErrorModal]);
 
@@ -132,12 +147,7 @@ const ContactForm = () => {
               `Message: ${formValues.message.trim()}`,
     ].join('\n');
 
-    setFormValues(prevState => ({
-      ...prevState,
-      ...{
-        loading: true,
-      },
-    }));
+    setLoading(true);
 
     // Dispatch action to redux with payload.
     dispatch(sendGitRequest({ title: formValues.email, body }));
@@ -150,98 +160,95 @@ const ContactForm = () => {
     validateForm]);
 
   return (
-    <Container maxWidth="sm">
-      <form id="contact-form" onSubmit={handleSubmit}>
-        <Grid container alignItems="center" justifyContent="center" direction="column" style={{ gap: '10px' }}>
-          <Grid container alignItems="center" justifyContent="center" direction="row" spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                id="contact-firstname"
-                name="firstName"
-                label="First Name *"
-                type="text"
-                autoComplete="off"
-                value={formValues.firstName}
-                onChange={onInputChange}
-                onFocus={clearErrors}
-                error={formValues.errors.missingFirstName}
-                helperText={formValues.errors.missingFirstName ? 'Please provide a first name.' : ''}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="contact-lastname"
-                name="lastName"
-                label="Last Name *"
-                type="text"
-                autoComplete="off"
-                value={formValues.lastName}
-                onChange={onInputChange}
-                onFocus={clearErrors}
-                error={formValues.errors.missingLastName}
-                helperText={formValues.errors.missingLastName ? 'Please provide a last name.' : ''}
-                fullWidth
-              />
-            </Grid>
+    <form id="contact-form" onSubmit={handleSubmit}>
+      <Grid container alignItems="center" justify="center" direction="column">
+        <Grid container alignItems="center" justify="center" direction="row" spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              id="contact-firstname"
+              name="firstName"
+              label="First Name *"
+              type="text"
+              autoComplete="off"
+              value={formValues.firstName}
+              onChange={onInputChange}
+              onFocus={clearErrors}
+              error={formValues.errors.missingFirstName}
+              helperText={formValues.errors.missingFirstName ? 'Please provide a first name.' : ''}
+              fullWidth
+            />
           </Grid>
-          <Grid container alignItems="center" justifyContent="center" direction="row">
-            <Grid item xs={12}>
-              <TextField
-                id="contact-email"
-                name="email"
-                label="Email *"
-                type="text"
-                autoComplete="off"
-                value={formValues.email}
-                onChange={onInputChange}
-                onFocus={clearErrors}
-                error={formValues.errors.missingEmail || formValues.errors.invalidEmail}
-                helperText={formValues.errors.missingEmail || formValues.errors.invalidEmail ? 'Please provide a valid email address.' : ''}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="contact-association"
-                name="association"
-                label="Association"
-                type="text"
-                autoComplete="off"
-                value={formValues.association}
-                onChange={onInputChange}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} style={{ paddingTop: '8px' }}>
-              <TextField
-                id="contact-message"
-                name="message"
-                label="Message *"
-                type="text"
-                variant="outlined"
-                rows={4}
-                autoComplete="off"
-                value={formValues.message}
-                onChange={onInputChange}
-                onFocus={clearErrors}
-                error={formValues.errors.missingMessage}
-                helperText={formValues.errors.missingMessage ? 'Please provide a message.' : ''}
-                fullWidth
-                multiline
-              />
-            </Grid>
-          </Grid>
-          <Grid container direction="column" alignItems="center" justifyContent="center" style={{ paddingTop: '8px' }}>
-            <CircularProgress style={{ display: formValues.loading ? 'block' : 'none' }} />
-            <Button variant="contained" color="primary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
-              Submit
-            </Button>
+          <Grid item xs={6}>
+            <TextField
+              id="contact-lastname"
+              name="lastName"
+              label="Last Name *"
+              type="text"
+              autoComplete="off"
+              value={formValues.lastName}
+              onChange={onInputChange}
+              onFocus={clearErrors}
+              error={formValues.errors.missingLastName}
+              helperText={formValues.errors.missingLastName ? 'Please provide a last name.' : ''}
+              fullWidth
+            />
           </Grid>
         </Grid>
-      </form>
-    </Container>
-
+        <Grid container alignItems="center" justify="center" direction="row">
+          <Grid item xs={12}>
+            <TextField
+              id="contact-email"
+              name="email"
+              label="Email *"
+              type="text"
+              autoComplete="off"
+              value={formValues.email}
+              onChange={onInputChange}
+              onFocus={clearErrors}
+              error={formValues.errors.missingEmail || formValues.errors.invalidEmail}
+              helperText={formValues.errors.missingEmail || formValues.errors.invalidEmail ? 'Please provide a valid email address.' : ''}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="contact-association"
+              name="association"
+              label="Association"
+              type="text"
+              autoComplete="off"
+              value={formValues.association}
+              onChange={onInputChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} style={{ paddingTop: '12px' }}>
+            <TextField
+              id="contact-message"
+              name="message"
+              label="Message *"
+              type="text"
+              variant="outlined"
+              rows={8}
+              autoComplete="off"
+              value={formValues.message}
+              onChange={onInputChange}
+              onFocus={clearErrors}
+              error={formValues.errors.missingMessage}
+              helperText={formValues.errors.missingMessage ? 'Please provide a message.' : ''}
+              fullWidth
+              multiline
+            />
+          </Grid>
+        </Grid>
+        <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: '20px' }}>
+          <CircularProgress style={{ display: formValues.loading ? 'block' : 'none' }} />
+          <Button variant="contained" color="secondary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
+            Submit
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
   );
 };
 

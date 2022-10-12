@@ -1,55 +1,54 @@
-const roboto = ['Roboto', 'sans-serif'];
-const oswald = ['Oswald', 'sans-serif'];
+import fonts from '@theme/fonts';
 
-const robotoMedium = 500;
-const robotoRegular = 400;
-const robotoBold = 700;
+// Note to future maintainers...
 
-export default {
+// Ideally, define only font-size in the typography object below.
+
+// Modifiers like font-weight and font-family, are component specific.
+// Therefore, consider defining them in the className property of the
+// <Typography> component via makeStyles().
+
+// Example: <Typography variant="h1" className={classes.robotoBold}>
+
+const typography = {
   button: {
     textTransform: 'none',
   },
-  fontFamily: roboto,
-  fontWeight: robotoRegular,
+
+  // Default family and weight for everything below.
+  fontFamily: fonts.family.roboto,
+  fontWeight: fonts.weight.regular,
+
   h1: {
-    fontFamily: oswald,
-    fontSize: 21,
+    fontSize: 96,
   },
   h2: {
-    fontSize: 18,
-    fontWeight: robotoMedium,
+    fontSize: 60,
   },
   h3: {
-    fontFamily: oswald,
-    fontSize: 17,
+    fontSize: 46,
   },
   h4: {
-    fontSize: 17,
-    fontWeight: robotoBold,
+    fontSize: 36,
   },
   h5: {
-    fontSize: 16,
-    fontWeight: robotoMedium,
+    fontSize: 24,
   },
   h6: {
-    fontSize: 16,
-    fontWeight: robotoBold,
+    fontSize: 18,
   },
   body1: {
     fontSize: 16,
   },
   body2: {
     fontSize: 14,
-    fontWeight: robotoRegular,
-  },
-  body3: {
-    fontSize: 14,
-    fontWeight: robotoMedium,
   },
   subtitle1: {
-    fontSize: 21,
+    fontSize: 16,
   },
   subtitle2: {
     fontSize: 21,
   },
 };
+
+export default typography;

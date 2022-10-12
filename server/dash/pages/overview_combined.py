@@ -1,13 +1,18 @@
-import textwrap
+"""Dash page that provides an overview of 311 requests across NCs."""
 import datetime
+import textwrap
 import urllib.parse
+
+import dash
+from dash import dcc, html
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dash import dcc, html
 
 from config import API_HOST
 from design import LABELS
+
+dash.register_page(__name__)
 
 # COMMON VARIABLES.
 AGENCY_NAME_FIELD = 'agency_name'
@@ -22,6 +27,8 @@ TITLE = "OVERVIEW COMBINED DASHBOARD"
 TYPE_NAME_FIELD = 'type_name'
 
 # API HELPER FUNCTION.
+
+
 def generate_dataframe_from_api(api_params, group_by_col):
     """Generates the dataframe output from the reports API.
 
@@ -45,6 +52,7 @@ def generate_dataframe_from_api(api_params, group_by_col):
 
 # DATAFRAMES
 
+
 # Loading the dataframe for the NCs and corresponding requests.
 nc_req_count_api_params = {'field': 'council_name', 'filter': CREATED_DATE_FILTER}
 _, nc_req_count_df = generate_dataframe_from_api(nc_req_count_api_params, COUNCIL_NAME_FIELD)
@@ -60,6 +68,7 @@ _, agency_count = generate_dataframe_from_api(
     req_agency_count_api_params, AGENCY_NAME_FIELD)
 
 # VISUALIZATION HELPER FUNCTIONS.
+
 
 def get_counts_dict():
     """Compute values for the indicator visualization.
@@ -88,6 +97,7 @@ def get_counts_dict():
     indicator_count_dict['agency_count'] = agency_count.shape[0]
 
     return indicator_count_dict
+
 
 def make_agency_pie_chart(agency_count):
     """Generates the request share by agency pie chart.
@@ -120,6 +130,7 @@ def make_agency_pie_chart(agency_count):
     req_share_by_agency_pie_chart.update_layout(margin=dict(l=100, r=100, b=100, t=100))
     return req_share_by_agency_pie_chart
 
+
 def make_req_type_source_bar_chart(req_source_count):
     """Generates the request type by source bar chart.
 
@@ -147,6 +158,7 @@ def make_req_type_source_bar_chart(req_source_count):
         orientation='h'
     )
     return req_source_bar_chart
+
 
 def make_days_to_close_box_plot():
     """Generates the request days to close box plot.
@@ -181,6 +193,7 @@ def make_days_to_close_box_plot():
     )
     return med_days_to_close_box_plot
 
+
 def make_day_of_week_bar_chart():
     """Generates the day of week bar chart.
 
@@ -209,6 +222,7 @@ def make_day_of_week_bar_chart():
         "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
     return num_req_by_day_bar_chart
 
+
 def make_req_by_nc_bar_chart(nc_req_count_df):
     """Generates the total request by nc bar chart.
 
@@ -230,6 +244,7 @@ def make_req_by_nc_bar_chart(nc_req_count_df):
     )
     req_by_nc_bar_chart.update_layout(font=dict(size=12))
     return req_by_nc_bar_chart
+
 
 # VISUALIZATION.
 indicator_count_dict = get_counts_dict()

@@ -1,15 +1,19 @@
-# import hashlib
 import os
 from datetime import date, timedelta
-from dateutil.relativedelta import relativedelta
-
 from ..config import DATA_DIR
 from ..models import (
     request_type, council, region, service_request
 )
 
+GET_FILTERED_REQUESTS_LIMIT = 10000
+
 
 async def build_cache():
+    """Builds the cache by calling the set of functions we want cached.
+
+    Returns:
+        A dict mapping cache entry string names to their counts.
+    """
     from ..models.geometry import Geometry  # avoiding circular imports
 
     open_requests = await service_request.get_open_requests()
@@ -19,31 +23,18 @@ async def build_cache():
     types = await request_type.get_types_dict()
     geojson = await Geometry.get_council_geojson()
 
-    # for i in councils:
-    #     await council.get_open_request_counts(i)
+    # Get results for past week.
+    num_requests_last_week = 0
+    for day in range(7):
+        num_requests_last_week += len(await service_request.get_filtered_requests(
+            date.today() - timedelta(days=day),
+            date.today() - timedelta(days=day),
+            limit=GET_FILTERED_REQUESTS_LIMIT)
+        )
 
-    # get results for past week
-    await service_request.get_filtered_requests(
-        date.today() - timedelta(days=7.0),
-        date.today(),
-        list(types),
-        list(councils),
-    )
-
-    # get results for past month
-    await service_request.get_filtered_requests(
-        date.today() - relativedelta(months=1),
-        date.today(),
-        list(types),
-        list(councils),
-    )
-
-    # delete any cached CSV files
+    # Delete any cached CSV files.
     for file in os.scandir(DATA_DIR):
         os.remove(file.path)
-
-    # import lacity_data_api.services.reports as rpts
-    # await rpts.make_csv_cache("service_requests")
 
     return {
         "open_requests": len(open_requests),
@@ -51,7 +42,8 @@ async def build_cache():
         "types": len(types),
         "councils": len(councils),
         "regions": len(regions),
-        "geojson": len(geojson)
+        "geojson": len(geojson),
+        "num_requests_last_week": num_requests_last_week
     }
 
 
@@ -71,26 +63,3 @@ def cache_key(f, *args, **kwargs):
         '.' +
         str(f.__qualname__) + str(args)
     )
-
-
-# TODO: maybe recessitate this for object keys (e.g. filters)
-# def hashed_cache_key(f, *args, **kwargs):
-#     """
-#     Utility function to create hashed key for pins based on filters
-#     """
-
-#     # want to sort the values for types and councils
-#     for i in args:
-#         if type(i) == list:
-#             i.sort()
-
-#     object_key = str(args).encode('utf-8')  # need a b-string for hashing
-#     hashed_key = hashlib.md5(object_key).hexdigest()
-
-#     # use unhashed string if in DEBUG mode
-#     if DEBUG:
-#         # this should match the default aiocache key format
-#         return format(str(f.__module__) + str(f.__name__) + str(args))
-#     else:
-#         # caching without the module and function to potentially make reusable
-#         return format(hashed_key)

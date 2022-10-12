@@ -1,6 +1,7 @@
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
-import ContactImage from './ContactImage';
+import TextHeading from '@components/common/TextHeading';
+import ContentBody from '@components/common/ContentBody';
 import ContactIntro from './ContactIntro';
 import ContactForm from './ContactForm';
 
@@ -10,7 +11,7 @@ const Contact = () => (
   <>
     <div>
       <ToastContainer
-        position="top-right"
+        position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -22,9 +23,11 @@ const Contact = () => (
       />
     </div>
     <div>
-      <ContactImage>Contact Us</ContactImage>
-      <ContactIntro />
-      <ContactForm />
+      <TextHeading>Contact Us</TextHeading>
+      <ContentBody maxWidth="sm">
+        <ContactIntro />
+        <ContactForm />
+      </ContentBody>
     </div>
   </>
 );

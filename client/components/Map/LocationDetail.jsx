@@ -38,7 +38,7 @@ const LocationDetail = ({
     <div className={classes.locationInfo}>
       <Typography
         className={classes.header}
-        variant="h1"
+        variant="h3"
         component="h2"
       >
         INFORMATION
