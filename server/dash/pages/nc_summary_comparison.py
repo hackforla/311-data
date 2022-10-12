@@ -196,14 +196,14 @@ def generate_summary_statistics(nc_comp_dropdown):
 
     Returns:
         total_req_card: integer for the the total number of request 
-            in first selected neigborhood council.
+            in selected neigborhood council.
         num_days_card: integer for the total number of days the data 
-            available in first selected neighborhood council span.
+            available in selected neighborhood council span.
     """
-    df_nc1, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
-    total_req_card = df_nc1.shape[0]
-    num_days_card = np.max(df_nc1[create_dt_col_name].dt.day) - \
-                           np.min(df_nc1[create_dt_col_name].dt.day) + 1
+    df_nc, create_dt_col_name = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    total_req_card = df_nc.shape[0]
+    num_days_card = np.max(df_nc[create_dt_col_name].dt.day) - \
+                           np.min(df_nc[create_dt_col_name].dt.day) + 1
     return total_req_card, num_days_card
 
 def req_source_helper(nc_comp_dropdown):
@@ -714,7 +714,7 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
         nc_comp_dropdown2: A string argument automatically detected 
         by Dash callback function when "nc_comp_dropdown2" element 
         is selected in the layout.
-        
+
     Returns: 
         Line chart showing the number of requests throughout the 
         day for both first and second selected neighborhood council.
