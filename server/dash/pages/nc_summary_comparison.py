@@ -59,12 +59,14 @@ COMPARISON_DASHBOARD_TITLE = "LA 311 Requests - Neighborhood Council Comparison 
 NUM_NEIGHBORHOOD_COUNCILS = 99
 
 
-## DATA WRANGLING HELPER FUNCTIONS.
+# DATA WRANGLING HELPER FUNCTIONS.
 def add_datetime_column(df, colname):
     """Adds a datetime column to a dataframe.
+
     This function takes a datetime column 'colname' in string type, remove the last 4 characters,
     split date and time by character 'T', and finally combine date and time into a single string again.
     The function then converts the string using pandas's to_datetime function.
+
     Args:
         df: dataframe to add the datetime column to.
         colname: the datetime column that is in string type.
@@ -79,10 +81,12 @@ def add_datetime_column(df, colname):
     return df, new_col_name
 
 def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types):
-    """Outputs the filtered dataframe based on the selected filters
+    """Outputs the filtered dataframe based on the selected filters.
+
     This function takes the original dataframe "api_data_df", selected neighborhood
     council "selected_nc", as well as the selected request type "selected_request_types" 
     to output a dataframe with matching records.
+
     Args:
         api_data_df: full 311-request data directly access from the 311 data API.
         selected_nc: A string argument automatically detected by Dash callback 
@@ -90,6 +94,7 @@ def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types
         selected_request_types: A list of strings automatically detected by Dash 
         callback function when "selected_request_types" element is selected in the
          layout, default None.
+
     Returns:
         pandas dataframe filtered by selected neighborhood council and request types
     """
@@ -107,9 +112,11 @@ def generate_filtered_dataframe(api_data_df, selected_nc, selected_request_types
 
 def filter_bad_quality_data(df, data_quality_switch=True):
     """Filters the dataframe based on pre-defined data quality filters.
+
     This function takes the original dataframe "df" and filters out records 
     with an outlier amount of request time to close based on the Freedman-Diaconis Rule.
     Generally 10% of data is excluded.
+
     Args:
         df: 311-request data accessed from the API.
         data_quality_switch: A boolean argument automatically detected by Dash. 
@@ -155,13 +162,16 @@ def filter_bad_quality_data(df, data_quality_switch=True):
 
 def generate_comparison_filtered_df(api_data_df, selected_nc):
     """Generates the dataframe based on selected neighborhood council.
+
     This function takes the selected neighborhood council (nc) value from 
     the "selected_nc" dropdown and outputs a dataframe 
     corresponding to their neighorhood council with additional datetime column.
+
     Args:
         api_data_df: full 311-request data directly access from the 311 data API.
         selected_nc: A string argument automatically detected by Dash callback
          function when "nc_comp_dropdown" element is selected in the layout.
+
     Returns: 
         df: Pandas dataframe with requests from the nc selected by nc_comp_dropdown.
         create_dt_col_name: String column name of the new datetime column.
@@ -176,6 +186,10 @@ def generate_comparison_filtered_df(api_data_df, selected_nc):
 def generate_summary_statistics(nc_comp_dropdown):
     """Generates the summary statistics for neighborhood council
     comparisons.
+
+    This function takes in "nc_comp_dropdown" to compute the 
+    summary statistics for the selected neighborhood council
+    to be displayed on the dashboard.
 
     Args:
         nc_comp_dropdown: name of the selected neighborhood council.
@@ -195,6 +209,10 @@ def generate_summary_statistics(nc_comp_dropdown):
 def req_source_helper(nc_comp_dropdown):
     """Generates a request source bar chart based on selected neighborhood council.
 
+    This function takes in "nc_comp_dropdown" and return a bar chart
+    that shows the number of requests from each source from the 
+    selected neighborhood council.
+
     Args:
         nc_comp_dropdown: A string argument automatically detected 
             by Dash callback function when "nc_comp_dropdown" element 
@@ -202,7 +220,7 @@ def req_source_helper(nc_comp_dropdown):
     
     Returns:
         req_source_bar_chart: bar chart showing the number of request
-                    from each source for the first neighborhood council 
+                    from each source for the neighborhood council 
                     (e.g. mobile, app, self-report...etc).
     """
     df_nc1, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
@@ -217,8 +235,10 @@ def req_source_helper(nc_comp_dropdown):
 # VISUALS HELPER FUNCTIONS.
 def generate_summary_header():
     """Generates the header for the summary dashboard.
+
     This function generates the html elements for the 
     title and data quality toggle for summary dashboard.
+
     Return:
         Dash html div element containing title and data 
         quality toggle.
@@ -233,8 +253,10 @@ def generate_summary_header():
 
 def generate_summary_dropdowns():
     """Generates the dropdowns for the summary dashboard.
+
     This function generates the html elements for the 
     neighborhood council and request type dropdowns for summary dashboard.
+
     Return:
         Dash html div element containing nc and request type dropdowns.
     """
@@ -251,8 +273,10 @@ def generate_summary_dropdowns():
 
 def generate_summary_line_chart():
     """Generates the line chart for the summary dashboard.
+
     This function generates the html elements for the 
     number of requests line chart for summary dashboard.
+
     Return:
         Dash html div element containing overlapping line chart.
     """
@@ -263,8 +287,10 @@ def generate_summary_line_chart():
 
 def generate_summary_pie_chart():
     """Generates the pie chart for the summary dashboard.
+
     This function generates the html elements for the 
     request type pie chart for summary dashboard.
+
     Return:
         Dash html div element containing request type pie chart.
     """
@@ -278,8 +304,10 @@ def generate_summary_pie_chart():
 
 def generate_summary_histogram():
     """Generates the histogram for the summary dashboard.
+
     This function generates the html elements for the 
     request time to close histogram for summary dashboard.
+
     Return:
         Dash html div element containing request time to close histogram.
     """
@@ -294,10 +322,13 @@ def generate_summary_histogram():
 def generate_council_name_dropdown(output_id):
     """Generates the neighborhood council (nc) dropdown for the 
     comparison dashboard.
+
     This function generates the html elements for the 
     nc dropdown for the comparison dashboard.
+
     Args:
         output_id: the id corresponding to the dash element in the layout.
+
     Return:
         Dash html div element containing nc drop down for left pane filtering.
     """
@@ -309,11 +340,14 @@ def generate_council_name_dropdown(output_id):
 def generate_comparison_total_req(output_id):
     """Generates the indicator visual for the 
     total number of requests.
+
     This function generates the html elements for the 
     indicator visual with matching output_id showing the total number of 
     requests for the comparison dashboard.
+
     Args:
         output_id: the id corresponding to the dash element in the layout.
+
     Return:
         Dash html div element containing label and indicator visual.
     """
@@ -326,12 +360,15 @@ def generate_comparison_total_req(output_id):
 def generate_comparison_num_days(output_id):
     """Generates the indicator visual for the 
     total number of days request spans.
+
     This function generates the html elements for the 
     indicator visual with matching output_id showing the 
     total number of days request spans for the 
     comparison dashboard.
+
     Args:
         output_id: the id corresponding to the dash element in the layout.
+
     Return:
         Dash html div element containing label and indicator visual.
     """
@@ -343,12 +380,15 @@ def generate_comparison_num_days(output_id):
 def generate_comparison_num_days(output_id):
     """Generates the indicator visual for the 
     total number of days request spans.
+
     This function generates the html elements for the 
     indicator visual with matching output_id showing the 
     total number of days request spans for the 
     comparison dashboard.
+
     Args:
         output_id: the id corresponding to the dash element in the layout.
+
     Return:
         Dash html div element containing label and indicator visual.
     """
@@ -360,11 +400,14 @@ def generate_comparison_num_days(output_id):
 def generate_comparison_req_source_bar(output_id):
     """Generates the bar chart visual for the 
     request source in comparison dashboard.
+
     This function generates the html elements for the 
     bar chart of request sources with matching output_id 
     on the comparison dashboard.
+
     Args:
         output_id: the id corresponding to the dash element in the layout.
+
     Return:
         Dash html div element containing request source bar chart.
     """
@@ -375,9 +418,11 @@ def generate_comparison_req_source_bar(output_id):
 def generate_comparison_line_chart():
     """Generates the line chart visual for the 
     number of requests in comparison dashboard.
+
     This function generates the html elements for the 
     overlapping line chart for number of requests on the 
     bottom of the comparison dashboard.
+
     Return:
         Dash html div element containing overlapping line chart.
     """
@@ -393,12 +438,15 @@ def generate_comparison_line_chart():
 )
 def generate_dynamic_filter(selected_nc):
     """Enables the dashboard to show dynamic filters.
+
     This function takes the selected neighborhood council (nc) value from the 
     "selected_nc" dropdown and output a a list of available request types
     from that neigbhorhood council.
+
     Args:
         selected_nc: A string argument automatically detected by Dash callback 
         function when "selected_nc" element is selected in the layout.
+
     Returns: 
         selected_request_types: a list of request types available from the selected 
         neigbhorhood council.
@@ -420,6 +468,7 @@ def generate_dynamic_filter(selected_nc):
 def update_line_chart(selected_nc):
     """Generates a line chart visualizations for LA 311 requests data
      based on the two selected neighborhood conucils.
+
     This function takes the selected neighborhood council (nc) value
      from the "selected_nc" dropdown and output a line chart showing 
     the number of requests throughout the day and the average number 
@@ -429,6 +478,7 @@ def update_line_chart(selected_nc):
     Args:
         selected_nc: A string argument automatically detected by Dash 
         callback function when "selected_nc" element is selected in the layout.
+
     Returns: 
         nc_avg_comp_line_chart: line chart showing the number of requests
          throughout the day for the selected neighborhood council and average
@@ -474,14 +524,17 @@ def update_line_chart(selected_nc):
 )
 def generate_req_type_pie_chart(selected_nc, selected_request_types=None):
     """Generates the request type pie chart based on selected filters.
+
     This callback function takes the selected neighborhood council (nc) value
     from the "selected_nc" dropdown, selected request type from "selected_request_types"
     dropdown to output a pie chart showing the share of request types.
+
     Args:
         selected_nc: A string argument automatically detected by Dash callback function
              when "selected_nc" element is selected in the layout.
         selected_request_types: A list of strings automatically detected by Dash callback 
             function when "selected_request_types" element is selected in the layout, default None.
+
     Returns:
         pie chart showing the share of each request type.
     """
@@ -508,9 +561,11 @@ def generate_req_type_pie_chart(selected_nc, selected_request_types=None):
 def generate_time_to_close_histogram(selected_nc, selected_request_types=None,
 data_quality_switch=True):
     """Generates the request type pie chart based on selected filters.
+
     This callback function takes the selected neighborhood council (nc) 
     value from the "selected_nc" dropdown, selected request type from "selected_request_types"
     dropdown to output a histogram for the time it takes for each request to close.
+
     Args:
         selected_nc: A string argument automatically detected by Dash callback 
             function when "selected_nc" element is selected in the layout.
@@ -520,6 +575,7 @@ data_quality_switch=True):
         data_quality_switch: A boolean for data quality filter automatically detected 
             by Dash callback function when "data_quality_switch" element is selected in 
             the layout, default True.
+
     Returns:
         time_close_histogram: histogram showing the distribution of the request time to close.
         data_quality_output: A string stating the status of the data quality filter 
@@ -546,6 +602,7 @@ data_quality_switch=True):
 )
 def generate_indicator_visuals_for_nc1(nc_comp_dropdown):
     """Generates the overlapping line chart based on selected filters.
+
     This function takes the neighborhood council (nc) value from 
     the "nc_comp_dropdown" dropdown and outputs indicator 
     visuals for the nc.
@@ -571,6 +628,7 @@ def generate_indicator_visuals_for_nc1(nc_comp_dropdown):
 )
 def generate_indicator_visuals_for_nc2(nc_comp_dropdown2):
     """Generates the overlapping line chart based on selected filters.
+
     This function takes the neighborhood council (nc) value from 
     the "nc_comp_dropdown2" dropdown and outputs indicator 
     visuals for the nc.
@@ -643,10 +701,12 @@ def generate_req_source_bar_charts2(nc_comp_dropdown2):
 )
 def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
     """Generates the overlapping line chart based on selected filters.
+
     This function takes the the two neighborhood council (nc) value 
     from the "nc_comp_dropdown" dropdown and second selected 
     neighborhood council value from "nc_comp_dropdown2"
     dropdown and outputs a overlapping line chart.
+
     Args:
         nc_comp_dropdown: A string argument automatically detected 
         by Dash callback function when "nc_comp_dropdown" element 
@@ -654,6 +714,7 @@ def generate_overlay_line_chart(nc_comp_dropdown, nc_comp_dropdown2):
         nc_comp_dropdown2: A string argument automatically detected 
         by Dash callback function when "nc_comp_dropdown2" element 
         is selected in the layout.
+        
     Returns: 
         Line chart showing the number of requests throughout the 
         day for both first and second selected neighborhood council.
