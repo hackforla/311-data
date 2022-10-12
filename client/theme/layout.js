@@ -23,6 +23,11 @@ const sharedLayout = makeStyles(theme => createStyles({
   marginBottomSmall: {
     marginBottom: theme.spacing(1),
   },
+
+  // Alignment
+  textAlignCenter: {
+    textAlign: 'center',
+  },
 }));
 
 export default sharedLayout;

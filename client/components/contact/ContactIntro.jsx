@@ -16,7 +16,7 @@ const ContactIntro = () => {
   return (
     <Grid container alignItems="center" justify="center" direction="column">
       <Grid item>
-        <div align="center">
+        <div className={classes.textAlignCenter}>
           <Typography variant="h6" className={classes.contentTitle}>
             {'Don\'t See What You Need?'}
           </Typography>

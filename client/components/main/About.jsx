@@ -59,10 +59,12 @@ const About = () => {
               us to create apps with this data, and that&apos;s where
               this project comes&nbsp;in.
             </Typography>
-            <div className={classes.marginTopLarge} align="center">
-              <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
-                Partners
-              </Typography>
+            <div className={classes.marginTopLarge}>
+              <div className={classes.textAlignCenter}>
+                <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
+                  Partners
+                </Typography>
+              </div>
             </div>
             <div className={classes.marginTopMedium}>
               <Typography variant="body1" paragraph>
@@ -89,10 +91,12 @@ const About = () => {
             <img src={codeForAmericaLogo} width={202} alt="Code for America" />
           </Grid>
         </Grid>
-        <div className={classes.marginTopLarge} align="center">
-          <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
-            How it works
-          </Typography>
+        <div className={classes.marginTopLarge}>
+          <div className={classes.textAlignCenter}>
+            <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
+              How it works
+            </Typography>
+          </div>
         </div>
       </ContentBody>
 

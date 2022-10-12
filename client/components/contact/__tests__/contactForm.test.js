@@ -6,14 +6,6 @@ import ContactForm from '@components/contact/ContactForm'
 
 describe("ContactForm", ()=>{
     describe("General",()=>{
-        test('should match snapshot', ()=>{
-            let tree = create(
-                <Provider store={store}>
-                    <ContactForm />
-                </Provider>
-            )
-            expect(tree.toJSON()).toMatchSnapshot();
-        })
         test('should display a contact form with all labels', ()=>{
             render(<ContactForm />)
             expect(screen.getByLabelText('First Name *')).toBeTruthy()
