@@ -206,7 +206,7 @@ def generate_summary_statistics(nc_comp_dropdown):
                            np.min(df_nc[create_dt_col_name].dt.day) + 1
     return total_req_card, num_days_card
 
-def req_source_helper(nc_comp_dropdown):
+def get_request_source_bar_chart(nc_comp_dropdown):
     """Generates a request source bar chart based on selected neighborhood council.
 
     This function takes in "nc_comp_dropdown" and return a bar chart
@@ -223,8 +223,8 @@ def req_source_helper(nc_comp_dropdown):
                     from each source for the neighborhood council 
                     (e.g. mobile, app, self-report...etc).
     """
-    df_nc1, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
-    req_source = pd.DataFrame(df_nc1["sourceName"].value_counts())
+    df_nc, _ = generate_comparison_filtered_df(api_data_df, nc_comp_dropdown)
+    req_source = pd.DataFrame(df_nc["sourceName"].value_counts())
     req_source = req_source.reset_index()
     req_source_bar_chart = px.bar(req_source, x="sourceName", y="index",
     orientation="h", title="Number of Requests by Source", labels={
@@ -668,7 +668,7 @@ def generate_req_source_bar_charts(nc_comp_dropdown):
              from each source for the first neighborhood council 
              (e.g. mobile, app, self-report...etc).
     """
-    return req_source_helper(nc_comp_dropdown)
+    return get_request_source_bar_chart(nc_comp_dropdown)
 
 @callback(
     Output("req_source_bar_chart2", "figure"),
@@ -691,7 +691,7 @@ def generate_req_source_bar_charts2(nc_comp_dropdown2):
          from each source for the second neighborhood council
           (e.g. mobile, app, self-report...etc).
     """
-    return req_source_helper(nc_comp_dropdown2)
+    return get_request_source_bar_chart(nc_comp_dropdown2)
 
 
 @callback(
