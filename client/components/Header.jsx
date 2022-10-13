@@ -84,12 +84,12 @@ const Header = () => {
             horizontal: 'left',
           }}
         >
-          <Link to="/reports/dashboards/overview_combined">
+          <Link to="/reports/overview-combined">
             <MenuItem onClick={handleClose}>
               Overview
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/nc_summary_comparison">
+          <Link to="/reports/nc-summary-comparison">
             <MenuItem onClick={handleClose}>
               Compare Two Neighborhoods
             </MenuItem>
