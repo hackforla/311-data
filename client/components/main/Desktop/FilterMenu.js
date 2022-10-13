@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto',
   },
   headerTitle: {
-    ...theme.typography.h5,
+    ...theme.typography.h6,
     fontFamily: fonts.family.oswald,
     fontWeight: fonts.weight.semiBold,
     letterSpacing: '2px',
@@ -81,7 +81,7 @@ const FilterMenu = ({ toggleMenu }) => {
         title={(
           <div className={classes.headerContent}>
             <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
-            <Typography className={classes.headerTitle} variant="h5">
+            <Typography className={classes.headerTitle} variant="h6">
               FILTERS&nbsp;&&nbsp;SETTINGS
             </Typography>
           </div>
