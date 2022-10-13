@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
     letterSpacing: '4px',
   },
+  menuPaper: {
+    backgroundColor: '#0F181F',
+  },
 }));
 
 const activeStyle = {
@@ -80,6 +83,7 @@ const Header = () => {
             vertical: 'bottom',
             horizontal: 'left',
           }}
+          classes={{ paper: classes.menuPaper }}
         >
           <Link to="/reports/dashboards/overview_combined" className={classes.link}>
             <MenuItem onClick={handleClose} button className={classes.button}>
