@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const activeStyle = {
-  borderBottom: '1px solid yellow',
+  borderBottom: '1px solid #FFB100',
 };
 
 // TODO: links/routing, mobile
