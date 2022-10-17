@@ -3,7 +3,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import coverImage from '@assets/contact_bg.png';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   contactImageCover: {
     height: '25vh',
     backgroundImage: `url(${coverImage})`,
@@ -11,9 +11,9 @@ const useStyles = makeStyles(() => ({
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     position: 'relative',
-
   },
   contactImageOverlayText: {
+    color: theme.palette.background.default,
     left: '50%',
     fontSize: '40px',
     fontWeight: 'bold',

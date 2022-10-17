@@ -1,14 +1,25 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import {
-  makeStyles,
-  Container,
-  Box,
-  List,
-  ListItem,
-  Grid,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import sharedLayout from '@theme/layout';
+import TextHeading from '@components/common/TextHeading';
+import ContentBody from '@components/common/ContentBody';
 import useContentful from '../../hooks/useContentful';
+
+const useStyles = makeStyles(theme => ({
+  textHeading: {
+    fontWeight: theme.typography.fontWeightBold,
+  },
+  contentTitle: {
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+  contentQuestion: {
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+}));
 
 const query = `
   query {
@@ -22,27 +33,9 @@ const query = `
   }
 `;
 
-const useStyles = makeStyles({
-  root: {
-    color: 'black',
-    backgroundColor: 'white',
-    padding: '2em',
-    '& h1': {
-      fontSize: '2.5em',
-    },
-    '& img': {
-      maxWidth: '100%',
-      height: 'auto',
-      display: 'block',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-  },
-});
-
 const Faqs = () => {
   const { data, errors } = useContentful(query);
-  const classes = useStyles();
+  const classes = { ...useStyles(), ...sharedLayout() };
 
   React.useEffect(() => {
     if (errors) console.log(errors);
@@ -50,27 +43,38 @@ const Faqs = () => {
 
   return (
     <>
-      { data
-        && (
-          <Container className={classes.root} maxWidth="md">
-            <Grid container spacing={2}>
-              <Grid item xs={9}>
-                <h1>Frequently Asked Questions</h1>
-                <List dense>
+      <TextHeading>
+        <Typography variant="h4" className={classes.textHeading}>
+          What can we help you with?
+        </Typography>
+      </TextHeading>
+      <ContentBody maxWidth="md">
+        { data
+          && (
+            <Grid container>
+              <Grid item>
+                <div className={classes.marginBottomLarge}>
+                  <Typography variant="h6" className={classes.contentTitle} align="center">
+                    Frequently Asked Questions
+                  </Typography>
+                </div>
+
+                <div className={classes.marginTop5}>
                   { data.faqCollection.items.map(item => (
-                    <ListItem key={item.sys.id} component="a" href={`#${item.question}`}>{item.question}</ListItem>
+                    <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
+                      <Typography variant="h6" className={classes.contentQuestion}>
+                        {item.question}
+                      </Typography>
+                      <ReactMarkdown>
+                        {item.answer}
+                      </ReactMarkdown>
+                    </Box>
                   ))}
-                </List>
-                { data.faqCollection.items.map(item => (
-                  <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
-                    <h2 id={item.question}>{item.question}</h2>
-                    <ReactMarkdown>{item.answer}</ReactMarkdown>
-                  </Box>
-                ))}
+                </div>
               </Grid>
             </Grid>
-          </Container>
-        )}
+          )}
+      </ContentBody>
     </>
   );
 };
