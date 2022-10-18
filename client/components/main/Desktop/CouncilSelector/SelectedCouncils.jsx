@@ -32,7 +32,7 @@ const SelectedCouncils = ({
     <ChipList>
       { items.length
         ? renderSelected()
-        : <span className={classes.placeholder}>Select council districts</span>}
+        : <span className={classes.placeholder}>Neighborhood Districts</span>}
     </ChipList>
   );
 };

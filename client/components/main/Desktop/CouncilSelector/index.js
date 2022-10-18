@@ -54,7 +54,7 @@ const CouncilSelector = ({
 
   return (
     <>
-      <div className={classes.label}>Council Districts</div>
+      <div className={classes.label}>Boundaries</div>
       <SelectorBox>
         <SelectorBox.Display>
           <SelectedCouncils

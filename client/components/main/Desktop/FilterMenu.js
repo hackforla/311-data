@@ -15,6 +15,7 @@ import GearButton from '@components/common/GearButton';
 import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/main/Desktop/TypeSelector';
 import StatusSelector from '@components/main/Desktop/StatusSelector';
+import CouncilSelector from '@components/main/Desktop/CouncilSelector';
 
 import sharedStyles from '@theme/styles';
 
@@ -101,6 +102,9 @@ const FilterMenu = ({ toggleMenu }) => {
           </div>
           <div className={classes.selectorWrapper}>
             <StatusSelector />
+          </div>
+          <div className={classes.selectorWrapper}>
+            <CouncilSelector />
           </div>
         </CardContent>
       </Collapse>
