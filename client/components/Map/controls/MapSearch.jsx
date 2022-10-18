@@ -104,13 +104,12 @@ class MapSearch extends React.Component {
   setTab = tab => {
     this.props.onChangeTab(tab);
     this.geocoder.clear();
+    this.geocoder.setPlaceholder(`Enter ${tab.toLowerCase()}`);
     switch(tab) {
       case GEO_FILTER_TYPES.address:
-        this.geocoder.setPlaceholder('Enter address');
         this.geocoder.options.localGeocoderOnly = false;
         break;
       case GEO_FILTER_TYPES.nc:
-        this.geocoder.setPlaceholder('Enter neighborhood council');
         this.geocoder.options.localGeocoderOnly = true;
         break;
     }
