@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     color: '#A8A8A8',
   },
   link: {
-    ...theme.typography.h2,
+    ...theme.typography.h5,
     color: '#ececec',
   },
 }));
@@ -38,7 +38,7 @@ const LocationDetail = ({
     <div className={classes.locationInfo}>
       <Typography
         className={classes.header}
-        variant="h3"
+        variant="h5"
         component="h2"
       >
         INFORMATION
