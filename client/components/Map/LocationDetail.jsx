@@ -30,12 +30,13 @@ const LocationDetail = ({
   nc,
   // ccs,
 }) => {
-  const classes = { ...useStyles(), ...sharedStyles() };
+  const classes = useStyles();
+  const sharedClasses = sharedStyles();
 
   return (
     <div className={classes.locationInfo}>
       <Typography
-        className={classes.headerTitle}
+        className={sharedClasses.headerTitle}
         variant="h6"
         component="h2"
       >

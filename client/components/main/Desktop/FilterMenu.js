@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes from 'proptypes';
+// import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,11 +11,12 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
-import GearButton from '@components/common/GearButton';
 import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/main/Desktop/TypeSelector';
 import StatusSelector from '@components/main/Desktop/StatusSelector';
 import CouncilSelector from '@components/main/Desktop/CouncilSelector';
+// import GearButton from '@components/common/GearButton';
+// import clsx from 'clsx';
 
 import sharedStyles from '@theme/styles';
 
@@ -40,6 +41,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
   },
+  headerMargin: {
+    marginLeft: '10px', // to fill space of gear icon
+  },
   button: {
     padding: theme.gaps.xs,
     paddingRight: 0,
@@ -59,9 +63,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const FilterMenu = ({ toggleMenu }) => {
+// const FilterMenu = ({ toggleMenu }) => { //toggleMenu used with GearButton
+const FilterMenu = () => {
   const [expanded, setExpanded] = useState(true);
-  const classes = { ...useStyles(), ...sharedStyles() };
+  const classes = useStyles();
+  const sharedClasses = sharedStyles();
 
   return (
     <Card className={classes.card}>
@@ -74,10 +80,12 @@ const FilterMenu = ({ toggleMenu }) => {
         }}
         title={(
           <div className={classes.headerContent}>
-            <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
-            <Typography className={classes.headerTitle} variant="h6">
-              FILTERS&nbsp;&&nbsp;SETTINGS
-            </Typography>
+            {/* <GearButton aria-label="toggle map menu" onClick={toggleMenu} /> */}
+            <div className={classes.headerMargin}>
+              <Typography className={sharedClasses.headerTitle} variant="h6">
+                FILTERS&nbsp;&&nbsp;SETTINGS
+              </Typography>
+            </div>
           </div>
         )}
         action={(
@@ -118,6 +126,6 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(null, mapDispatchToProps)(FilterMenu);
 
-FilterMenu.propTypes = {
-  toggleMenu: PropTypes.func.isRequired,
-};
+// FilterMenu.propTypes = {
+//   toggleMenu: PropTypes.func.isRequired,
+// };
