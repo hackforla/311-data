@@ -5,7 +5,8 @@ import ChipList, { StyledChip } from '@components/common/ChipList';
 
 const useStyles = makeStyles(theme => ({
   placeholder: {
-    ...theme.typography.body1,
+    ...theme.typography.body2,
+    fontSize: '12px',
     color: theme.palette.text.secondaryDark,
   },
 }));

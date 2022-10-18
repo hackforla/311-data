@@ -6,7 +6,7 @@ import SelectItem from './SelectItem';
 
 const useStyles = makeStyles(theme => ({
   groupName: {
-    ...theme.typography.h5,
+    ...theme.typography.body2,
     marginTop: theme.gaps.sm,
     marginBottom: theme.gaps.xs,
   },

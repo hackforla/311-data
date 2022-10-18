@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.dark,
     padding: 10,
     borderRadius: 5,
-    fontSize: 14,
+    fontSize: '12px',
     color: theme.palette.text.secondaryLight,
   },
   placeholder: {

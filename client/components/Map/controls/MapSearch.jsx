@@ -32,7 +32,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.dark,
         color: theme.palette.text.secondaryLight,
         '&::placeholder': {
-          ...theme.typography.body1,
+          ...theme.typography.body2,
           color: theme.palette.text.secondaryDark,
         },
       }
