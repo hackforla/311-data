@@ -43,6 +43,15 @@ const StatusSelector = ({
         <ToggleButton
           className={classes.button}
           selected={requestStatus.closed}
+          onClick={() => updateStatusFilter('all')}
+          value="all"
+          disableRipple
+        >
+          All
+        </ToggleButton>
+        <ToggleButton
+          className={classes.button}
+          selected={requestStatus.closed}
           onClick={() => updateStatusFilter('closed')}
           value="closed"
           disableRipple
