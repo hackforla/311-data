@@ -17,14 +17,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const REPORTS_PATH = '/reports/';
+
 const Reports = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const classes = useStyles();
 
   const url = process.env.REPORT_URL;
-  let reportPath = '/dashboards/overview';
   const location = useLocation();
-  reportPath = location.pathname.slice(8);
+  const reportPath = location.pathname.slice(REPORTS_PATH.length - 1);
   const reportRef = React.useRef(reportPath);
 
   React.useEffect(() => {

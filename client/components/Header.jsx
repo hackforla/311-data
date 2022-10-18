@@ -1,15 +1,15 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Button,
-  Toolbar,
-  Typography,
-  Menu,
-  MenuItem,
-} from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
 import fonts from '@theme/fonts';
+import colors from '@theme/colors';
 
 // Header should make use of style overrides to look the same regardless of light/dark theme.
 const useStyles = makeStyles(theme => ({
@@ -37,10 +37,13 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightBold,
     flexGrow: 1,
   },
+  menuPaper: {
+    backgroundColor: colors.textPrimaryDark,
+  },
 }));
 
 const activeStyle = {
-  borderBottom: '1px solid yellow',
+  borderBottom: `1px solid ${colors.primaryFocus}`,
 };
 
 // TODO: links/routing, mobile
@@ -83,13 +86,14 @@ const Header = () => {
             vertical: 'bottom',
             horizontal: 'left',
           }}
+          classes={{ paper: classes.menuPaper }}
         >
-          <Link to="/reports/dashboards/overview_combined">
+          <Link to="/reports/overview-combined">
             <MenuItem onClick={handleClose}>
               Overview
             </MenuItem>
           </Link>
-          <Link to="/reports/dashboards/nc_summary_comparison">
+          <Link to="/reports/nc-summary-comparison">
             <MenuItem onClick={handleClose}>
               Compare Two Neighborhoods
             </MenuItem>
