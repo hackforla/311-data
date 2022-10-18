@@ -11,12 +11,12 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
-import fonts from '@theme/fonts';
-
 import GearButton from '@components/common/GearButton';
 import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/main/Desktop/TypeSelector';
 import StatusSelector from '@components/main/Desktop/StatusSelector';
+
+import sharedStyles from '@theme/styles';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -28,19 +28,12 @@ const useStyles = makeStyles(theme => ({
     borderBottomRightRadius: theme.borderRadius.md,
   },
   header: {
-    color: theme.palette.text.cyan,
+    // color: theme.palette.text.cyan,
     padding: theme.gaps.xs,
     paddingRight: 0,
   },
   headerAction: {
     margin: 'auto',
-  },
-  headerTitle: {
-    ...theme.typography.h6,
-    fontFamily: fonts.family.oswald,
-    fontWeight: fonts.weight.semiBold,
-    letterSpacing: '2px',
-    marginLeft: theme.gaps.xs,
   },
   headerContent: {
     display: 'flex',
@@ -67,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 
 const FilterMenu = ({ toggleMenu }) => {
   const [expanded, setExpanded] = useState(true);
-  const classes = useStyles();
+  const classes = { ...useStyles(), ...sharedStyles() };
 
   return (
     <Card className={classes.card}>
