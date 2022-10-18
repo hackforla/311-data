@@ -86,8 +86,8 @@ const styles = theme => ({
   },
   menuWrapper: {
     position: 'absolute',
-    left: 35,
-    top: 75,
+    left: '20px',
+    top: '20px',
   },
 })
 
