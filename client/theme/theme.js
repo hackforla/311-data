@@ -21,6 +21,7 @@ const commonThemeItems = {
   },
 };
 
+// lightTheme is used by content pages - see Routes.jsx.
 const lightTheme = responsiveFontSizes(createMuiTheme({
   ...commonThemeItems,
   palette: {
@@ -39,6 +40,7 @@ const lightTheme = responsiveFontSizes(createMuiTheme({
   },
 }));
 
+// darkTheme is used by map page
 const darkTheme = responsiveFontSizes(createMuiTheme({
   ...commonThemeItems,
   palette: {
