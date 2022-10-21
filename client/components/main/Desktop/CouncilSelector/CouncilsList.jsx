@@ -56,7 +56,7 @@ const CouncilsList = ({
       <div className={classes.searchWrapper}>
         <div className={classes.search}>
           <SearchBar
-            placeholder="Type District Name"
+            placeholder="Enter district"
             onChange={setSearchTerm}
             value={searchTerm}
           />
