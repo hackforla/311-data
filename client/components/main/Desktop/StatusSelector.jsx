@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
 
 const StatusSelector = ({
   updateStatusFilter,
-  // requestStatus,
+  requestStatus,
 }) => {
   const classes = useStyles();
   const [selection, setSelection] = useState('open');
@@ -43,7 +43,7 @@ const StatusSelector = ({
       >
         <ToggleButton
           className={classes.button}
-          // selected={requestStatus.open}
+          selected={requestStatus.open && !requestStatus.closed}
           onClick={() => updateStatusFilter('open')}
           value="open"
           disableRipple
@@ -52,7 +52,7 @@ const StatusSelector = ({
         </ToggleButton>
         <ToggleButton
           className={classes.button}
-          // selected={requestStatus.all}
+          selected={requestStatus.open && requestStatus.closed}
           onClick={() => updateStatusFilter('all')}
           value="all"
           disableRipple
@@ -61,7 +61,7 @@ const StatusSelector = ({
         </ToggleButton>
         <ToggleButton
           className={classes.button}
-          // selected={requestStatus.closed}
+          selected={requestStatus.closed && !requestStatus.open}
           onClick={() => updateStatusFilter('closed')}
           value="closed"
           disableRipple

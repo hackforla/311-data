@@ -90,13 +90,47 @@ export default (state = initialState, action) => {
         councilId: action.payload,
       };
     case types.UPDATE_REQUEST_STATUS:
-      return {
-        ...state,
-        requestStatus: {
-          ...state.requestStatus,
-          [action.payload]: !state.requestStatus[action.payload],
-        },
-      };
+      switch (action.payload) {
+        case 'all':
+          return {
+            ...state,
+            requestStatus: {
+              ...state.requestStatus,
+              open: true,
+              closed: true,
+            },
+          };
+        case 'open':
+          return {
+            ...state,
+            requestStatus: {
+              ...state.requestStatus,
+              open: true,
+              closed: false,
+            },
+          };
+        case 'closed':
+          return {
+            ...state,
+            requestStatus: {
+              ...state.requestStatus,
+              open: false,
+              closed: true,
+            },
+          };
+
+        // default to non-exclusive v1 'open' and 'closed' toggle code
+        // where 'open' and 'closed' can be selected/deselected at same time
+        // v2 will not need this default clause and should simply return state
+        default:
+          return {
+            ...state,
+            requestStatus: {
+              ...state.requestStatus,
+              [action.payload]: !state.requestStatus[action.payload],
+            },
+          };
+      }
     default:
       return state;
   }
