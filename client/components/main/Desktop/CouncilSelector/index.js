@@ -37,7 +37,7 @@ const CouncilSelector = ({
     const newUnselected = not(councils, newSelected, 'councilId');
     setSelected(newSelected);
     setUnselected(newUnselected);
-    updateCouncilsFilter(newSelected);
+    updateCouncilsFilter(deletedCouncilId);
   };
 
   const handleSelect = e => {
@@ -48,7 +48,7 @@ const CouncilSelector = ({
       const newUnselected = not(councils, newSelected, 'councilId');
       setSelected(newSelected);
       setUnselected(newUnselected);
-      updateCouncilsFilter(newSelected);
+      updateCouncilsFilter(selectedCouncilId);
     }
   };
 
