@@ -92,7 +92,7 @@ const useStyles = makeStyles(theme => ({
     /* Rounded border with volume for selected start and end days of a range */
 
     '& .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected:not(.DayPicker-Day--outside):before, .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected:not(.DayPicker-Day--outside):before': {
-      content: '',
+      content: '""',
       position: 'absolute',
       border: '2px solid white',
       height: 'calc(100% + 5px)',
