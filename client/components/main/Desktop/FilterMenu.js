@@ -103,6 +103,9 @@ const FilterMenu = () => {
       <Collapse in={expanded}>
         <CardContent className={classes.content}>
           <div className={classes.selectorWrapper}>
+            <CouncilSelector />
+          </div>
+          <div className={classes.selectorWrapper}>
             <DateSelector range />
           </div>
           <div className={classes.selectorWrapper}>
@@ -110,9 +113,6 @@ const FilterMenu = () => {
           </div>
           <div className={classes.selectorWrapper}>
             <StatusSelector />
-          </div>
-          <div className={classes.selectorWrapper}>
-            <CouncilSelector />
           </div>
         </CardContent>
       </Collapse>
