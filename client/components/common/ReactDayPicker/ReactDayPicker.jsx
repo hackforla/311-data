@@ -42,6 +42,7 @@ const useStyles = makeStyles(theme => ({
     },
 
     /* Selected range without start and end dates */
+
     '& .DayPicker-Day--selected:not(.DayPicker-Day--outside)': {
       backgroundColor: `${theme.palette.selected.primary} !important`,
     },
@@ -53,8 +54,9 @@ const useStyles = makeStyles(theme => ({
     },
 
     /* Day cell hover */
-    '& .DayPicker:not(.DayPicker--interactionDisabled).DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover': {
-      backgroundColor: theme.palette.selected.primary,
+
+    '& .DayPicker:not(.DayPicker--interactionDisabled), .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover': {
+      backgroundColor: `${theme.palette.selected.primary} !important`,
       borderRadius: '50% !important',
     },
 
