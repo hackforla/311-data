@@ -42,14 +42,31 @@ const CouncilSelector = ({
     resetMap();
   };
 
+  // Allow multiple boundaries to be selected (original).
+  //
+  // const handleMultiSelect = e => {
+  //   const selectedCouncilId = Number(e.currentTarget.value);
+  //   if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
+  //     const newSelectedCouncil = councils.find(({ councilId }) => {
+  //       return councilId === selectedCouncilId
+  //     });
+  //     const newSelected = [...selected, newSelectedCouncil];
+  //     const newUnselected = not(councils, newSelected, 'councilId');
+  //     setSelected(newSelected);
+  //     setUnselected(newUnselected);
+  //     updateCouncilsFilter(selectedCouncilId);
+  //   }
+  // };
+
+  // Allow single boundary to be selected.
+  //
   const handleSelect = e => {
     const selectedCouncilId = Number(e.currentTarget.value);
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
       const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
-      const newSelected = [...selected, newSelectedCouncil];
-      const newUnselected = not(councils, newSelected, 'councilId');
+      const newSelected = [newSelectedCouncil];
       setSelected(newSelected);
-      setUnselected(newUnselected);
+      setUnselected(councils);
       updateCouncilsFilter(selectedCouncilId);
     }
   };
@@ -71,6 +88,7 @@ const CouncilSelector = ({
                 <CouncilsList
                   items={unselected}
                   onClick={handleSelect}
+                  // onClick={handleMultiSelect}
                 />
               )
           }
