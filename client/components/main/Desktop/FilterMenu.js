@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import PropTypes from 'proptypes';
+import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 import { makeStyles } from '@material-ui/core/styles';
@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // const FilterMenu = ({ toggleMenu }) => { //toggleMenu used with GearButton
-const FilterMenu = () => {
+const FilterMenu = ({ resetMap }) => {
   const [expanded, setExpanded] = useState(true);
   const classes = useStyles();
   const sharedClasses = sharedStyles();
@@ -103,7 +103,7 @@ const FilterMenu = () => {
       <Collapse in={expanded}>
         <CardContent className={classes.content}>
           <div className={classes.selectorWrapper}>
-            <CouncilSelector />
+            <CouncilSelector resetMap={resetMap} />
           </div>
           <div className={classes.selectorWrapper}>
             <DateSelector range />
@@ -126,6 +126,11 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(null, mapDispatchToProps)(FilterMenu);
 
-// FilterMenu.propTypes = {
-//   toggleMenu: PropTypes.func.isRequired,
-// };
+FilterMenu.defaultProps = {
+  resetMap: () => {},
+};
+
+FilterMenu.propTypes = {
+  resetMap: PropTypes.func,
+  // toggleMenu: PropTypes.func.isRequired,
+};

@@ -550,7 +550,7 @@ class Map extends React.Component {
                 onReset={this.reset}
                 canReset={!!filterGeo && canReset}
               />
-              <FilterMenu />
+              <FilterMenu resetMap={this.reset} />
               {
                 (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
               }

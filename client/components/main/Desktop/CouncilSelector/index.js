@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 const CouncilSelector = ({
   councils,
   updateCouncilsFilter,
+  resetMap,
 }) => {
   const classes = useStyles();
   const [selected, setSelected] = useState([]);
@@ -38,6 +39,7 @@ const CouncilSelector = ({
     setSelected(newSelected);
     setUnselected(newUnselected);
     updateCouncilsFilter(deletedCouncilId);
+    resetMap();
   };
 
   const handleSelect = e => {
@@ -91,9 +93,14 @@ export default connect(
   mapDispatchToProps,
 )(CouncilSelector);
 
+CouncilSelector.defaultProps = {
+  resetMap: () => {},
+};
+
 CouncilSelector.propTypes = {
   councils: PropTypes.arrayOf(PropTypes.shape({})),
   updateCouncilsFilter: PropTypes.func.isRequired,
+  resetMap: PropTypes.func,
 };
 
 CouncilSelector.defaultProps = {
