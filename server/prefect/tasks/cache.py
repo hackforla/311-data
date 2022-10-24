@@ -73,4 +73,5 @@ def reload_reports():
     if SUCCESS_STRING in result:
         logger.info(f"Report reloading successful: {reload_path}")
     else:
-        logger.warning("Report reloading FAILED")
+        logger.warning("Report reloading FAILED. Reload page content: %s",
+            result)
