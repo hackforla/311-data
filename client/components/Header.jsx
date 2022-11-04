@@ -40,6 +40,12 @@ const useStyles = makeStyles(theme => ({
   menuPaper: {
     backgroundColor: colors.textPrimaryDark,
   },
+  menuItem: {
+    color: 'white',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
 }));
 
 const activeStyle = {
@@ -89,12 +95,12 @@ const Header = () => {
           classes={{ paper: classes.menuPaper }}
         >
           <Link to="/reports/overview-combined">
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleClose} className={classes.menuItem}>
               Overview
             </MenuItem>
           </Link>
           <Link to="/reports/nc-summary-comparison">
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleClose} className={classes.menuItem}>
               Compare Two Neighborhoods
             </MenuItem>
           </Link>
