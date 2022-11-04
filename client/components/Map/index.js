@@ -13,7 +13,7 @@ import CookieNotice from '../main/CookieNotice';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
 import moment from 'moment';
-import { CircularProgress } from '@material-ui/core';
+import gif from '@assets/loadinggif.gif'
 
 // We make API requests on a per-day basis. On average, there are about 4k
 // requests per day, so 10k is a large safety margin.
@@ -303,7 +303,7 @@ class MapContainer extends React.Component {
           selectedTypes={selectedTypes}
         />
         <CookieNotice />
-        {isMapLoading && <CircularProgress />}
+        {isMapLoading && <img style={{ width:window.innerWidth, height: 16, position:'absolute' }} src={gif}/>}
       </div>
     );
   }
