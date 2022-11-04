@@ -16,6 +16,7 @@ const styles = theme => ({
     width: 325,
     backgroundColor: theme.palette.primary.dark,
     borderTopRightRadius: '10px',
+    borderTopLeftRadius: '10px',
     padding: '10px 15px 10px 15px',
     '& div.mapboxgl-ctrl': {
       width: '100%',
@@ -121,7 +122,8 @@ class MapSearch extends React.Component {
     const { classes, geoFilterType } = this.props;
     return (
       <div>
-        <div className={classes.wrapper}>
+        {/* To show Address & District Tabs (above the address input), uncomment below */}
+        {/* <div className={classes.wrapper}>
         { TABS.map(tab => (
             <Button
               key={tab}
@@ -135,7 +137,7 @@ class MapSearch extends React.Component {
               { tab }
             </Button>
         ))}
-        </div>
+        </div> */}
         <div id="geocoder" className={classes.geocoder} />
       </div>
     );
