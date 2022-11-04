@@ -111,6 +111,9 @@ const Header = () => {
         <NavLink to="/about" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>About</Button>
         </NavLink>
+        <NavLink to="/research" className={classes.link} activeStyle={activeStyle}>
+          <Button className={classes.button}>Research</Button>
+        </NavLink>
         <NavLink to="/privacy" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>Privacy</Button>
         </NavLink>
