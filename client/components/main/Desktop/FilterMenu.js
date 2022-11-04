@@ -83,7 +83,7 @@ const FilterMenu = ({ resetMap }) => {
             {/* <GearButton aria-label="toggle map menu" onClick={toggleMenu} /> */}
             <div className={classes.headerMargin}>
               <Typography className={sharedClasses.headerTitle} variant="h6">
-                FILTERS&nbsp;&&nbsp;SETTINGS
+                FILTERS
               </Typography>
             </div>
           </div>
