@@ -212,6 +212,7 @@ class Map extends React.Component {
       });
     }
 
+    /*
     if (this.props.selectedNcId !== prevProps.selectedNcId) {
       console.log(`prevProps.selectedNcId: ${prevProps.selectedNcId}`)
       console.log(`this.props.selectedNcId: ${this.props.selectedNcId}`)
@@ -224,18 +225,20 @@ class Map extends React.Component {
         const { councils, selectedNcId } = this.props;
         const nc = councils.find(({ councilId }) => councilId === selectedNcId);
         this.setState({ selectedNc: nc });
-        this.ncLayer.selectRegion(selectedNcId);
+        // this.ncLayer.selectRegion(selectedNcId);
       }
     }
-
+    */
+    /*
     if (this.props.ncId !== prevProps.ncId) {
-      console.log(`prevProps.ncId: ${prevProps.ncId}`)
-      console.log(`this.props.ncId: ${this.props.ncId}`)
+      console.log(`componentDidUpdate -- prevProps.ncId: ${prevProps.ncId}`)
+      console.log(`componentDidUpdate -- this.props.ncId: ${this.props.ncId}`)
       const { councils, ncId } = this.props;
       const nc = councils.find(({ councilId }) => councilId === ncId);
       this.setState({ selectedNc: nc });
       this.ncLayer.selectRegion(ncId);
     }
+    */
   }
 
   initLayers = addListeners => {
@@ -332,14 +335,13 @@ class Map extends React.Component {
   onClick = e => {
     e.preventDefault()
 
-    console.log(`in onClick(), this.state.canReset: ${this.state.canReset}`)
-    console.log(`in onClick(), !!this.state.selectedNc: ${!!this.state.selectedNc}`)
+    const { councils, updateNcId, getNc } = this.props;
 
-    if(!!this.state.selectedNc){
-      console.log(`returning early in onClick and calling this.reset()`)
-      this.reset()
-      return
-    }
+    console.log(`in onClick(), this.state.canReset: ${this.state.canReset}`)
+    console.log(`in onClick(), this.state.selectedNc: ${JSON.stringify(this.state.selectedNc)}`)
+    console.log(`in onClick(), this.props.ncId: ${JSON.stringify(this.props.ncId)}`)
+
+    // console.table(this.state.selectedNc)
 
     const hoverables = [
       'nc-fills',
@@ -353,34 +355,109 @@ class Map extends React.Component {
       ]
     });
 
-    const { updateNcId } = this.props;
+    console.log(`features.length: ${features.length}`)
+
+    if(!!this.state.selectedNc){
+
+      //show popup when zoomed into district
+      if(features.length){
+        for (let i = 0; i < features.length; i++) {
+          feature = features[i];
+
+          //check if coordinates clicked are for current district
+          const { type, coordinates } = feature.geometry;
+          if( type === "Point"){
+            console.group(`${type}  detected`)
+            const nc = getNc({longitude: coordinates[0], latitude: coordinates[1]})  //should update selectedNcId
+            console.log(`nc: ${JSON.stringify(nc)}`)
+            console.log(`feature.id: ${feature.id}`)
+            console.log(`nc.council_id: ${nc.council_id}`)
+            console.log(`this.props.ncId: ${this.props.ncId}`)
+            console.log(`this.props.selectedNcId: ${this.props.selectedNcId}`)
+            if (this.props.ncId && this.props.selectedNcId !== this.props.ncId){
+              //reset since pop-up is for another district
+              console.log('returning since his.props.selectedNcId !== this.props.ncId')
+              this.reset()
+              return
+            }
+            console.groupEnd(`${type}  detected`)
+
+          }
+
+          if (feature.layer.id === 'request-circles') {
+            console.group(`inside request-circles`)
+            // const { coordinates } = feature.geometry;
+            const { requestId, typeId } = feature.properties;
+            this.addPopup(coordinates, requestId);
+            console.groupEnd(`inside request-circles`)
+            return
+          }
+        }
+      }
+
+      //zoom out and reset
+      console.log(`returning early in onClick and calling this.reset()`)
+      this.reset()
+      return
+    }
+
+
+    if(!features.length){
+      return
+    }
+
+    let feature = null;
 
     for (let i = 0; i < features.length; i++) {
-      const feature = features[i];
+      feature = features[i];
 
-      if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
+      console.log(`feature.properties.council_id: ${feature.properties.council_id}`)
+      console.log(`this.props.selectedNcId: ${this.props.selectedNcId}`)
+      console.log(`feature.id: ${feature.id}`)
+      if (feature.id ) {
+        const nc = councils.find(({ councilId }) => councilId === feature.id);
+        console.log(`calling this.setState({ selectedNc: ${JSON.stringify(nc)}})`)
+        updateNcId(feature.id)
+        this.setState({ selectedNc: nc})
+      }
+
+      console.log(`feature[${i}: ${JSON.stringify(feature)}`)
+      if (feature.layer.id === 'request-circles') {
+        console.group(`inside request-circles`)
+        const { coordinates } = feature.geometry;
+        const { requestId, typeId } = feature.properties;
+        this.addPopup(coordinates, requestId);
+        console.groupEnd(`inside request-circles`)
+        break
+      }
+      
+
+      if (hoverables.includes(feature.layer.id) && !feature?.state.selected) {
         switch (feature.layer.id) {
           case 'nc-fills':
-            this.setState({ address: null });          
-            updateNcId(feature.properties.council_id);
-            this.ncLayer?.selectRegion(feature.id);
-            this.state.selectedNcId && this.setState({ selectedNcId: null})
+            console.group('inside nc-fills')
+            this.setState({ address: null });         
+            // console.log(`feature.properties.council_id: ${feature.properties.council_id}`)
+            // console.log(`calling updateNcId(feature.properties.council_id);`)
+            // updateNcId(feature.properties.council_id);
+            // console.log(`feature.id: ${feature.id}`)
+            // console.log(`calling this.ncLayer.selectRegion(feature.id);`)
+            console.log(`calling this.ncLayer.selectRegion(${feature.id});`)
+            this.ncLayer.selectRegion(feature.id);
+            console.groupEnd('inside nc-fills')
             break          
           case 'cc-fills':
-            this.ccLayer?.selectRegion(feature.id);
+            console.group('inside cc-fills')
+            console.log(`calling this.ccLayer.selectRegion(${feature.id});`)
+            this.ccLayer.selectRegion(feature.id);
+            console.groupEnd('inside cc-fills')
             break
           default:
             // return null;
         }
       }
-
-      if (feature.layer.id === 'request-circles') {
-        const { coordinates } = feature.geometry;
-        const { requestId, typeId } = feature.properties;
-        this.addPopup(coordinates, requestId);
-      }
     }
-  };
+  }
 
   onChangeSearchTab = tab => {
     this.setState({ geoFilterType: tab });
