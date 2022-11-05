@@ -307,6 +307,9 @@ class Map extends React.Component {
     }
   };
 
+  //returns true if a district is selected on the map
+  hasDistrictSelected = () => !!this.state.selectedNc
+
   reset = () => {
     console.log(`reset() was called`)
 
@@ -325,6 +328,7 @@ class Map extends React.Component {
 
     this.map.once('zoomend', () => {
       console.log(`zoomend detected, updating state in reset()`)
+      updateNcId(null); //reset councilId in redux/reducers/filter.jsx back to initial value of 'null'
       this.setState({
         filterGeo: null,
         canReset: true,
@@ -348,6 +352,7 @@ class Map extends React.Component {
       'cc-fills'
     ];
 
+    //get a list of all the map features
     const features = this.map.queryRenderedFeatures(e.point, {
       layers: [
         'request-circles',
@@ -357,7 +362,8 @@ class Map extends React.Component {
 
     console.log(`features.length: ${features.length}`)
 
-    if(!!this.state.selectedNc){
+    //has a district already been selected? if so, proceed
+    if(this.hasDistrictSelected()){
 
       //show popup when zoomed into district
       if(features.length){
@@ -408,6 +414,7 @@ class Map extends React.Component {
 
     let feature = null;
 
+    //loop through all the features
     for (let i = 0; i < features.length; i++) {
       feature = features[i];
 
@@ -699,7 +706,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getNc: coords => dispatch(getNcByLngLat(coords)),
-  updateNcId: id => dispatch(updateNcId(id)),
+  updateNcId: id => dispatch(updateNcId(id)), //sets councilId to payload(id) in redux/reducers/filters
 });
 
 // We need to specify forwardRef to allow refs on connected components.
