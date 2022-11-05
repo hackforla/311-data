@@ -142,6 +142,7 @@ class Map extends React.Component {
         this.initLayers(true);
 
         map.on('click', this.onClick);
+        map.on('mouseenter', 'request-circles', this.onMouseEnter);
 
         map.once('idle', e => {
           this.setState({ mapReady: true });
@@ -149,6 +150,8 @@ class Map extends React.Component {
       }
     });
     this.map = map;
+
+    window.map = this.map //expose map to console
   }
 
   componentWillUnmount() {
@@ -335,6 +338,10 @@ class Map extends React.Component {
       });
     });
   };
+
+  onMouseEnter = e => {
+    console.log('A mouseenter event occurred on a visible portion of the request-circle layer.');
+  }
 
   onClick = e => {
     e.preventDefault()
