@@ -101,7 +101,7 @@ class MapSearch extends React.Component {
     });
 
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(map));
-    this.setTab(GEO_FILTER_TYPES.address);
+    // this.setTab(GEO_FILTER_TYPES.address);
   }
 
   setTab = tab => {

@@ -213,17 +213,28 @@ class Map extends React.Component {
     }
 
     if (this.props.selectedNcId !== prevProps.selectedNcId) {
-      const { councils, selectedNcId } = this.props;
-      const nc = councils.find(({ councilId }) => councilId === selectedNcId);
-      this.setState({ selectedNc: nc });
-      return this.ncLayer.selectRegion(selectedNcId);
+      console.log(`prevProps.selectedNcId: ${prevProps.selectedNcId}`)
+      console.log(`this.props.selectedNcId: ${this.props.selectedNcId}`)
+      console.log(`this.state.canReset: ${this.state.canReset}`)
+      if (this.state.selectedNc){
+        console.log(`calling this.reset() from componentDidUpdate`)
+        this.reset()
+      }
+      else{
+        const { councils, selectedNcId } = this.props;
+        const nc = councils.find(({ councilId }) => councilId === selectedNcId);
+        this.setState({ selectedNc: nc });
+        this.ncLayer.selectRegion(selectedNcId);
+      }
     }
 
     if (this.props.ncId !== prevProps.ncId) {
+      console.log(`prevProps.ncId: ${prevProps.ncId}`)
+      console.log(`this.props.ncId: ${this.props.ncId}`)
       const { councils, ncId } = this.props;
       const nc = councils.find(({ councilId }) => councilId === ncId);
       this.setState({ selectedNc: nc });
-      return this.ncLayer.selectRegion(ncId);
+      this.ncLayer.selectRegion(ncId);
     }
   }
 
@@ -294,6 +305,8 @@ class Map extends React.Component {
   };
 
   reset = () => {
+    console.log(`reset() was called`)
+
     this.zoomOut();
     this.addressLayer.clearMarker();
     this.ncLayer.clearSelectedRegion();
@@ -308,6 +321,7 @@ class Map extends React.Component {
     });
 
     this.map.once('zoomend', () => {
+      console.log(`zoomend detected, updating state in reset()`)
       this.setState({
         filterGeo: null,
         canReset: true,
@@ -316,6 +330,16 @@ class Map extends React.Component {
   };
 
   onClick = e => {
+    e.preventDefault()
+
+    console.log(`in onClick(), this.state.canReset: ${this.state.canReset}`)
+    console.log(`in onClick(), !!this.state.selectedNc: ${!!this.state.selectedNc}`)
+
+    if(!!this.state.selectedNc){
+      console.log(`returning early in onClick and calling this.reset()`)
+      this.reset()
+      return
+    }
 
     const hoverables = [
       'nc-fills',
@@ -337,20 +361,23 @@ class Map extends React.Component {
       if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
         switch (feature.layer.id) {
           case 'nc-fills':
-            this.setState({ address: null });
+            this.setState({ address: null });          
             updateNcId(feature.properties.council_id);
-            return this.ncLayer.selectRegion(feature.id);
+            this.ncLayer?.selectRegion(feature.id);
+            this.state.selectedNcId && this.setState({ selectedNcId: null})
+            break          
           case 'cc-fills':
-            return this.ccLayer.selectRegion(feature.id);
+            this.ccLayer?.selectRegion(feature.id);
+            break
           default:
-            return null;
+            // return null;
         }
       }
 
       if (feature.layer.id === 'request-circles') {
         const { coordinates } = feature.geometry;
         const { requestId, typeId } = feature.properties;
-        return this.addPopup(coordinates, requestId);
+        this.addPopup(coordinates, requestId);
       }
     }
   };
