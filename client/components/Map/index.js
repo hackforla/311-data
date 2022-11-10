@@ -13,7 +13,7 @@ import CookieNotice from '../main/CookieNotice';
 // import "mapbox-gl/dist/mapbox-gl.css";
 import Map from './Map';
 import moment from 'moment';
-import gif from '@assets/loadinggif.gif'
+import gif from '@assets/loading.gif'
 
 // We make API requests on a per-day basis. On average, there are about 4k
 // requests per day, so 10k is a large safety margin.
