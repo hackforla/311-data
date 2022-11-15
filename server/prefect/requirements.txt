@@ -40,7 +40,7 @@ toml==0.10.2
 toolz==0.11.1
 tornado==6.1
 tqdm==4.59.0
-urllib3==1.26.4
+urllib3==1.26.5
 websocket-client==0.58.0
 websockets==8.1
 zict==2.0.0
