@@ -1,5 +1,5 @@
 appdirs==1.4.4
-certifi==2020.12.5
+certifi==2022.12.7
 chardet==4.0.0
 click==7.1.2
 cloudpickle==1.6.0
