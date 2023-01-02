@@ -23,23 +23,26 @@ const getDates = dateOptionValue => {
   const formatPriorDate = (num, timeInterval) => moment().subtract(num, timeInterval).format('MM/DD/YYYY');
 
   switch (dateOptionValue) {
-    case 'LAST_WEEK':
-      newStartDate = formatPriorDate(1, 'week');
-      break;
-    case 'LAST_MONTH':
-      newStartDate = formatPriorDate(1, 'month');
-      break;
-    case 'LAST_6_MONTHS':
-      newStartDate = formatPriorDate(6, 'months');
-      break;
-    case 'LAST_12_MONTHS':
-      newStartDate = formatPriorDate(12, 'months');
-      break;
-    case 'YEAR_TO_DATE':
-      newStartDate = moment().startOf('year').format('MM/DD/YYYY');
-      break;
+    case "LAST_DAY":
+      newStartDate = formatPriorDate(1, "day")
+      break
+    case "LAST_WEEK":
+      newStartDate = formatPriorDate(1, "week")
+      break
+    case "LAST_MONTH":
+      newStartDate = formatPriorDate(1, "month")
+      break
+    case "LAST_6_MONTHS":
+      newStartDate = formatPriorDate(6, "months")
+      break
+    case "LAST_12_MONTHS":
+      newStartDate = formatPriorDate(12, "months")
+      break
+    case "YEAR_TO_DATE":
+      newStartDate = moment().startOf("year").format("MM/DD/YYYY")
+      break
     default:
-      break;
+      break
   }
   return { newStartDate, newEndDate };
 };
@@ -58,13 +61,14 @@ const DateSelector = ({
 }) => {
   const placeHolder = 'MM/DD/YYYY';
   const dateRangeOptions = [
-    { label: 'Last Week', value: 'LAST_WEEK' },
-    { label: 'Last Month', value: 'LAST_MONTH' },
-    { label: 'Last 6 Months', value: 'LAST_6_MONTHS' },
-    { label: 'Last 12 months', value: 'LAST_12_MONTHS' },
-    { label: 'Year to Date', value: 'YEAR_TO_DATE' },
-    { label: 'Custom Date Range', value: 'CUSTOM_DATE_RANGE' },
-  ];
+    { label: "Last Day", value: "LAST_DAY" },
+    { label: "Last Week", value: "LAST_WEEK" },
+    { label: "Last Month", value: "LAST_MONTH" },
+    { label: "Last 6 Months", value: "LAST_6_MONTHS" },
+    { label: "Last 12 months", value: "LAST_12_MONTHS" },
+    { label: "Year to Date", value: "YEAR_TO_DATE" },
+    { label: "Custom Date Range", value: "CUSTOM_DATE_RANGE" },
+  ]
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleSelection = dateOption => {
