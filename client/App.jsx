@@ -17,7 +17,7 @@ import { SnapshotRenderer } from '@components/export/SnapshotService';
 import MaintenanceMode from '@components/MaintenanceMode';
 import Routes from './Routes';
 
-const maintmaintenanceMode = true;
+const maintenanceMode = true;
 
 const App = ({
   getMetadata,
@@ -27,7 +27,7 @@ const App = ({
   });
 
   return (
-    maintmaintenanceMode === true
+    maintenanceMode === true
       ? (
         <Router>
           <Switch>
