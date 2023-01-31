@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router, Switch, Route, Redirect,
+} from 'react-router-dom';
 import 'focus-visible';
 import { getMetadataRequest } from '@reducers/metadata';
 
@@ -12,7 +14,10 @@ import Header from '@components/main/header/Header';
 import Footer from '@components/main/footer/Footer';
 import StaticFooter from '@components/main/footer/StaticFooter';
 import { SnapshotRenderer } from '@components/export/SnapshotService';
+import MaintenanceMode from '@components/MaintenanceMode';
 import Routes from './Routes';
+
+const maintmaintenanceMode = true;
 
 const App = ({
   getMetadata,
@@ -22,17 +27,28 @@ const App = ({
   });
 
   return (
-    <Router>
-      <RouteChange actions={actions} />
-      <Header />
-      <Routes />
-      <Switch>
-        <Route path="/(about|contact|privacy|faq)" component={StaticFooter} />
-        <Route path="/" component={Footer} />
-      </Switch>
-      <SnapshotRenderer />
-      <CookieNotice />
-    </Router>
+    maintmaintenanceMode === true
+      ? (
+        <Router>
+          <Switch>
+            <Route path="/" component={MaintenanceMode} />
+            <Redirect to="/" />
+          </Switch>
+        </Router>
+      )
+      : (
+        <Router>
+          <RouteChange actions={actions} />
+          <Header />
+          <Routes />
+          <Switch>
+            <Route path="/(about|contact|privacy|faq)" component={StaticFooter} />
+            <Route path="/" component={Footer} />
+          </Switch>
+          <SnapshotRenderer />
+          <CookieNotice />
+        </Router>
+      )
   );
 };
 
