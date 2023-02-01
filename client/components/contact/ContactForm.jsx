@@ -125,7 +125,7 @@ const ContactForm = () => {
       || formValues.message.trim().length > 1000;
     if (!noFirstName && !noLastName && !notValidFirstName && !notValidLastName
       && !noEmail && !incompleteEmail
-      && !noMessage && invalidMessageLength) {
+      && !noMessage && !invalidMessageLength) {
       return true;
     }
 
