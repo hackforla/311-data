@@ -142,7 +142,6 @@ class Map extends React.Component {
         this.initLayers(true);
 
         map.on('click', this.onClick);
-        map.on('mouseenter', 'request-circles', this.onMouseEnter);
 
         map.once('idle', e => {
           this.setState({ mapReady: true });
@@ -150,8 +149,6 @@ class Map extends React.Component {
       }
     });
     this.map = map;
-
-    window.map = this.map //expose map to console
   }
 
   componentWillUnmount() {
@@ -215,33 +212,19 @@ class Map extends React.Component {
       });
     }
 
-    /*
     if (this.props.selectedNcId !== prevProps.selectedNcId) {
-      console.log(`prevProps.selectedNcId: ${prevProps.selectedNcId}`)
-      console.log(`this.props.selectedNcId: ${this.props.selectedNcId}`)
-      console.log(`this.state.canReset: ${this.state.canReset}`)
-      if (this.state.selectedNc){
-        console.log(`calling this.reset() from componentDidUpdate`)
-        this.reset()
-      }
-      else{
-        const { councils, selectedNcId } = this.props;
-        const nc = councils.find(({ councilId }) => councilId === selectedNcId);
-        this.setState({ selectedNc: nc });
-        // this.ncLayer.selectRegion(selectedNcId);
-      }
+      const { councils, selectedNcId } = this.props;
+      const nc = councils.find(({ councilId }) => councilId === selectedNcId);
+      this.setState({ selectedNc: nc });
+      return this.ncLayer.selectRegion(selectedNcId);
     }
-    */
-    /*
+
     if (this.props.ncId !== prevProps.ncId) {
-      console.log(`componentDidUpdate -- prevProps.ncId: ${prevProps.ncId}`)
-      console.log(`componentDidUpdate -- this.props.ncId: ${this.props.ncId}`)
       const { councils, ncId } = this.props;
       const nc = councils.find(({ councilId }) => councilId === ncId);
       this.setState({ selectedNc: nc });
-      this.ncLayer.selectRegion(ncId);
+      return this.ncLayer.selectRegion(ncId);
     }
-    */
   }
 
   initLayers = addListeners => {
@@ -310,12 +293,7 @@ class Map extends React.Component {
     }
   };
 
-  //returns true if a district is selected on the map
-  hasDistrictSelected = () => !!this.state.selectedNc
-
   reset = () => {
-    console.log(`reset() was called`)
-
     this.zoomOut();
     this.addressLayer.clearMarker();
     this.ncLayer.clearSelectedRegion();
@@ -330,8 +308,6 @@ class Map extends React.Component {
     });
 
     this.map.once('zoomend', () => {
-      console.log(`zoomend detected, updating state in reset()`)
-      updateNcId(null); //reset councilId in redux/reducers/filter.jsx back to initial value of 'null'
       this.setState({
         filterGeo: null,
         canReset: true,
@@ -339,27 +315,13 @@ class Map extends React.Component {
     });
   };
 
-  onMouseEnter = e => {
-    console.log('A mouseenter event occurred on a visible portion of the request-circle layer.');
-  }
-
   onClick = e => {
-    e.preventDefault()
-
-    const { councils, updateNcId, getNc } = this.props;
-
-    console.log(`in onClick(), this.state.canReset: ${this.state.canReset}`)
-    console.log(`in onClick(), this.state.selectedNc: ${JSON.stringify(this.state.selectedNc)}`)
-    console.log(`in onClick(), this.props.ncId: ${JSON.stringify(this.props.ncId)}`)
-
-    // console.table(this.state.selectedNc)
 
     const hoverables = [
       'nc-fills',
       'cc-fills'
     ];
 
-    //get a list of all the map features
     const features = this.map.queryRenderedFeatures(e.point, {
       layers: [
         'request-circles',
@@ -367,111 +329,31 @@ class Map extends React.Component {
       ]
     });
 
-    console.log(`features.length: ${features.length}`)
+    const { updateNcId } = this.props;
 
-    //has a district already been selected? if so, proceed
-    if(this.hasDistrictSelected()){
-
-      //show popup when zoomed into district
-      if(features.length){
-        for (let i = 0; i < features.length; i++) {
-          feature = features[i];
-
-          //check if coordinates clicked are for current district
-          const { type, coordinates } = feature.geometry;
-          if( type === "Point"){
-            console.group(`${type}  detected`)
-            const nc = getNc({longitude: coordinates[0], latitude: coordinates[1]})  //should update selectedNcId
-            console.log(`nc: ${JSON.stringify(nc)}`)
-            console.log(`feature.id: ${feature.id}`)
-            console.log(`nc.council_id: ${nc.council_id}`)
-            console.log(`this.props.ncId: ${this.props.ncId}`)
-            console.log(`this.props.selectedNcId: ${this.props.selectedNcId}`)
-            if (this.props.ncId && this.props.selectedNcId !== this.props.ncId){
-              //reset since pop-up is for another district
-              console.log('returning since his.props.selectedNcId !== this.props.ncId')
-              this.reset()
-              return
-            }
-            console.groupEnd(`${type}  detected`)
-
-          }
-
-          if (feature.layer.id === 'request-circles') {
-            console.group(`inside request-circles`)
-            // const { coordinates } = feature.geometry;
-            const { requestId, typeId } = feature.properties;
-            this.addPopup(coordinates, requestId);
-            console.groupEnd(`inside request-circles`)
-            return
-          }
-        }
-      }
-
-      //zoom out and reset
-      console.log(`returning early in onClick and calling this.reset()`)
-      this.reset()
-      return
-    }
-
-
-    if(!features.length){
-      return
-    }
-
-    let feature = null;
-
-    //loop through all the features
     for (let i = 0; i < features.length; i++) {
-      feature = features[i];
+      const feature = features[i];
 
-      console.log(`feature.properties.council_id: ${feature.properties.council_id}`)
-      console.log(`this.props.selectedNcId: ${this.props.selectedNcId}`)
-      console.log(`feature.id: ${feature.id}`)
-      if (feature.id ) {
-        const nc = councils.find(({ councilId }) => councilId === feature.id);
-        console.log(`calling this.setState({ selectedNc: ${JSON.stringify(nc)}})`)
-        updateNcId(feature.id)
-        this.setState({ selectedNc: nc})
-      }
-
-      console.log(`feature[${i}: ${JSON.stringify(feature)}`)
-      if (feature.layer.id === 'request-circles') {
-        console.group(`inside request-circles`)
-        const { coordinates } = feature.geometry;
-        const { requestId, typeId } = feature.properties;
-        this.addPopup(coordinates, requestId);
-        console.groupEnd(`inside request-circles`)
-        break
-      }
-      
-
-      if (hoverables.includes(feature.layer.id) && !feature?.state.selected) {
+      if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
         switch (feature.layer.id) {
           case 'nc-fills':
-            console.group('inside nc-fills')
-            this.setState({ address: null });         
-            // console.log(`feature.properties.council_id: ${feature.properties.council_id}`)
-            // console.log(`calling updateNcId(feature.properties.council_id);`)
-            // updateNcId(feature.properties.council_id);
-            // console.log(`feature.id: ${feature.id}`)
-            // console.log(`calling this.ncLayer.selectRegion(feature.id);`)
-            console.log(`calling this.ncLayer.selectRegion(${feature.id});`)
-            this.ncLayer.selectRegion(feature.id);
-            console.groupEnd('inside nc-fills')
-            break          
+            this.setState({ address: null });
+            updateNcId(feature.properties.council_id);
+            return this.ncLayer.selectRegion(feature.id);
           case 'cc-fills':
-            console.group('inside cc-fills')
-            console.log(`calling this.ccLayer.selectRegion(${feature.id});`)
-            this.ccLayer.selectRegion(feature.id);
-            console.groupEnd('inside cc-fills')
-            break
+            return this.ccLayer.selectRegion(feature.id);
           default:
-            // return null;
+            return null;
         }
       }
+
+      if (feature.layer.id === 'request-circles') {
+        const { coordinates } = feature.geometry;
+        const { requestId, typeId } = feature.properties;
+        return this.addPopup(coordinates, requestId);
+      }
     }
-  }
+  };
 
   onChangeSearchTab = tab => {
     this.setState({ geoFilterType: tab });
@@ -713,7 +595,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getNc: coords => dispatch(getNcByLngLat(coords)),
-  updateNcId: id => dispatch(updateNcId(id)), //sets councilId to payload(id) in redux/reducers/filters
+  updateNcId: id => dispatch(updateNcId(id)),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
