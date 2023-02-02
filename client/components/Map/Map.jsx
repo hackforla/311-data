@@ -334,6 +334,19 @@ class Map extends React.Component {
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
 
+      console.log(`this.props.selectedNcId=${this.props.selectedNcId }`)
+      console.log(`feature.properties.council_id=${feature.properties.council_id}`)
+
+      if (
+        (this.props.selectedNcId !== null)
+        && (feature.properties.council_id && this.props.selectedNcId !== feature.properties.council_id)
+      ){
+        //reset since pop-up is for another district
+        console.log('reseting since feature.properties.council_id && this.props.selectedNcId !== feature.properties.council_id')
+        this.reset()
+        return
+      }
+
       if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
         switch (feature.layer.id) {
           case 'nc-fills':
