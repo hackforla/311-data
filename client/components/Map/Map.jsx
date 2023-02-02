@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
-import LocationDetail from './LocationDetail';
+// import LocationDetail from './LocationDetail';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
@@ -551,9 +551,9 @@ class Map extends React.Component {
                 canReset={!!filterGeo && canReset}
               />
               <FilterMenu resetMap={this.reset} />
-              {
+              {/* {
                 (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
-              }
+              } */}
 
             </div>
             {/* <MapLayers
