@@ -5,7 +5,7 @@ import fonts from '@theme/fonts';
 const sharedStyles = makeStyles(theme => createStyles({
   // Desktop Menu
   headerTitle: {
-    ...theme.typography.h6,
+    ...theme.typography.h5,
     fontFamily: fonts.family.oswald,
     fontWeight: fonts.weight.semiBold,
     letterSpacing: '2px',
