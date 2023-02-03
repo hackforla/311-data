@@ -349,7 +349,6 @@ class Map extends React.Component {
 
         //reset councilSelector
         
-
         //reset Map
         this.reset()
 
@@ -618,7 +617,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getNc: coords => dispatch(getNcByLngLat(coords)),
   updateNcId: id => dispatch(updateNcId(id)),
-  updateCouncilsFilter: councilId => dispatch(updateNcId(councilId)),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
