@@ -179,7 +179,17 @@ const ReactDayPicker = ({
     // first day in their date range if from and to are set, or if they're both
     // unset. Otherwise, they are selecting the last day.
     if (!(startDate && endDate)) {
-      setToDay(day);
+      // If the user picks the first date then picks the second date that is before the first date
+      // Reassign the From and To Day
+      if (moment(day).format(INTERNAL_DATE_SPEC) < startDate) {
+        const tempDate = startDate;
+        setToDay(moment(tempDate).toDate());
+        setFromDay(day);
+        updateEndDate(tempDate);
+        setEnteredTo(moment(tempDate).toDate());
+      } else {
+        setToDay(day);
+      }
       return;
     }
     setFromDay(day);
