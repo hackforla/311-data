@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { updateNcId } from '@reducers/filters';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import {
+  updateNcId,
+  updateSelectedCouncils,
+  updateUnselectedCouncils,
+} from '@reducers/filters';
 import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
 import SelectorBox from '@components/common/SelectorBox';
@@ -21,23 +25,31 @@ const useStyles = makeStyles(theme => ({
 
 const CouncilSelector = ({
   councils,
+  selected,
+  unselected,
   updateCouncilsFilter,
+  updateSelectedCouncils,
+  updateUnselectedCouncils,
   resetMap,
 }) => {
   const classes = useStyles();
-  const [selected, setSelected] = useState([]);
-  const [unselected, setUnselected] = useState([]);
+  // const [selected, setSelected] = useState([]);
+  // const [unselected, setUnselected] = useState([]);
 
   useEffect(() => {
-    setUnselected(councils);
-  }, [councils]);
+    console.log('CouncilSelector: ', { councils });
+    // setUnselected(councils);
+    updateUnselectedCouncils(councils);
+  }, [councils, updateUnselectedCouncils]);
 
   const handleDelete = e => {
     const deletedCouncilId = Number(e.currentTarget.dataset.id);
     const newSelected = selected.filter(({ councilId }) => councilId !== deletedCouncilId);
     const newUnselected = not(councils, newSelected, 'councilId');
-    setSelected(newSelected);
-    setUnselected(newUnselected);
+    // setSelected(newSelected);
+    updateSelectedCouncils(newSelected);
+    // setUnselected(newUnselected);
+    updateUnselectedCouncils(newUnselected);
     updateCouncilsFilter(deletedCouncilId);
     resetMap();
   };
@@ -65,8 +77,10 @@ const CouncilSelector = ({
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
       const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
       const newSelected = [newSelectedCouncil];
-      setSelected(newSelected);
-      setUnselected(councils);
+      // setSelected(newSelected);
+      updateSelectedCouncils(newSelected);
+      // setUnselected(councils);
+      updateUnselectedCouncils(councils);
       updateCouncilsFilter(selectedCouncilId);
     }
   };
@@ -100,10 +114,14 @@ const CouncilSelector = ({
 
 const mapStateToProps = state => ({
   councils: state.metadata.councils,
+  selected: state.filters.selected,
+  unselected: state.filters.unselected,
 });
 
 const mapDispatchToProps = dispatch => ({
   updateCouncilsFilter: councilId => dispatch(updateNcId(councilId)),
+  updateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
+  updateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
 });
 
 export default connect(
@@ -117,10 +135,16 @@ CouncilSelector.defaultProps = {
 
 CouncilSelector.propTypes = {
   councils: PropTypes.arrayOf(PropTypes.shape({})),
+  selected: PropTypes.arrayOf(PropTypes.shape({})),
+  unselected: PropTypes.arrayOf(PropTypes.shape({})),
   updateCouncilsFilter: PropTypes.func.isRequired,
+  updateSelectedCouncils: PropTypes.func.isRequired,
+  updateUnselectedCouncils: PropTypes.func.isRequired,
   resetMap: PropTypes.func,
 };
 
 CouncilSelector.defaultProps = {
   councils: [],
+  selected: [],
+  unselected: [],
 };

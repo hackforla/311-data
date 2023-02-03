@@ -7,6 +7,8 @@ export const types = {
   UPDATE_REQUEST_TYPES: 'UPDATE_REQUEST_TYPES',
   UPDATE_REQUEST_STATUS: 'UPDATE_REQUEST_STATUS',
   UPDATE_NEIGHBORHOOD_COUNCIL: 'UPDATE_NEIGHBORHOOD_COUNCIL',
+  UPDATE_SELECTED_COUNCILS: 'UPDATE_SELECTED_COUNCILS',
+  UPDATE_UNSELECTED_COUNCILS: 'UPDATE_UNSELECTED_COUNCILS',
   SELECT_ALL_REQUEST_TYPES: 'SELECT_ALL_REQUEST_TYPES',
   DESELECT_ALL_REQUEST_TYPES: 'DESELECT_ALL_REQUEST_TYPES',
 };
@@ -31,6 +33,16 @@ export const updateNcId = ncId => ({
   payload: ncId,
 });
 
+export const updateSelectedCouncils = councils => ({
+  type: types.UPDATE_SELECTED_COUNCILS,
+  payload: councils,
+});
+
+export const updateUnselectedCouncils = councils => ({
+  type: types.UPDATE_UNSELECTED_COUNCILS,
+  payload: councils,
+});
+
 export const updateRequestStatus = status => ({
   type: types.UPDATE_REQUEST_STATUS,
   payload: status,
@@ -42,6 +54,8 @@ const initialState = {
   startDate: moment(DATE_RANGES[0].startDate, USER_DATE_SPEC).format(INTERNAL_DATE_SPEC),
   endDate: moment(DATE_RANGES[0].endDate, USER_DATE_SPEC).format(INTERNAL_DATE_SPEC),
   councilId: null,
+  selected: [],
+  unselected: [],
   requestTypes: {
     1: true,
     2: true,
@@ -88,6 +102,17 @@ export default (state = initialState, action) => {
       return {
         ...state,
         councilId: action.payload,
+      };
+    case types.UPDATE_SELECTED_COUNCILS:
+      return {
+        ...state,
+        selected: action.payload,
+      };
+    case types.UPDATE_UNSELECTED_COUNCILS:
+      console.log('inside case types.UPDATE_UNSELECTED_COUNCILS:');
+      return {
+        ...state,
+        unselected: action.payload,
       };
     case types.UPDATE_REQUEST_STATUS:
       switch (action.payload) {
