@@ -343,7 +343,17 @@ class Map extends React.Component {
       ){
         //reset since pop-up is for another district
         console.log('reseting since feature.properties.council_id && this.props.selectedNcId !== feature.properties.council_id')
+        
+        //update the selected NcId
+        // updateNcId(Number(feature.properties.council_id));
+        updateNcId(null);
+
+        //reset consoleSelector
+
+        //reset Map
+        // resetMap();
         this.reset()
+
         return
       }
 
@@ -609,6 +619,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getNc: coords => dispatch(getNcByLngLat(coords)),
   updateNcId: id => dispatch(updateNcId(id)),
+  updateCouncilsFilter: councilId => dispatch(updateNcId(councilId)),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
