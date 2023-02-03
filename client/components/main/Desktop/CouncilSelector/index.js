@@ -33,12 +33,9 @@ const CouncilSelector = ({
   resetMap,
 }) => {
   const classes = useStyles();
-  // const [selected, setSelected] = useState([]);
-  // const [unselected, setUnselected] = useState([]);
 
   useEffect(() => {
     console.log('CouncilSelector: ', { councils });
-    // setUnselected(councils);
     updateUnselectedCouncils(councils);
   }, [councils, updateUnselectedCouncils]);
 
@@ -46,9 +43,7 @@ const CouncilSelector = ({
     const deletedCouncilId = Number(e.currentTarget.dataset.id);
     const newSelected = selected.filter(({ councilId }) => councilId !== deletedCouncilId);
     const newUnselected = not(councils, newSelected, 'councilId');
-    // setSelected(newSelected);
     updateSelectedCouncils(newSelected);
-    // setUnselected(newUnselected);
     updateUnselectedCouncils(newUnselected);
     updateCouncilsFilter(deletedCouncilId);
     resetMap();
@@ -77,9 +72,7 @@ const CouncilSelector = ({
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
       const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
       const newSelected = [newSelectedCouncil];
-      // setSelected(newSelected);
       updateSelectedCouncils(newSelected);
-      // setUnselected(councils);
       updateUnselectedCouncils(councils);
       updateCouncilsFilter(selectedCouncilId);
     }

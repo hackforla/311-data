@@ -10,7 +10,11 @@ import FilterMenu from '@components/main/Desktop/FilterMenu';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
-import { updateNcId } from '@reducers/filters';
+import {
+  updateNcId,
+  updateSelectedCouncils,
+  updateUnselectedCouncils,
+} from '@reducers/filters';
 
 import {
   INITIAL_BOUNDS,
@@ -329,7 +333,11 @@ class Map extends React.Component {
       ]
     });
 
-    const { updateNcId } = this.props;
+    const { 
+      updateNcId, 
+      updateSelectedCouncils,
+      updateUnselectedCouncils,
+      councils } = this.props;
 
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
@@ -348,7 +356,9 @@ class Map extends React.Component {
         updateNcId(null);
 
         //reset councilSelector
-        
+        updateSelectedCouncils([])
+        updateUnselectedCouncils(councils)
+
         //reset Map
         this.reset()
 
@@ -359,7 +369,12 @@ class Map extends React.Component {
         switch (feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
-            updateNcId(feature.properties.council_id);
+            const selectedCouncilId = Number(feature.properties.council_id)
+            const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
+            const newSelected = [newSelectedCouncil];
+            updateSelectedCouncils(newSelected);
+            updateUnselectedCouncils(councils);
+            updateNcId(selectedCouncilId);
             return this.ncLayer.selectRegion(feature.id);
           case 'cc-fills':
             return this.ccLayer.selectRegion(feature.id);
@@ -617,6 +632,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getNc: coords => dispatch(getNcByLngLat(coords)),
   updateNcId: id => dispatch(updateNcId(id)),
+  updateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
+  updateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
