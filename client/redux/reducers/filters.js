@@ -109,7 +109,6 @@ export default (state = initialState, action) => {
         selected: action.payload,
       };
     case types.UPDATE_UNSELECTED_COUNCILS:
-      console.log('inside case types.UPDATE_UNSELECTED_COUNCILS:');
       return {
         ...state,
         unselected: action.payload,
