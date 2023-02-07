@@ -94,7 +94,7 @@
     "file-loader": "^4.2.0",
     "husky": "^4.3.8",
     "mini-css-extract-plugin": "^0.9.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "react-svg-loader": "^3.0.3",
     "sass-loader": "^8.0.0",
     "social-tags-webpack-plugin": "^1.1.0",
