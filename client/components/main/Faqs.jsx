@@ -68,7 +68,7 @@ const Faqs = () => {
 
   const [searchFormState, setSearchFormState] = React.useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     console.log(searchFormState);
     if (searchFormState) {
@@ -76,7 +76,7 @@ const Faqs = () => {
     }
   };
 
-  const handleSearchFieldOnChange = (e) => {
+  const handleSearchFieldOnChange = e => {
     setSearchFormState(e.target.value);
   };
 
@@ -110,7 +110,8 @@ const Faqs = () => {
             className={classes.searchButton}
             variant="contained"
             color="secondary"
-            type="search">
+            type="search"
+          >
             Search
           </Button>
         </form>
@@ -118,29 +119,29 @@ const Faqs = () => {
       <ContentBody maxWidth="md">
         { data
           && (
-          <Grid container>
-            <Grid item>
-              <div className={classes.marginBottomLarge}>
+            <Grid container>
+              <Grid item>
+                <div className={classes.marginBottomLarge}>
                   <Typography variant="h6" className={classes.contentTitle} align="center">
-                  Frequently Asked Questions
-                </Typography>
-              </div>
+                    Frequently Asked Questions
+                  </Typography>
+                </div>
 
-              <div className={classes.marginTop5}>
+                <div className={classes.marginTop5}>
                   { data.faqCollection.items.map(item => (
-                  <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
+                    <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
                       <Typography variant="h6" className={classes.contentQuestion}>
-                      {item.question}
-                    </Typography>
+                        {item.question}
+                      </Typography>
                       <ReactMarkdown>
                         {item.answer}
                       </ReactMarkdown>
-                  </Box>
-                ))}
-              </div>
+                    </Box>
+                  ))}
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        )}
+          )}
       </ContentBody>
     </>
   );
