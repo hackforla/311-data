@@ -334,9 +334,9 @@ class Map extends React.Component {
     });
 
     const { 
-      updateNcId, 
-      updateSelectedCouncils,
-      updateUnselectedCouncils,
+      dispatchUpdateNcId, 
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
       councils } = this.props;
 
     for (let i = 0; i < features.length; i++) {
@@ -349,11 +349,11 @@ class Map extends React.Component {
         // Since click is for another district, zoom out and reset map.
         
         // Reset the selected NcId back to null.
-        updateNcId(null);
+        dispatchUpdateNcId(null);
 
         // Reset councilSelector.
-        updateSelectedCouncils([])
-        updateUnselectedCouncils(councils)
+        dispatchUpdateSelectedCouncils([])
+        dispatchUpdateUnselectedCouncils(councils)
 
         // Reset Map.
         this.reset()
@@ -368,9 +368,9 @@ class Map extends React.Component {
             const selectedCouncilId = Number(feature.properties.council_id)
             const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
             const newSelected = [newSelectedCouncil];
-            updateSelectedCouncils(newSelected);
-            updateUnselectedCouncils(councils);
-            updateNcId(selectedCouncilId);
+            dispatchUpdateSelectedCouncils(newSelected);
+            dispatchUpdateUnselectedCouncils(councils);
+            dispatchUpdateNcId(selectedCouncilId);
             return this.ncLayer.selectRegion(feature.id);
           case 'cc-fills':
             return this.ccLayer.selectRegion(feature.id);
@@ -393,17 +393,17 @@ class Map extends React.Component {
   };
 
   onGeocoderResult = ({ result }) => {
-    const { getNc, updateNcId } = this.props;
+    const { dispatchGetNcByLngLat, dispatchUpdateNcId } = this.props;
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
-      updateNcId(result.id);
+      dispatchUpdateNcId(result.id);
     } else {
       const address = result.place_name
         .split(',')
         .slice(0, -2)
         .join(', ');
 
-      getNc({ longitude: result.center[0], latitude: result.center[1] });
+      dispatchGetNcByLngLat({ longitude: result.center[0], latitude: result.center[1] });
 
       this.setState({
         address: address,
@@ -611,8 +611,8 @@ Map.propTypes = {
   requests: PropTypes.shape({}),
   position: PropTypes.shape({}),
   selectedTypes: PropTypes.shape({}),
-  getNc: PropTypes.func.isRequired,
-  updateNcId: PropTypes.func.isRequired,
+  dispatchGetNcByLngLat: PropTypes.func.isRequired,
+  dispatchUpdateNcId: PropTypes.func.isRequired,
 };
 
 Map.defaultProps = {};
@@ -626,10 +626,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getNc: coords => dispatch(getNcByLngLat(coords)),
-  updateNcId: id => dispatch(updateNcId(id)),
-  updateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
-  updateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
+  dispatchGetNcByLngLat: coords => dispatch(getNcByLngLat(coords)),
+  dispatchUpdateNcId: id => dispatch(updateNcId(id)),
+  dispatchUpdateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
+  dispatchUpdateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
