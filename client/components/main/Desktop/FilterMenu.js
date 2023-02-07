@@ -11,11 +11,14 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
-
-import GearButton from '@components/common/GearButton';
 import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/main/Desktop/TypeSelector';
 import StatusSelector from '@components/main/Desktop/StatusSelector';
+import CouncilSelector from '@components/main/Desktop/CouncilSelector';
+// import GearButton from '@components/common/GearButton';
+// import clsx from 'clsx';
+
+import sharedStyles from '@theme/styles';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -27,22 +30,19 @@ const useStyles = makeStyles(theme => ({
     borderBottomRightRadius: theme.borderRadius.md,
   },
   header: {
-    color: theme.palette.text.cyan,
+    // color: theme.palette.text.cyan,
     padding: theme.gaps.xs,
     paddingRight: 0,
   },
   headerAction: {
     margin: 'auto',
   },
-  headerTitle: {
-    ...theme.typography.h5,
-    fontWeight: theme.typography.fontWeightMedium,
-    letterSpacing: '2px',
-    marginLeft: theme.gaps.xs,
-  },
   headerContent: {
     display: 'flex',
     alignItems: 'center',
+  },
+  headerMargin: {
+    marginLeft: '10px', // to fill space of gear icon
   },
   button: {
     padding: theme.gaps.xs,
@@ -63,9 +63,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const FilterMenu = ({ toggleMenu }) => {
+// const FilterMenu = ({ toggleMenu }) => { //toggleMenu used with GearButton
+const FilterMenu = ({ resetMap }) => {
   const [expanded, setExpanded] = useState(true);
   const classes = useStyles();
+  const sharedClasses = sharedStyles();
 
   return (
     <Card className={classes.card}>
@@ -78,10 +80,12 @@ const FilterMenu = ({ toggleMenu }) => {
         }}
         title={(
           <div className={classes.headerContent}>
-            <GearButton aria-label="toggle map menu" onClick={toggleMenu} />
-            <Typography className={classes.headerTitle} variant="h5">
-              FILTERS
-            </Typography>
+            {/* <GearButton aria-label="toggle map menu" onClick={toggleMenu} /> */}
+            <div className={classes.headerMargin}>
+              <Typography className={sharedClasses.headerTitle} variant="h6">
+                FILTERS
+              </Typography>
+            </div>
           </div>
         )}
         action={(
@@ -98,6 +102,9 @@ const FilterMenu = ({ toggleMenu }) => {
       />
       <Collapse in={expanded}>
         <CardContent className={classes.content}>
+          <div className={classes.selectorWrapper}>
+            <CouncilSelector resetMap={resetMap} />
+          </div>
           <div className={classes.selectorWrapper}>
             <DateSelector range />
           </div>
@@ -119,6 +126,11 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(null, mapDispatchToProps)(FilterMenu);
 
+FilterMenu.defaultProps = {
+  resetMap: () => {},
+};
+
 FilterMenu.propTypes = {
-  toggleMenu: PropTypes.func.isRequired,
+  resetMap: PropTypes.func,
+  // toggleMenu: PropTypes.func.isRequired,
 };

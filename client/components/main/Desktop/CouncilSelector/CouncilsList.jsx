@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-
 import SearchBar from '@components/common/SearchBar';
 import GroupedMultiSelect from '@components/common/MultiSelect/GroupedMultiSelect';
 
@@ -40,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   header: {
-    color: theme.palette.secondary.main,
+    color: theme.palette.text.cyan,
     marginTop: theme.gaps.xs,
   },
 }));
@@ -57,14 +56,13 @@ const CouncilsList = ({
       <div className={classes.searchWrapper}>
         <div className={classes.search}>
           <SearchBar
-            placeholder="Type District Name"
+            placeholder="Enter district"
             onChange={setSearchTerm}
             value={searchTerm}
           />
         </div>
       </div>
       <div className={classes.scrollWrapper}>
-        <h4 className={classes.header}>NEIGHBORHOOD DISTRICT</h4>
         <GroupedMultiSelect
           items={items}
           groupBy="regionName"

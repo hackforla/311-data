@@ -11,7 +11,7 @@ export const INITIAL_LOCATION = {
 
 export const GEO_FILTER_TYPES = {
   address: 'Address',
-  nc: 'Council',
+  nc: 'District',
 };
 
 export const MAP_STYLES = {

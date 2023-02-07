@@ -21,6 +21,7 @@ module.exports = {
       '@root': __dirname,
       '@theme': path.resolve(__dirname, 'theme'),
       '@components': path.resolve(__dirname, 'components'),
+      '@hooks': path.resolve(__dirname, 'hooks'),
       '@reducers': path.resolve(__dirname, 'redux/reducers'),
       '@styles': path.resolve(__dirname, 'styles'),
       '@assets': path.resolve(__dirname, 'assets'),

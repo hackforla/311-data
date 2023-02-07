@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 
+import sharedStyles from '@theme/styles';
+
 const useStyles = makeStyles(theme => ({
   locationInfo: {
     borderRadius: 10,
@@ -13,16 +15,12 @@ const useStyles = makeStyles(theme => ({
     padding: 15,
     marginTop: theme.gaps.xs,
   },
-  header: {
-    color: theme.palette.text.cyan,
-    letterSpacing: '2px',
-  },
   subheader: {
-    ...theme.typography.body2,
+    ...theme.typography.body1,
     color: '#A8A8A8',
   },
   link: {
-    ...theme.typography.h2,
+    ...theme.typography.h6,
     color: '#ececec',
   },
 }));
@@ -33,12 +31,13 @@ const LocationDetail = ({
   // ccs,
 }) => {
   const classes = useStyles();
+  const sharedClasses = sharedStyles();
 
   return (
     <div className={classes.locationInfo}>
       <Typography
-        className={classes.header}
-        variant="h3"
+        className={sharedClasses.headerTitle}
+        variant="h6"
         component="h2"
       >
         INFORMATION
