@@ -17,10 +17,13 @@ const initialFormValues = {
   message: '',
   errors: {
     missingFirstName: false,
+    invalidFirstName: false,
     missingLastName: false,
+    invalidLastName: false,
     missingEmail: false,
     invalidEmail: false,
     missingMessage: false,
+    invalidMessage: false,
   },
   loading: false,
 };
@@ -86,16 +89,25 @@ const ContactForm = () => {
     return VALID_EMAIL_FORMAT_REGEX.test(emailAddress);
   }
 
+  function validateName(name) {
+    // A regular expression checking for valid names (first and last).
+    const NAME_REGEX = /^[a-zA-Z]+$/;
+    return NAME_REGEX.test(name);
+  }
+
   const clearErrors = useCallback(() => {
     setFormValues(prevState => ({
       ...prevState,
       ...{
         errors: {
           missingFirstName: false,
+          invalidFirstName: false,
           missingLastName: false,
+          invalidLastName: false,
           missingEmail: false,
           invalidEmail: false,
           missingMessage: false,
+          invalidMessage: false,
         },
       },
     }));
@@ -103,11 +115,17 @@ const ContactForm = () => {
 
   const validateForm = useCallback(() => {
     const noFirstName = formValues.firstName.trim().length === 0;
+    const notValidFirstName = !validateName(formValues.firstName.trim());
     const noLastName = formValues.lastName.trim().length === 0;
+    const notValidLastName = !validateName(formValues.lastName.trim());
     const noEmail = formValues.email.trim().length === 0;
     const noMessage = formValues.message.trim().length === 0;
     const incompleteEmail = (!noEmail && !validateEmail(formValues.email));
-    if (!noFirstName && !noLastName && !noEmail && !noMessage && !incompleteEmail) {
+    const invalidMessageLength = formValues.message.trim().length < 6
+      || formValues.message.trim().length > 1000;
+    if (!noFirstName && !noLastName && !notValidFirstName && !notValidLastName
+      && !noEmail && !incompleteEmail
+      && !noMessage && !invalidMessageLength) {
       return true;
     }
 
@@ -116,10 +134,13 @@ const ContactForm = () => {
       ...{
         errors: {
           missingFirstName: noFirstName,
+          invalidFirstName: notValidFirstName,
           missingLastName: noLastName,
+          invalidLastName: notValidLastName,
           missingEmail: noEmail,
           invalidEmail: incompleteEmail,
           missingMessage: noMessage,
+          invalidMessage: invalidMessageLength,
         },
       },
     }));
@@ -140,11 +161,11 @@ const ContactForm = () => {
     }
 
     const body = [
-              `First name: ${formValues.firstName.trim()}`,
-              `Last name: ${formValues.lastName.trim()}`,
-              `Email: ${formValues.email.trim()}`,
-              `Association: ${formValues.association.trim() || 'Not provided'}`,
-              `Message: ${formValues.message.trim()}`,
+      `First name: ${formValues.firstName.trim()}`,
+      `Last name: ${formValues.lastName.trim()}`,
+      `Email: ${formValues.email.trim()}`,
+      `Association: ${formValues.association.trim() || 'Not provided'}`,
+      `Message: ${formValues.message.trim()}`,
     ].join('\n');
 
     setLoading(true);
@@ -173,8 +194,8 @@ const ContactForm = () => {
               value={formValues.firstName}
               onChange={onInputChange}
               onFocus={clearErrors}
-              error={formValues.errors.missingFirstName}
-              helperText={formValues.errors.missingFirstName ? 'Please provide a first name.' : ''}
+              error={formValues.errors.missingFirstName || formValues.errors.invalidFirstName}
+              helperText={formValues.errors.missingFirstName || formValues.errors.invalidFirstName ? 'Please provide a first name.' : ''}
               fullWidth
             />
           </Grid>
@@ -188,8 +209,8 @@ const ContactForm = () => {
               value={formValues.lastName}
               onChange={onInputChange}
               onFocus={clearErrors}
-              error={formValues.errors.missingLastName}
-              helperText={formValues.errors.missingLastName ? 'Please provide a last name.' : ''}
+              error={formValues.errors.missingLastName || formValues.errors.invalidLastName}
+              helperText={formValues.errors.missingLastName || formValues.errors.invalidLastName ? 'Please provide a valid last name.' : ''}
               fullWidth
             />
           </Grid>
@@ -234,8 +255,8 @@ const ContactForm = () => {
               value={formValues.message}
               onChange={onInputChange}
               onFocus={clearErrors}
-              error={formValues.errors.missingMessage}
-              helperText={formValues.errors.missingMessage ? 'Please provide a message.' : ''}
+              error={formValues.errors.missingMessage || formValues.errors.invalidMessage}
+              helperText={formValues.errors.missingMessage || formValues.errors.invalidMessage ? 'Please provide a message (6-1000 characters).' : ''}
               fullWidth
               multiline
             />
