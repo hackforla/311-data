@@ -6,11 +6,15 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
-import LocationDetail from './LocationDetail';
+// import LocationDetail from './LocationDetail';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
-import { updateNcId } from '@reducers/filters';
+import {
+  updateNcId,
+  updateSelectedCouncils,
+  updateUnselectedCouncils,
+} from '@reducers/filters';
 
 import {
   INITIAL_BOUNDS,
@@ -86,8 +90,8 @@ const styles = theme => ({
   },
   menuWrapper: {
     position: 'absolute',
-    left: 35,
-    top: 75,
+    left: '20px',
+    top: '20px',
   },
 })
 
@@ -329,16 +333,44 @@ class Map extends React.Component {
       ]
     });
 
-    const { updateNcId } = this.props;
+    const { 
+      dispatchUpdateNcId, 
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+      councils } = this.props;
 
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
+
+      if (
+        (this.props.selectedNcId !== null)
+        && (feature.properties.council_id && this.props.selectedNcId !== feature.properties.council_id)
+      ){
+        // Since click is for another district, zoom out and reset map.
+        
+        // Reset the selected NcId back to null.
+        dispatchUpdateNcId(null);
+
+        // Reset councilSelector.
+        dispatchUpdateSelectedCouncils([])
+        dispatchUpdateUnselectedCouncils(councils)
+
+        // Reset Map.
+        this.reset()
+
+        return
+      }
 
       if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
         switch (feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
-            updateNcId(feature.properties.council_id);
+            const selectedCouncilId = Number(feature.properties.council_id)
+            const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
+            const newSelected = [newSelectedCouncil];
+            dispatchUpdateSelectedCouncils(newSelected);
+            dispatchUpdateUnselectedCouncils(councils);
+            dispatchUpdateNcId(selectedCouncilId);
             return this.ncLayer.selectRegion(feature.id);
           case 'cc-fills':
             return this.ccLayer.selectRegion(feature.id);
@@ -361,17 +393,17 @@ class Map extends React.Component {
   };
 
   onGeocoderResult = ({ result }) => {
-    const { getNc, updateNcId } = this.props;
+    const { dispatchGetNcByLngLat, dispatchUpdateNcId } = this.props;
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
-      updateNcId(result.id);
+      dispatchUpdateNcId(result.id);
     } else {
       const address = result.place_name
         .split(',')
         .slice(0, -2)
         .join(', ');
 
-      getNc({ longitude: result.center[0], latitude: result.center[1] });
+      dispatchGetNcByLngLat({ longitude: result.center[0], latitude: result.center[1] });
 
       this.setState({
         address: address,
@@ -550,10 +582,10 @@ class Map extends React.Component {
                 onReset={this.reset}
                 canReset={!!filterGeo && canReset}
               />
-              <FilterMenu />
-              {
+              <FilterMenu resetMap={this.reset} />
+              {/* {
                 (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
-              }
+              } */}
 
             </div>
             {/* <MapLayers
@@ -579,8 +611,8 @@ Map.propTypes = {
   requests: PropTypes.shape({}),
   position: PropTypes.shape({}),
   selectedTypes: PropTypes.shape({}),
-  getNc: PropTypes.func.isRequired,
-  updateNcId: PropTypes.func.isRequired,
+  dispatchGetNcByLngLat: PropTypes.func.isRequired,
+  dispatchUpdateNcId: PropTypes.func.isRequired,
 };
 
 Map.defaultProps = {};
@@ -594,8 +626,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getNc: coords => dispatch(getNcByLngLat(coords)),
-  updateNcId: id => dispatch(updateNcId(id)),
+  dispatchGetNcByLngLat: coords => dispatch(getNcByLngLat(coords)),
+  dispatchUpdateNcId: id => dispatch(updateNcId(id)),
+  dispatchUpdateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
+  dispatchUpdateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
 });
 
 // We need to specify forwardRef to allow refs on connected components.

@@ -16,6 +16,7 @@ const styles = theme => ({
     width: 325,
     backgroundColor: theme.palette.primary.dark,
     borderTopRightRadius: '10px',
+    borderTopLeftRadius: '10px',
     padding: '10px 15px 10px 15px',
     '& div.mapboxgl-ctrl': {
       width: '100%',
@@ -49,7 +50,7 @@ const styles = theme => ({
   button: {
     backgroundColor: '#0F181F',
     color: theme.palette.secondary.main,
-    ...theme.typography.body2,
+    ...theme.typography.body1,
   },
   active: {
     backgroundColor: theme.palette.primary.main,
@@ -94,23 +95,24 @@ class MapSearch extends React.Component {
 
     this.geocoder.on('result', ({ result }) => {
       this.props.onGeocoderResult({ result });
-      this.geocoder.clear();
+      
+      // This clears the address from the Address input field.
+      // this.geocoder.clear(); 
     });
 
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(map));
-    this.setTab(GEO_FILTER_TYPES.address);
+    // this.setTab(GEO_FILTER_TYPES.address);
   }
 
   setTab = tab => {
     this.props.onChangeTab(tab);
     this.geocoder.clear();
+    this.geocoder.setPlaceholder(`Enter ${tab.toLowerCase()}`);
     switch(tab) {
       case GEO_FILTER_TYPES.address:
-        this.geocoder.setPlaceholder('Enter address');
         this.geocoder.options.localGeocoderOnly = false;
         break;
       case GEO_FILTER_TYPES.nc:
-        this.geocoder.setPlaceholder('Enter neighborhood council');
         this.geocoder.options.localGeocoderOnly = true;
         break;
     }
@@ -120,7 +122,8 @@ class MapSearch extends React.Component {
     const { classes, geoFilterType } = this.props;
     return (
       <div>
-        <div className={classes.wrapper}>
+        {/* To show Address & District Tabs (above the address input), uncomment below */}
+        {/* <div className={classes.wrapper}>
         { TABS.map(tab => (
             <Button
               key={tab}
@@ -134,7 +137,7 @@ class MapSearch extends React.Component {
               { tab }
             </Button>
         ))}
-        </div>
+        </div> */}
         <div id="geocoder" className={classes.geocoder} />
       </div>
     );

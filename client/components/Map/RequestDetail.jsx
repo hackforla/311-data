@@ -37,7 +37,7 @@ const styles = theme => ({
     marginBottom: 8,
   },
   info1: {
-    ...theme.typography.body2,
+    ...theme.typography.body1,
     marginTop: 0,
     marginBottom: 0,
   },
