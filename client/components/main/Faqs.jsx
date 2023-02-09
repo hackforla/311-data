@@ -5,8 +5,12 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import sharedLayout from '@theme/layout';
-import TextHeading from '@components/common/TextHeading';
+import TextHeadingFAQ from '@components/common/TextHeading/TextHeadingFAQ';
 import ContentBody from '@components/common/ContentBody';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import useContentful from '../../hooks/useContentful';
 
 const useStyles = makeStyles(theme => ({
@@ -18,6 +22,27 @@ const useStyles = makeStyles(theme => ({
   },
   contentQuestion: {
     fontWeight: theme.typography.fontWeightMedium,
+  },
+  searchBar: {
+    display: 'flex',
+    width: '150%',
+    transform: 'translate(-15%, 40%)',
+  },
+  textField: {
+    width: '100%',
+  },
+  textFieldInput: {
+    color: theme.palette.grey,
+    fontSize: '18px',
+    fontWeight: theme.typography.fontWeightRegular,
+    background: 'white',
+  },
+  searchButton: {
+    width: '30%',
+    marginLeft: '5%',
+    borderRadius: '5px',
+    fontSize: '18px',
+    fontWeight: theme.typography.fontWeightBold,
   },
 }));
 
@@ -41,13 +66,56 @@ const Faqs = () => {
     if (errors) console.log(errors);
   }, [errors]);
 
+  const [searchFormState, setSearchFormState] = React.useState('');
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log(searchFormState);
+    if (searchFormState) {
+      alert(`Searching: ${searchFormState}`);
+    }
+  };
+
+  const handleSearchFieldOnChange = e => {
+    setSearchFormState(e.target.value);
+  };
+
   return (
     <>
-      <TextHeading>
+      <TextHeadingFAQ>
         <Typography variant="h4" className={classes.textHeading}>
           What can we help you with?
         </Typography>
-      </TextHeading>
+        <form className={classes.searchBar} onSubmit={handleSubmit}>
+          <TextField
+            placeholder="Type your question here..."
+            id="faq-search"
+            name="search"
+            type="search"
+            variant="outlined"
+            required
+            className={classes.textField}
+            value={searchFormState}
+            onChange={handleSearchFieldOnChange}
+            InputProps={{
+              className: classes.textFieldInput,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            className={classes.searchButton}
+            variant="contained"
+            color="secondary"
+            type="search"
+          >
+            Search
+          </Button>
+        </form>
+      </TextHeadingFAQ>
       <ContentBody maxWidth="md">
         { data
           && (
