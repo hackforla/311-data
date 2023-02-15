@@ -130,13 +130,15 @@ const Faqs = () => {
                     Frequently Asked Questions
                   </Typography>
                 </div>
-
+                <div className={classes.marginBottomLarge}>
+                  <Typography variant="h6" className={classes.contentTitle}>Expand/Collapse All</Typography>
+                </div>
                 <div className={classes.marginTop5}>
                   {data.faqCollection.items.map(item => (
                     <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
                       <Typography variant="h6" className={`${classes.contentQuestion} ${classes.flexContainer}`}>
                         {item.question}
-                        <i className="fa-solid fa-angle-down"></i>
+                        <i className="fa-solid fa-angle-up" />
                       </Typography>
                       <ReactMarkdown>
                         {item.answer}
