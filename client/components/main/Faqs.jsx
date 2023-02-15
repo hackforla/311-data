@@ -77,23 +77,27 @@ const Faqs = () => {
 
   const [searchFormState, setSearchFormState] = React.useState('');
   const [expanded, setExpanded] = React.useState({});
+  const [allExpanded, setAllExpanded] = React.useState(false);
 
-  const handleExpand = id => {
-    setExpanded({
-      ...expanded,
-      [id]: !expanded[id],
-    });
+  const handleExpand = (id) => {
+    setExpanded((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
   };
 
-  // console.log(data)
-  // const handleExpandAll = () => {
-  //   // const allExpanded = Object.keys(expanded).reduce((obj, key) => {
-  //   //   obj[key] = true;
-  //   //   return obj;
-  //   // }, {});
-  //   // const expandedQuest = Object.keys(expanded).find(key => expanded[key] === true) || [];
-  // };
-
+  const handleExpandAll = () => {
+    setAllExpanded((prevAllExpanded) => !prevAllExpanded);
+    setExpanded(
+      data.faqCollection.items.reduce(
+        (prevExpanded, item) => ({
+          ...prevExpanded,
+          [item.sys.id]: !allExpanded,
+        }),
+        {}
+      )
+    );
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -153,9 +157,9 @@ const Faqs = () => {
                     Frequently Asked Questions
                   </Typography>
                 </div>
-                <div className={classes.marginBottomLarge}>
+                <div className={classes.marginBottomLarge} onClick={handleExpandAll}>
                   <Typography variant="h6" className={`${classes.contentTitle} ${classes.expand}`}>
-                    Expand/Collapse All
+                    {allExpanded ? 'Collapse All' : 'Expand All'}
                   </Typography>
                 </div>
                 <div className={classes.marginTop5}>
