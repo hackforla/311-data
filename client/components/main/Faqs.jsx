@@ -14,6 +14,10 @@ import Button from '@material-ui/core/Button';
 import useContentful from '../../hooks/useContentful';
 
 const useStyles = makeStyles(theme => ({
+  flexContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
   textHeading: {
     fontWeight: theme.typography.fontWeightBold,
   },
@@ -117,7 +121,7 @@ const Faqs = () => {
         </form>
       </TextHeadingFAQ>
       <ContentBody maxWidth="md">
-        { data
+        {data
           && (
             <Grid container>
               <Grid item>
@@ -128,10 +132,11 @@ const Faqs = () => {
                 </div>
 
                 <div className={classes.marginTop5}>
-                  { data.faqCollection.items.map(item => (
+                  {data.faqCollection.items.map(item => (
                     <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
-                      <Typography variant="h6" className={classes.contentQuestion}>
+                      <Typography variant="h6" className={`${classes.contentQuestion} ${classes.flexContainer}`}>
                         {item.question}
+                        <i className="fa-solid fa-angle-down"></i>
                       </Typography>
                       <ReactMarkdown>
                         {item.answer}
