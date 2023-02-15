@@ -79,23 +79,23 @@ const Faqs = () => {
   const [expanded, setExpanded] = React.useState({});
   const [allExpanded, setAllExpanded] = React.useState(false);
 
-  const handleExpand = (id) => {
-    setExpanded((prevState) => ({
+  const handleExpand = id => {
+    setExpanded(prevState => ({
       ...prevState,
       [id]: !prevState[id],
     }));
   };
 
   const handleExpandAll = () => {
-    setAllExpanded((prevAllExpanded) => !prevAllExpanded);
+    setAllExpanded(prevAllExpanded => !prevAllExpanded);
     setExpanded(
       data.faqCollection.items.reduce(
         (prevExpanded, item) => ({
           ...prevExpanded,
           [item.sys.id]: !allExpanded,
         }),
-        {}
-      )
+        {},
+      ),
     );
   };
 
@@ -157,7 +157,17 @@ const Faqs = () => {
                     Frequently Asked Questions
                   </Typography>
                 </div>
-                <div className={classes.marginBottomLarge} onClick={handleExpandAll}>
+                <div
+                  className={classes.marginBottomLarge}
+                  onClick={handleExpandAll}
+                  onKeyDown={event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      handleExpandAll();
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
                   <Typography variant="h6" className={`${classes.contentTitle} ${classes.expand}`}>
                     {allExpanded ? 'Collapse All' : 'Expand All'}
                   </Typography>
