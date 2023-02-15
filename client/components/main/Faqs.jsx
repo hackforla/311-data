@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   },
   expand: {
     cursor: 'pointer',
-  }
+  },
 }));
 
 const query = `
@@ -67,7 +67,6 @@ const query = `
   }
 `;
 
-
 const Faqs = () => {
   const { data, errors } = useContentful(query);
   const classes = { ...useStyles(), ...sharedLayout() };
@@ -77,14 +76,24 @@ const Faqs = () => {
   }, [errors]);
 
   const [searchFormState, setSearchFormState] = React.useState('');
-  const [expanded, setExpanded] = React.useState({})
+  const [expanded, setExpanded] = React.useState({});
 
-  const handleExpand = (id) => {
+  const handleExpand = id => {
     setExpanded({
       ...expanded,
       [id]: !expanded[id],
-    })
+    });
   };
+
+  // console.log(data)
+  // const handleExpandAll = () => {
+  //   // const allExpanded = Object.keys(expanded).reduce((obj, key) => {
+  //   //   obj[key] = true;
+  //   //   return obj;
+  //   // }, {});
+  //   // const expandedQuest = Object.keys(expanded).find(key => expanded[key] === true) || [];
+  // };
+
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -144,7 +153,7 @@ const Faqs = () => {
                     Frequently Asked Questions
                   </Typography>
                 </div>
-                <div className={classes.marginBottomLarge} onClick={() => setExpandAll(true)}>
+                <div className={classes.marginBottomLarge}>
                   <Typography variant="h6" className={`${classes.contentTitle} ${classes.expand}`}>
                     Expand/Collapse All
                   </Typography>
