@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -26,6 +26,8 @@ const useStyles = makeStyles(theme => ({
   },
   contentQuestion: {
     fontWeight: theme.typography.fontWeightMedium,
+    minWidth: '920px',
+    cursor: 'pointer',
   },
   searchBar: {
     display: 'flex',
@@ -48,6 +50,9 @@ const useStyles = makeStyles(theme => ({
     fontSize: '18px',
     fontWeight: theme.typography.fontWeightBold,
   },
+  expand: {
+    cursor: 'pointer',
+  }
 }));
 
 const query = `
@@ -62,6 +67,7 @@ const query = `
   }
 `;
 
+
 const Faqs = () => {
   const { data, errors } = useContentful(query);
   const classes = { ...useStyles(), ...sharedLayout() };
@@ -71,6 +77,14 @@ const Faqs = () => {
   }, [errors]);
 
   const [searchFormState, setSearchFormState] = React.useState('');
+  const [expanded, setExpanded] = React.useState({})
+
+  const handleExpand = (id) => {
+    setExpanded({
+      ...expanded,
+      [id]: !expanded[id],
+    })
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -130,19 +144,24 @@ const Faqs = () => {
                     Frequently Asked Questions
                   </Typography>
                 </div>
-                <div className={classes.marginBottomLarge}>
-                  <Typography variant="h6" className={classes.contentTitle}>Expand/Collapse All</Typography>
+                <div className={classes.marginBottomLarge} onClick={() => setExpandAll(true)}>
+                  <Typography variant="h6" className={`${classes.contentTitle} ${classes.expand}`}>
+                    Expand/Collapse All
+                  </Typography>
                 </div>
                 <div className={classes.marginTop5}>
                   {data.faqCollection.items.map(item => (
                     <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
-                      <Typography variant="h6" className={`${classes.contentQuestion} ${classes.flexContainer}`}>
+                      <Typography variant="h6" className={`${classes.contentQuestion} ${classes.flexContainer}`} onClick={() => handleExpand(item.sys.id)}>
                         {item.question}
-                        <i className="fa-solid fa-angle-up" />
+                        {expanded[item.sys.id] && (<i className="fa-solid fa-angle-up" />)}
+                        {!expanded[item.sys.id] && (<i className="fa-solid fa-angle-down" />)}
                       </Typography>
-                      <ReactMarkdown>
-                        {item.answer}
-                      </ReactMarkdown>
+                      {expanded[item.sys.id] && (
+                        <ReactMarkdown>
+                          {item.answer}
+                        </ReactMarkdown>
+                      )}
                     </Box>
                   ))}
                 </div>
