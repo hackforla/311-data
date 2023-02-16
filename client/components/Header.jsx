@@ -75,14 +75,14 @@ const Header = () => {
           <Button className={classes.button}>Map</Button>
         </NavLink>
         <Button
-          id="report-anchor"
+          id="dashboard-anchor"
           onClick={handleClick}
           className={classes.button}
         >
-          Reports
+          Dashboard
         </Button>
         <Menu
-          id="report-menu"
+          id="dashboard-menu"
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}
@@ -94,12 +94,12 @@ const Header = () => {
           }}
           classes={{ paper: classes.menuPaper }}
         >
-          <Link to="/reports/overview-combined">
+          <Link to="/dashboard/overview-combined">
             <MenuItem onClick={handleClose} className={classes.menuItem}>
               Overview
             </MenuItem>
           </Link>
-          <Link to="/reports/nc-summary-comparison">
+          <Link to="/dashboard/nc-summary-comparison">
             <MenuItem onClick={handleClose} className={classes.menuItem}>
               Compare Two Neighborhoods
             </MenuItem>
