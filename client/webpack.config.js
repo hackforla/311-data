@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SocialTags = require('social-tags-webpack-plugin');
 
 const description = 'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.';
+const webpack = require('webpack');
 
 module.exports = {
   entry: './index.js',
@@ -120,5 +121,6 @@ module.exports = {
         'twitter:site': '@data_311',
       },
     }),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   ],
 };

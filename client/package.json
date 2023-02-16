@@ -64,7 +64,8 @@
     "lint:fix": "eslint --fix \"./**/*.js*\"",
     "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
-    "check-env": "node ./utils/checkEnv"
+    "check-env": "node ./utils/checkEnv",
+    "report": "webpack --config webpack.prod.js --profile --json > stats.json; webpack-bundle-analyzer ./stats.json"
   },
   "husky": {
     "hooks": {
@@ -100,6 +101,7 @@
     "social-tags-webpack-plugin": "^1.1.0",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.2",
+    "webpack-bundle-analyzer": "^4.8.0",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.9.0"
   }
