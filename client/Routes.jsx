@@ -10,7 +10,7 @@ import theme, { darkTheme } from '@theme/theme';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Desktop from '@components/main/Desktop';
-import Reports from '@components/main/Reports';
+import Dashboard from '@components/main/Dashboard';
 import Privacy from '@components/main/Privacy';
 import Faqs from '@components/main/Faqs';
 import About from '@components/main/About';
@@ -36,7 +36,7 @@ export default function Routes() {
       <ThemeProvider theme={theme}>
         <Paper elevation={0}>
           <Switch>
-            <Route path="/reports" component={Reports} />
+            <Route path="/dashboard" component={Dashboard} />
             <Route path="/privacy" component={Privacy} />
             <Route path="/faqs" component={Faqs} />
             <Route path="/research" component={Research} />
