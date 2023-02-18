@@ -16,7 +16,7 @@ sample_rate_for_api_calls = {
 
 
 def traces_sampler(ctx):
-    if ctx["path"] in sample_rate_for_api_calls:
+    if ctx.get("path") and ctx["path"] in sample_rate_for_api_calls:
         return sample_rate_for_api_calls[ctx["path"]]
     return 1.0  # Trace all
 
