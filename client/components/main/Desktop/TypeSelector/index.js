@@ -34,7 +34,7 @@ const formStyles = makeStyles(() => ({
 
 const RequestTypeSelector = ({
   requestTypes,
-  updateTypesFilter,
+  dispatchUpdateTypesFilter,
   selectedTypes,
 }) => {
   const [leftCol, setLeftCol] = useState();
@@ -65,7 +65,7 @@ const RequestTypeSelector = ({
   function updateAll(isSelected) {
     requestTypes.forEach(type => {
       if (selectedTypes[type.typeId] !== isSelected) {
-        updateTypesFilter(type.typeId);
+        dispatchUpdateTypesFilter(type.typeId);
       }
     });
   }
@@ -128,7 +128,7 @@ const RequestTypeSelector = ({
                           padding: '0 0 0 9px',
                         }}
                         checked={selectedTypes[type.typeId]}
-                        onChange={() => updateTypesFilter(type.typeId)}
+                        onChange={() => dispatchUpdateTypesFilter(type.typeId)}
                       />
                     )}
                     label={type.typeName}
@@ -155,7 +155,7 @@ const RequestTypeSelector = ({
                           padding: '0 2px 0 9px',
                         }}
                         checked={selectedTypes[type.typeId]}
-                        onChange={() => updateTypesFilter(type.typeId)}
+                        onChange={() => dispatchUpdateTypesFilter(type.typeId)}
                       />
                     )}
                     label={type.typeName}
@@ -176,7 +176,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateTypesFilter: type => dispatch(updateRequestTypes(type)),
+  dispatchUpdateTypesFilter: type => dispatch(updateRequestTypes(type)),
 });
 
 export default connect(
@@ -186,7 +186,7 @@ export default connect(
 
 RequestTypeSelector.propTypes = {
   requestTypes: PropTypes.arrayOf(PropTypes.shape({})),
-  updateTypesFilter: PropTypes.func.isRequired,
+  dispatchUpdateTypesFilter: PropTypes.func.isRequired,
   selectedTypes: PropTypes.shape({}).isRequired,
 };
 
