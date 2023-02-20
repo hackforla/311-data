@@ -39,7 +39,7 @@ const RequestTypeSelector = ({
 }) => {
   const [leftCol, setLeftCol] = useState();
   const [rightCol, setRightCol] = useState();
-  const [isToggled, toggle] = useToggle(false);
+  const [isToggled, toggle] = useToggle(true);
 
   // FormControlLabel related classes.
   const formClasses = formStyles();
