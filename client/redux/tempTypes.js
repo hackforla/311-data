@@ -4,9 +4,13 @@
 
 import colors from '@theme/colors'
 
+// For tempTypes below:
+// 'orderId' is used to order items in main/TypeSelector/index.js.
+// 'typeId' is the actual request ID value from server API.
 const tempTypes = [
-  {
-    "typeId": 1,
+  {    
+    "orderId": 1,
+    "typeId": 3,
     "typeName": "Animal Remains",
     "agencyId": 2,
     "agencyName": "Sanitation Bureau",
@@ -14,7 +18,8 @@ const tempTypes = [
     "description": "Dead animal located on the streets or outside of residences"
 },
   {
-    "typeId": 2,
+    "orderId": 2,
+    "typeId": 4,
     "typeName": "Bulky Items",
     "agencyId": 2,
     "agencyName": "Sanitation Bureau",
@@ -22,7 +27,8 @@ const tempTypes = [
     "description": "Chairs, desks, mattress and more..."
 },
   {
-    "typeId": 3,
+    "orderId": 3,
+    "typeId": 5,
     "typeName": "Electronic Waste",
     "agencyId": 2,
     "agencyName": "Sanitation Bureau",
@@ -30,7 +36,8 @@ const tempTypes = [
     "description": "Computers, microwaves, laptops and more..."
 },
   {
-    "typeId": 4,
+    "orderId": 4,
+    "typeId": 1,
     "typeName": "Graffiti",
     "agencyId": 4,
     "agencyName": "Office of Community Beautification",
@@ -38,7 +45,8 @@ const tempTypes = [
     "description": "Graffiti on walls/bulidings, unpainted concrete surfaces or metal posts"
 },
   {
-    "typeId": 5,
+    "orderId": 5,
+    "typeId": 2,
     "typeName": "Homeless Encampment",
     "agencyId": 2,
     "agencyName": "Sanitation Bureau",
@@ -46,6 +54,7 @@ const tempTypes = [
     "description": "Encampments impacting right-of-way or maintenance of clean and sanitary public areas"
 },
   {
+    "orderId": 6,
     "typeId": 6,
     "typeName": "Illegal Dumping",
     "agencyId": 2,
@@ -54,6 +63,7 @@ const tempTypes = [
     "description": "Disposing of garbage, waste and other matter on public or private property"
 },
   {
+    "orderId": 7,
     "typeId": 7,
     "typeName": "Metal Appliances",
     "agencyId": 2,
@@ -62,7 +72,8 @@ const tempTypes = [
     "description": "Air conditioners, dryers, refrigerator and more..."
 },
   {
-    "typeId": 8,
+    "orderId": 8,
+    "typeId": 9,
     "typeName": "Multiple Streetlights",
     "agencyId": 1,
     "agencyName": "Street Lighting Bureau",
@@ -70,7 +81,8 @@ const tempTypes = [
     "description": "Multiple poles knocked down, streetlight outages on wooden power poles, or malfunctioning traffic signals"
 },
   {
-    "typeId": 9,
+    "orderId": 9,
+    "typeId": 8,
     "typeName": "Single Streetlight",
     "agencyId": 1,
     "agencyName": "Street Lighting Bureau",
@@ -78,6 +90,7 @@ const tempTypes = [
     "description": "Pole knocked down, streetlight outage on a wooden power pole, or malfunctioning traffic signal"
 },
   {
+    "orderId": 10,
     "typeId": 10,
     "typeName": "Water Waste",
     "agencyId": 1,
@@ -86,7 +99,8 @@ const tempTypes = [
     "description": "Water runoff, over-watering, incorrect water days, or any other water waste "
 },
   {
-    "typeId": 11,
+    "orderId": 11,
+    "typeId": 12,
     "typeName": "Feedback",
     "agencyId": 0,
     "agencyName": null,
@@ -94,7 +108,8 @@ const tempTypes = [
     "description": "Either follow up on other issues or something that doesn't fit into the other types"
 },
   {
-    "typeId": 12,
+    "orderId": 12,
+    "typeId": 11,
     "typeName": "Other",
     "agencyId": 0,
     "agencyName": null,

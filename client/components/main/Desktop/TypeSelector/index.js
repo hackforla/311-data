@@ -49,9 +49,10 @@ const RequestTypeSelector = ({
 
   useEffect(() => {
     if (requestTypes) {
-      const mid = Math.ceil(requestTypes.length / 2);
-      const left = requestTypes.slice(0, mid);
-      const right = requestTypes.slice(-mid);
+      const sortedRequestTypes = requestTypes.sort((a, b) => a.orderId - b.orderId);
+      const mid = Math.ceil(sortedRequestTypes.length / 2);
+      const left = sortedRequestTypes.slice(0, mid);
+      const right = sortedRequestTypes.slice(-mid);
       setLeftCol(left);
       setRightCol(right);
     }
