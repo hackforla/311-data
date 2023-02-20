@@ -14,6 +14,10 @@ import Button from '@material-ui/core/Button';
 import useContentful from '../../hooks/useContentful';
 
 const useStyles = makeStyles(theme => ({
+  flexContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
   textHeading: {
     fontWeight: theme.typography.fontWeightBold,
   },
@@ -22,6 +26,8 @@ const useStyles = makeStyles(theme => ({
   },
   contentQuestion: {
     fontWeight: theme.typography.fontWeightMedium,
+    minWidth: '920px',
+    cursor: 'pointer',
   },
   searchBar: {
     display: 'flex',
@@ -43,6 +49,9 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '5px',
     fontSize: '18px',
     fontWeight: theme.typography.fontWeightBold,
+  },
+  expand: {
+    cursor: 'pointer',
   },
 }));
 
@@ -67,6 +76,28 @@ const Faqs = () => {
   }, [errors]);
 
   const [searchFormState, setSearchFormState] = React.useState('');
+  const [expanded, setExpanded] = React.useState({});
+  const [allExpanded, setAllExpanded] = React.useState(false);
+
+  const handleExpand = id => {
+    setExpanded(prevState => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
+
+  const handleExpandAll = () => {
+    setAllExpanded(prevAllExpanded => !prevAllExpanded);
+    setExpanded(
+      data.faqCollection.items.reduce(
+        (prevExpanded, item) => ({
+          ...prevExpanded,
+          [item.sys.id]: !allExpanded,
+        }),
+        {},
+      ),
+    );
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -117,7 +148,7 @@ const Faqs = () => {
         </form>
       </TextHeadingFAQ>
       <ContentBody maxWidth="md">
-        { data
+        {data
           && (
             <Grid container>
               <Grid item>
@@ -126,16 +157,34 @@ const Faqs = () => {
                     Frequently Asked Questions
                   </Typography>
                 </div>
-
+                <div
+                  className={classes.marginBottomLarge}
+                  onClick={handleExpandAll}
+                  onKeyDown={event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      handleExpandAll();
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <Typography variant="h6" className={`${classes.contentTitle} ${classes.expand}`}>
+                    {allExpanded ? 'Collapse All' : 'Expand All'}
+                  </Typography>
+                </div>
                 <div className={classes.marginTop5}>
-                  { data.faqCollection.items.map(item => (
+                  {data.faqCollection.items.map(item => (
                     <Box key={item.sys.id} style={{ marginBottom: '3em' }}>
-                      <Typography variant="h6" className={classes.contentQuestion}>
+                      <Typography variant="h6" className={`${classes.contentQuestion} ${classes.flexContainer}`} onClick={() => handleExpand(item.sys.id)}>
                         {item.question}
+                        {expanded[item.sys.id] && (<i className="fa-solid fa-angle-up" />)}
+                        {!expanded[item.sys.id] && (<i className="fa-solid fa-angle-down" />)}
                       </Typography>
-                      <ReactMarkdown>
-                        {item.answer}
-                      </ReactMarkdown>
+                      {expanded[item.sys.id] && (
+                        <ReactMarkdown>
+                          {item.answer}
+                        </ReactMarkdown>
+                      )}
                     </Box>
                   ))}
                 </div>
