@@ -52,10 +52,10 @@ const styles = theme => ({
 
 class RequestDetail extends React.Component {
   componentDidUpdate(prev) {
-    const { requestId, pinsInfo, getPinInfo } = this.props;
+    const { requestId, pinsInfo, dispatchGetPinInfo } = this.props;
     if (requestId === prev.requestId) return;
 
-    if (requestId && !pinsInfo[requestId]) getPinInfo(requestId);
+    if (requestId && !pinsInfo[requestId]) dispatchGetPinInfo(requestId);
   }
 
   renderDaysOpen = days => {
@@ -210,7 +210,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
+  dispatchGetPinInfo: srnumber => dispatch(getPinInfoRequest(srnumber)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(RequestDetail));
@@ -220,7 +220,7 @@ RequestDetail.propTypes = {
   pinsInfo: PropTypes.shape({}),
   requestTypes: PropTypes.arrayOf(PropTypes.shape({})),
   agencies: PropTypes.arrayOf(PropTypes.shape({})),
-  getPinInfo: PropTypes.func.isRequired,
+  dispatchGetPinInfo: PropTypes.func.isRequired,
 };
 
 RequestDetail.defaultProps = {
