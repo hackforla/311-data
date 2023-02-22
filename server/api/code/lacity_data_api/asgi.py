@@ -16,12 +16,10 @@ sample_rate_for_api_calls = {
 
 
 def traces_sampler(ctx):
-    if (
-        ctx["asgi_scope"].get("path")
-        and ctx["asgi_scope"].get("path") in sample_rate_for_api_calls
-    ):
-        return sample_rate_for_api_calls[ctx["asgi_scope"].get("path")]
-    return 1.0  # Trace all
+    # return sample rate based on path_name
+    # if sample rate is not defined trace all
+    path_name = ctx["asgi_scope"].get("path")
+    return sample_rate_for_api_calls.get(path_name, 1.0)
 
 
 if SENTRY_URL:
