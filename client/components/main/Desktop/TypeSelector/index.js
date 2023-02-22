@@ -34,12 +34,12 @@ const formStyles = makeStyles(() => ({
 
 const RequestTypeSelector = ({
   requestTypes,
-  updateTypesFilter,
+  dispatchUpdateTypesFilter,
   selectedTypes,
 }) => {
   const [leftCol, setLeftCol] = useState();
   const [rightCol, setRightCol] = useState();
-  const [isToggled, toggle] = useToggle(false);
+  const [isToggled, toggle] = useToggle(true);
 
   // FormControlLabel related classes.
   const formClasses = formStyles();
@@ -49,9 +49,10 @@ const RequestTypeSelector = ({
 
   useEffect(() => {
     if (requestTypes) {
-      const mid = Math.ceil(requestTypes.length / 2);
-      const left = requestTypes.slice(0, mid);
-      const right = requestTypes.slice(-mid);
+      const sortedRequestTypes = requestTypes.sort((a, b) => a.orderId - b.orderId);
+      const mid = Math.ceil(sortedRequestTypes.length / 2);
+      const left = sortedRequestTypes.slice(0, mid);
+      const right = sortedRequestTypes.slice(-mid);
       setLeftCol(left);
       setRightCol(right);
     }
@@ -65,7 +66,7 @@ const RequestTypeSelector = ({
   function updateAll(isSelected) {
     requestTypes.forEach(type => {
       if (selectedTypes[type.typeId] !== isSelected) {
-        updateTypesFilter(type.typeId);
+        dispatchUpdateTypesFilter(type.typeId);
       }
     });
   }
@@ -128,7 +129,7 @@ const RequestTypeSelector = ({
                           padding: '0 0 0 9px',
                         }}
                         checked={selectedTypes[type.typeId]}
-                        onChange={() => updateTypesFilter(type.typeId)}
+                        onChange={() => dispatchUpdateTypesFilter(type.typeId)}
                       />
                     )}
                     label={type.typeName}
@@ -155,7 +156,7 @@ const RequestTypeSelector = ({
                           padding: '0 2px 0 9px',
                         }}
                         checked={selectedTypes[type.typeId]}
-                        onChange={() => updateTypesFilter(type.typeId)}
+                        onChange={() => dispatchUpdateTypesFilter(type.typeId)}
                       />
                     )}
                     label={type.typeName}
@@ -176,7 +177,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateTypesFilter: type => dispatch(updateRequestTypes(type)),
+  dispatchUpdateTypesFilter: type => dispatch(updateRequestTypes(type)),
 });
 
 export default connect(
@@ -186,7 +187,7 @@ export default connect(
 
 RequestTypeSelector.propTypes = {
   requestTypes: PropTypes.arrayOf(PropTypes.shape({})),
-  updateTypesFilter: PropTypes.func.isRequired,
+  dispatchUpdateTypesFilter: PropTypes.func.isRequired,
   selectedTypes: PropTypes.shape({}).isRequired,
 };
 
