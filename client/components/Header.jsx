@@ -38,7 +38,10 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   menuPaper: {
-    backgroundColor: colors.textPrimaryDark,
+    backgroundColor: colors.textPrimaryLight,
+    '& a': {
+      textDecoration: 'none',
+    },
   },
   menuItem: {
     color: 'white',
