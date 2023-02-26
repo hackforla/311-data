@@ -44,6 +44,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   menuItem: {
+    ...theme.typography.body2,
     color: 'white',
     '&:hover': {
       textDecoration: 'underline',
