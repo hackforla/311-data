@@ -18,7 +18,7 @@ const query = `
   query {
     simplePageCollection(where: {slug: "privacy"}) {
       items {
-        title
+        slug
         body
       }
     }
