@@ -30,14 +30,14 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-   egress {
-     description = "allow outbound traffic to the world"
-     from_port   = 0
-     to_port     = 0
-     protocol    = "-1"
-     cidr_blocks = ["0.0.0.0/0"]
-     self        = true
-   }
+  egress {
+    description = "allow outbound traffic to the world"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    self        = true
+  }
 }
 
 resource "aws_lb_listener" "http" {
@@ -46,8 +46,8 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   default_action {
-    type              = "redirect"
-    target_group_arn  = aws_lb_target_group.default.arn
+    type             = "redirect"
+    target_group_arn = aws_lb_target_group.default.arn
 
     redirect {
       port        = "443"
@@ -71,21 +71,21 @@ resource "aws_lb_listener" "https" {
 }
 
 resource "aws_lb_target_group" "default" {
-  name_prefix           = substr(local.name, 0, 6)
-  port                  = var.container_port
-  protocol              = "HTTP"
-	deregistration_delay  = 100
-  target_type           = "ip"
-  vpc_id                = module.networked_rds.network_vpc_id
+  name_prefix          = substr(local.name, 0, 6)
+  port                 = var.container_port
+  protocol             = "HTTP"
+  deregistration_delay = 100
+  target_type          = "ip"
+  vpc_id               = module.networked_rds.network_vpc_id
 
   health_check {
-		enabled             = true
-		healthy_threshold   = 5
-		interval            = 30
-		path                = var.health_check_path
-		port                = "traffic-port"
-		protocol            = "HTTP"
-		timeout             = 10
-		unhealthy_threshold = 3
+    enabled             = true
+    healthy_threshold   = 5
+    interval            = 30
+    path                = var.health_check_path
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    timeout             = 10
+    unhealthy_threshold = 3
   }
 }
