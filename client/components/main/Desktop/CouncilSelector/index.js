@@ -35,7 +35,6 @@ const CouncilSelector = ({
   const classes = useStyles();
 
   useEffect(() => {
-    console.log('CouncilSelector: ', { councils });
     dispatchUpdateUnselectedCouncils(councils);
   }, [councils, dispatchUpdateUnselectedCouncils]);
 
