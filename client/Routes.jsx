@@ -21,7 +21,7 @@ import queryString from 'query-string';
 
 export default function Routes() {
   const { pathname, search } = useLocation();
-  const values = queryString.parse(search)
+  const values = queryString.parse(search);
 
   return (
     <>
