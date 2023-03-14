@@ -15,6 +15,8 @@ import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/main/Desktop/TypeSelector';
 import StatusSelector from '@components/main/Desktop/StatusSelector';
 import CouncilSelector from '@components/main/Desktop/CouncilSelector';
+import ShareableLinkCreator from '@components/main/Desktop/ShareableLinkCreator';
+
 // import GearButton from '@components/common/GearButton';
 // import clsx from 'clsx';
 
@@ -113,6 +115,9 @@ const FilterMenu = ({ resetMap }) => {
           </div>
           <div className={classes.selectorWrapper}>
             <StatusSelector />
+          </div>
+          <div className={classes.selectorWrapper}>
+            <ShareableLinkCreator />
           </div>
         </CardContent>
       </Collapse>

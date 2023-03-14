@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { getDataRequest, getDataRequestSuccess, updateDateRanges } from '@reducers/data';
+import { updateStartDate, updateEndDate, updateNcId, updateRequestTypes} from '@reducers/filters'
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 import { INTERNAL_DATE_SPEC } from '../common/CONSTANTS';
@@ -41,9 +42,14 @@ class MapContainer extends React.Component {
     // converted and stored in the Redux store.
     this.rawRequests = [];
     this.isSubscribed = null;
+
+    this.initialState = props.initialState
+    console.log("Map Container")
+    console.log(this.initialState)
   }
 
-  componentDidMount() {
+  componentDidMount(props) {
+    this.processSearchParams()
     this.isSubscribed = true;
     this.setData();
   }
@@ -65,6 +71,26 @@ class MapContainer extends React.Component {
     this.isSubscribed = false;
   }
   
+
+  processSearchParams = () => {
+    // Dispatch to edit Redux store with url search params
+    const { dispatchUpdateStartDate, dispatchUpdateEndDate, updateTypesFilter } = this.props;
+
+    // Filter requests on time
+    const dateFormat = 'YYYY-MM-DD';
+    const formattedStart = moment(this.initialState.startDate).format(dateFormat);
+    const formattedEnd = moment(this.initialState.endDate).format(dateFormat);
+    dispatchUpdateStartDate(formattedStart);
+    dispatchUpdateEndDate(formattedEnd);
+    
+    for(let request_id = 1; request_id < 13; request_id++){
+      if (this.initialState[`rtId${request_id}`] == 'false'){
+        updateTypesFilter(request_id);
+      }
+    }
+
+  }
+
   /**
    * Returns the non-overlapping date ranges of A before and after B.
    * @param {string} startA The start date of range A in INTERNAL_DATE_SPEC format.
@@ -301,6 +327,7 @@ class MapContainer extends React.Component {
           updatePosition={updatePosition}
           exportMap={exportMap}
           selectedTypes={selectedTypes}
+          initialState={this.initialState}
         />
         <CookieNotice />
         {isMapLoading && <img style={{ width:window.innerWidth, height: 16, position:'absolute' }} src={gif}/>}
@@ -328,6 +355,10 @@ const mapDispatchToProps = dispatch => ({
   getDataRedux: () => dispatch(getDataRequest()),
   getDataSuccess: data => dispatch(getDataRequestSuccess(data)),
   updateDateRangesWithRequests: dateRanges => dispatch(updateDateRanges(dateRanges)),
+  dispatchUpdateStartDate: startDate => dispatch(updateStartDate(startDate)),
+  dispatchUpdateEndDate: endDate => dispatch(updateEndDate(endDate)),
+  dispatchUpdateNcId: id => dispatch(updateNcId(id)),
+  updateTypesFilter: type => dispatch(updateRequestTypes(type))
 });
 
 MapContainer.propTypes = {};

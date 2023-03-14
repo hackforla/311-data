@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -45,6 +45,10 @@ import MapSearch from './controls/MapSearch';
 // import MapMeta from './controls/MapMeta';
 
 import RequestDetail from './RequestDetail';
+import {
+  call,
+} from 'redux-saga/effects';
+import axios from 'axios';
 
 const styles = theme => ({
   root: {
@@ -125,6 +129,11 @@ class Map extends React.Component {
     this.requestDetail = null;
     this.popup = null;
     this.isSubscribed = null;
+    this.initialState = props.initialState
+    this.hasSetInitialNCView = false
+
+    console.log("Map Componenet")
+    console.log(this.initialState)
   }
 
   componentDidMount() {
@@ -153,6 +162,7 @@ class Map extends React.Component {
       }
     });
     this.map = map;
+
   }
 
   componentWillUnmount() {
@@ -228,6 +238,24 @@ class Map extends React.Component {
       const nc = councils.find(({ councilId }) => councilId === ncId);
       this.setState({ selectedNc: nc });
       return this.ncLayer.selectRegion(ncId);
+    }
+
+
+    const { dispatchUpdateNcId,dispatchUpdateSelectedCouncils,dispatchUpdateUnselectedCouncils, councils, ncBoundaries } = this.props;
+
+    if(this.initialState.councilId && councils?.length > 0 && !(this.hasSetInitialNCView) && ncBoundaries){
+      try{
+        const selectedCouncilId = Number(this.initialState.councilId);
+        const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
+        const newSelected = [newSelectedCouncil];
+        dispatchUpdateSelectedCouncils(newSelected);
+        dispatchUpdateUnselectedCouncils(councils);
+        dispatchUpdateNcId(selectedCouncilId);
+        this.hasSetInitialNCView = true
+      } catch (err) {
+        console.log("could not set ncid")
+        this.hasSetInitialNCView = false
+      }
     }
   }
 

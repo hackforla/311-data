@@ -14,13 +14,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Desktop = () => {
+const Desktop = ({initialState}) => {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <PersistentDrawerLeft />
-      <MapContainer />
+      <MapContainer
+      initialState={initialState} 
+      />
     </div>
   );
 };

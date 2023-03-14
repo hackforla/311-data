@@ -228,10 +228,12 @@ class RequestsLayer extends React.Component {
   };
 
   setFilters = (selectedTypes, requestStatus, startDate, endDate) => {
-    this.map.setFilter('request-circles',
+    if (this.map){
+      this.map.setFilter('request-circles',
       this.getFilterSpec(selectedTypes, requestStatus, startDate, endDate));
     // Currently, we do not support heatmap. If we did, we'd want to update
     // its filter here as well.
+    }
   };
 
   setRequests = requests => {
