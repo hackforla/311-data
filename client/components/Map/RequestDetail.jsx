@@ -103,8 +103,7 @@ class RequestDetail extends React.Component {
     } = pinsInfo[requestId];
 
     // regex fix to replace "/" in typeName
-    const replaceString = ' ';
-    const replacedChar = typeName.split('/').join(replaceString);
+    const formattedTypeName = typeName.split('/').join(' ');
 
     const { color } = requestTypes.find(({ typeId }) => typeId === requestTypeId);
     const { website } = agencies.find(({ agencyId }) => agencyId === aId);
@@ -119,7 +118,7 @@ class RequestDetail extends React.Component {
           alignItems="center"
         >
           <Grid className={classes.requestType} item>
-            {replacedChar}
+            {formattedTypeName}
           </Grid>
           <Grid item>
             <FiberManualRecordIcon
