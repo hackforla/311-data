@@ -26,7 +26,7 @@ const styles = theme => ({
     width: '100%',
   },
   requestType: {
-    ...theme.typography.h4,
+    ...theme.typography.h5,
     marginRight: 5,
   },
   icon: {
@@ -102,6 +102,9 @@ class RequestDetail extends React.Component {
       address,
     } = pinsInfo[requestId];
 
+    // regex fix to replace "/" in typeName
+    const formattedTypeName = typeName.split('/').join(' ');
+
     const { color } = requestTypes.find(({ typeId }) => typeId === requestTypeId);
     const { website } = agencies.find(({ agencyId }) => agencyId === aId);
     const daysOpen = moment().diff(moment(createdDate), 'days');
@@ -115,7 +118,7 @@ class RequestDetail extends React.Component {
           alignItems="center"
         >
           <Grid className={classes.requestType} item>
-            {typeName}
+            {formattedTypeName}
           </Grid>
           <Grid item>
             <FiberManualRecordIcon
