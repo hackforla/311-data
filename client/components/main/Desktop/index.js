@@ -14,16 +14,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Desktop = ({initialState}) => {
+const Desktop = ({ initialState }) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <PersistentDrawerLeft />
       <MapContainer
-      initialState={initialState} 
+        initialState={initialState}
       />
     </div>
   );
 };
 
 export default Desktop;
+
+/* eslint-disable react/prop-types */ // TODO: upgrade to latest eslint tooling

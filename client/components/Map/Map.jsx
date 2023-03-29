@@ -247,6 +247,9 @@ class Map extends React.Component {
       try{
         const selectedCouncilId = Number(this.initialState.councilId);
         const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
+        if (!newSelectedCouncil){
+          throw new Error('Council Does not exist from search query')
+        }
         const newSelected = [newSelectedCouncil];
         dispatchUpdateSelectedCouncils(newSelected);
         dispatchUpdateUnselectedCouncils(councils);

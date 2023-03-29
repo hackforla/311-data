@@ -78,11 +78,16 @@ class MapContainer extends React.Component {
 
     // Filter requests on time
     const dateFormat = 'YYYY-MM-DD';
-    const formattedStart = moment(this.initialState.startDate).format(dateFormat);
-    const formattedEnd = moment(this.initialState.endDate).format(dateFormat);
-    dispatchUpdateStartDate(formattedStart);
-    dispatchUpdateEndDate(formattedEnd);
-    
+    // TODO: Check if endDate > startDate
+    if (moment(this.initialState.startDate, 'YYYY-MM-DD', true).isValid() && moment(this.initialState.endDate, 'YYYY-MM-DD',true).isValid()){
+      const formattedStart = moment(this.initialState.startDate).format(dateFormat);
+      const formattedEnd = moment(this.initialState.endDate).format(dateFormat);
+      if (formattedStart <= formattedEnd){
+        dispatchUpdateStartDate(formattedStart);
+        dispatchUpdateEndDate(formattedEnd);
+      }
+    }
+
     for(let request_id = 1; request_id < 13; request_id++){
       if (this.initialState[`rtId${request_id}`] == 'false'){
         updateTypesFilter(request_id);
