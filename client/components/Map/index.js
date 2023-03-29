@@ -44,8 +44,6 @@ class MapContainer extends React.Component {
     this.isSubscribed = null;
 
     this.initialState = props.initialState
-    console.log("Map Container")
-    console.log(this.initialState)
   }
 
   componentDidMount(props) {

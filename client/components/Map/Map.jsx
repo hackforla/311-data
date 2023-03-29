@@ -132,8 +132,6 @@ class Map extends React.Component {
     this.initialState = props.initialState
     this.hasSetInitialNCView = false
 
-    console.log("Map Componenet")
-    console.log(this.initialState)
   }
 
   componentDidMount() {
