@@ -125,6 +125,9 @@ class Map extends React.Component {
     this.requestDetail = null;
     this.popup = null;
     this.isSubscribed = null;
+    this.initialState = props.initialState
+    this.hasSetInitialNCView = false
+
   }
 
   componentDidMount() {
@@ -153,6 +156,7 @@ class Map extends React.Component {
       }
     });
     this.map = map;
+
   }
 
   componentWillUnmount() {
@@ -228,6 +232,27 @@ class Map extends React.Component {
       const nc = councils.find(({ councilId }) => councilId === ncId);
       this.setState({ selectedNc: nc });
       return this.ncLayer.selectRegion(ncId);
+    }
+
+
+    const { dispatchUpdateNcId,dispatchUpdateSelectedCouncils,dispatchUpdateUnselectedCouncils, councils, ncBoundaries } = this.props;
+
+    if(this.initialState.councilId && councils?.length > 0 && !(this.hasSetInitialNCView) && ncBoundaries){
+      try{
+        const selectedCouncilId = Number(this.initialState.councilId);
+        const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
+        if (!newSelectedCouncil){
+          throw new Error('Council Does not exist from search query')
+        }
+        const newSelected = [newSelectedCouncil];
+        dispatchUpdateSelectedCouncils(newSelected);
+        dispatchUpdateUnselectedCouncils(councils);
+        dispatchUpdateNcId(selectedCouncilId);
+        this.hasSetInitialNCView = true
+      } catch (err) {
+        console.log("could not set ncid")
+        this.hasSetInitialNCView = false
+      }
     }
   }
 

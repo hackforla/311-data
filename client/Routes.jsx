@@ -17,9 +17,11 @@ import About from '@components/main/About';
 import Research from '@components/main/Research';
 import Contact from '@components/contact/Contact';
 import ContentBottom from '@components/common/ContentBottom';
+import queryString from 'query-string';
 
 export default function Routes() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+  const values = queryString.parse(search);
 
   return (
     <>
@@ -27,7 +29,9 @@ export default function Routes() {
       <ThemeProvider theme={darkTheme}>
         <Paper elevation={0}>
           <Box visibility={pathname !== '/map' ? 'hidden' : 'visible'}>
-            <Desktop />
+            <Desktop
+              initialState={values}
+            />
           </Box>
         </Paper>
       </ThemeProvider>
@@ -43,7 +47,7 @@ export default function Routes() {
             <Route path="/about" component={About} />
             <Route path="/contact" component={Contact} />
             <Route path="/">
-              <Redirect to="map" />
+              <Redirect to={`map${search}`} />
             </Route>
           </Switch>
           <ContentBottom />

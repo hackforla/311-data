@@ -77,20 +77,36 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
+  const url = new URL(window.location.href);
+  const newSearchParams = url.searchParams;
+
   switch (action.type) {
     case types.UPDATE_START_DATE: {
+      newSearchParams.set('startDate', action.payload);
+      url.search = newSearchParams.toString();
+      window.history.replaceState(null, 'Change URL', url);
       return {
         ...state,
         startDate: action.payload,
       };
     }
     case types.UPDATE_END_DATE: {
+      newSearchParams.set('endDate', action.payload);
+      url.search = newSearchParams.toString();
+      window.history.replaceState(null, 'Change URL', url);
       return {
         ...state,
         endDate: action.payload,
       };
     }
     case types.UPDATE_REQUEST_TYPES:
+      if (!state.requestTypes[action.payload]) {
+        newSearchParams.delete(`rtId${action.payload}`);
+      } else {
+        newSearchParams.set(`rtId${action.payload}`, 'false');
+      }
+      url.search = newSearchParams.toString();
+      window.history.replaceState(null, 'Change URL', url);
       return {
         ...state,
         requestTypes: {
@@ -99,6 +115,13 @@ export default (state = initialState, action) => {
         },
       };
     case types.UPDATE_NEIGHBORHOOD_COUNCIL:
+      if (action.payload === state.councilId) {
+        newSearchParams.delete('councilId');
+      } else {
+        newSearchParams.set('councilId', action.payload);
+      }
+      url.search = newSearchParams.toString();
+      window.history.replaceState(null, 'Change URL', url);
       return {
         ...state,
         councilId: action.payload,
@@ -116,6 +139,10 @@ export default (state = initialState, action) => {
     case types.UPDATE_REQUEST_STATUS:
       switch (action.payload) {
         case 'all':
+          newSearchParams.set('requestStatusOpen', true);
+          newSearchParams.set('requestStatusClosed', true);
+          url.search = newSearchParams.toString();
+          window.history.replaceState(null, 'Change URL', url);
           return {
             ...state,
             requestStatus: {
@@ -125,6 +152,10 @@ export default (state = initialState, action) => {
             },
           };
         case 'open':
+          newSearchParams.set('requestStatusOpen', true);
+          newSearchParams.set('requestStatusClosed', false);
+          url.search = newSearchParams.toString();
+          window.history.replaceState(null, 'Change URL', url);
           return {
             ...state,
             requestStatus: {
@@ -134,6 +165,10 @@ export default (state = initialState, action) => {
             },
           };
         case 'closed':
+          newSearchParams.set('requestStatusOpen', false);
+          newSearchParams.set('requestStatusClosed', true);
+          url.search = newSearchParams.toString();
+          window.history.replaceState(null, 'Change URL', url);
           return {
             ...state,
             requestStatus: {
