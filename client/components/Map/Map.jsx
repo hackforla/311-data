@@ -45,10 +45,6 @@ import MapSearch from './controls/MapSearch';
 // import MapMeta from './controls/MapMeta';
 
 import RequestDetail from './RequestDetail';
-import {
-  call,
-} from 'redux-saga/effects';
-import axios from 'axios';
 
 const styles = theme => ({
   root: {

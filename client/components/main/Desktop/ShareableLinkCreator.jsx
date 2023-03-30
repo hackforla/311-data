@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { updateRequestStatus } from '@reducers/filters';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 
@@ -37,13 +36,8 @@ const mapStateToProps = state => ({
   requestStatus: state.filters,
 });
 
-const mapDispatchToProps = dispatch => ({
-  updateStatusFilter: status => dispatch(updateRequestStatus(status)),
-});
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(ShareableLinkCreator);
 
 ShareableLinkCreator.propTypes = {
@@ -55,6 +49,19 @@ ShareableLinkCreator.propTypes = {
     startDate: PropTypes.string,
     endDate: PropTypes.string,
     councilId: PropTypes.number,
-    requestTypes: PropTypes.arrayOf.bool,
+    requestTypes: PropTypes.shape({
+      1: PropTypes.bool,
+      2: PropTypes.bool,
+      3: PropTypes.bool,
+      4: PropTypes.bool,
+      5: PropTypes.bool,
+      6: PropTypes.bool,
+      7: PropTypes.bool,
+      8: PropTypes.bool,
+      9: PropTypes.bool,
+      10: PropTypes.bool,
+      11: PropTypes.bool,
+      12: PropTypes.bool,
+    }),
   }).isRequired,
 };

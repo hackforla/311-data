@@ -72,7 +72,7 @@ class MapContainer extends React.Component {
 
   processSearchParams = () => {
     // Dispatch to edit Redux store with url search params
-    const { dispatchUpdateStartDate, dispatchUpdateEndDate, updateTypesFilter } = this.props;
+    const { dispatchUpdateStartDate, dispatchUpdateEndDate, dispatchUpdateTypesFilter } = this.props;
 
     // Filter requests on time
     const dateFormat = 'YYYY-MM-DD';
@@ -88,7 +88,7 @@ class MapContainer extends React.Component {
 
     for(let request_id = 1; request_id < 13; request_id++){
       if (this.initialState[`rtId${request_id}`] == 'false'){
-        updateTypesFilter(request_id);
+        dispatchUpdateTypesFilter(request_id);
       }
     }
 
@@ -361,7 +361,7 @@ const mapDispatchToProps = dispatch => ({
   dispatchUpdateStartDate: startDate => dispatch(updateStartDate(startDate)),
   dispatchUpdateEndDate: endDate => dispatch(updateEndDate(endDate)),
   dispatchUpdateNcId: id => dispatch(updateNcId(id)),
-  updateTypesFilter: type => dispatch(updateRequestTypes(type))
+  dispatchUpdateTypesFilter: type => dispatch(updateRequestTypes(type))
 });
 
 MapContainer.propTypes = {};
