@@ -54,7 +54,7 @@ ShareableLinkCreator.propTypes = {
     }).isRequired,
     startDate: PropTypes.string,
     endDate: PropTypes.string,
-    councilId: PropTypes.string,
+    councilId: PropTypes.number,
     requestTypes: PropTypes.arrayOf.bool,
   }).isRequired,
 };
