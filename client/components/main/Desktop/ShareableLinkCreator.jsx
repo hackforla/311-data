@@ -52,9 +52,9 @@ ShareableLinkCreator.propTypes = {
       open: PropTypes.bool.isRequired,
       closed: PropTypes.bool.isRequired,
     }).isRequired,
-    startDate: PropTypes.string.isRequired,
-    endDate: PropTypes.string.isRequired,
-    councilId: PropTypes.string.isRequired,
+    startDate: PropTypes.string,
+    endDate: PropTypes.string,
+    councilId: PropTypes.string,
     requestTypes: PropTypes.arrayOf.bool,
   }).isRequired,
 };
