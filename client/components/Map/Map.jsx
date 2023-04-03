@@ -344,6 +344,22 @@ class Map extends React.Component {
     });
   };
 
+  resetBoundaries = () => {
+    const { 
+      dispatchUpdateNcId, 
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+      councils } = this.props;
+
+    // Reset the selected NcId back to null.
+    dispatchUpdateNcId(null);
+
+    // Reset councilSelector.
+    dispatchUpdateSelectedCouncils([])
+    dispatchUpdateUnselectedCouncils(councils)
+    console.log("resetBoundaries() called")
+  }
+
   onClick = e => {
 
     const hoverables = [
@@ -372,13 +388,7 @@ class Map extends React.Component {
         && (feature.properties.council_id && this.props.selectedNcId !== feature.properties.council_id)
       ){
         // Since click is for another district, zoom out and reset map.
-        
-        // Reset the selected NcId back to null.
-        dispatchUpdateNcId(null);
-
-        // Reset councilSelector.
-        dispatchUpdateSelectedCouncils([])
-        dispatchUpdateUnselectedCouncils(councils)
+        this.resetBoundaries()
 
         // Reset Map.
         this.reset()
@@ -418,6 +428,13 @@ class Map extends React.Component {
   };
 
   onGeocoderResult = ({ result }) => {
+    // Reset Boundaries input
+    this.resetBoundaries()
+    
+    // Reset Map & Zoom out
+    this.reset();
+
+
     const { dispatchGetNcByLngLat, dispatchUpdateNcId } = this.props;
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
