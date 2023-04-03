@@ -31,6 +31,7 @@
     "html-webpack-plugin": "^3.2.0",
     "html2canvas": "^1.0.0-rc.5",
     "jest": "^24.9.0",
+    "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^1.12.0",
     "mixpanel-browser": "^2.36.0",
     "moment": "^2.29.4",

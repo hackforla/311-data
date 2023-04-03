@@ -6,9 +6,11 @@ import {
   updateSelectedCouncils,
   updateUnselectedCouncils,
 } from '@reducers/filters';
+import debounce from 'lodash.debounce';
 import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
 import SelectorBox from '@components/common/SelectorBox';
+import settings from '@settings';
 import SelectedCouncils from './SelectedCouncils';
 import CouncilsList from './CouncilsList';
 
@@ -68,7 +70,10 @@ const CouncilSelector = ({
   // Selecting a neighborhood district will triger the handleSelect event
   // Allow single boundary to be selected.
   const handleSelect = e => {
-    const selectedCouncilId = Number(e.currentTarget.value);
+    console.log('handleSelect called e:', e);
+    console.log('handleSelect e.target.value:', e.target.value);
+
+    const selectedCouncilId = Number(e.target.value);
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
       const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
       const newSelected = [newSelectedCouncil];
@@ -77,6 +82,15 @@ const CouncilSelector = ({
       updateCouncilsFilter(selectedCouncilId);
     }
   };
+
+  const debouncedHandleSelect = debounce(
+    handleSelect,
+    settings.map.debounce.duration,
+    {
+      leading: true,
+      trailing: false,
+    },
+  );
 
   return (
     <>
@@ -94,7 +108,10 @@ const CouncilSelector = ({
               && (
                 <CouncilsList
                   items={unselected}
-                  onClick={handleSelect}
+                  // onClick={handleSelect}
+                  // onClick={debounce(handleSelect, settings.map.debounce.duration)}
+                  onClick={debouncedHandleSelect}
+                  // onClick={e => debouncedHandleSelect(e)}
                   // onClick={handleMultiSelect}
                 />
               )
