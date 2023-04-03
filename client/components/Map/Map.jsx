@@ -427,13 +427,14 @@ class Map extends React.Component {
     this.reset();
   };
 
+  // Address Search event handler
+  // An Address Search will triger the onGeocoderResult event
   onGeocoderResult = ({ result }) => {
     // Reset Boundaries input
     this.resetBoundaries()
     
     // Reset Map & Zoom out
     this.reset();
-
 
     const { dispatchGetNcByLngLat, dispatchUpdateNcId } = this.props;
     if (result.properties.type === GEO_FILTER_TYPES.nc) {

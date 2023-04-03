@@ -64,8 +64,9 @@ const CouncilSelector = ({
   //   }
   // };
 
+  // Boundaries selection event handler
+  // Selecting a neighborhood district will triger the handleSelect event
   // Allow single boundary to be selected.
-  //
   const handleSelect = e => {
     const selectedCouncilId = Number(e.currentTarget.value);
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
