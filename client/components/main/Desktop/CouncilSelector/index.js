@@ -102,11 +102,7 @@ const CouncilSelector = ({
               && (
                 <CouncilsList
                   items={unselected}
-                  // onClick={handleSelect}
-                  // onClick={debounce(handleSelect, settings.map.debounce.duration)}
                   onClick={debouncedHandleSelect}
-                  // onClick={e => debouncedHandleSelect(e)}
-                  // onClick={handleMultiSelect}
                 />
               )
           }
