@@ -83,7 +83,9 @@ const CouncilSelector = ({
     }
   };
 
+  // Debounced event handlers
   const debouncedHandleSelect = debounce(handleSelect);
+  const debouncedHandleDelete = debounce(handleDelete);
 
   return (
     <>
@@ -92,7 +94,7 @@ const CouncilSelector = ({
         <SelectorBox.Display>
           <SelectedCouncils
             items={selected}
-            onDelete={handleDelete}
+            onDelete={debouncedHandleDelete}
           />
         </SelectorBox.Display>
         <SelectorBox.Collapse>
