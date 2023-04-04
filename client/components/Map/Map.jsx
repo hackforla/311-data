@@ -46,6 +46,8 @@ import MapSearch from './controls/MapSearch';
 
 import RequestDetail from './RequestDetail';
 
+import { debounce } from '@utils';
+
 const styles = theme => ({
   root: {
     position: 'absolute',
@@ -148,7 +150,8 @@ class Map extends React.Component {
       if (this.isSubscribed) {
         this.initLayers(true);
 
-        map.on('click', this.onClick);
+        // map.on('click', this.onClick);
+        map.on('click', this.debouncedOnClick);
 
         map.once('idle', e => {
           this.setState({ mapReady: true });
@@ -357,7 +360,6 @@ class Map extends React.Component {
     // Reset councilSelector.
     dispatchUpdateSelectedCouncils([])
     dispatchUpdateUnselectedCouncils(councils)
-    console.log("resetBoundaries() called")
   }
 
   onClick = e => {
@@ -421,6 +423,8 @@ class Map extends React.Component {
       }
     }
   };
+
+  debouncedOnClick = debounce(this.onClick)
 
   onChangeSearchTab = tab => {
     this.setState({ geoFilterType: tab });
