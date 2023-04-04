@@ -70,9 +70,6 @@ const CouncilSelector = ({
   // Selecting a neighborhood district will triger the handleSelect event
   // Allow single boundary to be selected.
   const handleSelect = e => {
-    console.log('handleSelect called e:', e);
-    console.log('handleSelect e.target.value:', e.target.value);
-
     const selectedCouncilId = Number(e.target.value);
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
       const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
