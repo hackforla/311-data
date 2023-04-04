@@ -86,10 +86,7 @@ const CouncilSelector = ({
   const debouncedHandleSelect = debounce(
     handleSelect,
     settings.map.debounce.duration,
-    {
-      leading: true,
-      trailing: false,
-    },
+    settings.map.debounce.options,
   );
 
   return (
