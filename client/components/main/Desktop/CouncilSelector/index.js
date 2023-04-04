@@ -6,11 +6,10 @@ import {
   updateSelectedCouncils,
   updateUnselectedCouncils,
 } from '@reducers/filters';
-import debounce from 'lodash.debounce';
+import { debounce } from '@utils';
 import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
 import SelectorBox from '@components/common/SelectorBox';
-import settings from '@settings';
 import SelectedCouncils from './SelectedCouncils';
 import CouncilsList from './CouncilsList';
 
@@ -80,11 +79,7 @@ const CouncilSelector = ({
     }
   };
 
-  const debouncedHandleSelect = debounce(
-    handleSelect,
-    settings.map.debounce.duration,
-    settings.map.debounce.options,
-  );
+  const debouncedHandleSelect = debounce(handleSelect);
 
   return (
     <>

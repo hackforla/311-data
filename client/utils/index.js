@@ -1,3 +1,6 @@
+import _debounce from 'lodash.debounce';
+import settings from '@settings';
+
 export default {};
 
 /*
@@ -32,3 +35,10 @@ export function transformCounts(counts = {}) {
 
   return altCounts;
 }
+
+// lodash debounce wrapper called with our settings values
+export const debounce = func => _debounce(
+  func,
+  settings.map.debounce.duration,
+  settings.map.debounce.options,
+);
