@@ -362,6 +362,11 @@ class Map extends React.Component {
     dispatchUpdateUnselectedCouncils(councils)
   }
 
+  resetAddressSearch = () => {
+    const addressSearchInput = document.querySelector('#geocoder input')
+    addressSearchInput.value = ""
+  }
+
   onClick = e => {
 
     const hoverables = [
@@ -629,7 +634,10 @@ class Map extends React.Component {
                 onReset={this.reset}
                 canReset={!!filterGeo && canReset}
               />
-              <FilterMenu resetMap={this.reset} />
+              <FilterMenu 
+                resetMap={this.reset} 
+                resetAddressSearch={this.resetAddressSearch}
+              />
               {/* {
                 (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
               } */}

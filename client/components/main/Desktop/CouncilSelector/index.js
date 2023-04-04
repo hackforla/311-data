@@ -32,6 +32,7 @@ const CouncilSelector = ({
   dispatchUpdateSelectedCouncils,
   dispatchUpdateUnselectedCouncils,
   resetMap,
+  resetAddressSearch,
 }) => {
   const classes = useStyles();
 
@@ -71,6 +72,9 @@ const CouncilSelector = ({
   const handleSelect = e => {
     const selectedCouncilId = Number(e.target.value);
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
+      // Clear out Address Search input
+      resetAddressSearch();
+
       const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
       const newSelected = [newSelectedCouncil];
       dispatchUpdateSelectedCouncils(newSelected);
@@ -125,7 +129,11 @@ export default connect(
 )(CouncilSelector);
 
 CouncilSelector.defaultProps = {
+  councils: [],
+  selected: [],
+  unselected: [],
   resetMap: () => {},
+  resetAddressSearch: () => {},
 };
 
 CouncilSelector.propTypes = {
@@ -136,10 +144,5 @@ CouncilSelector.propTypes = {
   dispatchUpdateSelectedCouncils: PropTypes.func.isRequired,
   dispatchUpdateUnselectedCouncils: PropTypes.func.isRequired,
   resetMap: PropTypes.func,
-};
-
-CouncilSelector.defaultProps = {
-  councils: [],
-  selected: [],
-  unselected: [],
+  resetAddressSearch: PropTypes.func,
 };
