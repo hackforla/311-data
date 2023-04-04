@@ -28,7 +28,7 @@ const CouncilSelector = ({
   councils,
   selected,
   unselected,
-  updateCouncilsFilter,
+  dispatchUpdateCouncilsFilter,
   dispatchUpdateSelectedCouncils,
   dispatchUpdateUnselectedCouncils,
   resetMap,
@@ -46,7 +46,7 @@ const CouncilSelector = ({
     const newUnselected = not(councils, newSelected, 'councilId');
     dispatchUpdateSelectedCouncils(newSelected);
     dispatchUpdateUnselectedCouncils(newUnselected);
-    updateCouncilsFilter(deletedCouncilId);
+    dispatchUpdateCouncilsFilter(deletedCouncilId);
     resetMap();
   };
 
@@ -62,7 +62,7 @@ const CouncilSelector = ({
   //     const newUnselected = not(councils, newSelected, 'councilId');
   //     setSelected(newSelected);
   //     setUnselected(newUnselected);
-  //     updateCouncilsFilter(selectedCouncilId);
+  //     dispatchUpdateCouncilsFilter(selectedCouncilId);
   //   }
   // };
 
@@ -79,7 +79,7 @@ const CouncilSelector = ({
       const newSelected = [newSelectedCouncil];
       dispatchUpdateSelectedCouncils(newSelected);
       dispatchUpdateUnselectedCouncils(councils);
-      updateCouncilsFilter(selectedCouncilId);
+      dispatchUpdateCouncilsFilter(selectedCouncilId);
     }
   };
 
@@ -118,7 +118,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateCouncilsFilter: councilId => dispatch(updateNcId(councilId)),
+  dispatchUpdateCouncilsFilter: councilId => dispatch(updateNcId(councilId)),
   dispatchUpdateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
   dispatchUpdateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
 });
@@ -140,7 +140,7 @@ CouncilSelector.propTypes = {
   councils: PropTypes.arrayOf(PropTypes.shape({})),
   selected: PropTypes.arrayOf(PropTypes.shape({})),
   unselected: PropTypes.arrayOf(PropTypes.shape({})),
-  updateCouncilsFilter: PropTypes.func.isRequired,
+  dispatchUpdateCouncilsFilter: PropTypes.func.isRequired,
   dispatchUpdateSelectedCouncils: PropTypes.func.isRequired,
   dispatchUpdateUnselectedCouncils: PropTypes.func.isRequired,
   resetMap: PropTypes.func,
