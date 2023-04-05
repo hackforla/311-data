@@ -1,6 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'proptypes';
-
+import { connect } from 'react-redux';
+import { toggleBoundaries, showBoundaries, closeBoundaries } from '@reducers/ui';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import IconButton from '@material-ui/core/IconButton';
@@ -46,24 +47,39 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Context = React.createContext({ expanded: false });
+// const Context = React.createContext({ expanded: false });
+const Context = React.createContext({ isOpen: false });
 
 const SelectorBox = ({
   onToggle,
   children,
   expanded: initial,
   arrowHidden,
+  isOpen,
+  dispatchToggleBoundaries,
+  dispatchShowBoundaries,
+  dispatchCloseBoundaries,
 }) => {
-  const [expanded, setExpanded] = useState(initial);
+  // const [expanded, setExpanded] = useState(initial);
   const classes = useStyles();
 
   useEffect(() => {
-    setExpanded(initial);
-  }, [initial]);
+    // setExpanded(initial);
+    if (!!initial === false) {
+      dispatchCloseBoundaries();
+    } else {
+      dispatchShowBoundaries();
+    }
+  }, [dispatchCloseBoundaries, dispatchShowBoundaries, initial]);
+
+  // const toggleCollapse = () => {
+  //   if (onToggle) onToggle();
+  //   setExpanded(prevState => !prevState);
+  // };
 
   const toggleCollapse = () => {
     if (onToggle) onToggle();
-    setExpanded(prevState => !prevState);
+    dispatchToggleBoundaries();
   };
 
   const renderDisplay = () => {
@@ -87,7 +103,8 @@ const SelectorBox = ({
               disableFocusRipple
               disableRipple
             >
-              {expanded ? (
+              {/* {expanded ? ( */}
+              {isOpen ? (
                 <ArrowDropUpIcon className={classes.button} />
               ) : (
                 <ArrowDropDownIcon className={classes.button} />
@@ -105,7 +122,7 @@ const SelectorBox = ({
   };
 
   return (
-    <Context.Provider value={{ expanded, classes }}>
+    <Context.Provider value={{ isOpen, classes }}>
       <Card className={classes.card}>
         {renderDisplay()}
         {renderCollapse()}
@@ -116,7 +133,7 @@ const SelectorBox = ({
 
 SelectorBox.propTypes = {
   onToggle: PropTypes.func,
-  expanded: PropTypes.bool,
+  // expanded: PropTypes.bool,
   arrowHidden: PropTypes.bool,
   children: PropTypes.node,
 };
@@ -124,7 +141,7 @@ SelectorBox.propTypes = {
 SelectorBox.defaultProps = {
   onToggle: undefined,
   arrowHidden: false,
-  expanded: false,
+  // expanded: false,
   children: null,
 };
 
@@ -142,10 +159,10 @@ Display.defaultProps = {
 };
 
 function Collapse({ children }) {
-  const { expanded, classes } = useContext(Context);
+  const { isOpen, classes } = useContext(Context);
 
   return (
-    <CollapseMUI in={expanded}>
+    <CollapseMUI in={isOpen}>
       <Box className={classes.content}>{children}</Box>
     </CollapseMUI>
   );
@@ -163,4 +180,16 @@ Collapse.defaultProps = {
 SelectorBox.Display = Display;
 SelectorBox.Collapse = Collapse;
 
-export default SelectorBox;
+const mapStateToProps = state => ({
+  isOpen: state.ui.boundaries.isOpen,
+});
+
+const mapDispatchToProps = dispatch => ({
+  dispatchToggleBoundaries: () => dispatch(toggleBoundaries()),
+  dispatchShowBoundaries: () => dispatch(showBoundaries()),
+  dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SelectorBox);
+
+// export default SelectorBox;
