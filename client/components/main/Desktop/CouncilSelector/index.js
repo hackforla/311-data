@@ -12,7 +12,7 @@ import {
 } from '@utils';
 import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
-import SelectorBox from '@components/common/SelectorBox';
+import BoundariesSection from '../BoundariesSection';
 import SelectedCouncils from './SelectedCouncils';
 import CouncilsList from './CouncilsList';
 
@@ -53,22 +53,6 @@ const CouncilSelector = ({
     resetMap();
   };
 
-  // Allow multiple boundaries to be selected (original).
-  //
-  // const handleMultiSelect = e => {
-  //   const selectedCouncilId = Number(e.currentTarget.value);
-  //   if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
-  //     const newSelectedCouncil = councils.find(({ councilId }) => {
-  //       return councilId === selectedCouncilId
-  //     });
-  //     const newSelected = [...selected, newSelectedCouncil];
-  //     const newUnselected = not(councils, newSelected, 'councilId');
-  //     setSelected(newSelected);
-  //     setUnselected(newUnselected);
-  //     dispatchUpdateCouncilsFilter(selectedCouncilId);
-  //   }
-  // };
-
   // Boundaries selection event handler
   // Selecting a neighborhood district will triger the handleSelect event
   // Allow single boundary to be selected.
@@ -96,14 +80,14 @@ const CouncilSelector = ({
   return (
     <>
       <div className={classes.label}>Boundaries</div>
-      <SelectorBox>
-        <SelectorBox.Display>
+      <BoundariesSection>
+        <BoundariesSection.Display>
           <SelectedCouncils
             items={selected}
             onDelete={debouncedHandleDelete}
           />
-        </SelectorBox.Display>
-        <SelectorBox.Collapse>
+        </BoundariesSection.Display>
+        <BoundariesSection.Collapse>
           {
             unselected
               && (
@@ -113,8 +97,8 @@ const CouncilSelector = ({
                 />
               )
           }
-        </SelectorBox.Collapse>
-      </SelectorBox>
+        </BoundariesSection.Collapse>
+      </BoundariesSection>
     </>
   );
 };
