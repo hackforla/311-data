@@ -31,7 +31,7 @@ const CouncilSelector = ({
   councils,
   selected,
   unselected,
-  dispatchUpdateCouncilsFilter,
+  dispatchUpdateNcId,
   dispatchUpdateSelectedCouncils,
   dispatchUpdateUnselectedCouncils,
   dispatchCloseBoundaries,
@@ -50,7 +50,7 @@ const CouncilSelector = ({
     const newUnselected = not(councils, newSelected, 'councilId');
     dispatchUpdateSelectedCouncils(newSelected);
     dispatchUpdateUnselectedCouncils(newUnselected);
-    dispatchUpdateCouncilsFilter(deletedCouncilId);
+    dispatchUpdateNcId(deletedCouncilId);
     // Clear out Address Search input
     resetAddressSearch();
 
@@ -71,7 +71,7 @@ const CouncilSelector = ({
       const newSelected = [newSelectedCouncil];
       dispatchUpdateSelectedCouncils(newSelected);
       dispatchUpdateUnselectedCouncils(councils);
-      dispatchUpdateCouncilsFilter(selectedCouncilId);
+      dispatchUpdateNcId(selectedCouncilId);
 
       // Collapse Boundaries Section
       dispatchCloseBoundaries();
@@ -115,7 +115,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  dispatchUpdateCouncilsFilter: councilId => dispatch(updateNcId(councilId)),
+  dispatchUpdateNcId: councilId => dispatch(updateNcId(councilId)),
   dispatchUpdateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
   dispatchUpdateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
   dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
@@ -139,7 +139,7 @@ CouncilSelector.propTypes = {
   councils: PropTypes.arrayOf(PropTypes.shape({})),
   selected: PropTypes.arrayOf(PropTypes.shape({})),
   unselected: PropTypes.arrayOf(PropTypes.shape({})),
-  dispatchUpdateCouncilsFilter: PropTypes.func.isRequired,
+  dispatchUpdateNcId: PropTypes.func.isRequired,
   dispatchUpdateSelectedCouncils: PropTypes.func.isRequired,
   dispatchUpdateUnselectedCouncils: PropTypes.func.isRequired,
   resetMap: PropTypes.func,
