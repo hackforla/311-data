@@ -6,7 +6,10 @@ import {
   updateSelectedCouncils,
   updateUnselectedCouncils,
 } from '@reducers/filters';
-import { debounce } from '@utils';
+import {
+  debounce,
+  toggleBoundaries,
+} from '@utils';
 import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
 import SelectorBox from '@components/common/SelectorBox';
@@ -80,6 +83,9 @@ const CouncilSelector = ({
       dispatchUpdateSelectedCouncils(newSelected);
       dispatchUpdateUnselectedCouncils(councils);
       dispatchUpdateCouncilsFilter(selectedCouncilId);
+
+      // Toggle to close Boundaries selector box
+      toggleBoundaries();
     }
   };
 

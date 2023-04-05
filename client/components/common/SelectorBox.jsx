@@ -80,6 +80,7 @@ const SelectorBox = ({
         action={
           !arrowHidden ? (
             <IconButton
+              id="boundaries"
               className={classes.button}
               aria-label="toggle filter menu"
               onClick={toggleCollapse}
