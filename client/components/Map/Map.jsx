@@ -367,6 +367,11 @@ class Map extends React.Component {
     addressSearchInput.value = ""
   }
 
+  // TODO: 	
+  // - selecting a neighborhood district on map should:
+  //    1. clear address search input 
+  //    2. collapse the boundaries section
+
   onClick = e => {
 
     const hoverables = [
@@ -407,6 +412,7 @@ class Map extends React.Component {
         switch (feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
+            this.resetAddressSearch();
             const selectedCouncilId = Number(feature.properties.council_id)
             const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
             const newSelected = [newSelectedCouncil];
