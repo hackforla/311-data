@@ -51,6 +51,10 @@ const CouncilSelector = ({
     dispatchUpdateSelectedCouncils(newSelected);
     dispatchUpdateUnselectedCouncils(newUnselected);
     dispatchUpdateCouncilsFilter(deletedCouncilId);
+    // Clear out Address Search input
+    resetAddressSearch();
+
+    // Zoom out of map
     resetMap();
   };
 
