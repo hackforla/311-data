@@ -369,7 +369,7 @@ class Map extends React.Component {
 
   // TODO: 	
   // - selecting a neighborhood district on map should:
-  //    1. clear address search input 
+  //    1. clear address search input (done)
   //    2. collapse the boundaries section
 
   onClick = e => {
@@ -390,6 +390,7 @@ class Map extends React.Component {
       dispatchUpdateNcId, 
       dispatchUpdateSelectedCouncils,
       dispatchUpdateUnselectedCouncils,
+      dispatchCloseBoundaries,
       councils } = this.props;
 
     for (let i = 0; i < features.length; i++) {
@@ -402,6 +403,9 @@ class Map extends React.Component {
         // Since click is for another district, zoom out and reset map.
         this.resetBoundaries()
 
+        // Collapse boundaries section
+        dispatchCloseBoundaries()
+
         // Reset Map.
         this.reset()
 
@@ -412,7 +416,8 @@ class Map extends React.Component {
         switch (feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
-            this.resetAddressSearch();
+            this.resetAddressSearch();  // Clear address search input
+            dispatchCloseBoundaries();  // Collapse boundaries section
             const selectedCouncilId = Number(feature.properties.council_id)
             const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
             const newSelected = [newSelectedCouncil];
