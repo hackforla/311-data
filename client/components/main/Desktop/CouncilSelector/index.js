@@ -6,9 +6,9 @@ import {
   updateSelectedCouncils,
   updateUnselectedCouncils,
 } from '@reducers/filters';
+import { closeBoundaries } from '@reducers/ui';
 import {
   debounce,
-  toggleBoundaries,
 } from '@utils';
 import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
@@ -34,6 +34,7 @@ const CouncilSelector = ({
   dispatchUpdateCouncilsFilter,
   dispatchUpdateSelectedCouncils,
   dispatchUpdateUnselectedCouncils,
+  dispatchCloseBoundaries,
   resetMap,
   resetAddressSearch,
 }) => {
@@ -68,8 +69,8 @@ const CouncilSelector = ({
       dispatchUpdateUnselectedCouncils(councils);
       dispatchUpdateCouncilsFilter(selectedCouncilId);
 
-      // Toggle to close Boundaries selector box
-      toggleBoundaries();
+      // Collapse Boundaries Section
+      dispatchCloseBoundaries();
     }
   };
 
@@ -113,6 +114,7 @@ const mapDispatchToProps = dispatch => ({
   dispatchUpdateCouncilsFilter: councilId => dispatch(updateNcId(councilId)),
   dispatchUpdateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
   dispatchUpdateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
+  dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
 });
 
 export default connect(
@@ -126,6 +128,7 @@ CouncilSelector.defaultProps = {
   unselected: [],
   resetMap: () => {},
   resetAddressSearch: () => {},
+  dispatchCloseBoundaries: undefined,
 };
 
 CouncilSelector.propTypes = {
@@ -137,4 +140,5 @@ CouncilSelector.propTypes = {
   dispatchUpdateUnselectedCouncils: PropTypes.func.isRequired,
   resetMap: PropTypes.func,
   resetAddressSearch: PropTypes.func,
+  dispatchCloseBoundaries: PropTypes.func,
 };

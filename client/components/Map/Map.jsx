@@ -9,13 +9,13 @@ import FilterMenu from '@components/main/Desktop/FilterMenu';
 // import LocationDetail from './LocationDetail';
 
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
+import { getNcByLngLat } from '@reducers/data';
 import {
   updateNcId,
   updateSelectedCouncils,
   updateUnselectedCouncils,
 } from '@reducers/filters';
-
+import { closeBoundaries } from '@reducers/ui';
 import {
   INITIAL_BOUNDS,
   INITIAL_LOCATION,
@@ -435,17 +435,25 @@ class Map extends React.Component {
     this.setState({ geoFilterType: tab });
     this.reset();
   };
-
+  
   // Address Search event handler
   // An Address Search will triger the onGeocoderResult event
   onGeocoderResult = ({ result }) => {
+    const { 
+      dispatchGetNcByLngLat, 
+      dispatchUpdateNcId,
+      dispatchCloseBoundaries
+    } = this.props;
+
     // Reset Boundaries input
     this.resetBoundaries()
     
-    // Reset Map & Zoom out
-    this.reset();
+    // Collapse Boundaries Section
+    dispatchCloseBoundaries()
 
-    const { dispatchGetNcByLngLat, dispatchUpdateNcId } = this.props;
+    // Reset Map & Zoom out
+    this.reset()
+
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
       dispatchUpdateNcId(result.id);
@@ -685,6 +693,7 @@ const mapDispatchToProps = dispatch => ({
   dispatchUpdateNcId: id => dispatch(updateNcId(id)),
   dispatchUpdateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
   dispatchUpdateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
+  dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
