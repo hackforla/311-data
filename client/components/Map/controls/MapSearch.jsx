@@ -94,6 +94,7 @@ class MapSearch extends React.Component {
     });
 
     this.geocoder.on('result', ({ result }) => {
+      console.log(`MapSearch: this.geocoder.on('result'): result:`,{result})
       this.props.onGeocoderResult({ result });
       
       // This clears the address from the Address input field.

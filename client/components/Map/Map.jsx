@@ -468,17 +468,33 @@ class Map extends React.Component {
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
       dispatchUpdateNcId(result.id);
-    } else {
+    } 
+    else {  // When result.properties.type does not equal "District"
       const address = result.place_name
         .split(',')
         .slice(0, -2)
         .join(', ');
 
+      // what does dispatchGetNcByLngLat() do?
+      //
+      // dispatchGetNcByLngLat calls a sagas in redux/sagas/data.js:
+      //  yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat);
+      //  which will:
+      //    call(fetchNcByLngLat, action.payload);
+      //  on success: getNcByLngLatSuccess(data)
+      //  on error: getNcByLngLatFailure(e);
+      //
+      //  fetchNcByLngLat above makes an API call to:
+      //   `${BASE_URL}/geojson/geocode?latitude=${latitude}&longitude=${longitude}`
+      //
+      //  and returns the data
       dispatchGetNcByLngLat({ longitude: result.center[0], latitude: result.center[1] });
 
       this.setState({
         address: address,
       });
+
+      // Add that cute House Icon on the map
       return this.addressLayer.addMarker([result.center[0], result.center[1]]);
     }
   };
