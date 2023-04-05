@@ -481,8 +481,8 @@ class Map extends React.Component {
       //  yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat);
       //  which will:
       //    call(fetchNcByLngLat, action.payload);
-      //  on success: getNcByLngLatSuccess(data)
-      //  on error: getNcByLngLatFailure(e);
+      //  on success: getNcByLngLatSuccess(data) where state.selectedNcId gets set
+      //  on error: getNcByLngLatFailure(e) where state.error object gets set
       //
       //  fetchNcByLngLat above makes an API call to:
       //   `${BASE_URL}/geojson/geocode?latitude=${latitude}&longitude=${longitude}`
