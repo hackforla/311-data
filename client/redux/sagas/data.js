@@ -21,6 +21,10 @@ import {
 } from '../reducers/data';
 
 import {
+  updateNcId,
+} from '../reducers/filters';
+
+import {
   setErrorModal,
   showFeedbackSuccess,
 } from '../reducers/ui';
@@ -127,6 +131,7 @@ function* getNcByLngLat(action) {
   try {
     const data = yield call(fetchNcByLngLat, action.payload);
     yield put(getNcByLngLatSuccess(data));
+    if (data?.council_id) { yield put(updateNcId(data?.council_id)); }
   } catch (e) {
     yield put(getNcByLngLatFailure(e));
   }
