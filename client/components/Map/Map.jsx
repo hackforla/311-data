@@ -349,7 +349,7 @@ class Map extends React.Component {
 
     // Set councilId in reducers/filters back to null
     dispatchUpdateNcId(null)
-
+       
     this.map.once('zoomend', () => {
       this.setState({
         filterGeo: null,
@@ -426,6 +426,9 @@ class Map extends React.Component {
 
         // Collapse boundaries section
         dispatchCloseBoundaries()
+
+        // Reset Address Search input field
+        this.resetAddressSearch()
 
         // Reset Map.
         this.reset()
