@@ -7,7 +7,6 @@ import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 // import LocationDetail from './LocationDetail';
-
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat } from '@reducers/data';
 import {
@@ -47,6 +46,8 @@ import MapSearch from './controls/MapSearch';
 import RequestDetail from './RequestDetail';
 
 import { debounce } from '@utils';
+
+import settings from '@settings'
 
 const styles = theme => ({
   root: {
@@ -372,9 +373,19 @@ class Map extends React.Component {
     dispatchUpdateUnselectedCouncils(councils)
   }
 
-  resetAddressSearch = () => {
+  addressSearchIsEmpty = () => {
     const addressSearchInput = document.querySelector('#geocoder input')
-    addressSearchInput.value = ""
+    return !Boolean(addressSearchInput.value?.trim())
+  }
+
+  resetAddressSearch = () => {
+    if(this.addressSearchIsEmpty()){
+      return
+    }
+
+    const geocoderElement = document.getElementById('geocoder')
+    const resetEvent = new Event(settings.map.eventName.reset)
+    geocoderElement.dispatchEvent(resetEvent)
   }
 
   // TODO: 	
