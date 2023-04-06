@@ -50,11 +50,12 @@ const CouncilSelector = ({
     const newUnselected = not(councils, newSelected, 'councilId');
     dispatchUpdateSelectedCouncils(newSelected);
     dispatchUpdateUnselectedCouncils(newUnselected);
-    dispatchUpdateNcId(deletedCouncilId);
     // Clear out Address Search input
     resetAddressSearch();
 
-    // Zoom out of map
+    // resetMap() will
+    // 1. zoom out of map and
+    // 2. call dispatchUpdateNcId(null); to reset councilId back to null in reducers/filters
     resetMap();
   };
 
