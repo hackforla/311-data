@@ -1,3 +1,5 @@
+// Component based on components/common/SelectorBox that connects to redux store
+// and toggles open and closed based on state.ui.boundaries.isOpen state variable
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
