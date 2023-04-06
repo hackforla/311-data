@@ -178,18 +178,15 @@ def make_days_to_close_box_plot():
     med_days_to_close_box_plot.add_trace(
         go.Box(
             y=stats_df.type_name,
-            q1=stats_df['q1'],
-            median=stats_df['median'],
-            q3=stats_df['q3'],
-            marker_color='#29404F',
-            fillcolor='#E17C05',
+            hover_data={stats_df.type_name: ':.2f'},
+            hovertemplate='Median: %{y:.2f}<extra></extra>'
         )
     )
     med_days_to_close_box_plot.update_xaxes(
         dtick=5
     )
     med_days_to_close_box_plot.update_layout(
-        title="Total Median Days to Close by Type",
+        title="Total Median Days to THIS WORKS by Type",
     )
     return med_days_to_close_box_plot
 
