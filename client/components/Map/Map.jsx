@@ -238,7 +238,12 @@ class Map extends React.Component {
     }
 
 
-    const { dispatchUpdateNcId,dispatchUpdateSelectedCouncils,dispatchUpdateUnselectedCouncils, councils, ncBoundaries } = this.props;
+    const { 
+      dispatchUpdateNcId,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils, 
+      councils, 
+      ncBoundaries } = this.props;
 
     if(this.initialState.councilId && councils?.length > 0 && !(this.hasSetInitialNCView) && ncBoundaries){
       try{
@@ -326,6 +331,8 @@ class Map extends React.Component {
   };
 
   reset = () => {
+    const { dispatchUpdateNcId } = this.props
+
     this.zoomOut();
     this.addressLayer.clearMarker();
     this.ncLayer.clearSelectedRegion();
@@ -339,11 +346,14 @@ class Map extends React.Component {
       selectedNc: null,
     });
 
+    // Set councilId in reducers/filters back to null
+    dispatchUpdateNcId(null)
+
     this.map.once('zoomend', () => {
       this.setState({
         filterGeo: null,
         canReset: true,
-      });
+      });      
     });
   };
 
@@ -481,8 +491,8 @@ class Map extends React.Component {
       //  yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat);
       //  which will:
       //    call(fetchNcByLngLat, action.payload);
-      //  on success: getNcByLngLatSuccess(data) where state.selectedNcId gets set
-      //  on error: getNcByLngLatFailure(e) where state.error object gets set
+      //  on success: getNcByLngLatSuccess(data) to set value for state.selectedNcId
+      //  on error: getNcByLngLatFailure(e) to set value for state.error object
       //
       //  fetchNcByLngLat above makes an API call to:
       //   `${BASE_URL}/geojson/geocode?latitude=${latitude}&longitude=${longitude}`
