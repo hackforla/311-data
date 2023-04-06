@@ -151,7 +151,6 @@ class Map extends React.Component {
       if (this.isSubscribed) {
         this.initLayers(true);
 
-        // map.on('click', this.onClick);
         map.on('click', this.debouncedOnClick);
 
         map.once('idle', e => {
