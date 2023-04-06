@@ -49,7 +49,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-// const Context = React.createContext({ expanded: false });
 const Context = React.createContext({ isOpen: false });
 
 const BoundariesSection = ({
@@ -62,22 +61,15 @@ const BoundariesSection = ({
   dispatchShowBoundaries,
   dispatchCloseBoundaries,
 }) => {
-  // const [expanded, setExpanded] = useState(initial);
   const classes = useStyles();
 
   useEffect(() => {
-    // setExpanded(initial);
     if (!!initial === false) {
       dispatchCloseBoundaries();
     } else {
       dispatchShowBoundaries();
     }
   }, [dispatchCloseBoundaries, dispatchShowBoundaries, initial]);
-
-  // const toggleCollapse = () => {
-  //   if (onToggle) onToggle();
-  //   setExpanded(prevState => !prevState);
-  // };
 
   const toggleCollapse = () => {
     if (onToggle) onToggle();
@@ -201,5 +193,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BoundariesSection);
-
-// export default SelectorBox;
