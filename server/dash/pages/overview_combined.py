@@ -303,7 +303,7 @@ layout = html.Div([
     html.H1(TITLE + " Pt. 2"),
     html.Div([
         html.Div(dcc.Graph(id='num_req_by_day_bar_chart', figure=num_req_by_day_bar_chart, className="half-graph",
-        style=TWO_CHART_STYLE), style=BORDER_STYLE, config = {'displayModeBar' : False}),   # noqa
+        style=TWO_CHART_STYLE, config = {'displayModeBar' : False}), style=BORDER_STYLE),   # noqa
         html.Div(dcc.Graph(id='req_source_bar_chart', figure=req_source_bar_chart, className="half-graph",
                  responsive=True, style=TWO_CHART_STYLE, config = {'displayModeBar' : False}), style=BORDER_STYLE)
     ], className="graph-row", style=EQUAL_SPACE_BOX_STYLE),

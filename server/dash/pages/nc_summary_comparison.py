@@ -411,8 +411,7 @@ def generate_comparison_req_source_bar(output_id):
     Return:
         Dash html div element containing request source bar chart.
     """
-    return html.Div(dcc.Graph(id=output_id, style={"height": "30vh"}),
-         config = {'displayModeBar' : False}, style=merge_dict(CHART_OUTLINE_STYLE, {
+    return html.Div(dcc.Graph(id=output_id, style={"height": "30vh"}, config = {'displayModeBar' : False}), style=merge_dict(CHART_OUTLINE_STYLE, {
              "width": "48.5vw", "height": "30vh"}))
 
 def generate_comparison_line_chart():
