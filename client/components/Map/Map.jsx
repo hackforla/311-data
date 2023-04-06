@@ -375,23 +375,17 @@ class Map extends React.Component {
 
   addressSearchIsEmpty = () => {
     const addressSearchInput = document.querySelector('#geocoder input')
-    return !Boolean(addressSearchInput.value?.trim())
+    return !Boolean(addressSearchInput?.value?.trim())
   }
 
   resetAddressSearch = () => {
-    if(this.addressSearchIsEmpty()){
-      return
+    if(!this.addressSearchIsEmpty()){
+      // Dispatch custom event to MapSearch to trigger geocoder.clear() to clear Address Search input
+      const geocoderElement = document.getElementById('geocoder')
+      const resetEvent = new Event(settings.map.eventName.reset)
+      geocoderElement.dispatchEvent(resetEvent)
     }
-
-    const geocoderElement = document.getElementById('geocoder')
-    const resetEvent = new Event(settings.map.eventName.reset)
-    geocoderElement.dispatchEvent(resetEvent)
   }
-
-  // TODO: 	
-  // - selecting a neighborhood district on map should:
-  //    1. clear address search input (done)
-  //    2. collapse the boundaries section
 
   onClick = e => {
 
@@ -421,7 +415,9 @@ class Map extends React.Component {
         (this.props.selectedNcId !== null)
         && (feature.properties.council_id && this.props.selectedNcId !== feature.properties.council_id)
       ){
-        // Since click is for another district, zoom out and reset map.
+        // Since click is for another district
+        
+        // Reset boundaries selection
         this.resetBoundaries()
 
         // Collapse boundaries section
