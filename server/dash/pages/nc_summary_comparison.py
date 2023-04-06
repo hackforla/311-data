@@ -280,7 +280,7 @@ def generate_summary_line_chart():
     Return:
         Dash html div element containing overlapping line chart.
     """
-    return html.Div(dcc.Graph(id="nc_avg_comp_line_chart", style={"height": "40vh",
+    return html.Div(dcc.Graph(id="nc_avg_comp_line_chart", config = {'displayModeBar' : False}, style={"height": "40vh",
          "width": "97.4vw"}),
         style=merge_dict(BORDER_STYLE, {"height": "40vh", "width": "97.4vw"}))
 
@@ -296,7 +296,7 @@ def generate_summary_pie_chart():
     """
     return html.Div(
         dcc.Graph(
-            id="req_type_pie_chart", style={"height": "40vh",
+            id="req_type_pie_chart", config = {'displayModeBar' : False}, style={"height": "40vh",
                             "width": "48.5vw"}
         ), style=merge_dict(CHART_OUTLINE_STYLE, {"width": "48.5vw",
                         "height": "40vh"}))  # for border-radius , add stuff later
@@ -313,7 +313,7 @@ def generate_summary_histogram():
     """
     return html.Div(
         dcc.Graph(
-            id="time_close_histogram", style={"height": "40vh",
+            id="time_close_histogram", config = {'displayModeBar' : False}, style={"height": "40vh",
                      "width": "48vw"}
         ), style=merge_dict(CHART_OUTLINE_STYLE, {"width": "48vw",
                  "height": "40vh"}))
@@ -412,7 +412,7 @@ def generate_comparison_req_source_bar(output_id):
         Dash html div element containing request source bar chart.
     """
     return html.Div(dcc.Graph(id=output_id, style={"height": "30vh"}),
-         style=merge_dict(CHART_OUTLINE_STYLE, {
+         config = {'displayModeBar' : False}, style=merge_dict(CHART_OUTLINE_STYLE, {
              "width": "48.5vw", "height": "30vh"}))
 
 def generate_comparison_line_chart():
@@ -426,7 +426,7 @@ def generate_comparison_line_chart():
     Return:
         Dash html div element containing overlapping line chart.
     """
-    return html.Div(dcc.Graph(id="overlay_req_time_line_chart", style={"height": "32vh",
+    return html.Div(dcc.Graph(id="overlay_req_time_line_chart", config = {'displayModeBar' : False}, style={"height": "32vh",
      "width": "97.5vw"}), style=merge_dict(BORDER_STYLE, {
          "height": "32vh", "width": "97.5vw"}))
     

@@ -154,9 +154,12 @@ def make_req_type_source_bar_chart(req_source_count):
         req_source_count_df,
         y=req_source_count_df.index,
         x='counts',
+        color = req_source_count_df.index,
         title="Total Requests by Source",
         orientation='h'
     )
+    req_source_bar_chart.update_layout(xaxis_title = "Number of Requests", yaxis_title = "Source", showlegend=False)
+
     return req_source_bar_chart
 
 
@@ -178,8 +181,12 @@ def make_days_to_close_box_plot():
     med_days_to_close_box_plot.add_trace(
         go.Box(
             y=stats_df.type_name,
-            hover_data={stats_df.type_name: ':.2f'},
-            hovertemplate='Median: %{y:.2f}<extra></extra>'
+            q1=stats_df['q1'],
+            median=stats_df['median'],
+            q3=stats_df['q3'],
+            marker_color='#29404F',
+            fillcolor='#E17C05',
+            hoverinfo = 'none'
         )
     )
     med_days_to_close_box_plot.update_xaxes(
@@ -214,6 +221,7 @@ def make_day_of_week_bar_chart():
         x="day_of_week",
         y="counts",
         labels=LABELS,
+        title = 'Total Requests by Day of the Week'
     )
     num_req_by_day_bar_chart.update_xaxes(categoryorder='array', categoryarray=[
         "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
@@ -275,18 +283,18 @@ layout = html.Div([
         html.Div([html.H2(indicator_count_dict['req_count']), html.Label(
             "Request Types")], style=INDICATOR_CARD_STYLE),
         html.Div([html.H2(indicator_count_dict['source_count']), html.Label(
-            "Request Source")], style=INDICATOR_CARD_STYLE),
+            "Request Sources")], style=INDICATOR_CARD_STYLE),
         html.Div([html.H2(indicator_count_dict['agency_count']), html.Label(
-            "Request Agency")], style=INDICATOR_CARD_STYLE)
+            "Request Agencies")], style=INDICATOR_CARD_STYLE)
         ], style=EQUAL_SPACE_BOX_STYLE),
 
     html.Div(html.Br(), style={"height": "3vh"}),
 
     html.Div([
         html.Div(dcc.Graph(id='med_days_to_close_box_plot', figure=med_days_to_close_box_plot, responsive=True, style={
-                 "width": "60vw", "height": "60vh"}), style=BORDER_STYLE),
+                 "width": "60vw", "height": "60vh"}, config = {'displayModeBar' : False}), style=BORDER_STYLE),
         html.Div(dcc.Graph(id='req_share_by_agency_pie_chart', figure=req_share_by_agency_pie_chart, className="half-graph",
-                 responsive=True, style={"width": "35vw", "height": "60vh"}), style=BORDER_STYLE)
+                 responsive=True, style={"width": "35vw", "height": "60vh"}, config = {'displayModeBar' : False}), style=BORDER_STYLE)
     ], className="graph-row", style=EQUAL_SPACE_BOX_STYLE),
 
     html.Div(html.Br(), style={"height": "2vh"}),
@@ -295,14 +303,14 @@ layout = html.Div([
     html.H1(TITLE + " Pt. 2"),
     html.Div([
         html.Div(dcc.Graph(id='num_req_by_day_bar_chart', figure=num_req_by_day_bar_chart, className="half-graph",
-        style=TWO_CHART_STYLE), style=BORDER_STYLE),   # noqa
+        style=TWO_CHART_STYLE), style=BORDER_STYLE, config = {'displayModeBar' : False}),   # noqa
         html.Div(dcc.Graph(id='req_source_bar_chart', figure=req_source_bar_chart, className="half-graph",
-                 responsive=True, style=TWO_CHART_STYLE), style=BORDER_STYLE)
+                 responsive=True, style=TWO_CHART_STYLE, config = {'displayModeBar' : False}), style=BORDER_STYLE)
     ], className="graph-row", style=EQUAL_SPACE_BOX_STYLE),
 
     html.Div(html.Br(), style={"height": "2vh"}),
 
     html.Div(dcc.Graph(id='req_by_nc_bar_chart', figure=req_by_nc_bar_chart, responsive=True,
-             style={"height": "45vh"}), style=BORDER_STYLE)
+             style={"height": "45vh"}, config = {'displayModeBar' : False}), style=BORDER_STYLE)
 
 ])
