@@ -12,7 +12,7 @@ import {
 } from '@utils';
 import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
-import BoundariesSection from '../BoundariesSection';
+import BoundariesSection from '@components/main/Desktop/BoundariesSection';
 import SelectedCouncils from './SelectedCouncils';
 import CouncilsList from './CouncilsList';
 
@@ -50,12 +50,11 @@ const CouncilSelector = ({
     const newUnselected = not(councils, newSelected, 'councilId');
     dispatchUpdateSelectedCouncils(newSelected);
     dispatchUpdateUnselectedCouncils(newUnselected);
-    // Clear out Address Search input
+    // Clear out address search input
     resetAddressSearch();
 
-    // resetMap() will
-    // 1. zoom out of map and
-    // 2. call dispatchUpdateNcId(null); to reset councilId back to null in reducers/filters
+    // resetMap() will call dispatchUpdateNcId(null) to reset councilId back to null
+    // in reducers/filters so no need to do it again here
     resetMap();
   };
 
@@ -65,7 +64,7 @@ const CouncilSelector = ({
   const handleSelect = e => {
     const selectedCouncilId = Number(e.target.value);
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
-      // Clear out Address Search input
+      // Clear out address search input
       resetAddressSearch();
 
       const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
@@ -74,7 +73,7 @@ const CouncilSelector = ({
       dispatchUpdateUnselectedCouncils(councils);
       dispatchUpdateNcId(selectedCouncilId);
 
-      // Collapse Boundaries Section
+      // Collapse boundaries section
       dispatchCloseBoundaries();
     }
   };

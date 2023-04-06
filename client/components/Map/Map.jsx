@@ -476,13 +476,13 @@ class Map extends React.Component {
       dispatchCloseBoundaries
     } = this.props;
 
-    // Reset Boundaries input
+    // Reset boundaries input
     this.resetBoundaries()
     
-    // Collapse Boundaries Section
+    // Collapse boundaries section
     dispatchCloseBoundaries()
 
-    // Reset Map & Zoom out
+    // Reset map & zoom out
     this.reset()
 
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
