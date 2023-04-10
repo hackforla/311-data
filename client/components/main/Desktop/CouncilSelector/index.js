@@ -6,9 +6,13 @@ import {
   updateSelectedCouncils,
   updateUnselectedCouncils,
 } from '@reducers/filters';
+import { closeBoundaries } from '@reducers/ui';
+import {
+  debounce,
+} from '@utils';
 import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
-import SelectorBox from '@components/common/SelectorBox';
+import BoundariesSection from '@components/main/Desktop/BoundariesSection';
 import SelectedCouncils from './SelectedCouncils';
 import CouncilsList from './CouncilsList';
 
@@ -27,10 +31,12 @@ const CouncilSelector = ({
   councils,
   selected,
   unselected,
-  updateCouncilsFilter,
+  dispatchUpdateNcId,
   dispatchUpdateSelectedCouncils,
   dispatchUpdateUnselectedCouncils,
+  dispatchCloseBoundaries,
   resetMap,
+  resetAddressSearch,
 }) => {
   const classes = useStyles();
 
@@ -44,62 +50,60 @@ const CouncilSelector = ({
     const newUnselected = not(councils, newSelected, 'councilId');
     dispatchUpdateSelectedCouncils(newSelected);
     dispatchUpdateUnselectedCouncils(newUnselected);
-    updateCouncilsFilter(deletedCouncilId);
+    // Clear out address search input
+    resetAddressSearch();
+
+    // resetMap() will call dispatchUpdateNcId(null) to reset councilId back to null
+    // in reducers/filters so no need to do it again here
     resetMap();
   };
 
-  // Allow multiple boundaries to be selected (original).
-  //
-  // const handleMultiSelect = e => {
-  //   const selectedCouncilId = Number(e.currentTarget.value);
-  //   if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
-  //     const newSelectedCouncil = councils.find(({ councilId }) => {
-  //       return councilId === selectedCouncilId
-  //     });
-  //     const newSelected = [...selected, newSelectedCouncil];
-  //     const newUnselected = not(councils, newSelected, 'councilId');
-  //     setSelected(newSelected);
-  //     setUnselected(newUnselected);
-  //     updateCouncilsFilter(selectedCouncilId);
-  //   }
-  // };
-
+  // Boundaries selection event handler
+  // Selecting a neighborhood district will triger the handleSelect event
   // Allow single boundary to be selected.
-  //
   const handleSelect = e => {
-    const selectedCouncilId = Number(e.currentTarget.value);
+    const selectedCouncilId = Number(e.target.value);
     if (!selected.some(({ councilId }) => councilId === selectedCouncilId)) {
+      // Clear out address search input
+      resetAddressSearch();
+
       const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
       const newSelected = [newSelectedCouncil];
       dispatchUpdateSelectedCouncils(newSelected);
       dispatchUpdateUnselectedCouncils(councils);
-      updateCouncilsFilter(selectedCouncilId);
+      dispatchUpdateNcId(selectedCouncilId);
+
+      // Collapse boundaries section
+      dispatchCloseBoundaries();
     }
   };
+
+  // Debounced event handlers
+  const debouncedHandleSelect = debounce(handleSelect);
+  const debouncedHandleDelete = debounce(handleDelete);
 
   return (
     <>
       <div className={classes.label}>Boundaries</div>
-      <SelectorBox>
-        <SelectorBox.Display>
+      <BoundariesSection>
+        <BoundariesSection.Display>
           <SelectedCouncils
             items={selected}
-            onDelete={handleDelete}
+            onDelete={debouncedHandleDelete}
           />
-        </SelectorBox.Display>
-        <SelectorBox.Collapse>
+        </BoundariesSection.Display>
+        <BoundariesSection.Collapse>
           {
             unselected
               && (
                 <CouncilsList
                   items={unselected}
-                  onClick={handleSelect}
-                  // onClick={handleMultiSelect}
+                  onClick={debouncedHandleSelect}
                 />
               )
           }
-        </SelectorBox.Collapse>
-      </SelectorBox>
+        </BoundariesSection.Collapse>
+      </BoundariesSection>
     </>
   );
 };
@@ -111,9 +115,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateCouncilsFilter: councilId => dispatch(updateNcId(councilId)),
+  dispatchUpdateNcId: councilId => dispatch(updateNcId(councilId)),
   dispatchUpdateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
   dispatchUpdateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
+  dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
 });
 
 export default connect(
@@ -122,21 +127,22 @@ export default connect(
 )(CouncilSelector);
 
 CouncilSelector.defaultProps = {
+  councils: [],
+  selected: [],
+  unselected: [],
   resetMap: () => {},
+  resetAddressSearch: () => {},
+  dispatchCloseBoundaries: undefined,
 };
 
 CouncilSelector.propTypes = {
   councils: PropTypes.arrayOf(PropTypes.shape({})),
   selected: PropTypes.arrayOf(PropTypes.shape({})),
   unselected: PropTypes.arrayOf(PropTypes.shape({})),
-  updateCouncilsFilter: PropTypes.func.isRequired,
+  dispatchUpdateNcId: PropTypes.func.isRequired,
   dispatchUpdateSelectedCouncils: PropTypes.func.isRequired,
   dispatchUpdateUnselectedCouncils: PropTypes.func.isRequired,
   resetMap: PropTypes.func,
-};
-
-CouncilSelector.defaultProps = {
-  councils: [],
-  selected: [],
-  unselected: [],
+  resetAddressSearch: PropTypes.func,
+  dispatchCloseBoundaries: PropTypes.func,
 };

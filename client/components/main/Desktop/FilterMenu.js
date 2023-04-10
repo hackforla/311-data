@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // const FilterMenu = ({ toggleMenu }) => { //toggleMenu used with GearButton
-const FilterMenu = ({ resetMap }) => {
+const FilterMenu = ({ resetMap, resetAddressSearch }) => {
   const [expanded, setExpanded] = useState(true);
   const classes = useStyles();
   const sharedClasses = sharedStyles();
@@ -105,7 +105,10 @@ const FilterMenu = ({ resetMap }) => {
       <Collapse in={expanded}>
         <CardContent className={classes.content}>
           <div className={classes.selectorWrapper}>
-            <CouncilSelector resetMap={resetMap} />
+            <CouncilSelector
+              resetMap={resetMap}
+              resetAddressSearch={resetAddressSearch}
+            />
           </div>
           <div className={classes.selectorWrapper}>
             <DateSelector range />
@@ -133,9 +136,11 @@ export default connect(null, mapDispatchToProps)(FilterMenu);
 
 FilterMenu.defaultProps = {
   resetMap: () => {},
+  resetAddressSearch: () => {},
 };
 
 FilterMenu.propTypes = {
   resetMap: PropTypes.func,
+  resetAddressSearch: PropTypes.func,
   // toggleMenu: PropTypes.func.isRequired,
 };

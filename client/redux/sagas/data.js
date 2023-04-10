@@ -21,6 +21,10 @@ import {
 } from '../reducers/data';
 
 import {
+  updateNcId,
+} from '../reducers/filters';
+
+import {
   setErrorModal,
   showFeedbackSuccess,
 } from '../reducers/ui';
@@ -127,6 +131,12 @@ function* getNcByLngLat(action) {
   try {
     const data = yield call(fetchNcByLngLat, action.payload);
     yield put(getNcByLngLatSuccess(data));
+
+    if (data?.council_id) {
+      // This is where address search syncs with councilId state in reducers/filters.js
+      // without this, address search will be out of sync with rest of code
+      yield put(updateNcId(data.council_id));
+    }
   } catch (e) {
     yield put(getNcByLngLatFailure(e));
   }

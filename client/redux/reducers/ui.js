@@ -3,6 +3,9 @@ import { MAP_MODES } from '@components/common/CONSTANTS';
 export const types = {
   TOGGLE_MENU: 'TOGGLE_MENU',
   CLOSE_MENU: 'CLOSE_MENU',
+  TOGGLE_BOUNDARIES: 'TOGGLE_BOUNDARIES',
+  SHOW_BOUNDARIES: 'SHOW_BOUNDARIES',
+  CLOSE_BOUNDARIES: 'CLOSE_BOUNDARIES',
   SET_MENU_TAB: 'SET_MENU_TAB',
   SET_ERROR_MODAL: 'SET_ERROR_MODAL',
   SHOW_DATA_CHARTS: 'SHOW_DATA_CHARTS',
@@ -19,6 +22,18 @@ export const toggleMenu = () => ({
 
 export const closeMenu = () => ({
   type: types.CLOSE_MENU,
+});
+
+export const toggleBoundaries = () => ({
+  type: types.TOGGLE_BOUNDARIES,
+});
+
+export const showBoundaries = () => ({
+  type: types.SHOW_BOUNDARIES,
+});
+
+export const closeBoundaries = () => ({
+  type: types.CLOSE_BOUNDARIES,
 });
 
 export const setMenuTab = tab => ({
@@ -68,6 +83,9 @@ const initialState = {
   map: {
     activeMode: MAP_MODES.OPEN,
   },
+  boundaries: {
+    isOpen: false,
+  },
   error: {
     isOpen: false,
   },
@@ -79,6 +97,30 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case types.TOGGLE_BOUNDARIES:
+      return {
+        ...state,
+        boundaries: {
+          ...state.boundaries,
+          isOpen: !state.boundaries.isOpen,
+        },
+      };
+    case types.SHOW_BOUNDARIES:
+      return {
+        ...state,
+        boundaries: {
+          ...state.boundaries,
+          isOpen: true,
+        },
+      };
+    case types.CLOSE_BOUNDARIES:
+      return {
+        ...state,
+        boundaries: {
+          ...state.boundaries,
+          isOpen: false,
+        },
+      };
     case types.CLOSE_MENU:
       return {
         ...state,

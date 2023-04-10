@@ -7,15 +7,14 @@ import { withStyles } from '@material-ui/core/styles';
 import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 // import LocationDetail from './LocationDetail';
-
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getNcByLngLat, setSelectedNcId } from '@reducers/data';
+import { getNcByLngLat } from '@reducers/data';
 import {
   updateNcId,
   updateSelectedCouncils,
   updateUnselectedCouncils,
 } from '@reducers/filters';
-
+import { closeBoundaries } from '@reducers/ui';
 import {
   INITIAL_BOUNDS,
   INITIAL_LOCATION,
@@ -45,6 +44,10 @@ import MapSearch from './controls/MapSearch';
 // import MapMeta from './controls/MapMeta';
 
 import RequestDetail from './RequestDetail';
+
+import { debounce } from '@utils';
+
+import settings from '@settings'
 
 const styles = theme => ({
   root: {
@@ -148,7 +151,7 @@ class Map extends React.Component {
       if (this.isSubscribed) {
         this.initLayers(true);
 
-        map.on('click', this.onClick);
+        map.on('click', this.debouncedOnClick);
 
         map.once('idle', e => {
           this.setState({ mapReady: true });
@@ -235,7 +238,12 @@ class Map extends React.Component {
     }
 
 
-    const { dispatchUpdateNcId,dispatchUpdateSelectedCouncils,dispatchUpdateUnselectedCouncils, councils, ncBoundaries } = this.props;
+    const { 
+      dispatchUpdateNcId,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils, 
+      councils, 
+      ncBoundaries } = this.props;
 
     if(this.initialState.councilId && councils?.length > 0 && !(this.hasSetInitialNCView) && ncBoundaries){
       try{
@@ -323,6 +331,8 @@ class Map extends React.Component {
   };
 
   reset = () => {
+    const { dispatchUpdateNcId } = this.props
+
     this.zoomOut();
     this.addressLayer.clearMarker();
     this.ncLayer.clearSelectedRegion();
@@ -336,13 +346,45 @@ class Map extends React.Component {
       selectedNc: null,
     });
 
+    // Set councilId in reducers/filters back to null
+    dispatchUpdateNcId(null)
+       
     this.map.once('zoomend', () => {
       this.setState({
         filterGeo: null,
         canReset: true,
-      });
+      });      
     });
   };
+
+  resetBoundaries = () => {
+    const { 
+      dispatchUpdateNcId, 
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+      councils } = this.props;
+
+    // Reset the selected NcId back to null.
+    dispatchUpdateNcId(null);
+
+    // Reset councilSelector.
+    dispatchUpdateSelectedCouncils([])
+    dispatchUpdateUnselectedCouncils(councils)
+  }
+
+  addressSearchIsEmpty = () => {
+    const addressSearchInput = document.querySelector('#geocoder input')
+    return !Boolean(addressSearchInput?.value?.trim())
+  }
+
+  resetAddressSearch = () => {
+    if(!this.addressSearchIsEmpty()){
+      // Dispatch custom event to MapSearch to trigger geocoder.clear() to clear Address Search input
+      const geocoderElement = document.getElementById('geocoder')
+      const resetEvent = new Event(settings.map.eventName.reset)
+      geocoderElement.dispatchEvent(resetEvent)
+    }
+  }
 
   onClick = e => {
 
@@ -362,6 +404,7 @@ class Map extends React.Component {
       dispatchUpdateNcId, 
       dispatchUpdateSelectedCouncils,
       dispatchUpdateUnselectedCouncils,
+      dispatchCloseBoundaries,
       councils } = this.props;
 
     for (let i = 0; i < features.length; i++) {
@@ -371,14 +414,16 @@ class Map extends React.Component {
         (this.props.selectedNcId !== null)
         && (feature.properties.council_id && this.props.selectedNcId !== feature.properties.council_id)
       ){
-        // Since click is for another district, zoom out and reset map.
+        // Since click is for another district
         
-        // Reset the selected NcId back to null.
-        dispatchUpdateNcId(null);
+        // Reset boundaries selection
+        this.resetBoundaries()
 
-        // Reset councilSelector.
-        dispatchUpdateSelectedCouncils([])
-        dispatchUpdateUnselectedCouncils(councils)
+        // Collapse boundaries section
+        dispatchCloseBoundaries()
+
+        // Reset Address Search input field
+        this.resetAddressSearch()
 
         // Reset Map.
         this.reset()
@@ -390,6 +435,8 @@ class Map extends React.Component {
         switch (feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
+            this.resetAddressSearch();  // Clear address search input
+            dispatchCloseBoundaries();  // Collapse boundaries section
             const selectedCouncilId = Number(feature.properties.council_id)
             const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
             const newSelected = [newSelectedCouncil];
@@ -412,27 +459,61 @@ class Map extends React.Component {
     }
   };
 
+  debouncedOnClick = debounce(this.onClick)
+
   onChangeSearchTab = tab => {
     this.setState({ geoFilterType: tab });
     this.reset();
   };
-
+  
+  // Address Search event handler
+  // An Address Search will triger the onGeocoderResult event
   onGeocoderResult = ({ result }) => {
-    const { dispatchGetNcByLngLat, dispatchUpdateNcId } = this.props;
+    const { 
+      dispatchGetNcByLngLat, 
+      dispatchUpdateNcId,
+      dispatchCloseBoundaries
+    } = this.props;
+
+    // Reset boundaries input
+    this.resetBoundaries()
+    
+    // Collapse boundaries section
+    dispatchCloseBoundaries()
+
+    // Reset map & zoom out
+    this.reset()
+
     if (result.properties.type === GEO_FILTER_TYPES.nc) {
       this.setState({ address: null });
       dispatchUpdateNcId(result.id);
-    } else {
+    } 
+    else {  // When result.properties.type does not equal "District"
       const address = result.place_name
         .split(',')
         .slice(0, -2)
         .join(', ');
 
+      // what does dispatchGetNcByLngLat() do?
+      //
+      // dispatchGetNcByLngLat calls a sagas in redux/sagas/data.js:
+      //  yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat);
+      //  which will:
+      //    call(fetchNcByLngLat, action.payload);
+      //  on success: getNcByLngLatSuccess(data) to set value for state.selectedNcId
+      //  on error: getNcByLngLatFailure(e) to set value for state.error object
+      //
+      //  fetchNcByLngLat above makes an API call to:
+      //   `${BASE_URL}/geojson/geocode?latitude=${latitude}&longitude=${longitude}`
+      //
+      //  and returns the data
       dispatchGetNcByLngLat({ longitude: result.center[0], latitude: result.center[1] });
 
       this.setState({
         address: address,
       });
+
+      // Add that cute House Icon on the map
       return this.addressLayer.addMarker([result.center[0], result.center[1]]);
     }
   };
@@ -607,7 +688,10 @@ class Map extends React.Component {
                 onReset={this.reset}
                 canReset={!!filterGeo && canReset}
               />
-              <FilterMenu resetMap={this.reset} />
+              <FilterMenu 
+                resetMap={this.reset} 
+                resetAddressSearch={this.resetAddressSearch}
+              />
               {/* {
                 (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
               } */}
@@ -655,6 +739,7 @@ const mapDispatchToProps = dispatch => ({
   dispatchUpdateNcId: id => dispatch(updateNcId(id)),
   dispatchUpdateSelectedCouncils: councils => dispatch(updateSelectedCouncils(councils)),
   dispatchUpdateUnselectedCouncils: councils => dispatch(updateUnselectedCouncils(councils)),
+  dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
