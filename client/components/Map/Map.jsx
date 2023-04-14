@@ -185,83 +185,84 @@ class Map extends React.Component {
     //     map: this.map,
     //   });
     // }
-
-    if (
-      this.state.filterGeo !== prevState.filterGeo ||
-      this.state.selectedTypes !== prevState.selectedTypes
-    ) this.map.once('idle', this.setFilteredRequestCounts);
-
-    if (this.props.ncBoundaries != prevProps.ncBoundaries) {
-      this.ncLayer.init({
-        map: this.map,
-        addListeners: true,
-        sourceId: 'nc',
-        sourceData: this.props.ncBoundaries,
-        idProperty: 'council_id',
-        onSelectRegion: geo => {
-          this.setState({
-            locationInfo: {
-              nc: {
-                name: geo.properties.council_name,
-                // url removed from /geojson payload
-                // need to map from /councils response
-                // url: geo.properties.waddress || geo.properties.dwebsite,
+    this.map.on('load', () => {
+      if (
+        this.state.filterGeo !== prevState.filterGeo ||
+        this.state.selectedTypes !== prevState.selectedTypes
+      ) this.map.once('idle', this.setFilteredRequestCounts);
+  
+      if (this.props.ncBoundaries != prevProps.ncBoundaries) {
+        this.ncLayer.init({
+          map: this.map,
+          addListeners: true,
+          sourceId: 'nc',
+          sourceData: this.props.ncBoundaries,
+          idProperty: 'council_id',
+          onSelectRegion: geo => {
+            this.setState({
+              locationInfo: {
+                nc: {
+                  name: geo.properties.council_name,
+                  // url removed from /geojson payload
+                  // need to map from /councils response
+                  // url: geo.properties.waddress || geo.properties.dwebsite,
+                },
               },
-            },
-          });
-          this.map.once('zoomend', () => {
-            this.setState({ filterGeo: geo });
-          });
-        },
-        onHoverRegion: geo => {
-          this.setState({
-            hoveredRegionName: geo
-              ? ncNameFromId(geo.properties.nc_id)
-              : null
-          });
-        }
-      });
-    }
-
-    if (this.props.selectedNcId !== prevProps.selectedNcId) {
-      const { councils, selectedNcId } = this.props;
-      const nc = councils.find(({ councilId }) => councilId === selectedNcId);
-      this.setState({ selectedNc: nc });
-      return this.ncLayer.selectRegion(selectedNcId);
-    }
-
-    if (this.props.ncId !== prevProps.ncId) {
-      const { councils, ncId } = this.props;
-      const nc = councils.find(({ councilId }) => councilId === ncId);
-      this.setState({ selectedNc: nc });
-      return this.ncLayer.selectRegion(ncId);
-    }
-
-
-    const { 
-      dispatchUpdateNcId,
-      dispatchUpdateSelectedCouncils,
-      dispatchUpdateUnselectedCouncils, 
-      councils, 
-      ncBoundaries } = this.props;
-
-    if(this.initialState.councilId && councils?.length > 0 && !(this.hasSetInitialNCView) && ncBoundaries){
-      try{
-        const selectedCouncilId = Number(this.initialState.councilId);
-        const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
-        if (!newSelectedCouncil){
-          throw new Error('Council Does not exist from search query')
-        }
-        const newSelected = [newSelectedCouncil];
-        dispatchUpdateSelectedCouncils(newSelected);
-        dispatchUpdateUnselectedCouncils(councils);
-        dispatchUpdateNcId(selectedCouncilId);
-        this.hasSetInitialNCView = true
-      } catch (err) {
-        console.log("could not set ncid")
-        this.hasSetInitialNCView = false
+            });
+            this.map.once('zoomend', () => {
+              this.setState({ filterGeo: geo });
+            });
+          },
+          onHoverRegion: geo => {
+            this.setState({
+              hoveredRegionName: geo
+                ? ncNameFromId(geo.properties.nc_id)
+                : null
+            });
+          }
+        });
       }
-    }
+  
+      if (this.props.selectedNcId !== prevProps.selectedNcId) {
+        const { councils, selectedNcId } = this.props;
+        const nc = councils.find(({ councilId }) => councilId === selectedNcId);
+        this.setState({ selectedNc: nc });
+        return this.ncLayer.selectRegion(selectedNcId);
+      }
+  
+      if (this.props.ncId !== prevProps.ncId) {
+        const { councils, ncId } = this.props;
+        const nc = councils.find(({ councilId }) => councilId === ncId);
+        this.setState({ selectedNc: nc });
+        return this.ncLayer.selectRegion(ncId);
+      }
+  
+  
+      const { 
+        dispatchUpdateNcId,
+        dispatchUpdateSelectedCouncils,
+        dispatchUpdateUnselectedCouncils, 
+        councils, 
+        ncBoundaries } = this.props;
+  
+      if(this.initialState.councilId && councils?.length > 0 && !(this.hasSetInitialNCView) && ncBoundaries){
+        try{
+          const selectedCouncilId = Number(this.initialState.councilId);
+          const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
+          if (!newSelectedCouncil){
+            throw new Error('Council Does not exist from search query')
+          }
+          const newSelected = [newSelectedCouncil];
+          dispatchUpdateSelectedCouncils(newSelected);
+          dispatchUpdateUnselectedCouncils(councils);
+          dispatchUpdateNcId(selectedCouncilId);
+          this.hasSetInitialNCView = true
+        } catch (err) {
+          console.log("could not set ncid")
+          this.hasSetInitialNCView = false
+        }
+      }
+    })
   }
 
   initLayers = addListeners => {
