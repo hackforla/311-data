@@ -55,6 +55,7 @@ We are looking for volunteers! Those with non-technical skills are welcome as we
 
 * Go to the [Getting Started](https://www.hackforla.org/getting-started) page on the Hack for LA website and learn about the projects and onboarding process.
 * Sign up for an onboarding session on the [Hack for LA Meetup](https://www.meetup.com/hackforla/events) page. These session happen every week!
+* Look over our [Project Wiki](https://github.com/hackforla/311-data/wiki) for concrete steps on how to onboard onto the 311-Data team
 
 ## More Information about the 311 Data project
 
