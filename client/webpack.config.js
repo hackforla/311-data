@@ -19,6 +19,7 @@ module.exports = {
     extensions: ['.js', '.jsx'],
     alias: {
       '@root': __dirname,
+      '@data': path.resolve(__dirname, 'data'),
       '@theme': path.resolve(__dirname, 'theme'),
       '@components': path.resolve(__dirname, 'components'),
       '@hooks': path.resolve(__dirname, 'hooks'),
@@ -27,7 +28,6 @@ module.exports = {
       '@assets': path.resolve(__dirname, 'assets'),
       '@utils': path.resolve(__dirname, 'utils'),
       '@settings': path.resolve(__dirname, 'settings'),
-
     },
   },
   module: {
