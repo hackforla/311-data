@@ -1,0 +1,55 @@
+#btn-district-selector-submit {
+  @extend .cta-button;
+  box-shadow: none;
+}
+
+.district-selector {
+  margin-bottom: 25px;
+
+  .comparison-set {
+    display: grid;
+    grid-template-columns: 1fr 55px;
+    grid-column-gap: 0;
+    align-items: center;
+
+    .set1, .set2 {
+      border: 1px solid $brand-stroke-color;
+      border-radius: 3px;
+      padding: 8px 11px;
+      margin-right: 0;
+      display: inline-block;
+
+      #btn-toggle-show-more {
+        color: $brand-main-color;
+        display: inline-block;
+        margin: 0 0 0 6px;
+        cursor: pointer;
+        background-color: transparent;
+        border: 0;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 24px;
+        padding: 0;
+        height: auto;
+        &:focus:not(:active) {
+          box-shadow: none;
+        }
+      }
+    }
+
+    .clear-set-container {
+      text-align: center;
+    }
+
+    .comparison-set-header {
+      font-weight: bold;
+    }
+  }
+}
+
+.district-selector-dropdown {
+  .dropdown-item-label {
+    font: $brand-text-family;
+    font-size: 16px;
+  }
+}

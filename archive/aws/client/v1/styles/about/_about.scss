@@ -1,0 +1,57 @@
+.about-311 {
+  position: absolute;
+  top: $header-height;
+  bottom: $footer-height;
+  text-align: center;
+  padding-bottom: 100px;
+  overflow-y: auto;
+
+  .about-scroll-wrapper {
+    border-radius: 50%;
+    background-color: $brand-text-color;
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    bottom: 25px;
+    left: calc(50% - 24px);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50);
+
+    #icon-about-scroll {
+      cursor: pointer;
+      color: $brand-bg-color;
+    }
+
+    &.bounce {
+      animation: bounce 2s;
+      animation-delay: 2s;
+      animation-iteration-count: 3;
+    }
+
+    @keyframes bounce {
+      0%,
+      25%,
+      50%,
+      75%,
+      100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-20px);
+      }
+      60% {
+        transform: translateY(-12px);
+      }
+    }
+  }
+
+  #btn-about-311 {
+    background-color: $brand-cta1-color;
+    color: $brand-text-color;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: $brand-heading-family;
+    width: 256px;
+    height: 42px;
+    text-align: center;
+  }
+}

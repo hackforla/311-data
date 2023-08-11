@@ -1,0 +1,12 @@
+{
+  "name": "311-data-e2e",
+  "version": "1.0.0",
+  "description": "end-to-end testing",
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
+  "dependencies": {
+    "@testing-library/cypress": "^6.0.0",
+    "cypress": "^4.12.1"
+  }
+}

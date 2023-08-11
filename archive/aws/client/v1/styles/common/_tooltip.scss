@@ -1,0 +1,103 @@
+.tooltip {
+
+  $bg-color: #C4C4C4;
+  $arrow-size: 4px;
+  $margin: 6px;
+
+  position: absolute;
+  z-index: $z-tooltip;
+  pointer-events: none;
+  background-color: $bg-color;
+  border-radius: 4px;
+
+  .arrow {
+    position: absolute;
+    width: 2 * $arrow-size;
+    height: 2 * $arrow-size;
+    z-index: -1;
+    transform: rotate(45deg);
+    background-color: $bg-color;
+  }
+
+  &.top {
+    left: 50%;
+    top: -$margin;
+    transform: translate(-50%, -100%);
+    .arrow {
+      bottom: -$arrow-size;
+      left: calc(50% - #{$arrow-size});
+    }
+  }
+
+  &.bottom {
+    left: 50%;
+    top: calc(100% + #{$margin});
+    transform: translateX(-50%);
+    .arrow {
+      top: -$arrow-size;
+      left: calc(50% - #{$arrow-size});
+    }
+  }
+
+  &.left {
+    left: -$margin;
+    top: 50%;
+    transform: translate(-100%, -50%);
+    .arrow {
+      right: -$arrow-size;
+      top: calc(50% - #{$arrow-size});
+    }
+  }
+
+  &.right {
+    left: calc(100% + #{$margin});
+    top: 50%;
+    transform: translateY(-50%);
+    .arrow {
+      left: -$arrow-size;
+      top: calc(50% - #{$arrow-size});
+    }
+  }
+}
+
+.hover-over-info {
+  position: relative;
+  .hover-over-tooltip {
+    width: 275px;
+    padding: 8px 12px;
+    word-break: break-word;
+    line-height: 20px;
+    display: flex;
+
+    .icon {
+      margin-right: 8px;
+      margin-top: 2px;
+    }
+
+    .title-row {
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 18px;
+      text-align: left;
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.chart-tooltip {
+  padding: 8px 12px;
+  white-space: nowrap;
+  text-align: left;
+  &-line {
+    &.bold {
+      font-weight: bold;
+    }
+  }
+}

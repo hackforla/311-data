@@ -1,0 +1,33 @@
+# initial load
+
+https://dev-api.311-data.org/status/api
+
+curl -i -s -k -X $'GET' \
+    -H $'Host: dev-api.311-data.org' -H $'Sec-Ch-Ua: \"Not:A-Brand\";v=\"99\", \"Chromium\";v=\"112\"' -H $'Accept: application/json, text/plain, */*' -H $'Sec-Ch-Ua-Mobile: ?0' -H $'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36' -H $'Sec-Ch-Ua-Platform: \"Linux\"' -H $'Origin: https://dev.311-data.org' -H $'Sec-Fetch-Site: same-site' -H $'Sec-Fetch-Mode: cors' -H $'Sec-Fetch-Dest: empty' -H $'Referer: https://dev.311-data.org/' -H $'Accept-Encoding: gzip, deflate' -H $'Accept-Language: en-US,en;q=0.9' -H $'Connection: close' \
+    $'https://dev-api.311-data.org/status/api'
+
+GET /status/api HTTP/1.1
+Host: dev-api.311-data.org
+Sec-Ch-Ua: "Not:A-Brand";v="99", "Chromium";v="112"
+Accept: application/json, text/plain, */*
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36
+Sec-Ch-Ua-Platform: "Linux"
+Origin: https://dev.311-data.org
+Sec-Fetch-Site: same-site
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://dev.311-data.org/
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close
+HTTP/2 200 OK
+Date: Fri, 14 Apr 2023 02:31:57 GMT
+Content-Type: application/json
+Content-Length: 305
+Server: uvicorn
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Origin: https://dev.311-data.org
+Vary: Origin
+
+{"currentTimeUTC":"2023-04-14T02:31:56.958349","lastPulledUTC":"2023-04-13T08:22:01.580116","currentTimeLocal":"2023-04-13T19:31:56.958365-07:00","lastPulledLocal":"2023-04-13T01:22:01.580116-07:00","stage":"Development","version":"dev","gitSha":"8e875eb6c9a23ae291dcc98fe90b8b13d881a7f8","process":13120}

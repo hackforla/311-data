@@ -1,0 +1,49 @@
+# This Action is specifically for creating and deploying a new API Image from the 'dev' branch.
+# The API image is used only by the prod server that serves the v1 frontend.
+# It differs from create_release_dev.yml in that its configured for prod usage.
+name: Create API Image (DEV) (v1)
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - "server/api/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Create Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Get branch name
+        uses: nelonoel/branch-name@v1.0.1
+      - name: Setup environment
+        run: |
+          echo GITHUB_CODE_VERSION=${{ env.BRANCH_NAME }} >> server/api/.env
+          echo GITHUB_SHA=${{ github.sha }} >> server/api/.env
+          echo GITHUB_TOKEN=${{ secrets.GH_ISSUES_TOKEN }} >> server/api/.env
+          echo GITHUB_PROJECT_URL=${{ secrets.GH_PROJECT_URL }} >> server/api/.env
+          echo GITHUB_ISSUES_URL=https://api.github.com/repos/hackforla/311-data-support/issues >> server/api/.env
+          echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> server/api/.env
+          echo API_ALLOWED_ORIGINS=https://311-data.org,https://www.311-data.org >> server/api/.env
+      - name: Build and Push Image to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          path: server/api
+          repository: la311data/311_data_api
+          tag_with_sha: true
+          tags: latest # Tag with 'latest' since the prod service uses the 'latest' image.
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: (Rolling) Restart ECS Tasks
+        run: |
+          aws ecs update-service --cluster prod-la-311-data-cluster --service prod-la-311-data-svc --force-new-deployment

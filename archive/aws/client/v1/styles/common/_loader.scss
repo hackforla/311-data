@@ -1,0 +1,40 @@
+.loader-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: $z-loader;
+  pointer-events: none;
+
+  .inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 60px;
+    background-color: rgba(153, 153, 153, 0.7);
+    border-radius: 4px;
+
+    .loader {
+      margin: 20px auto;
+      width: 50px;
+      height: 50px;
+      border-width: 5px;
+    }
+  }
+}
+
+.loader-button {
+  position: relative;
+  &.loading {
+    color: transparent;
+    cursor: default;
+  }
+  .loader-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

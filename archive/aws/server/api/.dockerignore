@@ -1,0 +1,16 @@
+# Ignore
+*
+
+# Don't ignore
+!requirements.txt
+
+!Dockerfile
+!README.md
+!alembic
+!alembic.ini
+!code
+!data
+!setup.cfg
+!start_api.sh
+!tests
+!.env

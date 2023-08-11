@@ -1,0 +1,19 @@
+.chart {
+  position: relative;
+  max-width: $chart-max-width;
+  margin: 0 auto;
+
+  h1, .info-title {
+    text-align: center;
+    margin-bottom: 0px;
+  }
+
+  &.pie {
+    h1 {
+      margin-bottom: 6px;
+    }
+    canvas {
+      border: 1px solid $brand-stroke-color;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+# searching 90071 from address search input
+
+https://dev-api.311-data.org/geojson/geocode?latitude=34.051511&longitude=-118.251459
+
+curl -i -s -k -X $'GET' \
+    -H $'Host: dev-api.311-data.org' -H $'Sec-Ch-Ua: \"Not:A-Brand\";v=\"99\", \"Chromium\";v=\"112\"' -H $'Accept: application/json, text/plain, */*' -H $'Sec-Ch-Ua-Mobile: ?0' -H $'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36' -H $'Sec-Ch-Ua-Platform: \"Linux\"' -H $'Origin: https://dev.311-data.org' -H $'Sec-Fetch-Site: same-site' -H $'Sec-Fetch-Mode: cors' -H $'Sec-Fetch-Dest: empty' -H $'Referer: https://dev.311-data.org/' -H $'Accept-Encoding: gzip, deflate' -H $'Accept-Language: en-US,en;q=0.9' \
+    $'https://dev-api.311-data.org/geojson/geocode?latitude=34.051511&longitude=-118.251459'
+
+GET /geojson/geocode?latitude=34.051511&longitude=-118.251459 HTTP/1.1
+Host: dev-api.311-data.org
+Sec-Ch-Ua: "Not:A-Brand";v="99", "Chromium";v="112"
+Accept: application/json, text/plain, */*
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36
+Sec-Ch-Ua-Platform: "Linux"
+Origin: https://dev.311-data.org
+Sec-Fetch-Site: same-site
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://dev.311-data.org/
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+HTTP/2 200 OK
+Date: Fri, 14 Apr 2023 02:32:28 GMT
+Content-Type: application/json
+Content-Length: 17
+Server: uvicorn
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Origin: https://dev.311-data.org
+Vary: Origin
+
+{"council_id":14}

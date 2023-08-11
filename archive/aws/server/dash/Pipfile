@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+autopep8 = "*"
+reorder-python-imports = "*"
+pre-commit = "*"
+
+[packages]
+dash = "*"
+pandas = "*"
+gunicorn = "*"
+
+[requires]
+python_version = "3.7"

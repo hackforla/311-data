@@ -1,0 +1,28 @@
+
+# Test results
+coverage/
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.vscode
+.now
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# config
+config.js
+.env
+
+# builds
+dist

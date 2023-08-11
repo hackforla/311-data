@@ -1,0 +1,21 @@
+.how-it-works{
+  margin: 35px 15em 35px 15em;
+
+  h1 {
+    text-align: center;
+  }
+
+  p {
+    text-align: left;
+    line-height: 19px;
+  }
+
+  .grid-container {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-row-gap: 20px;
+    grid-column-gap: 50px;
+    justify-items: center;
+  }
+}

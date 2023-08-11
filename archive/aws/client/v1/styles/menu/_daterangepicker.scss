@@ -1,0 +1,112 @@
+.date-range-picker {
+  height: 200px;
+  width: 400px;
+  overflow: visible;
+  box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.5);
+
+  .modal-card-head {
+    height: 70px;
+    border: none;
+    border-radius: 0;
+
+    .modal-title {
+      font-family: $brand-heading-family;
+      margin-top: 18px;
+      margin-left: 18px;
+    }
+
+    .picker-close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: transparent;
+      color: $brand-stroke-color;
+      padding-left: 6px;
+      padding-right: 6px;
+      &:hover {
+        background-color: transparent;
+        color: $brand-stroke-color;
+      }
+      .icon {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  .modal-card-body {
+    overflow: visible;
+    display: flex;
+    align-items: center;
+
+    .container.inner {
+      padding: 0 5px;
+      height: 42px;
+      width: 317px;
+      display: flex;
+      align-items: center;
+      &.focus {
+        background-color: $brand-stroke-color;
+      }
+
+      .input-label {
+        display: inline-block;
+        width: 100px;
+      }
+
+      .input-wrapper {
+        border: 1px solid $brand-stroke-color;
+        border-radius: 4px;
+        position: relative;
+        width: 150px;
+        &.error {
+          border-color: red;
+          border-width: 2px;
+        }
+
+        input {
+          width: 100%;
+        }
+
+        .svg-wrapper {
+          position: absolute;
+          top: 3px;
+          right: 4px;
+        }
+      }
+
+      .date-input {
+        padding: 4px;
+        border-radius: 4px;
+        outline: none;
+        font-size: 16px;
+        color: $brand-main-color;
+        border: none;
+      }
+    }
+    .error-message {
+      font-size: 12px;
+      color: red;
+      text-align: center;
+      height: 16px;
+      margin-top: 6px;
+    }
+  }
+
+  .modal-card-foot {
+    border: none;
+    text-align: center;
+    border-radius: 0;
+    height: 65px;
+
+    .container {
+      padding-bottom: 30px;
+
+      .date-range-button {
+        @extend .cta-button;
+        width: 125px;
+        height: 42px;
+      }
+    }
+  }
+}

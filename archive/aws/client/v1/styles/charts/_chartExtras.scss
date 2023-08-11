@@ -1,0 +1,85 @@
+.chart-extra {
+  max-width: $chart-max-width;
+  margin: 0 auto;
+
+  h1, .info-title {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .outline {
+    border: 1px solid $brand-stroke-color;
+    padding: 20px;
+    text-align: left;
+  }
+
+  &.criteria,
+  &.comparison-criteria {
+    .outline > div:not(:first-child) {
+      margin-top: 8px;
+    }
+    .criteria-type {
+      display: inline-block;
+      margin-right: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  &.comparison-criteria .criteria-type:not(:first-of-type) {
+    display: block;
+    margin-top: 10px;
+  }
+
+  &.legend {
+    .outline {
+      padding-bottom: 10px;
+      column-width: 200px;
+    }
+    .legend-item {
+      display: inline-block;
+      margin: 0 15px 10px 0;
+      .circle {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 8px;
+        margin-right: 8px;
+      }
+    }
+  }
+
+  &.comparison-legend {
+    .outline {
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      &:not(:last-child) {
+        margin-bottom: 4px;
+      }
+      .color-swatch {
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+        margin-right: 16px;
+      }
+    }
+  }
+
+  &.number-of-requests {
+    .requests-box-container {
+      text-align: center;
+    }
+    .requests-box {
+      display: inline-block;
+      margin: 0 auto;
+      border: 4px grey solid;
+      border-color: $brand-stroke-color;
+      padding: 8px 16px;
+      font-weight: bold;
+    }
+  }
+}

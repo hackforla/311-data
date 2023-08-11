@@ -1,42 +1,40 @@
-# [311 Data](https://www.311-data.org/)
+# 311-Data v2
 
+Demo: https://edwinjue.github.io/311-data-v2-gh-pages/
+
+## "Democratizing public data to improve community initiatives"
 Each day, Los Angelenos report thousands of 311 requests all across LA to resolve issues such as illegal dumping and graffiti in their neighborhoods. These requests are then received by relevant agencies, such as the Police, Building and Safety, or Department of Transportation. The agency responds to the request, addresses it, and then closes it once it is fixed. Thanks to Mayor Eric Garcetti's [Open Data Initiative](https://data.lacity.org/), the expansive amount of data associated with these 311 requests is available online.
 
-To empower local residents and [Neighborhood Councils](https://empowerla.org/councils/) to make informed decisions about how to improve their communities using an easy-to-use application, [Hack For LA](https://www.hackforla.org/) partnered with [EmpowerLA](https://empowerla.org/) to create the [311 Data project](https://www.hackforla.org/projects/311-data). 311 Data makes navigating the wealth of 311 data easier using an open source application built and maintained by volunteers throughout our community. To that end, 311 Data primarily provides two types of visualization:
+We are a group of volunteers with diverse backgrounds who share a common vision: To make 311 request data more accessible and useful for our diverse communities and their representatives through visualization and data science. 
+
+By leveraging technology, we can empower local residents and the representatives of our [Neighborhood Councils](https://empowerla.org/councils/) to 
+* Access
+* Analyze
+* Visualize
+
+the service request data that gets submitted to Los Angeles's 311 system at https://myla311.lacity.org/. 
+
+Our application is open source, built and maintaned by volunteers throughout our community and provides two primary modes of operation:
 * An interactive map showing where different types of 311 requests are being submitted
 * Dashboards that show what types of requests are being made, how quickly they're being resolved, how different councils compare, and more
 
-![311 Screenshot](docs/images/screenshot.png)
+![image](https://user-images.githubusercontent.com/1448719/233575938-ce84a530-39ff-484e-a848-56121a40fe51.png)
+
+Our mission is to create a user-friendly platform for anyone interested in exploring 311 service requests so that they can immediately gain actionable insights. We are looking for sponsors who can support our efforts and help us scale our impact. If you are interested in learning more about our project, would like to volunteer or become a sponsor, please email hungrylulu8@gmail.com. 
 
 ## Project Technology
-
-### Frontend
-
-* Javascript (React)
+* Node.js
+* React.js
+* Duckdb-wasm
 * Redux
-* Bulma
-* HTML/CSS
-
-[See here](client/README.md) for more information about 311 Data client technology.
-
-### Server/API
-
-* FastAPI: asynchronous Python REST API
-* Redis: key-value caching
-* PostgreSql: persistent SQL database
-* Prefect: data ingestion pipeline in Python
-* Docker: containerized servers hosted in AWS
-
-[See here](server/README.md) for more information about 311 Data server technology.
+* Material-UI 4.x
 
 ### Data Analysis
 
 * Python
-* Pandas/Numpy/Matplotlib
-* PostgreSql
-* Socrata API
-
-[See here](docs/data_loading.md) for more information about 311 Data project data analysis.
+* Polars/Pandas/Numpy/Matplotlib
+* Google Colab
+* Observable
 
 ### UI/UX
 
@@ -45,19 +43,16 @@ To empower local residents and [Neighborhood Councils](https://empowerla.org/cou
 * Adobe CC
 * Miro
 
-## Joining the 311 Data project
+## Quick Start
+* node -v (make sure you are using node version 12.*)
+* clone the repo
+* cd 311-data-v2-gh-pages/
+* npm run setup && npm start
+* visit http://localhost:3000
 
-We are looking for volunteers! Those with non-technical skills are welcome as well.
+## Resources
+Public data used in this project:
+* [MyLA311 Service Request Data](https://data.lacity.org/browse?q=myla311%20service%20request%20data&sortBy=relevance)
+* [CSV and parquet datasets are also available here at huggingface.co](https://huggingface.co/edwinjue)
 
-311 Data is part of [Hack for LA](https://www.hackforla.org/) where you can sign up to join weekly onboarding meetings. You can find more information about the current project team [here](https://www.hackforla.org/projects/311-data).
-
-### To Sign Up
-
-* Go to the [Getting Started](https://www.hackforla.org/getting-started) page on the Hack for LA website and learn about the projects and onboarding process.
-* Sign up for an onboarding session on the [Hack for LA Meetup](https://www.meetup.com/hackforla/events) page. These session happen every week!
-
-## More Information about the 311 Data project
-
-* [Project background and resources](docs/background.md)
-* [Contributing to the project](docs/contributing.md)
-* [Data loading and analysis](docs/data_loading.md)
+The source code for this project is based on the original 311-Data [v2-aws](https://github.com/hackforla/311-data/releases/tag/v2-aws) release

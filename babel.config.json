@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env", 
+      {
+        "useBuiltIns": "usage",
+        "corejs": 3,
+        "debug": false,
+        "targets": "> 1%, last 2 versions, not dead"
+      }
+    ],
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties"
+  ]
+}

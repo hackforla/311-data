@@ -1,0 +1,45 @@
+[
+  {
+    "name": "redis",
+    "image": "redis:5",
+    "portMappings": [
+      {
+        "containerPort": 6379
+      }
+    ],
+    "essential": true
+  },
+  {
+    "name": "311_data_api",
+    "image": "la311data/311_data_api:${image_tag}",
+    "portMappings": [
+      {
+        "containerPort": ${container_port}
+      }
+    ],
+    "healthCheck": {
+      "command": [
+        "CMD-SHELL",
+        "python -c \"print('health OK')\""
+      ],
+      "interval": 20,
+      "timeout": 30,
+      "retries": 2
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group" : "/${stage}/${task_name}/311_data_api",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "ecs",
+        "awslogs-create-group": "true"
+      }
+    },
+    "command": ["gunicorn", "lacity_data_api.asgi:app", "-w", "3", "-t", "60", "-k", "uvicorn.workers.UvicornWorker", "--log-level", "info", "-b", "0.0.0.0:5000"],
+    "secrets": [
+      { "name": "DB_DSN", "valueFrom": "/${stage}/${region}/DB_DSN" },
+      { "name": "SENTRY_URL", "valueFrom": "/${stage}/${region}/SENTRY_URL" },
+      { "name": "STAGE", "valueFrom": "/${stage}/${region}/STAGE" }      
+    ]
+  }
+]

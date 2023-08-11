@@ -1,0 +1,88 @@
+const agencies = [
+  {
+    agencyId: 1,
+    agencyName: 'Street Lighting Bureau',
+    socrataOwner: 'BSL',
+    website: 'http://bsl.lacity.org/',
+    twitter: 'LAlight',
+  },
+  {
+    agencyId: 2,
+    agencyName: 'Sanitation Bureau',
+    socrataOwner: 'LASAN',
+    website: 'http://lacitysan.org/',
+    twitter: 'lacitysan',
+  },
+  {
+    agencyId: 3,
+    agencyName: 'Sanitation Bureau',
+    socrataOwner: 'LASAN',
+    website: 'http://lacitysan.org/',
+    twitter: 'lacitysan',
+  },
+  {
+    agencyId: 4,
+    agencyName: 'Office of Community Beautification',
+    socrataOwner: 'OCB',
+    website: 'http://www.laocb.org/',
+    twitter: 'LA_OCB',
+  },
+  {
+    agencyId: 5,
+    agencyName: 'Information Technology Agency',
+    socrataOwner: 'ITA',
+    website: 'http://ita.lacity.org/',
+    twitter: '',
+  },
+  {
+    agencyId: 6,
+    agencyName: 'Department of Water & Power',
+    socrataOwner: 'LADWP',
+    website: 'https://www.ladwp.com/',
+    twitter: 'LADWP',
+  },
+  {
+    agencyId: 7,
+    agencyName: 'Bureau of Street Services',
+    socrataOwner: 'BSS',
+    website: 'https://streetsla.lacity.org/',
+    twitter: 'BSSLosAngeles',
+  },
+  {
+    agencyId: 8,
+    agencyName: 'Transportation Department',
+    socrataOwner: 'LADOT',
+    website: 'http://ladot.lacity.org/',
+    twitter: 'LADOTofficial',
+  },
+  {
+    agencyId: 9,
+    agencyName: 'Department of Animal Services',
+    socrataOwner: 'LAAS',
+    website: 'http://www.laanimalservices.com/',
+    twitter: 'lacitypets',
+  },
+  {
+    agencyId: 10,
+    agencyName: 'Recreation & Parks',
+    socrataOwner: 'RAP',
+    website: 'http://www.laparks.org/',
+    twitter: 'LACityParks',
+  },
+  {
+    agencyId: 11,
+    agencyName: 'Engineering Bureau',
+    socrataOwner: 'ENG',
+    website: 'http://eng.lacity.org/',
+    twitter: '',
+  },
+  {
+    agencyId: 12,
+    agencyName: 'Department of Building and Safety',
+    socrataOwner: 'LADBS',
+    website: 'https://www.ladbs.org/',
+    twitter: '',
+  },
+];
+
+export default agencies;
