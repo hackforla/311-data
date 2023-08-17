@@ -44,11 +44,10 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 * Miro
 
 ## Quick Start
-* Ensure node and npm is installed on your workspace (e.g. follow a [tutorial](https://radixweb.com/blog/installing-npm-and-nodejs-on-windows-and-mac))
 * Ensure that node version manager (nvm) is installed (e.g. follow a [tutorial](https://heynode.com/tutorial/install-nodejs-locally-nvm/))
-* Run `nvm install 12`
-* if you already have nvm, switch to Node 12 via `nvm use 12`
-* confirm you are using Node 12 by running `node -v` (e.g. `Now using node v12.13.0 (npm v6.12.0)`)
+* Run `nvm install lts/erbium`
+* Run `nvm use lts/erbium`
+* confirm you are using Node 12 by running `node -v` (e.g. `Now using node v12.22.12 (npm v6.14.16)`)
 * clone the repo
 * cd 311-data/
 * cp .example.env .env
