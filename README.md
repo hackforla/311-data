@@ -44,9 +44,13 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 * Miro
 
 ## Quick Start
-* node -v (make sure you are using node version 12.*)
+* Ensure node and npm is installed on your workspace (e.g. follow a [tutorial](https://radixweb.com/blog/installing-npm-and-nodejs-on-windows-and-mac))
+* Ensure that node version manager (nvm) is installed (e.g. follow a [tutorial](https://heynode.com/tutorial/install-nodejs-locally-nvm/))
+* Run `nvm install 12`
+* if you already have nvm, switch to Node 12 via `nvm use 12`
+* confirm you are using Node 12 by running `node -v` (e.g. `Now using node v12.13.0 (npm v6.12.0)`)
 * clone the repo
-* cd 311-data-v2-gh-pages/
+* cd 311-data/
 * cp .example.env .env
 * Edit .env and supply a valid MAPBOX_TOKEN. If you are a member of hack4la, please contact someone in 311-engineering for one
 * npm run setup && npm start
