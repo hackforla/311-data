@@ -20,7 +20,6 @@ __snapshots__
 /data/*.geojson
 
 # misc
-db/
 tags/
 Temp/
 *-new.*

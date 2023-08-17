@@ -9,9 +9,9 @@ import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import DbContext from '@db/DbContext';
 import toTitleCase from '@utils/toTitleCase';
 import { updatePinInfo } from '@reducers/data';
-import DbContext from '@db/DbContext';
 import ddbh from '@utils/duckDbHelpers.js';
 import { isEmpty } from '@utils';
 
