@@ -9,7 +9,7 @@ const datasets = {
   parquet: {
     // huggingface
     hfYtd:
-      'https://huggingface.co/datasets/edwinjue/311-data-2023/resolve/refs%2Fconvert%2Fparquet/default/311-data-2023-train.parquet', // year-to-date
+      'https://huggingface.co/datasets/edwinjue/311-data-2023/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet', // year-to-date
     hfLastMonth:
       'https://huggingface.co/datasets/edwinjue/311-data-last-month/resolve/refs%2Fconvert%2Fparquet/edwinjue--311-data-last-month/csv-train.parquet', // last month
   },
