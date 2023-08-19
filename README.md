@@ -1,4 +1,4 @@
-# 311-Data v2
+# 311-Data
 
 Demo: https://edwinjue.github.io/311-data-v2-gh-pages/
 
@@ -44,16 +44,20 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 * Miro
 
 ## Quick Start
+### Setup your environment
 * Ensure that node version manager (nvm) is installed (e.g. follow a [tutorial](https://heynode.com/tutorial/install-nodejs-locally-nvm/))
 * Run `nvm install lts/erbium`
 * Run `nvm use lts/erbium`
-* confirm you are using Node 12 by running `node -v` (e.g. `Now using node v12.22.12 (npm v6.14.16)`)
-* clone the repo
-* cd 311-data/
-* cp .example.env .env
+* Confirm you are using Node 12 by running `node -v` (e.g. `Now using node v12.22.12 (npm v6.14.16)`)
+### Clone the repo
+* `git clone git@github.com:hackforla/311-data.git`
+### Set up and run the project
+* `cd 311-data/`
+* `cp .example.env .env`
 * Edit .env and supply a valid MAPBOX_TOKEN. If you are a member of hack4la, please contact someone in 311-engineering for one
-* npm run setup && npm start
-* visit http://localhost:3000
+* `npm run setup`
+* `npm start`
+* Visit [http://localhost:3000](http://localhost:3000)
 
 ## Resources
 Public data used in this project:
