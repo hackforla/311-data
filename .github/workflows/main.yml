@@ -1,9 +1,9 @@
-name: Deploy Frontend
-  
-on: 
+name: Deploy NRD Frontend
+
+on:
   push:
     branches:
-    - main
+      - main
 
 defaults:
   run:
@@ -13,44 +13,43 @@ jobs:
   build:
     permissions:
       contents: write
-      
+
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repo Code
-      uses: actions/checkout@v2
-      
-#    - name: Setup Python
-#      uses: actions/setup-python@v2
-#      with:
-#        python-version: '2.x'
-        
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: '12.x'
-  
-    - name: Install Packages
-      run: npm ci
-    
-    - name: Setup environment
-      run: |
-        echo "MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }}" > .env
-        echo "SOCRATA_API_URL=${{ secrets.SOCRATA_API_URL }}" >> .env
-        echo "SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }}" >> .env
-        echo "CONTENTFUL_SPACE=${{ secrets.CONTENTFUL_SPACE }}" >> .env
-        echo "CONTENTFUL_TOKEN=${{ secrets.CONTENTFUL_TOKEN }}" >> .env
+      - name: Checkout Repo Code
+        uses: actions/checkout@v2
 
-# JamesIves
-    - name: Build website
-      run: npm run build
+      #    - name: Setup Python
+      #      uses: actions/setup-python@v2
+      #      with:
+      #        python-version: '2.x'
 
-    - name: JamesIves Deploy
-      uses: JamesIves/github-pages-deploy-action@4.1.1
-      with:
-  #         TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        FOLDER: dist
-        BRANCH: gh-pages
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '12.x'
 
+      - name: Install Packages
+        run: npm ci
+
+      - name: Setup environment
+        run: |
+          echo "MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }}" > .env
+          echo "SOCRATA_API_URL=${{ secrets.SOCRATA_API_URL }}" >> .env
+          echo "SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }}" >> .env
+          echo "CONTENTFUL_SPACE=${{ secrets.CONTENTFUL_SPACE }}" >> .env
+          echo "CONTENTFUL_TOKEN=${{ secrets.CONTENTFUL_TOKEN }}" >> .env
+
+      # JamesIves
+      - name: Build website
+        run: npm run build
+
+      - name: JamesIves Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          #         TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          FOLDER: dist
+          BRANCH: gh-pages
 # Chelsey
 #     - name: Configuring git…
 #       run: |
