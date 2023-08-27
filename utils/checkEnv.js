@@ -23,13 +23,22 @@ function getEnv(fileName) {
   if (fs.existsSync(envPath)) {
     const env = getEnv(envPath);
     const exampleEnv = getEnv(exampleEnvPath);
-    const missingKeys = Object.keys(exampleEnv).filter(key => !Object.keys(env).includes(key));
+    const missingKeys = Object.keys(exampleEnv).filter(
+      key => !Object.keys(env).includes(key),
+    );
 
     if (missingKeys.length > 0) {
-      console.log('You are missing these keys in your .env file:', missingKeys, '\n');
+      console.log(
+        'You are missing these keys in your .env file:',
+        missingKeys,
+        '\n',
+      );
       console.log('Copying missing keys to .env...');
       missingKeys.forEach(key => fs.appendFileSync(envPath, `\n${key}=${exampleEnv[key]}`));
-      console.log(green, `File updated: ${envPath}\nDon't forget to update the values!`);
+      console.log(
+        green,
+        `File updated: ${envPath}\nDon't forget to update the values!`,
+      );
     } else {
       console.log(green, 'Your .env file has all required keys.');
     }
@@ -37,6 +46,9 @@ function getEnv(fileName) {
     console.error(red, `No .env file found in ${__dirname}`);
     console.log('Creating .env file from .example.env...');
     fs.copyFileSync(exampleEnvPath, envPath);
-    console.log(green, `File created: ${envPath}\nDon't forget to update the values!`);
+    console.log(
+      green,
+      `File created: ${envPath}\nDon't forget to update the values!`,
+    );
   }
 }());

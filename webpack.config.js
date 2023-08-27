@@ -1,9 +1,10 @@
+const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const SocialTags = require('social-tags-webpack-plugin');
+// const SocialTags = require('social-tags-webpack-plugin');
 
 const description =
   'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.';
@@ -38,7 +39,7 @@ module.exports = {
     rules: [
       {
         test: /\.worker\.(js|cjs|mjs)$/,
-        use: { loader: 'worker-loader' },
+        use: ['worker-loader'],
       },
       {
         test: /\.mjs$/,
@@ -48,21 +49,20 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
+        use: ['babel-loader'],
       },
       {
-        test: /\.(css|scss|sass)$/,
+        test: /\.(css|scss|sass)$/i,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: true,
-            },
+            options: {},
           },
           {
             loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
           },
           {
             loader: 'sass-loader',
@@ -75,7 +75,8 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        use: ['file-loader'],
+        // use: ['file-loader'],
+        type: 'asset/resource',
       },
     ],
   },
@@ -97,25 +98,25 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),
-    new SocialTags({
-      appUrl: 'https://www.311-data.org/',
-      facebook: {
-        'og:type': 'website',
-        'og:url': 'https://www.311-data.org/',
-        'og:title': '311-Data Neighborhood Engagement Tool',
-        'og:image': './public/social-media-card-image.png',
-        'og:description': description,
-        'og:locale': 'en_US',
-        // 'fb:app_id': 'placeholder',
-      },
-      twitter: {
-        'twitter:card': 'summary_large_image',
-        'twitter:url': 'https://www.311-data.org/',
-        'twitter:title': '311-Data Neighborhood Engagement Tool',
-        'twitter:image': './public/social-media-card-image.png',
-        'twitter:description': description,
-        'twitter:site': '@data_311',
-      },
-    }),
+    // new SocialTags({
+    //   appUrl: 'https://www.311-data.org/',
+    //   facebook: {
+    //     'og:type': 'website',
+    //     'og:url': 'https://www.311-data.org/',
+    //     'og:title': '311-Data Neighborhood Engagement Tool',
+    //     'og:image': './public/social-media-card-image.png',
+    //     'og:description': description,
+    //     'og:locale': 'en_US',
+    //     // 'fb:app_id': 'placeholder',
+    //   },
+    //   twitter: {
+    //     'twitter:card': 'summary_large_image',
+    //     'twitter:url': 'https://www.311-data.org/',
+    //     'twitter:title': '311-Data Neighborhood Engagement Tool',
+    //     'twitter:image': './public/social-media-card-image.png',
+    //     'twitter:description': description,
+    //     'twitter:site': '@data_311',
+    //   },
+    // }),
   ],
 };
