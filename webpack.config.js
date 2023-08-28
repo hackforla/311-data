@@ -97,25 +97,25 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),
-    new SocialTags({
-      appUrl: 'https://www.311-data.org/',
-      facebook: {
-        'og:type': 'website',
-        'og:url': 'https://www.311-data.org/',
-        'og:title': '311-Data Neighborhood Engagement Tool',
-        'og:image': './public/social-media-card-image.png',
-        'og:description': description,
-        'og:locale': 'en_US',
-        // 'fb:app_id': 'placeholder',
-      },
-      twitter: {
-        'twitter:card': 'summary_large_image',
-        'twitter:url': 'https://www.311-data.org/',
-        'twitter:title': '311-Data Neighborhood Engagement Tool',
-        'twitter:image': './public/social-media-card-image.png',
-        'twitter:description': description,
-        'twitter:site': '@data_311',
-      },
-    }),
+    // new SocialTags({
+    //   appUrl: 'https://www.311-data.org/',
+    //   facebook: {
+    //     'og:type': 'website',
+    //     'og:url': 'https://www.311-data.org/',
+    //     'og:title': '311-Data Neighborhood Engagement Tool',
+    //     'og:image': './public/social-media-card-image.png',
+    //     'og:description': description,
+    //     'og:locale': 'en_US',
+    //     // 'fb:app_id': 'placeholder',
+    //   },
+    //   twitter: {
+    //     'twitter:card': 'summary_large_image',
+    //     'twitter:url': 'https://www.311-data.org/',
+    //     'twitter:title': '311-Data Neighborhood Engagement Tool',
+    //     'twitter:image': './public/social-media-card-image.png',
+    //     'twitter:description': description,
+    //     'twitter:site': '@data_311',
+    //   },
+    // }),
   ],
 };
