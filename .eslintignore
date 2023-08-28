@@ -1,10 +1,11 @@
 *.json
 *.test.js*
-v1/*
-dist/*
+**/v1/*
+**/dist/*
 webpack.*.js
-node_modules/
-public/*
-Temp/*
-*copy.*
-data/*
+**/node_modules/
+**/public/*
+**/Temp/*
+*\ copy.*
+**/data/*
+**/archive/*
