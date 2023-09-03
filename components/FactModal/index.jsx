@@ -26,9 +26,12 @@ export default function FactModal({ isLoading }) {
 
   useEffect(() => {
     let intervalId = null;
+    let factIndex = 0;
+
     if (isLoading) {
       intervalId = setInterval(() => {
-        setCurrentFactIndex(prev => (prev === facts.length - 1 ? 0 : prev + 1));
+        factIndex = (factIndex + 1) % facts.length;
+        setCurrentFactIndex(factIndex);
       }, seconds(5));
     }
     return () => clearInterval(intervalId);
