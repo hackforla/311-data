@@ -37,5 +37,3 @@ venv/
 # duckDb experimental files
 *-duckDb*
 
-
-.DS_Store
