@@ -38,3 +38,4 @@ venv/
 *-duckDb*
 
 
+.DS_Store
