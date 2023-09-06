@@ -36,3 +36,6 @@ venv/
 
 # duckDb experimental files
 *-duckDb*
+
+# archive
+/archive/aws/API\ Responses/*
