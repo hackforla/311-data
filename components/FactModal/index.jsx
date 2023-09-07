@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Modal, Typography } from '@material-ui/core';
 import { seconds } from '@utils';
@@ -19,23 +18,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function FactModal({ isLoading }) {
+export default function FactModal() {
   const classes = useStyles();
   const [open, setOpen] = useState(true);
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
+  const factsLength = facts.length;
 
   useEffect(() => {
     let intervalId = null;
-    let factIndex = 0;
-
-    if (isLoading) {
-      intervalId = setInterval(() => {
-        factIndex = (factIndex + 1) % facts.length;
-        setCurrentFactIndex(factIndex);
-      }, seconds(5));
-    }
+    intervalId = setInterval(() => {
+      setCurrentFactIndex((currentFactIndex + 1) % factsLength);
+    }, seconds(5));
     return () => clearInterval(intervalId);
-  }, [isLoading]);
+  });
 
   const handleClose = () => {
     setOpen(false);
@@ -52,7 +47,3 @@ export default function FactModal({ isLoading }) {
     </Modal>
   );
 }
-
-FactModal.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-};
