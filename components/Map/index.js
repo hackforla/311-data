@@ -1,7 +1,6 @@
 /* eslint-disable */
 
 import React from 'react';
-import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -397,7 +396,7 @@ class MapContainer extends React.Component {
         <CookieNotice />
         {(isDbLoading || isMapLoading) && (
           <>
-            <FactModal isLoading={true} />
+            <FactModal />
             <img
               style={{
                 width: window.innerWidth,
