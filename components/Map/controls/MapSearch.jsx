@@ -83,7 +83,6 @@ class MapSearch extends React.Component {
       marker: false,
       minLength: 1,
       localGeocoder: searchTerm => {
-        console.log("inside search!!!!!");
         const { geoFilterType } = this.props;
         const searchFilter = new RegExp(searchTerm, 'i');
         switch(geoFilterType) {
