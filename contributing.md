@@ -13,7 +13,7 @@ Building on feature branching, we treat the 'main' branch as the primary contrib
 In other words, whenever you are about to start on a new feature, checkout a new local branch based off of the main branch. Your command would look something like 'git checkout -b 567-BACK-NewEndpoint'. See [this stackoverflow post](https://stackoverflow.com/questions/4470523/create-a-branch-in-git-from-another-branch) for more context.
 
 ## Branch Protection/Github Actions (to be implemented)
-We use Github Actions to run our continuous integration (CI). These actions include status checks that run whenever you submit a pull request to main. When you submit a PR, Github will run a set of operations to build and test all or part of the codebase. If any of these steps fail, the pull request will not be allowed to be merged until they are fixed. From the pull request UI you can find the reason an operation may have failed in the status checks section towards the bottom.
+We use [Github Actions](https://github.com/features/actions) to run our continuous integration (CI). These actions include status checks that run whenever you submit a pull request to main. When you submit a PR, Github will run a set of operations to build and test all or part of the codebase. If any of these steps fail, the pull request will not be allowed to be merged until they are fixed. From the pull request UI you can find the reason an operation may have failed in the status checks section towards the bottom.
 
 If you want to look at our setup, check out the "Actions" tab in Github, as well as the [workflows directory](https://github.com/hackforla/311-data/tree/master/.github/workflows), which contains the code that Github runs when actions are triggered.
 
@@ -29,5 +29,4 @@ CI Is driven by tests, they help instill confidence in pull requests because a d
     - Test with strange input, (What if I send characters to a function that expects integers)
   - One for the "null path"
     - Test with empty params/nothing/emptiness
-Our front end tests are run through Enzyme and our backend tests are run through Pytest.
-
+Our front end tests are run through Jest and RTL.
