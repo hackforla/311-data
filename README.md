@@ -45,15 +45,15 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 
 ## Quick Start
 * Ensure that node version manager (nvm) is installed (e.g. follow a [tutorial](https://heynode.com/tutorial/install-nodejs-locally-nvm/))
-* Run `nvm install lts/erbium`
-* Run `nvm use lts/erbium`
+* Run `nvm install lts/erbium` (on windows `nvm install erbium`)
+* Run `nvm use lts/erbium` (on windows `nvm use erbium`)
 * confirm you are using Node 12 by running `node -v` (e.g. `Now using node v12.22.12 (npm v6.14.16)`)
 * clone the repo
 * cd 311-data/
 * cp .example.env .env
 * Edit .env and supply a valid MAPBOX_TOKEN. If you are a member of hack4la, please contact someone in 311-engineering for one
-* npm run setup && npm start
-* visit http://localhost:3000
+* From the 311-data parent directory run: `npm run setup && npm start`
+* Visit http://localhost:3000
 
 ## Resources
 Public data used in this project:
