@@ -30,8 +30,7 @@ export default function FactModal() {
       setCurrentFactIndex((currentFactIndex + 1) % factsLength);
     }, seconds(5));
     return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentFactIndex, factsLength]);
 
   const handleClose = () => {
     setOpen(false);
