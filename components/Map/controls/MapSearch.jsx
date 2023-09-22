@@ -85,7 +85,6 @@ class MapSearch extends React.Component {
       localGeocoder: searchTerm => {
         const { geoFilterType } = this.props;
         const searchFilter = new RegExp(searchTerm, 'i');
-
         switch(geoFilterType) {
           case GEO_FILTER_TYPES.address:
             return [];
@@ -106,6 +105,14 @@ class MapSearch extends React.Component {
             }));
         }
       },
+      filter: (item) => {
+        // Early return if item is undefined
+        if (item?.context === undefined || item.context.length === 0) return;
+        // Return only places that are in los angeles county as district, this can be adjusted to include more places
+        return item.context.some( (i) => {
+          return (i.id.split(".").shift() === 'district' && i.text === "Los Angeles County");
+        });
+      }
     });
 
     // This event fires upon an Address Search submission
