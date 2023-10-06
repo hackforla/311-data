@@ -2,17 +2,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import colors from '@theme/colors';
 
 const useStyles = makeStyles(theme => ({
   headingBackground: {
-    background: theme.palette.primary.main,
+    // background: theme.palette.primary.main,
     backgroundPosition: 'top',
-    height: '30vh',
+    height: '25vh',
     position: 'relative',
   },
   headingOverlayText: {
     left: '50%',
-    color: 'white',
+    color: `${colors.textPrimaryLight}`,
     position: 'absolute',
     textAlign: 'center',
     top: '50%',

@@ -10,6 +10,7 @@ export default {
   textDark: '#C4C4C4',
   textPrimaryDark: '#0F181F',
   textPrimaryLight: '#29404F',
+  textPrimaryLightWithOpacity: 'rgba(41, 64, 79, 0.25)',
   textSecondaryDark: '#A8A8A8',
   textSecondaryLight: '#ECECEC',
   textFocus: '#87C8BC',
