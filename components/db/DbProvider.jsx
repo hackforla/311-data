@@ -55,7 +55,7 @@ const DbProvider = ({ children }) => {
         // register parquet
         await newDb.registerFileURL(
           'requests.parquet',
-          datasets.parquet.hfYtd,
+          datasets.csv.hfYtd,
           4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
         );
 
