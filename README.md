@@ -28,7 +28,7 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 * Duckdb-wasm
 * Redux
 * Material-UI 4.x
-
+ 
 ### Data Analysis
 
 * Python
