@@ -24,11 +24,11 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 
 ## Project Technology
 * Node.js
-* React.js
+* React.js 
 * Duckdb-wasm
 * Redux
 * Material-UI 4.x
-
+ 
 ### Data Analysis
 
 * Python
