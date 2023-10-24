@@ -1,9 +1,9 @@
-import { DateUtils } from 'react-day-picker';
+import { addMonths } from 'date-fns';
 
 const today = new Date();
 
-const oneMonthBack = DateUtils.addMonths(today, -1);
-const threeMonthsBack = DateUtils.addMonths(today, -3);
+const oneMonthBack = addMonths(today, -1);
+const threeMonthsBack = addMonths(today, -3);
 const oneWeekBack = new Date(new Date().setDate(today.getDate() - 7));
 
 const options = [

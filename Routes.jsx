@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Switch, Route, Redirect, useLocation,
+  Routes, Route, Navigate, useLocation,
 } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -17,7 +17,7 @@ import Research from '@components/main/Research';
 import Contact from '@components/contact/Contact';
 import ContentBottom from '@components/common/ContentBottom';
 
-export default function Routes() {
+export default function AppRoutes() {
   const { pathname, search } = useLocation();
   const values = queryString.parse(search);
 
@@ -35,7 +35,7 @@ export default function Routes() {
       {/* Default theme - Everything else. */}
       <ThemeProvider theme={theme}>
         <Paper elevation={0}>
-          <Switch>
+          <Routes>
             <Route path="/dashboard-overview" component={DashboardOverview} />
             <Route
               path="/dashboard-comparison"
@@ -46,10 +46,8 @@ export default function Routes() {
             <Route path="/research" component={Research} />
             <Route path="/about" component={About} />
             <Route path="/contact" component={Contact} />
-            <Route path="/">
-              <Redirect to={`map${search}`} />
-            </Route>
-          </Switch>
+            <Route path="/" element={<Navigate to={`map${search}`} />} />
+          </Routes>
           <ContentBottom />
         </Paper>
       </ThemeProvider>

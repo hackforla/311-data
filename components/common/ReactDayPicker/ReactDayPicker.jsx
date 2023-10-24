@@ -1,9 +1,9 @@
-import 'react-day-picker/lib/style.css';
+// import 'react-day-picker/lib/style.css';
 
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import DayPicker from 'react-day-picker';
+import { DayPicker } from 'react-day-picker';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';

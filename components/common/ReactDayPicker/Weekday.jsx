@@ -1,5 +1,5 @@
 import React from 'react';
-import { WeekdayElementProps } from 'react-day-picker/';
+import { WeekdayElementProps } from 'react-day-picker';
 
 const Weekday = ({
   weekday, className, localeUtils, locale,

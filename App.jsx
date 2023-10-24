@@ -6,7 +6,7 @@ import { getMetadataRequest } from '@reducers/metadata';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
-import Routes from './Routes';
+import AppRoutes from './Routes';
 import RouteChange from './components/main/util/RouteChange';
 
 const App = ({ getMetadata }) => {
@@ -17,7 +17,7 @@ const App = ({ getMetadata }) => {
   return (
     <HashRouter>
       <Header />
-      <Routes />
+      <AppRoutes />
       <Footer />
       <RouteChange />
     </HashRouter>

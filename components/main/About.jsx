@@ -17,6 +17,7 @@ import databaseIcon from '@assets/database_icon.png';
 import publishIcon from '@assets/publish_icon.png';
 import upliftIcon from '@assets/uplift_icon.png';
 import visualizeIcon from '@assets/visualize_icon.png';
+import { Box } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -59,11 +60,11 @@ const About = () => {
               us to create apps with this data, and that&apos;s where
               this project comes&nbsp;in.
             </Typography>
-            <div className={classes.marginTopLarge} align="center">
+            <Box className={classes.marginTopLarge} align="center">
               <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
                 Partners
               </Typography>
-            </div>
+            </Box>
             <div className={classes.marginTopMedium}>
               <Typography variant="body1" paragraph>
                 To empower local residents and Neighborhood Councils to
@@ -89,11 +90,11 @@ const About = () => {
             <img src={codeForAmericaLogo} width={202} alt="Code for America" />
           </Grid>
         </Grid>
-        <div className={classes.marginTopLarge} align="center">
+        <Box className={classes.marginTopLarge} align="center">
           <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
             How it works
           </Typography>
-        </div>
+        </Box>
       </ContentBody>
 
       <ContentBody maxWidth="lg" hasTopMargin={false}>

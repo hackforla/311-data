@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import sharedLayout from '@theme/layout';
+import { Box } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -16,11 +17,11 @@ const ContactIntro = () => {
   return (
     <Grid container alignItems="center" justify="center" direction="column">
       <Grid item>
-        <div align="center">
+        <Box align="center">
           <Typography variant="h6" className={classes.contentTitle}>
             {'Don\'t See What You Need?'}
           </Typography>
-        </div>
+        </Box>
         <div className={classes.marginTopSmall}>
           <Typography variant="body1">
             We want to build a tool that works for you. We are open to suggestions and
