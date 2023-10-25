@@ -2,9 +2,9 @@ import React from 'react';
 import {
   Routes, Route, Navigate, useLocation,
 } from 'react-router-dom';
-import { ThemeProvider } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import queryString from 'query-string';
 import theme, { darkTheme } from '@theme/theme';
 import Desktop from '@components/main/Desktop';
@@ -24,33 +24,37 @@ export default function AppRoutes() {
   return (
     <>
       {/* Dark Theme - Map. */}
-      <ThemeProvider theme={darkTheme}>
-        <Paper elevation={0}>
-          <Box visibility={pathname !== '/map' ? 'hidden' : 'visible'}>
-            <Desktop initialState={values} />
-          </Box>
-        </Paper>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={darkTheme}>
+          <Paper elevation={0}>
+            <Box visibility={pathname !== '/map' ? 'hidden' : 'visible'}>
+              <Desktop initialState={values} />
+            </Box>
+          </Paper>
+        </ThemeProvider>
+      </StyledEngineProvider>
 
       {/* Default theme - Everything else. */}
-      <ThemeProvider theme={theme}>
-        <Paper elevation={0}>
-          <Routes>
-            <Route path="/dashboard-overview" component={DashboardOverview} />
-            <Route
-              path="/dashboard-comparison"
-              component={DashboardComparison}
-            />
-            <Route path="/privacy" component={Privacy} />
-            <Route path="/faqs" component={Faqs} />
-            <Route path="/research" component={Research} />
-            <Route path="/about" component={About} />
-            <Route path="/contact" component={Contact} />
-            <Route path="/" element={<Navigate to={`map${search}`} />} />
-          </Routes>
-          <ContentBottom />
-        </Paper>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Paper elevation={0}>
+            <Routes>
+              <Route path="/dashboard-overview" element={<DashboardOverview />} />
+              <Route
+                path="/dashboard-comparison"
+                element={<DashboardComparison />}
+              />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/faqs" element={<Faqs />} />
+              <Route path="/research" element={<Research />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/" element={<Navigate to={`map${search}`} />} />
+            </Routes>
+            <ContentBottom />
+          </Paper>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </>
   );
 }

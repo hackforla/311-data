@@ -7,14 +7,14 @@ import actions from './routeChangeActions';
 // Taken from
 // https://reactrouter.com/en/main/start/faq#what-happened-to-withrouter-i-need-it
 function withRouter(WrappedComponent) {
-  const ComponentWithRouterProp = props => {
+  function ComponentWithRouterProp(props) {
     const location = useLocation();
     const navigate = useNavigate();
     const params = useParams();
     const routerProps = { location, navigate, params };
     // eslint-disable-next-line react/jsx-props-no-spreading
     return <WrappedComponent {...props} router={routerProps} />;
-  };
+  }
 
   return ComponentWithRouterProp;
 }

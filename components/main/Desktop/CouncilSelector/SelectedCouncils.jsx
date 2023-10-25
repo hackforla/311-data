@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import ChipList, { StyledChip } from '@components/common/ChipList';
 
 const useStyles = makeStyles(theme => ({
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SelectedCouncils = ({ items, onDelete }) => {
+function SelectedCouncils({ items, onDelete }) {
   const classes = useStyles();
 
   const renderSelected = () => items.map(item => (
@@ -33,7 +33,7 @@ const SelectedCouncils = ({ items, onDelete }) => {
       )}
     </ChipList>
   );
-};
+}
 
 export default SelectedCouncils;
 

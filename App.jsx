@@ -7,9 +7,9 @@ import { getMetadataRequest } from '@reducers/metadata';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import AppRoutes from './Routes';
-import RouteChange from './components/main/util/RouteChange';
+// import RouteChange from './components/main/util/RouteChange';
 
-const App = ({ getMetadata }) => {
+function App({ getMetadata }) {
   useEffect(() => {
     getMetadata();
   });
@@ -19,10 +19,10 @@ const App = ({ getMetadata }) => {
       <Header />
       <AppRoutes />
       <Footer />
-      <RouteChange />
+      {/* <RouteChange /> */}
     </HashRouter>
   );
-};
+}
 
 const mapDispatchToProps = dispatch => ({
   getMetadata: () => dispatch(getMetadataRequest()),

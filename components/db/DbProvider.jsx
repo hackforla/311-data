@@ -20,7 +20,7 @@ const datasets = {
   },
 };
 
-const DbProvider = ({ children }) => {
+function DbProvider({ children }) {
   const [db, setDb] = useState(null);
   const [conn, setConn] = useState(null);
   const [worker, setWorker] = useState(null);
@@ -110,7 +110,7 @@ const DbProvider = ({ children }) => {
       {children}
     </DbContext.Provider>
   );
-};
+}
 
 DbProvider.propTypes = {
   children: PropTypes.node,

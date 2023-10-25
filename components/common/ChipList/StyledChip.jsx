@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
-import CloseIcon from '@material-ui/icons/Close';
+import makeStyles from '@mui/styles/makeStyles';
+import Chip from '@mui/material/Chip';
+import CloseIcon from '@mui/icons-material/Close';
 
 const useStylesSolid = makeStyles(theme => ({
   root: {
@@ -36,13 +36,13 @@ const useStylesOutlined = makeStyles(theme => ({
   },
 }));
 
-const StyledChip = ({
+function StyledChip({
   label,
   value,
   color,
   onDelete,
   outlined,
-}) => {
+}) {
   const classesSolid = useStylesSolid({ color });
   const classesOutlined = useStylesOutlined({ color });
 
@@ -57,7 +57,7 @@ const StyledChip = ({
       clickable={false}
     />
   );
-};
+}
 
 export default StyledChip;
 

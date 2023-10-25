@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const DateRanges = ({
+function DateRanges({
   options, onSelect, dates, classes,
-}) => {
+}) {
   function highlightIfSelected(optionDays, selectedDays) {
     if (dates.length > 0) {
       const [from, to, start, end] = [
@@ -38,7 +38,7 @@ const DateRanges = ({
         : null}
     </div>
   );
-};
+}
 
 const {
   func, arrayOf, shape, string,

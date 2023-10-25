@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
 import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
 import { sendGitRequest } from '@reducers/data';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,7 +38,7 @@ const toastEmitterSettings = {
   progress: undefined,
 };
 
-const ContactForm = () => {
+function ContactForm() {
   const dispatch = useDispatch();
 
   // mapStateToProps equivalent.
@@ -182,8 +182,8 @@ const ContactForm = () => {
 
   return (
     <form id="contact-form" onSubmit={handleSubmit}>
-      <Grid container alignItems="center" justify="center" direction="column">
-        <Grid container alignItems="center" justify="center" direction="row" spacing={2}>
+      <Grid container alignItems="center" justifyContent="center" direction="column">
+        <Grid container alignItems="center" justifyContent="center" direction="row" spacing={2}>
           <Grid item xs={6}>
             <TextField
               id="contact-firstname"
@@ -215,7 +215,7 @@ const ContactForm = () => {
             />
           </Grid>
         </Grid>
-        <Grid container alignItems="center" justify="center" direction="row">
+        <Grid container alignItems="center" justifyContent="center" direction="row">
           <Grid item xs={12}>
             <TextField
               id="contact-email"
@@ -262,7 +262,7 @@ const ContactForm = () => {
             />
           </Grid>
         </Grid>
-        <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: '20px' }}>
+        <Grid container direction="column" alignItems="center" justifyContent="center" style={{ paddingTop: '20px' }}>
           <CircularProgress style={{ display: formValues.loading ? 'block' : 'none' }} />
           <Button variant="contained" color="secondary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
             Submit
@@ -271,6 +271,6 @@ const ContactForm = () => {
       </Grid>
     </form>
   );
-};
+}
 
 export default ContactForm;

@@ -1,9 +1,9 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
 import sharedLayout from '@theme/layout';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -11,11 +11,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ContactIntro = () => {
+function ContactIntro() {
   const classes = { ...useStyles(), ...sharedLayout() };
 
   return (
-    <Grid container alignItems="center" justify="center" direction="column">
+    <Grid container alignItems="center" justifyContent="center" direction="column">
       <Grid item>
         <Box align="center">
           <Typography variant="h6" className={classes.contentTitle}>
@@ -33,6 +33,6 @@ const ContactIntro = () => {
       </Grid>
     </Grid>
   );
-};
+}
 
 export default ContactIntro;
