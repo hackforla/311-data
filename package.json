@@ -41,7 +41,6 @@
     "clsx": "^2.0.0",
     "core-js": "^3.33.1",
     "dataframe-js": "^1.4.4",
-    "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "dotenv-webpack": "^8.0.1",
     "html-webpack-plugin": "^5.5.3",

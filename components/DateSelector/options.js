@@ -1,4 +1,4 @@
-import { addMonths } from 'date-fns';
+import { addMonths } from 'react-day-picker';
 
 const today = new Date();
 
