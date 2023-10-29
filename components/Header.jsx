@@ -7,7 +7,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import fonts from '@theme/fonts';
 import colors from '@theme/colors';
 
@@ -20,6 +19,12 @@ const useStyles = makeStyles(theme => ({
   link: {
     color: 'white',
     textDecoration: 'none',
+    '& button': {
+      borderRadius: '0',
+    },
+    '&.active button': {
+      borderBottom: `2px solid ${colors.primaryFocus}`,
+    },
   },
   button: {
     color: 'white',
@@ -28,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     textDecoration: 'none',
+    minWidth: '15px',
   },
   title: {
     ...theme.typography.h4,
@@ -52,10 +58,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const activeStyle = {
-  borderBottom: `1px solid ${colors.primaryFocus}`,
-};
-
 // TODO: links/routing, mobile
 const Header = () => {
   const classes = useStyles();
@@ -77,7 +79,7 @@ const Header = () => {
             311DATA
           </Link>
         </Typography>
-        <NavLink className={classes.link} to="/map" activeStyle={activeStyle}>
+        <NavLink className={classes.link} to="/map">
           <Button className={classes.button}>Map</Button>
         </NavLink>
         <Button
@@ -111,31 +113,19 @@ const Header = () => {
             </MenuItem>
           </Link>
         </Menu>
-        <NavLink to="/faqs" className={classes.link} activeStyle={activeStyle}>
+        <NavLink to="/faqs" className={classes.link}>
           <Button className={classes.button}>FAQ</Button>
         </NavLink>
-        <NavLink to="/about" className={classes.link} activeStyle={activeStyle}>
+        <NavLink to="/about" className={classes.link}>
           <Button className={classes.button}>About</Button>
         </NavLink>
-        <NavLink
-          to="/research"
-          className={classes.link}
-          activeStyle={activeStyle}
-        >
+        <NavLink to="/research" className={classes.link}>
           <Button className={classes.button}>Research</Button>
         </NavLink>
-        <NavLink
-          to="/privacy"
-          className={classes.link}
-          activeStyle={activeStyle}
-        >
+        <NavLink to="/privacy" className={classes.link}>
           <Button className={classes.button}>Privacy</Button>
         </NavLink>
-        <NavLink
-          to="/contact"
-          className={classes.link}
-          activeStyle={activeStyle}
-        >
+        <NavLink to="/contact" className={classes.link}>
           <Button className={classes.button}>Contact</Button>
         </NavLink>
       </Toolbar>
