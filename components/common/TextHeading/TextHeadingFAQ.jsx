@@ -10,6 +10,7 @@ const useStyles = makeStyles(theme => ({
     backgroundPosition: 'top',
     height: '25vh',
     position: 'relative',
+    overflow: 'hidden',
   },
   headingOverlayText: {
     left: '50%',
