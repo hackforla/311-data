@@ -13,14 +13,14 @@ import requestTypes from '../../../data/requestTypes';
 // import 'react-toastify/dist/ReactToastify.css';
 
 // TO DO ------
-// x button
-// querying filters:
+// x Button
+// x Querying filters:
 //      x status
 //      x date
-//      - request type
-//      x neighborhood (Object NC:  54 | NCName: "MacArthur Park")
-//         councilId : 38 endDate : "2023-10-13"
+//      x request type
+//      x neighborhood
 // x CSV
+// - Toast Modal
 
 // export button main function
 const ExportButton = ({ filters }) => {
@@ -73,7 +73,7 @@ const ExportButton = ({ filters }) => {
     const dataToExport = await conn.query(query);
     const results = ddbh.getTableData(dataToExport);
 
-    console.log('got results - length: ', results.length);
+    // console.log('got results - length: ', results.length);
     if (!isEmpty(results)) {
       // test
       // console.log('logging results: ... ');
