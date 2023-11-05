@@ -2,7 +2,7 @@
 export default {
   primaryDark: '#192730',
   primaryDarkMain: '#29404F',
-  primaryFocus: '#FFB100',
+  primaryFocus: '#FFB104',
   primaryLight: '#29404F',
   secondaryDark: '#0F181F',
   secondaryFocus: '#87C8BC',
