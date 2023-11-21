@@ -1,22 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 
-const SelectItem = ({
+function SelectItem({
   text, value, onClick, disabled,
-}) => (
-  <MenuItem
-    key={text}
-    onClick={onClick}
-    dense
-    value={value}
-    disableRipple
-    disabled={disabled}
-    aria-label={text}
-  >
-    {text}
-  </MenuItem>
-);
+}) {
+  return (
+    <MenuItem
+      key={text}
+      onClick={onClick}
+      dense
+      value={value}
+      disableRipple
+      disabled={disabled}
+      aria-label={text}
+    >
+      {text}
+    </MenuItem>
+  );
+}
 
 export default SelectItem;
 

@@ -3,14 +3,14 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import IconButton from '@material-ui/core/IconButton';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import Box from '@material-ui/core/Box';
-import CollapseMUI from '@material-ui/core/Collapse';
-import { makeStyles } from '@material-ui/core/styles';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import IconButton from '@mui/material/IconButton';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import Box from '@mui/material/Box';
+import CollapseMUI from '@mui/material/Collapse';
+import makeStyles from '@mui/styles/makeStyles';
 import { toggleBoundaries, showBoundaries, closeBoundaries } from '@reducers/ui';
 
 const useStyles = makeStyles(theme => ({
@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 
 const Context = React.createContext({ isOpen: false });
 
-const BoundariesSection = ({
+function BoundariesSection({
   onToggle,
   children,
   expanded: initial,
@@ -60,7 +60,7 @@ const BoundariesSection = ({
   dispatchToggleBoundaries,
   dispatchShowBoundaries,
   dispatchCloseBoundaries,
-}) => {
+}) {
   const classes = useStyles();
 
   useEffect(() => {
@@ -96,6 +96,7 @@ const BoundariesSection = ({
               onClick={toggleCollapse}
               disableFocusRipple
               disableRipple
+              size="large"
             >
               {/* {expanded ? ( */}
               {isOpen ? (
@@ -123,7 +124,7 @@ const BoundariesSection = ({
       </Card>
     </Context.Provider>
   );
-};
+}
 
 BoundariesSection.propTypes = {
   onToggle: PropTypes.func,

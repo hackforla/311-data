@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import makeStyles from '@mui/styles/makeStyles';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import fonts from '@theme/fonts';
 import colors from '@theme/colors';
@@ -57,7 +57,7 @@ const activeStyle = {
 };
 
 // TODO: links/routing, mobile
-const Header = () => {
+function Header() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -77,7 +77,7 @@ const Header = () => {
             311DATA
           </Link>
         </Typography>
-        <NavLink className={classes.link} to="/map" activeStyle={activeStyle}>
+        <NavLink className={classes.link} to="/map" style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>Map</Button>
         </NavLink>
         <Button
@@ -93,7 +93,6 @@ const Header = () => {
           keepMounted
           open={Boolean(anchorEl)}
           onClose={handleClose}
-          getContentAnchorEl={null}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
@@ -111,36 +110,36 @@ const Header = () => {
             </MenuItem>
           </Link>
         </Menu>
-        <NavLink to="/faqs" className={classes.link} activeStyle={activeStyle}>
+        <NavLink to="/faqs" className={classes.link} style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>FAQ</Button>
         </NavLink>
-        <NavLink to="/about" className={classes.link} activeStyle={activeStyle}>
+        <NavLink to="/about" className={classes.link} style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>About</Button>
         </NavLink>
         <NavLink
           to="/research"
           className={classes.link}
-          activeStyle={activeStyle}
+          style={({ isActive }) => (isActive ? activeStyle : null)}
         >
           <Button className={classes.button}>Research</Button>
         </NavLink>
         <NavLink
           to="/privacy"
           className={classes.link}
-          activeStyle={activeStyle}
+          style={({ isActive }) => (isActive ? activeStyle : null)}
         >
           <Button className={classes.button}>Privacy</Button>
         </NavLink>
         <NavLink
           to="/contact"
           className={classes.link}
-          activeStyle={activeStyle}
+          style={({ isActive }) => (isActive ? activeStyle : null)}
         >
           <Button className={classes.button}>Contact</Button>
         </NavLink>
       </Toolbar>
     </AppBar>
   );
-};
+}
 
 export default Header;

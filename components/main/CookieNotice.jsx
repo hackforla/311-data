@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import { CardHeader } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import { CardHeader } from '@mui/material';
+import Button from '@mui/material/Button';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { acceptCookies } from '@reducers/ui';
 import colors from '@theme/colors';
 
@@ -50,10 +50,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const CookieNotice = ({
+function CookieNotice({
   showCookieNotice,
   acceptCookieNotice,
-}) => {
+}) {
   const classes = useStyles();
   const handleClick = () => {
     acceptCookieNotice();
@@ -84,7 +84,7 @@ const CookieNotice = ({
     );
   }
   return null;
-};
+}
 
 const mapStateToProps = state => ({
   showCookieNotice: !state.ui.cookiesAccepted,

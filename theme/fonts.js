@@ -1,8 +1,8 @@
 // Define standard font constants.
 export default {
   family: {
-    oswald: ['Oswald', 'sans-serif'],
-    roboto: ['Roboto', 'sans-serif'],
+    oswald: 'Oswald, sans-serif',
+    roboto: 'Roboto, sans-serif',
   },
   weight: {
     medium: 500,

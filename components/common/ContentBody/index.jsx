@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import clsx from 'clsx';
 import sharedLayout from '@theme/layout';
 
 // ContentBody keeps the body of all content pages centered
 // with a customizable maxWidth container that defaults to 'md'.
 
-const ContentBody = ({ children, maxWidth, hasTopMargin }) => {
+function ContentBody({ children, maxWidth, hasTopMargin }) {
   const classes = sharedLayout();
 
   return (
-    <Grid container className={clsx(hasTopMargin && classes.marginTopLarge)} alignItems="center" justify="center" direction="column">
+    <Grid container className={clsx(hasTopMargin && classes.marginTopLarge)} alignItems="center" justifyContent="center" direction="column">
       <Grid item>
         <Container component="main" maxWidth={maxWidth}>
           <div>
@@ -22,7 +22,7 @@ const ContentBody = ({ children, maxWidth, hasTopMargin }) => {
       </Grid>
     </Grid>
   );
-};
+}
 
 ContentBody.defaultProps = {
   children: {},

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { updateRequestStatus } from '@reducers/filters';
 
 const useStyles = makeStyles(() => ({
@@ -21,10 +21,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const StatusSelector = ({
+function StatusSelector({
   updateStatusFilter,
   requestStatus,
-}) => {
+}) {
   const classes = useStyles();
   const [selection, setSelection] = useState('open');
 
@@ -71,7 +71,7 @@ const StatusSelector = ({
       </ToggleButtonGroup>
     </>
   );
-};
+}
 
 const mapStateToProps = state => ({
   requestStatus: state.filters.requestStatus,

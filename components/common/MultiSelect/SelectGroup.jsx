@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import SelectItem from './SelectItem';
 
@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SelectGroup = ({ name, items, onChange }) => {
+function SelectGroup({ name, items, onChange }) {
   const classes = useStyles();
 
   return (
@@ -28,7 +28,7 @@ const SelectGroup = ({ name, items, onChange }) => {
       ))}
     </div>
   );
-};
+}
 
 export default SelectGroup;
 

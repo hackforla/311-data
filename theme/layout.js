@@ -1,4 +1,5 @@
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import createStyles from '@mui/styles/createStyles';
 
 // Define standard layout spacing and export as makeStyles hook.
 const sharedLayout = makeStyles(theme => createStyles({
