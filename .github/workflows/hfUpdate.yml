@@ -1,8 +1,8 @@
 name: Update Huggingface Dataset
 
 on:
-  schedule: # once daily at 11:05 pm PST (6:05 UTC)
-    - cron: '5 6 * * *'
+  schedule: # once daily at 3:05 pm PST (23:05 UTC)
+    - cron: '5 23 * * *'
 
 jobs:
   run:
@@ -17,7 +17,7 @@ jobs:
     - name: Set up Python environment
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.11.x'
 
     - name: Install dependencies
       run: pip install -r requirements.txt

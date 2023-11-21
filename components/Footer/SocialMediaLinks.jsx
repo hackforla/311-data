@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import TwitterSVG from '@assets/twitter-round.svg';
 import FacebookSVG from '@assets/facebook-round.svg';
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SocialMediaLinks = () => {
+function SocialMediaLinks() {
   const classes = useStyles();
   return (
     <div className={classes.socialMedia}>
@@ -45,6 +45,6 @@ const SocialMediaLinks = () => {
       </a>
     </div>
   );
-};
+}
 
 export default SocialMediaLinks;

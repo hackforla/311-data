@@ -1,7 +1,4 @@
-import {
-  createMuiTheme,
-  responsiveFontSizes,
-} from '@material-ui/core/styles';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import colors from '@theme/colors';
 import gaps from '@theme/gaps';
 import borderRadius from '@theme/borderRadius';
@@ -22,10 +19,10 @@ const commonThemeItems = {
 };
 
 // lightTheme is used by content pages - see Routes.jsx.
-const lightTheme = responsiveFontSizes(createMuiTheme({
+const lightTheme = responsiveFontSizes(createTheme({
   ...commonThemeItems,
   palette: {
-    type: 'light',
+    mode: 'light',
     selected: { primary: colors.selectedPrimary },
     primary: {
       main: colors.primaryLight,
@@ -41,10 +38,10 @@ const lightTheme = responsiveFontSizes(createMuiTheme({
 }));
 
 // darkTheme is used by map page
-const darkTheme = responsiveFontSizes(createMuiTheme({
+const darkTheme = responsiveFontSizes(createTheme({
   ...commonThemeItems,
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: {
       main: colors.primaryDarkMain,
       dark: colors.primaryDark,

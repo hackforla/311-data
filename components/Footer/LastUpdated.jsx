@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 import DbContext from '@db/DbContext';
 import ddbh from '@utils/duckDbHelpers.js';
 import { isEmpty } from '@utils';
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const LastUpdated = () => {
+function LastUpdated() {
   const classes = useStyles();
   const [lastUpdated, setLastUpdated] = useState('');
   const { conn } = useContext(DbContext);
@@ -45,6 +45,6 @@ const LastUpdated = () => {
       </div>
     )
   );
-};
+}
 
 export default LastUpdated;

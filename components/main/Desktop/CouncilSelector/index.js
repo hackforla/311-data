@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   updateNcId,
   updateSelectedCouncils,
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 
 // TODO: display loader while fetching councils
 
-const CouncilSelector = ({
+function CouncilSelector({
   councils,
   selected,
   unselected,
@@ -35,7 +35,7 @@ const CouncilSelector = ({
   dispatchCloseBoundaries,
   resetMap,
   resetAddressSearch,
-}) => {
+}) {
   const classes = useStyles();
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const CouncilSelector = ({
       </BoundariesSection>
     </>
   );
-};
+}
 
 const mapStateToProps = state => ({
   councils: state.metadata.councils,
