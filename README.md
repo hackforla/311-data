@@ -27,7 +27,7 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 * React.js
 * Duckdb-wasm
 * Redux
-* Material-UI 4.x
+* Material-UI 5.x
 
 ### Data Analysis
 
@@ -45,9 +45,9 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 
 ## Quick Start
 * Ensure that node version manager (nvm) is installed (e.g. follow a [tutorial](https://heynode.com/tutorial/install-nodejs-locally-nvm/))
-* Run `nvm install lts/erbium` (on windows `nvm install erbium`)
-* Run `nvm use lts/erbium` (on windows `nvm use erbium`)
-* confirm you are using Node 12 by running `node -v` (e.g. `Now using node v12.22.12 (npm v6.14.16)`)
+* Run `nvm install lts/hydrogen` (on windows `nvm install hydrogen`)
+* Run `nvm use lts/hydrogen` (on windows `nvm use hydrogen`)
+* confirm you are using Node 18 by running `node -v` (e.g. `Now using node v18.7.0 (npm v8.9.2)`)
 * clone the repo
 * cd 311-data/
 * cp .example.env .env

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import DayPicker from 'react-day-picker';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
 import {
   updateEndDate as reduxUpdateEndDate,
@@ -153,9 +153,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /** A wrapper around react-day-picker that selects a date range. */
-const ReactDayPicker = ({
+function ReactDayPicker({
   range, updateStartDate, updateEndDate, startDate, endDate,
-}) => {
+}) {
   const classes = useStyles();
 
   // enteredTo represents the day that the user is currently hovering over.
@@ -225,7 +225,7 @@ const ReactDayPicker = ({
       />
     </>
   );
-};
+}
 
 ReactDayPicker.propTypes = {
   range: PropTypes.bool,

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import SelectGroup from './SelectGroup';
 
-const GroupedMultiSelect = ({
+function GroupedMultiSelect({
   items, onChange, groupBy, searchTerm,
-}) => {
+}) {
   const [filtered, setFiltered] = useState(false);
   const [filteredItems, setFilteredItems] = useState([]);
 
@@ -63,7 +63,7 @@ const GroupedMultiSelect = ({
         onChange={onChange}
       />
     ));
-};
+}
 
 export default GroupedMultiSelect;
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles(theme => ({
   bottomSpacing: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 // bottom of the content pages. This component is utilized at the bottom of the
 // component page <Switch> of Routes.jsx
 
-const ContentBottom = () => {
+function ContentBottom() {
   const classes = useStyles();
   return (
     <Grid container className={classes.bottomSpacing}>
@@ -21,6 +21,6 @@ const ContentBottom = () => {
         *  fixed positioned footer from obscuring submit button */}
     </Grid>
   );
-};
+}
 
 export default ContentBottom;

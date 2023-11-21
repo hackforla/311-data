@@ -2,13 +2,13 @@
 import React, { useContext, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import withStyles from '@mui/styles/withStyles';
 import moment from 'moment';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import CircularProgress from '@mui/material/CircularProgress';
 import DbContext from '@db/DbContext';
 import toTitleCase from '@utils/toTitleCase';
 import { updatePinInfo } from '@reducers/data';
@@ -54,7 +54,7 @@ const styles = theme => ({
   },
 });
 
-const RequestDetail = ({
+function RequestDetail({
   classes,
   requestId,
   pinsInfo,
@@ -62,7 +62,7 @@ const RequestDetail = ({
   agencies,
   // dispatchGetPinInfoRequest,
   dispatchUpdatePinInfo,
-}) => {
+}) {
   const { conn } = useContext(DbContext);
   const getPinInfo = useCallback(async () => {
     try {
@@ -144,7 +144,7 @@ const RequestDetail = ({
 
   return (
     <div className={classes.popupContent}>
-      <Grid container direction="row" justify="flex-start" alignItems="center">
+      <Grid container direction="row" justifyContent="flex-start" alignItems="center">
         <Grid className={classes.requestType} item>
           {formattedTypeName}
         </Grid>
@@ -165,7 +165,7 @@ const RequestDetail = ({
         className={classes.info2}
         container
         direction="row"
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="flex-start"
       >
         <Grid item xs={6}>
@@ -223,7 +223,7 @@ const RequestDetail = ({
       </Grid>
     </div>
   );
-};
+}
 
 RequestDetail.propTypes = {
   requestId: PropTypes.string,

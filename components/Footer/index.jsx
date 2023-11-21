@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 import LastUpdated from '@components/Footer/LastUpdated';
 import SocialMediaLinks from '@components/Footer/SocialMediaLinks';
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // TODO: check with UI/UX re placement of social media, privacy policy links
-const Footer = () => {
+function Footer() {
   const classes = useStyles();
   const currentDate = new Date();
 
@@ -69,7 +69,7 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+}
 
 const mapStateToProps = state => ({
   lastUpdated: state.metadata.lastPulledLocal,

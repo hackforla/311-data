@@ -7,29 +7,31 @@ import ContactForm from './ContactForm';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-const Contact = () => (
-  <>
-    <div>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-    </div>
-    <div>
-      <TextHeading>Contact Us</TextHeading>
-      <ContentBody maxWidth="sm">
-        <ContactIntro />
-        <ContactForm />
-      </ContentBody>
-    </div>
-  </>
-);
+function Contact() {
+  return (
+    <>
+      <div>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </div>
+      <div>
+        <TextHeading>Contact Us</TextHeading>
+        <ContentBody maxWidth="sm">
+          <ContactIntro />
+          <ContactForm />
+        </ContentBody>
+      </div>
+    </>
+  );
+}
 
 export default Contact;

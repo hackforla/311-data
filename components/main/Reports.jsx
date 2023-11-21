@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { Backdrop, CircularProgress } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 const REPORTS_PATH = '/reports/';
 
-const Reports = () => {
+function Reports() {
   const [isLoading, setIsLoading] = React.useState(true);
   const classes = useStyles();
 
@@ -64,6 +64,6 @@ const Reports = () => {
       />
     </div>
   );
-};
+}
 
 export default Reports;

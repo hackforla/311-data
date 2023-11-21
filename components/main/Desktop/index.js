@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import PropTypes from 'prop-types';
 import MapContainer from '@components/Map';
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Desktop = ({ initialState }) => {
+function Desktop({ initialState }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -23,7 +23,7 @@ const Desktop = ({ initialState }) => {
       <MapContainer initialState={initialState} />
     </div>
   );
-};
+}
 
 export default Desktop;
 
