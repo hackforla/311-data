@@ -60,8 +60,8 @@ def hfUpload():
     '''
     local_filename = '2023-clean.csv'
     dest_filename = '2023.csv'
-    username = 'edwinjue'
-    repo_name = '311-data-2023'
+    username = '311-data'
+    repo_name = '2023'
     repo_type = 'dataset'
 
     repo_id = f"{username}/{repo_name}"
