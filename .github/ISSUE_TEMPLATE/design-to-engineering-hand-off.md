@@ -1,8 +1,8 @@
 ---
 name: Design-To-Enginering Hand-Off
 about: Ticket for tracking designs submitted to engineering, discussion around implementation of designs
-title: 'Design-To-Engineering Hand-Off <TODO>'
-labels: 'Size: 1pt,Role: Frontend,role: UI/UX Design,Milestone: Missing,Feature:Missing'
+title: '<TODO>'
+labels: 'Size: 1pt,Role: Frontend,role: UI/UX Design,Milestone: Missing,Feature:Missing,Design-To-Engineering Hand Off'
 assignees: ''
 ---
 # Design To Engineering Hand Off
