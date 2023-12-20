@@ -11,7 +11,7 @@ import ContentBody from '@components/common/ContentBody';
 // Images
 import empowerLaLogo from '@assets/empower_la_logo.png';
 import hackForLaLogo from '@assets/hack_for_la_logo.png';
-import codeForAmericaLogo from '@assets/code_for_america_logo.png';
+import civicTechStructureLogo from '@assets/civic_tech_structure_logo.png';
 import mobileAppIcon from '@assets/mobile_app_icon.png';
 import databaseIcon from '@assets/database_icon.png';
 import publishIcon from '@assets/publish_icon.png';
@@ -87,7 +87,7 @@ function About() {
             <img src={hackForLaLogo} width={97} alt="Hack for LA" />
           </Grid>
           <Grid item xs={12} md={4} align="right">
-            <img src={codeForAmericaLogo} width={202} alt="Code for America" />
+            <img src={civicTechStructureLogo} width={144} alt="Civic Tech Structure" />
           </Grid>
         </Grid>
         <Box className={classes.marginTopLarge} align="center">
