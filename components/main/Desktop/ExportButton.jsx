@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import JSZip from 'jszip';
@@ -9,21 +9,9 @@ import DbContext from '@db/DbContext';
 import ddbh from '@utils/duckDbHelpers.js';
 import { isEmpty } from '@utils';
 import requestTypes from '../../../data/requestTypes';
-// import { toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-
-// TO DO ------
-// x Button
-// x Querying filters:
-//      x status
-//      x date
-//      x request type
-//      x neighborhood
-// x CSV
-// - Toast Modal
 
 // export button main function
-const ExportButton = ({ filters }) => {
+function ExportButton({ filters }) {
   const { conn } = useContext(DbContext);
 
   // creation zip file
@@ -37,10 +25,6 @@ const ExportButton = ({ filters }) => {
 
   // data to add into zip file, queries then add results
   const getDataToExport = async () => {
-    // test
-    // console.log('getDataToExport: filters:', filters);
-    // console.log('this is request type consoling', filters.requestTypes)
-
     // define request status filter variable to reuse variable
     let requestStatusFilter = '';
 
@@ -58,7 +42,6 @@ const ExportButton = ({ filters }) => {
       .filter(item => filters.requestTypes[item.typeId])
       .map(v => `'${v.typeName}'`)
       .join(', ');
-    // console.log('formattedRequestTypes', formattedRequestTypes);
 
     // // in the case user chooses one neighborhood or all are selected + dates and status
     const query = `select * from requests where CreatedDate >= '${filters.startDate}' AND
@@ -67,17 +50,10 @@ const ExportButton = ({ filters }) => {
     ${filters.councilId !== null
         ? ` AND NC='${filters.councilId}'` : ''} AND RequestType IN (${formattedRequestTypes});`;
 
-    // console.log('query', query);
-    // return;
-
     const dataToExport = await conn.query(query);
     const results = ddbh.getTableData(dataToExport);
 
-    // console.log('got results - length: ', results.length);
     if (!isEmpty(results)) {
-      // test
-      // console.log('logging results: ... ');
-      // console.log(results.slice(0, 5));
       // results chosen to csv
       const csvContent = Papa.unparse(results);
       downloadZip(csvContent);
@@ -92,13 +68,12 @@ const ExportButton = ({ filters }) => {
   };
 
   return (
-    <>
-      <Button variant="contained" onClick={handleExport}>
-        Export
-      </Button>
-    </>
+    <Button variant="contained" onClick={handleExport}>
+      Export
+    </Button>
+
   );
-};
+}
 
 const mapStateToProps = state => ({
   filters: state.filters,
