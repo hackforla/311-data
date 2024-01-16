@@ -188,7 +188,6 @@ function ContactForm() {
             <TextField
               id="contact-firstname"
               name="firstName"
-              label="First Name *"
               type="text"
               autoComplete="off"
               value={formValues.firstName}
@@ -203,7 +202,6 @@ function ContactForm() {
             <TextField
               id="contact-lastname"
               name="lastName"
-              label="Last Name *"
               type="text"
               autoComplete="off"
               value={formValues.lastName}
@@ -220,7 +218,6 @@ function ContactForm() {
             <TextField
               id="contact-email"
               name="email"
-              label="Email *"
               type="text"
               autoComplete="off"
               value={formValues.email}
@@ -235,7 +232,6 @@ function ContactForm() {
             <TextField
               id="contact-association"
               name="association"
-              label="Association"
               type="text"
               autoComplete="off"
               value={formValues.association}
@@ -247,7 +243,6 @@ function ContactForm() {
             <TextField
               id="contact-message"
               name="message"
-              label="Message *"
               type="text"
               variant="outlined"
               rows={8}
