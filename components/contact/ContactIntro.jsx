@@ -24,10 +24,7 @@ function ContactIntro() {
         </Box>
         <div className={classes.marginTopSmall}>
           <Typography variant="body1">
-            We want to build a tool that works for you. We are open to suggestions and
-            feedback and would love the opportunity to get connected. Feel free to input
-            your information in the contact form below and we will be sure to get back to
-            you within 2-3 business days. Thank you!
+            We are open to suggestions and feedback and would love the opportunity to get connected.
           </Typography>
         </div>
       </Grid>
