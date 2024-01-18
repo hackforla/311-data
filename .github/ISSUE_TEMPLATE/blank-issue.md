@@ -2,7 +2,7 @@
 name: Blank Issue
 about: Describe this issue's purpose here
 title: ''
-labels: 'Milestone: Missing,Role: Missing,Size: Missing,Feature:Missing'
+labels: 'Milestone: Missing, Role: Missing, Size: Missing'
 assignees: ''
 
 ---
