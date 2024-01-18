@@ -121,9 +121,9 @@ function FilterMenu({ resetMap, resetAddressSearch }) {
           <div className={classes.selectorWrapper}>
             <StatusSelector />
           </div>
-          <div className={classes.selectorWrapper}>
+          {/* <div className={classes.selectorWrapper}>
             <ShareableLinkCreator />
-          </div>
+          </div> */}
           {/* <div className={classes.selectorWrapper}>
             <ExportButton />
           </div> */}
