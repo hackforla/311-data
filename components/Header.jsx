@@ -46,24 +46,21 @@ const useStyles = makeStyles(theme => ({
     height: '15px',
     backgroundColor: colors.primaryFocus,
   },
-  iconStyle: {
-    verticalAlign: 'text-top',
-  },
-  iconMenuStyle: {
-    '& ul': {
-      width: '325px',
-      padding: 0,
-    },
-  },
+  // iconStyle: {
+  //   verticalAlign: 'text-top',
+  // },
+  // iconMenuStyle: {
+  //   '& ul': {
+  //     width: '325px',
+  //     padding: 0,
+  //   },
+  // },
   accessibileMenu: {
-    width: '487px',
     height: 'auto',
     backgroundColor: colors.textSecondaryLight,
     color: colors.secondaryDark,
     zIndex: 50000,
     position: 'inherit',
-    bottom: 0,
-    right: 0,
   },
   accessibileMenuUl: {
     '& ul:first-child': {
@@ -180,7 +177,7 @@ const Header = () => {
           getContentAnchorEl={null}
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'left',
+            horizontal: 'right',
           }}
           classes={{ paper: classes.menuPaper }}
         >
@@ -229,7 +226,7 @@ const Header = () => {
             vertical: 'bottom',
             horizontal: 'left',
           }}
-        >
+        > 
           <MenuItem onClick={handleIconClose}>
             <Card className={classes.accessibileMenu}>
               <CardHeader className={classes.headStyle} />
@@ -278,67 +275,67 @@ const Header = () => {
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Move backwards from link to link or to controls:
-                      <span style={{ fontWeight: 700 }}>Shift + Tab</span>
+                      <span style={{ fontWeight: 700 }}> Shift + Tab</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Select buttons:
-                      <span style={{ fontWeight: 700 }}>Spacebar</span>
+                      <span style={{ fontWeight: 700 }}> Spacebar</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Navigate and select Radio Buttons:
-                      <span style={{ fontWeight: 700 }}>Arrow</span>
+                      <span style={{ fontWeight: 700 }}> Arrow</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Select/deselect boxes:
-                      <span style={{ fontWeight: 700 }}>Spacebar</span>
+                      <span style={{ fontWeight: 700 }}> Spacebar</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Move from box to box:
-                      <span style={{ fontWeight: 700 }}>Tab</span>
+                      <span style={{ fontWeight: 700 }}> Tab</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Open a List Box:
-                      <span style={{ fontWeight: 700 }}>ALT + Down arrow</span>
+                      <span style={{ fontWeight: 700 }}> ALT + Down arrow</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Read the prior screen:
-                      <span style={{ fontWeight: 700 }}>CTRL + Page down</span>
+                      <span style={{ fontWeight: 700 }}> CTRL + Page down</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Go to the top of page:
-                      <span style={{ fontWeight: 700 }}>CTRL + Home</span>
+                      <span style={{ fontWeight: 700 }}> CTRL + Home</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Go to the bottom of the page:
-                      <span style={{ fontWeight: 700 }}>CTRL + End</span>
+                      <span style={{ fontWeight: 700 }}> CTRL + End</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Close the current window (in Internet Explorer):
-                      <span style={{ fontWeight: 700 }}>CTRL + W</span>
+                      <span style={{ fontWeight: 700 }}> CTRL + W</span>
                     </p>
                   </li>
                   <li style={{ paddingTop: 6, paddingBottom: 6 }}>
                     <p>
                       Refresh the screen:
-                      <span style={{ fontWeight: 700 }}>F5</span>
+                      <span style={{ fontWeight: 700 }}> F5</span>
                     </p>
                   </li>
                 </ul>
