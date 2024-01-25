@@ -12,8 +12,8 @@ def dlData():
     '''
     Download the dataset from data.lacity.org
     '''
-    url = "https://data.lacity.org/api/views/4a4x-mna2/rows.csv?accessType=DOWNLOAD"
-    outfile = "2023.csv"
+    url = "https://data.lacity.org/api/views/d4vt-q4t5/rows.csv?accessType=DOWNLOAD"
+    outfile = "2024.csv"
 
     response = requests.get(url, stream=True)
 
@@ -27,9 +27,9 @@ def hfClean():
     '''
     Clean the dataset by removing problematic string combinations and update timestamp to ISO format
     '''
-    infile = "2023.csv"
-    fixed_filename = "2023-fixed.csv"
-    clean_filename = "2023-clean.csv"
+    infile = "2024.csv"
+    fixed_filename = "2024-fixed.csv"
+    clean_filename = "2024-clean.csv"
 
     # List of problmenatic strings to be replaced with ""
     replace_strings = ["VE, 0"]
@@ -58,10 +58,10 @@ def hfUpload():
     '''
     Upload the clean dataset to huggingface.co
     '''
-    local_filename = '2023-clean.csv'
-    dest_filename = '2023.csv'
+    local_filename = '2024-clean.csv'
+    dest_filename = '2024.csv'
     username = '311-data'
-    repo_name = '2023'
+    repo_name = '2024'
     repo_type = 'dataset'
 
     repo_id = f"{username}/{repo_name}"
