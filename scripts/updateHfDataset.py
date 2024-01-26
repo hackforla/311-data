@@ -12,7 +12,7 @@ def dlData():
     '''
     Download the dataset from data.lacity.org
     '''
-    url = "https://data.lacity.org/api/views/d4vt-q4t5/rows.csv?accessType=DOWNLOAD"
+    url = "https://data.lacity.org/api/views/b7dx-7gc3/rows.csv?accessType=DOWNLOAD"
     outfile = "2024.csv"
 
     response = requests.get(url, stream=True)
