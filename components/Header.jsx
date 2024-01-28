@@ -127,7 +127,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const activeStyle = {
-  borderBottom: `1px solid ${colors.primaryFocus}`,
+  borderBottom: `2px solid ${colors.primaryFocus}`,
 };
 
 // TODO: links/routing, mobile
@@ -158,10 +158,10 @@ const Header = () => {
         <Typography variant="h4" className={classes.textLogo}>
           <Link to="/" className={classes.link}>311DATA</Link>
         </Typography>
-        <NavLink className={classes.link} to="/map" activeStyle={activeStyle}>
+        <NavLink className={classes.link} to="/map" style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>Map</Button>
         </NavLink>
-        <Button
+        {/* <Button
           id="dashboard-anchor"
           onClick={handleDashboardClick}
           className={classes.button}
@@ -191,17 +191,17 @@ const Header = () => {
               Compare Two Neighborhoods
             </MenuItem>
           </Link>
-        </Menu>
-        <NavLink to="/faqs" className={classes.link} activeStyle={activeStyle}>
+        </Menu> */}
+        <NavLink to="/faqs" className={classes.link} style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>FAQ</Button>
         </NavLink>
-        <NavLink to="/about" className={classes.link} activeStyle={activeStyle}>
+        <NavLink to="/about" className={classes.link} style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>About</Button>
         </NavLink>
-        <NavLink to="/research" className={classes.link} activeStyle={activeStyle}>
+        {/* <NavLink to="/research" className={classes.link} activeStyle={activeStyle}>
           <Button className={classes.button}>Research</Button>
-        </NavLink>
-        <NavLink to="/contact" className={classes.link} activeStyle={activeStyle}>
+        </NavLink> */}
+        <NavLink to="/contact" className={classes.link} style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>Contact</Button>
         </NavLink>
         <IconButton
