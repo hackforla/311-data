@@ -60,8 +60,8 @@ def hfUpload():
     '''
     local_filename = '2024-clean.parquet'
     dest_filename = '2024.parquet'
-    username = 'edwinjue'
-    repo_name = '311-data-2024'
+    username = '311-data'
+    repo_name = '2024'
     repo_type = 'dataset'
 
     repo_id = f"{username}/{repo_name}"
