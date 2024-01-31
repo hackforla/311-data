@@ -46,15 +46,6 @@ const useStyles = makeStyles(theme => ({
     height: '15px',
     backgroundColor: colors.primaryFocus,
   },
-  // iconStyle: {
-  //   verticalAlign: 'text-top',
-  // },
-  // iconMenuStyle: {
-  //   '& ul': {
-  //     width: '325px',
-  //     padding: 0,
-  //   },
-  // },
   accessibileMenu: {
     height: 'auto',
     backgroundColor: colors.textSecondaryLight,
@@ -133,17 +124,8 @@ const activeStyle = {
 // TODO: links/routing, mobile
 const Header = () => {
   const classes = useStyles();
-  const [isDashboardOpen, setIsDashboardOpen] = React.useState(false);
   const [isIconOpen, setIsIconOpen] = React.useState(false);
-
-  const handleDashboardClick = event => {
-    setIsDashboardOpen(event.currentTarget);
-  };
-
-  const handleDashboardClose = () => {
-    setIsDashboardOpen(null);
-  };
-
+  
   const handleIconClick = event => {
     setIsIconOpen(event.currentTarget);
   };
@@ -161,46 +143,12 @@ const Header = () => {
         <NavLink className={classes.link} to="/map" style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>Map</Button>
         </NavLink>
-        {/* <Button
-          id="dashboard-anchor"
-          onClick={handleDashboardClick}
-          className={classes.button}
-        >
-          Dashboard
-        </Button>
-        <Menu
-          id="dashboard-menu"
-          anchorEl={isDashboardOpen}
-          keepMounted
-          open={Boolean(isDashboardOpen)}
-          onClose={handleDashboardClose}
-          getContentAnchorEl={null}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          classes={{ paper: classes.menuPaper }}
-        >
-          <Link to="/dashboard/overview-combined">
-            <MenuItem onClick={handleDashboardClose} className={classes.menuItem}>
-              Overview
-            </MenuItem>
-          </Link>
-          <Link to="/dashboard/nc-summary-comparison">
-            <MenuItem onClick={handleDashboardClose} className={classes.menuItem}>
-              Compare Two Neighborhoods
-            </MenuItem>
-          </Link>
-        </Menu> */}
         <NavLink to="/faqs" className={classes.link} style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>FAQ</Button>
         </NavLink>
         <NavLink to="/about" className={classes.link} style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>About</Button>
         </NavLink>
-        {/* <NavLink to="/research" className={classes.link} activeStyle={activeStyle}>
-          <Button className={classes.button}>Research</Button>
-        </NavLink> */}
         <NavLink to="/contact" className={classes.link} style={({ isActive }) => (isActive ? activeStyle : null)}>
           <Button className={classes.button}>Contact</Button>
         </NavLink>
