@@ -125,7 +125,7 @@ const activeStyle = {
 const Header = () => {
   const classes = useStyles();
   const [isIconOpen, setIsIconOpen] = React.useState(false);
-  
+
   const handleIconClick = event => {
     setIsIconOpen(event.currentTarget);
   };
@@ -166,7 +166,7 @@ const Header = () => {
           className={classes.accessibileMenuUl}
           id="accessibile-menu"
           anchorEl={isIconOpen}
-          getContentAnchorEl={null}
+          getcontentanchorel={null}
           keepMounted
           open={Boolean(isIconOpen)}
           onClose={handleIconClose}

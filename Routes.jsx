@@ -30,7 +30,7 @@ export default function AppRoutes() {
         </ThemeProvider>
       </StyledEngineProvider>
 
-      /* Default theme - Everything else. */
+      {/* /* Default theme - Everything else. */ }
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Paper elevation={0}>
