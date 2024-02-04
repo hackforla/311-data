@@ -20,7 +20,7 @@ const FIT_BOUNDS_PADDING = {
 };
 
 function getBoundaryColor(boundaryStyle) {
-  return boundaryStyle === 'light' ? '#FFFFFF' : '#27272b';
+  return boundaryStyle === 'light' ? '#FFFFFF' : '#62ADFC';
 }
 
 function getMaskFillOpacity(boundaryStyle) {
