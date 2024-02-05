@@ -1,13 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
 import { sendGitRequest } from '@reducers/data';
 import 'react-toastify/dist/ReactToastify.css';
+
+const useStyles = makeStyles(theme => ({
+  formLabel: {
+    fontSize: '18px',
+    color: '#29404F',
+    fontWeight: 500,
+  },
+  // form: {
+  //   width: '100%',
+  // },
+  // container: {
+  //   width: '684px',
+  //   margin: '0 auto',
+  // },
+}));
 
 const initialFormValues = {
   firstName: '',
@@ -40,7 +57,7 @@ const toastEmitterSettings = {
 
 function ContactForm() {
   const dispatch = useDispatch();
-
+  const classes = useStyles()
   // mapStateToProps equivalent.
   const displayFeedbackSuccess = useSelector(state => state.ui.displayFeedbackSuccess);
   const openErrorModal = useSelector(state => state.ui.error.isOpen);
@@ -185,10 +202,10 @@ function ContactForm() {
       <Grid container alignItems="center" justifyContent="center" direction="column">
         <Grid container alignItems="center" justifyContent="center" direction="row" spacing={2}>
           <Grid item xs={6}>
+            <InputLabel htmlFor='contact-firstname' className={classes.formLabel}>First Name*</InputLabel>
             <TextField
               id="contact-firstname"
               name="firstName"
-              label="First Name *"
               type="text"
               autoComplete="off"
               value={formValues.firstName}
@@ -200,10 +217,10 @@ function ContactForm() {
             />
           </Grid>
           <Grid item xs={6}>
+            <InputLabel htmlFor='contact-lastname' className={classes.formLabel}>Last Name*</InputLabel>
             <TextField
               id="contact-lastname"
               name="lastName"
-              label="Last Name *"
               type="text"
               autoComplete="off"
               value={formValues.lastName}
@@ -217,10 +234,10 @@ function ContactForm() {
         </Grid>
         <Grid container alignItems="center" justifyContent="center" direction="row">
           <Grid item xs={12}>
+            <InputLabel htmlFor='contact-email' className={classes.formLabel}>Email*</InputLabel>
             <TextField
               id="contact-email"
               name="email"
-              label="Email *"
               type="text"
               autoComplete="off"
               value={formValues.email}
@@ -232,10 +249,10 @@ function ContactForm() {
             />
           </Grid>
           <Grid item xs={12}>
+            <InputLabel htmlFor='contact-association' className={classes.formLabel}>Association</InputLabel>
             <TextField
               id="contact-association"
               name="association"
-              label="Association"
               type="text"
               autoComplete="off"
               value={formValues.association}
@@ -244,10 +261,10 @@ function ContactForm() {
             />
           </Grid>
           <Grid item xs={12} style={{ paddingTop: '12px' }}>
+            <InputLabel htmlFor='contact-association' className={classes.formLabel}>Message*</InputLabel>
             <TextField
               id="contact-message"
               name="message"
-              label="Message *"
               type="text"
               variant="outlined"
               rows={8}
