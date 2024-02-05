@@ -8,7 +8,11 @@ import { Box } from '@mui/material';
 const useStyles = makeStyles(theme => ({
   contentTitle: {
     fontWeight: theme.typography.fontWeightMedium,
+    paddingTop: theme.spacing(10)
   },
+  contentSentence: {
+    paddingBottom: theme.spacing(10),
+  }
 }));
 
 function ContactIntro() {
@@ -23,7 +27,7 @@ function ContactIntro() {
           </Typography>
         </Box>
         <div className={classes.marginTopSmall}>
-          <Typography variant="body1">
+          <Typography variant="body1" className={classes.contentSentence}>
             We are open to suggestions and feedback and would love the opportunity to get connected.
           </Typography>
         </div>

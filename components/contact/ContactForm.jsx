@@ -16,14 +16,17 @@ const useStyles = makeStyles(theme => ({
     fontSize: '18px',
     color: '#29404F',
     fontWeight: 500,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  
   },
-  // form: {
-  //   width: '100%',
-  // },
-  // container: {
-  //   width: '684px',
-  //   margin: '0 auto',
-  // },
+  formInput: {
+    backgroundColor: '#29404F1A',
+    borderRadius: '5px'
+  },
+  noBorder: {
+    border: "none",
+  },
 }));
 
 const initialFormValues = {
@@ -204,6 +207,7 @@ function ContactForm() {
           <Grid item xs={6}>
             <InputLabel htmlFor='contact-firstname' className={classes.formLabel}>First Name*</InputLabel>
             <TextField
+              className={classes.formInput}
               id="contact-firstname"
               name="firstName"
               type="text"
@@ -214,11 +218,15 @@ function ContactForm() {
               error={formValues.errors.missingFirstName || formValues.errors.invalidFirstName}
               helperText={formValues.errors.missingFirstName || formValues.errors.invalidFirstName ? 'Please provide a first name.' : ''}
               fullWidth
+              InputProps={{
+                classes:{notchedOutline:classes.noBorder}
+              }}
             />
           </Grid>
           <Grid item xs={6}>
             <InputLabel htmlFor='contact-lastname' className={classes.formLabel}>Last Name*</InputLabel>
             <TextField
+              className={classes.formInput}
               id="contact-lastname"
               name="lastName"
               type="text"
@@ -229,6 +237,9 @@ function ContactForm() {
               error={formValues.errors.missingLastName || formValues.errors.invalidLastName}
               helperText={formValues.errors.missingLastName || formValues.errors.invalidLastName ? 'Please provide a valid last name.' : ''}
               fullWidth
+              InputProps={{
+                classes:{notchedOutline:classes.noBorder}
+              }}
             />
           </Grid>
         </Grid>
@@ -236,6 +247,7 @@ function ContactForm() {
           <Grid item xs={12}>
             <InputLabel htmlFor='contact-email' className={classes.formLabel}>Email*</InputLabel>
             <TextField
+              className={classes.formInput}
               id="contact-email"
               name="email"
               type="text"
@@ -246,11 +258,15 @@ function ContactForm() {
               error={formValues.errors.missingEmail || formValues.errors.invalidEmail}
               helperText={formValues.errors.missingEmail || formValues.errors.invalidEmail ? 'Please provide a valid email address.' : ''}
               fullWidth
+              InputProps={{
+                classes:{notchedOutline:classes.noBorder}
+              }}
             />
           </Grid>
           <Grid item xs={12}>
             <InputLabel htmlFor='contact-association' className={classes.formLabel}>Association</InputLabel>
             <TextField
+              className={classes.formInput}
               id="contact-association"
               name="association"
               type="text"
@@ -258,15 +274,18 @@ function ContactForm() {
               value={formValues.association}
               onChange={onInputChange}
               fullWidth
+              InputProps={{
+                classes:{notchedOutline:classes.noBorder}
+              }}
             />
           </Grid>
           <Grid item xs={12} style={{ paddingTop: '12px' }}>
             <InputLabel htmlFor='contact-association' className={classes.formLabel}>Message*</InputLabel>
             <TextField
+              className={classes.formInput}
               id="contact-message"
               name="message"
               type="text"
-              variant="outlined"
               rows={8}
               autoComplete="off"
               value={formValues.message}
@@ -276,6 +295,9 @@ function ContactForm() {
               helperText={formValues.errors.missingMessage || formValues.errors.invalidMessage ? 'Please provide a message (6-1000 characters).' : ''}
               fullWidth
               multiline
+              InputProps={{
+                classes:{notchedOutline:classes.noBorder}
+              }}
             />
           </Grid>
         </Grid>
