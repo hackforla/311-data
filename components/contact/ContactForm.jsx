@@ -12,13 +12,15 @@ import { sendGitRequest } from '@reducers/data';
 import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles(theme => ({
+  form: {
+    marginBottom: theme.spacing(20)
+  },
   formLabel: {
     fontSize: '18px',
     color: '#29404F',
     fontWeight: 500,
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  
   },
   formInput: {
     backgroundColor: '#29404F1A',
@@ -201,7 +203,7 @@ function ContactForm() {
     validateForm]);
 
   return (
-    <form id="contact-form" onSubmit={handleSubmit}>
+    <form className={classes.form} id="contact-form" onSubmit={handleSubmit}>
       <Grid container alignItems="center" justifyContent="center" direction="column">
         <Grid container alignItems="center" justifyContent="center" direction="row" spacing={2}>
           <Grid item xs={6}>
