@@ -117,7 +117,7 @@ class Map extends React.Component {
       filteredRequestCounts: {},
       hoveredRegionName: null,
       colorScheme: 'prism',
-      mapStyle: 'streets',
+      mapStyle: 'light',
       canReset: true,
       selectedRequestId: null,
       selectedNc: null,
