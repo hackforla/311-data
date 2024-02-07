@@ -48,6 +48,13 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 3,
     textDecoration: 'none',
   },
+  buttonStyle: {
+    color: '#ffffff',
+    border: '1px solid #ffffff',
+    '&:hover': {
+      border: '1px solid #ffffff',
+    },
+  },
 }));
 
 function CookieNotice({
@@ -76,7 +83,7 @@ function CookieNotice({
           website, you consent to our use of cookies and other tracking technologies.
           <Link className={classes.linkStyle} to="/privacy">Learn more</Link>
           <CardActions style={{ justifyContent: 'flex-end' }}>
-            <Button variant="outlined" onClick={handleClick}>Got it!</Button>
+            <Button className={classes.buttonStyle} variant="outlined" onClick={handleClick}>Got it!</Button>
           </CardActions>
         </CardContent>
 
