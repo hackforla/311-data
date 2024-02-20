@@ -58,6 +58,6 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 ## Resources
 Public data used in this project:
 * [MyLA311 Service Request Data](https://data.lacity.org/browse?q=myla311%20service%20request%20data&sortBy=relevance)
-* [CSV and parquet datasets are also available here at huggingface.co](https://huggingface.co/edwinjue)
+* [CSV and parquet datasets are also available here at huggingface.co](https://huggingface.co/311-data)
 
 The source code for this project is based on the original 311-Data [v2-aws](https://github.com/hackforla/311-data/releases/tag/v2-aws) release
