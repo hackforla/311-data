@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles'
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,21 +10,25 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
 import { sendGitRequest } from '@reducers/data';
 import 'react-toastify/dist/ReactToastify.css';
+import colors from '../../theme/colors';
+import fonts from '../../theme/fonts';
+import typography from '../../theme/typography';
+import borderRadius from '../../theme/borderRadius';
 
 const useStyles = makeStyles(theme => ({
   form: {
     marginBottom: theme.spacing(20)
   },
   formLabel: {
-    fontSize: '18px',
-    color: '#29404F',
-    fontWeight: 500,
+    fontSize: typography.h6.fontSize,
+    color: colors.primaryLight,
+    fontWeight: fonts.weight.medium,
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
   formInput: {
-    backgroundColor: '#29404F1A',
-    borderRadius: '5px'
+    backgroundColor: colors.formInput,
+    borderRadius: borderRadius.sm
   },
   noBorder: {
     border: "none",
@@ -63,6 +67,7 @@ const toastEmitterSettings = {
 function ContactForm() {
   const dispatch = useDispatch();
   const classes = useStyles()
+
   // mapStateToProps equivalent.
   const displayFeedbackSuccess = useSelector(state => state.ui.displayFeedbackSuccess);
   const openErrorModal = useSelector(state => state.ui.error.isOpen);
@@ -207,10 +212,11 @@ function ContactForm() {
       <Grid container alignItems="center" justifyContent="center" direction="column">
         <Grid container alignItems="center" justifyContent="center" direction="row" spacing={2}>
           <Grid item xs={6}>
-            <InputLabel htmlFor='contact-firstname' className={classes.formLabel}>First Name*</InputLabel>
+            {/* <Typography variant='h1'></Typography> */}
+            <InputLabel variant='h1' htmlFor='contact-firstname' className={classes.formLabel}>First Name*</InputLabel>
             <TextField
               className={classes.formInput}
-              id="contact-firstname"
+              id="contact-firstname" 
               name="firstName"
               type="text"
               autoComplete="off"

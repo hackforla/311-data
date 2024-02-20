@@ -25,7 +25,7 @@ function Contact() {
       </div>
       <div>
         <TextHeading>Contact Us</TextHeading>
-        <ContentBody maxWidth="684px">
+        <ContentBody>
           <ContactIntro />
           <ContactForm />
         </ContentBody>
