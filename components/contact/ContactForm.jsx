@@ -212,7 +212,6 @@ function ContactForm() {
       <Grid container alignItems="center" justifyContent="center" direction="column">
         <Grid container alignItems="center" justifyContent="center" direction="row" spacing={2}>
           <Grid item xs={6}>
-            {/* <Typography variant='h1'></Typography> */}
             <InputLabel variant='h1' htmlFor='contact-firstname' className={classes.formLabel}>First Name*</InputLabel>
             <TextField
               className={classes.formInput}
