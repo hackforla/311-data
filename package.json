@@ -35,7 +35,7 @@
     "@redux-devtools/extension": "^3.2.5",
     "@turf/turf": "^6.5.0",
     "apache-arrow": "^13.0.0",
-    "axios": "^1.5.1",
+    "axios": "^1.6.0",
     "chart.js": "^4.4.0",
     "classnames": "^2.3.2",
     "clsx": "^2.0.0",
