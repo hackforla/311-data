@@ -222,6 +222,7 @@ function ReactDayPicker({
         onDayClick={handleDayClick}
         onDayMouseEnter={handleDayMouseEnter}
         weekdayElement={<WeekDay />}
+        fromMonth={new Date(2023, 12)}
       />
     </>
   );
