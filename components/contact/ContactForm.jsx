@@ -10,10 +10,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
 import { sendGitRequest } from '@reducers/data';
 import 'react-toastify/dist/ReactToastify.css';
-import colors from '../../theme/colors';
-import fonts from '../../theme/fonts';
-import typography from '../../theme/typography';
-import borderRadius from '../../theme/borderRadius';
+import colors from '@theme/colors'
+import fonts from '@theme/fonts';
+import typography from '@theme/typography';
+import borderRadius from '@theme/borderRadius';
 
 const useStyles = makeStyles(theme => ({
   form: {
