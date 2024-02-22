@@ -4,7 +4,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import Typography from '@mui/material/Typography';
 import sharedLayout from '@theme/layout';
 import { Box } from '@mui/material';
-import typography from '../../theme/typography';
+import typography from '@theme/typography';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
