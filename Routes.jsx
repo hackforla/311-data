@@ -11,6 +11,7 @@ import Desktop from '@components/main/Desktop';
 import Faqs from '@components/main/Faqs';
 import About from '@components/main/About';
 import Contact from '@components/contact/Contact';
+import Privacy from '@components/main/Privacy';
 import ContentBottom from '@components/common/ContentBottom';
 
 export default function AppRoutes() {
@@ -39,6 +40,7 @@ export default function AppRoutes() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/" element={<Navigate to={`map${search}`} />} />
+              <Route path="/privacy" element={<Privacy />} />
             </Routes>
             <ContentBottom />
           </Paper>
