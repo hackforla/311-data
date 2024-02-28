@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import Chip from '@mui/material/Chip';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTheme } from '@mui/styles/';
 
 const useStylesSolid = makeStyles(theme => ({
   root: {
@@ -43,6 +44,7 @@ function StyledChip({
   onDelete,
   outlined,
 }) {
+  const theme = useTheme();
   const classesSolid = useStylesSolid({ color });
   const classesOutlined = useStylesOutlined({ color });
 
@@ -51,7 +53,14 @@ function StyledChip({
       classes={outlined ? classesOutlined : classesSolid}
       label={label}
       onDelete={onDelete}
-      deleteIcon={<CloseIcon data-id={value} />}
+      deleteIcon={(
+        <CloseIcon
+          style={{
+            color: outlined ? theme.palette.text.primaryDark : theme.palette.secondary.light,
+          }}
+          data-id={value}
+        />
+      )}
       size="small"
       variant={outlined ? 'outlined' : 'default'}
       clickable={false}
