@@ -13,6 +13,7 @@ export default {
   textSecondaryDark: '#A8A8A8',
   textSecondaryLight: '#ECECEC',
   textFocus: '#87C8BC',
+  formInput: '#29404F1A',
 
   requestTypes: {
     animalRemains: '#3CB4B2',
