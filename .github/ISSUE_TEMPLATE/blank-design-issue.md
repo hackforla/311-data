@@ -2,7 +2,7 @@
 name: Blank Design Issue
 about: Template for designers to create issues and prepare for engineering hand off.
 title: ''
-labels: 'Milestone: Missing, Role: UI/UX Design, Size: Missing'
+labels: 'Milestone: Missing, role: UI/UX Design, Size: Missing'
 assignees: ''
 
 ---
