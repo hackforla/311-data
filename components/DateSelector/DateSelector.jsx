@@ -1,15 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import SelectorBox from '@components/common/SelectorBox';
 import DatePicker from '@components/common/DatePicker';
 import {
   updateStartDate as reduxUpdateStartDate,
   updateEndDate as reduxUpdateEndDate,
 } from '@reducers/filters';
-import Tooltip from '@mui/material/Tooltip';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import moment from 'moment';
 import options from './options';
 import useStyles from './useStyles';
 import DateRanges from './DateRanges';
@@ -40,12 +38,7 @@ function DateSelector({
 
   return (
     <>
-      <span className={classes.label}>
-        Date Range&nbsp;
-        <Tooltip title="311-Data is currently only able to load 311 service request data in 2024 and onwards. For updates on the release of available 311 Data, please follow our LinkedIn page at https://www.linkedin.com/company/hack-for-la/.">
-          <InfoOutlinedIcon className={classes.iconStyle} fontSize="inherit" />
-        </Tooltip>
-      </span>
+      <span className={classes.label}>Date Range</span>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
           <div className={classes.selector}>

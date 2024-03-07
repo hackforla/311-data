@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
-import Box from '@mui/material/Box';
+import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles({
   root: {
@@ -17,9 +17,9 @@ const useStyles = makeStyles({
   },
 });
 
-function ChipList({
+const ChipList = ({
   children,
-}) {
+}) => {
   const classes = useStyles();
 
   return (
@@ -31,7 +31,7 @@ function ChipList({
       }
     </Box>
   );
-}
+};
 
 export default ChipList;
 export { default as StyledChip } from './StyledChip';

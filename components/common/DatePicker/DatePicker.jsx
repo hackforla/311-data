@@ -3,12 +3,12 @@ import React, {
 } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import PropTypes from 'prop-types';
-import CalendarIcon from '@mui/icons-material/CalendarToday';
-import IconButton from '@mui/material/IconButton';
-import makeStyles from '@mui/styles/makeStyles';
-import useOutsideClick from '@components/common/customHooks/useOutsideClick';
 import ReactDayPicker from '@components/common/ReactDayPicker';
+import PropTypes from 'prop-types';
+import CalendarIcon from '@material-ui/icons/CalendarToday';
+import IconButton from '@material-ui/core/IconButton';
+import useOutsideClick from '@components/common/customHooks/useOutsideClick';
+import { makeStyles } from '@material-ui/core';
 
 // TODO: Apply gaps (margin, padding) from theme
 
@@ -80,9 +80,9 @@ const renderSelectedDays = (dates, classes, range) => {
   return selectedDaysElements;
 };
 
-function DatePicker({
+const DatePicker = ({
   open, onToggle, range, startDate, endDate,
-}) {
+}) => {
   const [showCalendar, setShowCalendar] = useState(() => open);
   const classes = useStyles();
 
@@ -119,7 +119,6 @@ function DatePicker({
         onClick={toggleCalendar}
         disableFocusRipple
         disableRipple
-        size="large"
       >
         <CalendarIcon />
       </IconButton>
@@ -132,7 +131,7 @@ function DatePicker({
       </div>
     </div>
   );
-}
+};
 
 DatePicker.propTypes = {
   range: PropTypes.bool,

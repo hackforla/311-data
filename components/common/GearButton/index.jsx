@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'proptypes';
-import { IconButton } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
+import { IconButton } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import SettingsSharpIcon from '@material-ui/icons/SettingsSharp';
 
 const useStyles = makeStyles(theme => ({
   gearIcon: {
@@ -18,9 +18,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function GearButton({
+const GearButton = ({
   onClick,
-}) {
+}) => {
   const { gearIcon, button } = useStyles();
   const [pressed, setPressed] = useState(false);
 
@@ -50,12 +50,11 @@ function GearButton({
       aria-label="Toggle Sidebar"
       disableFocusRipple
       disableRipple
-      size="large"
     >
       <SettingsSharpIcon className={gearIcon} />
     </IconButton>
   );
-}
+};
 
 GearButton.propTypes = {
   onClick: PropTypes.func,

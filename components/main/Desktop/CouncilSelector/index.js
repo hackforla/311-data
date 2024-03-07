@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import makeStyles from '@mui/styles/makeStyles';
 import {
   updateNcId,
   updateSelectedCouncils,
   updateUnselectedCouncils,
 } from '@reducers/filters';
 import { closeBoundaries } from '@reducers/ui';
-import { debounce } from '@utils';
+import {
+  debounce,
+} from '@utils';
+import { makeStyles } from '@material-ui/core/styles';
 import not from '@utils/not';
 import BoundariesSection from '@components/main/Desktop/BoundariesSection';
 import SelectedCouncils from './SelectedCouncils';
@@ -25,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 // TODO: display loader while fetching councils
 
-function CouncilSelector({
+const CouncilSelector = ({
   councils,
   selected,
   unselected,
@@ -35,7 +37,7 @@ function CouncilSelector({
   dispatchCloseBoundaries,
   resetMap,
   resetAddressSearch,
-}) {
+}) => {
   const classes = useStyles();
 
   useEffect(() => {
@@ -44,9 +46,7 @@ function CouncilSelector({
 
   const handleDelete = e => {
     const deletedCouncilId = Number(e.currentTarget.dataset.id);
-    const newSelected = selected.filter(
-      ({ councilId }) => councilId !== deletedCouncilId,
-    );
+    const newSelected = selected.filter(({ councilId }) => councilId !== deletedCouncilId);
     const newUnselected = not(councils, newSelected, 'councilId');
     dispatchUpdateSelectedCouncils(newSelected);
     dispatchUpdateUnselectedCouncils(newUnselected);
@@ -67,9 +67,7 @@ function CouncilSelector({
       // Clear out address search input
       resetAddressSearch();
 
-      const newSelectedCouncil = councils.find(
-        ({ councilId }) => councilId === selectedCouncilId,
-      );
+      const newSelectedCouncil = councils.find(({ councilId }) => councilId === selectedCouncilId);
       const newSelected = [newSelectedCouncil];
       dispatchUpdateSelectedCouncils(newSelected);
       dispatchUpdateUnselectedCouncils(councils);
@@ -89,17 +87,26 @@ function CouncilSelector({
       <div className={classes.label}>Boundaries</div>
       <BoundariesSection>
         <BoundariesSection.Display>
-          <SelectedCouncils items={selected} onDelete={debouncedHandleDelete} />
+          <SelectedCouncils
+            items={selected}
+            onDelete={debouncedHandleDelete}
+          />
         </BoundariesSection.Display>
         <BoundariesSection.Collapse>
-          {unselected && (
-            <CouncilsList items={unselected} onClick={debouncedHandleSelect} />
-          )}
+          {
+            unselected
+              && (
+                <CouncilsList
+                  items={unselected}
+                  onClick={debouncedHandleSelect}
+                />
+              )
+          }
         </BoundariesSection.Collapse>
       </BoundariesSection>
     </>
   );
-}
+};
 
 const mapStateToProps = state => ({
   councils: state.metadata.councils,
@@ -114,7 +121,10 @@ const mapDispatchToProps = dispatch => ({
   dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CouncilSelector);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CouncilSelector);
 
 CouncilSelector.defaultProps = {
   councils: [],

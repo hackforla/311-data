@@ -1,5 +1,5 @@
-import { select, call, takeLatest } from 'redux-saga/effects';
 import Mixpanel from '@utils/Mixpanel';
+import { select, call, takeLatest } from 'redux-saga/effects';
 
 import { types as dataTypes } from '../reducers/data';
 import { types as analyticsTypes } from '../reducers/analytics';

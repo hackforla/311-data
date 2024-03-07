@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'proptypes';
 
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import IconButton from '@mui/material/IconButton';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import Box from '@mui/material/Box';
-import CollapseMUI from '@mui/material/Collapse';
-import makeStyles from '@mui/styles/makeStyles';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import IconButton from '@material-ui/core/IconButton';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import Box from '@material-ui/core/Box';
+import CollapseMUI from '@material-ui/core/Collapse';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -48,12 +48,12 @@ const useStyles = makeStyles(theme => ({
 
 const Context = React.createContext({ expanded: false });
 
-function SelectorBox({
+const SelectorBox = ({
   onToggle,
   children,
   expanded: initial,
   arrowHidden,
-}) {
+}) => {
   const [expanded, setExpanded] = useState(initial);
   const classes = useStyles();
 
@@ -85,7 +85,6 @@ function SelectorBox({
               onClick={toggleCollapse}
               disableFocusRipple
               disableRipple
-              size="large"
             >
               {expanded ? (
                 <ArrowDropUpIcon className={classes.button} />
@@ -112,7 +111,7 @@ function SelectorBox({
       </Card>
     </Context.Provider>
   );
-}
+};
 
 SelectorBox.propTypes = {
   onToggle: PropTypes.func,

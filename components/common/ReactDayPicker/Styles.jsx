@@ -1,11 +1,11 @@
 import React from 'react';
-import { useTheme } from '@mui/material';
+import { useTheme } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 // This component is currently unused and has been ported to MUI makeStyles in ReactDayPicker.
 // Keeping around for reference only.
 
-function Styles({ range }) {
+const Styles = ({ range }) => {
   const theme = useTheme();
 
   return (
@@ -165,7 +165,7 @@ function Styles({ range }) {
     `}
     </style>
   );
-}
+};
 
 Styles.propTypes = {
   range: PropTypes.bool,

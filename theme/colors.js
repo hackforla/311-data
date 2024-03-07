@@ -2,7 +2,7 @@
 export default {
   primaryDark: '#192730',
   primaryDarkMain: '#29404F',
-  primaryFocus: '#FFB104',
+  primaryFocus: '#FFB100',
   primaryLight: '#29404F',
   secondaryDark: '#0F181F',
   secondaryFocus: '#87C8BC',
@@ -13,7 +13,6 @@ export default {
   textSecondaryDark: '#A8A8A8',
   textSecondaryLight: '#ECECEC',
   textFocus: '#87C8BC',
-  formInput: '#29404F1A',
 
   requestTypes: {
     animalRemains: '#3CB4B2',

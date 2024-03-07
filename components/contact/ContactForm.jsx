@@ -1,39 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import makeStyles from '@mui/styles/makeStyles'
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import CircularProgress from '@mui/material/CircularProgress';
-import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
 import { sendGitRequest } from '@reducers/data';
+import { showFeedbackSuccess, setErrorModal } from '@reducers/ui';
+import { toast } from 'react-toastify';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import 'react-toastify/dist/ReactToastify.css';
-import colors from '@theme/colors'
-import fonts from '@theme/fonts';
-import typography from '@theme/typography';
-import borderRadius from '@theme/borderRadius';
-
-const useStyles = makeStyles(theme => ({
-  form: {
-    marginBottom: theme.spacing(20)
-  },
-  formLabel: {
-    fontSize: typography.h6.fontSize,
-    color: colors.primaryLight,
-    fontWeight: fonts.weight.medium,
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  formInput: {
-    backgroundColor: colors.formInput,
-    borderRadius: borderRadius.sm
-  },
-  noBorder: {
-    border: "none",
-  },
-}));
 
 const initialFormValues = {
   firstName: '',
@@ -64,9 +38,8 @@ const toastEmitterSettings = {
   progress: undefined,
 };
 
-function ContactForm() {
+const ContactForm = () => {
   const dispatch = useDispatch();
-  const classes = useStyles()
 
   // mapStateToProps equivalent.
   const displayFeedbackSuccess = useSelector(state => state.ui.displayFeedbackSuccess);
@@ -208,15 +181,14 @@ function ContactForm() {
     validateForm]);
 
   return (
-    <form className={classes.form} id="contact-form" onSubmit={handleSubmit}>
-      <Grid container alignItems="center" justifyContent="center" direction="column">
-        <Grid container alignItems="center" justifyContent="center" direction="row" spacing={2}>
+    <form id="contact-form" onSubmit={handleSubmit}>
+      <Grid container alignItems="center" justify="center" direction="column">
+        <Grid container alignItems="center" justify="center" direction="row" spacing={2}>
           <Grid item xs={6}>
-            <InputLabel variant='h1' htmlFor='contact-firstname' className={classes.formLabel}>First Name*</InputLabel>
             <TextField
-              className={classes.formInput}
-              id="contact-firstname" 
+              id="contact-firstname"
               name="firstName"
+              label="First Name *"
               type="text"
               autoComplete="off"
               value={formValues.firstName}
@@ -225,17 +197,13 @@ function ContactForm() {
               error={formValues.errors.missingFirstName || formValues.errors.invalidFirstName}
               helperText={formValues.errors.missingFirstName || formValues.errors.invalidFirstName ? 'Please provide a first name.' : ''}
               fullWidth
-              InputProps={{
-                classes:{notchedOutline:classes.noBorder}
-              }}
             />
           </Grid>
           <Grid item xs={6}>
-            <InputLabel htmlFor='contact-lastname' className={classes.formLabel}>Last Name*</InputLabel>
             <TextField
-              className={classes.formInput}
               id="contact-lastname"
               name="lastName"
+              label="Last Name *"
               type="text"
               autoComplete="off"
               value={formValues.lastName}
@@ -244,19 +212,15 @@ function ContactForm() {
               error={formValues.errors.missingLastName || formValues.errors.invalidLastName}
               helperText={formValues.errors.missingLastName || formValues.errors.invalidLastName ? 'Please provide a valid last name.' : ''}
               fullWidth
-              InputProps={{
-                classes:{notchedOutline:classes.noBorder}
-              }}
             />
           </Grid>
         </Grid>
-        <Grid container alignItems="center" justifyContent="center" direction="row">
+        <Grid container alignItems="center" justify="center" direction="row">
           <Grid item xs={12}>
-            <InputLabel htmlFor='contact-email' className={classes.formLabel}>Email*</InputLabel>
             <TextField
-              className={classes.formInput}
               id="contact-email"
               name="email"
+              label="Email *"
               type="text"
               autoComplete="off"
               value={formValues.email}
@@ -265,34 +229,27 @@ function ContactForm() {
               error={formValues.errors.missingEmail || formValues.errors.invalidEmail}
               helperText={formValues.errors.missingEmail || formValues.errors.invalidEmail ? 'Please provide a valid email address.' : ''}
               fullWidth
-              InputProps={{
-                classes:{notchedOutline:classes.noBorder}
-              }}
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel htmlFor='contact-association' className={classes.formLabel}>Association</InputLabel>
             <TextField
-              className={classes.formInput}
               id="contact-association"
               name="association"
+              label="Association"
               type="text"
               autoComplete="off"
               value={formValues.association}
               onChange={onInputChange}
               fullWidth
-              InputProps={{
-                classes:{notchedOutline:classes.noBorder}
-              }}
             />
           </Grid>
           <Grid item xs={12} style={{ paddingTop: '12px' }}>
-            <InputLabel htmlFor='contact-association' className={classes.formLabel}>Message*</InputLabel>
             <TextField
-              className={classes.formInput}
               id="contact-message"
               name="message"
+              label="Message *"
               type="text"
+              variant="outlined"
               rows={8}
               autoComplete="off"
               value={formValues.message}
@@ -302,13 +259,10 @@ function ContactForm() {
               helperText={formValues.errors.missingMessage || formValues.errors.invalidMessage ? 'Please provide a message (6-1000 characters).' : ''}
               fullWidth
               multiline
-              InputProps={{
-                classes:{notchedOutline:classes.noBorder}
-              }}
             />
           </Grid>
         </Grid>
-        <Grid container direction="column" alignItems="center" justifyContent="center" style={{ paddingTop: '20px' }}>
+        <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: '20px' }}>
           <CircularProgress style={{ display: formValues.loading ? 'block' : 'none' }} />
           <Button variant="contained" color="secondary" type="submit" style={{ display: formValues.loading ? 'none' : 'block' }}>
             Submit
@@ -317,6 +271,6 @@ function ContactForm() {
       </Grid>
     </form>
   );
-}
+};
 
 export default ContactForm;

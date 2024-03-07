@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
-import Chip from '@mui/material/Chip';
-import CloseIcon from '@mui/icons-material/Close';
-import { useTheme } from '@mui/styles/';
+import { makeStyles } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStylesSolid = makeStyles(theme => ({
   root: {
@@ -37,14 +36,13 @@ const useStylesOutlined = makeStyles(theme => ({
   },
 }));
 
-function StyledChip({
+const StyledChip = ({
   label,
   value,
   color,
   onDelete,
   outlined,
-}) {
-  const theme = useTheme();
+}) => {
   const classesSolid = useStylesSolid({ color });
   const classesOutlined = useStylesOutlined({ color });
 
@@ -53,20 +51,13 @@ function StyledChip({
       classes={outlined ? classesOutlined : classesSolid}
       label={label}
       onDelete={onDelete}
-      deleteIcon={(
-        <CloseIcon
-          style={{
-            color: outlined ? theme.palette.text.primaryDark : theme.palette.secondary.light,
-          }}
-          data-id={value}
-        />
-      )}
+      deleteIcon={<CloseIcon data-id={value} />}
       size="small"
       variant={outlined ? 'outlined' : 'default'}
       clickable={false}
     />
   );
-}
+};
 
 export default StyledChip;
 

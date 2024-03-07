@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import coverImage from '@assets/contact_bg.png';
 
 const useStyles = makeStyles(theme => ({
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ContactImage({ children }) {
+const ContactImage = ({ children }) => {
   const classes = useStyles();
 
   return (
@@ -34,7 +34,7 @@ function ContactImage({ children }) {
       </div>
     </div>
   );
-}
+};
 
 ContactImage.propTypes = {
   children: PropTypes.node.isRequired,

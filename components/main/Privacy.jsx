@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 import sharedLayout from '@theme/layout';
 import TextHeading from '@components/common/TextHeading';
 import ContentBody from '@components/common/ContentBody';
@@ -21,7 +21,7 @@ const query = `
   }
 `;
 
-function Privacy() {
+const Privacy = () => {
   const { data, errors } = useContentful(query);
   const classes = { ...useStyles(), ...sharedLayout() };
 
@@ -49,6 +49,6 @@ function Privacy() {
       </ContentBody>
     </>
   );
-}
+};
 
 export default Privacy;

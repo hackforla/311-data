@@ -1,5 +1,5 @@
-import moment from 'moment';
 import { DATE_RANGES, INTERNAL_DATE_SPEC, USER_DATE_SPEC } from '@components/common/CONSTANTS';
+import moment from 'moment';
 
 export const types = {
   UPDATE_START_DATE: 'UPDATE_START_DATE',

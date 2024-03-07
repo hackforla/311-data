@@ -1,24 +1,23 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'proptypes';
-import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import LinkIcon from '@mui/icons-material/Link';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import LinkIcon from '@material-ui/icons/Link';
 import { connect } from 'react-redux';
-import Radio from '@mui/material/Radio';
 import {
   toggleMenu as reduxToggleMenu,
   closeMenu as reduxCloseMenu,
 } from '@reducers/ui';
+import Radio from '@material-ui/core/Radio';
 
 const drawerWidth = 275;
 
@@ -64,7 +63,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function PersistentDrawerLeft({ menuIsOpen, toggleMenu, closeMenu }) {
+const PersistentDrawerLeft = ({ menuIsOpen, toggleMenu, closeMenu }) => {
   // TODO ADD FUNCTIONALITY
   const [selectedMapStyleValue, setMapStyleValue] = React.useState('Point Map');
   const [selectedMapModeValue, setMapModeValue] = React.useState('Dark');
@@ -121,7 +120,7 @@ function PersistentDrawerLeft({ menuIsOpen, toggleMenu, closeMenu }) {
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={toggleMenu} size="large">
+          <IconButton onClick={toggleMenu}>
             {theme.direction === 'ltr' ? (
               <ChevronLeftIcon />
             ) : (
@@ -254,7 +253,7 @@ function PersistentDrawerLeft({ menuIsOpen, toggleMenu, closeMenu }) {
       </Drawer>
     </div>
   );
-}
+};
 
 PersistentDrawerLeft.propTypes = {
   menuIsOpen: PropTypes.bool.isRequired,

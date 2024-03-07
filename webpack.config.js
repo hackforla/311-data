@@ -1,11 +1,10 @@
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const SocialTags = require('social-tags-webpack-plugin');
 
-const description =
-  'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.';
+const description = 'Hack for LA’s 311-Data Team has partnered with the Los Angeles Department of Neighborhood Empowerment and LA Neighborhood Councils to create 311 data dashboards to provide all City of LA neighborhoods with actionable information at the local level.';
 
 module.exports = {
   entry: './index.js',
@@ -20,25 +19,19 @@ module.exports = {
     extensions: ['.js', '.jsx'],
     alias: {
       '@root': __dirname,
-      '@data': path.resolve(__dirname, 'data'),
       '@theme': path.resolve(__dirname, 'theme'),
       '@components': path.resolve(__dirname, 'components'),
-      '@dashboards': path.resolve(__dirname, 'components/Dashboards'),
       '@hooks': path.resolve(__dirname, 'hooks'),
       '@reducers': path.resolve(__dirname, 'redux/reducers'),
       '@styles': path.resolve(__dirname, 'styles'),
       '@assets': path.resolve(__dirname, 'assets'),
       '@utils': path.resolve(__dirname, 'utils'),
       '@settings': path.resolve(__dirname, 'settings'),
-      '@db': path.resolve(__dirname, 'components/db'),
+
     },
   },
   module: {
     rules: [
-      {
-        test: /\.worker\.(js|cjs|mjs)$/,
-        use: { loader: 'worker-loader' },
-      },
       {
         test: /\.mjs$/,
         include: /node_modules/,
@@ -56,6 +49,9 @@ module.exports = {
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: true,
+            },
           },
           {
             loader: 'css-loader',
@@ -71,38 +67,60 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        use: ['file-loader'],
+        use: [
+          'file-loader',
+        ],
       },
+      // {
+      //   test: /\.svg$/,
+      //   use: [
+      //     {
+      //       loader: 'babel-loader',
+      //     },
+      //     {
+      //       loader: 'react-svg-loader',
+      //       options: {
+      //         jsx: true,
+      //       },
+      //     },
+      //   ],
+      // },
     ],
   },
   plugins: [
     new Dotenv({
-      path: '.env',
+      path: './.env',
     }),
     new HtmlWebpackPlugin({
-      template: './index.html',
+      template: './public/index.html',
       title: '311-Data Neighborhood Engagement Tool',
       favicon: './public/favicon.png',
       meta: {
         description,
-        'twitter:card': { name: 'twitter:card', content: 'summary_large_image' },
-        'twitter:url': { name: 'twitter:url', content: 'https://www.311-data.org/' },
-        'twitter:title': { name: 'twitter:title', content: '311-Data Neighborhood Engagement Tool' },
-        'twitter:image': { name: 'twitter:image', content: './public/social-media-card-image.png' },
-        'twitter:description': { name: 'twitter:description', content: description },
-
-        'og:type': { property: 'og:type', content: 'website' },
-        'og:url': { property: 'og:url', content: 'https://www.311-data.org/' },
-        'og:title': { property: 'og:title', content: '311-Data Neighborhood Engagement Tool' },
-        'og:image': { property: 'og:image', content: './public/social-media-card-image.png' },
-        'og:description': { property: 'og:description', content: description },
       },
-    }),
-    new CopyWebpackPlugin({
-      patterns: [{ from: 'public', to: '.' }],
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
+    }),
+    new SocialTags({
+      appUrl: 'https://www.311-data.org/',
+      facebook: {
+        'og:type': 'website',
+        'og:url': 'https://www.311-data.org/',
+        'og:title': '311-Data Neighborhood Engagement Tool',
+        'og:image': './public/social-media-card-image.png',
+        'og:description': description,
+        'og:locale': 'en_US',
+        // 'fb:app_id': 'placeholder',
+      },
+      twitter: {
+        'twitter:card': 'summary_large_image',
+        'twitter:url': 'https://www.311-data.org/',
+        'twitter:title': '311-Data Neighborhood Engagement Tool',
+        'twitter:image': './public/social-media-card-image.png',
+        'twitter:description': description,
+        'twitter:site': '@data_311',
+      },
     }),
   ],
 };

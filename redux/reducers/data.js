@@ -1,6 +1,4 @@
 export const types = {
-  GET_DB_REQUEST: 'GET_DB_REQUEST',
-  GET_DB_REQUEST_SUCCESS: 'GET_DB_REQUEST_SUCCESS',
   GET_DATA_REQUEST: 'GET_DATA_REQUEST',
   GET_DATA_REQUEST_SUCCESS: 'GET_DATA_REQUEST_SUCCESS',
   UPDATE_DATE_RANGES: 'UPDATE_DATE_RANGES',
@@ -9,7 +7,6 @@ export const types = {
   GET_OPEN_REQUESTS: 'GET_OPEN_REQUESTS',
   GET_OPEN_REQUESTS_SUCCESS: 'GET_OPEN_REQUESTS_SUCCESS',
   GET_OPEN_REQUESTS_FAILURE: 'GET_OPEN_REQUESTS_FAILURE',
-  UPDATE_PIN_INFO: 'UPDATE_PIN_INFO',
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
@@ -25,15 +22,6 @@ export const types = {
   GIT_RESPONSE_SUCCESS: 'GIT_RESPONSE_SUCCESS',
   GIT_RESPONSE_FAILURE: 'GIT_RESPONSE_FAILURE',
 };
-
-export const getDbRequest = () => ({
-  type: types.GET_DB_REQUEST,
-});
-
-export const getDbRequestSuccess = response => ({
-  type: types.GET_DB_REQUEST_SUCCESS,
-  payload: response,
-});
 
 export const getDataRequest = () => ({
   type: types.GET_DATA_REQUEST,
@@ -57,11 +45,6 @@ export const getPinsSuccess = response => ({
 export const getPinsFailure = error => ({
   type: types.GET_PINS_FAILURE,
   payload: error,
-});
-
-export const updatePinInfo = pinData => ({
-  type: types.UPDATE_PIN_INFO,
-  payload: pinData,
 });
 
 export const getPinInfoRequest = requestId => ({
@@ -135,7 +118,6 @@ export const gitResponseFailure = error => ({
 });
 
 const initialState = {
-  isDbLoading: true,
   isMapLoading: false,
   error: null,
   pins: [],
@@ -148,17 +130,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.GET_DB_REQUEST:
-      return {
-        ...state,
-        isDbLoading: true,
-      };
-    case types.GET_DB_REQUEST_SUCCESS: {
-      return {
-        ...state,
-        isDbLoading: false,
-      };
-    }
     case types.GET_DATA_REQUEST:
       return {
         ...state,
@@ -202,15 +173,6 @@ export default (state = initialState, action) => {
         isMapLoading: false,
       };
     }
-    case types.UPDATE_PIN_INFO:
-      return {
-        ...state,
-        error: null,
-        pinsInfo: {
-          ...state.pinsInfo,
-          ...action.payload,
-        },
-      };
     case types.GET_PIN_INFO_SUCCESS:
       return {
         ...state,

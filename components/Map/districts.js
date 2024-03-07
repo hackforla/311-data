@@ -1,8 +1,8 @@
 /* eslint-disable */
 
 import { COUNCILS, CITY_COUNCILS } from '@components/common/CONSTANTS';
-import ncGeoJson from '@data/nc-boundary-2019-modified.json';
-import ccGeoJson from '@data/la-city-council-districts-2012.json';
+import ncGeoJson from '../../v1/data/nc-boundary-2019-modified.json';
+import ccGeoJson from '../../v1/data/la-city-council-districts-2012.json';
 import { isPointWithinGeo } from './geoUtils';
 
 export const ncBoundaries = ncGeoJson;

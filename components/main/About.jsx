@@ -1,7 +1,7 @@
 import React from 'react';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import fonts from '@theme/fonts';
 import sharedLayout from '@theme/layout';
@@ -11,13 +11,12 @@ import ContentBody from '@components/common/ContentBody';
 // Images
 import empowerLaLogo from '@assets/empower_la_logo.png';
 import hackForLaLogo from '@assets/hack_for_la_logo.png';
-import civicTechStructureLogo from '@assets/civic_tech_structure_logo.png';
+import codeForAmericaLogo from '@assets/code_for_america_logo.png';
 import mobileAppIcon from '@assets/mobile_app_icon.png';
 import databaseIcon from '@assets/database_icon.png';
 import publishIcon from '@assets/publish_icon.png';
 import upliftIcon from '@assets/uplift_icon.png';
 import visualizeIcon from '@assets/visualize_icon.png';
-import { Box } from '@mui/material';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -31,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function About() {
+const About = () => {
   const classes = { ...sharedLayout(), ...useStyles() };
 
   return (
@@ -41,7 +40,7 @@ function About() {
       </TextHeading>
 
       <ContentBody maxWidth="md">
-        <Grid container alignItems="center" justifyContent="center" direction="column">
+        <Grid container alignItems="center" justify="center" direction="column">
           <Grid item>
             <Typography variant="body1" paragraph>
               Each day, Los Angelenos report thousands of 311
@@ -60,11 +59,11 @@ function About() {
               us to create apps with this data, and that&apos;s where
               this project comes&nbsp;in.
             </Typography>
-            <Box className={classes.marginTopLarge} align="center">
+            <div className={classes.marginTopLarge} align="center">
               <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
                 Partners
               </Typography>
-            </Box>
+            </div>
             <div className={classes.marginTopMedium}>
               <Typography variant="body1" paragraph>
                 To empower local residents and Neighborhood Councils to
@@ -79,7 +78,7 @@ function About() {
         </Grid>
 
         {/* Inserting 3 images horizontally here  */}
-        <Grid container className={classes.marginTopSmall} justifyContent="space-between">
+        <Grid container className={classes.marginTopSmall} justify="space-between">
           <Grid item xs={12} md={4} align="left">
             <img src={empowerLaLogo} width={362} alt="Empower LA" />
           </Grid>
@@ -87,18 +86,18 @@ function About() {
             <img src={hackForLaLogo} width={97} alt="Hack for LA" />
           </Grid>
           <Grid item xs={12} md={4} align="right">
-            <img src={civicTechStructureLogo} width={144} alt="Civic Tech Structure" />
+            <img src={codeForAmericaLogo} width={202} alt="Code for America" />
           </Grid>
         </Grid>
-        <Box className={classes.marginTopLarge} align="center">
+        <div className={classes.marginTopLarge} align="center">
           <Typography variant="h3" className={clsx(classes.contentHeader, classes.contentTitle)}>
             How it works
           </Typography>
-        </Box>
+        </div>
       </ContentBody>
 
       <ContentBody maxWidth="lg" hasTopMargin={false}>
-        <Grid container className={classes.marginTopLarge} justifyContent="space-between">
+        <Grid container className={classes.marginTopLarge} justify="space-between">
           <Grid item sm={12} md={2}>
             <img className={classes.imageStyle} src={mobileAppIcon} width={75} alt="Mobile App" />
             <Typography variant="body1" paragraph>
@@ -139,6 +138,6 @@ function About() {
       </ContentBody>
     </>
   );
-}
+};
 
 export default About;

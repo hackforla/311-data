@@ -1,8 +1,8 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 
-import PropTypes from 'prop-types';
 import MapContainer from '@components/Map';
+import PropTypes from 'prop-types';
 import PersistentDrawerLeft from '../shared/PersistentDrawerLeft';
 
 const useStyles = makeStyles(theme => ({
@@ -15,15 +15,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Desktop({ initialState }) {
+const Desktop = ({ initialState }) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <PersistentDrawerLeft />
-      <MapContainer initialState={initialState} />
+      <MapContainer
+        initialState={initialState}
+      />
     </div>
   );
-}
+};
 
 export default Desktop;
 

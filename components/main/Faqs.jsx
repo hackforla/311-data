@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import ContentBody from '@components/common/ContentBody';
-import TextHeadingFAQ from '@components/common/TextHeading/TextHeadingFAQ';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import sharedLayout from '@theme/layout';
+import TextHeadingFAQ from '@components/common/TextHeading/TextHeadingFAQ';
+import ContentBody from '@components/common/ContentBody';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import useContentful from '../../hooks/useContentful';
 
 const useStyles = makeStyles(theme => ({
@@ -67,7 +67,7 @@ const query = `
   }
 `;
 
-function Faqs() {
+const Faqs = () => {
   const { data, errors } = useContentful(query);
   const classes = { ...useStyles(), ...sharedLayout() };
 
@@ -194,6 +194,6 @@ function Faqs() {
       </ContentBody>
     </>
   );
-}
+};
 
 export default Faqs;

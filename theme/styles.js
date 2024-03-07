@@ -1,5 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
-import createStyles from '@mui/styles/createStyles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import fonts from '@theme/fonts';
 
 // Define common styles as makeStyles hook.

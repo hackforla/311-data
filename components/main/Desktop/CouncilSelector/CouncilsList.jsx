@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import SearchBar from '@components/common/SearchBar';
 import GroupedMultiSelect from '@components/common/MultiSelect/GroupedMultiSelect';
 
@@ -44,7 +44,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function CouncilsList({ items, onClick }) {
+const CouncilsList = ({
+  items,
+  onClick,
+}) => {
   const classes = useStyles();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -55,21 +58,21 @@ function CouncilsList({ items, onClick }) {
           <SearchBar
             placeholder="Enter district"
             onChange={setSearchTerm}
-            value={searchTerm.toUpperCase()}
+            value={searchTerm}
           />
         </div>
       </div>
       <div className={classes.scrollWrapper}>
         <GroupedMultiSelect
           items={items}
-          groupBy="SERVICE_RE"
+          groupBy="regionName"
           onChange={onClick}
           searchTerm={searchTerm}
         />
       </div>
     </>
   );
-}
+};
 
 export default CouncilsList;
 

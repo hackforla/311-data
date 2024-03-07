@@ -1,63 +1,40 @@
-# 311-Data v2
+## Getting Started
 
-Demo: [https://hackforla.github.io/311-data/](https://hackforla.github.io/311-data/)
+### Setting up the project for the first time?
 
-## "Democratizing public data to improve community initiatives"
-Each day, Los Angelenos report thousands of 311 requests all across LA to resolve issues such as illegal dumping and graffiti in their neighborhoods. These requests are then received by relevant agencies, such as the Police, Building and Safety, or Department of Transportation. The agency responds to the request, addresses it, and then closes it once it is fixed. Thanks to Mayor Eric Garcetti's [Open Data Initiative](https://data.lacity.org/), the expansive amount of data associated with these 311 requests is available online.
+- Install [nvm](https://github.com/nvm-sh/nvm).
+- Install Node 12: `nvm install 12`
+- Switch to using Node 12: `nvm use 12`
+- From this directory, `npm run setup` to install front end dependencies and create an `.env` file
+- get a [Mapbox](https://account.mapbox.com/auth/signin/) API token and add that to your `.env` file as the `MAPBOX_TOKEN`
+- get the `API_URL` from a team member and add that to your `.env` file. Alternatively, you can [bring up](https://github.com/hackforla/311-data/blob/dev/docs/server_setup.md) your own local server and use that (if you are running your own local server, set `API_URL` to 'http://localhost:5000')
 
-We are a group of volunteers with diverse backgrounds who share a common vision: To make 311 request data more accessible and useful for our diverse communities and their representatives through visualization and data science. 
+Setup complete!
 
-By leveraging technology, we can empower local residents and the representatives of our [Neighborhood Councils](https://empowerla.org/councils/) to 
-* Access
-* Analyze
-* Visualize
+### Development
 
-the service request data that gets submitted to Los Angeles's 311 system at https://myla311.lacity.org/. 
+- From this directory, `npm start` to check your `.env` file and start webpack dev server
 
-Our application is open source, built and maintaned by volunteers throughout our community and provides two primary modes of operation:
-* An interactive map showing where different types of 311 requests are being submitted
-* Dashboards that show what types of requests are being made, how quickly they're being resolved, how different councils compare, and more
+Your browser should open to `0.0.0.0:3000` and the site should render. Webpack will detect saved code changes, rebuild the bundle in memory, and update the site in your browser.
 
-![image](https://user-images.githubusercontent.com/1448719/233575938-ce84a530-39ff-484e-a848-56121a40fe51.png)
+Stop webpack dev server with `Ctrl-C`.
 
-Our mission is to create a user-friendly platform for anyone interested in exploring 311 service requests so that they can immediately gain actionable insights. We are looking for sponsors who can support our efforts and help us scale our impact. If you are interested in learning more about our project, would like to volunteer or become a sponsor, please email hungrylulu8@gmail.com. 
+### Making new code changes?
+Whenever new code changes are made to the client, developers should consider running a Lighthouse audit in Google Chrome to identify and resolve any potential issues. A Lighthouse audit will offer ways to improve site quality, performance, accessibility, search engine optimization and end user experience. 
 
-## Project Technology
-* Node.js
-* React.js
-* Duckdb-wasm
-* Redux
-* Material-UI 5.x
+To run Lighthouse:
+- Open Google Chrome and navigate to the site containing your code
+- Inspect the site either by pressing `f12` or `Right-click > Inspect`
+- At the top of the Inspect window, select the 'Lighthouse' panel ('Lighthouse' may be hidden so you may need to click `>>` to see more)
+- Customize your report and click `Analyze page load`
 
-### Data Analysis
+### Useful commands
 
-* Python
-* Polars/Pandas/Numpy/Matplotlib
-* Google Colab
-* Observable
-
-### UI/UX
-
-* Figma
-* Google Drive
-* Adobe CC
-* Miro
-
-## Quick Start
-* Ensure that node version manager (nvm) is installed (e.g. follow a [tutorial](https://heynode.com/tutorial/install-nodejs-locally-nvm/))
-* Run `nvm install lts/hydrogen` (on windows `nvm install hydrogen`)
-* Run `nvm use lts/hydrogen` (on windows `nvm use hydrogen`)
-* confirm you are using Node 18 by running `node -v` (e.g. `Now using node v18.7.0 (npm v8.9.2)`)
-* clone the repo
-* cd 311-data/
-* cp .example.env .env
-* Edit .env and supply a valid MAPBOX_TOKEN. If you are a member of hack4la, please contact someone in 311-engineering for one
-* From the 311-data parent directory run: `npm run setup && npm start`
-* Visit http://localhost:3000
-
-## Resources
-Public data used in this project:
-* [MyLA311 Service Request Data](https://data.lacity.org/browse?q=myla311%20service%20request%20data&sortBy=relevance)
-* [CSV and parquet datasets are also available here at huggingface.co](https://huggingface.co/311-data)
-
-The source code for this project is based on the original 311-Data [v2-aws](https://github.com/hackforla/311-data/releases/tag/v2-aws) release
+```
+npm run setup                 # install dependencies listed in package.json and check .env file
+npm run check-env             # checks .env file exists and has all required keys
+npm start                     # check .env file and start webpack dev server
+npm run dev                   # start webpack dev server (no .env check)
+npm run build                 # run webpack in production mode - output is placed in dist directory
+npm run lint                  # lint javascript in client directory
+```

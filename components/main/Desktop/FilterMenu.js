@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
-import makeStyles from '@mui/styles/makeStyles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
-import IconButton from '@mui/material/IconButton';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import Collapse from '@mui/material/Collapse';
-import Typography from '@mui/material/Typography';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import Collapse from '@material-ui/core/Collapse';
+import Typography from '@material-ui/core/Typography';
 import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/main/Desktop/TypeSelector';
 import StatusSelector from '@components/main/Desktop/StatusSelector';
 import CouncilSelector from '@components/main/Desktop/CouncilSelector';
-// import ShareableLinkCreator from '@components/main/Desktop/ShareableLinkCreator';
-// import ExportButton from '@components/main/Desktop/ExportButton';
+import ShareableLinkCreator from '@components/main/Desktop/ShareableLinkCreator';
 
 // import GearButton from '@components/common/GearButton';
 // import clsx from 'clsx';
@@ -67,7 +66,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // const FilterMenu = ({ toggleMenu }) => { //toggleMenu used with GearButton
-function FilterMenu({ resetMap, resetAddressSearch }) {
+const FilterMenu = ({ resetMap, resetAddressSearch }) => {
   const [expanded, setExpanded] = useState(true);
   const classes = useStyles();
   const sharedClasses = sharedStyles();
@@ -98,7 +97,6 @@ function FilterMenu({ resetMap, resetAddressSearch }) {
             onClick={() => setExpanded(prevExpanded => !prevExpanded)}
             disableFocusRipple
             disableRipple
-            size="large"
           >
             {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
           </IconButton>
@@ -121,17 +119,14 @@ function FilterMenu({ resetMap, resetAddressSearch }) {
           <div className={classes.selectorWrapper}>
             <StatusSelector />
           </div>
-          {/* <div className={classes.selectorWrapper}>
+          <div className={classes.selectorWrapper}>
             <ShareableLinkCreator />
-          </div> */}
-          {/* <div className={classes.selectorWrapper}>
-            <ExportButton />
-          </div> */}
+          </div>
         </CardContent>
       </Collapse>
     </Card>
   );
-}
+};
 
 const mapDispatchToProps = dispatch => ({
   toggleMenu: () => dispatch(reduxToggleMenu()),

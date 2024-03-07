@@ -16,17 +16,30 @@ const FIT_BOUNDS_PADDING = {
   top: 65,
   bottom: 65,
   left: 350,
-  right: 350,
+  right: 350
 };
 
 function getBoundaryColor(boundaryStyle) {
-  return boundaryStyle === 'light' ? '#FFFFFF' : '#62ADFC';
+  return boundaryStyle === 'light'
+    ? '#FFFFFF'
+    : '#27272b';
 }
 
 function getMaskFillOpacity(boundaryStyle) {
   return boundaryStyle === 'light'
-    ? ['interpolate', ['linear'], ['zoom'], 10, 0, 13, 0.3]
-    : ['interpolate', ['linear'], ['zoom'], 10, 0, 13, 0.6];
+    ? [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      10, 0,
+      13, 0.3
+    ] : [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      10, 0,
+      13, 0.6
+    ];
 }
 
 class BoundaryLayer extends React.Component {
@@ -51,19 +64,21 @@ class BoundaryLayer extends React.Component {
 
     this.addSources();
     this.addLayers();
-    if (addListeners) this.addListeners();
+    if (addListeners)
+      this.addListeners();
   };
 
   componentDidUpdate(prev) {
     const { visible } = this.props;
-    if (visible !== prev.visible) this.setVisibility(visible);
+    if (visible !== prev.visible)
+      this.setVisibility(visible);
   }
 
   addSources = () => {
     this.map.addSource(this.sourceId, {
       type: 'geojson',
       data: this.sourceData,
-      promoteId: this.idProperty,
+      promoteId: this.idProperty
     });
 
     this.map.addSource(`${this.sourceId}-region-mask`, {
@@ -85,7 +100,7 @@ class BoundaryLayer extends React.Component {
       paint: {
         'line-color': getBoundaryColor(boundaryStyle),
         'line-width': BOUNDARY_WIDTH,
-      },
+      }
     });
 
     this.map.addLayer({
@@ -99,15 +114,14 @@ class BoundaryLayer extends React.Component {
         'fill-color': getBoundaryColor(boundaryStyle),
         'fill-opacity': [
           'case',
-          [
-            'all',
+          ['all',
             ['boolean', ['feature-state', 'hover'], false],
-            ['!', ['boolean', ['feature-state', 'selected'], false]],
+            ['!', ['boolean', ['feature-state', 'selected'], false]]
           ],
           0.5,
-          0,
-        ],
-      },
+          0
+        ]
+      }
     });
 
     this.map.addLayer({
@@ -120,14 +134,15 @@ class BoundaryLayer extends React.Component {
       paint: {
         'fill-color': getBoundaryColor(boundaryStyle),
         'fill-opacity': getMaskFillOpacity(boundaryStyle),
-      },
+      }
     });
   };
 
   addListeners = () => {
-    this.map.on('mousemove', `${this.sourceId}-fills`, (e) => {
+    this.map.on('mousemove', `${this.sourceId}-fills`, e => {
       const region = e.features[0];
-      if (!region || region.id === this.hoveredRegionId) return;
+      if (!region || region.id === this.hoveredRegionId)
+        return;
 
       this.setHoveredRegion(region);
       this.onHoverRegion(region);
@@ -141,7 +156,7 @@ class BoundaryLayer extends React.Component {
     });
   };
 
-  setHoveredRegion = (region) => {
+  setHoveredRegion = region => {
     if (this.hoveredRegionId) {
       this.map.setFeatureState(
         { source: this.sourceId, id: this.hoveredRegionId },
@@ -165,10 +180,11 @@ class BoundaryLayer extends React.Component {
       );
       this.hoveredRegionId = null;
     }
-  };
+  }
 
-  selectRegion = (regionId) => {
-    if (!regionId || regionId === this.selectedRegionId) return;
+  selectRegion = regionId => {
+    if (!regionId || regionId === this.selectedRegionId)
+      return;
 
     if (this.selectedRegionId)
       this.map.setFeatureState(
@@ -187,16 +203,15 @@ class BoundaryLayer extends React.Component {
       'case',
       ['boolean', ['feature-state', 'selected'], false],
       BOUNDARY_WIDTH,
-      0,
+      0
     ]);
 
     // get the region geo
     // notice double-equals because id is a number when it comes from CONSTANTS,
     // but a string in the geojson
-
-    let geo = this.sourceData.features.find(
-      (el) => el.properties[this.idProperty] == this.selectedRegionId
-    );
+    let geo = this.sourceData.features.find(el => (
+      el.properties[this.idProperty] == this.selectedRegionId
+    ));
 
     geo = removeGeoHoles(geo);
 
@@ -210,10 +225,11 @@ class BoundaryLayer extends React.Component {
 
     // inform main
     this.onSelectRegion(geo);
-  };
+  }
 
   clearSelectedRegion = () => {
-    if (!this.selectedRegionId) return;
+    if (!this.selectedRegionId)
+      return;
 
     this.map.setFeatureState(
       { source: this.sourceId, id: this.selectedRegionId },
@@ -224,22 +240,22 @@ class BoundaryLayer extends React.Component {
       this.map.setPaintProperty(
         `${this.sourceId}-borders`,
         'line-width',
-        BOUNDARY_WIDTH
+        BOUNDARY_WIDTH,
       );
     });
 
     this.map.getSource(`${this.sourceId}-region-mask`).setData(emptyGeo());
 
     this.selectedRegionId = null;
-  };
+  }
 
-  setVisibility = (visible) => {
+  setVisibility = visible => {
     const value = visible ? 'visible' : 'none';
     [
       `${this.sourceId}-borders`,
       `${this.sourceId}-fills`,
       `${this.sourceId}-region-mask-fill`,
-    ].forEach((layerId) => {
+    ].forEach(layerId => {
       this.map.setLayoutProperty(layerId, 'visibility', value);
     });
   };

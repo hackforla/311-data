@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Button from '@mui/material/Button';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 
-function ShareableLinkCreator({
+const ShareableLinkCreator = ({
   requestStatus,
-}) {
-  return (
+}) => (
+  <>
     <Button
       variant="contained"
       onClick={() => {
@@ -29,8 +29,8 @@ function ShareableLinkCreator({
     >
       Get Shareable Link
     </Button>
-  );
-}
+  </>
+);
 
 const mapStateToProps = state => ({
   requestStatus: state.filters,

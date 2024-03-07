@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+import Box from '@material-ui/core/Box';
 
 import sharedStyles from '@theme/styles';
 
@@ -25,11 +25,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function LocationDetail({
+const LocationDetail = ({
   address,
   nc,
   // ccs,
-}) {
+}) => {
   const classes = useStyles();
   const sharedClasses = sharedStyles();
 
@@ -64,7 +64,7 @@ function LocationDetail({
       )}
     </div>
   );
-}
+};
 
 export default LocationDetail;
 

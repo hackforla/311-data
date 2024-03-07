@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import SelectItem from './SelectItem';
 
@@ -12,12 +12,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function SelectGroup({ name, items, onChange }) {
+const SelectGroup = ({
+  name,
+  items,
+  onChange,
+}) => {
   const classes = useStyles();
 
   return (
     <div>
-      <div className={classes.groupName}>{`${name} (${items.length})`}</div>
+      <div className={classes.groupName}>
+        {`${name} (${items.length})`}
+      </div>
       {items.map(item => (
         <SelectItem
           key={item.councilId}
@@ -28,7 +34,7 @@ function SelectGroup({ name, items, onChange }) {
       ))}
     </div>
   );
-}
+};
 
 export default SelectGroup;
 

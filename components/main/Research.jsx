@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
-  Container, Box, Grid, List, ListItem,
-} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+  makeStyles,
+  Container,
+  Box,
+  Grid,
+  List,
+  ListItem,
+} from '@material-ui/core';
 import TextHeading from '@components/common/TextHeading';
 import useContentful from '../../hooks/useContentful';
 
@@ -39,7 +43,7 @@ const useStyles = makeStyles({
   },
 });
 
-function Research() {
+const Research = () => {
   const { data, errors } = useContentful(query);
   const classes = useStyles();
 
@@ -81,6 +85,6 @@ function Research() {
         )}
     </>
   );
-}
+};
 
 export default Research;

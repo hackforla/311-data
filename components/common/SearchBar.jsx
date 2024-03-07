@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
-import SearchIcon from '@mui/icons-material/Search';
+import { makeStyles } from '@material-ui/core/styles';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -27,11 +27,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function SearchBar({
+const SearchBar = ({
   value,
   placeholder,
   onChange,
-}) {
+}) => {
   const classes = useStyles();
 
   return (
@@ -48,7 +48,7 @@ function SearchBar({
       />
     </div>
   );
-}
+};
 
 export default SearchBar;
 
