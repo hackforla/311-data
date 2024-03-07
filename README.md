@@ -1,3 +1,7 @@
+# IMPORTANT NOTE
+
+This branch represents an archived state of the frontend repo. Do not delete this branch unless you are absolutely sure it is not needed. 
+
 ## Getting Started
 
 ### Setting up the project for the first time?
