@@ -1,5 +1,0 @@
-*.json
-*.test.js*
-v1/*
-dist/*
-webpack.*.js
