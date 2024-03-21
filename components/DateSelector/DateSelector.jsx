@@ -76,7 +76,7 @@ function DateSelector({
       },
     [`& .${tooltipClasses.tooltip}`]: {
         backgroundColor: theme.palette.common.white,
-        color: 'black',
+        color: theme.palette.common.black,
         marginLeft: '-4px',
         maxWidth: '275px',
         padding: '5px',
