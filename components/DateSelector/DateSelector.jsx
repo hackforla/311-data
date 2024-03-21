@@ -8,10 +8,11 @@ import {
   updateStartDate as reduxUpdateStartDate,
   updateEndDate as reduxUpdateEndDate,
 } from '@reducers/filters';
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import options from './options';
 import useStyles from './useStyles';
+import { styled } from '@mui/material/styles';
 import DateRanges from './DateRanges';
 
 const dateFormat = 'YYYY-MM-DD';
@@ -38,13 +39,56 @@ function DateSelector({
 
   const { option, selected } = classes;
 
+  const ArrowToolTip = styled(({ className })  => (
+    <Tooltip
+      placement="top-end"
+      arrow
+      classes = {{ popper: className}}
+      title={
+        <div>
+          <p className={classes.tooltipParagraph}>
+            <strong>
+              Currently, 311-Data loads only 311 service
+              request data from 2024 onward.
+            </strong>
+          </p>
+          <p className={classes.tooltipParagraph}>
+            For updates on the release of available 311
+            Data, please follow our {` `}
+            <a href="https://www.linkedin.com/company/hack-for-la/">
+              LinkedIn Page
+            </a>
+            .
+          </p>
+        </div>
+      }
+    >
+      <InfoOutlinedIcon
+        className={classes.iconStyle}
+        fontSize="inherit"
+      />
+    </Tooltip>
+    ))(({ theme }) => ({
+      [`& .${tooltipClasses.arrow}`]: {
+        "&::before": {
+            backgroundColor: theme.palette.common.white,
+          }
+      },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: theme.palette.common.white,
+        color: 'black',
+        marginLeft: '-4px',
+        maxWidth: '275px',
+        padding: '5px',
+    },
+    })); 
+  
+
   return (
     <>
       <span className={classes.label}>
         Date Range&nbsp;
-        <Tooltip title="311-Data is currently only able to load 311 service request data in 2024 and onwards. For updates on the release of available 311 Data, please follow our LinkedIn page at https://www.linkedin.com/company/hack-for-la/.">
-          <InfoOutlinedIcon className={classes.iconStyle} fontSize="inherit" />
-        </Tooltip>
+      <ArrowToolTip/>
       </span>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
