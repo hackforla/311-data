@@ -40,6 +40,9 @@ const useStyles = makeStyles(theme => ({
   selected: {
     backgroundColor: `${theme.palette.selected.primary} !important`,
   },
+  tooltipParagraph: {
+    margin: '1px',
+  },
 }));
 
 export default useStyles;
