@@ -8,7 +8,7 @@ import facts from '@data/facts';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
-  alignItems: 'flex-end',
+  alignItems: 'flex',
   justifyContent: 'center',
 });
 
@@ -18,6 +18,13 @@ const StyledBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#424242',
   padding: theme.spacing(2, 4, 3),
   textAlign: 'center',
+  maxWidth: '533px',
+  borderRadius: '10px',
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  fontSize: '16px',
+  fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
 }));
 
 export default function FactModal() {
@@ -35,11 +42,11 @@ export default function FactModal() {
   return (
     <StyledModal open={open}>
       <StyledBox>
-        <Typography variant="body1">
+        <StyledTypography variant="body1">
           Did you know?
           {' '}
           {facts[currentFactIndex]}
-        </Typography>
+        </StyledTypography>
       </StyledBox>
     </StyledModal>
   );
