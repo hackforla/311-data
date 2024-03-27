@@ -20,7 +20,7 @@ import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
 import { INTERNAL_DATE_SPEC } from '../common/CONSTANTS';
 import { getTypeIdFromTypeName } from '@utils';
-import FactModal from '@components/FactModal';
+import FactModal from '@components/Loading/FactModal';
 import CookieNotice from '../main/CookieNotice';
 import Map from './Map';
 import moment from 'moment';
@@ -395,7 +395,10 @@ class MapContainer extends React.Component {
         />
         <CookieNotice />
         {(isDbLoading || isMapLoading) && (
+          <>
             <FactModal />
+            <FactModal />
+          </>
         )}
       </div>
     );
