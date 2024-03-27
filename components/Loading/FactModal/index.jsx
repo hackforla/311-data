@@ -36,10 +36,11 @@ export default function FactModal() {
   return (
     <Modal open={open} className={classes.modal}>
       <div className={classes.paper}>
-        <Typography variant="h5" gutterBottom>
-          Did you know Fact?
+        <Typography variant="body1">
+          Did you know?
+          {' '}
+          {facts[currentFactIndex]}
         </Typography>
-        <Typography variant="body1">{facts[currentFactIndex]}</Typography>
       </div>
     </Modal>
   );
