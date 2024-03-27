@@ -33,12 +33,8 @@ export default function FactModal() {
     return () => clearInterval(intervalId);
   }, [currentFactIndex, factsLength]);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
-    <Modal open={open} onClose={handleClose} className={classes.modal}>
+    <Modal open={open} className={classes.modal}>
       <div className={classes.paper}>
         <Typography variant="h5" gutterBottom>
           Did you know Fact?
