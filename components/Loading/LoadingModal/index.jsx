@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function FactModal() {
+export default function LoadingModal() {
   const classes = useStyles();
   const [open, setOpen] = useState(true);
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
