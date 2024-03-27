@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
+import { Box, Modal, Typography } from '@mui/material';
 import { seconds } from '@utils';
 import facts from '@data/facts';
 
