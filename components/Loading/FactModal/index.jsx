@@ -5,7 +5,6 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import { seconds } from '@utils';
 import facts from '@data/facts';
-import fonts from '@theme/fonts';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -25,12 +24,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
   borderRadius: '10px',
 }));
 
-const StyledTypography = styled(Typography)({
-  fontSize: '16px',
-  fontFamily: fonts.family.roboto,
-  fontWeight: fonts.weight.regular,
-});
-
 export default function FactModal() {
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
   const factsLength = facts.length;
@@ -45,11 +38,11 @@ export default function FactModal() {
   return (
     <StyledModal open hideBackdrop disableAutoFocus>
       <StyledBox>
-        <StyledTypography variant="body1">
+        <Typography variant="body1">
           Did you know?
           {' '}
           {facts[currentFactIndex]}
-        </StyledTypography>
+        </Typography>
       </StyledBox>
     </StyledModal>
   );
