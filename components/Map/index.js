@@ -24,7 +24,6 @@ import FactModal from '@components/Loading/FactModal';
 import CookieNotice from '../main/CookieNotice';
 import Map from './Map';
 import moment from 'moment';
-import gif from '@assets/loading.gif';
 import ddbh from '@utils/duckDbHelpers.js';
 import DbContext from '@db/DbContext';
 
