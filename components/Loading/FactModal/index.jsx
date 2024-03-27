@@ -18,6 +18,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   bottom: '20vh',
   backgroundColor: '#424242',
   padding: theme.spacing(4, 4, 4),
+  boxShadow: theme.shadows[5],
   textAlign: 'center',
   maxWidth: '533px',
   width: 'auto',
@@ -31,7 +32,6 @@ const StyledTypography = styled(Typography)({
 });
 
 export default function FactModal() {
-  const [open, setOpen] = useState(true);
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
   const factsLength = facts.length;
 
@@ -43,7 +43,7 @@ export default function FactModal() {
   }, [factsLength]);
 
   return (
-    <StyledModal open={open} hideBackdrop disableAutoFocus>
+    <StyledModal open hideBackdrop disableAutoFocus>
       <StyledBox>
         <StyledTypography variant="body1">
           Did you know?
