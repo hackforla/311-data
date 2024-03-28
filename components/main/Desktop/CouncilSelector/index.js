@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import makeStyles from '@mui/styles/makeStyles';
@@ -37,10 +37,19 @@ function CouncilSelector({
   resetAddressSearch,
 }) {
   const classes = useStyles();
+  const [resetChildState, setResetChildState] = useState(false);
+
 
   useEffect(() => {
     dispatchUpdateUnselectedCouncils(councils);
   }, [councils, dispatchUpdateUnselectedCouncils]);
+
+  const handleResetChildState = () => {
+    setResetChildState(true);
+    setTimeout(() => {
+      setResetChildState(false);
+    }, 1000);
+  };
 
   const handleDelete = e => {
     const deletedCouncilId = Number(e.currentTarget.dataset.id);
@@ -56,6 +65,7 @@ function CouncilSelector({
     // resetMap() will call dispatchUpdateNcId(null) to reset councilId back to null
     // in reducers/filters so no need to do it again here
     resetMap();
+    handleResetChildState();
   };
 
   // Boundaries selection event handler
@@ -93,7 +103,7 @@ function CouncilSelector({
         </BoundariesSection.Display>
         <BoundariesSection.Collapse>
           {unselected && (
-            <CouncilsList items={unselected} onClick={debouncedHandleSelect} />
+            <CouncilsList items={unselected} onClick={debouncedHandleSelect} resetState={resetChildState} />
           )}
         </BoundariesSection.Collapse>
       </BoundariesSection>
