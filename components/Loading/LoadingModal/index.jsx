@@ -1,8 +1,11 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Modal, Typography, Link } from '@mui/material';
+import {
+  Box, Modal, Typography, Link,
+} from '@mui/material';
 import fonts from '@theme/fonts';
 import LoadingModal311Logo from '@assets/311Logo.png';
+import HFLALogo from '@assets/hack_for_la_logo.png';
 import colors from '@theme/colors';
 
 const StyledModal = styled(Modal)({
@@ -13,18 +16,17 @@ const StyledModal = styled(Modal)({
 
 const StyledBox = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  bottom: '40vh',
+  bottom: '35vh',
   backgroundColor: '#29404F',
   padding: theme.spacing(4, 4, 4),
   boxShadow: theme.shadows[5],
   textAlign: 'center',
   maxWidth: '533px',
-  maxHeight: '469px',
   borderRadius: '20px',
 }));
 
 const StyledTypography = styled(Typography)({
-  fontSize: '18px',
+  fontSize: '16px',
   fontFamily: fonts.family.roboto,
   fontWeight: fonts.weight.medium,
 });
@@ -36,6 +38,19 @@ const ExternalLink = styled(Link)({
     textDecoration: 'none',
   },
 });
+
+const styledFooter = {
+  justifyContent: 'center',
+  display: 'flex',
+  alignItems: 'center',
+  marginTop: '15px',
+};
+
+const styledFooterText = {
+  fontSize: '14px',
+  fontFamily: fonts.family.roboto,
+  fontWeight: fonts.weight.medium,
+};
 
 export default function LoadingModal() {
   return (
@@ -52,7 +67,12 @@ export default function LoadingModal() {
           </ExternalLink>
           .
         </StyledTypography>
-
+        <Box sx={styledFooter}>
+          <Typography sx={styledFooterText}>
+            Powered by Volunteers at Hack for LA
+          </Typography>
+          <img src={HFLALogo} alt="Hack For LA logo" width={40} />
+        </Box>
       </StyledBox>
     </StyledModal>
   );
