@@ -14,7 +14,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   position: 'absolute',
   bottom: '10vh',
   backgroundColor: '#424242',
-  padding: theme.spacing(4, 4, 4),
+  padding: theme.spacing(3, 3, 3),
   boxShadow: theme.shadows[5],
   textAlign: 'center',
   maxWidth: '533px',
@@ -37,7 +37,7 @@ export default function FactModal() {
   return (
     <StyledCard>
       <StyledBox>
-        <Typography variant="body1">
+        <Typography variant="body1" sx={{ fontSize: '14px' }}>
           Did you know?
           {' '}
           {facts[currentFactIndex]}
