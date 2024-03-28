@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Modal, Typography } from '@mui/material';
+import { Card, Box, Typography } from '@mui/material';
 import { seconds } from '@utils';
 import facts from '@data/facts';
 
-const StyledModal = styled(Modal)({
+const StyledCard = styled(Card)({
   display: 'flex',
   alignItems: 'flex',
   justifyContent: 'center',
@@ -20,6 +20,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   maxWidth: '533px',
   width: 'auto',
   borderRadius: '10px',
+  zIndex: 50000, // This prevents from being overlay by LoadingModal's backdrop
 }));
 
 export default function FactModal() {
@@ -34,7 +35,7 @@ export default function FactModal() {
   }, [factsLength]);
 
   return (
-    <StyledModal open hideBackdrop disableAutoFocus>
+    <StyledCard>
       <StyledBox>
         <Typography variant="body1">
           Did you know?
@@ -42,6 +43,6 @@ export default function FactModal() {
           {facts[currentFactIndex]}
         </Typography>
       </StyledBox>
-    </StyledModal>
+    </StyledCard>
   );
 }
