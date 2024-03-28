@@ -21,7 +21,7 @@ import { trackMapExport } from '@reducers/analytics';
 import { INTERNAL_DATE_SPEC } from '../common/CONSTANTS';
 import { getTypeIdFromTypeName } from '@utils';
 import LoadingModal from '../Loading/LoadingModal';
-import FactModal from '@components/Loading/FactModal';
+import FunFactCard from '@components/Loading/FunFactCard';
 import CookieNotice from '../main/CookieNotice';
 import Map from './Map';
 import moment from 'moment';
@@ -397,7 +397,7 @@ class MapContainer extends React.Component {
         {(isDbLoading || isMapLoading) && (
           <>
             <LoadingModal />
-            <FactModal />
+            <FunFactCard />
           </>
         )}
       </div>

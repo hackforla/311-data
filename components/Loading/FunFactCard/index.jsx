@@ -12,7 +12,7 @@ const StyledCard = styled(Card)({
 
 const StyledBox = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  bottom: '10vh',
+  bottom: '12vh',
   backgroundColor: '#424242',
   padding: theme.spacing(3, 3, 3),
   boxShadow: theme.shadows[5],
@@ -23,7 +23,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   zIndex: 50000, // This prevents from being overlay by LoadingModal's backdrop
 }));
 
-export default function FactModal() {
+export default function FunFactCard() {
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
   const factsLength = facts.length;
 
