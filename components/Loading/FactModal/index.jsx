@@ -12,7 +12,7 @@ const StyledCard = styled(Card)({
 
 const StyledBox = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  bottom: '15vh',
+  bottom: '10vh',
   backgroundColor: '#424242',
   padding: theme.spacing(4, 4, 4),
   boxShadow: theme.shadows[5],
