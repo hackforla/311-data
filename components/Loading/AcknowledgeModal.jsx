@@ -18,6 +18,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   textAlign: 'center',
   maxWidth: '464px',
   borderRadius: '10px',
+  outline: 'none',
 }));
 
 const ExternalLink = styled(Link)({
