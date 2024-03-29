@@ -10,11 +10,6 @@ import HFLALogo from '@assets/hack_for_la_logo.png';
 import spinner from '@assets/spinner.png';
 import colors from '@theme/colors';
 
-const spin = keyframes`
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-`;
-
 const StyledModal = styled(Modal)({
   display: 'flex',
   alignItems: 'center',
@@ -46,6 +41,12 @@ const ExternalLink = styled(Link)({
     textDecoration: 'underline',
   },
 });
+
+// Loading png spinner animation
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
 
 const StyledSpinner = styled('img')({
   animation: `${spin} 2s linear infinite`,
