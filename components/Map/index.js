@@ -27,6 +27,7 @@ import Map from './Map';
 import moment from 'moment';
 import ddbh from '@utils/duckDbHelpers.js';
 import DbContext from '@db/DbContext';
+import AcknowledgeModal from '../Loading/AcknowledgeModal';
 
 // We make API requests on a per-day basis. On average, there are about 4k
 // requests per day, so 10k is a large safety margin.
@@ -394,11 +395,13 @@ class MapContainer extends React.Component {
           initialState={this.initialState}
         />
         <CookieNotice />
-        {(isDbLoading || isMapLoading) && (
+        {(isDbLoading || isMapLoading) ? (
           <>
             <LoadingModal />
             <FunFactCard />
           </>
+        ) : (
+          <FunFactCard/>
         )}
       </div>
     );
