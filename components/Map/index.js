@@ -401,7 +401,7 @@ class MapContainer extends React.Component {
             <FunFactCard />
           </>
         ) : (
-          <FunFactCard/>
+          <AcknowledgeModal/>
         )}
       </div>
     );
