@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  styled, Box, Modal, Typography, Link,
+  styled, Box, Modal, Typography, Link, Button,
 } from '@mui/material';
 import colors from '@theme/colors';
 
@@ -28,14 +28,28 @@ const ExternalLink = styled(Link)({
   },
 });
 
+const buttonStyle = {
+  width: '104px',
+  height: '29px',
+  borderRadius: '5px',
+  backgroundColor: '#ECECEC',
+  border: '1px solid #ECECEC',
+  '&:hover': {
+    backgroundColor: '#DADADA',
+    borderColor: '#DADADA',
+  },
+  color: '#29404F',
+  fontWeight: '500',
+};
+
 function AcknowledgeModal() {
   return (
-    <StyledModal open disableAutoFocus disableEnforceFocus disableRestoreFocus keepMounted>
+    <StyledModal open>
       <StyledBox>
         <Typography variant="h6" sx={{ fontWeight: 500 }} gutterBottom>
           Welcome to 311Data
         </Typography>
-        <Typography variant="body2" sx={{ fontWieght: 400 }} gutterBottom>
+        <Typography variant="body2" sx={{ fontWieght: 400, textAlign: 'start' }} gutterBottom>
           311-data.org is 100% powered by volunteers from Hack
           <br />
           for LA and is not affiliated with the city of Los Angeles.
@@ -49,6 +63,9 @@ function AcknowledgeModal() {
           </ExternalLink>
           .
         </Typography>
+        <Box sx={{ pt: 3 }}>
+          <Button sx={buttonStyle}>Ok</Button>
+        </Box>
       </StyledBox>
     </StyledModal>
   );
