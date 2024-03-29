@@ -26,6 +26,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   maxWidth: '533px',
   maxHeight: '469px',
   borderRadius: '20px',
+  outline: 'none',
 }));
 
 const StyledTypography = styled(Typography)({
@@ -57,7 +58,7 @@ const StyledSpinner = styled('img')({
 
 export default function LoadingModal() {
   return (
-    <StyledModal open disableAutoFocus disableEnforceFocus disableRestoreFocus keepMounted>
+    <StyledModal open>
       <StyledBox>
         <Box sx={{ marginBottom: '20px' }}>
           <img src={LoadingModal311Logo} width="245" height="160" alt="311 data logo" />
