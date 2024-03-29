@@ -43,8 +43,12 @@ const buttonStyle = {
 };
 
 function AcknowledgeModal() {
+  const [open, setOpen] = React.useState(true);
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
-    <StyledModal open>
+    <StyledModal open={open}>
       <StyledBox>
         <Typography variant="h6" sx={{ fontWeight: 500 }} gutterBottom>
           Welcome to 311Data
@@ -64,7 +68,7 @@ function AcknowledgeModal() {
           .
         </Typography>
         <Box sx={{ pt: 3 }}>
-          <Button sx={buttonStyle}>Ok</Button>
+          <Button onClick={handleClose} sx={buttonStyle}>Ok</Button>
         </Box>
       </StyledBox>
     </StyledModal>
