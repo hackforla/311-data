@@ -10,9 +10,9 @@ import {
 } from '@reducers/filters';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { styled } from '@mui/material/styles';
 import options from './options';
 import useStyles from './useStyles';
-import { styled } from '@mui/material/styles';
 import DateRanges from './DateRanges';
 
 const dateFormat = 'YYYY-MM-DD';
@@ -39,28 +39,31 @@ function DateSelector({
 
   const { option, selected } = classes;
 
-  const ArrowToolTip = styled(({ className })  => (
+  const ArrowToolTip = styled(({ className }) => (
     <Tooltip
       placement="top-end"
       arrow
-      classes = {{ popper: className}}
+      classes={{ popper: className }}
       title={
-        <div>
-          <p className={classes.tooltipParagraph}>
-            <strong>
-              Currently, 311-Data loads only 311 service
-              request data from 2024 onward.
-            </strong>
-          </p>
-          <p className={classes.tooltipParagraph}>
-            For updates on the release of available 311
-            Data, please follow our {` `}
-            <a href="https://www.linkedin.com/company/hack-for-la/">
-              LinkedIn Page
-            </a>
+        (
+          <div>
+            <p className={classes.tooltipParagraph}>
+              <strong>
+                Currently, 311-Data loads only 311 service
+                request data from 2024 onward.
+              </strong>
+            </p>
+            <p className={classes.tooltipParagraph}>
+              For updates on the release of available 311
+              Data, please follow our
+              {` `}
+              <a href='https://www.linkedin.com/company/hack-for-la/'>
+                LinkedIn Page
+              </a>
             .
-          </p>
-        </div>
+            </p>
+          </div>
+        )
       }
     >
       <InfoOutlinedIcon
@@ -68,26 +71,25 @@ function DateSelector({
         fontSize="inherit"
       />
     </Tooltip>
-    ))(({ theme }) => ({
-      [`& .${tooltipClasses.arrow}`]: {
-        "&::before": {
-            backgroundColor: theme.palette.common.white,
-          }
-      },
-    [`& .${tooltipClasses.tooltip}`]: {
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+      '&::before': {
         backgroundColor: theme.palette.common.white,
-        color: theme.palette.common.black,
-        marginLeft: '-4px',
-        maxWidth: '275px',
-        padding: '5px',
+      },
     },
-    })); 
-  
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.common.black,
+      marginLeft: '-4px',
+      maxWidth: '275px',
+      padding: '5px',
+    },
+  }));
   return (
     <>
       <span className={classes.label}>
         Date Range&nbsp;
-      <ArrowToolTip/>
+        <ArrowToolTip />
       </span>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
