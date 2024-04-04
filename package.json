@@ -32,6 +32,7 @@
     "@mui/lab": "^5.0.0-alpha.150",
     "@mui/material": "^5.14.15",
     "@mui/styles": "^5.14.15",
+    "@mui/system": "^5.15.14",
     "@redux-devtools/extension": "^3.2.5",
     "@turf/turf": "^6.5.0",
     "apache-arrow": "^13.0.0",
