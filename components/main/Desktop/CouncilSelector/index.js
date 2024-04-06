@@ -37,19 +37,11 @@ function CouncilSelector({
   resetAddressSearch,
 }) {
   const classes = useStyles();
-  const [resetChildState, setResetChildState] = useState(false);
-
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     dispatchUpdateUnselectedCouncils(councils);
   }, [councils, dispatchUpdateUnselectedCouncils]);
-
-  const handleResetChildState = () => {
-    setResetChildState(true);
-    setTimeout(() => {
-      setResetChildState(false);
-    }, 1000);
-  };
 
   const handleDelete = e => {
     const deletedCouncilId = Number(e.currentTarget.dataset.id);
@@ -65,7 +57,8 @@ function CouncilSelector({
     // resetMap() will call dispatchUpdateNcId(null) to reset councilId back to null
     // in reducers/filters so no need to do it again here
     resetMap();
-    handleResetChildState();
+    //Clear district council search box field on deselect
+    setSearchTerm('');
   };
 
   // Boundaries selection event handler
@@ -103,7 +96,7 @@ function CouncilSelector({
         </BoundariesSection.Display>
         <BoundariesSection.Collapse>
           {unselected && (
-            <CouncilsList items={unselected} onClick={debouncedHandleSelect} resetState={resetChildState} />
+            <CouncilsList items={unselected} onClick={debouncedHandleSelect}searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           )}
         </BoundariesSection.Collapse>
       </BoundariesSection>

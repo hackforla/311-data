@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import SearchBar from '@components/common/SearchBar';
@@ -44,14 +44,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function CouncilsList({ items, onClick, resetState }) {
+function CouncilsList({ items, onClick, searchTerm, setSearchTerm }) {
   const classes = useStyles();
-  const [searchTerm, setSearchTerm] = useState('');
-  useEffect(() => {
-    if (resetState) {
-      setSearchTerm('');
-    }
-  }, [resetState]);
 
   return (
     <>
