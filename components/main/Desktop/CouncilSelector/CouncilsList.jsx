@@ -75,6 +75,8 @@ export default CouncilsList;
 CouncilsList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})),
   onClick: PropTypes.func.isRequired,
+  searchTerm: PropTypes.string.isRequired,
+  setSearchTerm: PropTypes.func.isRequired
 };
 
 CouncilsList.defaultProps = {
