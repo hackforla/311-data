@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import makeStyles from '@mui/styles/makeStyles';
@@ -37,6 +37,7 @@ function CouncilSelector({
   resetAddressSearch,
 }) {
   const classes = useStyles();
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     dispatchUpdateUnselectedCouncils(councils);
@@ -56,6 +57,8 @@ function CouncilSelector({
     // resetMap() will call dispatchUpdateNcId(null) to reset councilId back to null
     // in reducers/filters so no need to do it again here
     resetMap();
+    //Clear district council search box field on deselect
+    setSearchTerm('');
   };
 
   // Boundaries selection event handler
@@ -93,7 +96,7 @@ function CouncilSelector({
         </BoundariesSection.Display>
         <BoundariesSection.Collapse>
           {unselected && (
-            <CouncilsList items={unselected} onClick={debouncedHandleSelect} />
+            <CouncilsList items={unselected} onClick={debouncedHandleSelect}searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           )}
         </BoundariesSection.Collapse>
       </BoundariesSection>
