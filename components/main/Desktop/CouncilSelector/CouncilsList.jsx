@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import SearchBar from '@components/common/SearchBar';
@@ -44,9 +44,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function CouncilsList({ items, onClick }) {
+function CouncilsList({ items, onClick, searchTerm, setSearchTerm }) {
   const classes = useStyles();
-  const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <>
@@ -76,6 +75,8 @@ export default CouncilsList;
 CouncilsList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})),
   onClick: PropTypes.func.isRequired,
+  searchTerm: PropTypes.string.isRequired,
+  setSearchTerm: PropTypes.func.isRequired
 };
 
 CouncilsList.defaultProps = {
