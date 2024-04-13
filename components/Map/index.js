@@ -66,10 +66,15 @@ class MapContainer extends React.Component {
 
   createRequestsTable = async () => {
     const { conn } = this.context;
+    const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
+    const year = moment(startDate).year(); // extrac the year
+
+    const datasetYear = year === 2024 ? '2024' : '2023';
+    const datasetFileName = `requests${datasetYear}.parquet`
 
     // Create the 'requests' table.
     const createSQL =
-      'CREATE TABLE requests AS SELECT * FROM "requests2024.parquet"'; // query from parquet
+      `CREATE TABLE requests AS SELECT * FROM "${datasetFileName}"`; // query from parquet
 
     await conn.query(createSQL);
   };
@@ -443,6 +448,7 @@ MapContainer.propTypes = {};
 
 MapContainer.defaultProps = {};
 
+// connect MapContainer to Redux store
 export default connect(
   mapStateToProps,
   mapDispatchToProps
