@@ -69,7 +69,7 @@ class MapContainer extends React.Component {
 
     // Create the 'requests' table.
     const createSQL =
-      'CREATE TABLE requests AS SELECT * FROM "requests.parquet"'; // parquet
+      'CREATE TABLE requests AS SELECT * FROM "requests2024.parquet"'; // parquet
 
     await conn.query(createSQL);
   };
