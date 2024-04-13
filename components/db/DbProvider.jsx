@@ -8,8 +8,10 @@ import DbContext from '@db/DbContext';
 const datasets = {
   parquet: {
     // huggingface
-    hfYtd:
-      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // year-to-date
+    hfYtd2024:
+      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 year-to-date
+    hfYtd2023:
+      'https://huggingface.co/datasets/311-data/2023/resolve/main/2023.parquet', // 2023 year-to-date
     hfLastMonth:
       'https://huggingface.co/datasets/edwinjue/311-data-last-month/resolve/refs%2Fconvert%2Fparquet/edwinjue--311-data-last-month/csv-train.parquet', // last month
   },
@@ -49,14 +51,20 @@ function DbProvider({ children }) {
 
         await newDb.instantiate(
           DUCKDB_CONFIG.mainModule,
-          DUCKDB_CONFIG.pthreadWorker
+          DUCKDB_CONFIG.pthreadWorker,
         );
 
         // register parquet
         await newDb.registerFileURL(
-          'requests.parquet',
-          datasets.parquet.hfYtd,
-          4 // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
+          'requests2024.parquet',
+          datasets.parquet.hfYtd2024,
+          4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
+        );
+
+        await newDb.registerFileURL(
+          'requests2023.parquet',
+          datasets.parquet.hfYtd2023,
+          4,
         );
 
         // Create db connection
