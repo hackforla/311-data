@@ -53,6 +53,7 @@ class MapContainer extends React.Component {
       position: props.position,
       lastUpdated: props.lastUpdated,
       selectedTypes: this.getSelectedTypes(),
+      isTableLoading: false,
     };
 
     // We store the raw requests from the API call here, but eventually they aremap/inde
@@ -65,14 +66,14 @@ class MapContainer extends React.Component {
   }
 
   createRequestsTable = async () => {
+    this.setState({ isTableLoading: true });
     const { conn } = this.context;
-
     const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
     const year = moment(startDate).year(); // extrac the year
     const datasetFileName = `requests${year}.parquet`;
     const tableName = `requests_${year}`;
 
-    // Create the 'requests' table.
+    // Create the year data table.
     const createSQL =
       `CREATE TABLE IF NOT EXISTS ${tableName} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
       try {
@@ -80,6 +81,8 @@ class MapContainer extends React.Component {
         console.log("Table created and dataset registered successfully.");
       } catch (error) {
         console.error("Error in creating table or registering dataset:", error);
+      } finally {
+        this.setState({ isTableLoading: false});
       }
 
     // await conn.query(createSQL);
@@ -394,7 +397,7 @@ class MapContainer extends React.Component {
       isMapLoading,
       isDbLoading,
     } = this.props;
-    const { ncCounts, ccCounts, selectedTypes } = this.state;
+    const { ncCounts, ccCounts, selectedTypes, isTableLoading } = this.state;
     return (
       <div className={classes.root}>
         <Map
@@ -409,7 +412,7 @@ class MapContainer extends React.Component {
           initialState={this.initialState}
         />
         <CookieNotice />
-        {(isDbLoading || isMapLoading) ? (
+        {(isDbLoading || isMapLoading || isTableLoading) ? (
           <>
             <LoadingModal />
             <FunFactCard />
