@@ -66,17 +66,23 @@ class MapContainer extends React.Component {
 
   createRequestsTable = async () => {
     const { conn } = this.context;
+
     const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
     const year = moment(startDate).year(); // extrac the year
-
-    const datasetYear = year === 2024 ? '2024' : '2023';
-    const datasetFileName = `requests${datasetYear}.parquet`
+    const datasetFileName = `requests${year}.parquet`;
+    const tableName = `requests_${year}`;
 
     // Create the 'requests' table.
     const createSQL =
-      `CREATE TABLE requests AS SELECT * FROM "${datasetFileName}"`; // query from parquet
+      `CREATE TABLE IF NOT EXISTS ${tableName} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
+      try {
+        await conn.query(createSQL);
+        console.log("Table created and dataset registered successfully.");
+      } catch (error) {
+        console.error("Error in creating table or registering dataset:", error);
+      }
 
-    await conn.query(createSQL);
+    // await conn.query(createSQL);
   };
 
   async componentDidMount(props) {
@@ -88,19 +94,20 @@ class MapContainer extends React.Component {
 
   async componentDidUpdate(prevProps) {
     const { activeMode, pins, startDate, endDate } = this.props;
-    function didDateRangeChange() {
-      // Check that endDate is not null since we only want to retrieve data
-      // when both the startDate and endDate are selected.
-      return (
-        (prevProps.startDate != startDate || prevProps.endDate != endDate) &&
-        endDate != null
-      );
-    }
+    const yearChanged = moment(prevProps.startDate).year() !== moment(startDate).year();
+    const startDateChanged = prevProps.startDate !== startDate;
+    const endDateChanged = prevProps.endDate !== endDate;
+
+    // Check that endDate is not null since we only want to retrieve data
+    // when both the startDate and endDate are selected.
+    const didDateRangeChange = (yearChanged || startDateChanged || endDateChanged) && endDate !== null;
+
     if (
       prevProps.activeMode !== activeMode ||
       prevProps.pins !== pins ||
-      didDateRangeChange()
+      didDateRangeChange
     ) {
+      await this.createRequestsTable();
       await this.setData();
     }
   }
@@ -298,9 +305,11 @@ class MapContainer extends React.Component {
   getAllRequests = async (startDate, endDate) => {
     try {
       const { conn } = this.context;
+      const year = moment(startDate).year();
+      const tableName = `requests_${year}`;
 
       // Execute a SELECT query from 'requests' table
-      const selectSQL = `SELECT * FROM requests WHERE CreatedDate between '${startDate}' and '${endDate}'`;
+      const selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate between '${startDate}' and '${endDate}'`;
 
       const requestsAsArrowTable = await conn.query(selectSQL);
 
