@@ -67,15 +67,15 @@ class MapContainer extends React.Component {
 
   createRequestsTable = async () => {
     this.setState({ isTableLoading: true });
-    const { conn } = this.context;
+    const { conn, tableNameByYear } = this.context;
     const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
     const year = moment(startDate).year(); // extrac the year
     const datasetFileName = `requests${year}.parquet`;
-    const tableName = `requests_${year}`; // dynamic table name by year extracted from startDate
+    // const tableName = `requests_${year}`; // dynamic table name by year extracted from startDate
 
     // Create the year data table if not exist already
     const createSQL =
-      `CREATE TABLE IF NOT EXISTS ${tableName} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
+      `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
 
     const startTime = performance.now(); // start the time tracker
 
@@ -311,12 +311,11 @@ class MapContainer extends React.Component {
 
   getAllRequests = async (startDate, endDate) => {
     try {
-      const { conn } = this.context;
+      const { conn, tableNameByYear } = this.context;
       const year = moment(startDate).year();
-      const tableName = `requests_${year}`;
 
       // Execute a SELECT query from 'requests' table
-      const selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate between '${startDate}' and '${endDate}'`;
+      const selectSQL = `SELECT * FROM ${tableNameByYear} WHERE CreatedDate between '${startDate}' and '${endDate}'`;
 
       const requestsAsArrowTable = await conn.query(selectSQL);
 
