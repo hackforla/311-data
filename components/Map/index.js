@@ -71,7 +71,6 @@ class MapContainer extends React.Component {
     const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
     const year = moment(startDate).year(); // extrac the year
     const datasetFileName = `requests${year}.parquet`;
-    // const tableName = `requests_${year}`; // dynamic table name by year extracted from startDate
 
     // Create the year data table if not exist already
     const createSQL =
