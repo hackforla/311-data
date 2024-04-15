@@ -73,13 +73,16 @@ class MapContainer extends React.Component {
     const datasetFileName = `requests${year}.parquet`;
     const tableName = `requests_${year}`; // dynamic table name by year extracted from startDate
 
-    // Create the year data table.
+    // Create the year data table if not exist already
     const createSQL =
-    // create new table only if year changed
       `CREATE TABLE IF NOT EXISTS ${tableName} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
+
+    const startTime = performance.now(); // start the time tracker
+
       try {
         await conn.query(createSQL);
-        console.log("Table created and dataset registered successfully.");
+        const endTime = performance.now() // end the timer
+        console.log(`Table created and dataset registered. Time taken: ${Math.floor(endTime - startTime)} ms.`);
       } catch (error) {
         console.error("Error in creating table or registering dataset:", error);
       } finally {
@@ -322,7 +325,7 @@ class MapContainer extends React.Component {
       this.endTime = performance.now(); // end bnechmark
 
       console.log(
-        `Time taken to bootstrap db: ${this.endTime - this.startTime}ms`
+        `Time taken to bootstrap db: ${Math.floor(this.endTime - this.startTime)} ms`
       );
       return requests;
     } catch (e) {
