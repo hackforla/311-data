@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'proptypes';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import * as duckdb from '@duckdb/duckdb-wasm';
 import Worker from 'web-worker';
 import DbContext from '@db/DbContext';
+import moment from 'moment';
 
 // List of remote dataset locations used by db.registerFileURL
 const datasets = {
@@ -22,10 +24,11 @@ const datasets = {
   },
 };
 
-function DbProvider({ children }) {
+function DbProvider({ children, startDate }) {
   const [db, setDb] = useState(null);
   const [conn, setConn] = useState(null);
   const [worker, setWorker] = useState(null);
+  const [tableNameByYear, setTableNameByYear] = useState('');
 
   useEffect(() => {
     const dbInitialize = async () => {
@@ -108,13 +111,25 @@ function DbProvider({ children }) {
   // Important: dependency array must be empty or you will get the following error
   // "cannot send a message since the worker is not set" and app will infinite loop
 
+  // This useEffect specifically handle dynamic table name generation
+  // separated from the previous useEffect that handles db initialization and teardown
+  useEffect(() => {
+    if (startDate) {
+      const year = moment(startDate).year();
+      setTableNameByYear(`requests_${year}`);
+    }
+  }, [startDate]); // Depend on startDate
+
   //   block until db, conn, worker are available
   if (!db || !conn || !worker) {
     return null;
   }
 
   return (
-    <DbContext.Provider value={{ db, conn, worker }}>
+    <DbContext.Provider value={{
+      db, conn, worker, tableNameByYear,
+    }}
+    >
       {children}
     </DbContext.Provider>
   );
@@ -122,10 +137,17 @@ function DbProvider({ children }) {
 
 DbProvider.propTypes = {
   children: PropTypes.node,
+  startDate: PropTypes.string,
 };
 
 DbProvider.defaultProps = {
   children: null,
+  startDate: PropTypes.string,
 };
 
-export default DbProvider;
+// connect DbProvider to Redux to get startDate
+const mapStateToProps = state => ({
+  startDate: state.filters.startDate,
+});
+
+export default connect(mapStateToProps)(DbProvider);
