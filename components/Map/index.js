@@ -71,10 +71,11 @@ class MapContainer extends React.Component {
     const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
     const year = moment(startDate).year(); // extrac the year
     const datasetFileName = `requests${year}.parquet`;
-    const tableName = `requests_${year}`;
+    const tableName = `requests_${year}`; // dynamic table name by year extracted from startDate
 
     // Create the year data table.
     const createSQL =
+    // create new table only if year changed
       `CREATE TABLE IF NOT EXISTS ${tableName} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
       try {
         await conn.query(createSQL);
@@ -84,8 +85,6 @@ class MapContainer extends React.Component {
       } finally {
         this.setState({ isTableLoading: false});
       }
-
-    // await conn.query(createSQL);
   };
 
   async componentDidMount(props) {
@@ -97,6 +96,8 @@ class MapContainer extends React.Component {
 
   async componentDidUpdate(prevProps) {
     const { activeMode, pins, startDate, endDate } = this.props;
+
+    // create conditions to check if year or startDate or endDate changed
     const yearChanged = moment(prevProps.startDate).year() !== moment(startDate).year();
     const startDateChanged = prevProps.startDate !== startDate;
     const endDateChanged = prevProps.endDate !== endDate;
