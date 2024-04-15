@@ -63,10 +63,10 @@ function RequestDetail({
   // dispatchGetPinInfoRequest,
   dispatchUpdatePinInfo,
 }) {
-  const { conn } = useContext(DbContext);
+  const { conn, tableNameByYear } = useContext(DbContext);
   const getPinInfo = useCallback(async () => {
     try {
-      const getPinsInfoSQL = `SELECT * FROM requests WHERE TRIM(SRNumber) = '${requestId}'`;
+      const getPinsInfoSQL = `SELECT * FROM ${tableNameByYear} WHERE TRIM(SRNumber) = '${requestId}'`;
 
       const pinsInfoAsArrowTable = await conn.query(getPinsInfoSQL);
       const newPinsInfo = ddbh.getTableData(pinsInfoAsArrowTable);
