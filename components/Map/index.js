@@ -53,6 +53,7 @@ class MapContainer extends React.Component {
       position: props.position,
       lastUpdated: props.lastUpdated,
       selectedTypes: this.getSelectedTypes(),
+      acknowledgeModalShown: false
     };
 
     // We store the raw requests from the API call here, but eventually they aremap/inde
@@ -369,6 +370,10 @@ class MapContainer extends React.Component {
     return requestTypes;
   };
 
+  onClose = () => {
+    this.state.acknowledgeModalShown = true;
+  }
+
   render() {
     const {
       position,
@@ -380,7 +385,7 @@ class MapContainer extends React.Component {
       isMapLoading,
       isDbLoading,
     } = this.props;
-    const { ncCounts, ccCounts, selectedTypes } = this.state;
+    const { ncCounts, ccCounts, selectedTypes, acknowledgeModalShown } = this.state;
     return (
       <div className={classes.root}>
         <Map
@@ -395,13 +400,13 @@ class MapContainer extends React.Component {
           initialState={this.initialState}
         />
         <CookieNotice />
-        {(isDbLoading || isMapLoading) ? (
+        {(isDbLoading || isMapLoading) && acknowledgeModalShown === false ? (
           <>
             <LoadingModal />
             <FunFactCard />
           </>
         ) : (
-          <AcknowledgeModal/>
+          <AcknowledgeModal onClose={this.onClose}/>
         )}
       </div>
     );

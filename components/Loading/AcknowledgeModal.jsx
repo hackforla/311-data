@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   styled, Box, Modal, Typography, Link, Button,
 } from '@mui/material';
@@ -43,10 +44,11 @@ const buttonStyle = {
   fontWeight: '500',
 };
 
-function AcknowledgeModal() {
+function AcknowledgeModal({onClose}) {
   const [open, setOpen] = React.useState(true);
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
   return (
     <StyledModal open={open}>
@@ -77,3 +79,7 @@ function AcknowledgeModal() {
 }
 
 export default AcknowledgeModal;
+
+AcknowledgeModal.propTypes = {
+  onClose: PropTypes.func.isRequired
+};
