@@ -400,14 +400,14 @@ class MapContainer extends React.Component {
           initialState={this.initialState}
         />
         <CookieNotice />
-        {(isDbLoading || isMapLoading) && acknowledgeModalShown === false ? (
+        {(isDbLoading || isMapLoading) ? (
           <>
             <LoadingModal />
             <FunFactCard />
           </>
-        ) : (
+        ) : (acknowledgeModalShown === false) ? (
           <AcknowledgeModal onClose={this.onClose}/>
-        )}
+        ) : null}
       </div>
     );
   }
