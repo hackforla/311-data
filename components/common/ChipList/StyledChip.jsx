@@ -8,6 +8,10 @@ import { useTheme } from '@mui/styles/';
 const useStylesSolid = makeStyles(theme => ({
   root: {
     backgroundColor: props => props.color,
+    height: 'auto',
+    '& .MuiChip-label': {
+      whiteSpace: 'normal',
+    },
   },
   label: {
     fontFamily: 'Roboto',
@@ -21,6 +25,10 @@ const useStylesSolid = makeStyles(theme => ({
 const useStylesOutlined = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.secondary.light,
+    height: 'auto',
+    '& .MuiChip-label': {
+      whiteSpace: 'normal',
+    },
   },
   outlined: {
     borderColor: props => props.color,

@@ -28,7 +28,7 @@ function GroupedMultiSelect({
     if (searchTerm) {
       const searchFilter = new RegExp(searchTerm, 'i');
       const filteredGroups = Object.keys(groups).reduce((acc, group) => {
-        const filteredGroup = groups[group].filter(item => searchFilter.test(item.councilName));
+        const filteredGroup = groups[group].filter(item => searchFilter.test(item.TOOLTIP));
         if (filteredGroup.length) {
           return { ...acc, [group]: filteredGroup };
         }
