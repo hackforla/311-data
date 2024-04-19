@@ -1,12 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
+import makeStyles from '@mui/styles/makeStyles';
+
+const useStyles = makeStyles(() => ({
+  selectItemTextWrap: {
+    whiteSpace: 'normal',
+  },
+}));
 
 function SelectItem({
   text, value, onClick, disabled,
 }) {
+  const classes = useStyles();
   return (
     <MenuItem
+      className={classes.selectItemTextWrap}
       key={text}
       onClick={onClick}
       dense
