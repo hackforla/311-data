@@ -311,7 +311,6 @@ class MapContainer extends React.Component {
   getAllRequests = async (startDate, endDate) => {
     try {
       const { conn, tableNameByYear } = this.context;
-      const year = moment(startDate).year();
 
       // Execute a SELECT query from 'requests' table
       const selectSQL = `SELECT * FROM ${tableNameByYear} WHERE CreatedDate between '${startDate}' and '${endDate}'`;
