@@ -21,7 +21,7 @@ function SelectGroup({ name, items, onChange }) {
       {items.map(item => (
         <SelectItem
           key={item.councilId}
-          text={item.councilName}
+          text={item.TOOLTIP}
           value={item.councilId}
           onClick={onChange}
         />

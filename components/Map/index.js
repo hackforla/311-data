@@ -53,6 +53,7 @@ class MapContainer extends React.Component {
       position: props.position,
       lastUpdated: props.lastUpdated,
       selectedTypes: this.getSelectedTypes(),
+      acknowledgeModalShown: false,
       isTableLoading: false,
     };
 
@@ -387,6 +388,10 @@ class MapContainer extends React.Component {
     return requestTypes;
   };
 
+  onClose = () => {
+    this.state.acknowledgeModalShown = true;
+  }
+
   render() {
     const {
       position,
@@ -398,7 +403,7 @@ class MapContainer extends React.Component {
       isMapLoading,
       isDbLoading,
     } = this.props;
-    const { ncCounts, ccCounts, selectedTypes, isTableLoading } = this.state;
+    const { ncCounts, ccCounts, selectedTypes, acknowledgeModalShown, isTableLoading } = this.state;
     return (
       <div className={classes.root}>
         <Map
@@ -418,9 +423,9 @@ class MapContainer extends React.Component {
             <LoadingModal />
             <FunFactCard />
           </>
-        ) : (
-          <AcknowledgeModal/>
-        )}
+        ) : (acknowledgeModalShown === false) ? (
+          <AcknowledgeModal onClose={this.onClose}/>
+        ) : null}
       </div>
     );
   }
