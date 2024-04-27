@@ -115,7 +115,7 @@ export default (state = initialState, action) => {
         },
       };
     case types.UPDATE_NEIGHBORHOOD_COUNCIL:
-      if (action.payload === state.councilId) {
+      if (action.payload === null) {
         newSearchParams.delete('councilId');
       } else {
         newSearchParams.set('councilId', action.payload);
