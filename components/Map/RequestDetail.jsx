@@ -62,11 +62,34 @@ function RequestDetail({
   agencies,
   // dispatchGetPinInfoRequest,
   dispatchUpdatePinInfo,
+  startDate,
+  endDate,
 }) {
-  const { conn, tableNameByYear } = useContext(DbContext);
+  const { conn } = useContext(DbContext);
   const getPinInfo = useCallback(async () => {
+    if (!requestId) return;
+
     try {
-      const getPinsInfoSQL = `SELECT * FROM ${tableNameByYear} WHERE TRIM(SRNumber) = '${requestId}'`;
+      const startYear = moment(startDate).year();
+      const endYear = moment(endDate).year();
+
+      let getPinsInfoSQL = '';
+
+      if (startYear === endYear) {
+        // If search date range is within the same year
+        const tableName = `requests_${startYear}`;
+        getPinsInfoSQL = `SELECT * FROM ${tableName} WHERE TRIM(SRNumber) = '${requestId}'`;
+      } else {
+        // If search date range is across two different years
+        const tableNameStartYear = `requests_${startYear}`;
+        const tableNameEndYear = `requests_${endYear}`;
+
+        getPinsInfoSQL = `
+          (SELECT * FROM ${tableNameStartYear} WHERE TRIM(SRNumber) = '${requestId}')
+          UNION ALL
+          (SELECT * FROM ${tableNameEndYear} WHERE TRIM(SRNumber) = '${requestId}')
+        `;
+      }
 
       const pinsInfoAsArrowTable = await conn.query(getPinsInfoSQL);
       const newPinsInfo = ddbh.getTableData(pinsInfoAsArrowTable);
@@ -76,12 +99,12 @@ function RequestDetail({
         && Array.isArray(newPinsInfo)
         && newPinsInfo.length > 0
       ) {
-        dispatchUpdatePinInfo(newPinsInfo[0]);
+        dispatchUpdatePinInfo(newPinsInfo[0]); // Assumes first entry is correct, adjust as needed
       }
     } catch (e) {
       console.error('RequestDetail: Error occurred: ', e);
     }
-  }, [requestId, conn, dispatchUpdatePinInfo]);
+  }, [requestId, conn, dispatchUpdatePinInfo, startDate, endDate]);
 
   useEffect(() => {
     async function fetchPins() {
@@ -244,6 +267,8 @@ const mapStateToProps = state => ({
   pinsInfo: state.data.pinsInfo,
   requestTypes: state.metadata.requestTypes,
   agencies: state.metadata.agencies,
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
 });
 
 const mapDispatchToProps = dispatch => ({
