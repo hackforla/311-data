@@ -309,27 +309,63 @@ class MapContainer extends React.Component {
     return dateArray;
   };
 
-  getAllRequests = async (startDate, endDate) => {
-    try {
-      const { conn, tableNameByYear } = this.context;
+  // getAllRequests = async (startDate, endDate) => {
+  //   try {
+  //     const { conn, tableNameByYear } = this.context;
 
-      // Execute a SELECT query from 'requests' table
-      const selectSQL = `SELECT * FROM ${tableNameByYear} WHERE CreatedDate between '${startDate}' and '${endDate}'`;
+  //     // Execute a SELECT query from 'requests' table
+  //     const selectSQL = `SELECT * FROM ${tableNameByYear} WHERE CreatedDate between '${startDate}' and '${endDate}'`;
+
+  //     const requestsAsArrowTable = await conn.query(selectSQL);
+
+  //     const requests = ddbh.getTableData(requestsAsArrowTable);
+
+  //     this.endTime = performance.now(); // end bnechmark
+
+  //     console.log(
+  //       `Time taken to bootstrap db: ${Math.floor(this.endTime - this.startTime)} ms`
+  //     );
+  //     return requests;
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
+
+  async getAllRequests(startDate, endDate) {
+    const { conn } = this.context;
+    const startYear = moment(startDate).year();
+    const endYear = moment(endDate).year();
+
+    let selectSQL = '';
+
+    try {
+      if (startYear === endYear) {
+        // If the dates are within the same year, query that single year's table.
+        const tableName = `requests_${startYear}`;
+        selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
+      } else {
+        // If the dates span multiple years, create two queries and union them.
+        const tableNameStartYear = `requests_${startYear}`;
+        const endOfStartYear = moment(startDate).endOf('year').format('YYYY-MM-DD');
+        const tableNameEndYear = `requests_${endYear}`;
+        const startOfEndYear = moment(endDate).startOf('year').format('YYYY-MM-DD');
+
+        selectSQL = `
+          (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
+          UNION ALL
+          (SELECT * FROM ${tableNameEndYear} WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${endDate}')
+        `;
+      }
 
       const requestsAsArrowTable = await conn.query(selectSQL);
-
       const requests = ddbh.getTableData(requestsAsArrowTable);
 
-      this.endTime = performance.now(); // end bnechmark
-
-      console.log(
-        `Time taken to bootstrap db: ${Math.floor(this.endTime - this.startTime)} ms`
-      );
       return requests;
     } catch (e) {
-      console.error(e);
+      console.error("Error during database query execution:", e);
     }
-  };
+  }
+
 
   setData = async () => {
     const { startDate, endDate, dispatchGetDbRequest, dispatchGetDataRequest } =
