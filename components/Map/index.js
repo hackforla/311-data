@@ -309,27 +309,9 @@ class MapContainer extends React.Component {
     return dateArray;
   };
 
-  // getAllRequests = async (startDate, endDate) => {
-  //   try {
-  //     const { conn, tableNameByYear } = this.context;
-
-  //     // Execute a SELECT query from 'requests' table
-  //     const selectSQL = `SELECT * FROM ${tableNameByYear} WHERE CreatedDate between '${startDate}' and '${endDate}'`;
-
-  //     const requestsAsArrowTable = await conn.query(selectSQL);
-
-  //     const requests = ddbh.getTableData(requestsAsArrowTable);
-
-  //     this.endTime = performance.now(); // end bnechmark
-
-  //     console.log(
-  //       `Time taken to bootstrap db: ${Math.floor(this.endTime - this.startTime)} ms`
-  //     );
-  //     return requests;
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
+  // To handle cross-year date ranges, we check if the startDate and endDate year are the same year
+  // if same year, we simply query from that year's table
+  // if different years, we query both startDate year and endDate year, then union the result
 
   async getAllRequests(startDate, endDate) {
     const { conn } = this.context;
