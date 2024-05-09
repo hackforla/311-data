@@ -142,7 +142,7 @@ DbProvider.propTypes = {
 
 DbProvider.defaultProps = {
   children: null,
-  startDate: PropTypes.string,
+  startDate: null,
 };
 
 // connect DbProvider to Redux to get startDate

@@ -4,7 +4,7 @@ const DbContext = React.createContext({
   db: null,
   conn: null,
   worker: null,
-  tableName: '',
+  tableNameByYear: '',
 });
 
 export default DbContext;
