@@ -82,7 +82,7 @@ class MapContainer extends React.Component {
       try {
         await conn.query(createSQL);
         const endTime = performance.now() // end the timer
-        console.log(`Table created and dataset registered. Time taken: ${Math.floor(endTime - startTime)} ms.`);
+        console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
       } catch (error) {
         console.error("Error in creating table or registering dataset:", error);
       } finally {
@@ -339,8 +339,16 @@ class MapContainer extends React.Component {
         `;
       }
 
+      const dataLoadStartTime = performance.now();
       const requestsAsArrowTable = await conn.query(selectSQL);
+      const dataLoadEndTime = performance.now();
+
+      console.log(`Data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
+
       const requests = ddbh.getTableData(requestsAsArrowTable);
+      const mapLoadEndTime = performance.now();
+
+      console.log(`Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`);
 
       return requests;
     } catch (e) {
