@@ -53,7 +53,8 @@ class MapContainer extends React.Component {
       position: props.position,
       lastUpdated: props.lastUpdated,
       selectedTypes: this.getSelectedTypes(),
-      acknowledgeModalShown: false
+      acknowledgeModalShown: false,
+      isTableLoading: false,
     };
 
     // We store the raw requests from the API call here, but eventually they aremap/inde
@@ -66,13 +67,27 @@ class MapContainer extends React.Component {
   }
 
   createRequestsTable = async () => {
-    const { conn } = this.context;
+    this.setState({ isTableLoading: true });
+    const { conn, tableNameByYear } = this.context;
+    const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
+    const year = moment(startDate).year(); // extrac the year
+    const datasetFileName = `requests${year}.parquet`;
 
-    // Create the 'requests' table.
+    // Create the year data table if not exist already
     const createSQL =
-      'CREATE TABLE requests AS SELECT * FROM "requests.parquet"'; // parquet
+      `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
 
-    await conn.query(createSQL);
+    const startTime = performance.now(); // start the time tracker
+
+      try {
+        await conn.query(createSQL);
+        const endTime = performance.now() // end the timer
+        console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
+      } catch (error) {
+        console.error("Error in creating table or registering dataset:", error);
+      } finally {
+        this.setState({ isTableLoading: false});
+      }
   };
 
   async componentDidMount(props) {
@@ -84,19 +99,22 @@ class MapContainer extends React.Component {
 
   async componentDidUpdate(prevProps) {
     const { activeMode, pins, startDate, endDate } = this.props;
-    function didDateRangeChange() {
-      // Check that endDate is not null since we only want to retrieve data
-      // when both the startDate and endDate are selected.
-      return (
-        (prevProps.startDate != startDate || prevProps.endDate != endDate) &&
-        endDate != null
-      );
-    }
+
+    // create conditions to check if year or startDate or endDate changed
+    const yearChanged = moment(prevProps.startDate).year() !== moment(startDate).year();
+    const startDateChanged = prevProps.startDate !== startDate;
+    const endDateChanged = prevProps.endDate !== endDate;
+
+    // Check that endDate is not null since we only want to retrieve data
+    // when both the startDate and endDate are selected.
+    const didDateRangeChange = (yearChanged || startDateChanged || endDateChanged) && endDate !== null;
+
     if (
       prevProps.activeMode !== activeMode ||
       prevProps.pins !== pins ||
-      didDateRangeChange()
+      didDateRangeChange
     ) {
+      await this.createRequestsTable();
       await this.setData();
     }
   }
@@ -291,27 +309,53 @@ class MapContainer extends React.Component {
     return dateArray;
   };
 
-  getAllRequests = async (startDate, endDate) => {
+  // To handle cross-year date ranges, we check if the startDate and endDate year are the same year
+  // if same year, we simply query from that year's table
+  // if different years, we query both startDate year and endDate year, then union the result
+
+  async getAllRequests(startDate, endDate) {
+    const { conn } = this.context;
+    const startYear = moment(startDate).year();
+    const endYear = moment(endDate).year();
+
+    let selectSQL = '';
+
     try {
-      const { conn } = this.context;
+      if (startYear === endYear) {
+        // If the dates are within the same year, query that single year's table.
+        const tableName = `requests_${startYear}`;
+        selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
+      } else {
+        // If the dates span multiple years, create two queries and union them.
+        const tableNameStartYear = `requests_${startYear}`;
+        const endOfStartYear = moment(startDate).endOf('year').format('YYYY-MM-DD');
+        const tableNameEndYear = `requests_${endYear}`;
+        const startOfEndYear = moment(endDate).startOf('year').format('YYYY-MM-DD');
 
-      // Execute a SELECT query from 'requests' table
-      const selectSQL = `SELECT * FROM requests WHERE CreatedDate between '${startDate}' and '${endDate}'`;
+        selectSQL = `
+          (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
+          UNION ALL
+          (SELECT * FROM ${tableNameEndYear} WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${endDate}')
+        `;
+      }
 
+      const dataLoadStartTime = performance.now();
       const requestsAsArrowTable = await conn.query(selectSQL);
+      const dataLoadEndTime = performance.now();
+
+      console.log(`Data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
 
       const requests = ddbh.getTableData(requestsAsArrowTable);
+      const mapLoadEndTime = performance.now();
 
-      this.endTime = performance.now(); // end bnechmark
+      console.log(`Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`);
 
-      console.log(
-        `Time taken to bootstrap db: ${this.endTime - this.startTime}ms`
-      );
       return requests;
     } catch (e) {
-      console.error(e);
+      console.error("Error during database query execution:", e);
     }
-  };
+  }
+
 
   setData = async () => {
     const { startDate, endDate, dispatchGetDbRequest, dispatchGetDataRequest } =
@@ -385,7 +429,7 @@ class MapContainer extends React.Component {
       isMapLoading,
       isDbLoading,
     } = this.props;
-    const { ncCounts, ccCounts, selectedTypes, acknowledgeModalShown } = this.state;
+    const { ncCounts, ccCounts, selectedTypes, acknowledgeModalShown, isTableLoading } = this.state;
     return (
       <div className={classes.root}>
         <Map
@@ -400,7 +444,7 @@ class MapContainer extends React.Component {
           initialState={this.initialState}
         />
         <CookieNotice />
-        {(isDbLoading || isMapLoading) ? (
+        {(isDbLoading || isMapLoading || isTableLoading) ? (
           <>
             <LoadingModal />
             <FunFactCard />
@@ -448,6 +492,7 @@ MapContainer.propTypes = {};
 
 MapContainer.defaultProps = {};
 
+// connect MapContainer to Redux store
 export default connect(
   mapStateToProps,
   mapDispatchToProps
