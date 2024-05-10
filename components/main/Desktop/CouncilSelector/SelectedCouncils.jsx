@@ -17,7 +17,7 @@ function SelectedCouncils({ items, onDelete }) {
   const renderSelected = () => items.map(item => (
     <StyledChip
       key={item.councilName}
-      label={item.councilName}
+      label={item.TOOLTIP}
       value={item.councilId}
       onDelete={onDelete}
       outlined

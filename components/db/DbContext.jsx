@@ -1,5 +1,10 @@
 import React from 'react';
 
-const DbContext = React.createContext();
+const DbContext = React.createContext({
+  db: null,
+  conn: null,
+  worker: null,
+  tableNameByYear: '',
+});
 
 export default DbContext;
