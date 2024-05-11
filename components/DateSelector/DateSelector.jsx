@@ -8,9 +8,7 @@ import {
   updateStartDate as reduxUpdateStartDate,
   updateEndDate as reduxUpdateEndDate,
 } from '@reducers/filters';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { styled } from '@mui/material/styles';
+import ArrowToolTip from '@components/common/ArrowToolTip';
 import options from './options';
 import useStyles from './useStyles';
 import DateRanges from './DateRanges';
@@ -37,59 +35,28 @@ function DateSelector({
     setExpanded(false);
   }, []);
 
-  const { option, selected } = classes;
+  const { option, selected, label, iconStyle, tooltipParagraph } = classes;
 
-  const ArrowToolTip = styled(({ className }) => (
-    <Tooltip
-      placement="top-end"
-      arrow
-      classes={{ popper: className }}
-      title={
-        (
+  const linkedinPageLink = <a href='https://www.linkedin.com/company/hack-for-la/'>LinkedIn Page</a>
+
+  return (
+    <>
+      <span className={label}>
+        Date Range&nbsp;
+        <ArrowToolTip iconStyle={iconStyle}>
           <div>
-            <p className={classes.tooltipParagraph}>
+            <p className={tooltipParagraph}>
               <strong>
                 Currently, 311-Data loads only 311 service
                 request data from 2024 onward.
               </strong>
             </p>
-            <p className={classes.tooltipParagraph}>
+            <p className={tooltipParagraph}>
               For updates on the release of available 311
-              Data, please follow our
-              {` `}
-              <a href='https://www.linkedin.com/company/hack-for-la/'>
-                LinkedIn Page
-              </a>
-            .
+              Data, please follow our {linkedinPageLink}.
             </p>
           </div>
-        )
-      }
-    >
-      <InfoOutlinedIcon
-        className={classes.iconStyle}
-        fontSize="inherit"
-      />
-    </Tooltip>
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-      '&::before': {
-        backgroundColor: theme.palette.common.white,
-      },
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: theme.palette.common.white,
-      color: theme.palette.common.black,
-      marginLeft: '-4px',
-      maxWidth: '275px',
-      padding: '5px',
-    },
-  }));
-  return (
-    <>
-      <span className={classes.label}>
-        Date Range&nbsp;
-        <ArrowToolTip />
+        </ArrowToolTip>
       </span>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
