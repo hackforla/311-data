@@ -44,4 +44,5 @@ const ArrowToolTip = ({iconStyle, children}) => {
 export default ArrowToolTip;
 ArrowToolTip.propTypes = {
   children: PropTypes.node.isRequired,
+  iconStyles: PropTypes.string,
 }
