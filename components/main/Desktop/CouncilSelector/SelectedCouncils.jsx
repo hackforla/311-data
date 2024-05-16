@@ -29,7 +29,7 @@ function SelectedCouncils({ items, onDelete }) {
       {items.length ? (
         renderSelected()
       ) : (
-        <span className={classes.placeholder}>Neighborhood Districts</span>
+        <span className={classes.placeholder}>Neighborhood Councils</span>
       )}
     </ChipList>
   );
