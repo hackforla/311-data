@@ -8,9 +8,7 @@ import {
   updateStartDate as reduxUpdateStartDate,
   updateEndDate as reduxUpdateEndDate,
 } from '@reducers/filters';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { styled } from '@mui/material/styles';
+import ArrowToolTip from '@components/common/ArrowToolTip';
 import options from './options';
 import useStyles from './useStyles';
 import DateRanges from './DateRanges';
@@ -37,59 +35,28 @@ function DateSelector({
     setExpanded(false);
   }, []);
 
-  const { option, selected } = classes;
+  const { option, selected, label, iconStyle, tooltipParagraph } = classes;
 
-  const ArrowToolTip = styled(({ className }) => (
-    <Tooltip
-      placement="top-end"
-      arrow
-      classes={{ popper: className }}
-      title={
-        (
-          <div>
-            <p className={classes.tooltipParagraph}>
-              <strong>
-                Currently, 311-Data loads only 311 service
-                request data from 2024 onward.
-              </strong>
-            </p>
-            <p className={classes.tooltipParagraph}>
-              For updates on the release of available 311
-              Data, please follow our
-              {` `}
-              <a href='https://www.linkedin.com/company/hack-for-la/'>
-                LinkedIn Page
-              </a>
-            .
-            </p>
-          </div>
-        )
-      }
-    >
-      <InfoOutlinedIcon
-        className={classes.iconStyle}
-        fontSize="inherit"
-      />
-    </Tooltip>
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-      '&::before': {
-        backgroundColor: theme.palette.common.white,
-      },
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: theme.palette.common.white,
-      color: theme.palette.common.black,
-      marginLeft: '-4px',
-      maxWidth: '275px',
-      padding: '5px',
-    },
-  }));
+  const linkedinPageLink = <a href='https://www.linkedin.com/company/hack-for-la/'>LinkedIn Page</a>
+
   return (
     <>
-      <span className={classes.label}>
+      <span className={label}>
         Date Range&nbsp;
-        <ArrowToolTip />
+        <ArrowToolTip iconStyle={iconStyle}>
+          <div>
+            <p className={tooltipParagraph}>
+              <strong>
+                Currently, 311-Data loads only 311 service
+                request data from 2023 onward.
+              </strong>
+            </p>
+            <p className={tooltipParagraph}>
+              For updates on the release of available 311
+              Data, please follow our {linkedinPageLink}.
+            </p>
+          </div>
+        </ArrowToolTip>
       </span>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
