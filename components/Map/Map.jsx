@@ -35,6 +35,7 @@ import { pointsWithinGeo, getNcByLngLatv2 } from './geoUtils';
 import RequestsLayer from './layers/RequestsLayer';
 import BoundaryLayer from './layers/BoundaryLayer';
 import AddressLayer from './layers/AddressLayer';
+import DbContext from '@db/DbContext';
 
 // import MapOverview from './controls/MapOverview';
 
@@ -103,6 +104,9 @@ const hoverables = ['nc-fills', 'cc-fills'];
 const featureLayers = ['request-circles', ...hoverables];
 
 class Map extends React.Component {
+  // Note: 'this.context' is defined using the static contextType property
+  // static contextType assignment allows Map to access values provided by DbContext.Provider
+  static contextType = DbContext;
   constructor(props) {
     super(props);
 
@@ -172,9 +176,19 @@ class Map extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const entireMapLoadTime = () => {
+      if (this.map.isSourceLoaded('requests')) {
+        const { startTime } = this.context;
+        const endTime = performance.now()
+        console.log(`Pin load time: ${Math.floor(endTime - startTime)} ms`)
+        this.map.off('idle', entireMapLoadTime);
+      }
+    }
+    
     if (this.props.requests != prevProps.requests) {
       if (this.state.mapReady) {
         this.setState({ requests: this.props.requests });
+        this.map.on('idle', entireMapLoadTime)
         // this.map.once('idle', this.setFilteredRequestCounts);
       } else {
         this.map.once('idle', () => {
