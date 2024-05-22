@@ -78,7 +78,6 @@ class MapContainer extends React.Component {
       `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
 
     const startTime = performance.now(); // start the time tracker
-    console.log('startTime in map/index.js', startTime)
     setStartTime(startTime)
 
       try {
