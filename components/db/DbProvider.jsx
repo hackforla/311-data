@@ -29,7 +29,7 @@ function DbProvider({ children, startDate }) {
   const [conn, setConn] = useState(null);
   const [worker, setWorker] = useState(null);
   const [tableNameByYear, setTableNameByYear] = useState('');
-  const [startTime, setStartTime] = useState(null);
+  const [dbStartTime, setDbStartTime] = useState(null);
 
   useEffect(() => {
     const dbInitialize = async () => {
@@ -132,8 +132,8 @@ function DbProvider({ children, startDate }) {
       conn,
       worker,
       tableNameByYear,
-      startTime,
-      setStartTime,
+      dbStartTime,
+      setDbStartTime,
     }}
     >
       {children}

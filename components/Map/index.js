@@ -68,7 +68,7 @@ class MapContainer extends React.Component {
 
   createRequestsTable = async () => {
     this.setState({ isTableLoading: true });
-    const { conn, tableNameByYear, setStartTime } = this.context;
+    const { conn, tableNameByYear, setDbStartTime } = this.context;
     const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
     const year = moment(startDate).year(); // extrac the year
     const datasetFileName = `requests${year}.parquet`;
@@ -78,7 +78,7 @@ class MapContainer extends React.Component {
       `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
 
     const startTime = performance.now(); // start the time tracker
-    setStartTime(startTime)
+    setDbStartTime(startTime)
 
       try {
         await conn.query(createSQL);

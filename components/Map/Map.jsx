@@ -178,9 +178,9 @@ class Map extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const entireMapLoadTime = () => {
       if (this.map.isSourceLoaded('requests')) {
-        const { startTime } = this.context;
-        const endTime = performance.now()
-        console.log(`Pin load time: ${Math.floor(endTime - startTime)} ms`)
+        const { dbStartTime } = this.context;
+        const pinLoadEndTime = performance.now()
+        console.log(`Pin load time: ${Math.floor(pinLoadEndTime - dbStartTime)} ms`)
         this.map.off('idle', entireMapLoadTime);
       }
     }
