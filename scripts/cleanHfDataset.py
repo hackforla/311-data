@@ -11,7 +11,7 @@ load_dotenv()
 
 def dlData(year):
     '''
-    Download the dataset from huggingface
+    Download the dataset from Edwin's huggingface
     '''
     url = f"https://huggingface.co/datasets/edwinjue/311-data-{year}/resolve/main/{year}.csv"
     outfile = f"{year}.csv"
