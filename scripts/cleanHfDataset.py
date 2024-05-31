@@ -13,7 +13,7 @@ def dlData(year):
     '''
     Download the dataset from huggingface
     '''
-    url = f"https://huggingface.co/datasets/edwinjue/311-data-2022/resolve/main/{year}.csv"
+    url = f"https://huggingface.co/datasets/edwinjue/311-data-{year}/resolve/main/{year}.csv"
     outfile = f"{year}.csv"
     response = requests.get(url, stream=True)
 
@@ -69,6 +69,14 @@ def hfUpload(year):
 
     login(TOKEN)
     api = HfApi()
+
+    # Check if the repository exists, and create it if it doesn't
+    try:
+        api.repo_info(repo_id)
+    except:
+        api.create_repo(repo_id, repo_type=repo_type, exist_ok=True)
+
+    # Upload the file to the repository
     api.upload_file(
         path_or_fileobj=local_filename,
         path_in_repo=dest_filename,
