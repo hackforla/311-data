@@ -29,6 +29,7 @@ function DbProvider({ children, startDate }) {
   const [conn, setConn] = useState(null);
   const [worker, setWorker] = useState(null);
   const [tableNameByYear, setTableNameByYear] = useState('');
+  const [dbStartTime, setDbStartTime] = useState(null);
 
   useEffect(() => {
     const dbInitialize = async () => {
@@ -127,7 +128,12 @@ function DbProvider({ children, startDate }) {
 
   return (
     <DbContext.Provider value={{
-      db, conn, worker, tableNameByYear,
+      db,
+      conn,
+      worker,
+      tableNameByYear,
+      dbStartTime,
+      setDbStartTime,
     }}
     >
       {children}

@@ -6,6 +6,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { updateRequestStatus } from '@reducers/filters';
+import ArrowToolTip from '@components/common/ArrowToolTip';
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -18,6 +19,9 @@ const useStyles = makeStyles(() => ({
   },
   button: {
     width: '50%',
+  },
+  tooltipParagraph: {
+    margin: '1px',
   },
 }));
 
@@ -34,7 +38,17 @@ function StatusSelector({
 
   return (
     <>
-      <div className={classes.header}>Request Status</div>
+      <div className={classes.header}>
+        Request Status&nbsp;
+        <ArrowToolTip iconStyle={classes.iconStyle}>
+          <p className={classes.tooltipParagraph}>
+            There are multiple definitions of closed, including the following:
+            The issue may have already been reported (duplicate request),
+            the issue could have been resolved, or a service technician visited
+            the site of the reported issue and put in an internal request to resolve it.
+          </p>
+        </ArrowToolTip>
+      </div>
       <ToggleButtonGroup
         value={selection}
         onChange={handleSelection}
