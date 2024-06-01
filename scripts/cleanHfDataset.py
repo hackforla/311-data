@@ -1,3 +1,15 @@
+'''
+This script downloads the selected year's csv file from Edwin's HuggingFace (which we no longer use),
+and transform the csv into a parquet file, creates selected the year's repo on 311-Data's HuggingFace and
+uploads the parquet file.
+
+This is only use for migrating older years' data for case-by-case usage, not to be confused with the
+daily cron-job.
+
+Run the script with Python in the terminal with input year:
+ie.: `python3 cleanHfDataset.py 2022`
+'''
+
 import duckdb
 import requests
 import os
