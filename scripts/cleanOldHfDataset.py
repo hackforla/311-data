@@ -18,6 +18,7 @@ from tqdm import tqdm
 from huggingface_hub import HfApi, login
 from dotenv import load_dotenv
 import sys
+import logging
 
 load_dotenv()
 
@@ -27,12 +28,17 @@ def dlData(year):
     '''
     url = f"https://huggingface.co/datasets/edwinjue/311-data-{year}/resolve/main/{year}.csv"
     outfile = f"{year}.csv"
+    chunk_size = 1024 * 1024 # 1 MB
+
     response = requests.get(url, stream=True)
 
     # Save downloaded file
     with open(outfile, "wb") as file:
-        for data in tqdm(response.iter_content()):
-            file.write(data)
+        for chunk in tqdm(response.iter_content(chunk_size=chunk_size), desc="Downloading data"):
+            if chunk:  # filter out keep-alive new chunks
+                file.write(chunk)
+
+    logging.info(f"Downloaded {outfile} successfully.")
 
 
 def hfClean(year):
