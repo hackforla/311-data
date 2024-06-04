@@ -64,7 +64,7 @@ def hfClean(year):
 
         # Open modified file and perform an import/export to duckdb to ensure timestamps are formatted correctly
         conn.execute(
-            f"create table requests as select * from read_csv_auto('{fixed_filename}', header=True, timestampformat='%m/%d/%Y %H:%M:%S %p');")
+            f"create table requests as select * from read_csv_auto('{fixed_filename}', header=True, timestampformat='%m/%d/%Y %H:%M:%S %p', parallel=false);")
         conn.execute(
             f"copy (select * from requests) to '{clean_filename}' with (FORMAT PARQUET);")
 
