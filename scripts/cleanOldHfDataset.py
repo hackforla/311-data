@@ -7,7 +7,7 @@ This is only use for migrating older years' data for case-by-case usage, not to 
 daily cron-job.
 
 To process an older year's data, run the script with Python in the terminal with input year:
-ie.: `python3 cleanHfDataset.py 2022`
+ie.: `python3 cleanOldHfDataset.py 2022`
 '''
 
 import duckdb
