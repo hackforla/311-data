@@ -7,7 +7,7 @@ This is only use for migrating older years' data for case-by-case usage, not to 
 daily cron-job.
 
 To process an older year's data, run the script with Python in the terminal with input year:
-ie.: `python3 cleanOldHfDataset.py 2022`
+ie.: `python3 cleanOldHfDataset.py 2022`, make sure to change the year to your intended year
 '''
 
 import duckdb
@@ -113,17 +113,24 @@ def cleanUp():
         os.remove(file)
 
 
-def process_data(year):
-    dlData(year)
-    hfClean(year)
+def process_data(year, skip_download=False, skip_clean=False, stop_after_clean=False):
+    if not skip_download:
+        dlData(year)
+    if not skip_clean:
+        hfClean(year)
+    if stop_after_clean:
+        logging.info("Stopping after hfClean as requested.")
+        return
     hfUpload(year)
     cleanUp()
 
-
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python one_time_script.py <year>")
+    if len(sys.argv) < 2:
+        print("Usage: python one_time_script.py <year> [--skip-download] [--skip-clean] [--stop-after-clean]")
         sys.exit(1)
 
     year = sys.argv[1]
-    process_data(year)
+    skip_download = '--skip-download' in sys.argv
+    skip_clean = '--skip-clean' in sys.argv
+    stop_after_clean = '--stop-after-clean' in sys.argv
+    process_data(year, skip_download, skip_clean, stop_after_clean)
