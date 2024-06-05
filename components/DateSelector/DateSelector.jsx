@@ -35,9 +35,11 @@ function DateSelector({
     setExpanded(false);
   }, []);
 
-  const { option, selected, label, iconStyle, tooltipParagraph } = classes;
+  const {
+    option, selected, label, iconStyle, tooltipParagraph,
+  } = classes;
 
-  const linkedinPageLink = <a href='https://www.linkedin.com/company/hack-for-la/'>LinkedIn Page</a>
+  const linkedinPageLink = <a href="https://www.linkedin.com/company/hack-for-la/">LinkedIn Page</a>;
 
   return (
     <>
@@ -53,7 +55,10 @@ function DateSelector({
             </p>
             <p className={tooltipParagraph}>
               For updates on the release of available 311
-              Data, please follow our {linkedinPageLink}.
+              Data, please follow our
+              {' '}
+              {linkedinPageLink}
+              .
             </p>
           </div>
         </ArrowToolTip>
