@@ -16,6 +16,10 @@ const datasets = {
       'https://huggingface.co/datasets/311-data/2023/resolve/main/2023.parquet', // 2023 entire year
     hfYtd2022:
       'https://huggingface.co/datasets/311-data/2022/resolve/main/2022.parquet', // 2022 entire year
+    hfYtd2021:
+      'https://huggingface.co/datasets/311-data/2021/resolve/main/2021.parquet', // 2021 entire year
+    hfYtd2020:
+      'https://huggingface.co/datasets/311-data/2020/resolve/main/2020.parquet', // 2020 entire year
   },
 };
 
@@ -69,6 +73,18 @@ function DbProvider({ children, startDate }) {
         await newDb.registerFileURL(
           'requests2022.parquet',
           datasets.parquet.hfYtd2022,
+          4,
+        );
+
+        await newDb.registerFileURL(
+          'requests2021.parquet',
+          datasets.parquet.hfYtd2021,
+          4,
+        );
+
+        await newDb.registerFileURL(
+          'requests2020.parquet',
+          datasets.parquet.hfYtd2020,
           4,
         );
 
