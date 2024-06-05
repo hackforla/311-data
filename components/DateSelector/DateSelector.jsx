@@ -48,7 +48,7 @@ function DateSelector({
             <p className={tooltipParagraph}>
               <strong>
                 Currently, 311-Data loads only 311 service
-                request data from 2022 onward.
+                request data from 2020 onward.
               </strong>
             </p>
             <p className={tooltipParagraph}>
