@@ -22,6 +22,9 @@ import logging
 
 load_dotenv()
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 def dlData(year):
     '''
     Download the dataset from Edwin's huggingface
