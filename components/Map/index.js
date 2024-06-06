@@ -444,14 +444,18 @@ class MapContainer extends React.Component {
           initialState={this.initialState}
         />
         <CookieNotice />
-        {(isDbLoading || isMapLoading || isTableLoading) ? (
-          <>
-            <LoadingModal />
-            <FunFactCard />
-          </>
-        ) : (acknowledgeModalShown === false) ? (
-          <AcknowledgeModal onClose={this.onClose}/>
-        ) : null}
+        {
+          window.location.hash == '#/map' && (
+            (isDbLoading || isMapLoading || isTableLoading) ? (
+              <>
+                <LoadingModal />
+                <FunFactCard />
+              </>
+            ) : (acknowledgeModalShown === false) ? (
+              <AcknowledgeModal onClose={this.onClose}/>
+            ) : null
+          )
+        }
       </div>
     );
   }
