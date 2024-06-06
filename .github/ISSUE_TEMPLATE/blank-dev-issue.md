@@ -2,7 +2,7 @@
 name: Blank Dev Issue
 about: Template for developers to create issues and prepare for engineering tickets.
 title: ''
-labels: 'Draft, Milestone: Missing, role: Frontend, Size: Missing, Feature: Missing'
+labels: 'draft, Milestone: Missing, Role: Frontend, Size: Missing, Feature: Missing'
 assignees: ''
 ---
 
