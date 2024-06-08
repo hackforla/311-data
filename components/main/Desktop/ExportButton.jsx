@@ -15,9 +15,14 @@ function ExportButton({ filters }) {
   const { conn } = useContext(DbContext);
 
   // creation zip file
-  const downloadZip = async csvContent => {
+  const downloadZip = async (neighborhoodCsvContent, srCsvContent) => {
     const zip = new JSZip();
-    zip.file('NeighborhoodData.csv', csvContent);
+    zip.file('NeighborhoodData.csv', neighborhoodCsvContent);
+
+    // Only add SR count csv if it was generated
+    if (srCsvContent) {
+      zip.file('ServiceRequestCount.csv', srCsvContent);
+    }
 
     const content = await zip.generateAsync({ type: 'blob' });
     saveAs(content, '311Data.zip');
@@ -43,20 +48,47 @@ function ExportButton({ filters }) {
       .map(v => `'${v.typeName}'`)
       .join(', ');
 
-    // // in the case user chooses one neighborhood or all are selected + dates and status
-    const query = `select * from requests where CreatedDate >= '${filters.startDate}' AND
-    CreatedDate < '${filters.endDate}'${requestStatusFilter !== ''
-      ? ` AND Status='${requestStatusFilter}'` : ''}
-    ${filters.councilId !== null
-        ? ` AND NC='${filters.councilId}'` : ''} AND RequestType IN (${formattedRequestTypes});`;
+    // in the case user chooses one neighborhood or all are selected + dates and status
+    const neighborhoodDataQuery = `SELECT * FROM requests_2024 
+      WHERE CreatedDate >= '${filters.startDate}' 
+      AND CreatedDate < '${filters.endDate}'
+      ${requestStatusFilter !== '' ? ` AND Status='${requestStatusFilter}'` : ''}
+      ${filters.councilId !== null ? ` AND NC='${filters.councilId}'` : ''} 
+      AND RequestType IN (${formattedRequestTypes});`;
 
-    const dataToExport = await conn.query(query);
-    const results = ddbh.getTableData(dataToExport);
+    const groupedAddressQuery = `SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_2024
+      WHERE CreatedDate >= '${filters.startDate}' 
+      AND CreatedDate < '${filters.endDate}' 
+      AND Status = 'Open' 
+      AND NC = '${filters.councilId}' 
+      AND RequestType IN (${formattedRequestTypes})
+      GROUP BY Address`;
 
-    if (!isEmpty(results)) {
-      // results chosen to csv
-      const csvContent = Papa.unparse(results);
-      downloadZip(csvContent);
+    const neighborhoodDataToExport = await conn.query(neighborhoodDataQuery);
+    const neighborhoodResults = ddbh.getTableData(neighborhoodDataToExport);
+
+    if (!isEmpty(neighborhoodResults)) {
+      const neighborhoodCsvContent = Papa.unparse(neighborhoodResults);
+      let groupedAddressesToExport;
+      let srCountResults;
+      let srCsvContent;
+
+      const srTypeCount = Object.values(filters.requestTypes).reduce(
+        (acc, cur) => (cur === true ? acc + 1 : acc),
+        0,
+      );
+
+      // SR count csv data only generated if:
+      // exactly one SR type is selected, NC selected, and status is open
+      if (srTypeCount === 1 && filters.councilId && requestStatusFilter === 'Open') {
+        groupedAddressesToExport = await conn.query(groupedAddressQuery);
+        srCountResults = ddbh.getTableData(groupedAddressesToExport);
+
+        if (!isEmpty(srCountResults)) {
+          srCsvContent = Papa.unparse(srCountResults);
+        }
+      }
+      downloadZip(neighborhoodCsvContent, srCsvContent);
     } else {
       window.alert('No 311 data available within the selected filters. Please adjust your filters and try again.');
     }
