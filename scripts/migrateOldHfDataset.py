@@ -7,7 +7,7 @@ This is only use for migrating older years' data for case-by-case usage, not to 
 daily cron-job.
 
 To process an older year's data, run the script with Python in the terminal with input year:
-ie.: `python3 cleanHfDataset.py 2022`
+ie.: `python3 cleanOldHfDataset.py 2022`, make sure to change the year to your intended year
 '''
 
 import duckdb
@@ -18,8 +18,12 @@ from tqdm import tqdm
 from huggingface_hub import HfApi, login
 from dotenv import load_dotenv
 import sys
+import logging
 
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def dlData(year):
     '''
@@ -27,12 +31,17 @@ def dlData(year):
     '''
     url = f"https://huggingface.co/datasets/edwinjue/311-data-{year}/resolve/main/{year}.csv"
     outfile = f"{year}.csv"
+    chunk_size = 1024 * 1024 # 1 MB
+
     response = requests.get(url, stream=True)
 
     # Save downloaded file
     with open(outfile, "wb") as file:
-        for data in tqdm(response.iter_content()):
-            file.write(data)
+        for chunk in tqdm(response.iter_content(chunk_size=chunk_size), desc="Downloading data"):
+            if chunk:  # filter out keep-alive new chunks
+                file.write(chunk)
+
+    logging.info(f"Downloaded {outfile} successfully.")
 
 
 def hfClean(year):
@@ -58,7 +67,7 @@ def hfClean(year):
 
         # Open modified file and perform an import/export to duckdb to ensure timestamps are formatted correctly
         conn.execute(
-            f"create table requests as select * from read_csv_auto('{fixed_filename}', header=True, timestampformat='%m/%d/%Y %H:%M:%S %p');")
+            f"create table requests as select * from read_csv_auto('{fixed_filename}', header=True, timestampformat='%m/%d/%Y %H:%M:%S %p', parallel=false);")
         conn.execute(
             f"copy (select * from requests) to '{clean_filename}' with (FORMAT PARQUET);")
 
@@ -104,17 +113,24 @@ def cleanUp():
         os.remove(file)
 
 
-def process_data(year):
-    dlData(year)
-    hfClean(year)
+def process_data(year, skip_download=False, skip_clean=False, stop_after_clean=False):
+    if not skip_download:
+        dlData(year)
+    if not skip_clean:
+        hfClean(year)
+    if stop_after_clean:
+        logging.info("Stopping after hfClean as requested.")
+        return
     hfUpload(year)
     cleanUp()
 
-
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python one_time_script.py <year>")
+    if len(sys.argv) < 2:
+        print("Usage: python one_time_script.py <year> [--skip-download] [--skip-clean] [--stop-after-clean]")
         sys.exit(1)
 
     year = sys.argv[1]
-    process_data(year)
+    skip_download = '--skip-download' in sys.argv
+    skip_clean = '--skip-clean' in sys.argv
+    stop_after_clean = '--stop-after-clean' in sys.argv
+    process_data(year, skip_download, skip_clean, stop_after_clean)
