@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import Button from '@mui/material/Button';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import JSZip from 'jszip';
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
@@ -48,22 +49,60 @@ function ExportButton({ filters }) {
       .map(v => `'${v.typeName}'`)
       .join(', ');
 
-    // in the case user chooses one neighborhood or all are selected + dates and status
-    const neighborhoodDataQuery = `SELECT * FROM requests_2024 
-      WHERE CreatedDate >= '${filters.startDate}' 
-      AND CreatedDate < '${filters.endDate}'
-      ${requestStatusFilter !== '' ? ` AND Status='${requestStatusFilter}'` : ''}
-      ${filters.councilId !== null ? ` AND NC='${filters.councilId}'` : ''} 
-      AND RequestType IN (${formattedRequestTypes});`;
+    const startYear = moment(filters.startDate).year();
+    const endYear = moment(filters.endDate).year();
 
-    const groupedAddressQuery = `SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_2024
-      WHERE CreatedDate >= '${filters.startDate}' 
-      AND CreatedDate < '${filters.endDate}' 
-      AND Status = 'Open' 
-      AND NC = '${filters.councilId}' 
-      AND RequestType IN (${formattedRequestTypes})
-      GROUP BY Address`;
+    const generateQuery = (grouped = false) => {
+      if (startYear === endYear) {
+        if (grouped) {
+          return `SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${startYear}
+            WHERE CreatedDate >= '${filters.startDate}' 
+            AND CreatedDate < '${filters.endDate}' 
+            AND Status = 'Open' 
+            AND NC = '${filters.councilId}' 
+            AND RequestType IN (${formattedRequestTypes})
+            GROUP BY Address`;
+        }
+        return `SELECT * FROM requests_${startYear} 
+          WHERE CreatedDate >= '${filters.startDate}' 
+          AND CreatedDate < '${filters.endDate}'
+          ${requestStatusFilter !== '' ? ` AND Status='${requestStatusFilter}'` : ''}
+          ${filters.councilId !== null ? ` AND NC='${filters.councilId}'` : ''} 
+          AND RequestType IN (${formattedRequestTypes});`;
+      }
 
+      const endOfStartYear = moment(filters.startDate).endOf('year').format('YYYY-MM-DD');
+      const startOfEndYear = moment(filters.endDate).startOf('year').format('YYYY-MM-DD');
+
+      if (grouped) {
+        return `(SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${startYear}
+          WHERE CreatedDate BETWEEN '${filters.startDate}' AND '${endOfStartYear}' 
+          AND Status = 'Open' 
+          AND NC = '${filters.councilId}' 
+          AND RequestType IN (${formattedRequestTypes})
+          GROUP BY Address)
+          UNION ALL
+          (SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${endYear}
+          WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${filters.endDate}' 
+          AND Status = 'Open' 
+          AND NC = '${filters.councilId}' 
+          AND RequestType IN (${formattedRequestTypes})
+          GROUP BY Address)`;
+      }
+      return `(SELECT * FROM requests_${startYear} 
+        WHERE CreatedDate BETWEEN '${filters.startDate}' AND '${endOfStartYear}'
+        ${requestStatusFilter !== '' ? ` AND Status='${requestStatusFilter}'` : ''}
+        ${filters.councilId !== null ? ` AND NC='${filters.councilId}'` : ''} 
+        AND RequestType IN (${formattedRequestTypes}))
+        UNION ALL
+        (SELECT * FROM requests_${endYear} 
+        WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${filters.endDate}'
+        ${requestStatusFilter !== '' ? ` AND Status='${requestStatusFilter}'` : ''}
+        ${filters.councilId !== null ? ` AND NC='${filters.councilId}'` : ''} 
+        AND RequestType IN (${formattedRequestTypes}))`;
+    };
+
+    const neighborhoodDataQuery = generateQuery();
     const neighborhoodDataToExport = await conn.query(neighborhoodDataQuery);
     const neighborhoodResults = ddbh.getTableData(neighborhoodDataToExport);
 
@@ -81,6 +120,7 @@ function ExportButton({ filters }) {
       // SR count csv data only generated if:
       // exactly one SR type is selected, NC selected, and status is open
       if (srTypeCount === 1 && filters.councilId && requestStatusFilter === 'Open') {
+        const groupedAddressQuery = generateQuery(true);
         groupedAddressesToExport = await conn.query(groupedAddressQuery);
         srCountResults = ddbh.getTableData(groupedAddressesToExport);
 
