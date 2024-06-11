@@ -57,7 +57,7 @@ function Footer() {
         <div className={classes.copyrightContainer}>
           <Typography variant="body2" className={classes.copyright}>
             <span>
-              &#169;&nbsp;{currentDate.getFullYear()}&nbsp;311&nbsp;Data
+              &copy;&nbsp;{currentDate.getFullYear()}&nbsp;311&nbsp;Data
             </span>
             <span>|</span>
             <span>All&nbsp;Rights&nbsp;Reserved</span>
