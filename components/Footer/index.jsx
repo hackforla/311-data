@@ -49,25 +49,35 @@ const useStyles = makeStyles(theme => ({
 function Footer() {
   const classes = useStyles();
   const currentDate = new Date();
+  const footerItems = [
+    { text: `\u00a9 ${currentDate.getFullYear()} 311 Data` },
+    { text: 'All Rights Reserved' },
+    { text: 'Privacy Policy', href: '/privacy' },
+    { text: 'Powered by volunteers from Hack for LA' },
+  ];
 
   return (
     <footer className={classes.footer}>
       <div className={classes.container}>
         <div className={classes.copyrightContainer}>
           <Typography variant="body2" className={classes.copyright}>
-            <span>
-              &copy;&nbsp;{currentDate.getFullYear()}&nbsp;311&nbsp;Data
-            </span>
-            <span>|</span>
-            <span>All&nbsp;Rights&nbsp;Reserved</span>
-            <span>|</span>
-            <Link to="/privacy" className={classes.link}>
-              Privacy&nbsp;Policy
-            </Link>
-            <span>|</span>
-            <span>
-              Powered&nbsp;by&nbsp;volunteers&nbsp;from&nbsp;Hack&nbsp;for&nbsp;LA
-            </span>
+            {footerItems.map(({ text, href }, i) => {
+              const nonBreakingText = text.replaceAll(' ', '\u00a0');
+
+              return (
+                <React.Fragment key={text}>
+                  {href ? (
+                    <Link to={href} className={classes.link}>
+                      {nonBreakingText}
+                    </Link>
+                  ) : (
+                    <span>{nonBreakingText}</span>
+                  )}
+
+                  {i === footerItems.length - 1 ? null : <span>|</span>}
+                </React.Fragment>
+              );
+            })}
           </Typography>
 
           <img
