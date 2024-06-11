@@ -5,6 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 import LastUpdated from '@components/Footer/LastUpdated';
 import SocialMediaLinks from '@components/Footer/SocialMediaLinks';
+import HFLALogo from '@assets/hack_for_la_logo.png';
 
 // Footer should make use of style overrides to look the same regardless of light/dark theme.
 const useStyles = makeStyles(theme => ({
@@ -34,6 +35,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   link: {
     color: theme.palette.text.dark,
@@ -58,8 +60,11 @@ function Footer() {
             <Link to="/privacy" className={classes.link}>
               Privacy Policy
             </Link>
-            &nbsp;&nbsp;|&nbsp;&nbsp;Powered by volunteers from Hack for LA
+            &nbsp;&nbsp;|&nbsp;&nbsp;Powered by volunteers from Hack for
+            LA&nbsp;&nbsp;
           </Typography>
+
+          <img src={HFLALogo} alt="Hack for LA logo" width="24" />
         </div>
 
         <LastUpdated />
