@@ -46,7 +46,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-// TODO: check with UI/UX re placement of social media, privacy policy links
 function Footer() {
   const classes = useStyles();
   const currentDate = new Date();
