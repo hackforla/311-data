@@ -39,7 +39,7 @@ function LastUpdated() {
     lastUpdated && (
       <div>
         <Typography variant="body2" className={classes.lastUpdated}>
-          Data last updated&nbsp;
+          Data&nbsp;last&nbsp;updated&nbsp;
           {moment(lastUpdated).format('MM/DD/YY')}
         </Typography>
       </div>

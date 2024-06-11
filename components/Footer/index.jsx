@@ -21,6 +21,8 @@ const useStyles = makeStyles(theme => ({
     height: theme.footer.height,
   },
   copyright: {
+    display: 'flex',
+    gap: theme.spacing(1),
     fontWeight: theme.typography.fontWeightMedium,
     lineHeight: theme.footer.height,
     color: theme.palette.text.dark,
@@ -33,13 +35,14 @@ const useStyles = makeStyles(theme => ({
   },
   copyrightContainer: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
   },
   link: {
     color: theme.palette.text.dark,
     textDecoration: 'none',
+  },
+  logo: {
+    marginInline: theme.spacing(1),
   },
 }));
 
@@ -53,18 +56,27 @@ function Footer() {
       <div className={classes.container}>
         <div className={classes.copyrightContainer}>
           <Typography variant="body2" className={classes.copyright}>
-            &#169;
-            {currentDate.getFullYear()}
-            &nbsp;311 Data&nbsp;&nbsp;|&nbsp;&nbsp;All Rights
-            Reserved&nbsp;&nbsp;|&nbsp;&nbsp;
+            <span>
+              &#169;&nbsp;{currentDate.getFullYear()}&nbsp;311&nbsp;Data
+            </span>
+            <span>|</span>
+            <span>All&nbsp;Rights&nbsp;Reserved</span>
+            <span>|</span>
             <Link to="/privacy" className={classes.link}>
-              Privacy Policy
+              Privacy&nbsp;Policy
             </Link>
-            &nbsp;&nbsp;|&nbsp;&nbsp;Powered by volunteers from Hack for
-            LA&nbsp;&nbsp;
+            <span>|</span>
+            <span>
+              Powered&nbsp;by&nbsp;volunteers&nbsp;from&nbsp;Hack&nbsp;for&nbsp;LA
+            </span>
           </Typography>
 
-          <img src={HFLALogo} alt="Hack for LA logo" width="24" />
+          <img
+            src={HFLALogo}
+            alt="Hack for LA logo"
+            width="24"
+            className={classes.logo}
+          />
         </div>
 
         <LastUpdated />
