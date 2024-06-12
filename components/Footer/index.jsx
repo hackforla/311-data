@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
@@ -65,7 +65,7 @@ function Footer() {
               const nonBreakingText = text.replaceAll(' ', '\u00a0');
 
               return (
-                <React.Fragment key={text}>
+                <Fragment key={text}>
                   {href ? (
                     <Link to={href} className={classes.link}>
                       {nonBreakingText}
@@ -75,7 +75,7 @@ function Footer() {
                   )}
 
                   {i === footerItems.length - 1 ? null : <span>|</span>}
-                </React.Fragment>
+                </Fragment>
               );
             })}
           </Typography>
