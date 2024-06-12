@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 import DbContext from '@db/DbContext';
 import ddbh from '@utils/duckDbHelpers.js';
-import { isEmpty } from '@utils';
+import { isEmpty, toNonBreakingSpaces } from '@utils';
 
 const useStyles = makeStyles(theme => ({
   lastUpdated: {
@@ -39,8 +39,9 @@ function LastUpdated() {
     lastUpdated && (
       <div>
         <Typography variant="body2" className={classes.lastUpdated}>
-          Data&nbsp;last&nbsp;updated&nbsp;
-          {moment(lastUpdated).format('MM/DD/YY')}
+          {toNonBreakingSpaces(
+            `Data last updated ${moment(lastUpdated).format('MM/DD/YY')}`
+          )}
         </Typography>
       </div>
     )

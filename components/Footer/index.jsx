@@ -5,6 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 import LastUpdated from '@components/Footer/LastUpdated';
 import SocialMediaLinks from '@components/Footer/SocialMediaLinks';
+import { toNonBreakingSpaces } from '@utils';
 import HFLALogo from '@assets/hack_for_la_logo.png';
 
 // Footer should make use of style overrides to look the same regardless of light/dark theme.
@@ -62,7 +63,7 @@ function Footer() {
         <div className={classes.copyrightContainer}>
           <Typography variant="body2" className={classes.copyright}>
             {footerItems.map(({ text, href }, i) => {
-              const nonBreakingText = text.replaceAll(' ', '\u00a0');
+              const nonBreakingText = toNonBreakingSpaces(text);
 
               return (
                 <Fragment key={text}>
