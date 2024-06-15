@@ -52,54 +52,78 @@ function ExportButton({ filters }) {
     const startYear = moment(filters.startDate).year();
     const endYear = moment(filters.endDate).year();
 
+    const getAllRequests = (year, startDate, endDate, councilId = '', status = '') => `
+      SELECT * FROM requests_${year} 
+      WHERE CreatedDate >= '${startDate}' 
+      AND CreatedDate < '${endDate}'
+      ${status !== '' ? ` AND Status='${status}'` : ''}
+      ${councilId !== null ? ` AND NC='${councilId}'` : ''} 
+      AND RequestType IN (${formattedRequestTypes})`;
+
+    // Note: this logic will only generate the SR count CSV if it meets the following conditions:
+    // exactly one SR type is selected, a NC is selected, and status is Open.
+    const groupRequestsByAddress = (year, startDate, endDate, councilId) => `
+      SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${year}
+      WHERE CreatedDate >= '${startDate}' 
+      AND CreatedDate < '${endDate}' 
+      AND Status = 'Open' 
+      AND NC = '${councilId}' 
+      AND RequestType IN (${formattedRequestTypes})
+      GROUP BY Address`;
+
     const generateQuery = (grouped = false) => {
       if (startYear === endYear) {
         if (grouped) {
-          return `SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${startYear}
-            WHERE CreatedDate >= '${filters.startDate}' 
-            AND CreatedDate < '${filters.endDate}' 
-            AND Status = 'Open' 
-            AND NC = '${filters.councilId}' 
-            AND RequestType IN (${formattedRequestTypes})
-            GROUP BY Address`;
+          // SRs grouped by address from same year
+          return groupRequestsByAddress(
+            startYear,
+            filters.startDate,
+            filters.endDate,
+            filters.councilId,
+          );
         }
-        return `SELECT * FROM requests_${startYear} 
-          WHERE CreatedDate >= '${filters.startDate}' 
-          AND CreatedDate < '${filters.endDate}'
-          ${requestStatusFilter !== '' ? ` AND Status='${requestStatusFilter}'` : ''}
-          ${filters.councilId !== null ? ` AND NC='${filters.councilId}'` : ''} 
-          AND RequestType IN (${formattedRequestTypes});`;
+        // data comes from same year and includes all columns matching filters
+        return getAllRequests(
+          startYear,
+          filters.startDate,
+          filters.endDate,
+          filters.councilId,
+          requestStatusFilter,
+        );
       }
 
       const endOfStartYear = moment(filters.startDate).endOf('year').format('YYYY-MM-DD');
       const startOfEndYear = moment(filters.endDate).startOf('year').format('YYYY-MM-DD');
 
+      // SRs grouped by address with different start and end years
       if (grouped) {
-        return `(SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${startYear}
-          WHERE CreatedDate BETWEEN '${filters.startDate}' AND '${endOfStartYear}' 
-          AND Status = 'Open' 
-          AND NC = '${filters.councilId}' 
-          AND RequestType IN (${formattedRequestTypes})
-          GROUP BY Address)
-          UNION ALL
-          (SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${endYear}
-          WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${filters.endDate}' 
-          AND Status = 'Open' 
-          AND NC = '${filters.councilId}' 
-          AND RequestType IN (${formattedRequestTypes})
-          GROUP BY Address)`;
+        return `(${groupRequestsByAddress(
+          startYear,
+          filters.startDate,
+          endOfStartYear,
+          filters.councilId,
+        )}) UNION ALL (${groupRequestsByAddress(
+          endYear,
+          startOfEndYear,
+          filters.endDate,
+          filters.councilId,
+        )})`;
       }
-      return `(SELECT * FROM requests_${startYear} 
-        WHERE CreatedDate BETWEEN '${filters.startDate}' AND '${endOfStartYear}'
-        ${requestStatusFilter !== '' ? ` AND Status='${requestStatusFilter}'` : ''}
-        ${filters.councilId !== null ? ` AND NC='${filters.councilId}'` : ''} 
-        AND RequestType IN (${formattedRequestTypes}))
-        UNION ALL
-        (SELECT * FROM requests_${endYear} 
-        WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${filters.endDate}'
-        ${requestStatusFilter !== '' ? ` AND Status='${requestStatusFilter}'` : ''}
-        ${filters.councilId !== null ? ` AND NC='${filters.councilId}'` : ''} 
-        AND RequestType IN (${formattedRequestTypes}))`;
+
+      // data with different start and end years and includes all columns matching filters
+      return `(${getAllRequests(
+        startYear,
+        filters.startDate,
+        endOfStartYear,
+        filters.councilId,
+        requestStatusFilter,
+      )}) UNION ALL (${getAllRequests(
+        endYear,
+        startOfEndYear,
+        filters.endDate,
+        filters.councilId,
+        requestStatusFilter,
+      )})`;
     };
 
     const neighborhoodDataQuery = generateQuery();
