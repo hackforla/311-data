@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  styled, Box, Modal, Typography, Link, Button,
+  styled,
+  Box,
+  Modal,
+  Typography,
+  Link,
+  Button,
 } from '@mui/material';
 import colors from '@theme/colors';
 
@@ -44,7 +49,7 @@ const buttonStyle = {
   fontWeight: '500',
 };
 
-function AcknowledgeModal({onClose}) {
+function AcknowledgeModal({ onClose }) {
   const [open, setOpen] = React.useState(true);
   const handleClose = () => {
     setOpen(false);
@@ -53,10 +58,14 @@ function AcknowledgeModal({onClose}) {
   return (
     <StyledModal open={open}>
       <StyledBox>
-        <Typography variant="h6" sx={{ fontWeight: 500 }} gutterBottom>
+        <Typography variant="h6" gutterBottom>
           Welcome to 311Data
         </Typography>
-        <Typography variant="body2" sx={{ fontWieght: 400, textAlign: 'start' }} gutterBottom>
+        <Typography
+          variant="body2"
+          sx={{ textAlign: 'start' }}
+          gutterBottom
+        >
           311-data.org is 100% powered by volunteers from Hack
           <br />
           for LA and is not affiliated with the city of Los Angeles.
@@ -65,13 +74,20 @@ function AcknowledgeModal({onClose}) {
           <br />
           Angeles, please visit
           {' '}
-          <ExternalLink href="https://lacity.gov/myla311" target="_blank" rel="noopener noreferrer" aria-label="Visit MyLA311 for official information (opens in a new tab)">
+          <ExternalLink
+            href="https://lacity.gov/myla311"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit MyLA311 for official information (opens in a new tab)"
+          >
             MyLA311
           </ExternalLink>
           .
         </Typography>
         <Box sx={{ pt: 3 }}>
-          <Button onClick={handleClose} sx={buttonStyle}>Ok</Button>
+          <Button onClick={handleClose} sx={buttonStyle}>
+            Ok
+          </Button>
         </Box>
       </StyledBox>
     </StyledModal>
@@ -81,5 +97,5 @@ function AcknowledgeModal({onClose}) {
 export default AcknowledgeModal;
 
 AcknowledgeModal.propTypes = {
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
 };
