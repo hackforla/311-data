@@ -52,7 +52,7 @@ function CouncilsList({ items, onClick, searchTerm, setSearchTerm }) {
       <div className={classes.searchWrapper}>
         <div className={classes.search}>
           <SearchBar
-            placeholder="Enter district"
+            placeholder="Enter council name"
             onChange={setSearchTerm}
             value={searchTerm.toUpperCase()}
           />

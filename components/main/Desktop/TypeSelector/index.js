@@ -13,6 +13,7 @@ import { updateRequestTypes } from '@reducers/filters';
 // import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import sharedLayout from '@theme/layout';
 import useToggle from './isToggle';
+import ArrowToolTip from '@components/common/ArrowToolTip';
 
 const useStyles = makeStyles(theme => ({
   iconStyle: {
@@ -21,6 +22,9 @@ const useStyles = makeStyles(theme => ({
   header: {
     fontSize: '12.47px',
     fontWeight: theme.typography.fontWeightMedium,
+  },
+  tooltipParagraph: {
+    margin: '1px',
   },
 }));
 
@@ -71,14 +75,20 @@ function RequestTypeSelector({
     });
   }
 
+  const myla311Link = <a href="https://www.myla311.lacity.org">MyLa311</a>;
+
   return (
     <Grid container direction="column">
       <Grid item>
         <Typography variant="body2" className={classes.header}>
           Request&nbsp;Types&nbsp;
-          <Tooltip title="Info">
-            <InfoOutlinedIcon className={classes.iconStyle} fontSize="inherit" />
-          </Tooltip>
+          <ArrowToolTip iconStyle={classes.iconStyle}>
+            <p className={classes.tooltipParagraph}>
+              The service request categories for this public dataset are maintained by
+              Information Technologies Agency and may not reflect the categories
+              available on {myla311Link}.
+            </p>
+          </ArrowToolTip>
         </Typography>
       </Grid>
       <Grid item className={classes.marginTopSmall}>
