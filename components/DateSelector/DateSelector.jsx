@@ -35,9 +35,11 @@ function DateSelector({
     setExpanded(false);
   }, []);
 
-  const { option, selected, label, iconStyle, tooltipParagraph } = classes;
+  const {
+    option, selected, label, iconStyle, tooltipParagraph,
+  } = classes;
 
-  const linkedinPageLink = <a href='https://www.linkedin.com/company/hack-for-la/'>LinkedIn Page</a>
+  const linkedinPageLink = <a href="https://www.linkedin.com/company/hack-for-la/">LinkedIn Page</a>;
 
   return (
     <>
@@ -48,12 +50,15 @@ function DateSelector({
             <p className={tooltipParagraph}>
               <strong>
                 Currently, 311-Data loads only 311 service
-                request data from 2023 onward.
+                request data from 2020 onward.
               </strong>
             </p>
             <p className={tooltipParagraph}>
               For updates on the release of available 311
-              Data, please follow our {linkedinPageLink}.
+              Data, please follow our
+              {' '}
+              {linkedinPageLink}
+              .
             </p>
           </div>
         </ArrowToolTip>
