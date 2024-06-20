@@ -1,12 +1,12 @@
 ---
 name: Post an open role
 about: Recruit volunteers for specific open roles template
-title: '311 Data: Open Role for: [Replace with NAME OF ROLE]'
 labels: 'size: 0.25pt,feature: recruiting,Role: Missing'
+title: '311Data: Open Role for: [Replace with NAME OF ROLE]'
 assignees: ''
 
 ---
 
-![image](https://private-user-images.githubusercontent.com/6414668/310743944-85c85809-d62b-41cc-b8d5-4257ebe1dd9d.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTg3MzgwMTksIm5iZiI6MTcxODczNzcxOSwicGF0aCI6Ii82NDE0NjY4LzMxMDc0Mzk0NC04NWM4NTgwOS1kNjJiLTQxY2MtYjhkNS00MjU3ZWJlMWRkOWQucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI0MDYxOCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNDA2MThUMTkwODM5WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9N2IyMWFjNDMyMjk5OWI2NDFhNjgyMDVhZGVjYjI5ZDQyNWM1YTg2YTJjOTA5NjE0OWM4NzI4ODkwNzUyN2NiMSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmYWN0b3JfaWQ9MCZrZXlfaWQ9MCZyZXBvX2lkPTAifQ.gbOLpqbrzzivm2jGfNwh2QWFZNRISDk64e1JQUCm3QQ)
+<img src="https://www.hackforla.org/assets/images/projects/311_data.png"/>
 
 [INSERT DRAFT FROM THE Recruit volunteers for team open roles issue]

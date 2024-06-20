@@ -4,12 +4,20 @@ import requestTypes from '@root/data/requestTypes';
 
 export default {};
 
-function removeSpaces(str) {
+function replaceSpaces(str, replacement) {
   if (!!str === false || typeof str !== 'string') {
     return null;
   }
 
-  return str.replace(/\s/g, '');
+  return str.replace(/\s/g, replacement);
+}
+
+function removeSpaces(str) {
+  return replaceSpaces(str, '')
+}
+
+export function toNonBreakingSpaces(str) {
+  return replaceSpaces(str, '\u00a0');
 }
 
 export function getTypeIdFromTypeName(typeNameParam = '') {
