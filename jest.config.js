@@ -8,15 +8,18 @@ const config = {
   },
   moduleDirectories: ['node_modules'],
   moduleNameMapper: {
-    // TODO add module name mappings for all aliases in webpack config
     '^@root(.*)$': '<rootDir>/$1',
+    '^@data(.*)$': '<rootDir>/data/$1',
     '^@theme(.*)$': '<rootDir>/theme/$1',
     '^@components(.*)$': '<rootDir>/components/$1',
+    '^@dashboards(.*)$': '<rootDir>/components/Dashboards/$1',
+    '^@hooks(.*)$': '<rootDir>/hooks/$1',
     '^@reducers(.*)$': '<rootDir>/redux/reducers/$1',
     '^@styles(.*)$': '<rootDir>/styles/$1',
     '^@assets(.*)$': '<rootDir>/assets/$1',
     '^@utils(.*)$': '<rootDir>/utils/$1',
     '^@settings(.*)$': '<rootDir>/settings/$1',
+    '^@db(.*)$': '<rootDir>/components/db/$1',
     '^@tests(.*)$': '<rootDir>/__tests__/$1',
     '^.+.(styl|less|sass|scss|png|jpg|ttf|woff|woff2|svg)$':
       'jest-transform-stub',
