@@ -8,6 +8,8 @@ geojson_file = "./nc-boundary-2019-modified.json"
 input_csv_file = "./2024.csv"
 filtered_csv_path = "./Data_csvfiles/filtered_data.csv"
 outside_csv_path = "./Data_csvfiles/outside_boundary_data.csv"
+filtered_parquet_path = "./Data_csvfiles/filtered_data.parquet"
+outside_parquet_path = "./Data_csvfiles/outside_boundary_data.parquet"
 
 # Check if the GeoJSON file exists
 if os.path.exists(geojson_file):
@@ -42,6 +44,11 @@ replace_strings = ["VE, 0"]
 filtered_df.replace(to_replace=replace_strings, value="", inplace=True)
 outside_df.replace(to_replace=replace_strings, value="", inplace=True)
 
+# Convert ZipCode column to numeric (if applicable)
+filtered_df['ZipCode'] = pd.to_numeric(filtered_df['ZipCode'], errors='coerce')
+outside_df['ZipCode'] = pd.to_numeric(outside_df['ZipCode'], errors='coerce')
+
+
 # Print the initial, final, and outside data shapes
 print("Initial data shape: {}".format(df.shape))
 print("Filtered data shape: {}".format(filtered_df.shape))
@@ -55,4 +62,15 @@ print("Filtered data saved to CSV file successfully.")
 # Save the outside boundary DataFrame to a CSV file
 os.makedirs(os.path.dirname(outside_csv_path), exist_ok=True)
 outside_df.to_csv(outside_csv_path, index=False)
+print("Outside boundary data saved to CSV file successfully.")
+
+
+# Save the filtered DataFrame to a CSV file
+os.makedirs(os.path.dirname(filtered_parquet_path), exist_ok=True)
+filtered_df.to_csv(filtered_parquet_path, index=False)
+print("Filtered data saved to CSV file successfully.")
+
+# Save the outside boundary DataFrame to a CSV file
+os.makedirs(os.path.dirname(outside_parquet_path), exist_ok=True)
+outside_df.to_csv(outside_parquet_path, index=False)
 print("Outside boundary data saved to CSV file successfully.")
