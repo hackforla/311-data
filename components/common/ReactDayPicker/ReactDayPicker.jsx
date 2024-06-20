@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 
     '& .DayPicker-Day--disabled': {
       color: colors.textSecondaryDark,
-      pointerEvents: 'none !important',
+      pointerEvents: 'none',
     },
 
     /* Day cell hover */
