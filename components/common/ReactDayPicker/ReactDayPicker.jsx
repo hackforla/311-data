@@ -2,8 +2,7 @@ import 'react-day-picker/lib/style.css';
 
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
-import Alert from '@mui/material/Alert';
+import React, { useState } from 'react';
 import DayPicker from 'react-day-picker';
 import { connect } from 'react-redux';
 import makeStyles from '@mui/styles/makeStyles';
@@ -162,40 +161,13 @@ function ReactDayPicker({
 
   // enteredTo represents the day that the user is currently hovering over.
   const [enteredTo, setEnteredTo] = useState(endDate);
-  const [error, setError] = useState(null);
 
-  useEffect (() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError(null);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
-
-  const isDateValid = date => {
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-    const inputDate = new Date(date);
-    inputDate.setHours(0, 0, 0, 0);
-    return inputDate <= currentDate;
-  };
   const setFromDay = day => {
-    if (isDateValid(day)) {
-      updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
-      setError(null);
-    } else {
-      setError('Error: Date cannot be in the future.');
-    }
+    updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
 
   const setToDay = day => {
-    if (isDateValid(day)) {
-      updateEndDate(moment(day).format(INTERNAL_DATE_SPEC));
-      setError(null);
-    } else {
-      setError('Error: Date cannot be in the future.');
-    }
+    updateEndDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
 
   const handleDayClick = day => {
@@ -241,13 +213,6 @@ function ReactDayPicker({
   return (
     <>
       {/* <Styles range={range} /> */}
-      {
-        error && (
-          <Alert severity="error">
-            <p>{error}</p>
-          </Alert>
-        )
-      }
       <DayPicker
         // className="Range"
         className={clsx(classes.root, range && classes.hasRange, !range && classes.noRange)}
