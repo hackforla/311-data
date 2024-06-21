@@ -136,7 +136,7 @@ class MapSearch extends React.Component {
   componentWillUnmount() {
     // Free memory and remove all event listeners
     const geocoderElement = document.getElementById('geocoder')
-    removeListeners(geocoderElement, settings.map.eventName.reset)
+    this.removeListeners(geocoderElement, settings.map.eventName.reset);
   }
 
   setTab = tab => {
