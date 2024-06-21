@@ -9,10 +9,10 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -b gh-pages -d dist",
-    "start": "npm run check-env && npm run dev",
+    "start": "vite",
     "setup": "npm i && npm run check-env",
-    "dev": "webpack-dev-server --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "build": "vite build",
+    "serve": "vite preview",
     "lint": "eslint \"./**/*.js*\"",
     "lint:fix": "eslint --fix \"./**/*.js*\"",
     "test": "jest --passWithNoTests",
