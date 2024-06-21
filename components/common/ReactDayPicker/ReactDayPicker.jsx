@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 
     '& .DayPicker-Day--disabled': {
       color: colors.textSecondaryDark,
-      pointerEvents: 'none !important',
+      pointerEvents: 'none',
     },
 
     /* Day cell hover */
@@ -208,7 +208,9 @@ function ReactDayPicker({
   const from = moment(startDate).toDate();
   const enteredToDate = moment(enteredTo).toDate();
   const today = new Date();
-  const lastThreeMonths = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+  const currentMonth = today.getFullYear();
+  const currentYear = today.getMonth();
+  const lastThreeMonths = new Date(currentYear, currentMonth - 3, today.getDate());
 
   return (
     <>
@@ -224,6 +226,7 @@ function ReactDayPicker({
         onDayMouseEnter={handleDayMouseEnter}
         weekdayElement={<WeekDay />}
         fromMonth={new Date(2019, 12)}
+        toMonth={new Date(currentMonth, currentYear)}
       />
     </>
   );
