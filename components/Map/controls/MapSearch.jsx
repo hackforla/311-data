@@ -78,7 +78,7 @@ class MapSearch extends React.Component {
     const { map } = this.props;
 
     this.geocoder = new MapboxGeocoder({
-      accessToken: process.env.MAPBOX_TOKEN,
+      accessToken: import.meta.env.VITE_MAPBOX_TOKEN,
       flyTo: false,
       marker: false,
       minLength: 1,

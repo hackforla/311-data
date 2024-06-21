@@ -142,7 +142,7 @@ class Map extends React.Component {
 
   componentDidMount() {
     this.isSubscribed = true;
-    mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
+    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
     const map = new mapboxgl.Map({
       container: this.mapContainer,
