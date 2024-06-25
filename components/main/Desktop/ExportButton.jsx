@@ -45,9 +45,9 @@ function ExportButton({ filters }) {
     }
 
     const formattedRequestTypes = requestTypes
-      .filter(item => filters.requestTypes[item.typeId])
-      .map(v => `'${v.typeName}'`)
-      .join(', ');
+    .filter(item => filters.requestTypes[item.typeId])
+    .map(reqType => `'${reqType.socrataNames[0]}'`)
+    .join(', ');
 
     const startYear = moment(filters.startDate).year();
     const endYear = moment(filters.endDate).year();
@@ -55,18 +55,19 @@ function ExportButton({ filters }) {
     const getAllRequests = (year, startDate, endDate, councilId = '', status = '') => `
       SELECT * FROM requests_${year} 
       WHERE CreatedDate >= '${startDate}' 
-      AND CreatedDate < '${endDate}'
-      ${status !== '' ? ` AND Status='${status}'` : ''}
+      AND CreatedDate <= '${endDate}'
+      ${status === 'Open' ? " AND (Status = 'Open' OR Status = 'Pending')" : ''}
+      ${status === 'Closed' ? " AND (Status = 'Closed')" : ''}
       ${councilId !== null ? ` AND NC='${councilId}'` : ''} 
       AND RequestType IN (${formattedRequestTypes})`;
 
     // Note: this logic will only generate the SR count CSV if it meets the following conditions:
-    // exactly one SR type is selected, a NC is selected, and status is Open.
+    // exactly one SR type is selected, a NC is selected, and status is Open or Pending.
     const groupRequestsByAddress = (year, startDate, endDate, councilId) => `
       SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${year}
       WHERE CreatedDate >= '${startDate}' 
-      AND CreatedDate < '${endDate}' 
-      AND Status = 'Open' 
+      AND CreatedDate <= '${endDate}' 
+      AND (Status = 'Open' OR Status = 'Pending')
       AND NC = '${councilId}' 
       AND RequestType IN (${formattedRequestTypes})
       GROUP BY Address`;
