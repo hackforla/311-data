@@ -23,7 +23,7 @@ Our application is open source, built and maintained by volunteers throughout ou
 
 ![screenshot](./assets/screenshot.PNG)
 
-Our mission is to create a user-friendly platform for anyone interested in exploring 311 service requests so that they can immediately gain actionable insights. We are looking for sponsors who can support our efforts and help us scale our impact. If you are interested in learning more about our project, would like to volunteer or become a sponsor, please email hungrylulu8@gmail.com.
+Our mission is to create a user-friendly platform for anyone interested in exploring 311 service requests so that they can immediately gain actionable insights. We are looking for sponsors who can support our efforts and help us scale our impact. If you are interested in learning more about our project, would like to volunteer or become a sponsor, please visit the [Open Roles Board](https://github.com/orgs/hackforla/projects/67).
 
 ## Project Technology
 
