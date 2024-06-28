@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import Button from '@mui/material/Button';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import JSZip from 'jszip';
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
@@ -15,9 +16,14 @@ function ExportButton({ filters }) {
   const { conn } = useContext(DbContext);
 
   // creation zip file
-  const downloadZip = async csvContent => {
+  const downloadZip = async (neighborhoodCsvContent, srCsvContent) => {
     const zip = new JSZip();
-    zip.file('NeighborhoodData.csv', csvContent);
+    zip.file('NeighborhoodData.csv', neighborhoodCsvContent);
+
+    // Only add SR count csv if it was generated
+    if (srCsvContent) {
+      zip.file('ServiceRequestCount.csv', srCsvContent);
+    }
 
     const content = await zip.generateAsync({ type: 'blob' });
     saveAs(content, '311Data.zip');
@@ -39,24 +45,122 @@ function ExportButton({ filters }) {
     }
 
     const formattedRequestTypes = requestTypes
-      .filter(item => filters.requestTypes[item.typeId])
-      .map(v => `'${v.typeName}'`)
-      .join(', ');
+    .filter(item => filters.requestTypes[item.typeId])
+    .map(reqType => `'${reqType.socrataNames[0]}'`)
+    .join(', ');
 
-    // // in the case user chooses one neighborhood or all are selected + dates and status
-    const query = `select * from requests where CreatedDate >= '${filters.startDate}' AND
-    CreatedDate < '${filters.endDate}'${requestStatusFilter !== ''
-      ? ` AND Status='${requestStatusFilter}'` : ''}
-    ${filters.councilId !== null
-        ? ` AND NC='${filters.councilId}'` : ''} AND RequestType IN (${formattedRequestTypes});`;
+    const startYear = moment(filters.startDate).year();
+    const endYear = moment(filters.endDate).year();
 
-    const dataToExport = await conn.query(query);
-    const results = ddbh.getTableData(dataToExport);
+    const getAllRequests = (year, startDate, endDate, councilId = '', status = '') => `
+      SELECT * FROM requests_${year} 
+      WHERE CreatedDate >= '${startDate}' 
+      AND CreatedDate <= '${endDate}'
+      ${status === 'Open' ? " AND (Status = 'Open' OR Status = 'Pending')" : ''}
+      ${status === 'Closed' ? " AND (Status = 'Closed')" : ''}
+      ${councilId !== null ? ` AND NC='${councilId}'` : ''} 
+      AND RequestType IN (${formattedRequestTypes})`;
 
-    if (!isEmpty(results)) {
-      // results chosen to csv
-      const csvContent = Papa.unparse(results);
-      downloadZip(csvContent);
+    // Note: this logic will only generate the SR count CSV if it meets the following conditions:
+    // exactly one SR type is selected, a NC is selected, and status is Open or Pending.
+    const groupRequestsByAddress = (year, startDate, endDate, councilId) => `
+      SELECT Address, COUNT(*) AS NumberOfRequests FROM requests_${year}
+      WHERE CreatedDate >= '${startDate}' 
+      AND CreatedDate <= '${endDate}' 
+      AND (Status = 'Open' OR Status = 'Pending')
+      AND NC = '${councilId}' 
+      AND RequestType IN (${formattedRequestTypes})
+      GROUP BY Address`;
+
+    const generateQuery = (grouped = false) => {
+      if (startYear === endYear) {
+        if (grouped) {
+          // SRs grouped by address from same year
+          return groupRequestsByAddress(
+            startYear,
+            filters.startDate,
+            filters.endDate,
+            filters.councilId,
+          );
+        }
+        // data comes from same year and includes all columns matching filters
+        return getAllRequests(
+          startYear,
+          filters.startDate,
+          filters.endDate,
+          filters.councilId,
+          requestStatusFilter,
+        );
+      }
+
+      const endOfStartYear = moment(filters.startDate).endOf('year').format('YYYY-MM-DD');
+      const startOfEndYear = moment(filters.endDate).startOf('year').format('YYYY-MM-DD');
+
+      // SRs grouped by address with different start and end years
+      if (grouped) {
+        return `(${groupRequestsByAddress(
+          startYear,
+          filters.startDate,
+          endOfStartYear,
+          filters.councilId,
+        )}) UNION ALL (${groupRequestsByAddress(
+          endYear,
+          startOfEndYear,
+          filters.endDate,
+          filters.councilId,
+        )})`;
+      }
+
+      // data with different start and end years and includes all columns matching filters
+      return `(${getAllRequests(
+        startYear,
+        filters.startDate,
+        endOfStartYear,
+        filters.councilId,
+        requestStatusFilter,
+      )}) UNION ALL (${getAllRequests(
+        endYear,
+        startOfEndYear,
+        filters.endDate,
+        filters.councilId,
+        requestStatusFilter,
+      )})`;
+    };
+
+    const neighborhoodDataQuery = generateQuery();
+    const neighborhoodDataToExport = await conn.query(neighborhoodDataQuery);
+    const neighborhoodResults = ddbh.getTableData(neighborhoodDataToExport);
+    const formattedResults = neighborhoodResults.map(row => ({
+      ...row,
+      CreatedDate: row.CreatedDate ? moment(row.CreatedDate).format('YYYY-MM-DD HH:mm:ss') : null,
+      UpdatedDate: row.UpdatedDate ? moment(row.UpdatedDate).format('YYYY-MM-DD HH:mm:ss') : null,
+      ServiceDate: row.ServiceDate ? moment(row.ServiceDate).format('YYYY-MM-DD HH:mm:ss') : null,
+      ClosedDate: row.ClosedDate ? moment(row.ClosedDate).format('YYYY-MM-DD HH:mm:ss') : null,
+    }));
+
+    if (!isEmpty(formattedResults)) {
+      const neighborhoodCsvContent = Papa.unparse(formattedResults);
+      let groupedAddressesToExport;
+      let srCountResults;
+      let srCsvContent;
+
+      const srTypeCount = Object.values(filters.requestTypes).reduce(
+        (acc, cur) => (cur === true ? acc + 1 : acc),
+        0,
+      );
+
+      // SR count csv data only generated if:
+      // exactly one SR type is selected, NC selected, and status is open
+      if (srTypeCount === 1 && filters.councilId && requestStatusFilter === 'Open') {
+        const groupedAddressQuery = generateQuery(true);
+        groupedAddressesToExport = await conn.query(groupedAddressQuery);
+        srCountResults = ddbh.getTableData(groupedAddressesToExport);
+
+        if (!isEmpty(srCountResults)) {
+          srCsvContent = Papa.unparse(srCountResults);
+        }
+      }
+      downloadZip(neighborhoodCsvContent, srCsvContent);
     } else {
       window.alert('No 311 data available within the selected filters. Please adjust your filters and try again.');
     }
