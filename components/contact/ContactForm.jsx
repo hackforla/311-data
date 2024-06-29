@@ -22,6 +22,7 @@ function ContactForm() {
 
   return (
     <div className={classes.formContainer}>
+      {/* Embed the Google Form */}
       <iframe
         src="https://docs.google.com/forms/d/e/1FAIpQLScrhJY9ezqlKcpYermIImgGKYZ4bP2k1BRAOpuEay-tVXfvdQ/viewform?embedded=true"
         className={classes.iframe}
