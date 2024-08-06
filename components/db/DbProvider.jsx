@@ -11,7 +11,9 @@ const datasets = {
   parquet: {
     // huggingface
     hfYtd2024:
-      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 year-to-date
+    '/datasets/filtered_data.parquet', // for filter bound testing, please DELETE for production
+    // '/datasets/outside_boundary_data.parquet', // for outside bound testing, please DELETE for production
+    // 'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 year-to-date
     hfYtd2023:
       'https://huggingface.co/datasets/311-data/2023/resolve/main/2023.parquet', // 2023 entire year
     hfYtd2022:
