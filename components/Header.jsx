@@ -20,6 +20,8 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     height: theme.header.height,
     backgroundColor: theme.palette.primary.main,
+    position: 'relative',
+    zIndex: 14000,
   },
   link: {
     color: 'white',
