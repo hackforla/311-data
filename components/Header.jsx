@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     height: theme.header.height,
     backgroundColor: theme.palette.primary.main,
     position: 'relative',
-    zIndex: 14000,
+    zIndex: 1400,
   },
   link: {
     color: 'white',
