@@ -27,6 +27,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 );
-
-// hot module replacement during development
-if (module.hot) module.hot.accept();
