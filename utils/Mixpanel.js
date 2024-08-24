@@ -7,7 +7,7 @@ const token = import.meta.env.PROD
 // Set MIXPANEL_ENABLED env variable to:
 //   1 or greater to enable Mixpanel logging
 //   0 to disable Mixpanel logging
-const mixpanelEnabled = process.env.MIXPANEL_ENABLED > 0;
+const mixpanelEnabled = import.meta.env.MIXPANEL_ENABLED > 0;
 
 if (mixpanelEnabled) {
   mixpanel.init(token);
