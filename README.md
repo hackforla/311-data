@@ -56,6 +56,20 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 - From the 311-data parent directory run: `npm run setup && npm start`
 - Visit http://localhost:3000
 
+### Information About Technologies
+
+- Frontend
+  - Mapbox
+  -  React
+  -  MUI
+-  Backend
+  -  DuckDb
+  -  HuggingFace
+  -  python data transform + Github Actions
+  -  DbProvider + Context
+  -  Data Export Queries
+  -  Bot Email + Support Ticket Automation
+     
 ## Resources
 
 Public data used in this project:
