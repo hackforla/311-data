@@ -34,7 +34,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          echo "MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }}" > .env
+          echo "VITE_MAPBOX_TOKEN=${{ secrets.VITE_MAPBOX_TOKEN }}" > .env
           echo "SOCRATA_API_URL=${{ secrets.SOCRATA_API_URL }}" >> .env
           echo "SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }}" >> .env
           echo "CONTENTFUL_SPACE=${{ secrets.CONTENTFUL_SPACE }}" >> .env
