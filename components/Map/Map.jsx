@@ -109,7 +109,6 @@ class Map extends React.Component {
   // static contextType assignment allows Map to access values provided by DbContext.Provider
   static contextType = DbContext;
   constructor(props) {
-    console.log('what are in props', props)
     super(props);
 
     this.state = {
@@ -250,6 +249,7 @@ class Map extends React.Component {
         dispatchUpdateUnselectedCouncils,
         councils,
         ncBoundaries,
+        dispatchClearPinInfo
       } = this.props;
 
       if (
@@ -346,9 +346,9 @@ class Map extends React.Component {
   addPopup = (coordinates, requestId) => {
     this.setState({ selectedRequestId: requestId });
     this.popup = new mapboxgl.Popup()
-    .setLngLat(coordinates)
-    .setDOMContent(this.requestDetail)
-    .addTo(this.map);
+      .setLngLat(coordinates)
+      .setDOMContent(this.requestDetail)
+      .addTo(this.map);
   };
   
   removePopup = () => {
@@ -461,7 +461,6 @@ class Map extends React.Component {
   };
 
   onMouseLeave = (e) => {
-    // this.dispatchClearPinInfo()
     this.removePopup();
   };
 
@@ -473,7 +472,6 @@ class Map extends React.Component {
       dispatchUpdateUnselectedCouncils,
       dispatchCloseBoundaries,
       councils,
-
     } = this.props;
 
     const features = this.getAllFeaturesAtPoint(e.point);
@@ -681,7 +679,7 @@ class Map extends React.Component {
       selectedNcId,
       councils,
     } = this.props;
-    console.log('props', this.props)
+
     const {
       geoFilterType,
       locationInfo,
@@ -697,7 +695,6 @@ class Map extends React.Component {
       selectedTypes,
       address,
     } = this.state;
-    console.log('this.state', this.state)
 
     const { classes } = this.props;
 
