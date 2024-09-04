@@ -51,6 +51,7 @@ function StyledChip({
   color,
   onDelete,
   outlined,
+  sx,
 }) {
   const theme = useTheme();
   const classesSolid = useStylesSolid({ color });
@@ -72,6 +73,7 @@ function StyledChip({
       size="small"
       variant={outlined ? 'outlined' : 'default'}
       clickable={false}
+      sx={sx}
     />
   );
 }
@@ -79,7 +81,10 @@ function StyledChip({
 export default StyledChip;
 
 StyledChip.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+  ]).isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
@@ -87,6 +92,7 @@ StyledChip.propTypes = {
   color: PropTypes.string,
   onDelete: PropTypes.func,
   outlined: PropTypes.bool,
+  sx: PropTypes.shape({}),
 };
 
 StyledChip.defaultProps = {
@@ -94,4 +100,5 @@ StyledChip.defaultProps = {
   color: undefined,
   onDelete: undefined,
   outlined: false,
+  sx: undefined,
 };
