@@ -126,7 +126,8 @@ const activeStyle = {
 // TODO: links/routing, mobile
 const Header = () => {
   const classes = useStyles();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  // this variable gets set to the DOM reference of IconButton, non-null value indicates the menu should be visible
+  const [isMenuOpen, setIsMenuOpen] = React.useState(null);
 
   const handleMenuClick = event => {
     if (Boolean(isMenuOpen)){
