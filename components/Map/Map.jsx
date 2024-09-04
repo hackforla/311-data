@@ -249,7 +249,6 @@ class Map extends React.Component {
         dispatchUpdateUnselectedCouncils,
         councils,
         ncBoundaries,
-        dispatchClearPinInfo
       } = this.props;
 
       if (
