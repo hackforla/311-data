@@ -357,7 +357,6 @@ class Map extends React.Component {
       this.popup = null;
       this.setState({ selectedRequestId: null });
     }
-
   };
 
   reset = () => {
