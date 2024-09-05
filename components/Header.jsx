@@ -126,14 +126,19 @@ const activeStyle = {
 // TODO: links/routing, mobile
 const Header = () => {
   const classes = useStyles();
-  const [isIconOpen, setIsIconOpen] = React.useState(false);
+  // this variable gets set to the DOM reference of IconButton, non-null value indicates the menu should be visible
+  const [isMenuOpen, setIsMenuOpen] = React.useState(null);
 
-  const handleIconClick = event => {
-    setIsIconOpen(event.currentTarget);
+  const handleMenuClick = event => {
+    if (Boolean(isMenuOpen)){
+      setIsMenuOpen(null);
+    } else{
+      setIsMenuOpen(event.currentTarget);
+    }
   };
 
-  const handleIconClose = () => {
-    setIsIconOpen(null);
+  const handleMenuClose = () => {
+    setIsMenuOpen(null);
   };
 
   return (
@@ -155,11 +160,11 @@ const Header = () => {
           <Button className={classes.button}>Contact</Button>
         </NavLink>
         <IconButton
-          onClick={handleIconClick}g
+          onClick={handleMenuClick}
           className={classes.imageStyle}
-          aria-controls={isIconOpen ? 'accessibile-menu' : undefined}
+          aria-controls={isMenuOpen ? 'accessibile-menu' : undefined}
           aria-haspopup="true"
-          aria-expanded={isIconOpen ? 'true' : undefined}
+          aria-expanded={isMenuOpen ? 'true' : undefined}
           size="large"
         >
           <img src={accessibileIcon} alt="Accessibility" width="24px" />
@@ -167,17 +172,17 @@ const Header = () => {
         <Menu
           className={classes.accessibileMenuUl}
           id="accessibile-menu"
-          anchorEl={isIconOpen}
+          anchorEl={isMenuOpen}
           getcontentanchorel={null}
           keepMounted
-          open={Boolean(isIconOpen)}
-          onClose={handleIconClose}
+          open={Boolean(isMenuOpen)}
+          onClose={handleMenuClose}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
           }}
         > 
-          <MenuItem onClick={handleIconClose}>
+          <MenuItem onClick={handleMenuClose}>
             <Card className={classes.accessibileMenu}>
               <CardHeader className={classes.headStyle} />
               <CardContent className={`${classes.accessibileContent} ${classes.accessibileCopyStyle}`}>
