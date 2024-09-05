@@ -352,12 +352,10 @@ class Map extends React.Component {
   
   removePopup = () => {
     if (this.popup) {
-      this.props.dispatchClearPinInfo()
       this.popup.remove();
       this.popup = null;
       this.setState({ selectedRequestId: null });
     }
-
   };
 
   reset = () => {
@@ -460,6 +458,7 @@ class Map extends React.Component {
   };
 
   onMouseLeave = (e) => {
+    this.props.dispatchClearPinInfo()
     this.removePopup();
   };
 

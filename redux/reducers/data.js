@@ -217,7 +217,11 @@ export default (state = initialState, action) => {
         },
       };
     case types.CLEAR_PIN_INFO:
-      return { ...state, pinsInfo: {} };
+      return {
+        ...state,
+        error: null,
+        pinsInfo: {},
+      };
     case types.GET_PIN_INFO_SUCCESS:
       return {
         ...state,
