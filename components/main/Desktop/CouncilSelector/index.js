@@ -15,11 +15,9 @@ import SelectedCouncils from './SelectedCouncils';
 import CouncilsList from './CouncilsList';
 
 const useStyles = makeStyles(theme => ({
-  label: {
-    display: 'inline-block',
-    font: theme.typography.b2,
-    marginBottom: '10px',
-    color: theme.palette.secondary.light,
+  header: {
+    fontSize: '12.47px',
+    fontWeight: theme.typography.fontWeightMedium,
   },
 }));
 
@@ -89,7 +87,7 @@ function CouncilSelector({
 
   return (
     <>
-      <div className={classes.label}>Boundaries</div>
+      <div className={classes.header}>Boundaries</div>
       <BoundariesSection>
         <BoundariesSection.Display>
           <SelectedCouncils items={selected} onDelete={debouncedHandleDelete} />
