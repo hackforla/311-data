@@ -22,6 +22,9 @@ function DateSelector({
 }) {
   const [expanded, setExpanded] = useState(false);
   const useStyles = makeStyles(theme => ({
+  iconStyle: {
+    verticalAlign: 'middle',
+  },
     header: {
       fontSize: '12.47px',
       fontWeight: theme.typography.fontWeightMedium,
@@ -43,7 +46,7 @@ function DateSelector({
   }, []);
 
   const {
-    option, selected, label, iconStyle, tooltipParagraph,
+    option, selected, tooltipParagraph,
   } = classes;
 
   const linkedinPageLink = <a href="https://www.linkedin.com/company/hack-for-la/">LinkedIn Page</a>;
@@ -52,7 +55,7 @@ function DateSelector({
     <>
       <div className={classes.header}>
         Date Range&nbsp;
-        <ArrowToolTip iconStyle={iconStyle}>
+        <ArrowToolTip iconStyle={classes.iconStyle}>
           <div>
             <p className={tooltipParagraph}>
               <strong>
