@@ -8,6 +8,7 @@ import {
   updateStartDate as reduxUpdateStartDate,
   updateEndDate as reduxUpdateEndDate,
 } from '@reducers/filters';
+import Typography from '@mui/material/Typography';
 import ArrowToolTip from '@components/common/ArrowToolTip';
 import options from './options';
 import makeStyles from '@mui/styles/makeStyles';
@@ -53,7 +54,7 @@ function DateSelector({
 
   return (
     <>
-      <div className={classes.header}>
+      <Typography className={classes.header}>
         Date Range&nbsp;
         <ArrowToolTip iconStyle={classes.iconStyle}>
           <div>
@@ -72,7 +73,7 @@ function DateSelector({
             </p>
           </div>
         </ArrowToolTip>
-      </div>
+      </Typography>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
           <div className={classes.selector}>
