@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
   header: {
     fontSize: '12.47px',
     fontWeight: theme.typography.fontWeightMedium,
+    marginBottom: '8px',
   },
 }));
 

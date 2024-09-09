@@ -25,6 +25,7 @@ function DateSelector({
     header: {
       fontSize: '12.47px',
       fontWeight: theme.typography.fontWeightMedium,
+      marginBottom: '8px',
     },
   }));
   const classes = useStyles();
