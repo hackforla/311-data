@@ -560,6 +560,7 @@ class Map extends React.Component {
 
       const ncIdOfAddressSearch = getNcByLngLatv2({ longitude, latitude });
       if (!isEmpty(ncIdOfAddressSearch)) {
+        //Adding name pill to search bar 
         const newSelectedCouncil = councils.find(
           ({ councilId }) => councilId === ncIdOfAddressSearch,
         );
