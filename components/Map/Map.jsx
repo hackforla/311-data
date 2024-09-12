@@ -536,6 +536,9 @@ class Map extends React.Component {
       dispatchGetNcByLngLat,
       dispatchUpdateNcId,
       dispatchCloseBoundaries,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+      councils
     } = this.props;
 
     // Reset boundaries input
@@ -557,6 +560,13 @@ class Map extends React.Component {
 
       const ncIdOfAddressSearch = getNcByLngLatv2({ longitude, latitude });
       if (!isEmpty(ncIdOfAddressSearch)) {
+        const newSelectedCouncil = councils.find(
+          ({ councilId }) => councilId === ncIdOfAddressSearch,
+        );
+        const newSelected = [newSelectedCouncil];
+        dispatchUpdateSelectedCouncils(newSelected);
+        dispatchUpdateUnselectedCouncils(councils);
+        
         dispatchUpdateNcId(Number(ncIdOfAddressSearch));
         this.setState({
           address: address,
