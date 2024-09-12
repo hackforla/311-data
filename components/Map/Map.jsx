@@ -49,7 +49,6 @@ import RequestDetail from './RequestDetail';
 import { debounce, isEmpty } from '@utils';
 
 import settings from '@settings';
-import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 
 const styles = (theme) => ({
   root: {
@@ -349,7 +348,7 @@ class Map extends React.Component {
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
   };
-
+  
   removePopup = () => {
     if (this.popup) {
       this.popup.remove();
