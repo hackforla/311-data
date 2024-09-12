@@ -10,6 +10,7 @@ export const types = {
   GET_OPEN_REQUESTS_SUCCESS: 'GET_OPEN_REQUESTS_SUCCESS',
   GET_OPEN_REQUESTS_FAILURE: 'GET_OPEN_REQUESTS_FAILURE',
   UPDATE_PIN_INFO: 'UPDATE_PIN_INFO',
+  CLEAR_PIN_INFO: 'CLEAR_PIN_INFO',
   GET_PIN_INFO_REQUEST: 'GET_PIN_INFO_REQUEST',
   GET_PIN_INFO_SUCCESS: 'GET_PIN_INFO_SUCCESS',
   GET_PIN_INFO_FAILURE: 'GET_PIN_INFO_FAILURE',
@@ -62,6 +63,10 @@ export const getPinsFailure = error => ({
 export const updatePinInfo = pinData => ({
   type: types.UPDATE_PIN_INFO,
   payload: pinData,
+});
+
+export const clearPinInfo = () => ({
+  type: types.CLEAR_PIN_INFO,
 });
 
 export const getPinInfoRequest = requestId => ({
@@ -210,6 +215,12 @@ export default (state = initialState, action) => {
           ...state.pinsInfo,
           ...action.payload,
         },
+      };
+    case types.CLEAR_PIN_INFO:
+      return {
+        ...state,
+        error: null,
+        pinsInfo: {},
       };
     case types.GET_PIN_INFO_SUCCESS:
       return {

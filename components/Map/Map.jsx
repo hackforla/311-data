@@ -8,7 +8,7 @@ import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 // import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getNcByLngLat } from '@reducers/data';
+import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 import {
   updateNcId,
   updateSelectedCouncils,
@@ -457,6 +457,7 @@ class Map extends React.Component {
   };
 
   onMouseLeave = (e) => {
+    this.props.dispatchClearPinInfo()
     this.removePopup();
   };
 
@@ -794,6 +795,7 @@ const mapDispatchToProps = (dispatch) => ({
   dispatchUpdateUnselectedCouncils: (councils) =>
     dispatch(updateUnselectedCouncils(councils)),
   dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
+  dispatchClearPinInfo: () => dispatch(clearPinInfo()),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
