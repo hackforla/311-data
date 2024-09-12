@@ -8,9 +8,10 @@ import {
   updateStartDate as reduxUpdateStartDate,
   updateEndDate as reduxUpdateEndDate,
 } from '@reducers/filters';
+import Typography from '@mui/material/Typography';
 import ArrowToolTip from '@components/common/ArrowToolTip';
 import options from './options';
-import useStyles from './useStyles';
+import makeStyles from '@mui/styles/makeStyles';
 import DateRanges from './DateRanges';
 
 const dateFormat = 'YYYY-MM-DD';
@@ -21,6 +22,16 @@ function DateSelector({
   updateEndDate,
 }) {
   const [expanded, setExpanded] = useState(false);
+  const useStyles = makeStyles(theme => ({
+  iconStyle: {
+    verticalAlign: 'middle',
+  },
+    header: {
+      fontSize: '12.47px',
+      fontWeight: theme.typography.fontWeightMedium,
+      marginBottom: '8px',
+    },
+  }));
   const classes = useStyles();
 
   const handleOptionSelect = optionDates => {
@@ -36,16 +47,16 @@ function DateSelector({
   }, []);
 
   const {
-    option, selected, label, iconStyle, tooltipParagraph,
+    option, selected, tooltipParagraph,
   } = classes;
 
   const linkedinPageLink = <a href="https://www.linkedin.com/company/hack-for-la/">LinkedIn Page</a>;
 
   return (
     <>
-      <span className={label}>
+      <Typography className={classes.header}>
         Date Range&nbsp;
-        <ArrowToolTip iconStyle={iconStyle}>
+        <ArrowToolTip iconStyle={classes.iconStyle}>
           <div>
             <p className={tooltipParagraph}>
               <strong>
@@ -62,7 +73,7 @@ function DateSelector({
             </p>
           </div>
         </ArrowToolTip>
-      </span>
+      </Typography>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
           <div className={classes.selector}>
