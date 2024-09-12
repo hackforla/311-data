@@ -8,7 +8,7 @@ import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 // import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getNcByLngLat } from '@reducers/data';
+import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 import {
   updateNcId,
   updateSelectedCouncils,
@@ -49,7 +49,6 @@ import RequestDetail from './RequestDetail';
 import { debounce, isEmpty } from '@utils';
 
 import settings from '@settings';
-import { clearPinInfo } from '../../redux/reducers/data';
 
 const styles = (theme) => ({
   root: {
@@ -349,7 +348,7 @@ class Map extends React.Component {
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
   };
-  
+
   removePopup = () => {
     if (this.popup) {
       this.popup.remove();
