@@ -348,7 +348,7 @@ class Map extends React.Component {
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
   };
-  
+
   removePopup = () => {
     if (this.popup) {
       this.popup.remove();
