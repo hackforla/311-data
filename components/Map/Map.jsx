@@ -49,7 +49,7 @@ import RequestDetail from './RequestDetail';
 import { debounce, isEmpty } from '@utils';
 
 import settings from '@settings';
-import { clearPinInfo } from '../../redux/reducers/data';
+import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 
 const styles = (theme) => ({
   root: {
