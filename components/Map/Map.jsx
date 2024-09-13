@@ -564,6 +564,9 @@ class Map extends React.Component {
         const newSelectedCouncil = councils.find(
           ({ councilId }) => councilId === ncIdOfAddressSearch,
         );
+        if (!newSelectedCouncil) {
+          throw new Error('Council Id in address search geocoder result could not be found');
+        }
         const newSelected = [newSelectedCouncil];
         dispatchUpdateSelectedCouncils(newSelected);
         dispatchUpdateUnselectedCouncils(councils);
