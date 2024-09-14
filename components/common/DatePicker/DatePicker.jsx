@@ -1,50 +1,47 @@
 import React, {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
-import { connect } from "react-redux";
-import moment from "moment";
-import PropTypes from "prop-types";
-import CalendarIcon from "@mui/icons-material/CalendarToday";
-import IconButton from "@mui/material/IconButton";
-import makeStyles from "@mui/styles/makeStyles";
-import useOutsideClick from "@components/common/customHooks/useOutsideClick";
-import ReactDayPicker from "@components/common/ReactDayPicker";
+  useRef, useState, useEffect, useCallback,
+} from 'react';
+import { connect } from 'react-redux';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import CalendarIcon from '@mui/icons-material/CalendarToday';
+import IconButton from '@mui/material/IconButton';
+import makeStyles from '@mui/styles/makeStyles';
+import useOutsideClick from '@components/common/customHooks/useOutsideClick';
+import ReactDayPicker from '@components/common/ReactDayPicker';
 
 // TODO: Apply gaps (margin, padding) from theme
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   selector: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
     maxWidth: 268,
     backgroundColor: theme.palette.primary.dark,
     padding: 10,
     borderRadius: 5,
-    fontSize: "12px",
+    fontSize: '12px',
     color: theme.palette.text.secondaryLight,
-    "& > div": {
-      cursor: "pointer",
+    '& > div': {
+      cursor: 'pointer',
     },
   },
   placeholder: {
     color: theme.palette.text.secondaryDark,
   },
   selectorPopUp: {
-    position: "fixed",
+    position: 'fixed',
     zIndex: 1,
   },
   button: {
     padding: 0,
     color: theme.palette.text.dark,
-    "&:hover": {
+    '&:hover': {
       backgroundColor: theme.palette.primary.dark,
     },
-    "& svg": {
+    '& svg': {
       fontSize: 20,
       fill: theme.palette.text.secondaryLight,
     },
@@ -60,27 +57,35 @@ const renderSelectedDays = (dates, classes, range) => {
 
   if (isBothSelected) {
     selectedDaysElements.push(
-      <span key="from">{moment(from).format("L")}</span>,
+      <span key="from">{moment(from).format('L')}</span>,
       <span key="delimiter"> - </span>,
-      <span key="to">{moment(to).format("L")}</span>
+      <span key="to">{moment(to).format('L')}</span>,
     );
     return selectedDaysElements;
   }
   if (isFromSelected) {
     selectedDaysElements.push(
-      <span key="from"> {moment(from).format("L")} </span>
+      <span key="from">
+        {' '}
+        {moment(from).format('L')}
+        {' '}
+      </span>,
     );
     return selectedDaysElements;
   }
   selectedDaysElements.push(
     <span className={classes.placeholder} key="N/A">
-      Select a date {range ? " range" : ""}
-    </span>
+      Select a date
+      {' '}
+      {range ? ' range' : ''}
+    </span>,
   );
   return selectedDaysElements;
 };
 
-function DatePicker({ open, onToggle, range, startDate, endDate }) {
+function DatePicker({
+  open, onToggle, range, startDate, endDate,
+}) {
   const [showCalendar, setShowCalendar] = useState(() => open);
   const classes = useStyles();
 
@@ -105,7 +110,7 @@ function DatePicker({ open, onToggle, range, startDate, endDate }) {
   };
 
   const toggleCalendar = () => {
-    setShowCalendar((prevState) => !prevState);
+    setShowCalendar(prevState => !prevState);
     if (onToggle) onToggle();
   };
   return (
@@ -124,7 +129,11 @@ function DatePicker({ open, onToggle, range, startDate, endDate }) {
         <CalendarIcon />
       </IconButton>
       <div style={getCoordinates()} className={classes.selectorPopUp}>
-        {showCalendar ? <ReactDayPicker range={range} /> : null}
+        {showCalendar ? (
+          <ReactDayPicker
+            range={range}
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -146,7 +155,7 @@ DatePicker.defaultProps = {
   endDate: null,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   startDate: state.filters.startDate,
   endDate: state.filters.endDate,
 });
