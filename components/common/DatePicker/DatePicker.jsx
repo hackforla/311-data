@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 5,
     fontSize: '12px',
     color: theme.palette.text.secondaryLight,
+    '& > div': {
+      cursor: 'pointer',
+    },
   },
   placeholder: {
     color: theme.palette.text.secondaryDark,
@@ -112,7 +115,9 @@ function DatePicker({
   };
   return (
     <div ref={ref} className={classes.selector}>
-      <div>{renderSelectedDays([startDate, endDate], classes, range)}</div>
+      <div onClick={toggleCalendar}>
+        {renderSelectedDays([startDate, endDate], classes, range)}
+      </div>
       <IconButton
         className={classes.button}
         aria-label="toggle calendar datepicker"
