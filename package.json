@@ -10,7 +10,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -b gh-pages -d dist",
     "start": "vite",
-    "setup": "npm i && npm run check-env",
+    "setup": "npm install && npm run check-env",
     "build": "vite build",
     "serve": "vite preview",
     "lint": "eslint \"./**/*.js*\"",
