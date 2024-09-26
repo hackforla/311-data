@@ -10,6 +10,10 @@ import theme from '@theme/theme';
 import store from '@root/redux/store';
 import App from '@root/App';
 
+if (import.meta.env.DEV && !import.meta.env.VITE_MAPBOX_TOKEN) {
+  alert('Missing Mapbox token. Please run `npm run setup`.')
+}
+
 // Expose theme to debugging console like on mui.com.
 // https://mui.com/material-ui/customization/typography/#default-values
 window.theme = theme;
