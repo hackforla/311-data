@@ -37,8 +37,8 @@ jobs:
           echo "VITE_MAPBOX_TOKEN=${{ secrets.VITE_MAPBOX_TOKEN }}" > .env
           echo "SOCRATA_API_URL=${{ secrets.SOCRATA_API_URL }}" >> .env
           echo "SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }}" >> .env
-          echo "CONTENTFUL_SPACE=${{ secrets.CONTENTFUL_SPACE }}" >> .env
-          echo "CONTENTFUL_TOKEN=${{ secrets.CONTENTFUL_TOKEN }}" >> .env
+          echo "VITE_CONTENTFUL_SPACE=${{ secrets.VITE_CONTENTFUL_SPACE }}" >> .env
+          echo "VITE_CONTENTFUL_TOKEN=${{ secrets.VITE_CONTENTFUL_TOKEN }}" >> .env
 
       # JamesIves
       - name: Build website

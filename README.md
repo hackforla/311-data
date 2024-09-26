@@ -52,7 +52,7 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 - clone the repo
 - Run `cd 311-data/`
 - Run `cp .example.env .env`
-- Edit your new `.env` and supply a valid `MAPBOX_TOKEN`. If you are a member of hack4la, please contact someone in 311-engineering for one.
+- Edit your new `.env` and supply a valid `VITE_MAPBOX_TOKEN`. If you are a member of hack4la, please contact someone in 311-engineering for one.
 - Run `npm install`
 - From the 311-data parent directory run: `npm run setup && npm start`
 - Visit http://localhost:5173
