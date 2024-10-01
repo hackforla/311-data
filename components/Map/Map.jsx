@@ -152,6 +152,8 @@ class Map extends React.Component {
       pitchWithRotate: false,
       dragRotate: false,
       touchZoomRotate: false,
+      minZoom: 9,
+      maxZoom: 15,
     });
 
     map.on('load', () => {
