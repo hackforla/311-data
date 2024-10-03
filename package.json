@@ -5,6 +5,7 @@
   "engines": {
     "node": "18.x"
   },
+  "type": "module",
   "homepage": "https://edwinjue.github.io/311-data-v2-gh-pages",
   "scripts": {
     "predeploy": "npm run build",

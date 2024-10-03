@@ -3,10 +3,12 @@
 // Checks to see if .env has all keys in .example.env. Any missing keys will be copied.
 // If no .env file is found, one is created from .example.env.
 
-const fs = require('fs');
-const path = require('path');
-const dotenv = require('dotenv');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const red = '\x1b[31m%s\x1b[0m';
 const green = '\x1b[32m%s\x1b[0m';
 const vitePrefix = 'VITE_';
