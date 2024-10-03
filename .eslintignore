@@ -2,7 +2,6 @@
 *.test.js*
 **/v1/*
 **/dist/*
-webpack.*.js
 **/node_modules/
 **/public/*
 **/Temp/*
