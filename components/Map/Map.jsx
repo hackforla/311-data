@@ -60,9 +60,8 @@ const styles = (theme) => ({
     '& canvas.mapboxgl-canvas:focus': {
       outline: 'none',
     },
-    // TODO: controls placement
     '& .mapboxgl-control-container': {
-      // display: 'none',
+      // TODO: update styles here when design finalized
     },
     '& .mapboxgl-popup-content': {
       width: 'auto',
@@ -242,8 +241,35 @@ class Map extends React.Component {
               },
             });
             this.map.once('zoomend', () => {
-              this.setState({ filterGeo: geo });
+              this.setState({
+                filterGeo: geo,
+                minZoom: this.map.getZoom(),
+              });
             });
+            // grey out and disable the zoom buttons
+            const zoomInButton = document.querySelector(
+              '.mapboxgl-ctrl-zoom-in'
+            );
+            const zoomOutButton = document.querySelector(
+              '.mapboxgl-ctrl-zoom-out'
+            );
+
+            if (zoomInButton && zoomOutButton) {
+              zoomInButton.style.opacity = '0.5';
+              zoomInButton.style.pointerEvents = 'none';
+              zoomInButton.style.cursor = 'not-allowed';
+              zoomInButton.setAttribute('aria-disabled', 'true');
+
+              zoomOutButton.style.opacity = '0.5';
+              zoomOutButton.style.pointerEvents = 'none';
+              zoomOutButton.style.cursor = 'not-allowed';
+              zoomOutButton.setAttribute('aria-disabled', 'true');
+            }
+            // disable other methods of zooming in or out
+            this.map.scrollZoom.disable();
+            this.map.boxZoom.disable();
+            this.map.doubleClickZoom.disable();
+            this.map.touchZoomRotate.disable();
           },
           onHoverRegion: (geo) => {
             this.setState({
@@ -403,6 +429,30 @@ class Map extends React.Component {
         canReset: true,
       });
     });
+    // re-enable the zoom buttons
+    const zoomInButton = document.querySelector(
+      '.mapboxgl-ctrl-zoom-in'
+    );
+    const zoomOutButton = document.querySelector(
+      '.mapboxgl-ctrl-zoom-out'
+    );
+
+    if (zoomInButton && zoomOutButton) {
+      zoomInButton.style.opacity = '1';
+      zoomInButton.style.pointerEvents = 'auto';
+      zoomInButton.style.cursor = 'pointer';
+      zoomInButton.setAttribute('aria-disabled', 'false');
+
+      zoomOutButton.style.opacity = '1';
+      zoomOutButton.style.pointerEvents = 'auto';
+      zoomOutButton.style.cursor = 'pointer';
+      zoomOutButton.setAttribute('aria-disabled', 'false');
+    }
+    // re-enable other methods of zooming in or out
+    this.map.scrollZoom.enable();
+    this.map.boxZoom.enable();
+    this.map.doubleClickZoom.enable();
+    this.map.touchZoomRotate.enable();
   };
 
   resetBoundaries = () => {
