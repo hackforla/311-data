@@ -49,6 +49,7 @@ import RequestDetail from './RequestDetail';
 import { debounce, isEmpty } from '@utils';
 
 import settings from '@settings';
+import zoomTooltip from './zoomTooltip';
 
 const styles = (theme) => ({
   root: {
@@ -100,6 +101,8 @@ const styles = (theme) => ({
 
 // Define feature layers
 const featureLayers = ['request-circles', 'nc-fills'];
+const DEFAULT_MIN_ZOOM = 9;
+const DEFAULT_MAX_ZOOM = 17;
 
 class Map extends React.Component {
   // Note: 'this.context' is defined using the static contextType property
@@ -150,8 +153,8 @@ class Map extends React.Component {
       pitchWithRotate: false,
       dragRotate: false,
       touchZoomRotate: false,
-      minZoom: 9,
-      maxZoom: 15,
+      minZoom: DEFAULT_MIN_ZOOM,
+      maxZoom: DEFAULT_MAX_ZOOM,
     });
 
     map.on('load', () => {
@@ -245,31 +248,8 @@ class Map extends React.Component {
                 filterGeo: geo,
                 minZoom: this.map.getZoom(),
               });
+              this.map.setMinZoom(this.state.minZoom);
             });
-            // grey out and disable the zoom buttons
-            const zoomInButton = document.querySelector(
-              '.mapboxgl-ctrl-zoom-in'
-            );
-            const zoomOutButton = document.querySelector(
-              '.mapboxgl-ctrl-zoom-out'
-            );
-
-            if (zoomInButton && zoomOutButton) {
-              zoomInButton.style.opacity = '0.5';
-              zoomInButton.style.pointerEvents = 'none';
-              zoomInButton.style.cursor = 'not-allowed';
-              zoomInButton.setAttribute('aria-disabled', 'true');
-
-              zoomOutButton.style.opacity = '0.5';
-              zoomOutButton.style.pointerEvents = 'none';
-              zoomOutButton.style.cursor = 'not-allowed';
-              zoomOutButton.setAttribute('aria-disabled', 'true');
-            }
-            // disable other methods of zooming in or out
-            this.map.scrollZoom.disable();
-            this.map.boxZoom.disable();
-            this.map.doubleClickZoom.disable();
-            this.map.touchZoomRotate.disable();
           },
           onHoverRegion: (geo) => {
             this.setState({
@@ -429,30 +409,9 @@ class Map extends React.Component {
         canReset: true,
       });
     });
-    // re-enable the zoom buttons
-    const zoomInButton = document.querySelector(
-      '.mapboxgl-ctrl-zoom-in'
-    );
-    const zoomOutButton = document.querySelector(
-      '.mapboxgl-ctrl-zoom-out'
-    );
 
-    if (zoomInButton && zoomOutButton) {
-      zoomInButton.style.opacity = '1';
-      zoomInButton.style.pointerEvents = 'auto';
-      zoomInButton.style.cursor = 'pointer';
-      zoomInButton.setAttribute('aria-disabled', 'false');
-
-      zoomOutButton.style.opacity = '1';
-      zoomOutButton.style.pointerEvents = 'auto';
-      zoomOutButton.style.cursor = 'pointer';
-      zoomOutButton.setAttribute('aria-disabled', 'false');
-    }
-    // re-enable other methods of zooming in or out
-    this.map.scrollZoom.enable();
-    this.map.boxZoom.enable();
-    this.map.doubleClickZoom.enable();
-    this.map.touchZoomRotate.enable();
+    // Reset MinZoom to original value after deselecting NC
+    this.map.setMinZoom(DEFAULT_MIN_ZOOM);
   };
 
   resetBoundaries = () => {
