@@ -219,6 +219,32 @@ class Map extends React.Component {
     //   });
     // }
     this.map.on('load', () => {
+      const zoomOutControl = document.querySelector(
+        '.mapboxgl-ctrl-zoom-out'
+      );
+
+      const zoomToolTip = new mapboxgl.Popup({
+        closeButton: false,
+        offset: [-24, -37], // left, up -> to line up with zoom controls
+      }).setHTML(`
+        <p>
+          <strong>Zoom features are limited while locked into a neighborhood council.</strong>
+          <br />
+          To reset zoom features, please exit by clicking out of
+          the selected area.
+        </p>
+      `);
+
+      const showZoomTooltipAtZoomControl = () => {
+        const rect = zoomOutControl.getBoundingClientRect();
+        const mapCenter = this.map.unproject([
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2,
+        ]);
+
+        zoomToolTip.setLngLat(mapCenter).addTo(this.map);
+      };
+
       if (
         this.state.filterGeo !== prevState.filterGeo ||
         this.state.selectedTypes !== prevState.selectedTypes
@@ -232,6 +258,7 @@ class Map extends React.Component {
           sourceId: 'nc',
           sourceData: this.props.ncBoundaries,
           idProperty: 'NC_ID',
+
           onSelectRegion: (geo) => {
             this.setState({
               locationInfo: {
@@ -249,6 +276,13 @@ class Map extends React.Component {
                 minZoom: this.map.getZoom(),
               });
               this.map.setMinZoom(this.state.minZoom);
+              zoomOutControl.addEventListener(
+                'mouseenter',
+                showZoomTooltipAtZoomControl
+              );
+              zoomOutControl.addEventListener('mouseleave', () => {
+                zoomToolTip.remove();
+              });
             });
           },
           onHoverRegion: (geo) => {
