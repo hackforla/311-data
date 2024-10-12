@@ -10,7 +10,7 @@ function ShareableLinkCreator({
     <Button
       variant="contained"
       onClick={() => {
-        // const url = new URL(`${process.env.API_URL}/map`);
+        // const url = new URL(`${import.meta.env.API_URL}/map`);
         const url = new URL(`${window.location.href.split('?')[0]}`);
         if (requestStatus.councilId) {
           url.searchParams.append('councilId', requestStatus.councilId);
