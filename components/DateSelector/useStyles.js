@@ -43,6 +43,14 @@ const useStyles = makeStyles(theme => ({
   tooltipParagraph: {
     margin: '1px',
   },
+  iconStyle: {
+    verticalAlign: 'middle',
+  },
+    header: {
+      fontSize: '12.47px',
+      fontWeight: theme.typography.fontWeightMedium,
+      marginBottom: '8px',
+    },
 }));
 
 export default useStyles;

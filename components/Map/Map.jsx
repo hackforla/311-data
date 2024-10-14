@@ -8,7 +8,7 @@ import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 // import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getNcByLngLat } from '@reducers/data';
+import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 import {
   updateNcId,
   updateSelectedCouncils,
@@ -457,6 +457,7 @@ class Map extends React.Component {
   };
 
   onMouseLeave = (e) => {
+    this.props.dispatchClearPinInfo()
     this.removePopup();
   };
 
@@ -536,6 +537,9 @@ class Map extends React.Component {
       dispatchGetNcByLngLat,
       dispatchUpdateNcId,
       dispatchCloseBoundaries,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+      councils
     } = this.props;
 
     // Reset boundaries input
@@ -557,6 +561,17 @@ class Map extends React.Component {
 
       const ncIdOfAddressSearch = getNcByLngLatv2({ longitude, latitude });
       if (!isEmpty(ncIdOfAddressSearch)) {
+        //Adding name pill to search bar 
+        const newSelectedCouncil = councils.find(
+          ({ councilId }) => councilId === ncIdOfAddressSearch,
+        );
+        if (!newSelectedCouncil) {
+          throw new Error('Council Id in address search geocoder result could not be found');
+        }
+        const newSelected = [newSelectedCouncil];
+        dispatchUpdateSelectedCouncils(newSelected);
+        dispatchUpdateUnselectedCouncils(councils);
+        
         dispatchUpdateNcId(Number(ncIdOfAddressSearch));
         this.setState({
           address: address,
@@ -794,6 +809,7 @@ const mapDispatchToProps = (dispatch) => ({
   dispatchUpdateUnselectedCouncils: (councils) =>
     dispatch(updateUnselectedCouncils(councils)),
   dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
+  dispatchClearPinInfo: () => dispatch(clearPinInfo()),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
