@@ -11,7 +11,7 @@ import {
 import Typography from '@mui/material/Typography';
 import ArrowToolTip from '@components/common/ArrowToolTip';
 import options from './options';
-import makeStyles from '@mui/styles/makeStyles';
+import useStyles from './useStyles';
 import DateRanges from './DateRanges';
 
 const dateFormat = 'YYYY-MM-DD';
@@ -22,16 +22,6 @@ function DateSelector({
   updateEndDate,
 }) {
   const [expanded, setExpanded] = useState(false);
-  const useStyles = makeStyles(theme => ({
-  iconStyle: {
-    verticalAlign: 'middle',
-  },
-    header: {
-      fontSize: '12.47px',
-      fontWeight: theme.typography.fontWeightMedium,
-      marginBottom: '8px',
-    },
-  }));
   const classes = useStyles();
 
   const handleOptionSelect = optionDates => {
