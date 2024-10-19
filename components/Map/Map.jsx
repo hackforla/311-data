@@ -233,6 +233,7 @@ class Map extends React.Component {
 
       const minusSignClone = zoomOutControl.firstChild.cloneNode();
       ReactDOM.render(
+
         <Tooltip
           placement="top-end"
           arrow
