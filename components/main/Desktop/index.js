@@ -19,7 +19,7 @@ function Desktop({ initialState }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <PersistentDrawerLeft />
+      {/* <PersistentDrawerLeft /> */}
       <MapContainer initialState={initialState} />
     </div>
   );

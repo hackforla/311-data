@@ -17,6 +17,7 @@ const StyledModal = styled(Modal)({
 });
 
 const StyledBox = styled(Box)(({ theme }) => ({
+  color: 'white',
   position: 'absolute',
   backgroundColor: '#29404F',
   padding: theme.spacing(4),

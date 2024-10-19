@@ -1,11 +1,15 @@
 /* eslint-disable */
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import withStyles from '@mui/styles/withStyles';
 import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
+import ArrowToolTip from '@components/common/ArrowToolTip';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 // import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, clearPinInfo } from '@reducers/data';
@@ -156,6 +160,9 @@ class Map extends React.Component {
       touchZoomRotate: false,
       minZoom: DEFAULT_MIN_ZOOM,
       maxZoom: DEFAULT_MAX_ZOOM,
+      locale: {
+        'NavigationControl.ZoomIn': 'ZOOM TF IN BRO'
+      }
     });
 
     map.on('load', () => {
@@ -224,27 +231,74 @@ class Map extends React.Component {
         '.mapboxgl-ctrl-zoom-out'
       );
 
-      const zoomToolTip = new mapboxgl.Popup({
-        closeButton: false,
-        offset: [-24, -37], // left, up -> to line up with zoom controls
-      }).setHTML(`
-        <p>
-          <strong>Zoom features are limited while locked into a neighborhood council.</strong>
-          <br />
-          To reset zoom features, please exit by clicking out of
-          the selected area.
-        </p>
-      `);
+      const minusSignClone = zoomOutControl.firstChild.cloneNode();
+      ReactDOM.render(
+        <Tooltip
+          placement="top-end"
+          arrow
+          title={(
+            <div>
+              <p className={''}>
+                <strong>
+                  Currently, 311-Data loads only 311 service
+                  request data from 2020 onward.
+                </strong>
+              </p>
+              <p className={''}>
+                For updates on the release of available 311
+                Data, please follow our FUGETTABOUTIT
+                .
+              </p>
+            </div>
+          )}
+        >
+      </Tooltip>, zoomOutControl); // overwrites the children of zoomOutControl
 
-      const showZoomTooltipAtZoomControl = () => {
-        const rect = zoomOutControl.getBoundingClientRect();
-        const mapCenter = this.map.unproject([
-          rect.left + rect.width / 2,
-          rect.top + rect.height / 2,
-        ]);
+      zoomOutControl.firstChild.appendChild(minusSignClone);
+      // const wrapper = zoomOutControl.firstChild;
+      // const toWrap = zoomOutControl.lastChild;
+      // wrapper.appendChild(toWrap);
 
-        zoomToolTip.setLngLat(mapCenter).addTo(this.map);
-      };
+      // ReactDOM.render(
+      //   <ArrowToolTip>
+      //     <div>
+      //       <p className={''}>
+      //         <strong>
+      //           Currently, 311-Data loads only 311 service
+      //           request data from 2020 onward.
+      //         </strong>
+      //       </p>
+      //       <p className={''}>
+      //         For updates on the release of available 311
+      //         Data, please follow our FUGETTABOUTIT
+      //         .
+      //       </p>
+      //     </div>
+      //   </ArrowToolTip> , wrapper);
+      
+                
+
+      // const zoomToolTip = new mapboxgl.Popup({
+      //   closeButton: false,
+      //   offset: [-24, -37], // left, up -> to line up with zoom controls
+      // }).setHTML(`
+      //   <p>
+      //     <strong>Zoom features are limited while locked into a neighborhood council.</strong>
+      //     <br />
+      //     To reset zoom features, please exit by clicking out of
+      //     the selected area.
+      //   </p>
+      // `);
+
+      // const showZoomTooltipAtZoomControl = () => {
+      //   const rect = zoomOutControl.getBoundingClientRect();
+      //   const mapCenter = this.map.unproject([
+      //     rect.left + rect.width / 2,
+      //     rect.top + rect.height / 2,
+      //   ]);
+
+      //   zoomToolTip.setLngLat(mapCenter).addTo(this.map);
+      // };
 
       if (
         this.state.filterGeo !== prevState.filterGeo ||
@@ -276,14 +330,21 @@ class Map extends React.Component {
                 filterGeo: geo,
                 minZoom: this.map.getZoom(),
               });
+
+              // set min zoom
               this.map.setMinZoom(this.state.minZoom);
-              zoomOutControl.addEventListener(
-                'mouseenter',
-                showZoomTooltipAtZoomControl
-              );
+
+              // set hover listener
+              zoomOutControl.addEventListener('mouseenter', () => {
+                // this works!
+                // zoomOutControl.firstChild.title = 'AHHHHHHHHHHHHHHH'
+
+              })
+
               zoomOutControl.addEventListener('mouseleave', () => {
-                zoomToolTip.remove();
+                // zoomOutControl.removeChild(document.getElementById('zoom-out-limited-popup'));
               });
+
             });
           },
           onHoverRegion: (geo) => {

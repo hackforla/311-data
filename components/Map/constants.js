@@ -16,7 +16,7 @@ export const GEO_FILTER_TYPES = {
 
 export const MAP_STYLES = {
   dark: 'mapbox://styles/mapbox/dark-v10',
-  light: 'mapbox://styles/mapbox/light-v11',
+  light: 'mapbox://styles/mapbox/light-v11?optimize=true',
   streets: 'mapbox://styles/mapbox/streets-v11',
   satellite: 'mapbox://styles/mapbox/satellite-streets-v11',
 };

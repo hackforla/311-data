@@ -100,6 +100,7 @@ class RequestsLayer extends React.Component {
   };
 
   componentDidUpdate(prev) {
+    console.log("UPDATED!!!!!!!!!!!!!!!!!")
     const {
       activeLayer,
       selectedTypes,

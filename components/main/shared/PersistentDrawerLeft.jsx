@@ -115,7 +115,7 @@ function PersistentDrawerLeft({ menuIsOpen, toggleMenu, closeMenu }) {
         className={classes.drawer}
         variant="persistent"
         anchor="left"
-        open={menuIsOpen}
+        open={true}
         classes={{
           paper: classes.drawerPaper,
         }}

@@ -10,6 +10,7 @@ import {
 } from '@reducers/filters';
 import Typography from '@mui/material/Typography';
 import ArrowToolTip from '@components/common/ArrowToolTip';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import options from './options';
 import makeStyles from '@mui/styles/makeStyles';
 import DateRanges from './DateRanges';
@@ -56,7 +57,7 @@ function DateSelector({
     <>
       <Typography className={classes.header}>
         Date Range&nbsp;
-        <ArrowToolTip iconStyle={classes.iconStyle}>
+        {/* <ArrowToolTip iconStyle={classes.iconStyle}>
           <div>
             <p className={tooltipParagraph}>
               <strong>
@@ -72,7 +73,13 @@ function DateSelector({
               .
             </p>
           </div>
-        </ArrowToolTip>
+        </ArrowToolTip> */}
+        <Tooltip
+      placement="top-end"
+      arrow
+      title={(<div>WASAAAAAAAAAAAAAH</div>)}
+         >Click This</Tooltip>
+
       </Typography>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
