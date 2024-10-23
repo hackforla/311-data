@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as duckdb from '@duckdb/duckdb-wasm';
+import duckdb_wasm from '@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url';
+import mvp_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url';
+import duckdb_wasm_next from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
+import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import Worker from 'web-worker';
 import DbContext from '@db/DbContext';
 import moment from 'moment';
@@ -35,14 +39,15 @@ function DbProvider({ children, startDate }) {
       try {
         console.log('Loading db...');
 
+        // https://github.com/duckdb-wasm-examples/duckdbwasm-vitebrowser
         const DUCKDB_CONFIG = await duckdb.selectBundle({
           mvp: {
-            mainModule: './duckdb.wasm',
-            mainWorker: './duckdb-browser.worker.js',
+            mainModule: duckdb_wasm,
+            mainWorker: mvp_worker,
           },
           eh: {
-            mainModule: './duckdb-eh.wasm',
-            mainWorker: './duckdb-browser-eh.worker.js',
+            mainModule: duckdb_wasm_next,
+            mainWorker: eh_worker,
           },
         });
 

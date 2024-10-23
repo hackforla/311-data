@@ -78,7 +78,7 @@ class MapSearch extends React.Component {
     const { map } = this.props;
 
     this.geocoder = new MapboxGeocoder({
-      accessToken: process.env.MAPBOX_TOKEN,
+      accessToken: import.meta.env.VITE_MAPBOX_TOKEN,
       flyTo: false,
       marker: false,
       minLength: 1,
@@ -136,7 +136,7 @@ class MapSearch extends React.Component {
   componentWillUnmount() {
     // Free memory and remove all event listeners
     const geocoderElement = document.getElementById('geocoder')
-    removeListeners(geocoderElement, settings.map.eventName.reset)
+    this.removeListeners(geocoderElement, settings.map.eventName.reset)
   }
 
   setTab = tab => {
