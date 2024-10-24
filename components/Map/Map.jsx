@@ -8,7 +8,7 @@ import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 // import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getNcByLngLat } from '@reducers/data';
+import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 import {
   updateNcId,
   updateSelectedCouncils,
@@ -35,6 +35,7 @@ import { pointsWithinGeo, getNcByLngLatv2 } from './geoUtils';
 import RequestsLayer from './layers/RequestsLayer';
 import BoundaryLayer from './layers/BoundaryLayer';
 import AddressLayer from './layers/AddressLayer';
+import DbContext from '@db/DbContext';
 
 // import MapOverview from './controls/MapOverview';
 
@@ -103,6 +104,9 @@ const hoverables = ['nc-fills', 'cc-fills'];
 const featureLayers = ['request-circles', ...hoverables];
 
 class Map extends React.Component {
+  // Note: 'this.context' is defined using the static contextType property
+  // static contextType assignment allows Map to access values provided by DbContext.Provider
+  static contextType = DbContext;
   constructor(props) {
     super(props);
 
@@ -172,9 +176,19 @@ class Map extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const entireMapLoadTime = () => {
+      if (this.map.isSourceLoaded('requests')) {
+        const { dbStartTime } = this.context;
+        const pinLoadEndTime = performance.now()
+        console.log(`Pin load time: ${Math.floor(pinLoadEndTime - dbStartTime)} ms`)
+        this.map.off('idle', entireMapLoadTime);
+      }
+    }
+    
     if (this.props.requests != prevProps.requests) {
       if (this.state.mapReady) {
         this.setState({ requests: this.props.requests });
+        this.map.on('idle', entireMapLoadTime)
         // this.map.once('idle', this.setFilteredRequestCounts);
       } else {
         this.map.once('idle', () => {
@@ -443,6 +457,7 @@ class Map extends React.Component {
   };
 
   onMouseLeave = (e) => {
+    this.props.dispatchClearPinInfo()
     this.removePopup();
   };
 
@@ -522,6 +537,9 @@ class Map extends React.Component {
       dispatchGetNcByLngLat,
       dispatchUpdateNcId,
       dispatchCloseBoundaries,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+      councils
     } = this.props;
 
     // Reset boundaries input
@@ -543,6 +561,17 @@ class Map extends React.Component {
 
       const ncIdOfAddressSearch = getNcByLngLatv2({ longitude, latitude });
       if (!isEmpty(ncIdOfAddressSearch)) {
+        //Adding name pill to search bar 
+        const newSelectedCouncil = councils.find(
+          ({ councilId }) => councilId === ncIdOfAddressSearch,
+        );
+        if (!newSelectedCouncil) {
+          throw new Error('Council Id in address search geocoder result could not be found');
+        }
+        const newSelected = [newSelectedCouncil];
+        dispatchUpdateSelectedCouncils(newSelected);
+        dispatchUpdateUnselectedCouncils(councils);
+        
         dispatchUpdateNcId(Number(ncIdOfAddressSearch));
         this.setState({
           address: address,
@@ -780,6 +809,7 @@ const mapDispatchToProps = (dispatch) => ({
   dispatchUpdateUnselectedCouncils: (councils) =>
     dispatch(updateUnselectedCouncils(councils)),
   dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
+  dispatchClearPinInfo: () => dispatch(clearPinInfo()),
 });
 
 // We need to specify forwardRef to allow refs on connected components.

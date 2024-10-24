@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 import LastUpdated from '@components/Footer/LastUpdated';
 import SocialMediaLinks from '@components/Footer/SocialMediaLinks';
+import { toNonBreakingSpaces } from '@utils';
+import HFLALogo from '@assets/hack_for_la_logo.png';
 
 // Footer should make use of style overrides to look the same regardless of light/dark theme.
 const useStyles = makeStyles(theme => ({
@@ -14,12 +16,14 @@ const useStyles = makeStyles(theme => ({
     height: theme.footer.height,
     width: '100%',
     backgroundColor: theme.palette.primary.dark,
-    zIndex: 1,
+    zIndex: 1400,
   },
   footerSpacing: {
     height: theme.footer.height,
   },
   copyright: {
+    display: 'flex',
+    gap: theme.spacing(1),
     fontWeight: theme.typography.fontWeightMedium,
     lineHeight: theme.footer.height,
     color: theme.palette.text.dark,
@@ -32,34 +36,57 @@ const useStyles = makeStyles(theme => ({
   },
   copyrightContainer: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
   },
   link: {
     color: theme.palette.text.dark,
     textDecoration: 'none',
   },
+  logo: {
+    marginInline: theme.spacing(1),
+  },
 }));
 
-// TODO: check with UI/UX re placement of social media, privacy policy links
 function Footer() {
   const classes = useStyles();
   const currentDate = new Date();
+  const footerItems = [
+    { text: `\u00a9 ${currentDate.getFullYear()} 311 Data` },
+    { text: 'All Rights Reserved' },
+    { text: 'Privacy Policy', href: '/privacy' },
+    { text: 'Powered by volunteers from Hack for LA' },
+  ];
 
   return (
     <footer className={classes.footer}>
       <div className={classes.container}>
         <div className={classes.copyrightContainer}>
           <Typography variant="body2" className={classes.copyright}>
-            &#169;
-            {currentDate.getFullYear()}
-            &nbsp;311 Data&nbsp;&nbsp;|&nbsp;&nbsp;All Rights
-            Reserved&nbsp;&nbsp;|&nbsp;&nbsp;
-            <Link to="/privacy" className={classes.link}>
-              Privacy Policy
-            </Link>
-            &nbsp;&nbsp;|&nbsp;&nbsp;Powered by volunteers from Hack for LA
+            {footerItems.map(({ text, href }, i) => {
+              const nonBreakingText = toNonBreakingSpaces(text);
+
+              return (
+                <Fragment key={text}>
+                  {href ? (
+                    <Link to={href} className={classes.link}>
+                      {nonBreakingText}
+                    </Link>
+                  ) : (
+                    <span>{nonBreakingText}</span>
+                  )}
+
+                  {i === footerItems.length - 1 ? null : <span>|</span>}
+                </Fragment>
+              );
+            })}
           </Typography>
+
+          <img
+            src={HFLALogo}
+            alt="Hack for LA logo"
+            width="24"
+            className={classes.logo}
+          />
         </div>
 
         <LastUpdated />

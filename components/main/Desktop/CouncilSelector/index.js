@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
 import {
   updateNcId,
   updateSelectedCouncils,
@@ -15,11 +16,10 @@ import SelectedCouncils from './SelectedCouncils';
 import CouncilsList from './CouncilsList';
 
 const useStyles = makeStyles(theme => ({
-  label: {
-    display: 'inline-block',
-    font: theme.typography.b2,
-    marginBottom: '10px',
-    color: theme.palette.secondary.light,
+  header: {
+    fontSize: '12.47px',
+    fontWeight: theme.typography.fontWeightMedium,
+    marginBottom: '8px',
   },
 }));
 
@@ -89,7 +89,7 @@ function CouncilSelector({
 
   return (
     <>
-      <div className={classes.label}>Boundaries</div>
+      <Typography className={classes.header}>Boundaries</Typography>
       <BoundariesSection>
         <BoundariesSection.Display>
           <SelectedCouncils items={selected} onDelete={debouncedHandleDelete} />

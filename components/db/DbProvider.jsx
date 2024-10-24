@@ -13,14 +13,13 @@ const datasets = {
     hfYtd2024:
       'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 year-to-date
     hfYtd2023:
-      'https://huggingface.co/datasets/311-data/2023/resolve/main/2023.parquet', // 2023 year-to-date
-    hfLastMonth:
-      'https://huggingface.co/datasets/edwinjue/311-data-last-month/resolve/refs%2Fconvert%2Fparquet/edwinjue--311-data-last-month/csv-train.parquet', // last month
-  },
-  csv: {
-    // huggingface
-    hfYtd:
-      'https://huggingface.co/datasets/edwinjue/311-data-2023/resolve/main/2023.csv', // year-to-date
+      'https://huggingface.co/datasets/311-data/2023/resolve/main/2023.parquet', // 2023 entire year
+    hfYtd2022:
+      'https://huggingface.co/datasets/311-data/2022/resolve/main/2022.parquet', // 2022 entire year
+    hfYtd2021:
+      'https://huggingface.co/datasets/311-data/2021/resolve/main/2021.parquet', // 2021 entire year
+    hfYtd2020:
+      'https://huggingface.co/datasets/311-data/2020/resolve/main/2020.parquet', // 2020 entire year
   },
 };
 
@@ -29,6 +28,7 @@ function DbProvider({ children, startDate }) {
   const [conn, setConn] = useState(null);
   const [worker, setWorker] = useState(null);
   const [tableNameByYear, setTableNameByYear] = useState('');
+  const [dbStartTime, setDbStartTime] = useState(null);
 
   useEffect(() => {
     const dbInitialize = async () => {
@@ -67,6 +67,24 @@ function DbProvider({ children, startDate }) {
         await newDb.registerFileURL(
           'requests2023.parquet',
           datasets.parquet.hfYtd2023,
+          4,
+        );
+
+        await newDb.registerFileURL(
+          'requests2022.parquet',
+          datasets.parquet.hfYtd2022,
+          4,
+        );
+
+        await newDb.registerFileURL(
+          'requests2021.parquet',
+          datasets.parquet.hfYtd2021,
+          4,
+        );
+
+        await newDb.registerFileURL(
+          'requests2020.parquet',
+          datasets.parquet.hfYtd2020,
           4,
         );
 
@@ -127,7 +145,12 @@ function DbProvider({ children, startDate }) {
 
   return (
     <DbContext.Provider value={{
-      db, conn, worker, tableNameByYear,
+      db,
+      conn,
+      worker,
+      tableNameByYear,
+      dbStartTime,
+      setDbStartTime,
     }}
     >
       {children}
