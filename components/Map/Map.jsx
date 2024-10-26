@@ -569,10 +569,10 @@ class Map extends React.Component {
           throw new Error('Council Id in address search geocoder result could not be found');
         }
         const newSelected = [newSelectedCouncil];
-        dispatchUpdateSelectedCouncils(newSelected); //this doesn't control the zoom in
-        dispatchUpdateUnselectedCouncils(councils);  //this doesn't controlt he zoom
+        dispatchUpdateSelectedCouncils(newSelected);
+        dispatchUpdateUnselectedCouncils(councils);
         
-        dispatchUpdateNcId(Number(ncIdOfAddressSearch)); //this contorls the zoom
+        dispatchUpdateNcId(Number(ncIdOfAddressSearch));
         this.setState({
           address: address,
         });
