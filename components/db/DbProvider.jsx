@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as duckdb from '@duckdb/duckdb-wasm';
+import duckdb_wasm from '@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url';
+import mvp_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url';
+import duckdb_wasm_next from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
+import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import Worker from 'web-worker';
 import DbContext from '@db/DbContext';
 import moment from 'moment';
@@ -10,6 +14,9 @@ import moment from 'moment';
 const datasets = {
   parquet: {
     // huggingface
+    //* Quick fix - update url when 2025 data available
+    hfYtd2025:
+      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2025 year-to-date
     hfYtd2024:
       'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 year-to-date
     hfYtd2023:
@@ -27,7 +34,7 @@ function DbProvider({ children, startDate }) {
   const [db, setDb] = useState(null);
   const [conn, setConn] = useState(null);
   const [worker, setWorker] = useState(null);
-  const [tableNameByYear, setTableNameByYear] = useState('');
+  // const [tableNameByYear, setTableNameByYear] = useState('');
   const [dbStartTime, setDbStartTime] = useState(null);
 
   useEffect(() => {
@@ -35,14 +42,15 @@ function DbProvider({ children, startDate }) {
       try {
         console.log('Loading db...');
 
+        // https://github.com/duckdb-wasm-examples/duckdbwasm-vitebrowser
         const DUCKDB_CONFIG = await duckdb.selectBundle({
           mvp: {
-            mainModule: './duckdb.wasm',
-            mainWorker: './duckdb-browser.worker.js',
+            mainModule: duckdb_wasm,
+            mainWorker: mvp_worker,
           },
           eh: {
-            mainModule: './duckdb-eh.wasm',
-            mainWorker: './duckdb-browser-eh.worker.js',
+            mainModule: duckdb_wasm_next,
+            mainWorker: eh_worker,
           },
         });
 
@@ -58,6 +66,13 @@ function DbProvider({ children, startDate }) {
         );
 
         // register parquet
+        await newDb.registerFileURL(
+          'requests2025.parquet',
+          //* Quick fix - change hfYtd2024 to hfYtd2025 when 2025 data available
+          datasets.parquet.hfYtd2024,
+          4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
+        );
+
         await newDb.registerFileURL(
           'requests2024.parquet',
           datasets.parquet.hfYtd2024,
@@ -129,15 +144,6 @@ function DbProvider({ children, startDate }) {
   // Important: dependency array must be empty or you will get the following error
   // "cannot send a message since the worker is not set" and app will infinite loop
 
-  // This useEffect specifically handle dynamic table name generation
-  // separated from the previous useEffect that handles db initialization and teardown
-  useEffect(() => {
-    if (startDate) {
-      const year = moment(startDate).year();
-      setTableNameByYear(`requests_${year}`);
-    }
-  }, [startDate]); // Depend on startDate
-
   //   block until db, conn, worker are available
   if (!db || !conn || !worker) {
     return null;
@@ -148,7 +154,6 @@ function DbProvider({ children, startDate }) {
       db,
       conn,
       worker,
-      tableNameByYear,
       dbStartTime,
       setDbStartTime,
     }}
