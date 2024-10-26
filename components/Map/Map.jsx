@@ -225,18 +225,6 @@ class Map extends React.Component {
         '.mapboxgl-ctrl-zoom-out'
       );
 
-      // // create a wrapper div to hold the minus sign and tooltip
-      // const wrapper = document.createElement('div');
-      // wrapper.className = 'zoom-out-wrapper';
-      // wrapper.style.display = 'inline-block';
-
-      // // move the existing minus sign into the wrapper
-      // const originalMinusSign = zoomOutControl.firstChild;
-      // wrapper.appendChild(originalMinusSign);
-
-      // // append the wrapper back into the zoomOutControl
-      // zoomOutControl.appendChild(wrapper);
-
       // create a React component for the tooltip and render it into the wrapper
       const ZoomTooltip = ({ show }) => (
         <Tooltip
@@ -257,20 +245,25 @@ class Map extends React.Component {
             </div>
           }
           //* changing styles here changes the color of the zoom control, not the tooltip
-          // style={{
-          //   backgroundColor: '#29404f',
-          // }}
         >
           {/* empty span for positioning the zoomtooltip */}
           <span
             className="mapboxgl-ctrl-icon minus-sign-clone"
-            title={'Zoom out'}
+            //* adding a title here doesn't seem to work
+            // title={'Zoom out'}
+            //* changing styles here changes the color of the zoom control, not the tooltip
+            // style={{ backgroundColor: '#29404f' }}
           ></span>
         </Tooltip>
       );
 
       // use state to control tooltip's visibility
       let showZoomTooltip = false;
+
+      // if zoom controls aren't limited, add the 'Zoom out' title back
+      if (!showZoomTooltip) {
+        zoomOutControl.title = 'Zoom out';
+      }
 
       // function to render the zoomtooltip
       const renderZoomTooltip = () => {
@@ -297,9 +290,6 @@ class Map extends React.Component {
       // add hover event listeners to the zoomOutControl
       zoomOutControl.addEventListener('mouseenter', handleMouseEnter);
       zoomOutControl.addEventListener('mouseleave', handleMouseLeave);
-
-      // initial render with zoomtooltip hidden
-      renderZoomTooltip();
 
       if (
         this.state.filterGeo !== prevState.filterGeo ||
@@ -333,17 +323,8 @@ class Map extends React.Component {
               });
               this.map.setMinZoom(this.state.minZoom);
 
-              // only show the tooltip if the map is locked onto an ncLayer
-              //    e.g., filterGeo is set
-              const showTooltip = () => {
-                // if (this.state.filterGeo) {
-                minusSignClone.style.display = 'block';
-                // }
-              };
-
-              const hideTooltip = () => {
-                minusSignClone.style.display = 'none';
-              };
+              // initial render with zoomtooltip hidden
+              renderZoomTooltip();
             });
           },
           onHoverRegion: (geo) => {
