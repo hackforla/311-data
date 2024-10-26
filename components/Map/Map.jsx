@@ -583,8 +583,6 @@ class Map extends React.Component {
         this.setState({
           address: address,
         });
-        console.log('address if not found', this.state.address)
-       //depending on the number it'll zoom to that nc location
         this.map.flyTo({
           center: [longitude, latitude],
           essential: true,
