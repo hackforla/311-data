@@ -569,15 +569,27 @@ class Map extends React.Component {
           throw new Error('Council Id in address search geocoder result could not be found');
         }
         const newSelected = [newSelectedCouncil];
-        dispatchUpdateSelectedCouncils(newSelected);
-        dispatchUpdateUnselectedCouncils(councils);
+        dispatchUpdateSelectedCouncils(newSelected); //this doesn't control the zoom in
+        dispatchUpdateUnselectedCouncils(councils);  //this doesn't controlt he zoom
         
-        dispatchUpdateNcId(Number(ncIdOfAddressSearch));
+        dispatchUpdateNcId(Number(ncIdOfAddressSearch)); //this contorls the zoom
         this.setState({
           address: address,
         });
 
         // Add that cute House Icon on the map
+        return this.addressLayer.addMarker([longitude, latitude]);
+      } else {
+        this.setState({
+          address: address,
+        });
+        console.log('address if not found', this.state.address)
+       //depending on the number it'll zoom to that nc location
+        this.map.flyTo({
+          center: [longitude, latitude],
+          essential: true,
+          zoom: 9,
+      });
         return this.addressLayer.addMarker([longitude, latitude]);
       }
     }
