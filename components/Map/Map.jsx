@@ -579,6 +579,16 @@ class Map extends React.Component {
 
         // Add that cute House Icon on the map
         return this.addressLayer.addMarker([longitude, latitude]);
+      } else {
+        this.setState({
+          address: address,
+        });
+        this.map.flyTo({
+          center: [longitude, latitude],
+          essential: true,
+          zoom: 9,
+      });
+        return this.addressLayer.addMarker([longitude, latitude]);
       }
     }
   };
