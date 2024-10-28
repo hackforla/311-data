@@ -475,29 +475,7 @@ class Map extends React.Component {
     for (let i = 0; i < features.length; i += 1) {
       const feature = features[i];
 
-      if (
-        !isEmpty(this.props.selectedNcId) &&
-        !isEmpty(feature.properties.NC_ID) &&
-        this.props.selectedNcId !== feature.properties.NC_ID
-      ) {
-        // Since click is for another district
-
-        // Reset boundaries selection
-        this.resetBoundaries();
-
-        // Collapse boundaries section
-        dispatchCloseBoundaries();
-
-        // Reset Address Search input field
-        this.resetAddressSearch();
-
-        // Reset Map.
-        this.reset();
-
-        return;
-      }
-
-      if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
+      if (hoverables.includes(feature.layer.id)) {
         switch (feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
