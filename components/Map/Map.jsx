@@ -221,40 +221,9 @@ class Map extends React.Component {
     //   });
     // }
     this.map.on('load', () => {
+      // grab the Zoom Out button of the Mapbox zoom controls
       const zoomOutControl = document.querySelector(
         '.mapboxgl-ctrl-zoom-out'
-      );
-
-      // create a React component for the tooltip and render it into the wrapper
-      const ZoomTooltip = ({ show }) => (
-        <Tooltip
-          placement="top-end"
-          arrow
-          open={show}
-          title={
-            <div>
-              <p>
-                <strong>
-                  Zoom features are limited while locked into a
-                  neighborhood council.
-                </strong>{' '}
-                <br />
-                To reset zoom features, please exit by clicking out of
-                the selected area.
-              </p>
-            </div>
-          }
-          //* changing styles here changes the color of the zoom control, not the tooltip
-        >
-          {/* empty span for positioning the zoomtooltip */}
-          <span
-            className="mapboxgl-ctrl-icon minus-sign-clone"
-            //* adding a title here doesn't seem to work
-            // title={'Zoom out'}
-            //* changing styles here changes the color of the zoom control, not the tooltip
-            // style={{ backgroundColor: '#29404f' }}
-          ></span>
-        </Tooltip>
       );
 
       // use state to control tooltip's visibility
@@ -265,7 +234,7 @@ class Map extends React.Component {
         zoomOutControl.title = 'Zoom out';
       }
 
-      // function to render the zoomtooltip
+      // render the zoomtooltip component
       const renderZoomTooltip = () => {
         ReactDOM.render(
           <ZoomTooltip show={showZoomTooltip} />,
@@ -323,7 +292,7 @@ class Map extends React.Component {
               });
               this.map.setMinZoom(this.state.minZoom);
 
-              // initial render with zoomtooltip hidden
+              // initial render
               renderZoomTooltip();
             });
           },

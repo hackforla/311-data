@@ -1,39 +1,16 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-// import Button from '@mui/material/Button';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Tooltip from '@mui/material/Tooltip';
 
-export default function ZoomTooltip() {
-  const [open, setOpen] = React.useState(false);
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const HtmlTooltip = styled(({ className, ...props }) => (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: '#29404f',
-      color: 'white',
-      maxWidth: 300,
-      fontSize: theme.typography.pxToRem(10),
-      border: '1px solid #29404f',
-    },
-  }));
+function ZoomTooltip({ show }) {
   return (
-    <HtmlTooltip
-      open={open}
-      onClose={handleClose}
-      onOpen={handleOpen}
+    <Tooltip
       placement="top-end"
       arrow
+      open={show}
       title={(
         <div>
-          <Typography color="inherit">
+          <p>
             <strong>
               Zoom features are limited while locked into a
               neighborhood council.
@@ -41,11 +18,22 @@ export default function ZoomTooltip() {
             <br />
             To reset zoom features, please exit by clicking out of the
             selected area.
-          </Typography>
+          </p>
         </div>
       )}
+      //* changing styles here changes the color of the zoom control, not the tooltip
     >
-      {/* <Button>-</Button> */}
-    </HtmlTooltip>
+      {/* empty span for positioning the zoomtooltip */}
+      <span
+        className="mapboxgl-ctrl-icon minus-sign-clone"
+        // * changing styles here changes the color of the zoom control, not the tooltip
+        // style={{ backgroundColor: '#29404f' }}
+      />
+    </Tooltip>
   );
 }
+ZoomTooltip.propTypes = {
+  show: PropTypes.bool.isRequired,
+};
+
+export default ZoomTooltip;
