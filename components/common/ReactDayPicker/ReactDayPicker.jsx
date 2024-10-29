@@ -176,10 +176,16 @@ function ReactDayPicker({
       return;
     }
 
-    // Our date range selection logic is very simple: the user is selecting the
-    // first day in their date range if from and to are set, or if they're both
-    // unset. Otherwise, they are selecting the last day.
-    if (!(startDate && endDate)) {
+
+
+    
+  //If both startDate and endDate were already selected. Start a new range selection.
+  if(startDate && endDate){
+    setFromDay(day);
+    updateEndDate(null);
+    setEnteredTo(null);
+    //If startDate is selected and endDate is unselected, complete the range selection.
+  } else if(startDate && !endDate){
       // If the user picks the first date then picks the second date that is before the first date
       // Reassign the From and To Day
       if (moment(day).format(INTERNAL_DATE_SPEC) < startDate) {
@@ -191,11 +197,32 @@ function ReactDayPicker({
       } else {
         setToDay(day);
       }
-      return;
-    }
-    setFromDay(day);
-    updateEndDate(null);
-    setEnteredTo(null);
+  } else {
+      //This should never happen. Log a warning.
+      console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
+  } 
+
+
+    // Our date range selection logic is very simple: the user is selecting the
+    // first day in their date range if from and to are set, or if they're both
+    // unset. Otherwise, they are selecting the last day.
+  //   if (!startDate || !endDate) {
+  //     // If the user picks the first date then picks the second date that is before the first date
+  //     // Reassign the From and To Day
+  //     if (moment(day).format(INTERNAL_DATE_SPEC) < startDate) {
+  //       const tempDate = startDate;
+  //       setToDay(moment(tempDate).toDate());
+  //       setFromDay(day);
+  //       updateEndDate(tempDate);
+  //       setEnteredTo(moment(tempDate).toDate());
+  //     } else {
+  //       setToDay(day);
+  //     }
+  //     return;
+  //   }
+  //   setFromDay(day);
+  //   updateEndDate(null);
+  //   setEnteredTo(null);
   };
 
   const handleDayMouseEnter = day => {

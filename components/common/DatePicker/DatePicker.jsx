@@ -84,7 +84,7 @@ const renderSelectedDays = (dates, classes, range) => {
 };
 
 function DatePicker({
-  open, onToggle, range, startDate, endDate,
+  open, onToggle, range, startDate, endDate, setInitialStartDate, setInitialEndDate
 }) {
   const [showCalendar, setShowCalendar] = useState(() => open);
   const classes = useStyles();
@@ -95,6 +95,8 @@ function DatePicker({
 
   useEffect(() => {
     setShowCalendar(false);
+    setInitialStartDate(startDate)
+    setInitialEndDate(endDate)
   }, [open]);
 
   const getCoordinates = () => {
