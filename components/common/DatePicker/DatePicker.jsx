@@ -86,11 +86,12 @@ const renderSelectedDays = (dates, classes, range) => {
   return selectedDaysElements;
 };
 //TODO: Why is it important that open is being passed as a prop?
+// TODO: rename onToggle to indicate it is toggling the presets dropdown
 function DatePicker({
   open, onToggle, range, startDate, endDate, updateStartDate, updateEndDate,
 }) {
   const [showCalendar, setShowCalendar] = useState(() => open);
-  const [initialStartDate, setInitialStartDate] = useState(startDate);
+  const [initialStartDate, setInitialStartDate] = useState(startDate); // todo: maybe remove this
   const [initialEndDate, setInitialEndDate] = useState();
   const classes = useStyles();
 
@@ -100,16 +101,34 @@ function DatePicker({
     () => {
     if (startDate && endDate){
       setShowCalendar(false);
-    } else if (startDate && !endDate){
+    } else if (startDate && !endDate){ // warning: endDate may not be `null` at time of closing calendar :(
       //We need to restart startDate and endDate to their initial values
       //TODO: Make sure the formats are consistent
       updateStartDate(initialStartDate);
       updateEndDate(initialEndDate);
       console.log("StartDate", startDate)
       console.log("initial StartDate", initialStartDate)
+      // setShowCalendar(false) // todo -- add this
     }
-    }, []);
+    // todo
+    /*
+    else {
+      // log: something bad happened
+    }
+    */
+    }, [startDate, endDate, initialStartDate, initialEndDate]); // todo: make sure these show up in dep array
   useOutsideClick(ref, closeCalendar);
+
+  // TODO: (top-priority) write this...
+  // optionally -- see if useCallback works
+  /*
+  const openCalendar = () => {
+    // 1. setInitialStartDate(startDate)
+    // 2. setInitialEndDate(endDate)
+    // 3. setShowCalendar(true)
+    // optional (maybe just for test purposes) make a few console.logs
+  }
+  */
 
   useEffect(() => {
     setShowCalendar(false);
@@ -130,12 +149,45 @@ function DatePicker({
   };
 
   const toggleCalendar = () => {
-    setShowCalendar(prevState => !prevState);
-    if (onToggle) onToggle();
+    // TODO: (top priority) split this line up into an if-else
+    setShowCalendar(prevShowCalendar => !prevShowCalendar); // i've updated this for clarity... but please remove this line (cus our if-statement will do the same job)
+    /* suggested code
+    if (showCalendar) {
+      // we are showing the calendar, we want to change it to closed
+      // TODO: ticket's work goes here
+
+      closeCalendar(); //  utilize the work we already have, don't just call `setShowCalendar(false)`
+    }
+    else { // showCalendar is false
+      // we are not showing the calendar, we want to change it to open
+      
+
+      // TODO: write `openCalendar()`, whose main job is to call
+      // - setInitialStartDate
+      // - setInitialEndDate
+      // - setShowCalendar(true)
+    }
+    */
+
+    // optionally: google "can I pass setState/setMyVariable as a prop"
+    // note on useCallback: if (setExpanded) setExpanded(false); // <-- use callback lets us skip the parameter use
+
+    // TODO: rename onToggle to indicate it is toggling the presets dropdown
+    if (onToggle) onToggle(); // onToggle comes from DateSelector (aka parent component)
+                              // which translates to `closeOptionsOnDateToggle()`
+                              // (aka sets exapnded to false... doesn't actually toggle???)
+    // Update: onToggle specifically refers to the toggling of the DROPDOWN MENU
+    // e.g. it will set the dropdown's expanded state to false, closing the dropdown
+    // whenever you interact with the calendar
   };
   return (
+    // who is this: this is the entire bar
+    // 1. selected days
+    // 2. the IconButton
+    // 3. the dropdown that shows pre-selected date ranges (e.g. last week/month/3 months )
     <div ref={ref} className={classes.selector}>
-      <div onClick={toggleCalendar}>
+      {/* Careful: this calls toggleCalendar, not onToggle! */}
+      <div onClick={toggleCalendar}> 
         {renderSelectedDays([startDate, endDate], classes, range)}
       </div>
       <IconButton
@@ -164,7 +216,7 @@ function DatePicker({
 DatePicker.propTypes = {
   range: PropTypes.bool,
   open: PropTypes.bool,
-  onToggle: PropTypes.func,
+  onToggle: PropTypes.func, // todo: rename
   startDate: PropTypes.string,
   endDate: PropTypes.string,
 };
@@ -172,7 +224,7 @@ DatePicker.propTypes = {
 DatePicker.defaultProps = {
   open: false,
   range: false,
-  onToggle: null,
+  onToggle: null, // todo: rename
   startDate: null,
   endDate: null,
 };

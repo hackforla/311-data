@@ -21,6 +21,7 @@ function DateSelector({
   updateStartDate,
   updateEndDate,
 }) {
+  /* TODO: rename setExpanded to setExpandedMenu */
   const [expanded, setExpanded] = useState(false);
   const classes = useStyles();
 
@@ -29,11 +30,12 @@ function DateSelector({
     const formattedEnd = moment(optionDates[1]).format(dateFormat);
     updateStartDate(formattedStart);
     updateEndDate(formattedEnd);
-    setExpanded(false);
+    setExpanded(false); // TODO: rename setExpanded to setExpandedMenu 
   };
 
+  // TODO: optional, see if we can JUST pass `setExpanded` (which will be renamed) through props
   const closeOptionsOnDateToggle = useCallback(() => {
-    setExpanded(false);
+    setExpanded(false); // TODO: rename setExpanded to setExpandedMenu 
   }, []);
 
   const {
@@ -64,9 +66,11 @@ function DateSelector({
           </div>
         </ArrowToolTip>
       </Typography>
+      {/* TODO: rename setExpanded to setExpandedMenu */}
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
           <div className={classes.selector}>
+            {/* TODO: rename onToggle */}
             <DatePicker
               range={range}
               onToggle={closeOptionsOnDateToggle}
