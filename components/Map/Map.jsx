@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import withStyles from '@mui/styles/withStyles';
 import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 // import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, clearPinInfo } from '@reducers/data';
@@ -292,7 +292,7 @@ class Map extends React.Component {
                 return {
                   filterGeo: geo,
                   minZoom: newMinZoom,
-                }
+                };
               });
 
               // initial render
@@ -613,24 +613,16 @@ class Map extends React.Component {
     } else {
       // When result.properties.type does not equal "District"
       const [longitude, latitude] = result.center;
-      const address = result.place_name
-        .split(',')
-        .slice(0, -2)
-        .join(', ');
+      const address = result.place_name.split(',').slice(0, -2).join(', ');
 
-      const ncIdOfAddressSearch = getNcByLngLatv2({
-        longitude,
-        latitude,
-      });
+      const ncIdOfAddressSearch = getNcByLngLatv2({ longitude, latitude });
       if (!isEmpty(ncIdOfAddressSearch)) {
         //Adding name pill to search bar
         const newSelectedCouncil = councils.find(
           ({ councilId }) => councilId === ncIdOfAddressSearch
         );
         if (!newSelectedCouncil) {
-          throw new Error(
-            'Council Id in address search geocoder result could not be found'
-          );
+          throw new Error('Council Id in address search geocoder result could not be found');
         }
         const newSelected = [newSelectedCouncil];
         dispatchUpdateSelectedCouncils(newSelected);
@@ -702,19 +694,15 @@ class Map extends React.Component {
       }
     })();
 
-    return Object.keys(counts[regionId]).reduce(
-      (filteredCounts, rType) => {
+    return Object.keys(counts[regionId]).reduce((filteredCounts, rType) => {
         if (selectedTypes.includes(rType))
           filteredCounts[rType] = counts[regionId][rType];
         return filteredCounts;
-      },
-      {}
-    );
+      }, {});
   };
 
   setFilteredRequestCounts = () => {
-    const { requests, filterGeo, geoFilterType, selectedTypes } =
-      this.state;
+    const { requests, filterGeo, geoFilterType, selectedTypes } = this.state;
     const { ncCounts, ccCounts } = this.props;
 
     // use pre-calculated values for nc and cc filters if available
@@ -788,10 +776,7 @@ class Map extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div
-        className={classes.root}
-        ref={(el) => (this.mapContainer = el)}
-      >
+      <div className={classes.root} ref={(el) => (this.mapContainer = el)}>
         <RequestsLayer
           ref={(el) => (this.requestsLayer = el)}
           activeLayer={activeRequestsLayer}
