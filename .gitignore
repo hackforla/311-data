@@ -23,7 +23,6 @@ __snapshots__
 tags/
 Temp/
 *-new.*
-webpack-stats.json
 *.old
 *\ copy.*
 stats.json

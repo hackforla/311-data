@@ -1,0 +1,204 @@
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Tooltip from '@mui/material/Tooltip';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { updateRequestTypes } from '@reducers/filters';
+// import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import sharedLayout from '@theme/layout';
+import useToggle from './isToggle';
+import ArrowToolTip from '@components/common/ArrowToolTip';
+
+const useStyles = makeStyles(theme => ({
+  iconStyle: {
+    verticalAlign: 'middle',
+  },
+  header: {
+    fontSize: '12.47px',
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+  tooltipParagraph: {
+    margin: '1px',
+  },
+}));
+
+const formStyles = makeStyles(() => ({
+  label: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '12px',
+  },
+}));
+
+function RequestTypeSelector({
+  requestTypes,
+  dispatchUpdateTypesFilter,
+  selectedTypes,
+}) {
+  const [leftCol, setLeftCol] = useState();
+  const [rightCol, setRightCol] = useState();
+  const [isToggled, toggle] = useToggle(true);
+
+  // FormControlLabel related classes.
+  const formClasses = formStyles();
+
+  // All other classes.
+  const classes = { ...useStyles(), ...sharedLayout() };
+
+  useEffect(() => {
+    if (requestTypes) {
+      const sortedRequestTypes = requestTypes.sort((a, b) => a.orderId - b.orderId);
+      const mid = Math.ceil(sortedRequestTypes.length / 2);
+      const left = sortedRequestTypes.slice(0, mid);
+      const right = sortedRequestTypes.slice(-mid);
+      setLeftCol(left);
+      setRightCol(right);
+    }
+  }, [requestTypes]);
+
+  const checkAll = () => {
+    toggle(!isToggled);
+    return !isToggled;
+  };
+
+  function updateAll(isSelected) {
+    requestTypes.forEach(type => {
+      if (selectedTypes[type.typeId] !== isSelected) {
+        dispatchUpdateTypesFilter(type.typeId);
+      }
+    });
+  }
+
+  const myla311Link = <a href="https://www.myla311.lacity.org">MyLa311</a>;
+
+  return (
+    <Grid container direction="column">
+      <Grid item>
+        <Typography variant="body2" className={classes.header}>
+          Request&nbsp;Types&nbsp;
+          <ArrowToolTip iconStyle={classes.iconStyle}>
+            <p className={classes.tooltipParagraph}>
+              The service request categories for this public dataset are maintained by
+              Information Technologies Agency and may not reflect the categories
+              available on {myla311Link}.
+            </p>
+          </ArrowToolTip>
+        </Typography>
+      </Grid>
+      <Grid item className={classes.marginTopSmall}>
+        <Grid
+          container
+          style={{
+            margin: 'auto',
+            backgroundColor: '#192730',
+            borderRadius: '5px',
+            padding: '5px',
+            paddingTop: '3px',
+            paddingBottom: '3px',
+          }}
+        >
+          {/* Request Types - Left Column */}
+          <Grid item style={{ width: '50%' }}>
+            <FormGroup>
+
+              {/* Select All */}
+              <FormControlLabel
+                key="all"
+                classes={formClasses}
+                control={(
+                  <Checkbox
+                    style={{
+                      transform: 'scale(0.8)',
+                      color: 'white',
+                      padding: '0 0 0 9px',
+                    }}
+                    checked={Object.values(selectedTypes).every(val => val)}
+                    onChange={() => updateAll(checkAll())}
+                  />
+                )}
+                label="Select/Deselect All"
+              />
+
+              {/* Left Column Request Types */}
+              {leftCol && leftCol.map(type => (
+                <FormControlLabel
+                  key={type.typeId}
+                  classes={formClasses}
+                  control={(
+                    <Checkbox
+                      style={{
+                        transform: 'scale(0.8)',
+                        color: type.color,
+                        padding: '0 0 0 9px',
+                      }}
+                      checked={selectedTypes[type.typeId]}
+                      onChange={() => dispatchUpdateTypesFilter(type.typeId)}
+                    />
+                  )}
+                  label={type.typeName}
+                />
+              ))}
+
+            </FormGroup>
+          </Grid>
+
+          {/* Request Types - Right Column */}
+          <Grid item style={{ width: '50%' }}>
+            <FormGroup>
+
+              {/* Right Column Request Types */}
+              {rightCol && rightCol.map(type => (
+                <FormControlLabel
+                  key={type.typeId}
+                  classes={formClasses}
+                  control={(
+                    <Checkbox
+                      style={{
+                        transform: 'scale(0.8)',
+                        color: type.color,
+                        padding: '0 2px 0 9px',
+                      }}
+                      checked={selectedTypes[type.typeId]}
+                      onChange={() => dispatchUpdateTypesFilter(type.typeId)}
+                    />
+                  )}
+                  label={type.typeName}
+                />
+              ))}
+            </FormGroup>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+}
+
+const mapStateToProps = state => ({
+  requestTypes: state.metadata.requestTypes,
+  selectedTypes: state.filters.requestTypes,
+});
+
+const mapDispatchToProps = dispatch => ({
+  dispatchUpdateTypesFilter: type => dispatch(updateRequestTypes(type)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RequestTypeSelector);
+
+RequestTypeSelector.propTypes = {
+  requestTypes: PropTypes.arrayOf(PropTypes.shape({})),
+  dispatchUpdateTypesFilter: PropTypes.func.isRequired,
+  selectedTypes: PropTypes.shape({}).isRequired,
+};
+
+RequestTypeSelector.defaultProps = {
+  requestTypes: null,
+};

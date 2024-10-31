@@ -27,7 +27,7 @@ jobs:
       run: npm install
     - name: Setup environment
       run: |
-        echo MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }} > .env
+        echo VITE_MAPBOX_TOKEN=${{ secrets.VITE_MAPBOX_TOKEN }} > .env
         echo MAPBOX_STREETS_URL=${{ secrets.MAPBOX_STREETS_URL }} >> .env
         echo MAPBOX_SATELLITE_URL=${{ secrets.MAPBOX_SATELLITE_URL }} >> .env
         echo API_URL=${{ secrets.API_URL_PROD }} >> .env

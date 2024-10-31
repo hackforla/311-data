@@ -45,17 +45,25 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 
 ## Quick Start
 
+### Install Node.js
+
 - Ensure that node version manager (nvm) is installed (e.g. follow a [tutorial](https://heynode.com/tutorial/install-nodejs-locally-nvm/))
 - Run `nvm install lts/hydrogen` (on windows `nvm install hydrogen`)
 - Run `nvm use lts/hydrogen` (on windows `nvm use hydrogen`)
-- confirm you are using **Node 18** by running `node -v` (e.g. `Now using node v18.7.0 (npm v8.9.2)`)
-- clone the repo
+- Confirm you are using **Node 18** by running `node -v` (e.g. `Now using node v18.7.0 (npm v8.9.2)`)
+
+### Set up environment/variables
+
+- Clone the repo
 - Run `cd 311-data/`
 - Run `cp .example.env .env`
-- Edit your new `.env` and supply a valid `MAPBOX_TOKEN`. If you are a member of hack4la, please contact someone in 311-engineering for one.
-- Run `npm install`
-- From the 311-data parent directory run: `npm run setup && npm start`
-- Visit http://localhost:3000
+- Edit your new `.env` and supply a valid `VITE_MAPBOX_TOKEN`. If you are a member of hack4la, please contact someone in 311-engineering for one.
+- Run `npm run setup`
+
+### Start the development server
+
+- Run `npm start`
+- Visit http://localhost:5173
 
 ### Information About Technologies
 

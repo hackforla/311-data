@@ -28,7 +28,7 @@ import { types as mapFiltersTypes } from '../reducers/mapFilters';
 
 /* ////////////////// API CALLS  //////////////// */
 
-const BASE_URL = process.env.API_URL;
+const BASE_URL = import.meta.env.API_URL;
 
 /* ////  MAP //// */
 

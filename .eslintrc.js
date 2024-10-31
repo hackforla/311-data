@@ -21,7 +21,6 @@ module.exports = {
     'import/extensions': ['.js', '.jsx'],
     'import/resolver': {
       node: {},
-      webpack: 'webpack.config.js',
     },
   },
   plugins: ['react', 'react-hooks'],
