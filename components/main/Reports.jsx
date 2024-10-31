@@ -22,7 +22,7 @@ function Reports() {
   const [isLoading, setIsLoading] = React.useState(true);
   const classes = useStyles();
 
-  const url = process.env.REPORT_URL;
+  const url = import.meta.env.REPORT_URL;
   const location = useLocation();
   const reportPath = location.pathname.slice(REPORTS_PATH.length - 1);
   const reportRef = React.useRef(reportPath);
