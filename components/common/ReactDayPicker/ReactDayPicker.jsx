@@ -7,10 +7,10 @@ import DayPicker from 'react-day-picker';
 import { connect } from 'react-redux';
 import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
-import {
-  updateEndDate as reduxUpdateEndDate,
-  updateStartDate as reduxUpdateStartDate,
-} from '@reducers/filters';
+// import {
+//   updateEndDate as reduxUpdateEndDate,
+//   updateStartDate as reduxUpdateStartDate,
+// } from '@reducers/filters';
 
 import fonts from '@theme/fonts';
 import colors from '@theme/colors';
@@ -175,9 +175,6 @@ function ReactDayPicker({
       setFromDay(day);
       return;
     }
-
-
-
     
   //If both startDate and endDate were already selected. Start a new range selection.
   if(startDate && endDate){
