@@ -275,14 +275,14 @@ ReactDayPicker.defaultProps = {
   endDate: null,
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateStartDate: date => dispatch(reduxUpdateStartDate(date)),
-  updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
-});
+// const mapDispatchToProps = dispatch => ({
+//   updateStartDate: date => dispatch(reduxUpdateStartDate(date)),
+//   updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
+// });
 
 const mapStateToProps = state => ({
   startDate: state.filters.startDate,
   endDate: state.filters.endDate,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactDayPicker);
+export default connect(mapStateToProps)(ReactDayPicker);

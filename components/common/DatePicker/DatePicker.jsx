@@ -9,7 +9,10 @@ import IconButton from '@mui/material/IconButton';
 import makeStyles from '@mui/styles/makeStyles';
 import useOutsideClick from '@components/common/customHooks/useOutsideClick';
 import ReactDayPicker from '@components/common/ReactDayPicker';
-
+import {
+  updateEndDate as reduxUpdateEndDate,
+  updateStartDate as reduxUpdateStartDate,
+} from '@reducers/filters';
 // TODO: Apply gaps (margin, padding) from theme
 
 const useStyles = makeStyles(theme => ({
@@ -82,15 +85,30 @@ const renderSelectedDays = (dates, classes, range) => {
   );
   return selectedDaysElements;
 };
-
+//TODO: Why is it important that open is being passed as a prop?
 function DatePicker({
-  open, onToggle, range, startDate, endDate, setInitialStartDate, setInitialEndDate
+  open, onToggle, range, startDate, endDate, updateStartDate, updateEndDate,
 }) {
   const [showCalendar, setShowCalendar] = useState(() => open);
+  const [initialStartDate, setInitialStartDate] = useState(startDate);
+  const [initialEndDate, setInitialEndDate] = useState();
   const classes = useStyles();
 
   const ref = useRef(null);
-  const closeCalendar = useCallback(() => setShowCalendar(false), []);
+  // const closeCalendar = useCallback(() => setShowCalendar(false), []);
+  const closeCalendar = useCallback(
+    () => {
+    if (startDate && endDate){
+      setShowCalendar(false);
+    } else if (startDate && !endDate){
+      //We need to restart startDate and endDate to their initial values
+      //TODO: Make sure the formats are consistent
+      updateStartDate(initialStartDate);
+      updateEndDate(initialEndDate);
+      console.log("StartDate", startDate)
+      console.log("initial StartDate", initialStartDate)
+    }
+    }, []);
   useOutsideClick(ref, closeCalendar);
 
   useEffect(() => {
@@ -134,6 +152,8 @@ function DatePicker({
         {showCalendar ? (
           <ReactDayPicker
             range={range}
+            updateStartDate={updateStartDate}
+            updateEndDate={updateEndDate}
           />
         ) : null}
       </div>
@@ -162,4 +182,9 @@ const mapStateToProps = state => ({
   endDate: state.filters.endDate,
 });
 
-export default connect(mapStateToProps)(DatePicker);
+const mapDispatchToProps = dispatch => ({
+  updateStartDate: date => dispatch(reduxUpdateStartDate(date)),
+  updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DatePicker);
