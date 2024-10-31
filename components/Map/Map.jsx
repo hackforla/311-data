@@ -287,11 +287,14 @@ class Map extends React.Component {
               },
             });
             this.map.once('zoomend', () => {
-              this.setState({
-                filterGeo: geo,
-                minZoom: this.map.getZoom(),
+              this.setState((prevState) => {
+                const newMinZoom = this.map.getZoom();
+                this.map.setMinZoom(newMinZoom);
+                return {
+                  filterGeo: geo,
+                  minZoom: newMinZoom,
+                }
               });
-              this.map.setMinZoom(this.state.minZoom);
 
               // initial render
               renderZoomTooltip();
