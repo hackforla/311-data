@@ -142,7 +142,7 @@ class Map extends React.Component {
 
   componentDidMount() {
     this.isSubscribed = true;
-    mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
+    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
     const map = new mapboxgl.Map({
       container: this.mapContainer,
@@ -578,6 +578,16 @@ class Map extends React.Component {
         });
 
         // Add that cute House Icon on the map
+        return this.addressLayer.addMarker([longitude, latitude]);
+      } else {
+        this.setState({
+          address: address,
+        });
+        this.map.flyTo({
+          center: [longitude, latitude],
+          essential: true,
+          zoom: 9,
+      });
         return this.addressLayer.addMarker([longitude, latitude]);
       }
     }
