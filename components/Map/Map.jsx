@@ -100,8 +100,7 @@ const styles = (theme) => ({
 });
 
 // Define feature layers
-const hoverables = ['nc-fills', 'cc-fills'];
-const featureLayers = ['request-circles', ...hoverables];
+const featureLayers = ['request-circles','nc-fills'];
 
 class Map extends React.Component {
   // Note: 'this.context' is defined using the static contextType property
@@ -474,51 +473,27 @@ class Map extends React.Component {
     const features = this.getAllFeaturesAtPoint(e.point);
     for (let i = 0; i < features.length; i += 1) {
       const feature = features[i];
+      if (feature.layer.id == "nc-fills") {
+          this.setState({ address: null });
 
-      if (
-        !isEmpty(this.props.selectedNcId) &&
-        !isEmpty(feature.properties.NC_ID) &&
-        this.props.selectedNcId !== feature.properties.NC_ID
-      ) {
-        // Since click is for another district
+          this.resetAddressSearch(); // Clear address search input
+          dispatchCloseBoundaries(); // Collapse boundaries section
 
-        // Reset boundaries selection
-        this.resetBoundaries();
+          const selectedCouncilId = Number(feature.properties.NC_ID);
+          const newSelectedCouncil = councils.find(
+            ({ councilId }) => councilId === selectedCouncilId
+          );
+          const newSelected = isEmpty(newSelectedCouncil)
+            ? null
+            : [newSelectedCouncil];
 
-        // Collapse boundaries section
-        dispatchCloseBoundaries();
-
-        // Reset Address Search input field
-        this.resetAddressSearch();
-
-        // Reset Map.
-        this.reset();
-
-        return;
-      }
-
-      if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
-        switch (feature.layer.id) {
-          case 'nc-fills':
-            this.setState({ address: null });
-            this.resetAddressSearch(); // Clear address search input
-            dispatchCloseBoundaries(); // Collapse boundaries section
-            const selectedCouncilId = Number(feature.properties.NC_ID);
-            const newSelectedCouncil = councils.find(
-              ({ councilId }) => councilId === selectedCouncilId
-            );
-            const newSelected = isEmpty(newSelectedCouncil)
-              ? null
-              : [newSelectedCouncil];
-            dispatchUpdateSelectedCouncils(newSelected);
-            dispatchUpdateUnselectedCouncils(councils);
-            dispatchUpdateNcId(selectedCouncilId);
-            return this.ncLayer.selectRegion(feature.id);
-          case 'cc-fills':
-            return this.ccLayer.selectRegion(feature.id);
-          default:
-            return null;
-        }
+          dispatchUpdateSelectedCouncils(newSelected);
+          dispatchUpdateUnselectedCouncils(councils);
+          dispatchUpdateNcId(selectedCouncilId);
+          
+          return this.ncLayer.selectRegion(feature.id);
+      } else{
+        return null;
       }
     }
   };
