@@ -85,31 +85,38 @@ const renderSelectedDays = (dates, classes, range) => {
   );
   return selectedDaysElements;
 };
-//TODO: Why is it important that open is being passed as a prop?
+
 function DatePicker({
-  open, onToggle, range, startDate, endDate, updateStartDate, updateEndDate,
+  open, onTogglePresets, range, startDate, endDate, updateStartDate, updateEndDate,
 }) {
   const [showCalendar, setShowCalendar] = useState(() => open);
   const [initialStartDate, setInitialStartDate] = useState(startDate);
   const [initialEndDate, setInitialEndDate] = useState();
   const classes = useStyles();
-
   const ref = useRef(null);
-  // const closeCalendar = useCallback(() => setShowCalendar(false), []);
+
   const closeCalendar = useCallback(
     () => {
     if (startDate && endDate){
       setShowCalendar(false);
     } else if (startDate && !endDate){
-      //We need to restart startDate and endDate to their initial values
-      //TODO: Make sure the formats are consistent
+      //The calendar was closed with an incomplete date range selection so we need to restart
+      //startDate and endDate to their initial values
       updateStartDate(initialStartDate);
       updateEndDate(initialEndDate);
-      console.log("StartDate", startDate)
-      console.log("initial StartDate", initialStartDate)
+      setShowCalendar(false);
+    } else {
+      //This should never happen. Log a warning.
+      console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
     }
-    }, []);
+    }, [startDate, endDate]);
   useOutsideClick(ref, closeCalendar);
+
+  const openCalendar = () => {
+    setInitialStartDate(startDate);
+    setInitialEndDate(endDate);
+    setShowCalendar(true);
+  }
 
   useEffect(() => {
     setShowCalendar(false);
@@ -130,9 +137,14 @@ function DatePicker({
   };
 
   const toggleCalendar = () => {
-    setShowCalendar(prevState => !prevState);
-    if (onToggle) onToggle();
+    if(showCalendar) {
+      closeCalendar();
+    } else {
+      openCalendar();
+    }
+    if (onTogglePresets) onTogglePresets();
   };
+
   return (
     <div ref={ref} className={classes.selector}>
       <div onClick={toggleCalendar}>
@@ -164,7 +176,7 @@ function DatePicker({
 DatePicker.propTypes = {
   range: PropTypes.bool,
   open: PropTypes.bool,
-  onToggle: PropTypes.func,
+  onTogglePresets: PropTypes.func,
   startDate: PropTypes.string,
   endDate: PropTypes.string,
 };
@@ -172,7 +184,7 @@ DatePicker.propTypes = {
 DatePicker.defaultProps = {
   open: false,
   range: false,
-  onToggle: null,
+  onTogglePresets: null,
   startDate: null,
   endDate: null,
 };
