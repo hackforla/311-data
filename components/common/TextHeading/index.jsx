@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import Typography from '@mui/material/Typography';
+import cityBackground from '@assets/citybackgroundheader.png'
 
 const useStyles = makeStyles(theme => ({
   headingBackground: {
-    background: theme.palette.primary.main,
-    backgroundPosition: 'top',
-    height: '20vh',
+    background: `url(${cityBackground}) no-repeat center center`,
+    backgroundPosition: 'center 56%',
+    backgroundSize: 'cover',
+    height: '30vh',
     position: 'relative',
   },
   headingOverlayText: {
