@@ -8,6 +8,7 @@ import {
   polygon,
   pointsWithinPolygon,
   booleanPointInPolygon,
+  multiPolygon,
 } from '@turf/turf';
 
 import ncGeojson from '@data/ncGeojson';
@@ -68,20 +69,20 @@ export function getNcByLngLatv2({
     const features = ncGeojson.features;
     console.log({ features });
 
-    // TODO: Be able to handle MultiPolygons instead of skipping over them
-    // [ECHO PARK NC, NC VALLEY VILLAGE] are the only 2 MultiPolygons
-    const ncGeoArray = features.filter(
-      (feature) => feature.geometry.type !== 'MultiPolygon'
-    );
-    console.log({ ncGeoArray });
+    let foundNcGeoObj;
 
-    const foundNcGeoObj = ncGeoArray.find((ncGeoObj) =>
-      booleanPointInPolygon(
-        point([longitude, latitude]),
-        polygon(ncGeoObj.geometry.coordinates)
-      )
-    );
+    for (const feature of features) {
+      let featurePolygon;
+      if (feature.geometry.type == 'MultiPolygon')
+        featurePolygon = multiPolygon(feature.geometry.coordinates);
+      else {
+        featurePolygon = polygon(feature.geometry.coordinates);
+      }
 
+      if (booleanPointInPolygon(point([longitude, latitude]), featurePolygon)) {
+        foundNcGeoObj = feature
+      }
+    }
     console.log({ foundNcGeoObj });
 
     return foundNcGeoObj?.properties?.NC_ID;
