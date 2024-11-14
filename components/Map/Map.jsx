@@ -242,9 +242,12 @@ class Map extends React.Component {
         );
       };
 
-      // show the zoomtooltip on hover if the map is locked onto an ncLayer
+      // show the zoomtooltip on hover if the map is locked onto an ncLayer AND
+      // the zoom out control is disabled
       const handleMouseEnter = () => {
-        if (this.state.filterGeo) {
+        const isZoomOutDisabled =
+          this.map.getZoom() <= this.state.minZoom;
+        if (this.state.filterGeo && isZoomOutDisabled) {
           showZoomTooltip = true;
           renderZoomTooltip();
         }
