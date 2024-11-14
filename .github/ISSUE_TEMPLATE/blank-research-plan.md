@@ -2,7 +2,7 @@
 name: Blank Research Plan
 about: Template for UX researcher to create research plan.
 title: ''
-labels: 'Milestone: Missing, role: UI/UX Research, Size: Missing, Feature: Research'
+labels: 'Feature: Research, Milestone: Missing, role: UI/UX Research, Size: Missing'
 assignees: ''
 
 ---

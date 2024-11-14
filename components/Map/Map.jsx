@@ -102,8 +102,7 @@ const styles = (theme) => ({
 });
 
 // Define feature layers
-const hoverables = ['nc-fills', 'cc-fills'];
-const featureLayers = ['request-circles', ...hoverables];
+const featureLayers = ['request-circles', 'nc-fills'];
 const DEFAULT_MIN_ZOOM = 9;
 const DEFAULT_MAX_ZOOM = 17;
 
