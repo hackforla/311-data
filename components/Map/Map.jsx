@@ -243,9 +243,12 @@ class Map extends React.Component {
         );
       };
 
-      // show the zoomtooltip on hover if the map is locked onto an ncLayer
+      // show the zoomtooltip on hover if the map is locked onto an ncLayer AND
+      // the zoom out control is disabled
       const handleMouseEnter = () => {
-        if (this.state.filterGeo) {
+        const isZoomOutDisabled =
+          this.map.getZoom() <= this.state.minZoom;
+        if (this.state.filterGeo && isZoomOutDisabled) {
           showZoomTooltip = true;
           renderZoomTooltip();
         }
@@ -376,7 +379,9 @@ class Map extends React.Component {
           ...(center
             ? {
                 locationInfo: {
-                  location: `${center.lat.toFixed(6)} N ${center.lng.toFixed(6)} E`,
+                  location: `${center.lat.toFixed(
+                    6
+                  )} N ${center.lng.toFixed(6)} E`,
                   radius: 1,
                   nc: ncInfoFromLngLat(center),
                 },
@@ -407,7 +412,9 @@ class Map extends React.Component {
       },
       onHoverRegion: (geo) => {
         this.setState({
-          hoveredRegionName: geo ? ccNameFromId(geo.properties.name) : null,
+          hoveredRegionName: geo
+            ? ccNameFromId(geo.properties.name)
+            : null,
         });
       },
     });
@@ -476,7 +483,8 @@ class Map extends React.Component {
   };
 
   addressSearchIsEmpty = () => {
-    const addressSearchInput = document.querySelector('#geocoder input');
+    const addressSearchInput =
+      document.querySelector('#geocoder input');
     return !Boolean(addressSearchInput?.value?.trim());
   };
 
@@ -516,7 +524,8 @@ class Map extends React.Component {
         // Display pop-ups only for the current district
         if (
           features[i].properties.council_id &&
-          this.props.selectedNcId !== features[i].properties.council_id
+          this.props.selectedNcId !==
+            features[i].properties.council_id
         ) {
           return;
         }
@@ -572,13 +581,18 @@ class Map extends React.Component {
         return;
       }
 
-      if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
+      if (
+        hoverables.includes(feature.layer.id) &&
+        !feature.state.selected
+      ) {
         switch (feature.layer.id) {
           case 'nc-fills':
             this.setState({ address: null });
             this.resetAddressSearch(); // Clear address search input
             dispatchCloseBoundaries(); // Collapse boundaries section
-            const selectedCouncilId = Number(feature.properties.NC_ID);
+            const selectedCouncilId = Number(
+              feature.properties.NC_ID
+            );
             const newSelectedCouncil = councils.find(
               ({ councilId }) => councilId === selectedCouncilId
             );
@@ -632,16 +646,24 @@ class Map extends React.Component {
     } else {
       // When result.properties.type does not equal "District"
       const [longitude, latitude] = result.center;
-      const address = result.place_name.split(',').slice(0, -2).join(', ');
+      const address = result.place_name
+        .split(',')
+        .slice(0, -2)
+        .join(', ');
 
-      const ncIdOfAddressSearch = getNcByLngLatv2({ longitude, latitude });
+      const ncIdOfAddressSearch = getNcByLngLatv2({
+        longitude,
+        latitude,
+      });
       if (!isEmpty(ncIdOfAddressSearch)) {
         //Adding name pill to search bar
         const newSelectedCouncil = councils.find(
           ({ councilId }) => councilId === ncIdOfAddressSearch
         );
         if (!newSelectedCouncil) {
-          throw new Error('Council Id in address search geocoder result could not be found');
+          throw new Error(
+            'Council Id in address search geocoder result could not be found'
+          );
         }
         const newSelected = [newSelectedCouncil];
         dispatchUpdateSelectedCouncils(newSelected);
@@ -724,7 +746,8 @@ class Map extends React.Component {
   };
 
   setFilteredRequestCounts = () => {
-    const { requests, filterGeo, geoFilterType, selectedTypes } = this.state;
+    const { requests, filterGeo, geoFilterType, selectedTypes } =
+      this.state;
     const { ncCounts, ccCounts } = this.props;
 
     // use pre-calculated values for nc and cc filters if available
@@ -798,7 +821,10 @@ class Map extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root} ref={(el) => (this.mapContainer = el)}>
+      <div
+        className={classes.root}
+        ref={(el) => (this.mapContainer = el)}
+      >
         <RequestsLayer
           ref={(el) => (this.requestsLayer = el)}
           activeLayer={activeRequestsLayer}
