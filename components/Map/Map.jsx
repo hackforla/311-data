@@ -245,6 +245,8 @@ class Map extends React.Component {
       // show the zoomtooltip on hover if the map is locked onto an ncLayer AND
       // the zoom out control is disabled
       const handleMouseEnter = () => {
+        // check if the current zoom level (this.map.getZoom()) is at or below minZoom,
+        // indicating the map is zoomed in to its minimum level & the zoom out control is disabled
         const isZoomOutDisabled =
           this.map.getZoom() <= this.state.minZoom;
         if (this.state.filterGeo && isZoomOutDisabled) {
