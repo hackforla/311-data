@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     height: theme.footer.height,
     width: '100%',
     backgroundColor: theme.palette.primary.dark,
-    zIndex: 1,
+    zIndex: 1400,
   },
   footerSpacing: {
     height: theme.footer.height,

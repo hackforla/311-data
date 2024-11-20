@@ -8,7 +8,7 @@ import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 // import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
-import { getNcByLngLat } from '@reducers/data';
+import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 import {
   updateNcId,
   updateSelectedCouncils,
@@ -100,8 +100,7 @@ const styles = (theme) => ({
 });
 
 // Define feature layers
-const hoverables = ['nc-fills', 'cc-fills'];
-const featureLayers = ['request-circles', ...hoverables];
+const featureLayers = ['request-circles','nc-fills'];
 
 class Map extends React.Component {
   // Note: 'this.context' is defined using the static contextType property
@@ -142,7 +141,7 @@ class Map extends React.Component {
 
   componentDidMount() {
     this.isSubscribed = true;
-    mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
+    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
     const map = new mapboxgl.Map({
       container: this.mapContainer,
@@ -457,6 +456,7 @@ class Map extends React.Component {
   };
 
   onMouseLeave = (e) => {
+    this.props.dispatchClearPinInfo()
     this.removePopup();
   };
 
@@ -473,51 +473,27 @@ class Map extends React.Component {
     const features = this.getAllFeaturesAtPoint(e.point);
     for (let i = 0; i < features.length; i += 1) {
       const feature = features[i];
+      if (feature.layer.id == "nc-fills") {
+          this.setState({ address: null });
 
-      if (
-        !isEmpty(this.props.selectedNcId) &&
-        !isEmpty(feature.properties.NC_ID) &&
-        this.props.selectedNcId !== feature.properties.NC_ID
-      ) {
-        // Since click is for another district
+          this.resetAddressSearch(); // Clear address search input
+          dispatchCloseBoundaries(); // Collapse boundaries section
 
-        // Reset boundaries selection
-        this.resetBoundaries();
+          const selectedCouncilId = Number(feature.properties.NC_ID);
+          const newSelectedCouncil = councils.find(
+            ({ councilId }) => councilId === selectedCouncilId
+          );
+          const newSelected = isEmpty(newSelectedCouncil)
+            ? null
+            : [newSelectedCouncil];
 
-        // Collapse boundaries section
-        dispatchCloseBoundaries();
-
-        // Reset Address Search input field
-        this.resetAddressSearch();
-
-        // Reset Map.
-        this.reset();
-
-        return;
-      }
-
-      if (hoverables.includes(feature.layer.id) && !feature.state.selected) {
-        switch (feature.layer.id) {
-          case 'nc-fills':
-            this.setState({ address: null });
-            this.resetAddressSearch(); // Clear address search input
-            dispatchCloseBoundaries(); // Collapse boundaries section
-            const selectedCouncilId = Number(feature.properties.NC_ID);
-            const newSelectedCouncil = councils.find(
-              ({ councilId }) => councilId === selectedCouncilId
-            );
-            const newSelected = isEmpty(newSelectedCouncil)
-              ? null
-              : [newSelectedCouncil];
-            dispatchUpdateSelectedCouncils(newSelected);
-            dispatchUpdateUnselectedCouncils(councils);
-            dispatchUpdateNcId(selectedCouncilId);
-            return this.ncLayer.selectRegion(feature.id);
-          case 'cc-fills':
-            return this.ccLayer.selectRegion(feature.id);
-          default:
-            return null;
-        }
+          dispatchUpdateSelectedCouncils(newSelected);
+          dispatchUpdateUnselectedCouncils(councils);
+          dispatchUpdateNcId(selectedCouncilId);
+          
+          return this.ncLayer.selectRegion(feature.id);
+      } else{
+        return null;
       }
     }
   };
@@ -536,6 +512,9 @@ class Map extends React.Component {
       dispatchGetNcByLngLat,
       dispatchUpdateNcId,
       dispatchCloseBoundaries,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+      councils
     } = this.props;
 
     // Reset boundaries input
@@ -557,12 +536,33 @@ class Map extends React.Component {
 
       const ncIdOfAddressSearch = getNcByLngLatv2({ longitude, latitude });
       if (!isEmpty(ncIdOfAddressSearch)) {
+        //Adding name pill to search bar 
+        const newSelectedCouncil = councils.find(
+          ({ councilId }) => councilId === ncIdOfAddressSearch,
+        );
+        if (!newSelectedCouncil) {
+          throw new Error('Council Id in address search geocoder result could not be found');
+        }
+        const newSelected = [newSelectedCouncil];
+        dispatchUpdateSelectedCouncils(newSelected);
+        dispatchUpdateUnselectedCouncils(councils);
+        
         dispatchUpdateNcId(Number(ncIdOfAddressSearch));
         this.setState({
           address: address,
         });
 
         // Add that cute House Icon on the map
+        return this.addressLayer.addMarker([longitude, latitude]);
+      } else {
+        this.setState({
+          address: address,
+        });
+        this.map.flyTo({
+          center: [longitude, latitude],
+          essential: true,
+          zoom: 9,
+      });
         return this.addressLayer.addMarker([longitude, latitude]);
       }
     }
@@ -794,6 +794,7 @@ const mapDispatchToProps = (dispatch) => ({
   dispatchUpdateUnselectedCouncils: (councils) =>
     dispatch(updateUnselectedCouncils(councils)),
   dispatchCloseBoundaries: () => dispatch(closeBoundaries()),
+  dispatchClearPinInfo: () => dispatch(clearPinInfo()),
 });
 
 // We need to specify forwardRef to allow refs on connected components.
