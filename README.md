@@ -65,6 +65,10 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 - Run `npm start`
 - Visit http://localhost:5173
 
+### Run tests
+
+- Run `npm run test`
+
 ### Information About Technologies
 
 - Frontend
