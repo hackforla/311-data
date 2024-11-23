@@ -2,8 +2,10 @@
 name: New Blank Epic
 about: Template for PMs to create Epics to track batches of features in a milestone
 title: ''
-labels: 'draft,Epic,Milestone: Missing,Role: Product Management,size: epic,Feature: Missing'
+labels: 'draft, Epic, Feature: Missing, Milestone: Missing, Role: Product Management,
+  size: epic'
 assignees: ''
+
 ---
 
 ### Overview

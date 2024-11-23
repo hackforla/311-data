@@ -1,8 +1,8 @@
 ---
 name: Post an open role
 about: Recruit volunteers for specific open roles template
-labels: 'size: 0.25pt,feature: recruiting,Role: Missing'
 title: '311Data: Open Role for: [Replace with NAME OF ROLE]'
+labels: 'feature: recruiting, Role: Missing, size: 0.25pt'
 assignees: ''
 
 ---
