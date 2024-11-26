@@ -16,8 +16,10 @@ function ZoomTooltip({ show }) {
               neighborhood council.
             </strong>
             <br />
-            To reset zoom features, please exit by clicking out of the
-            selected area.
+            To reset zoom features, please exit the boundary selection
+            by clicking the 'X' on the selected Neighborhood Council
+            within the 'Boundaries' filter of the 'Search & Filters'
+            modal.
           </p>
         </div>
       )}
