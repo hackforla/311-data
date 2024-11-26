@@ -171,13 +171,13 @@ function ReactDayPicker({
       return;
     }
     
-  //If both startDate and endDate were already selected. Start a new range selection.
-  if(startDate && endDate){
+  // If both startDate and endDate were already selected. Start a new range selection.
+  if (startDate && endDate){
     setFromDay(day);
     updateEndDate(null);
     setEnteredTo(null);
-    //If startDate is selected and endDate is unselected, complete the range selection.
-  } else if(startDate && !endDate){
+    // If startDate is selected and endDate is unselected, complete the range selection.
+  } else if (startDate && !endDate){
       // If the user selects the startDate then chooses an endDate that precedes it,
       // swap the values of startDate and endDate
       if (moment(day).format(INTERNAL_DATE_SPEC) < startDate) {
@@ -190,7 +190,7 @@ function ReactDayPicker({
         setToDay(day);
       }
   } else {
-      //This should never happen. Log a warning.
+      // This should never happen. Log a warning.
       console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
   } 
   };

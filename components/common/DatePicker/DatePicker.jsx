@@ -100,13 +100,13 @@ function DatePicker({
     if (startDate && endDate){
       setShowCalendar(false);
     } else if (startDate && !endDate){
-      //The calendar was closed with an incomplete date range selection so we need to restart
-      //startDate and endDate to their initial values
+      // The calendar was closed with an incomplete date range selection so we need to restart
+      // startDate and endDate to their initial values
       updateStartDate(initialStartDate);
       updateEndDate(initialEndDate);
       setShowCalendar(false);
     } else {
-      //This should never happen. Log a warning.
+      // This should never happen. Log a warning.
       console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
     }
     }, [startDate, endDate]);
@@ -137,7 +137,7 @@ function DatePicker({
   };
 
   const toggleCalendar = () => {
-    if(showCalendar) {
+    if (showCalendar) {
       closeCalendar();
     } else {
       openCalendar();
