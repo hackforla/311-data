@@ -69,6 +69,8 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 
 - Run `npm test`
 
+See [contributing.md](contributing.md#testing) for info on writing tests.
+
 ### Information About Technologies
 
 - Frontend
