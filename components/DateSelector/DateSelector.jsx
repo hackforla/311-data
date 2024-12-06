@@ -21,7 +21,7 @@ function DateSelector({
   updateStartDate,
   updateEndDate,
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expandedMenu, setExpandedMenu] = useState(false);
   const classes = useStyles();
 
   const handleOptionSelect = optionDates => {
@@ -29,11 +29,11 @@ function DateSelector({
     const formattedEnd = moment(optionDates[1]).format(dateFormat);
     updateStartDate(formattedStart);
     updateEndDate(formattedEnd);
-    setExpanded(false);
+    setExpandedMenu(false);
   };
 
   const closeOptionsOnDateToggle = useCallback(() => {
-    setExpanded(false);
+    setExpandedMenu(false);
   }, []);
 
   const {
@@ -64,12 +64,12 @@ function DateSelector({
           </div>
         </ArrowToolTip>
       </Typography>
-      <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
+      <SelectorBox onToggle={() => setExpandedMenu(!expandedMenu)} expanded={expandedMenu}>
         <SelectorBox.Display>
           <div className={classes.selector}>
             <DatePicker
               range={range}
-              onToggle={closeOptionsOnDateToggle}
+              onTogglePresets={closeOptionsOnDateToggle}
             />
             <div className={classes.separator} />
           </div>
