@@ -16,9 +16,17 @@ if (import.meta.env.DEV) {
   middlewares.push(logger);
 }
 
-const store = createStore(rootReducer, composeWithDevToolsDevelopmentOnly(
-  applyMiddleware(...middlewares),
-));
+export function setupStore(preloadedState = {}) {
+  return createStore(
+    rootReducer,
+    preloadedState,
+    composeWithDevToolsDevelopmentOnly(
+      applyMiddleware(...middlewares),
+    )
+  );
+}
+
+const store = setupStore();
 
 sagaMiddleware.run(rootSaga);
 
