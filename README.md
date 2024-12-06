@@ -67,7 +67,7 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 
 ### Run tests
 
-- Run `npm run test`
+- Run `npm test`
 
 ### Information About Technologies
 
@@ -75,6 +75,9 @@ Our mission is to create a user-friendly platform for anyone interested in explo
   - Mapbox
   - React
   - MUI
+  - Vite
+  - Vitest
+  - React Testing Library
 - Backend
   - DuckDb
   - HuggingFace
