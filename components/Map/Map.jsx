@@ -52,6 +52,7 @@ import { debounce, isEmpty } from '@utils';
 
 import settings from '@settings';
 import ZoomTooltip from './zoomTooltip';
+import { DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM } from '@components/common/CONSTANTS';
 
 const styles = (theme) => ({
   root: {
@@ -103,8 +104,6 @@ const styles = (theme) => ({
 
 // Define feature layers
 const featureLayers = ['request-circles', 'nc-fills'];
-const DEFAULT_MIN_ZOOM = 9;
-const DEFAULT_MAX_ZOOM = 17;
 
 class Map extends React.Component {
   // Note: 'this.context' is defined using the static contextType property
