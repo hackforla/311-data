@@ -897,3 +897,6 @@ export const MAP_MODES = {
   OPEN: 'Open',
   CLOSED: 'Closed',
 };
+
+export const DEFAULT_MIN_ZOOM = 9;
+export const DEFAULT_MAX_ZOOM = 17;

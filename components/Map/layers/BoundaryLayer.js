@@ -8,6 +8,7 @@ import {
   makeGeoMask,
   boundingBox,
 } from '../geoUtils';
+import { DEFAULT_MIN_ZOOM } from '../../common/CONSTANTS';
 
 const BOUNDARY_WIDTH = 2;
 
@@ -201,6 +202,7 @@ class BoundaryLayer extends React.Component {
     geo = removeGeoHoles(geo);
 
     // zoom to the region
+    this.map.setMinZoom(DEFAULT_MIN_ZOOM);
     this.map.fitBounds(boundingBox(geo), { padding: FIT_BOUNDS_PADDING });
 
     // mask everything else
