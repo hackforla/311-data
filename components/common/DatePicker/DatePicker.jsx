@@ -9,7 +9,10 @@ import IconButton from '@mui/material/IconButton';
 import makeStyles from '@mui/styles/makeStyles';
 import useOutsideClick from '@components/common/customHooks/useOutsideClick';
 import ReactDayPicker from '@components/common/ReactDayPicker';
-
+import {
+  updateEndDate as reduxUpdateEndDate,
+  updateStartDate as reduxUpdateStartDate,
+} from '@reducers/filters';
 // TODO: Apply gaps (margin, padding) from theme
 
 const useStyles = makeStyles(theme => ({
@@ -84,17 +87,41 @@ const renderSelectedDays = (dates, classes, range) => {
 };
 
 function DatePicker({
-  open, onToggle, range, startDate, endDate,
+  open, onTogglePresets, range, startDate, endDate, updateStartDate, updateEndDate,
 }) {
   const [showCalendar, setShowCalendar] = useState(() => open);
+  const [initialStartDate, setInitialStartDate] = useState(startDate);
+  const [initialEndDate, setInitialEndDate] = useState();
   const classes = useStyles();
-
   const ref = useRef(null);
-  const closeCalendar = useCallback(() => setShowCalendar(false), []);
+
+  const closeCalendar = useCallback(
+    () => {
+    if (startDate && endDate){
+      setShowCalendar(false);
+    } else if (startDate && !endDate){
+      // The calendar was closed with an incomplete date range selection so we need to restart
+      // startDate and endDate to their initial values
+      updateStartDate(initialStartDate);
+      updateEndDate(initialEndDate);
+      setShowCalendar(false);
+    } else {
+      // This should never happen. Log a warning.
+      console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
+    }
+    }, [startDate, endDate]);
   useOutsideClick(ref, closeCalendar);
+
+  const openCalendar = () => {
+    setInitialStartDate(startDate);
+    setInitialEndDate(endDate);
+    setShowCalendar(true);
+  }
 
   useEffect(() => {
     setShowCalendar(false);
+    setInitialStartDate(startDate)
+    setInitialEndDate(endDate)
   }, [open]);
 
   const getCoordinates = () => {
@@ -110,9 +137,14 @@ function DatePicker({
   };
 
   const toggleCalendar = () => {
-    setShowCalendar(prevState => !prevState);
-    if (onToggle) onToggle();
+    if (showCalendar) {
+      closeCalendar();
+    } else {
+      openCalendar();
+    }
+    if (onTogglePresets) onTogglePresets();
   };
+
   return (
     <div ref={ref} className={classes.selector}>
       <div onClick={toggleCalendar}>
@@ -132,6 +164,8 @@ function DatePicker({
         {showCalendar ? (
           <ReactDayPicker
             range={range}
+            updateStartDate={updateStartDate}
+            updateEndDate={updateEndDate}
           />
         ) : null}
       </div>
@@ -142,7 +176,7 @@ function DatePicker({
 DatePicker.propTypes = {
   range: PropTypes.bool,
   open: PropTypes.bool,
-  onToggle: PropTypes.func,
+  onTogglePresets: PropTypes.func,
   startDate: PropTypes.string,
   endDate: PropTypes.string,
 };
@@ -150,7 +184,7 @@ DatePicker.propTypes = {
 DatePicker.defaultProps = {
   open: false,
   range: false,
-  onToggle: null,
+  onTogglePresets: null,
   startDate: null,
   endDate: null,
 };
@@ -160,4 +194,9 @@ const mapStateToProps = state => ({
   endDate: state.filters.endDate,
 });
 
-export default connect(mapStateToProps)(DatePicker);
+const mapDispatchToProps = dispatch => ({
+  updateStartDate: date => dispatch(reduxUpdateStartDate(date)),
+  updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DatePicker);

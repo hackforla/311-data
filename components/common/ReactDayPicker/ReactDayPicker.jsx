@@ -7,11 +7,6 @@ import DayPicker from 'react-day-picker';
 import { connect } from 'react-redux';
 import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
-import {
-  updateEndDate as reduxUpdateEndDate,
-  updateStartDate as reduxUpdateStartDate,
-} from '@reducers/filters';
-
 import fonts from '@theme/fonts';
 import colors from '@theme/colors';
 import { INTERNAL_DATE_SPEC } from '../CONSTANTS';
@@ -175,13 +170,16 @@ function ReactDayPicker({
       setFromDay(day);
       return;
     }
-
-    // Our date range selection logic is very simple: the user is selecting the
-    // first day in their date range if from and to are set, or if they're both
-    // unset. Otherwise, they are selecting the last day.
-    if (!(startDate && endDate)) {
-      // If the user picks the first date then picks the second date that is before the first date
-      // Reassign the From and To Day
+    
+  // If both startDate and endDate were already selected. Start a new range selection.
+  if (startDate && endDate){
+    setFromDay(day);
+    updateEndDate(null);
+    setEnteredTo(null);
+    // If startDate is selected and endDate is unselected, complete the range selection.
+  } else if (startDate && !endDate){
+      // If the user selects the startDate then chooses an endDate that precedes it,
+      // swap the values of startDate and endDate
       if (moment(day).format(INTERNAL_DATE_SPEC) < startDate) {
         const tempDate = startDate;
         setToDay(moment(tempDate).toDate());
@@ -191,11 +189,10 @@ function ReactDayPicker({
       } else {
         setToDay(day);
       }
-      return;
-    }
-    setFromDay(day);
-    updateEndDate(null);
-    setEnteredTo(null);
+  } else {
+      // This should never happen. Log a warning.
+      console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
+  } 
   };
 
   const handleDayMouseEnter = day => {
@@ -248,14 +245,9 @@ ReactDayPicker.defaultProps = {
   endDate: null,
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateStartDate: date => dispatch(reduxUpdateStartDate(date)),
-  updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
-});
-
 const mapStateToProps = state => ({
   startDate: state.filters.startDate,
   endDate: state.filters.endDate,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactDayPicker);
+export default connect(mapStateToProps)(ReactDayPicker);
