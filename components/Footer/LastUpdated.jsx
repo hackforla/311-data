@@ -21,7 +21,7 @@ function LastUpdated() {
 
   useEffect(() => {
     const getLastUpdated = async () => {
-      const getLastUpdatedSQL = 'select max(createddate) from requests_2024;';
+      const getLastUpdatedSQL = 'select max(createddate) from requests_2025;';
 
       const lastUpdatedAsArrowTable = await conn.query(getLastUpdatedSQL);
       const results = ddbh.getTableData(lastUpdatedAsArrowTable);
@@ -40,7 +40,9 @@ function LastUpdated() {
       <div>
         <Typography variant="body2" className={classes.lastUpdated}>
           {toNonBreakingSpaces(
-            `Data last updated ${moment(lastUpdated).format('MM/DD/YY')}`
+            //* Quickfix - hard coded date last updated until 2025 data available
+            // `Data last updated ${moment(lastUpdated).format('MM/DD/YY')}`
+            `Data last updated 12/31/24`
           )}
         </Typography>
       </div>
