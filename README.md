@@ -65,12 +65,21 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 - Run `npm start`
 - Visit http://localhost:5173
 
+### Run tests
+
+- Run `npm test`
+
+See [contributing.md](contributing.md#testing) for info on writing tests.
+
 ### Information About Technologies
 
 - Frontend
   - Mapbox
   - React
   - MUI
+  - Vite
+  - Vitest
+  - React Testing Library
 - Backend
   - DuckDb
   - HuggingFace
