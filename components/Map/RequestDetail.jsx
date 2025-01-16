@@ -14,6 +14,7 @@ import toTitleCase from '@utils/toTitleCase';
 import { updatePinInfo } from '@reducers/data';
 import ddbh from '@utils/duckDbHelpers.js';
 import { isEmpty } from '@utils';
+import { fontSize, fontWeight } from '@mui/system';
 
 // Your styles here
 const styles = theme => ({
@@ -32,6 +33,21 @@ const styles = theme => ({
   requestType: {
     ...theme.typography.h5,
     marginRight: 5,
+    font: 'Roboto',
+    fontWeight: 'bold',
+    fontSize: '40px',
+  },
+  sectionHeader: {
+    font: 'Roboto',
+    fontWeight: 'normal',
+    fontSize: '24px',
+  },
+  detailsStyles: {
+    font: 'Roboto',
+    fontWeight: 200,
+    fontSize: '16px',
+    color: '#FFFFFF',
+    paddingLeft: '19px',
   },
   icon: {
     display: 'block',
@@ -39,16 +55,29 @@ const styles = theme => ({
   divider: {
     marginTop: 6,
     marginBottom: 8,
+    backgroundColor: '#000000'
   },
-  info1: {
-    ...theme.typography.body1,
-    marginTop: 0,
-    marginBottom: 0,
+  reportedAndClosed: {
+     font: 'Roboto',
+     fontWeight: 200,
+     fontSize: '14px',
+     color: '#FFB104'
   },
-  councilName: {
-    color: '#A8A8A8',
-    marginTop: 5,
+  sourceAndAgency: {
+    font: 'Roboto',
+    fontWeight: 200,
+    fontSize: '10px',
+    color: '#FFFFFF'
   },
+  // info1: {
+  //   ...theme.typography.body1,
+  //   marginTop: 0,
+  //   marginBottom: 0,
+  // },
+  // councilName: {
+  //   color: '#A8A8A8',
+  //   marginTop: 5,
+  // },
   info2: {
     marginTop: 14,
   },
@@ -167,23 +196,25 @@ function RequestDetail({
 
   return (
     <div className={classes.popupContent}>
-      <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-        <Grid className={classes.requestType} item>
-          {formattedTypeName}
-        </Grid>
+      <Grid container direction="row" justifyContent="center" alignItems="center">
         <Grid item>
-          <FiberManualRecordIcon
-            className={classes.icon}
-            style={{
-              color,
-              fontSize: 16,
-            }}
-          />
-        </Grid>
+            <FiberManualRecordIcon
+              className={classes.icon}
+              style={{
+                color,
+                fontSize: 16,
+              }}
+            />
+          </Grid>
+          <Grid className={classes.requestType} item>
+            {formattedTypeName}
+          </Grid>
       </Grid>
       <Divider className={classes.divider} />
-      <p className={classes.info1}>{toTitleCase(address)}</p>
-      <p className={classes.councilName}>{councilName}</p>
+      <p className={classes.sectionHeader}>Location:</p>
+      <p className={classes.detailsStyles}>{toTitleCase(address)}</p>
+      <p className={classes.sectionHeader}>Neighborhood Council:</p>
+      <p className={classes.detailsStyles}>{councilName}</p>
       <Grid
         className={classes.info2}
         container
@@ -191,26 +222,26 @@ function RequestDetail({
         justifyContent="space-between"
         alignItems="flex-start"
       >
-        <Grid item xs={6}>
+        <Grid item xs={6} style={{ font: 'Roboto', fontWeight: 500, fontSize: '16px', textDecoration: 'underline' }}>
           Service request:
         </Grid>
         <Grid item xs={6} style={{ textAlign: 'right' }}>
-          {srnumber}
+          #&nbsp;{srnumber}
         </Grid>
-        <Grid item xs={6}>
-          Reported on:
+        <Grid className={classes.reportedAndClosed} item xs={6} >
+          Reported on: {moment(createdDate).format('l')}
         </Grid>
-        <Grid item xs={6} style={{ textAlign: 'right' }}>
+        {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
           {moment(createdDate).format('l')}
-        </Grid>
+        </Grid> */}
         {closedDate ? (
           <>
-            <Grid item xs={6}>
-              Closed on:
+            <Grid className={classes.reportedAndClosed}item xs={6}>
+              Closed on: {moment(closedDate).format('l')}
             </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
+            {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
               {moment(closedDate).format('l')}
-            </Grid>
+            </Grid> */}
           </>
         ) : (
           <>
