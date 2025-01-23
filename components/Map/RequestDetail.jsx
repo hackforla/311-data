@@ -35,19 +35,19 @@ const styles = theme => ({
   requestType: {
     ...theme.typography.h5,
     marginRight: 5,
-    font: 'Roboto',
-    fontWeight: 'bold',
+    fontFamily: 'Roboto',
+    fontWeight: 700,
     fontSize: '40px',
   },
   sectionHeader: {
-    font: 'Roboto',
+    fontFamily: 'Roboto',
     fontWeight: 'normal',
     fontSize: '24px',
     marginTop: '0px',
     marginBottom: '2px'
   },
   detailsStyles: {
-    font: 'Roboto',
+    fontFamily: 'Roboto',
     fontWeight: 200,
     fontSize: '16px',
     color: '#FFFFFF',
@@ -66,14 +66,19 @@ const styles = theme => ({
     marginRight: '22px',
     backgroundColor: '#000000'
   },
+  serviceRequestFieldNameValue: {
+    fontFamily: 'Roboto',
+    fontWeight: 600,
+    fontSize: '16px',
+  },
   reportedAndClosedStatus: {
-    font: 'Roboto',
+    fontFamily: 'Roboto',
     fontWeight: 200,
     fontSize: '14px',
     color: '#FFB104',
   },
   sourceAndAgency: {
-    font: 'Roboto',
+    fontFamily: 'Roboto',
     fontWeight: 100,
     fontSize: '10px',
     color: '#FFFFFF'
@@ -219,7 +224,7 @@ function RequestDetail({
               }}
             />
           {/* </Grid> */}
-          <Grid className={classes.requestType} item>
+          <Grid className={classes.requestType} style={{fontSize: '40px'}} item>
             {formattedTypeName}
             {/* <Typography align="center">{formattedTypeName}</Typography> */}
             {/* <Typography className={classes.requestType} align="center">{formattedTypeName}</Typography> */}
@@ -239,10 +244,10 @@ function RequestDetail({
         justifyContent="space-between"
         alignItems="flex-start"
       >
-        <Grid item xs={4} style={{ font: 'Roboto', fontWeight: 500, fontSize: '16px', textDecoration: 'underline', marginBottom: '31px' }}>
+        <Grid className={classes.serviceRequestFieldNameValue} style={{ textDecoration: 'underline', marginBottom: '31px' }} item xs={4}>
           Service request:
         </Grid>
-        <Grid item xs={4} style={{ textAlign: 'right' }}>
+        <Grid className={classes.serviceRequestFieldNameValue} style={{ textAlign: 'right' }} item xs={4}>
           #&nbsp;{srnumber}
         </Grid>
         <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '15px'}} item xs={12} >
