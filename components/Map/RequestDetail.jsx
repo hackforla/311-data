@@ -7,6 +7,7 @@ import moment from 'moment';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import CircularProgress from '@mui/material/CircularProgress';
 import DbContext from '@db/DbContext';
@@ -14,7 +15,7 @@ import toTitleCase from '@utils/toTitleCase';
 import { updatePinInfo } from '@reducers/data';
 import ddbh from '@utils/duckDbHelpers.js';
 import { isEmpty } from '@utils';
-import { fontSize, fontWeight } from '@mui/system';
+import { width } from '@mui/system';
 
 // Your styles here
 const styles = theme => ({
@@ -29,6 +30,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
     padding: '0 8',
     width: '100%',
+    marginBottom: 64,
   },
   requestType: {
     ...theme.typography.h5,
@@ -41,31 +43,38 @@ const styles = theme => ({
     font: 'Roboto',
     fontWeight: 'normal',
     fontSize: '24px',
+    marginTop: '0px',
+    marginBottom: '2px'
   },
   detailsStyles: {
     font: 'Roboto',
     fontWeight: 200,
     fontSize: '16px',
     color: '#FFFFFF',
-    paddingLeft: '19px',
+    paddingLeft: '18px',
+    marginTop: '0px',
+    marginBottom: '10px'
   },
   icon: {
     display: 'block',
   },
   divider: {
     marginTop: 6,
-    marginBottom: 8,
+    // marginBottom: 8,
+    marginBottom: 30,
+    marginLeft: '22px',
+    marginRight: '22px',
     backgroundColor: '#000000'
   },
-  reportedAndClosed: {
-     font: 'Roboto',
-     fontWeight: 200,
-     fontSize: '14px',
-     color: '#FFB104'
+  reportedAndClosedStatus: {
+    font: 'Roboto',
+    fontWeight: 200,
+    fontSize: '14px',
+    color: '#FFB104',
   },
   sourceAndAgency: {
     font: 'Roboto',
-    fontWeight: 200,
+    fontWeight: 100,
     fontSize: '10px',
     color: '#FFFFFF'
   },
@@ -80,6 +89,9 @@ const styles = theme => ({
   // },
   info2: {
     marginTop: 14,
+    marginLeft: '22px',
+    marginRight: '22px',
+    width: '411px',
   },
 });
 
@@ -196,25 +208,30 @@ function RequestDetail({
 
   return (
     <div className={classes.popupContent}>
-      <Grid container direction="row" justifyContent="center" alignItems="center">
-        <Grid item>
+      <Grid container direction="row" justifyContent="center" alignItems="center" style={{marginTop: '19px'}}>
+        {/* <Grid item> */}
             <FiberManualRecordIcon
               className={classes.icon}
               style={{
                 color,
                 fontSize: 16,
+                marginRight: '12px',
               }}
             />
-          </Grid>
+          {/* </Grid> */}
           <Grid className={classes.requestType} item>
             {formattedTypeName}
+            {/* <Typography align="center">{formattedTypeName}</Typography> */}
+            {/* <Typography className={classes.requestType} align="center">{formattedTypeName}</Typography> */}
           </Grid>
       </Grid>
       <Divider className={classes.divider} />
-      <p className={classes.sectionHeader}>Location:</p>
-      <p className={classes.detailsStyles}>{toTitleCase(address)}</p>
-      <p className={classes.sectionHeader}>Neighborhood Council:</p>
-      <p className={classes.detailsStyles}>{councilName}</p>
+      <div style={{marginLeft: '22px'}}>
+        <p className={classes.sectionHeader}>Location:</p>
+        <p className={classes.detailsStyles}>{toTitleCase(address)}</p>
+        <p className={classes.sectionHeader}>Neighborhood Council:</p>
+        <p className={classes.detailsStyles} style={{marginBottom: '29px'}}>{councilName}</p>
+      </div>
       <Grid
         className={classes.info2}
         container
@@ -222,22 +239,22 @@ function RequestDetail({
         justifyContent="space-between"
         alignItems="flex-start"
       >
-        <Grid item xs={6} style={{ font: 'Roboto', fontWeight: 500, fontSize: '16px', textDecoration: 'underline' }}>
+        <Grid item xs={4} style={{ font: 'Roboto', fontWeight: 500, fontSize: '16px', textDecoration: 'underline', marginBottom: '31px' }}>
           Service request:
         </Grid>
-        <Grid item xs={6} style={{ textAlign: 'right' }}>
+        <Grid item xs={4} style={{ textAlign: 'right' }}>
           #&nbsp;{srnumber}
         </Grid>
-        <Grid className={classes.reportedAndClosed} item xs={6} >
-          Reported on: {moment(createdDate).format('l')}
+        <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '15px'}} item xs={12} >
+          Reported: {moment(createdDate).format('l')}
         </Grid>
         {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
           {moment(createdDate).format('l')}
         </Grid> */}
         {closedDate ? (
           <>
-            <Grid className={classes.reportedAndClosed}item xs={6}>
-              Closed on: {moment(closedDate).format('l')}
+            <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '75px'}} item xs={12}>
+              Closed: {moment(closedDate).format('l')}
             </Grid>
             {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
               {moment(closedDate).format('l')}
@@ -245,24 +262,27 @@ function RequestDetail({
           </>
         ) : (
           <>
-            <Grid item xs={6}>
-              Status:
+            <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '75px'}} item xs={12}>
+              Status: {`Open (${renderDaysOpen(daysOpen)})`}
             </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
-              {`Open (${renderDaysOpen(daysOpen)})`}
-            </Grid>
+            {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
+              
+            </Grid> */}
           </>
         )}
-        <Grid item xs={6}>
-          Source:
+        
+        <Grid item xs={4}>
+          Source: {sourceName}
         </Grid>
-        <Grid item xs={6} style={{ textAlign: 'right' }}>
+        {/* <Grid item xs={2}></Grid> */}
+        {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
           {sourceName}
-        </Grid>
-        <Grid item xs={3}>
+        </Grid> */}
+        {/* <Grid item xs={3}>
           Agency:
-        </Grid>
-        <Grid item xs={9} style={{ textAlign: 'right' }}>
+        </Grid> */}
+        <Grid item xs={4} style={{ textAlign: 'right' }}>
+          Agency:&nbsp;
           <Link
             href={website}
             aria-label={`${agencyName} website`}

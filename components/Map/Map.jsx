@@ -53,6 +53,7 @@ import { debounce, isEmpty } from '@utils';
 import settings from '@settings';
 import ZoomTooltip from './zoomTooltip';
 import { DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM } from '@components/common/CONSTANTS';
+import { maxWidth } from '@mui/system';
 
 const styles = (theme) => ({
   root: {
@@ -81,6 +82,7 @@ const styles = (theme) => ({
       marginRight: 5,
     },
     '& .mapboxgl-popup': {
+      maxWidth: '474px!important',
       '&-anchor-bottom .mapboxgl-popup-tip': {
         borderTopColor: theme.palette.primary.main,
       },
