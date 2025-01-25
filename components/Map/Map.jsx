@@ -556,29 +556,35 @@ class Map extends React.Component {
     } = this.props;
 
     const features = this.getAllFeaturesAtPoint(e.point);
-    for (let i = 0; i < features.length; i += 1) {
-      const feature = features[i];
-      if (feature.layer.id == 'nc-fills') {
-        this.setState({ address: null });
 
-        this.resetAddressSearch(); // Clear address search input
-        dispatchCloseBoundaries(); // Collapse boundaries section
+    if (!features.length) {
+      this.reset()
+    } else {
+      for (let i = 0; i < features.length; i += 1) {
+        const feature = features[i];
+        if (feature.layer.id == 'nc-fills') {
+          this.setState({ address: null });
 
-        const selectedCouncilId = Number(feature.properties.NC_ID);
-        const newSelectedCouncil = councils.find(
-          ({ councilId }) => councilId === selectedCouncilId
-        );
-        const newSelected = isEmpty(newSelectedCouncil)
-          ? null
-          : [newSelectedCouncil];
+          this.resetAddressSearch(); // Clear address search input
+          dispatchCloseBoundaries(); // Collapse boundaries section
 
-        dispatchUpdateSelectedCouncils(newSelected);
-        dispatchUpdateUnselectedCouncils(councils);
-        dispatchUpdateNcId(selectedCouncilId);
+          const selectedCouncilId = Number(feature.properties.NC_ID);
+          const newSelectedCouncil = councils.find(
+            ({ councilId }) => councilId === selectedCouncilId
+          );
+          const newSelected = isEmpty(newSelectedCouncil)
+            ? null
+            : [newSelectedCouncil];
 
-        return this.ncLayer.selectRegion(feature.id);
-      } else {
-        return null;
+          dispatchUpdateSelectedCouncils(newSelected);
+          dispatchUpdateUnselectedCouncils(councils);
+          dispatchUpdateNcId(selectedCouncilId);
+
+          return this.ncLayer.selectRegion(feature.id);
+          
+        } else {
+          return null;
+        }
       }
     }
   };
