@@ -30,7 +30,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
     padding: '0 8',
     width: '100%',
-    marginBottom: 64,
+    marginBottom: '64px',
   },
   requestType: {
     ...theme.typography.h5,
@@ -44,7 +44,7 @@ const styles = theme => ({
     fontWeight: 'normal',
     fontSize: '24px',
     marginTop: '0px',
-    marginBottom: '2px'
+    marginBottom: '5px'
   },
   detailsStyles: {
     fontFamily: 'Roboto',
@@ -110,6 +110,7 @@ function RequestDetail({
   dispatchUpdatePinInfo,
   startDate,
   endDate,
+  loadingCallback,
 }) {
   const { conn } = useContext(DbContext);
   const getPinInfo = useCallback(async () => {
@@ -162,6 +163,13 @@ function RequestDetail({
     fetchPins();
   }, [requestId, getPinInfo]);
 
+  useEffect(() => {
+    const isLoading = isEmpty(pinsInfo);
+    if (loadingCallback) {
+      loadingCallback(isLoading);
+    }
+  }, [pinsInfo, loadingCallback]);
+
   const renderDaysOpen = days => {
     switch (days) {
       case 0:
@@ -212,7 +220,7 @@ function RequestDetail({
   const daysOpen = moment().diff(moment(createdDate), 'days');
 
   return (
-    <div className={classes.popupContent}>
+    <div className={classes.popupContent} style={{borderRadius: '30px'}}>
       <Grid container direction="row" justifyContent="center" alignItems="center" style={{marginTop: '19px'}}>
         {/* <Grid item> */}
             <FiberManualRecordIcon

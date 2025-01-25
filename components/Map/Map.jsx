@@ -53,7 +53,6 @@ import { debounce, isEmpty } from '@utils';
 import settings from '@settings';
 import ZoomTooltip from './zoomTooltip';
 import { DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM } from '@components/common/CONSTANTS';
-import { maxWidth } from '@mui/system';
 
 const styles = (theme) => ({
   root: {
@@ -130,6 +129,7 @@ class Map extends React.Component {
       selectedRequestId: null,
       selectedNc: null,
       requests: props.requests,
+      isRequestDetailLoading: true,
     };
 
     this.map = null;
@@ -763,6 +763,10 @@ class Map extends React.Component {
     this.setState({ filteredRequestCounts: counts });
   };
 
+  setRequestDetailLoading = (isLoading) => {
+    this.setState({ isRequestDetailLoading: isLoading });
+  };
+
   //// RENDER ////
 
   render() {
@@ -791,6 +795,7 @@ class Map extends React.Component {
       address,
     } = this.state;
 
+    const { isRequestDetailLoading } = this.state;
     const { classes } = this.props;
 
     return (
@@ -822,8 +827,14 @@ class Map extends React.Component {
           visible={geoFilterType === GEO_FILTER_TYPES.cc}
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
-        <div ref={(el) => (this.requestDetail = el)}>
-          <RequestDetail requestId={selectedRequestId} />
+        <div 
+          style={{ borderRadius: isRequestDetailLoading ? '5px' : '30px', border: '5px solid red' }}
+          ref={(el) => (this.requestDetail = el)}
+        >
+          <RequestDetail 
+            requestId={selectedRequestId} 
+            loadingCallback={this.setRequestDetailLoading}
+            />
         </div>
         {this.state.mapReady && requestTypes && (
           <>
