@@ -8,6 +8,7 @@ import withStyles from '@mui/styles/withStyles';
 import mapboxgl from 'mapbox-gl';
 import FilterMenu from '@components/main/Desktop/FilterMenu';
 import Tooltip from '@mui/material/Tooltip';
+import CircularProgress from '@mui/material/CircularProgress';
 // import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, clearPinInfo } from '@reducers/data';
@@ -53,6 +54,8 @@ import { debounce, isEmpty } from '@utils';
 import settings from '@settings';
 import ZoomTooltip from './zoomTooltip';
 import { DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM } from '@components/common/CONSTANTS';
+import RequestDetailLoader from './RequestDetailLoader';
+import { borderRadius } from '@mui/system';
 
 const styles = (theme) => ({
   root: {
@@ -93,6 +96,15 @@ const styles = (theme) => ({
       '&-anchor-right .mapboxgl-popup-tip': {
         borderLeftColor: theme.palette.primary.main,
       },
+    },
+  },
+  testing: {
+    borderRadius: 30,
+    '& .mapboxgl-popup-content': { // this is the key part! We can assign a popup a class via addClassName(),
+      width: 'auto',              // and then we can target the class for the actual modal like so
+      backgroundColor: theme.palette.primary.main,
+      borderRadius: 30,
+      padding: 10,
     },
   },
   menuWrapper: {
@@ -136,6 +148,7 @@ class Map extends React.Component {
     this.ncLayer = null;
     this.ccLayer = null;
     this.requestDetail = null;
+    this.requestDetailSpinner = null; // see note about "separate" modals
     this.popup = null;
     this.isSubscribed = null;
     this.initialState = props.initialState;
@@ -424,7 +437,7 @@ class Map extends React.Component {
     this.setState({ selectedRequestId: requestId });
     this.popup = new mapboxgl.Popup()
       .setLngLat(coordinates)
-      .setDOMContent(this.requestDetail)
+      .setDOMContent(this.requestDetailSpinner) // again, see note about "separate" modals
       .addTo(this.map);
   };
 
@@ -826,6 +839,21 @@ class Map extends React.Component {
           visible={geoFilterType === GEO_FILTER_TYPES.cc}
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
+        {/*
+          Having a "separate" ref for the loader content was not TOTALLY necessary. At the end of the day,
+          this.popup was never re-instantiated when loadingCallback() is hit. So we can basically call
+          this.popup.addClassName whenever / wherever (provided we have access to it). There seems to be no
+          issue with changing style properties to '.mapboxgl-popup-content' on the fly. The trick here was 
+          targeting it correctly.
+        */}
+        <div ref={(el) => (this.requestDetailSpinner = el)}> 
+          <RequestDetailLoader requestId={selectedRequestId} loadingCallback={() => {
+            if (this.popup) {
+              this.popup.setDOMContent(this.requestDetail);
+              this.popup.addClassName(classes.testing);
+            }
+          }}/>
+        </div>
         <div ref={(el) => (this.requestDetail = el)}>
           <RequestDetail requestId={selectedRequestId} />
         </div>
