@@ -7,7 +7,6 @@ import moment from 'moment';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import CircularProgress from '@mui/material/CircularProgress';
 import DbContext from '@db/DbContext';
@@ -15,7 +14,6 @@ import toTitleCase from '@utils/toTitleCase';
 import { updatePinInfo } from '@reducers/data';
 import ddbh from '@utils/duckDbHelpers.js';
 import { isEmpty } from '@utils';
-import { width } from '@mui/system';
 
 // Your styles here
 const styles = theme => ({
@@ -210,9 +208,8 @@ function RequestDetail({
   const daysOpen = moment().diff(moment(createdDate), 'days');
 
   return (
-    <div className={classes.popupContent} style={{borderRadius: '30px'}}>
+    <div className={classes.popupContent}>
       <Grid container direction="row" justifyContent="center" alignItems="center" style={{marginTop: '19px'}}>
-        {/* <Grid item> */}
             <FiberManualRecordIcon
               className={classes.icon}
               style={{
@@ -221,7 +218,6 @@ function RequestDetail({
                 marginRight: '12px',
               }}
             />
-          {/* </Grid> */}
           <Grid className={classes.requestType} style={{fontSize: '40px'}} item>
             {formattedTypeName}
           </Grid>
