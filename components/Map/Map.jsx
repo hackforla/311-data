@@ -96,6 +96,17 @@ const styles = (theme) => ({
       },
     },
   },
+  // loadedModal: {
+  //   width: 'auto',
+  //   backgroundColor: theme.palette.primary.main,
+  //   borderRadius: 30,
+  //   padding: 10,
+  // },
+  loadedModal: {
+   '& .mapboxgl-popup-content': {
+      borderRadius: 30,
+    },
+  },
   menuWrapper: {
     position: 'absolute',
     left: '20px',
@@ -764,6 +775,9 @@ class Map extends React.Component {
   };
 
   setRequestDetailLoading = (isLoading) => {
+    if (!isLoading && this.popup) {
+      this.popup.addClassName(this.props.classes.loadedModal);
+    }
     this.setState({ isRequestDetailLoading: isLoading });
   };
 
@@ -793,9 +807,9 @@ class Map extends React.Component {
       // selectedNc,
       selectedTypes,
       address,
+      isRequestDetailLoading
     } = this.state;
 
-    const { isRequestDetailLoading } = this.state;
     const { classes } = this.props;
 
     return (
@@ -827,14 +841,11 @@ class Map extends React.Component {
           visible={geoFilterType === GEO_FILTER_TYPES.cc}
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
-        <div 
-          style={{ borderRadius: isRequestDetailLoading ? '5px' : '30px', border: '5px solid red' }}
-          ref={(el) => (this.requestDetail = el)}
-        >
+        <div ref={(el) => (this.requestDetail = el)}>
           <RequestDetail 
             requestId={selectedRequestId} 
             loadingCallback={this.setRequestDetailLoading}
-            />
+          />
         </div>
         {this.state.mapReady && requestTypes && (
           <>
