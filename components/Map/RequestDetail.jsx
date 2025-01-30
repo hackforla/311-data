@@ -60,7 +60,6 @@ const styles = theme => ({
   },
   divider: {
     marginTop: 6,
-    // marginBottom: 8,
     marginBottom: 30,
     marginLeft: '22px',
     marginRight: '22px',
@@ -83,15 +82,6 @@ const styles = theme => ({
     fontSize: '10px',
     color: '#FFFFFF'
   },
-  // info1: {
-  //   ...theme.typography.body1,
-  //   marginTop: 0,
-  //   marginBottom: 0,
-  // },
-  // councilName: {
-  //   color: '#A8A8A8',
-  //   marginTop: 5,
-  // },
   info2: {
     marginTop: 14,
     marginLeft: '22px',
@@ -234,8 +224,6 @@ function RequestDetail({
           {/* </Grid> */}
           <Grid className={classes.requestType} style={{fontSize: '40px'}} item>
             {formattedTypeName}
-            {/* <Typography align="center">{formattedTypeName}</Typography> */}
-            {/* <Typography className={classes.requestType} align="center">{formattedTypeName}</Typography> */}
           </Grid>
       </Grid>
       <Divider className={classes.divider} />
@@ -261,39 +249,23 @@ function RequestDetail({
         <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '15px'}} item xs={12} >
           Reported: {moment(createdDate).format('l')}
         </Grid>
-        {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
-          {moment(createdDate).format('l')}
-        </Grid> */}
         {closedDate ? (
           <>
             <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '75px'}} item xs={12}>
               Closed: {moment(closedDate).format('l')}
             </Grid>
-            {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
-              {moment(closedDate).format('l')}
-            </Grid> */}
           </>
         ) : (
           <>
             <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '75px'}} item xs={12}>
               Status: {`Open (${renderDaysOpen(daysOpen)})`}
             </Grid>
-            {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
-              
-            </Grid> */}
           </>
         )}
         
         <Grid item xs={4}>
           Source: {sourceName}
         </Grid>
-        {/* <Grid item xs={2}></Grid> */}
-        {/* <Grid item xs={6} style={{ textAlign: 'right' }}>
-          {sourceName}
-        </Grid> */}
-        {/* <Grid item xs={3}>
-          Agency:
-        </Grid> */}
         <Grid item xs={4} style={{ textAlign: 'right' }}>
           Agency:&nbsp;
           <Link

@@ -96,12 +96,6 @@ const styles = (theme) => ({
       },
     },
   },
-  // loadedModal: {
-  //   width: 'auto',
-  //   backgroundColor: theme.palette.primary.main,
-  //   borderRadius: 30,
-  //   padding: 10,
-  // },
   loadedModal: {
    '& .mapboxgl-popup-content': {
       borderRadius: 30,
@@ -435,7 +429,7 @@ class Map extends React.Component {
 
   addPopup = (coordinates, requestId) => {
     this.setState({ selectedRequestId: requestId });
-    this.popup = new mapboxgl.Popup()
+    this.popup = new mapboxgl.Popup({closeButton: false})
       .setLngLat(coordinates)
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
@@ -807,7 +801,6 @@ class Map extends React.Component {
       // selectedNc,
       selectedTypes,
       address,
-      isRequestDetailLoading
     } = this.state;
 
     const { classes } = this.props;
