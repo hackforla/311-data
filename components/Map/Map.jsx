@@ -134,7 +134,6 @@ class Map extends React.Component {
       selectedRequestId: null,
       selectedNc: null,
       requests: props.requests,
-      isRequestDetailLoading: true,
     };
 
     this.map = null;
@@ -772,7 +771,6 @@ class Map extends React.Component {
     if (!isLoading && this.popup) {
       this.popup.addClassName(this.props.classes.loadedModal);
     }
-    this.setState({ isRequestDetailLoading: isLoading });
   };
 
   //// RENDER ////
