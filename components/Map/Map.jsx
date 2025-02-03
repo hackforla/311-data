@@ -454,6 +454,8 @@ class Map extends React.Component {
 
     // Set councilId in reducers/filters back to null
     dispatchUpdateNcId(null);
+    console.log('this.props', this.props)
+    updateSelectedCouncils([])
 
     this.map.once('zoomend', () => {
       this.setState({
@@ -478,7 +480,6 @@ class Map extends React.Component {
     dispatchUpdateNcId(null);
 
     // Reset councilSelector.
-    dispatchUpdateSelectedCouncils([]);
     dispatchUpdateUnselectedCouncils(councils);
   };
 
@@ -559,6 +560,7 @@ class Map extends React.Component {
 
     if (!features.length) {
       this.reset()
+      dispatchUpdateSelectedCouncils([]);
     } else {
       for (let i = 0; i < features.length; i += 1) {
         const feature = features[i];
