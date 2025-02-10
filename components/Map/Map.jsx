@@ -471,8 +471,6 @@ class Map extends React.Component {
   resetBoundaries = () => {
     const {
       dispatchUpdateNcId,
-      dispatchUpdateSelectedCouncils,
-      councils,
     } = this.props;
 
     // Reset the selected NcId back to null.
