@@ -472,15 +472,11 @@ class Map extends React.Component {
     const {
       dispatchUpdateNcId,
       dispatchUpdateSelectedCouncils,
-      dispatchUpdateUnselectedCouncils,
       councils,
     } = this.props;
 
     // Reset the selected NcId back to null.
     dispatchUpdateNcId(null);
-
-    // Reset councilSelector.
-    dispatchUpdateUnselectedCouncils(councils);
   };
 
   addressSearchIsEmpty = () => {
