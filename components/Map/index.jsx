@@ -29,10 +29,6 @@ import ddbh from '@utils/duckDbHelpers.js';
 import DbContext from '@db/DbContext';
 import AcknowledgeModal from '../Loading/AcknowledgeModal';
 
-// We make API requests on a per-day basis. On average, there are about 4k
-// requests per day, so 10k is a large safety margin.
-const REQUEST_LIMIT = 10000;
-
 const styles = (theme) => ({
   root: {
     height: `calc(100vh - ${theme.header.height} - ${theme.footer.height})`,
@@ -99,7 +95,7 @@ class MapContainer extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
-    const { activeMode, pins, startDate, endDate } = this.props;
+    const { activeMode, startDate, endDate, councilId } = this.props;
     // create conditions to check if year or startDate or endDate changed
     const yearChanged = moment(prevProps.startDate).year() !== moment(startDate).year();
     const startDateChanged = prevProps.startDate !== startDate;
@@ -111,7 +107,7 @@ class MapContainer extends React.Component {
 
     if (
       prevProps.activeMode !== activeMode ||
-      prevProps.pins !== pins ||
+			prevProps.councilId !== councilId ||
       didDateRangeChange
     ) {
       await this.createRequestsTable();
@@ -406,11 +402,9 @@ class MapContainer extends React.Component {
     });
 
   // TODO: fix this
+  //? Fix what? Need to leave more detailed comments.
   getSelectedTypes = () => {
     const { requestTypes } = this.props;
-    // return Object.keys(requestTypes).filter(type => {
-    //   return type !== 'All' && requestTypes[type]
-    // });
     return requestTypes;
   };
 
@@ -473,6 +467,7 @@ const mapStateToProps = (state) => ({
   dateRangesWithRequests: state.data.dateRangesWithRequests,
   isMapLoading: state.data.isMapLoading,
   isDbLoading: state.data.isDbLoading,
+	councilId: state.filters.councilId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
