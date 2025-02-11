@@ -10,10 +10,6 @@ import { COUNCILS } from '@components/common/CONSTANTS';
 
 import {
   types,
-  getPinsSuccess,
-  getPinsFailure,
-  // getPinInfoSuccess,
-  // getPinInfoFailure,
   getNcByLngLatSuccess,
   getNcByLngLatFailure,
   gitResponseSuccess,
@@ -40,13 +36,13 @@ function* fetchPins(filters) {
   return data;
 }
 
-// function* fetchPinInfo(srnumber) {
-//   const pinInfoUrl = `${BASE_URL}/requests/${srnumber}`;
-//
-//   const { data } = yield call(axios.get, pinInfoUrl);
-//
-//   return data;
-// }
+function* fetchPinInfo(srnumber) {
+  const pinInfoUrl = `${BASE_URL}/requests/${srnumber}`;
+
+  const { data } = yield call(axios.get, pinInfoUrl);
+
+  return data;
+}
 
 function* fetchNcByLngLat({ longitude, latitude }) {
   const geocodeUrl = `${BASE_URL}/geojson/geocode?latitude=${latitude}&longitude=${longitude}`;
@@ -90,6 +86,7 @@ function* getFilters() {
   };
 }
 
+
 /* /////////////////// SAGAS ///////////////// */
 
 function* getMapData() {
@@ -110,16 +107,16 @@ function* getMapData() {
   }
 }
 
-// function* getPinData(action) {
-//   try {
-//     const srnumber = action.payload;
-//     const data = yield call(fetchPinInfo, srnumber);
-//     yield put(getPinInfoSuccess(data));
-//   } catch (e) {
-//     yield put(getPinInfoFailure(e));
-//     yield put(setErrorModal(true));
-//   }
-// }
+function* getPinData(action) {
+  try {
+    const srnumber = action.payload;
+    const data = yield call(fetchPinInfo, srnumber);
+    yield put(getPinInfoSuccess(data));
+  } catch (e) {
+    yield put(getPinInfoFailure(e));
+    yield put(setErrorModal(true));
+  }
+}
 
 function* getNcByLngLat(action) {
   try {
@@ -149,8 +146,9 @@ function* sendContactData(action) {
 }
 
 export default function* rootSaga() {
+  yield takeLatest(mapFiltersTypes.UPDATE_MAP_DATE_RANGE);
   yield takeLatest(mapFiltersTypes.UPDATE_MAP_DATE_RANGE, getMapData);
   yield takeLatest(types.GET_NC_BY_LNG_LAT, getNcByLngLat);
-  // yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
+ // yield takeEvery(types.GET_PIN_INFO_REQUEST, getPinData);
   yield takeLatest(types.SEND_GIT_REQUEST, sendContactData);
 }
