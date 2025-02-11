@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React from "react";
 import { connect } from "react-redux";
 import withStyles from "@mui/styles/withStyles";
@@ -28,10 +26,6 @@ import moment from "moment";
 import ddbh from "@utils/duckDbHelpers.js";
 import DbContext from "@db/DbContext";
 import AcknowledgeModal from "../Loading/AcknowledgeModal";
-
-// We make API requests on a per-day basis. On average, there are about 4k
-// requests per day, so 10k is a large safety margin.
-const REQUEST_LIMIT = 10000;
 
 const styles = (theme) => ({
 	root: {
@@ -422,9 +416,6 @@ class MapContainer extends React.Component {
 	// TODO: fix this
 	getSelectedTypes = () => {
 		const { requestTypes } = this.props;
-		// return Object.keys(requestTypes).filter(type => {
-		//   return type !== 'All' && requestTypes[type]
-		// });
 		return requestTypes;
 	};
 

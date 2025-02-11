@@ -7,8 +7,6 @@ import { connect } from "react-redux";
 import withStyles from "@mui/styles/withStyles";
 import mapboxgl from "mapbox-gl";
 import FilterMenu from "@components/main/Desktop/FilterMenu";
-import Tooltip from "@mui/material/Tooltip";
-// import LocationDetail from './LocationDetail';
 import { REQUEST_TYPES } from "@components/common/CONSTANTS";
 import { getNcByLngLat, clearPinInfo } from "@reducers/data";
 import {
@@ -29,7 +27,6 @@ import {
 	ncNameFromId,
 	ccNameFromId,
 	ncInfoFromLngLat,
-	// ccNameFromLngLat,
 } from "./districts";
 
 import { pointsWithinGeo, getNcByLngLatv2 } from "./geoUtils";
@@ -38,18 +35,9 @@ import RequestsLayer from "./layers/RequestsLayer";
 import BoundaryLayer from "./layers/BoundaryLayer";
 import AddressLayer from "./layers/AddressLayer";
 import DbContext from "@db/DbContext";
-
-// import MapOverview from './controls/MapOverview';
-
 import MapSearch from "./controls/MapSearch";
-// import MapLayers from './controls/MapLayers';
-// import MapRegion from './controls/MapRegion';
-// import MapMeta from './controls/MapMeta';
-
 import RequestDetail from "./RequestDetail";
-
 import { debounce, isEmpty } from "@utils";
-
 import settings from "@settings";
 import ZoomTooltip from "./zoomTooltip";
 import {
@@ -227,20 +215,13 @@ class Map extends React.Component {
 			if (this.state.mapReady) {
 				this.setState({ requests: this.props.requests });
 				this.map.on("idle", entireMapLoadTime);
-				// this.map.once('idle', this.setFilteredRequestCounts);
 			} else {
 				this.map.once("idle", () => {
 					this.setState({ requests: this.props.requests });
-					// this.map.once('idle', this.setFilteredRequestCounts);
 				});
 			}
 		}
 
-		// if (this.props.requestTypes != prevProps.requestTypes) {
-		//   this.requestsLayer.init({
-		//     map: this.map,
-		//   });
-		// }
 		this.map.on("load", () => {
 			// grab the Zoom Out button of the Mapbox zoom controls
 			const zoomOutControl = document.querySelector(".mapboxgl-ctrl-zoom-out");
@@ -677,24 +658,6 @@ class Map extends React.Component {
 		console.log(this.map.getCanvas().toDataURL());
 	};
 
-	// setSelectedTypes = selectedTypes => {
-	//   this.setState({ selectedTypes });
-	// };
-
-	// setActiveRequestsLayer = layerName => {
-	//   this.setState({ activeRequestsLayer: layerName });
-	// };
-
-	// setMapStyle = mapStyle => {
-	//   this.setState({ mapStyle });
-	//   this.map.setStyle(MAP_STYLES[mapStyle]);
-	//   this.map.once('styledata', () => this.initLayers(false));
-	// };
-
-	// setColorScheme = scheme => {
-	//   this.setState({ colorScheme: scheme });
-	// };
-
 	getDistrictCounts = (geoFilterType, filterGeo, selectedTypes) => {
 		const { ncCounts, ccCounts } = this.props;
 		const { counts, regionId } = (() => {
@@ -765,32 +728,21 @@ class Map extends React.Component {
 		this.setState({ filteredRequestCounts: counts });
 	};
 
-	//// RENDER ////
-
 	render() {
 		const {
-			pinsInfo,
-			getPinInfo,
-			lastUpdated,
 			requestTypes,
-			selectedNcId,
 			councils,
 		} = this.props;
 
 		const {
 			geoFilterType,
-			locationInfo,
-			// filteredRequestCounts,
 			colorScheme,
 			filterGeo,
 			activeRequestsLayer,
 			mapStyle,
-			// hoveredRegionName,
 			canReset,
 			selectedRequestId,
-			// selectedNc,
 			selectedTypes,
-			address,
 		} = this.state;
 
 		const { classes } = this.props;
@@ -806,13 +758,11 @@ class Map extends React.Component {
 				/>
 				<AddressLayer
 					ref={(el) => (this.addressLayer = el)}
-					// visible={geoFilterType === GEO_FILTER_TYPES.address}
 					visible
 					boundaryStyle={mapStyle === "dark" ? "light" : "dark"}
 				/>
 				<BoundaryLayer
 					ref={(el) => (this.ncLayer = el)}
-					// visible={geoFilterType === GEO_FILTER_TYPES.nc}
 					visible
 					boundaryStyle={mapStyle === "dark" ? "light" : "dark"}
 				/>
@@ -826,12 +776,6 @@ class Map extends React.Component {
 				</div>
 				{this.state.mapReady && requestTypes && (
 					<>
-						{/* <MapOverview
-              date={lastUpdated}
-              locationInfo={locationInfo}
-              selectedRequests={filteredRequestCounts}
-              colorScheme={colorScheme}
-            /> */}
 						<div className={classes.menuWrapper}>
 							<MapSearch
 								map={this.map}
@@ -846,22 +790,7 @@ class Map extends React.Component {
 								resetMap={this.reset}
 								resetAddressSearch={this.resetAddressSearch}
 							/>
-							{/* {
-                (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
-              } */}
 						</div>
-						{/* <MapLayers
-              selectedTypes={selectedTypes}
-              onChangeSelectedTypes={this.setSelectedTypes}
-              requestsLayer={activeRequestsLayer}
-              onChangeRequestsLayer={this.setActiveRequestsLayer}
-              mapStyle={mapStyle}
-              onChangeMapStyle={this.setMapStyle}
-              colorScheme={colorScheme}
-              onChangeColorScheme={this.setColorScheme}
-            /> */}
-						{/* <MapRegion regionName={hoveredRegionName} />
-            <MapMeta map={this.map} /> */}
 					</>
 				)}
 			</div>
