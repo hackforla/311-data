@@ -437,7 +437,7 @@ class Map extends React.Component {
   };
 
   reset = () => {
-    const { dispatchUpdateNcId } = this.props;
+    const { dispatchUpdateNcId, dispatchUpdateSelectedCouncils } = this.props;
 
     this.zoomOut();
     this.addressLayer.clearMarker();
@@ -463,23 +463,18 @@ class Map extends React.Component {
     });
 
     // Reset MinZoom to original value after deselecting NC
+    this.resetBoundaries();
+    dispatchUpdateSelectedCouncils([])
     this.map.setMinZoom(DEFAULT_MIN_ZOOM);
   };
 
   resetBoundaries = () => {
     const {
       dispatchUpdateNcId,
-      dispatchUpdateSelectedCouncils,
-      dispatchUpdateUnselectedCouncils,
-      councils,
     } = this.props;
 
     // Reset the selected NcId back to null.
     dispatchUpdateNcId(null);
-
-    // Reset councilSelector.
-    dispatchUpdateSelectedCouncils([]);
-    dispatchUpdateUnselectedCouncils(councils);
   };
 
   addressSearchIsEmpty = () => {
