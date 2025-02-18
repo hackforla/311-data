@@ -437,7 +437,7 @@ class Map extends React.Component {
   };
 
   reset = () => {
-    const { dispatchUpdateNcId } = this.props;
+    const { dispatchUpdateNcId, dispatchUpdateSelectedCouncils } = this.props;
 
     this.zoomOut();
     this.addressLayer.clearMarker();
@@ -463,23 +463,18 @@ class Map extends React.Component {
     });
 
     // Reset MinZoom to original value after deselecting NC
+    this.resetBoundaries();
+    dispatchUpdateSelectedCouncils([])
     this.map.setMinZoom(DEFAULT_MIN_ZOOM);
   };
 
   resetBoundaries = () => {
     const {
       dispatchUpdateNcId,
-      dispatchUpdateSelectedCouncils,
-      dispatchUpdateUnselectedCouncils,
-      councils,
     } = this.props;
 
     // Reset the selected NcId back to null.
     dispatchUpdateNcId(null);
-
-    // Reset councilSelector.
-    dispatchUpdateSelectedCouncils([]);
-    dispatchUpdateUnselectedCouncils(councils);
   };
 
   addressSearchIsEmpty = () => {
@@ -556,29 +551,35 @@ class Map extends React.Component {
     } = this.props;
 
     const features = this.getAllFeaturesAtPoint(e.point);
-    for (let i = 0; i < features.length; i += 1) {
-      const feature = features[i];
-      if (feature.layer.id == 'nc-fills') {
-        this.setState({ address: null });
 
-        this.resetAddressSearch(); // Clear address search input
-        dispatchCloseBoundaries(); // Collapse boundaries section
+    if (!features.length) {
+      this.reset()
+    } else {
+      for (let i = 0; i < features.length; i += 1) {
+        const feature = features[i];
+        if (feature.layer.id == 'nc-fills') {
+          this.setState({ address: null });
 
-        const selectedCouncilId = Number(feature.properties.NC_ID);
-        const newSelectedCouncil = councils.find(
-          ({ councilId }) => councilId === selectedCouncilId
-        );
-        const newSelected = isEmpty(newSelectedCouncil)
-          ? null
-          : [newSelectedCouncil];
+          this.resetAddressSearch(); // Clear address search input
+          dispatchCloseBoundaries(); // Collapse boundaries section
 
-        dispatchUpdateSelectedCouncils(newSelected);
-        dispatchUpdateUnselectedCouncils(councils);
-        dispatchUpdateNcId(selectedCouncilId);
+          const selectedCouncilId = Number(feature.properties.NC_ID);
+          const newSelectedCouncil = councils.find(
+            ({ councilId }) => councilId === selectedCouncilId
+          );
+          const newSelected = isEmpty(newSelectedCouncil)
+            ? null
+            : [newSelectedCouncil];
 
-        return this.ncLayer.selectRegion(feature.id);
-      } else {
-        return null;
+          dispatchUpdateSelectedCouncils(newSelected);
+          dispatchUpdateUnselectedCouncils(councils);
+          dispatchUpdateNcId(selectedCouncilId);
+
+          return this.ncLayer.selectRegion(feature.id);
+          
+        } else {
+          return null;
+        }
       }
     }
   };
