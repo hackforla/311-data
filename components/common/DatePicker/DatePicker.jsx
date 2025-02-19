@@ -126,7 +126,8 @@ function DatePicker({
 
   const getCoordinates = () => {
     if (ref.current) {
-      const { left, top, height } = ref.current.getClientRects()[0];
+      const { left, top, height } =
+        ref.current.getClientRects()[0] ?? ref.current.getBoundingClientRect();
       const offsetFromSelectorDisplay = 2;
       return {
         left,
