@@ -9,6 +9,8 @@ import { COUNCILS } from '@components/common/CONSTANTS';
 
 import {
   types,
+  getPinsSuccess,
+  getPinsFailure,
   getNcByLngLatSuccess,
   getNcByLngLatFailure,
   gitResponseSuccess,
@@ -112,7 +114,8 @@ function* getNcByLngLat(action) {
 function* sendContactData(action) {
   try {
     const message = action.payload;
-    const data = yield call(postFeedback, message);
+    const data = yield call(postFeedback, message);0.
+
     yield put(gitResponseSuccess(data));
     yield put(showFeedbackSuccess(true));
   } catch (e) {

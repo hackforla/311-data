@@ -1,100 +1,100 @@
 /* eslint-disable */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import withStyles from "@mui/styles/withStyles";
-import mapboxgl from "mapbox-gl";
-import FilterMenu from "@components/main/Desktop/FilterMenu";
-import { REQUEST_TYPES } from "@components/common/CONSTANTS";
-import { getNcByLngLat, clearPinInfo } from "@reducers/data";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import withStyles from '@mui/styles/withStyles';
+import mapboxgl from 'mapbox-gl';
+import FilterMenu from '@components/main/Desktop/FilterMenu';
+import { REQUEST_TYPES } from '@components/common/CONSTANTS';
+import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 import {
 	updateNcId,
 	updateSelectedCouncils,
 	updateUnselectedCouncils,
-} from "@reducers/filters";
-import { closeBoundaries } from "@reducers/ui";
+} from '@reducers/filters';
+import { closeBoundaries } from '@reducers/ui';
 import {
 	INITIAL_BOUNDS,
 	INITIAL_LOCATION,
 	GEO_FILTER_TYPES,
 	MAP_STYLES,
-} from "./constants";
+} from './constants';
 
 import {
 	ccBoundaries,
 	ncNameFromId,
 	ccNameFromId,
 	ncInfoFromLngLat,
-} from "./districts";
+} from './districts';
 
-import { pointsWithinGeo, getNcByLngLatv2 } from "./geoUtils";
+import { pointsWithinGeo, getNcByLngLatv2 } from './geoUtils';
 
-import RequestsLayer from "./layers/RequestsLayer";
-import BoundaryLayer from "./layers/BoundaryLayer";
-import AddressLayer from "./layers/AddressLayer";
-import DbContext from "@db/DbContext";
-import MapSearch from "./controls/MapSearch";
-import RequestDetail from "./RequestDetail";
-import { debounce, isEmpty } from "@utils";
-import settings from "@settings";
-import ZoomTooltip from "./zoomTooltip";
+import RequestsLayer from './layers/RequestsLayer';
+import BoundaryLayer from './layers/BoundaryLayer';
+import AddressLayer from './layers/AddressLayer';
+import DbContext from '@db/DbContext';
+import MapSearch from './controls/MapSearch';
+import RequestDetail from './RequestDetail';
+import { debounce, isEmpty } from '@utils';
+import settings from '@settings';
+import ZoomTooltip from './zoomTooltip';
 import {
 	DEFAULT_MIN_ZOOM,
 	DEFAULT_MAX_ZOOM,
-} from "@components/common/CONSTANTS";
+} from '@components/common/CONSTANTS';
 
 const styles = (theme) => ({
 	root: {
-		position: "absolute",
+		position: 'absolute',
 		top: 0,
 		bottom: 0,
-		width: "100%",
-		margin: "0 auto",
-		"& canvas.mapboxgl-canvas:focus": {
-			outline: "none",
+		width: '100%',
+		margin: '0 auto',
+		'& canvas.mapboxgl-canvas:focus': {
+			outline: 'none',
 		},
-		"& .mapboxgl-control-container": {
+		'& .mapboxgl-control-container': {
 			// TODO: update styles here when design finalized
 		},
-		"& .mapboxgl-popup-content": {
-			width: "auto",
+		'& .mapboxgl-popup-content': {
+			width: 'auto',
 			backgroundColor: theme.palette.primary.main,
 			borderRadius: 5,
 			padding: 10,
 		},
-		"& .mapboxgl-popup-close-button": {
+		'& .mapboxgl-popup-close-button': {
 			fontSize: 24,
-			color: "white",
+			color: 'white',
 			padding: 0,
 			marginTop: 5,
 			marginRight: 5,
 		},
-		"& .mapboxgl-popup": {
-			"&-anchor-bottom .mapboxgl-popup-tip": {
+		'& .mapboxgl-popup': {
+			'&-anchor-bottom .mapboxgl-popup-tip': {
 				borderTopColor: theme.palette.primary.main,
 			},
-			"&-anchor-top .mapboxgl-popup-tip": {
+			'&-anchor-top .mapboxgl-popup-tip': {
 				borderBottomColor: theme.palette.primary.main,
 			},
-			"&-anchor-left .mapboxgl-popup-tip": {
+			'&-anchor-left .mapboxgl-popup-tip': {
 				borderRightColor: theme.palette.primary.main,
 			},
-			"&-anchor-right .mapboxgl-popup-tip": {
+			'&-anchor-right .mapboxgl-popup-tip': {
 				borderLeftColor: theme.palette.primary.main,
 			},
 		},
 	},
 	menuWrapper: {
-		position: "absolute",
-		left: "20px",
-		top: "20px",
+		position: 'absolute',
+		left: '20px',
+		top: '20px',
 	},
 });
 
 // Define feature layers
-const featureLayers = ["request-circles", "nc-fills"];
+const featureLayers = ['request-circles', 'nc-fills'];
 
 class Map extends React.Component {
 	// Note: 'this.context' is defined using the static contextType property
@@ -105,7 +105,7 @@ class Map extends React.Component {
 
 		this.state = {
 			mapReady: false,
-			activeRequestsLayer: "points",
+			activeRequestsLayer: 'points',
 			selectedTypes: props.selectedTypes,
 			locationInfo: INITIAL_LOCATION,
 			address: null,
@@ -113,8 +113,8 @@ class Map extends React.Component {
 			filterGeo: null,
 			filteredRequestCounts: {},
 			hoveredRegionName: null,
-			colorScheme: "prism",
-			mapStyle: "light",
+			colorScheme: 'prism',
+			mapStyle: 'light',
 			canReset: true,
 			selectedRequestId: null,
 			selectedNc: null,
@@ -149,7 +149,7 @@ class Map extends React.Component {
 			maxZoom: DEFAULT_MAX_ZOOM,
 		});
 
-		map.on("load", () => {
+		map.on('load', () => {
 			if (this.isSubscribed) {
 				this.initLayers(true);
 
@@ -158,14 +158,14 @@ class Map extends React.Component {
 						visualizePitch: false,
 						showCompass: false,
 					}),
-					"bottom-right"
+					'bottom-right'
 				);
 
-				map.on("click", this.debouncedOnClick);
-				map.on("mouseenter", "request-circles", this.onMouseEnter);
-				map.on("mouseleave", "request-circles", this.onMouseLeave);
+				map.on('click', this.debouncedOnClick);
+				map.on('mouseenter', 'request-circles', this.onMouseEnter);
+				map.on('mouseleave', 'request-circles', this.onMouseLeave);
 
-				map.once("idle", (e) => {
+				map.once('idle', (e) => {
 					this.setState({ mapReady: true });
 				});
 
@@ -201,37 +201,37 @@ class Map extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		const entireMapLoadTime = () => {
-			if (this.map.isSourceLoaded("requests")) {
+			if (this.map.isSourceLoaded('requests')) {
 				const { dbStartTime } = this.context;
 				const pinLoadEndTime = performance.now();
 				console.log(
 					`Pin load time: ${Math.floor(pinLoadEndTime - dbStartTime)} ms`
 				);
-				this.map.off("idle", entireMapLoadTime);
+				this.map.off('idle', entireMapLoadTime);
 			}
 		};
 
 		if (this.props.requests != prevProps.requests) {
 			if (this.state.mapReady) {
 				this.setState({ requests: this.props.requests });
-				this.map.on("idle", entireMapLoadTime);
+				this.map.on('idle', entireMapLoadTime);
 			} else {
-				this.map.once("idle", () => {
+				this.map.once('idle', () => {
 					this.setState({ requests: this.props.requests });
 				});
 			}
 		}
 
-		this.map.on("load", () => {
+		this.map.on('load', () => {
 			// grab the Zoom Out button of the Mapbox zoom controls
-			const zoomOutControl = document.querySelector(".mapboxgl-ctrl-zoom-out");
+			const zoomOutControl = document.querySelector('.mapboxgl-ctrl-zoom-out');
 
 			// use state to control tooltip's visibility
 			let showZoomTooltip = false;
 
 			// if zoom controls aren't limited, add the 'Zoom out' title back
 			if (!showZoomTooltip) {
-				zoomOutControl.title = "Zoom out";
+				zoomOutControl.title = 'Zoom out';
 			}
 
 			// render the zoomtooltip component
@@ -258,22 +258,22 @@ class Map extends React.Component {
 			};
 
 			// add hover event listeners to the zoomOutControl
-			zoomOutControl.addEventListener("mouseenter", handleMouseEnter);
-			zoomOutControl.addEventListener("mouseleave", handleMouseLeave);
+			zoomOutControl.addEventListener('mouseenter', handleMouseEnter);
+			zoomOutControl.addEventListener('mouseleave', handleMouseLeave);
 
 			if (
 				this.state.filterGeo !== prevState.filterGeo ||
 				this.state.selectedTypes !== prevState.selectedTypes
 			)
-				this.map.once("idle", this.setFilteredRequestCounts);
+				this.map.once('idle', this.setFilteredRequestCounts);
 
 			if (this.props.ncBoundaries != prevProps.ncBoundaries) {
 				this.ncLayer.init({
 					map: this.map,
 					addListeners: true,
-					sourceId: "nc",
+					sourceId: 'nc',
 					sourceData: this.props.ncBoundaries,
-					idProperty: "NC_ID",
+					idProperty: 'NC_ID',
 
 					onSelectRegion: (geo) => {
 						this.setState({
@@ -286,7 +286,7 @@ class Map extends React.Component {
 								},
 							},
 						});
-						this.map.once("zoomend", () => {
+						this.map.once('zoomend', () => {
 							this.setState((prevState) => {
 								const newMinZoom = this.map.getZoom();
 								this.map.setMinZoom(newMinZoom);
@@ -331,7 +331,7 @@ class Map extends React.Component {
 						({ councilId }) => councilId === selectedCouncilId
 					);
 					if (!newSelectedCouncil) {
-						throw new Error("Council Does not exist from search query");
+						throw new Error('Council Does not exist from search query');
 					}
 					const newSelected = [newSelectedCouncil];
 					dispatchUpdateSelectedCouncils(newSelected);
@@ -339,7 +339,7 @@ class Map extends React.Component {
 					dispatchUpdateNcId(selectedCouncilId);
 					this.hasSetInitialNCView = true;
 				} catch (err) {
-					console.error("could not set ncid");
+					console.error('could not set ncid');
 					this.hasSetInitialNCView = false;
 				}
 			}
@@ -388,16 +388,16 @@ class Map extends React.Component {
 		this.ccLayer.init({
 			map: this.map,
 			addListeners,
-			sourceId: "cc",
+			sourceId: 'cc',
 			sourceData: ccBoundaries,
-			idProperty: "name",
+			idProperty: 'name',
 			onSelectRegion: (geo) => {
 				this.setState({
 					locationInfo: {
 						cc: ccNameFromId(geo.properties.name),
 					},
 				});
-				this.map.once("zoomend", () => {
+				this.map.once('zoomend', () => {
 					this.setState({ filterGeo: geo });
 				});
 			},
@@ -444,7 +444,7 @@ class Map extends React.Component {
 		// Set councilId in reducers/filters back to null
 		dispatchUpdateNcId(null);
 
-		this.map.once("zoomend", () => {
+		this.map.once('zoomend', () => {
 			this.setState({
 				filterGeo: null,
 				canReset: true,
@@ -472,14 +472,14 @@ class Map extends React.Component {
 	};
 
 	addressSearchIsEmpty = () => {
-		const addressSearchInput = document.querySelector("#geocoder input");
+		const addressSearchInput = document.querySelector('#geocoder input');
 		return !Boolean(addressSearchInput?.value?.trim());
 	};
 
 	resetAddressSearch = () => {
 		if (!this.addressSearchIsEmpty()) {
 			// Dispatch custom event to MapSearch to trigger geocoder.clear() to clear Address Search input
-			const geocoderElement = document.getElementById("geocoder");
+			const geocoderElement = document.getElementById('geocoder');
 			const resetEvent = new Event(settings.map.eventName.reset);
 			geocoderElement.dispatchEvent(resetEvent);
 		}
@@ -517,7 +517,7 @@ class Map extends React.Component {
 					return;
 				}
 
-				if (features[i].layer.id === "request-circles") {
+				if (features[i].layer.id === 'request-circles') {
 					const { coordinates } = features[i].geometry;
 					const { requestId, typeId } = features[i].properties;
 					this.addPopup(coordinates, requestId);
@@ -549,7 +549,7 @@ class Map extends React.Component {
 		} else {
 			for (let i = 0; i < features.length; i += 1) {
 				const feature = features[i];
-				if (feature.layer.id == "nc-fills") {
+				if (feature.layer.id == 'nc-fills') {
 					this.setState({ address: null });
 
 					this.resetAddressSearch(); // Clear address search input
@@ -607,9 +607,9 @@ class Map extends React.Component {
 			this.setState({ address: null });
 			dispatchUpdateNcId(result.id);
 		} else {
-			// When result.properties.type does not equal "District"
+			// When result.properties.type does not equal 'District'
 			const [longitude, latitude] = result.center;
-			const address = result.place_name.split(",").slice(0, -2).join(", ");
+			const address = result.place_name.split(',').slice(0, -2).join(', ');
 
 			const ncIdOfAddressSearch = getNcByLngLatv2({
 				longitude,
@@ -622,7 +622,7 @@ class Map extends React.Component {
 				);
 				if (!newSelectedCouncil) {
 					throw new Error(
-						"Council Id in address search geocoder result could not be found"
+						'Council Id in address search geocoder result could not be found'
 					);
 				}
 				const newSelected = [newSelectedCouncil];
@@ -759,17 +759,17 @@ class Map extends React.Component {
 				<AddressLayer
 					ref={(el) => (this.addressLayer = el)}
 					visible
-					boundaryStyle={mapStyle === "dark" ? "light" : "dark"}
+					boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
 				/>
 				<BoundaryLayer
 					ref={(el) => (this.ncLayer = el)}
 					visible
-					boundaryStyle={mapStyle === "dark" ? "light" : "dark"}
+					boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
 				/>
 				<BoundaryLayer
 					ref={(el) => (this.ccLayer = el)}
 					visible={geoFilterType === GEO_FILTER_TYPES.cc}
-					boundaryStyle={mapStyle === "dark" ? "light" : "dark"}
+					boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
 				/>
 				<div ref={(el) => (this.requestDetail = el)}>
 					<RequestDetail requestId={selectedRequestId} />

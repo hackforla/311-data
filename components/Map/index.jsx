@@ -1,31 +1,31 @@
-import React from "react";
-import { connect } from "react-redux";
-import withStyles from "@mui/styles/withStyles";
+import React from 'react';
+import { connect } from 'react-redux';
+import withStyles from '@mui/styles/withStyles';
 import {
 	getDbRequest,
 	getDbRequestSuccess,
 	getDataRequest,
 	getDataRequestSuccess,
 	updateDateRanges,
-} from "@reducers/data";
+} from '@reducers/data';
 import {
 	updateStartDate,
 	updateEndDate,
 	updateNcId,
 	updateRequestTypes,
-} from "@reducers/filters";
-import { updateMapPosition } from "@reducers/ui";
-import { trackMapExport } from "@reducers/analytics";
-import { INTERNAL_DATE_SPEC } from "../common/CONSTANTS";
-import { getTypeIdFromTypeName } from "@utils";
-import LoadingModal from "../Loading/LoadingModal";
-import FunFactCard from "@components/Loading/FunFactCard";
-import CookieNotice from "../main/CookieNotice";
-import Map from "./Map";
-import moment from "moment";
-import ddbh from "@utils/duckDbHelpers.js";
-import DbContext from "@db/DbContext";
-import AcknowledgeModal from "../Loading/AcknowledgeModal";
+} from '@reducers/filters';
+import { updateMapPosition } from '@reducers/ui';
+import { trackMapExport } from '@reducers/analytics';
+import { INTERNAL_DATE_SPEC } from '../common/CONSTANTS';
+import { getTypeIdFromTypeName } from '@utils';
+import LoadingModal from '../Loading/LoadingModal';
+import FunFactCard from '@components/Loading/FunFactCard';
+import CookieNotice from '../main/CookieNotice';
+import Map from './Map';
+import moment from 'moment';
+import ddbh from '@utils/duckDbHelpers.js';
+import DbContext from '@db/DbContext';
+import AcknowledgeModal from '../Loading/AcknowledgeModal';
 
 const styles = (theme) => ({
 	root: {
@@ -68,7 +68,7 @@ class MapContainer extends React.Component {
 		const datasetFileName = `requests${year}.parquet`;
 
 		// Create the year data table if not exist already
-		const createSQL = `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
+		const createSQL = `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM '${datasetFileName}'`; // query from parquet
 
 		const startTime = performance.now(); // start the time tracker
 		setDbStartTime(startTime);
@@ -82,7 +82,7 @@ class MapContainer extends React.Component {
 				)} ms.`
 			);
 		} catch (error) {
-			console.error("Error in creating table or registering dataset:", error);
+			console.error('Error in creating table or registering dataset:', error);
 		} finally {
 			this.setState({ isTableLoading: false });
 		}
@@ -131,11 +131,11 @@ class MapContainer extends React.Component {
 		} = this.props;
 
 		// Filter requests on time
-		const dateFormat = "YYYY-MM-DD";
+		const dateFormat = 'YYYY-MM-DD';
 		// TODO: Check if endDate > startDate
 		if (
-			moment(this.initialState.startDate, "YYYY-MM-DD", true).isValid() &&
-			moment(this.initialState.endDate, "YYYY-MM-DD", true).isValid()
+			moment(this.initialState.startDate, 'YYYY-MM-DD', true).isValid() &&
+			moment(this.initialState.endDate, 'YYYY-MM-DD', true).isValid()
 		) {
 			const formattedStart = moment(this.initialState.startDate).format(
 				dateFormat
@@ -148,7 +148,7 @@ class MapContainer extends React.Component {
 		}
 
 		for (let request_id = 1; request_id < 13; request_id++) {
-			if (this.initialState[`rtId${request_id}`] == "false") {
+			if (this.initialState[`rtId${request_id}`] == 'false') {
 				dispatchUpdateTypesFilter(request_id);
 			}
 		}
@@ -180,7 +180,7 @@ class MapContainer extends React.Component {
 			// subtract 1 day from startB, since it's already included in A.
 			const leftNonOverlapEnd =
 				momentStartB < momentEndA
-					? momentStartB.subtract(1, "days")
+					? momentStartB.subtract(1, 'days')
 					: momentEndA;
 			leftNonOverlap = [startA, leftNonOverlapEnd.format(INTERNAL_DATE_SPEC)];
 		}
@@ -188,7 +188,7 @@ class MapContainer extends React.Component {
 		// not overlap with B.
 		if (momentEndB < momentEndA) {
 			var rightNonOverlapStart =
-				momentEndB < momentStartA ? momentStartA : momentEndB.add(1, "days");
+				momentEndB < momentStartA ? momentStartA : momentEndB.add(1, 'days');
 			rightNonOverlap = [rightNonOverlapStart.format(INTERNAL_DATE_SPEC), endA];
 		}
 		return [leftNonOverlap, rightNonOverlap];
@@ -273,7 +273,7 @@ class MapContainer extends React.Component {
 			}
 			// Check if the current date range is adjacent to the next date range.
 			if (
-				moment(currentEnd).add(1, "days").valueOf() ===
+				moment(currentEnd).add(1, 'days').valueOf() ===
 				moment(dateRange[0]).valueOf()
 			) {
 				// Extend the current date range to include the next date range.
@@ -303,7 +303,7 @@ class MapContainer extends React.Component {
 		const endDateMoment = moment(endDate, INTERNAL_DATE_SPEC);
 		while (currentDateMoment <= endDateMoment) {
 			dateArray.push(currentDateMoment.format(INTERNAL_DATE_SPEC));
-			currentDateMoment = currentDateMoment.add(1, "days");
+			currentDateMoment = currentDateMoment.add(1, 'days');
 		}
 		return dateArray;
 	};
@@ -317,7 +317,7 @@ class MapContainer extends React.Component {
 		const startYear = moment(startDate).year();
 		const endYear = moment(endDate).year();
 
-		let selectSQL = "";
+		let selectSQL = '';
 
 		try {
 			if (startYear === endYear) {
@@ -328,12 +328,12 @@ class MapContainer extends React.Component {
 				// If the dates span multiple years, create two queries and union them.
 				const tableNameStartYear = `requests_${startYear}`;
 				const endOfStartYear = moment(startDate)
-					.endOf("year")
-					.format("YYYY-MM-DD");
+					.endOf('year')
+					.format('YYYY-MM-DD');
 				const tableNameEndYear = `requests_${endYear}`;
 				const startOfEndYear = moment(endDate)
-					.startOf("year")
-					.format("YYYY-MM-DD");
+					.startOf('year')
+					.format('YYYY-MM-DD');
 
 				selectSQL = `
           (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
@@ -361,7 +361,7 @@ class MapContainer extends React.Component {
 
 			return requests;
 		} catch (e) {
-			console.error("Error during database query execution:", e);
+			console.error('Error during database query execution:', e);
 		}
 	}
 
@@ -397,7 +397,7 @@ class MapContainer extends React.Component {
 		requests.map((request) => {
 			// Be careful, request properties are case-sensitive
 			return {
-				type: "Feature",
+				type: 'Feature',
 				properties: {
 					requestId: request.SRNumber,
 					typeId: getTypeIdFromTypeName(request.RequestType),
@@ -407,7 +407,7 @@ class MapContainer extends React.Component {
 					createdDateMs: moment(request.CreatedDate).valueOf(),
 				},
 				geometry: {
-					type: "Point",
+					type: 'Point',
 					coordinates: [request.Longitude, request.Latitude],
 				},
 			};
@@ -457,7 +457,7 @@ class MapContainer extends React.Component {
 					councilId={councilId}
 				/>
 				<CookieNotice />
-				{window.location.hash == "#/map" &&
+				{window.location.hash == '#/map' &&
 					(isDbLoading || isMapLoading || isTableLoading ? (
 						<>
 							<LoadingModal />
