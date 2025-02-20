@@ -114,7 +114,7 @@ function* getNcByLngLat(action) {
 function* sendContactData(action) {
   try {
     const message = action.payload;
-    const data = yield call(postFeedback, message);0.
+    const data = yield call(postFeedback, message);
 
     yield put(gitResponseSuccess(data));
     yield put(showFeedbackSuccess(true));
