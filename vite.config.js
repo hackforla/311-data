@@ -25,5 +25,9 @@ export default defineConfig(() => {
         '@db': path.resolve(__dirname, 'components/db'),
       },
     },
+    test: {
+      environment: 'jsdom',
+      setupFiles: 'utils/test-setup.js'
+    }
   };
 });

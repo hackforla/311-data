@@ -44,18 +44,8 @@ function CouncilSelector({
   }, [councils, dispatchUpdateUnselectedCouncils]);
 
   const handleDelete = e => {
-    const deletedCouncilId = Number(e.currentTarget.dataset.id);
-    const newSelected = selected.filter(
-      ({ councilId }) => councilId !== deletedCouncilId,
-    );
-    const newUnselected = not(councils, newSelected, 'councilId');
-    dispatchUpdateSelectedCouncils(newSelected);
-    dispatchUpdateUnselectedCouncils(newUnselected);
     // Clear out address search input
     resetAddressSearch();
-
-    // resetMap() will call dispatchUpdateNcId(null) to reset councilId back to null
-    // in reducers/filters so no need to do it again here
     resetMap();
     //Clear district council search box field on deselect
     setSearchTerm('');
