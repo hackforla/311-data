@@ -29,6 +29,7 @@ stats.json
 docker/
 venv/
 .vscode
+.editorconfig
 
 # socrata experimental files
 *-socrata*
