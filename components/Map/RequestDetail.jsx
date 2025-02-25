@@ -73,7 +73,23 @@ function RequestDetail({
       const startYear = moment(startDate).year();
       const endYear = moment(endDate).year();
 
-      const getPinsInfoSQL = `SELECT * FROM requests WHERE TRIM(SRNumber) = '${requestId}'`;
+      let getPinsInfoSQL = '';
+
+      if (startYear === endYear) {
+        // If search date range is within the same year
+        const tableName = `requests_${startYear}`;
+        getPinsInfoSQL = `SELECT * FROM ${tableName} WHERE TRIM(SRNumber) = '${requestId}'`;
+      } else {
+        // If search date range is across two different years
+        const tableNameStartYear = `requests_${startYear}`;
+        const tableNameEndYear = `requests_${endYear}`;
+
+        getPinsInfoSQL = `
+          (SELECT * FROM ${tableNameStartYear} WHERE TRIM(SRNumber) = '${requestId}')
+          UNION ALL
+          (SELECT * FROM ${tableNameEndYear} WHERE TRIM(SRNumber) = '${requestId}')
+        `;
+      }
 
       const pinsInfoAsArrowTable = await conn.query(getPinsInfoSQL);
       const newPinsInfo = ddbh.getTableData(pinsInfoAsArrowTable);
