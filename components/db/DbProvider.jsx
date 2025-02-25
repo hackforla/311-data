@@ -34,7 +34,7 @@ function DbProvider({ children, startDate }) {
   const [db, setDb] = useState(null);
   const [conn, setConn] = useState(null);
   const [worker, setWorker] = useState(null);
-  // const [tableNameByYear, setTableNameByYear] = useState('');
+  const [tableNameByYear, setTableNameByYear] = useState('');
   const [dbStartTime, setDbStartTime] = useState(null);
 
   useEffect(() => {
@@ -144,6 +144,15 @@ function DbProvider({ children, startDate }) {
   // Important: dependency array must be empty or you will get the following error
   // "cannot send a message since the worker is not set" and app will infinite loop
 
+  // This useEffect specifically handle dynamic table name generation
+  // separated from the previous useEffect that handles db initialization and teardown
+  useEffect(() => {
+    if (startDate) {
+      const year = moment(startDate).year();
+      setTableNameByYear(`requests_${year}`);
+    }
+  }, [startDate]); // Depend on startDate
+
   //   block until db, conn, worker are available
   if (!db || !conn || !worker) {
     return null;
@@ -154,6 +163,7 @@ function DbProvider({ children, startDate }) {
       db,
       conn,
       worker,
+      tableNameByYear,
       dbStartTime,
       setDbStartTime,
     }}
