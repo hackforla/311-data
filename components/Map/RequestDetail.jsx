@@ -214,7 +214,7 @@ function RequestDetail({
               className={classes.icon}
               style={{
                 color,
-                fontSize: 16,
+                fontSize: 27,
                 marginRight: '12px',
               }}
             />

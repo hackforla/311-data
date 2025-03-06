@@ -428,7 +428,7 @@ class Map extends React.Component {
 
   addPopup = (coordinates, requestId) => {
     this.setState({ selectedRequestId: requestId });
-    this.popup = new mapboxgl.Popup({closeButton: false})
+    this.popup = new mapboxgl.Popup({closeButton: false, anchor: 'left'})
       .setLngLat(coordinates)
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
