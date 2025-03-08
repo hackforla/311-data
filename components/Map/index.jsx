@@ -28,6 +28,7 @@ import moment from 'moment';
 import ddbh from '@utils/duckDbHelpers.js';
 import DbContext from '@db/DbContext';
 import AcknowledgeModal from '../Loading/AcknowledgeModal';
+import { createRequestsTable, fetchData } from '../db/DbRequests';
 
 // We make API requests on a per-day basis. On average, there are about 4k
 // requests per day, so 10k is a large safety margin.
@@ -66,36 +67,12 @@ class MapContainer extends React.Component {
     this.endTime = 0;
   }
 
-  createRequestsTable = async () => {
-    this.setState({ isTableLoading: true });
-    const { conn, tableNameByYear, setDbStartTime } = this.context;
-    const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
-    const year = moment(startDate).year(); // extract the year
-    const datasetFileName = `requests${year}.parquet`;
-
-    // Create the year data table if not exist already
-    const createSQL =
-      `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
-
-    const startTime = performance.now(); // start the time tracker
-    setDbStartTime(startTime)
-
-      try {
-        await conn.query(createSQL);
-        const endTime = performance.now() // end the timer
-        console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
-      } catch (error) {
-        console.error("Error in creating table or registering dataset:", error);
-      } finally {
-        this.setState({ isTableLoading: false});
-      }
-  };
-
   async componentDidMount(props) {
     this.isSubscribed = true;
     this.processSearchParams();
-    await this.createRequestsTable();
+    await createRequestsTable({ conn: this.context.conn, setDbStartTime: this.context.setDbStartTime }, this.setState.bind(this));
     await this.setData();
+    await this.testFetchData();
   }
 
   async componentDidUpdate(prevProps) {
@@ -114,8 +91,9 @@ class MapContainer extends React.Component {
       prevProps.pins !== pins ||
       didDateRangeChange
     ) {
-      await this.createRequestsTable();
+      await createRequestsTable({ conn: this.context.conn, setDbStartTime: this.context.setDbStartTime }, this.setState.bind(this));
       await this.setData();
+      await this.testFetchData();
     }
   }
 
@@ -315,29 +293,9 @@ class MapContainer extends React.Component {
 
   async getAllRequests(startDate, endDate) {
     const { conn } = this.context;
-    const startYear = moment(startDate).year();
-    const endYear = moment(endDate).year();
-
-    let selectSQL = '';
 
     try {
-      if (startYear === endYear) {
-        // If the dates are within the same year, query that single year's table.
-        const tableName = `requests_${startYear}`;
-        selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
-      } else {
-        // If the dates span multiple years, create two queries and union them.
-        const tableNameStartYear = `requests_${startYear}`;
-        const endOfStartYear = moment(startDate).endOf('year').format('YYYY-MM-DD');
-        const tableNameEndYear = `requests_${endYear}`;
-        const startOfEndYear = moment(endDate).startOf('year').format('YYYY-MM-DD');
-
-        selectSQL = `
-          (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
-          UNION ALL
-          (SELECT * FROM ${tableNameEndYear} WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${endDate}')
-        `;
-      }
+      const selectSQL = `SELECT * FROM requests WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
 
       const dataLoadStartTime = performance.now();
       const requestsAsArrowTable = await conn.query(selectSQL);
@@ -355,7 +313,6 @@ class MapContainer extends React.Component {
       console.error("Error during database query execution:", e);
     }
   }
-
 
   setData = async () => {
     const { startDate, endDate, dispatchGetDbRequest, dispatchGetDataRequest } =
@@ -384,6 +341,14 @@ class MapContainer extends React.Component {
       dispatchUpdateDateRanges(newDateRangesWithRequests);
     }
   };
+
+  testFetchData = async () => {
+    const data = await fetchData(
+      { conn: this.context.conn },
+      { startDate: "2023-01-01", endDate: "2023-12-31", requestType: "Graffiti" }
+    );
+    console.log(`testFetchData ran in components/Map/index.jsx`);
+  }
 
   convertRequests = (requests) =>
     requests.map((request) => {
