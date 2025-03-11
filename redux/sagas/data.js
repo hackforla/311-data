@@ -29,14 +29,6 @@ function* fetchPins(filters) {
   return data;
 }
 
-function* fetchPinInfo(srnumber) {
-  const pinInfoUrl = `${BASE_URL}/requests/${srnumber}`;
-
-  const { data } = yield call(axios.get, pinInfoUrl);
-
-  return data;
-}
-
 function* fetchNcByLngLat({ longitude, latitude }) {
   const geocodeUrl = `${BASE_URL}/geojson/geocode?latitude=${latitude}&longitude=${longitude}`;
 
@@ -91,17 +83,6 @@ function* getMapData() {
     yield put(getPinsSuccess(pinsData));
   } catch (e) {
     yield put(getPinsFailure(e));
-    yield put(setErrorModal(true));
-  }
-}
-
-function* getPinData(action) {
-  try {
-    const srnumber = action.payload;
-    const data = yield call(fetchPinInfo, srnumber);
-    yield put(getPinInfoSuccess(data));
-  } catch (e) {
-    yield put(getPinInfoFailure(e));
     yield put(setErrorModal(true));
   }
 }
