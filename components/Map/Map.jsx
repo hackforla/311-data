@@ -211,20 +211,13 @@ class Map extends React.Component {
       if (this.state.mapReady) {
         this.setState({ requests: this.props.requests });
         this.map.on('idle', entireMapLoadTime);
-        // this.map.once('idle', this.setFilteredRequestCounts);
       } else {
         this.map.once('idle', () => {
           this.setState({ requests: this.props.requests });
-          // this.map.once('idle', this.setFilteredRequestCounts);
         });
       }
     }
 
-    // if (this.props.requestTypes != prevProps.requestTypes) {
-    //   this.requestsLayer.init({
-    //     map: this.map,
-    //   });
-    // }
     this.map.on('load', () => {
       // grab the Zoom Out button of the Mapbox zoom controls
       const zoomOutControl = document.querySelector(
@@ -676,24 +669,6 @@ class Map extends React.Component {
     console.log(this.map.getCanvas().toDataURL());
   };
 
-  // setSelectedTypes = selectedTypes => {
-  //   this.setState({ selectedTypes });
-  // };
-
-  // setActiveRequestsLayer = layerName => {
-  //   this.setState({ activeRequestsLayer: layerName });
-  // };
-
-  // setMapStyle = mapStyle => {
-  //   this.setState({ mapStyle });
-  //   this.map.setStyle(MAP_STYLES[mapStyle]);
-  //   this.map.once('styledata', () => this.initLayers(false));
-  // };
-
-  // setColorScheme = scheme => {
-  //   this.setState({ colorScheme: scheme });
-  // };
-
   getDistrictCounts = (geoFilterType, filterGeo, selectedTypes) => {
     const { ncCounts, ccCounts } = this.props;
     const { counts, regionId } = (() => {
@@ -768,6 +743,29 @@ class Map extends React.Component {
     this.setState({ filteredRequestCounts: counts });
   };
 
+  ncUpdateCheck () {
+    //TODO: Holding off on this function until query parameter logic is implemented. 
+    // Check to see if councilId is present and updates the state
+    const {
+      councilId,
+      councils,
+      dispatchUpdateNcId,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+    } = this.props;
+    if (councilId) {
+      const selectedCouncil = councils.find(
+        ({ councilId: id }) => id === councilId
+      );
+      if (selectedCouncil) {
+        this.setState({ selectedNc: selectedCouncil });
+        dispatchUpdateSelectedCouncils([selectedCouncil]);
+        dispatchUpdateUnselectedCouncils(councils);
+        dispatchUpdateNcId(councilId);
+        this.ncLayer.selectRegion(councilId);
+      }
+    }
+  }
   setRequestDetailLoading = (isLoading) => {
     if (!isLoading && this.popup) {
       this.popup.addClassName(this.props.classes.loadedModal);
@@ -778,28 +776,19 @@ class Map extends React.Component {
 
   render() {
     const {
-      pinsInfo,
-      getPinInfo,
-      lastUpdated,
       requestTypes,
-      selectedNcId,
       councils,
     } = this.props;
 
     const {
       geoFilterType,
-      locationInfo,
-      // filteredRequestCounts,
       colorScheme,
       filterGeo,
       activeRequestsLayer,
       mapStyle,
-      // hoveredRegionName,
       canReset,
       selectedRequestId,
-      // selectedNc,
       selectedTypes,
-      address,
     } = this.state;
 
     const { classes } = this.props;
@@ -841,12 +830,6 @@ class Map extends React.Component {
         </div>
         {this.state.mapReady && requestTypes && (
           <>
-            {/* <MapOverview
-              date={lastUpdated}
-              locationInfo={locationInfo}
-              selectedRequests={filteredRequestCounts}
-              colorScheme={colorScheme}
-            /> */}
             <div className={classes.menuWrapper}>
               <MapSearch
                 map={this.map}
@@ -861,22 +844,7 @@ class Map extends React.Component {
                 resetMap={this.reset}
                 resetAddressSearch={this.resetAddressSearch}
               />
-              {/* {
-                (selectedNc || address) && <LocationDetail address={address} nc={selectedNc} />
-              } */}
             </div>
-            {/* <MapLayers
-              selectedTypes={selectedTypes}
-              onChangeSelectedTypes={this.setSelectedTypes}
-              requestsLayer={activeRequestsLayer}
-              onChangeRequestsLayer={this.setActiveRequestsLayer}
-              mapStyle={mapStyle}
-              onChangeMapStyle={this.setMapStyle}
-              colorScheme={colorScheme}
-              onChangeColorScheme={this.setColorScheme}
-            /> */}
-            {/* <MapRegion regionName={hoveredRegionName} />
-            <MapMeta map={this.map} /> */}
           </>
         )}
       </div>
