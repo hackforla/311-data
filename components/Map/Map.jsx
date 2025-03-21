@@ -177,27 +177,6 @@ class Map extends React.Component {
         map.once('idle', (e) => {
           this.setState({ mapReady: true });
         });
-
-				// Check to see if councilId is present and updates the state
-				const {
-					councilId,
-					councils,
-					dispatchUpdateNcId,
-					dispatchUpdateSelectedCouncils,
-					dispatchUpdateUnselectedCouncils,
-				} = this.props;
-				if (councilId) {
-					const selectedCouncil = councils.find(
-						({ councilId: id }) => id === councilId
-					);
-					if (selectedCouncil) {
-						this.setState({ selectedNc: selectedCouncil });
-						dispatchUpdateSelectedCouncils([selectedCouncil]);
-						dispatchUpdateUnselectedCouncils(councils);
-						dispatchUpdateNcId(councilId);
-						this.ncLayer.selectRegion(councilId);
-					}
-				}
       }
     });
     this.map = map;
@@ -762,6 +741,30 @@ class Map extends React.Component {
 
     this.setState({ filteredRequestCounts: counts });
   };
+
+  ncUpdateCheck () {
+    //TODO: Holding off on this function until query parameter logic is implemented. 
+    // Check to see if councilId is present and updates the state
+    const {
+      councilId,
+      councils,
+      dispatchUpdateNcId,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+    } = this.props;
+    if (councilId) {
+      const selectedCouncil = councils.find(
+        ({ councilId: id }) => id === councilId
+      );
+      if (selectedCouncil) {
+        this.setState({ selectedNc: selectedCouncil });
+        dispatchUpdateSelectedCouncils([selectedCouncil]);
+        dispatchUpdateUnselectedCouncils(councils);
+        dispatchUpdateNcId(councilId);
+        this.ncLayer.selectRegion(councilId);
+      }
+    }
+  }
 
   render() {
     const {

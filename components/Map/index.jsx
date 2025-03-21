@@ -105,11 +105,7 @@ class MapContainer extends React.Component {
     // when both the startDate and endDate are selected.
     const didDateRangeChange = (yearChanged || startDateChanged || endDateChanged) && endDate !== null;
 
-    if (
-      prevProps.activeMode !== activeMode ||
-			prevProps.councilId !== councilId ||
-      didDateRangeChange
-    ) {
+    if (prevProps.activeMode !== activeMode || prevProps.councilId !== councilId || didDateRangeChange) {
       await this.createRequestsTable();
       await this.setData();
     }
