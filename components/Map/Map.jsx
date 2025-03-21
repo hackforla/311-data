@@ -81,6 +81,7 @@ const styles = (theme) => ({
       marginRight: 5,
     },
     '& .mapboxgl-popup': {
+      maxWidth: '474px!important',
       '&-anchor-bottom .mapboxgl-popup-tip': {
         borderTopColor: theme.palette.primary.main,
       },
@@ -93,6 +94,11 @@ const styles = (theme) => ({
       '&-anchor-right .mapboxgl-popup-tip': {
         borderLeftColor: theme.palette.primary.main,
       },
+    },
+  },
+  loadedModal: {
+   '& .mapboxgl-popup-content': {
+      borderRadius: 30,
     },
   },
   menuWrapper: {
@@ -415,7 +421,7 @@ class Map extends React.Component {
 
   addPopup = (coordinates, requestId) => {
     this.setState({ selectedRequestId: requestId });
-    this.popup = new mapboxgl.Popup()
+    this.popup = new mapboxgl.Popup({closeButton: false, anchor: 'left'})
       .setLngLat(coordinates)
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
@@ -430,7 +436,7 @@ class Map extends React.Component {
   };
 
   reset = () => {
-    const { dispatchUpdateNcId } = this.props;
+    const { dispatchUpdateNcId, dispatchUpdateSelectedCouncils } = this.props;
 
     this.zoomOut();
     this.addressLayer.clearMarker();
@@ -456,23 +462,18 @@ class Map extends React.Component {
     });
 
     // Reset MinZoom to original value after deselecting NC
+    this.resetBoundaries();
+    dispatchUpdateSelectedCouncils([])
     this.map.setMinZoom(DEFAULT_MIN_ZOOM);
   };
 
   resetBoundaries = () => {
     const {
       dispatchUpdateNcId,
-      dispatchUpdateSelectedCouncils,
-      dispatchUpdateUnselectedCouncils,
-      councils,
     } = this.props;
 
     // Reset the selected NcId back to null.
     dispatchUpdateNcId(null);
-
-    // Reset councilSelector.
-    dispatchUpdateSelectedCouncils([]);
-    dispatchUpdateUnselectedCouncils(councils);
   };
 
   addressSearchIsEmpty = () => {
@@ -765,6 +766,13 @@ class Map extends React.Component {
       }
     }
   }
+  setRequestDetailLoading = (isLoading) => {
+    if (!isLoading && this.popup) {
+      this.popup.addClassName(this.props.classes.loadedModal);
+    }
+  };
+
+  //// RENDER ////
 
   render() {
     const {
@@ -815,7 +823,10 @@ class Map extends React.Component {
           boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
         />
         <div ref={(el) => (this.requestDetail = el)}>
-          <RequestDetail requestId={selectedRequestId} />
+          <RequestDetail 
+            requestId={selectedRequestId} 
+            loadingCallback={this.setRequestDetailLoading}
+          />
         </div>
         {this.state.mapReady && requestTypes && (
           <>

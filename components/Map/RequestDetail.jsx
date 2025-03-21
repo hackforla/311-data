@@ -28,29 +28,63 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
     padding: '0 8',
     width: '100%',
+    marginBottom: '64px',
   },
   requestType: {
     ...theme.typography.h5,
     marginRight: 5,
+    fontFamily: 'Roboto',
+    fontWeight: 700,
+    fontSize: '40px',
+  },
+  sectionHeader: {
+    fontFamily: 'Roboto',
+    fontWeight: 'normal',
+    fontSize: '24px',
+    marginTop: '0px',
+    marginBottom: '5px'
+  },
+  detailsStyles: {
+    fontFamily: 'Roboto',
+    fontWeight: 200,
+    fontSize: '16px',
+    color: '#FFFFFF',
+    paddingLeft: '18px',
+    marginTop: '0px',
+    marginBottom: '10px'
   },
   icon: {
     display: 'block',
   },
   divider: {
     marginTop: 6,
-    marginBottom: 8,
+    marginBottom: 30,
+    marginLeft: '22px',
+    marginRight: '22px',
+    backgroundColor: '#000000'
   },
-  info1: {
-    ...theme.typography.body1,
-    marginTop: 0,
-    marginBottom: 0,
+  serviceRequestFieldNameValue: {
+    fontFamily: 'Roboto',
+    fontWeight: 600,
+    fontSize: '16px',
   },
-  councilName: {
-    color: '#A8A8A8',
-    marginTop: 5,
+  reportedAndClosedStatus: {
+    fontFamily: 'Roboto',
+    fontWeight: 200,
+    fontSize: '14px',
+    color: '#FFB104',
+  },
+  sourceAndAgency: {
+    fontFamily: 'Roboto',
+    fontWeight: 100,
+    fontSize: '10px',
+    color: '#FFFFFF'
   },
   info2: {
     marginTop: 14,
+    marginLeft: '22px',
+    marginRight: '22px',
+    width: '411px',
   },
 });
 
@@ -64,6 +98,7 @@ function RequestDetail({
   dispatchUpdatePinInfo,
   startDate,
   endDate,
+  loadingCallback,
 }) {
   const { conn } = useContext(DbContext);
   const getPinInfo = useCallback(async () => {
@@ -116,6 +151,13 @@ function RequestDetail({
     fetchPins();
   }, [requestId, getPinInfo]);
 
+  useEffect(() => {
+    const isLoading = isEmpty(pinsInfo);
+    if (loadingCallback) {
+      loadingCallback(isLoading);
+    }
+  }, [pinsInfo, loadingCallback]);
+
   const renderDaysOpen = days => {
     switch (days) {
       case 0:
@@ -167,23 +209,26 @@ function RequestDetail({
 
   return (
     <div className={classes.popupContent}>
-      <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-        <Grid className={classes.requestType} item>
-          {formattedTypeName}
-        </Grid>
-        <Grid item>
-          <FiberManualRecordIcon
-            className={classes.icon}
-            style={{
-              color,
-              fontSize: 16,
-            }}
-          />
-        </Grid>
+      <Grid container direction="row" justifyContent="center" alignItems="center" style={{marginTop: '19px'}}>
+            <FiberManualRecordIcon
+              className={classes.icon}
+              style={{
+                color,
+                fontSize: 27,
+                marginRight: '12px',
+              }}
+            />
+          <Grid className={classes.requestType} style={{fontSize: '40px'}} item>
+            {formattedTypeName}
+          </Grid>
       </Grid>
       <Divider className={classes.divider} />
-      <p className={classes.info1}>{toTitleCase(address)}</p>
-      <p className={classes.councilName}>{councilName}</p>
+      <div style={{marginLeft: '22px'}}>
+        <p className={classes.sectionHeader}>Location:</p>
+        <p className={classes.detailsStyles}>{toTitleCase(address)}</p>
+        <p className={classes.sectionHeader}>Neighborhood Council:</p>
+        <p className={classes.detailsStyles} style={{marginBottom: '29px'}}>{councilName}</p>
+      </div>
       <Grid
         className={classes.info2}
         container
@@ -191,47 +236,34 @@ function RequestDetail({
         justifyContent="space-between"
         alignItems="flex-start"
       >
-        <Grid item xs={6}>
+        <Grid className={classes.serviceRequestFieldNameValue} style={{ textDecoration: 'underline', marginBottom: '31px' }} item xs={4}>
           Service request:
         </Grid>
-        <Grid item xs={6} style={{ textAlign: 'right' }}>
-          {srnumber}
+        <Grid className={classes.serviceRequestFieldNameValue} style={{ textAlign: 'right' }} item xs={4}>
+          #&nbsp;{srnumber}
         </Grid>
-        <Grid item xs={6}>
-          Reported on:
-        </Grid>
-        <Grid item xs={6} style={{ textAlign: 'right' }}>
-          {moment(createdDate).format('l')}
+        <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '15px'}} item xs={12} >
+          Reported: {moment(createdDate).format('l')}
         </Grid>
         {closedDate ? (
           <>
-            <Grid item xs={6}>
-              Closed on:
-            </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
-              {moment(closedDate).format('l')}
+            <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '75px'}} item xs={12}>
+              Closed: {moment(closedDate).format('l')}
             </Grid>
           </>
         ) : (
           <>
-            <Grid item xs={6}>
-              Status:
-            </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
-              {`Open (${renderDaysOpen(daysOpen)})`}
+            <Grid className={classes.reportedAndClosedStatus} style={{marginBottom: '75px'}} item xs={12}>
+              Status: {`Open (${renderDaysOpen(daysOpen)})`}
             </Grid>
           </>
         )}
-        <Grid item xs={6}>
-          Source:
+        
+        <Grid item xs={4}>
+          Source: {sourceName}
         </Grid>
-        <Grid item xs={6} style={{ textAlign: 'right' }}>
-          {sourceName}
-        </Grid>
-        <Grid item xs={3}>
-          Agency:
-        </Grid>
-        <Grid item xs={9} style={{ textAlign: 'right' }}>
+        <Grid item xs={4} style={{ textAlign: 'right' }}>
+          Agency:&nbsp;
           <Link
             href={website}
             aria-label={`${agencyName} website`}
