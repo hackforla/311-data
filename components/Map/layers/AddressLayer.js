@@ -88,6 +88,9 @@ class AddressLayer extends React.Component {
       layout: {
         'icon-image': 'address-icon',
       },
+      paint: {
+      'icon-color': '#0F181F'
+    }
     })
   };
 
@@ -128,13 +131,15 @@ class AddressLayer extends React.Component {
     //   this.map.once('touchend', onUp);
     // });
 
-    // this.map.on('mouseenter', 'shed-fill', e => {
-    //   this.canvas.style.cursor = 'move';
-    // });
-
-    // this.map.on('mouseleave', 'shed-fill', e => {
-    //   this.canvas.style.cursor = '';
-    // });
+    this.map.on('mouseenter', 'point', () => {
+      this.map.setPaintProperty('point', 'icon-color', '#1D6996');
+      this.canvas.style.cursor = 'pointer';
+    });
+    
+    this.map.on('mouseleave', 'point', () => {
+      this.map.setPaintProperty('point', 'icon-color', '#0F181F');
+      this.canvas.style.cursor = '';
+    });
   }
 
   // setVisibility = visible => {
