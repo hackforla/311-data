@@ -89,7 +89,7 @@ class AddressLayer extends React.Component {
         'icon-image': 'address-icon',
       },
       paint: {
-      'icon-color': '#0F181F'
+        'icon-color': '#0F181F'
     }
     })
   };
