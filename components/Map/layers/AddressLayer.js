@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import homeSVG from '@assets/home-15.svg';
+import addressSVG from '@assets/address-icon-48.svg';
 import {
   emptyGeo,
   makeGeoCircle,
@@ -69,8 +69,8 @@ class AddressLayer extends React.Component {
 
   addImages = () => {
     let img = new Image(30, 30);
-    img.onload = () => this.map.addImage('home-icon', img);
-    img.src = homeSVG;
+    img.onload = () => this.map.addImage('address-icon', img);
+    img.src = addressSVG;
   }
 
   addSources = () => {
@@ -86,7 +86,7 @@ class AddressLayer extends React.Component {
       type: 'symbol',
       source: 'point',
       layout: {
-        'icon-image': 'home-icon',
+        'icon-image': 'address-icon',
       },
     })
   };
