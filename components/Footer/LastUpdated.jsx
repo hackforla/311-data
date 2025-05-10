@@ -21,7 +21,7 @@ function LastUpdated() {
 
   useEffect(() => {
     const getLastUpdated = async () => {
-      const getLastUpdatedSQL = 'select max(createddate) from requests_2025;';
+      const getLastUpdatedSQL = 'select max(createddate) from requests;';
 
       const lastUpdatedAsArrowTable = await conn.query(getLastUpdatedSQL);
       const results = ddbh.getTableData(lastUpdatedAsArrowTable);
