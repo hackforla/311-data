@@ -14,9 +14,8 @@ import moment from 'moment';
 const datasets = {
   parquet: {
     // huggingface
-    //* Quick fix - update url when 2025 data available
     hfYtd2025:
-      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2025 year-to-date
+      'https://huggingface.co/datasets/311-data/2025/resolve/main/2025.parquet', // 2025 year-to-date
     hfYtd2024:
       'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 year-to-date
     hfYtd2023:
@@ -68,8 +67,7 @@ function DbProvider({ children, startDate }) {
         // register parquet
         await newDb.registerFileURL(
           'requests2025.parquet',
-          //* Quick fix - change hfYtd2024 to hfYtd2025 when 2025 data available
-          datasets.parquet.hfYtd2024,
+          datasets.parquet.hfYtd2025,
           4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
         );
 
