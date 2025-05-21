@@ -552,7 +552,9 @@ class Map extends React.Component {
     const features = this.getAllFeaturesAtPoint(e.point);
 
     if (!features.length) {
-      this.reset()
+      if(this.hasDistrictSelected()) {
+        this.reset()
+      }
     } else {
       for (let i = 0; i < features.length; i += 1) {
         const feature = features[i];
