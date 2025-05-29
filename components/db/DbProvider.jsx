@@ -48,7 +48,10 @@ const dev_datasets = {
   },
 };
 
+// const datasets = dev_datasets; // Force dev datasets for now
+// const datasets = prod_datasets; // Force prod datasets for now
 const datasets = import.meta.env.VITE_ENV === 'DEV' ? dev_datasets : prod_datasets;
+
 function DbProvider({ children, startDate }) {
   const [db, setDb] = useState(null);
   const [conn, setConn] = useState(null);
@@ -88,7 +91,7 @@ function DbProvider({ children, startDate }) {
         await newDb.registerFileURL(
           'requests2025.parquet',
           //* Quick fix - change hfYtd2024 to hfYtd2025 when 2025 data available
-          datasets.parquet.hfYtd2024,
+          datasets.parquet.hfYtd2025,
           4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
         );
 
