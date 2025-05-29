@@ -48,7 +48,7 @@ const dev_datasets = {
   },
 };
 
-const datasets = import.meta.env.MODE === 'DEV' ? dev_datasets : prod_datasets;
+const datasets = import.meta.env.VITE_ENV === 'DEV' ? dev_datasets : prod_datasets;
 function DbProvider({ children, startDate }) {
   const [db, setDb] = useState(null);
   const [conn, setConn] = useState(null);
