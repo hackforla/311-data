@@ -7,6 +7,13 @@ from huggingface_hub import HfApi, login
 from dotenv import load_dotenv
 load_dotenv()
 
+# set environment as 'dev' or 'prod'
+ENV = os.getenv('VITE_ENV', 'PROD')
+
+if ENV == 'DEV':
+    HF_USERNAME = '311-Data-Dev'
+else:
+    HF_USERNAME = '311-data'
 
 def dlData():
     '''
@@ -60,11 +67,10 @@ def hfUpload():
     '''
     local_filename = '2024-clean.parquet'
     dest_filename = '2024.parquet'
-    username = '311-data'
     repo_name = '2024'
     repo_type = 'dataset'
 
-    repo_id = f"{username}/{repo_name}"
+    repo_id = f"{HF_USERNAME}/{repo_name}"
     TOKEN = os.getenv('HUGGINGFACE_LOGIN_TOKEN')
 
     login(TOKEN)
