@@ -17,10 +17,10 @@ else:
 
 def dlData():
     '''
-    Download the dataset from data.lacity.org
+    Download the current year's dataset from data.lacity.org
     '''
-    url = "https://data.lacity.org/api/views/b7dx-7gc3/rows.csv?accessType=DOWNLOAD"
-    outfile = "2024.csv"
+    url = "https://data.lacity.org/api/views/h73f-gn57/rows.csv?accessType=DOWNLOAD"
+    outfile = "2025.csv"
 
     response = requests.get(url, stream=True)
 
@@ -34,9 +34,9 @@ def hfClean():
     '''
     Clean the dataset by removing problematic string combinations and update timestamp to ISO format
     '''
-    infile = "2024.csv"
-    fixed_filename = "2024-fixed.csv"
-    clean_filename = "2024-clean.parquet"
+    infile = "2025.csv"
+    fixed_filename = "2025-fixed.csv"
+    clean_filename = "2025-clean.parquet"
 
     # List of problmenatic strings to be replaced with ""
     replace_strings = ["VE, 0"]
@@ -65,9 +65,9 @@ def hfUpload():
     '''
     Upload the clean dataset to huggingface.co
     '''
-    local_filename = '2024-clean.parquet'
-    dest_filename = '2024.parquet'
-    repo_name = '2024'
+    local_filename = '2025-clean.parquet'
+    dest_filename = '2025.parquet'
+    repo_name = '2025'
     repo_type = 'dataset'
 
     repo_id = f"{HF_USERNAME}/{repo_name}"
