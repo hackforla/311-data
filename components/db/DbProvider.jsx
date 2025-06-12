@@ -11,14 +11,14 @@ import DbContext from '@db/DbContext';
 import moment from 'moment';
 
 // List of remote dataset locations used by db.registerFileURL
-const datasets = {
+const prod_datasets = {
   parquet: {
     // huggingface
     //* Quick fix - update url when 2025 data available
     hfYtd2025:
       'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2025 year-to-date
     hfYtd2024:
-      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 year-to-date
+      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 entire year
     hfYtd2023:
       'https://huggingface.co/datasets/311-data/2023/resolve/main/2023.parquet', // 2023 entire year
     hfYtd2022:
@@ -29,6 +29,28 @@ const datasets = {
       'https://huggingface.co/datasets/311-data/2020/resolve/main/2020.parquet', // 2020 entire year
   },
 };
+
+const dev_datasets = {
+  parquet: {
+    // huggingface
+    hfYtd2025:
+      'https://huggingface.co/datasets/311-Data-Dev/2025/resolve/main/2025.parquet', // 2025 year-to-date
+    hfYtd2024:
+      'https://huggingface.co/datasets/311-Data-Dev/2025/resolve/main/2024.parquet', // 2024 entire year
+    hfYtd2023:
+      'https://huggingface.co/datasets/311-Data-Dev/2025/resolve/main/2023.parquet', // 2023 entire year
+    hfYtd2022:
+      'https://huggingface.co/datasets/311-Data-Dev/2025/resolve/main/2022.parquet', // 2022 entire year
+    hfYtd2021:
+      'https://huggingface.co/datasets/311-Data-Dev/2025/resolve/main/2021.parquet', // 2021 entire year
+    hfYtd2020:
+      'https://huggingface.co/datasets/311-Data-Dev/2025/resolve/main/2020.parquet', // 2020 entire year
+  },
+};
+
+// const datasets = dev_datasets; // Force dev datasets for now
+// const datasets = prod_datasets; // Force prod datasets for now
+const datasets = import.meta.env.VITE_ENV === 'DEV' ? dev_datasets : prod_datasets;
 
 function DbProvider({ children, startDate }) {
   const [db, setDb] = useState(null);
@@ -69,7 +91,7 @@ function DbProvider({ children, startDate }) {
         await newDb.registerFileURL(
           'requests2025.parquet',
           //* Quick fix - change hfYtd2024 to hfYtd2025 when 2025 data available
-          datasets.parquet.hfYtd2024,
+          datasets.parquet.hfYtd2025,
           4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
         );
 
