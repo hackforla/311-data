@@ -8,12 +8,16 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # set environment as 'dev' or 'prod'
-ENV = os.getenv('VITE_ENV', 'PROD')
+ENV = os.getenv('VITE_ENV').upper()
 
 if ENV == 'DEV':
     HF_USERNAME = '311-Data-Dev'
-else:
+elif ENV == 'PROD':
     HF_USERNAME = '311-data'
+else:
+  # exit out of the program with an error message
+  print('Incorrect environment variable set for VITE_ENV.')
+  exit(1)
 
 def dlData():
     '''
