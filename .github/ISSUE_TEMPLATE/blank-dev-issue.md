@@ -2,12 +2,11 @@
 name: Blank Dev Issue
 about: Template for developers to create issues and prepare for engineering tickets.
 title: ''
-labels: 'draft, Feature: Missing, Milestone: Missing, Role: Frontend, Size: Missing'
+labels: 'Complexity: Missing, draft, Feature: Missing, Milestone: Missing, Role: Frontend,
+  size: Missing'
 assignees: ''
 
 ---
-
-<!-- @format -->
 
 ### Overview
 
@@ -26,18 +25,22 @@ Explain here if the issue requires additional info
 
 ### Resources/Instructions
 
-[Replace this text - Provide these resources here if exist. Provide screenshot only if the issue has visual
-changes on the site, do not post screenshots of codebase]
+- Figma Section:
+- Related Design Ticket:
 
-- Figma design file link
-- Related previous ticket
 <details><summary>Screenshot before proposed changes</summary>
 <p>
 [insert screenshot here]
 </p>
 </details>
 
-<details><summary>Screenshot after proposed changes</summary>
+<details><summary>Screenshot of Figma</summary>
+<p>
+[insert screenshot here]
+</p>
+</details>
+
+<details><summary>Screenshot of new feature from localhost</summary>
 <p>
 [insert screenshot here]
 </p>

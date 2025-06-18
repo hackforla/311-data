@@ -3,13 +3,13 @@ name: Emergent Request
 about: When you discover something in your issue that is out of scope and it needs
   a new issue or discussion.
 title: 'ER: (title, required)'
-labels: 'Complexity: Missing, Discussion, Emergent Request, Feature: Missing, Question,
+labels: 'Complexity: Small, Discussion, Emergent Request, Feature: Missing, Question,
   Role: Missing, size: 0.25pt'
 assignees: ''
 
 ---
 
-### Emergent Requirement - Problem Description
+### Emergent Request - Problem Description
 - (short-answer, required)
 
 ### Relevant Issue(s)

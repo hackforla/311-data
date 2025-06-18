@@ -50,16 +50,6 @@ export const updateDateRanges = dateRanges => ({
 	payload: dateRanges,
 });
 
-export const getPinsSuccess = response => ({
-	type: types.GET_PINS_SUCCESS,
-	payload: response,
-  });
-  
-  export const getPinsFailure = error => ({
-	type: types.GET_PINS_FAILURE,
-	payload: error,
-  });
-
 export const updatePinInfo = pinData => ({
 	type: types.UPDATE_PIN_INFO,
 	payload: pinData,

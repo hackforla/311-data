@@ -46,51 +46,57 @@ import {
 } from '@components/common/CONSTANTS';
 
 const styles = (theme) => ({
-	root: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		width: '100%',
-		margin: '0 auto',
-		'& canvas.mapboxgl-canvas:focus': {
-			outline: 'none',
-		},
-		'& .mapboxgl-control-container': {
-			// TODO: update styles here when design finalized
-		},
-		'& .mapboxgl-popup-content': {
-			width: 'auto',
-			backgroundColor: theme.palette.primary.main,
-			borderRadius: 5,
-			padding: 10,
-		},
-		'& .mapboxgl-popup-close-button': {
-			fontSize: 24,
-			color: 'white',
-			padding: 0,
-			marginTop: 5,
-			marginRight: 5,
-		},
-		'& .mapboxgl-popup': {
-			'&-anchor-bottom .mapboxgl-popup-tip': {
-				borderTopColor: theme.palette.primary.main,
-			},
-			'&-anchor-top .mapboxgl-popup-tip': {
-				borderBottomColor: theme.palette.primary.main,
-			},
-			'&-anchor-left .mapboxgl-popup-tip': {
-				borderRightColor: theme.palette.primary.main,
-			},
-			'&-anchor-right .mapboxgl-popup-tip': {
-				borderLeftColor: theme.palette.primary.main,
-			},
-		},
-	},
-	menuWrapper: {
-		position: 'absolute',
-		left: '20px',
-		top: '20px',
-	},
+  root: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: '100%',
+    margin: '0 auto',
+    '& canvas.mapboxgl-canvas:focus': {
+      outline: 'none',
+    },
+    '& .mapboxgl-control-container': {
+      // TODO: update styles here when design finalized
+    },
+    '& .mapboxgl-popup-content': {
+      width: 'auto',
+      backgroundColor: theme.palette.primary.main,
+      borderRadius: 5,
+      padding: 10,
+    },
+    '& .mapboxgl-popup-close-button': {
+      fontSize: 24,
+      color: 'white',
+      padding: 0,
+      marginTop: 5,
+      marginRight: 5,
+    },
+    '& .mapboxgl-popup': {
+      maxWidth: '474px!important',
+      '&-anchor-bottom .mapboxgl-popup-tip': {
+        borderTopColor: theme.palette.primary.main,
+      },
+      '&-anchor-top .mapboxgl-popup-tip': {
+        borderBottomColor: theme.palette.primary.main,
+      },
+      '&-anchor-left .mapboxgl-popup-tip': {
+        borderRightColor: theme.palette.primary.main,
+      },
+      '&-anchor-right .mapboxgl-popup-tip': {
+        borderLeftColor: theme.palette.primary.main,
+      },
+    },
+  },
+  loadedModal: {
+   '& .mapboxgl-popup-content': {
+      borderRadius: 30,
+    },
+  },
+  menuWrapper: {
+    position: 'absolute',
+    left: '20px',
+    top: '20px',
+  },
 });
 
 // Define feature layers
@@ -211,20 +217,22 @@ class Map extends React.Component {
 			}
 		};
 
-		if (this.props.requests != prevProps.requests) {
-			if (this.state.mapReady) {
-				this.setState({ requests: this.props.requests });
-				this.map.on('idle', entireMapLoadTime);
-			} else {
-				this.map.once('idle', () => {
-					this.setState({ requests: this.props.requests });
-				});
-			}
-		}
+    if (this.props.requests != prevProps.requests) {
+      if (this.state.mapReady) {
+        this.setState({ requests: this.props.requests });
+        this.map.on('idle', entireMapLoadTime);
+      } else {
+        this.map.once('idle', () => {
+          this.setState({ requests: this.props.requests });
+        });
+      }
+    }
 
-		this.map.on('load', () => {
-			// grab the Zoom Out button of the Mapbox zoom controls
-			const zoomOutControl = document.querySelector('.mapboxgl-ctrl-zoom-out');
+    this.map.on('load', () => {
+      // grab the Zoom Out button of the Mapbox zoom controls
+      const zoomOutControl = document.querySelector(
+        '.mapboxgl-ctrl-zoom-out'
+      );
 
 			// use state to control tooltip's visibility
 			let showZoomTooltip = false;
@@ -409,13 +417,13 @@ class Map extends React.Component {
 		});
 	};
 
-	addPopup = (coordinates, requestId) => {
-		this.setState({ selectedRequestId: requestId });
-		this.popup = new mapboxgl.Popup()
-			.setLngLat(coordinates)
-			.setDOMContent(this.requestDetail)
-			.addTo(this.map);
-	};
+  addPopup = (coordinates, requestId) => {
+    this.setState({ selectedRequestId: requestId });
+    this.popup = new mapboxgl.Popup({closeButton: false, anchor: 'left'})
+      .setLngLat(coordinates)
+      .setDOMContent(this.requestDetail)
+      .addTo(this.map);
+  };
 
 	removePopup = () => {
 		if (this.popup) {
@@ -425,8 +433,8 @@ class Map extends React.Component {
 		}
 	};
 
-	reset = () => {
-		const { dispatchUpdateNcId } = this.props;
+  reset = () => {
+    const { dispatchUpdateNcId, dispatchUpdateSelectedCouncils } = this.props;
 
 		this.zoomOut();
 		this.addressLayer.clearMarker();
@@ -451,25 +459,20 @@ class Map extends React.Component {
 			});
 		});
 
-		// Reset MinZoom to original value after deselecting NC
-		this.map.setMinZoom(DEFAULT_MIN_ZOOM);
-	};
+    // Reset MinZoom to original value after deselecting NC
+    this.resetBoundaries();
+    dispatchUpdateSelectedCouncils([])
+    this.map.setMinZoom(DEFAULT_MIN_ZOOM);
+  };
 
-	resetBoundaries = () => {
-		const {
-			dispatchUpdateNcId,
-			dispatchUpdateSelectedCouncils,
-			dispatchUpdateUnselectedCouncils,
-			councils,
-		} = this.props;
+  resetBoundaries = () => {
+    const {
+      dispatchUpdateNcId,
+    } = this.props;
 
-		// Reset the selected NcId back to null.
-		dispatchUpdateNcId(null);
-
-		// Reset councilSelector.
-		dispatchUpdateSelectedCouncils([]);
-		dispatchUpdateUnselectedCouncils(councils);
-	};
+    // Reset the selected NcId back to null.
+    dispatchUpdateNcId(null);
+  };
 
 	addressSearchIsEmpty = () => {
 		const addressSearchInput = document.querySelector('#geocoder input');
@@ -654,9 +657,9 @@ class Map extends React.Component {
 		this.map.fitBounds(INITIAL_BOUNDS, { padding: 50, linear: true });
 	};
 
-	export = () => {
-		console.log(this.map.getCanvas().toDataURL());
-	};
+  export = () => {
+    console.log(this.map.getCanvas().toDataURL());
+  };
 
 	getDistrictCounts = (geoFilterType, filterGeo, selectedTypes) => {
 		const { ncCounts, ccCounts } = this.props;
@@ -725,77 +728,116 @@ class Map extends React.Component {
 			return p;
 		}, {});
 
-		this.setState({ filteredRequestCounts: counts });
-	};
+    this.setState({ filteredRequestCounts: counts });
+  };
 
-	render() {
-		const {
-			requestTypes,
-			councils,
-		} = this.props;
+  ncUpdateCheck () {
+    //TODO: Holding off on this function until query parameter logic is implemented. 
+    // Check to see if councilId is present and updates the state
+    const {
+      councilId,
+      councils,
+      dispatchUpdateNcId,
+      dispatchUpdateSelectedCouncils,
+      dispatchUpdateUnselectedCouncils,
+    } = this.props;
+    if (councilId) {
+      const selectedCouncil = councils.find(
+        ({ councilId: id }) => id === councilId
+      );
+      if (selectedCouncil) {
+        this.setState({ selectedNc: selectedCouncil });
+        dispatchUpdateSelectedCouncils([selectedCouncil]);
+        dispatchUpdateUnselectedCouncils(councils);
+        dispatchUpdateNcId(councilId);
+        this.ncLayer.selectRegion(councilId);
+      }
+    }
+  }
+  setRequestDetailLoading = (isLoading) => {
+    if (!isLoading && this.popup) {
+      this.popup.addClassName(this.props.classes.loadedModal);
+    }
+  };
 
-		const {
-			geoFilterType,
-			colorScheme,
-			filterGeo,
-			activeRequestsLayer,
-			mapStyle,
-			canReset,
-			selectedRequestId,
-			selectedTypes,
-		} = this.state;
+  //// RENDER ////
+
+  render() {
+    const {
+      requestTypes,
+      councils,
+    } = this.props;
+
+    const {
+      geoFilterType,
+      colorScheme,
+      filterGeo,
+      activeRequestsLayer,
+      mapStyle,
+      canReset,
+      selectedRequestId,
+      selectedTypes,
+    } = this.state;
 
 		const { classes } = this.props;
 
-		return (
-			<div className={classes.root} ref={(el) => (this.mapContainer = el)}>
-				<RequestsLayer
-					ref={(el) => (this.requestsLayer = el)}
-					activeLayer={activeRequestsLayer}
-					selectedTypes={selectedTypes}
-					colorScheme={colorScheme}
-					requestTypes={requestTypes}
-				/>
-				<AddressLayer
-					ref={(el) => (this.addressLayer = el)}
-					visible
-					boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
-				/>
-				<BoundaryLayer
-					ref={(el) => (this.ncLayer = el)}
-					visible
-					boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
-				/>
-				<BoundaryLayer
-					ref={(el) => (this.ccLayer = el)}
-					visible={geoFilterType === GEO_FILTER_TYPES.cc}
-					boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
-				/>
-				<div ref={(el) => (this.requestDetail = el)}>
-					<RequestDetail requestId={selectedRequestId} />
-				</div>
-				{this.state.mapReady && requestTypes && (
-					<>
-						<div className={classes.menuWrapper}>
-							<MapSearch
-								map={this.map}
-								geoFilterType={geoFilterType}
-								councils={councils}
-								onGeocoderResult={this.onGeocoderResult}
-								onChangeTab={this.onChangeSearchTab}
-								onReset={this.reset}
-								canReset={!!filterGeo && canReset}
-							/>
-							<FilterMenu
-								resetMap={this.reset}
-								resetAddressSearch={this.resetAddressSearch}
-							/>
-						</div>
-					</>
-				)}
-			</div>
-		);
-	}
+    return (
+      <div
+        className={classes.root}
+        ref={(el) => (this.mapContainer = el)}
+      >
+        <RequestsLayer
+          ref={(el) => (this.requestsLayer = el)}
+          activeLayer={activeRequestsLayer}
+          selectedTypes={selectedTypes}
+          colorScheme={colorScheme}
+          requestTypes={requestTypes}
+        />
+        <AddressLayer
+          ref={(el) => (this.addressLayer = el)}
+          // visible={geoFilterType === GEO_FILTER_TYPES.address}
+          visible
+          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
+        />
+        <BoundaryLayer
+          ref={(el) => (this.ncLayer = el)}
+          // visible={geoFilterType === GEO_FILTER_TYPES.nc}
+          visible
+          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
+        />
+        <BoundaryLayer
+          ref={(el) => (this.ccLayer = el)}
+          visible={geoFilterType === GEO_FILTER_TYPES.cc}
+          boundaryStyle={mapStyle === 'dark' ? 'light' : 'dark'}
+        />
+        <div ref={(el) => (this.requestDetail = el)}>
+          <RequestDetail 
+            requestId={selectedRequestId} 
+            loadingCallback={this.setRequestDetailLoading}
+          />
+        </div>
+        {this.state.mapReady && requestTypes && (
+          <>
+            <div className={classes.menuWrapper}>
+              <MapSearch
+                map={this.map}
+                geoFilterType={geoFilterType}
+                councils={councils}
+                onGeocoderResult={this.onGeocoderResult}
+                onChangeTab={this.onChangeSearchTab}
+                onReset={this.reset}
+                canReset={!!filterGeo && canReset}
+              />
+              <FilterMenu
+                resetMap={this.reset}
+                resetAddressSearch={this.resetAddressSearch}
+              />
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
 }
 
 Map.propTypes = {

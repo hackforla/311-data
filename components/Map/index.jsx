@@ -95,28 +95,22 @@ class MapContainer extends React.Component {
 		await this.setData();
 	}
 
-	async componentDidUpdate(prevProps) {
-		const { activeMode, startDate, endDate, councilId } = this.props;
-		// create conditions to check if year or startDate or endDate changed
-		const yearChanged =
-			moment(prevProps.startDate).year() !== moment(startDate).year();
-		const startDateChanged = prevProps.startDate !== startDate;
-		const endDateChanged = prevProps.endDate !== endDate;
+  async componentDidUpdate(prevProps) {
+    const { activeMode, startDate, endDate, councilId } = this.props;
+    // create conditions to check if year or startDate or endDate changed
+    const yearChanged = moment(prevProps.startDate).year() !== moment(startDate).year();
+    const startDateChanged = prevProps.startDate !== startDate;
+    const endDateChanged = prevProps.endDate !== endDate;
 
-		// Check that endDate is not null since we only want to retrieve data
-		// when both the startDate and endDate are selected.
-		const didDateRangeChange =
-			(yearChanged || startDateChanged || endDateChanged) && endDate !== null;
-	
-		if (
-			prevProps.activeMode !== activeMode ||
-			prevProps.councilId !== councilId ||
-			didDateRangeChange
-		) {
-			await this.createRequestsTable();
-			await this.setData();
-		}
-	}
+    // Check that endDate is not null since we only want to retrieve data
+    // when both the startDate and endDate are selected.
+    const didDateRangeChange = (yearChanged || startDateChanged || endDateChanged) && endDate !== null;
+
+    if (prevProps.activeMode !== activeMode || prevProps.councilId !== councilId || didDateRangeChange) {
+      await this.createRequestsTable();
+      await this.setData();
+    }
+  }
 
 	async componentWillUnmount() {
 		this.isSubscribed = false;
@@ -413,11 +407,12 @@ class MapContainer extends React.Component {
 			};
 		});
 
-	// TODO: fix this
-	getSelectedTypes = () => {
-		const { requestTypes } = this.props;
-		return requestTypes;
-	};
+  // TODO: fix this
+  //? Fix what? Need to leave more detailed comments.
+  getSelectedTypes = () => {
+    const { requestTypes } = this.props;
+    return requestTypes;
+  };
 
 	onClose = () => {
 		this.state.acknowledgeModalShown = true;
@@ -472,17 +467,17 @@ class MapContainer extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-	pins: state.data.pins,
-	position: state.ui.map,
-	lastUpdated: state.metadata.lastPulledLocal,
-	activeMode: state.ui.map.activeMode,
-	requestTypes: state.filters.requestTypes,
-	startDate: state.filters.startDate,
-	endDate: state.filters.endDate,
-	requests: state.data.requests,
-	dateRangesWithRequests: state.data.dateRangesWithRequests,
-	isMapLoading: state.data.isMapLoading,
-	isDbLoading: state.data.isDbLoading,
+  pins: state.data.pins,
+  position: state.ui.map,
+  lastUpdated: state.metadata.lastPulledLocal,
+  activeMode: state.ui.map.activeMode,
+  requestTypes: state.filters.requestTypes,
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
+  requests: state.data.requests,
+  dateRangesWithRequests: state.data.dateRangesWithRequests,
+  isMapLoading: state.data.isMapLoading,
+  isDbLoading: state.data.isDbLoading,
 	councilId: state.filters.councilId,
 });
 

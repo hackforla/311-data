@@ -6,28 +6,21 @@ import {
   select,
 } from 'redux-saga/effects';
 import { COUNCILS } from '@components/common/CONSTANTS';
-
 import {
   types,
-  getPinsSuccess,
-  getPinsFailure,
   getNcByLngLatSuccess,
   getNcByLngLatFailure,
   gitResponseSuccess,
   gitResponseFailure,
 } from '../reducers/data';
-
 import { updateNcId } from '../reducers/filters';
-
 import { setErrorModal, showFeedbackSuccess } from '../reducers/ui';
-
 import { types as mapFiltersTypes } from '../reducers/mapFilters';
 
-/* API CALLS */
+//* API Call
 const BASE_URL = import.meta.env.API_URL;
 
-/* MAP */
-
+//* Map
 function* fetchPins(filters) {
   const pinsUrl = `${BASE_URL}/map/pins`;
 
@@ -44,8 +37,7 @@ function* fetchNcByLngLat({ longitude, latitude }) {
   return data;
 }
 
-/* OTHER */
-
+//* Other
 function* postFeedback(message) {
   const contactURL = `${BASE_URL}/feedback`;
 
@@ -53,8 +45,7 @@ function* postFeedback(message) {
   return response;
 }
 
-/* FILTERS */
-
+//* Filters
 const getState = (state, slice) => state[slice];
 
 function* getFilters() {
@@ -78,10 +69,9 @@ function* getFilters() {
 }
 
 
-/* SAGAS */
+//* Sagas
 function* getMapData() {
   const filters = yield getFilters();
-
   if (filters.ncList.length === 0 || filters.requestTypes.length === 0) {
     yield put(getPinsSuccess([]));
     return;
