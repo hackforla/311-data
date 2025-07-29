@@ -547,13 +547,15 @@ class Map extends React.Component {
 
 		const features = this.getAllFeaturesAtPoint(e.point);
 
-		if (!features.length) {
-			this.reset();
-		} else {
-			for (let i = 0; i < features.length; i += 1) {
-				const feature = features[i];
-				if (feature.layer.id == 'nc-fills') {
-					this.setState({ address: null });
+    if (!features.length) {
+      if(this.hasDistrictSelected()) {
+        this.reset()
+      }
+    } else {
+      for (let i = 0; i < features.length; i += 1) {
+        const feature = features[i];
+        if (feature.layer.id == 'nc-fills') {
+          this.setState({ address: null });
 
 					this.resetAddressSearch(); // Clear address search input
 					dispatchCloseBoundaries(); // Collapse boundaries section
