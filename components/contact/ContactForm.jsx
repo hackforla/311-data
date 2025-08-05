@@ -24,10 +24,7 @@ function ContactForm() {
     <div className={classes.formContainer}>
       {/* Embed the Google Form */}
       <iframe
-        src={import.meta.env.MODE === 'development'
-          ? import.meta.env.VITE_CONTACT_FORM_DEV
-          : import.meta.env.VITE_CONTACT_FORM_PROD
-        }
+        src={import.meta.env.VITE_CONTACT_FORM}
         className={classes.iframe}
         title="Contact Form"
       >
