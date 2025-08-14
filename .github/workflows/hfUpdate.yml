@@ -25,6 +25,6 @@ jobs:
       - name: Setup environment
         run: |
           echo "HUGGINGFACE_LOGIN_TOKEN=${{ secrets.HUGGINGFACE_LOGIN_TOKEN }}" > .env
-          echo "VITE_ENV=${{ secrets.VITE_ENV }}" > .env
+          echo "VITE_ENV=${{ secrets.VITE_ENV }}" >> .env
       - name: Run script
         run: python updateHfDataset.py
