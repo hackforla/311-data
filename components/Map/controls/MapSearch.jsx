@@ -20,7 +20,7 @@ const styles = theme => ({
     '& div.mapboxgl-ctrl': {
       width: '100%',
       borderRadius: 0,
-      borderBottom: `1px solid ${theme.palette.primary.focus}`,
+      borderBottom: 'none', 
       '& svg': {
         color: theme.palette.primary.focus,
         fill: theme.palette.primary.focus,
