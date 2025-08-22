@@ -2,7 +2,8 @@
 name: Blank Design Issue
 about: Template for designers to create issues and prepare for engineering hand off.
 title: ''
-labels: 'Milestone: Missing, role: UI/UX Design, Size: Missing'
+labels: 'Complexity: Missing, draft, Feature: Missing, Milestone: Missing, role: UI/UX
+  Design, size: Missing'
 assignees: ''
 
 ---
@@ -12,9 +13,13 @@ We need to do X for Y reason.
 
 ### Action Items
 
-- [ ] Address the problem overview with possible design solution(s) in a comment
 - [ ] Complete Design Iterations section below
+  - [ ] design requirement 1
+  - [ ] design requirement 2
+  - [ ] design requirement 99
 - [ ] Document user interaction in Figma
+- [ ] Update the Hand Off section of this ticket with the final iteration of this design
+
 
 ---
 

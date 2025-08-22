@@ -29,6 +29,8 @@ stats.json
 docker/
 venv/
 .vscode
+.editorconfig
+.prettierignore
 
 # socrata experimental files
 *-socrata*
@@ -40,3 +42,4 @@ venv/
 /archive/aws/API\ Responses/*
 
 .DS_Store
+
