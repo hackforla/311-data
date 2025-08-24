@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React from 'react';
+import React from 'react'; //! Cleanup - delete
 
 const MaintenanceMode = () => (
   <div className="maintenance" role="banner">

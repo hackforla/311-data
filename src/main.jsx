@@ -7,8 +7,8 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import DbProvider from '@db/DbProvider';
 import theme from '@theme/theme';
-import store from '@root/redux/store';
-import App from '@root/App';
+import store from '@src/redux/store';
+import App from '@src/App';
 
 if (import.meta.env.DEV && !import.meta.env.VITE_MAPBOX_TOKEN) {
   alert('Missing Mapbox token. Please run `npm run setup`.')

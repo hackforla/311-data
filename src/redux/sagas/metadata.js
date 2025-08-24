@@ -2,18 +2,20 @@ import { takeLatest, put, all } from 'redux-saga/effects';
 import { removeFromName, truncateName } from '@utils';
 import settings from '@settings';
 
-import councils from '@root/data/councils';
-import regions from '@root/data/regions';
-import agencies from '@root/data/agencies';
-import metadata from '@root/data/metadata';
-import ncGeojson from '@root/data/ncGeojson';
+import councils from '@db/councils';
+import regions from '@db/regions';
+import agencies from '@db/agencies';
+import metadata from '@db/metadata';
+import ncGeojson from '@db/ncGeojson';
 
 import {
   types,
   getMetadataSuccess,
   getCouncilsSuccess,
   getRegionsSuccess,
-  getNcGeojsonSuccess,
+  getNcGeojsonSuccess, 
+
+    
   getAgenciesSuccess,
   getMetadataFailure,
 } from '../reducers/metadata';

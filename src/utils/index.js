@@ -1,6 +1,6 @@
 import _debounce from 'lodash.debounce';
 import settings from '@settings';
-import requestTypes from '@root/data/requestTypes';
+import requestTypes from '@db/requestTypes';
 
 export default {};
 

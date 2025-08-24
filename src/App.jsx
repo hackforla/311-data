@@ -7,7 +7,7 @@ import { getMetadataRequest } from '@reducers/metadata';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
-import AppRoutes from './Routes';
+import AppRoutes from '@routes/Routes';
 
 const TITLE = '311-Data Neighborhood Engagement Tool';
 const DESCRIPTION =
