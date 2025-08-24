@@ -5,8 +5,8 @@ import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { getMetadataRequest } from '@reducers/metadata';
 
-import Header from '@components/Header';
-import Footer from '@components/Footer';
+import Header from '@components/layout/Header';
+import Footer from '@components/layout/Footer';
 import AppRoutes from '@routes/Routes';
 
 const TITLE = '311-Data Neighborhood Engagement Tool';

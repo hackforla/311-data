@@ -12,11 +12,11 @@ import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import { toggleMenu as reduxToggleMenu } from '@reducers/ui';
 import DateSelector from '@components/DateSelector/DateSelector';
-import TypeSelector from '@components/main/Desktop/TypeSelector';
-import StatusSelector from '@components/main/Desktop/StatusSelector';
-import CouncilSelector from '@components/main/Desktop/CouncilSelector';
+import TypeSelector from '@components/layout/main/Desktop/TypeSelector';
+import StatusSelector from '@components/layout/main/Desktop/StatusSelector';
+import CouncilSelector from '@components/layout/main/Desktop/CouncilSelector';
 // import ShareableLinkCreator from '@components/main/Desktop/ShareableLinkCreator';
-import ExportButton from '@components/main/Desktop/Export/ExportButton';
+import ExportButton from '@components/layout/main/Desktop/Export/ExportButton';
 
 // import GearButton from '@components/common/GearButton';
 // import clsx from 'clsx';

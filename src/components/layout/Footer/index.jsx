@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
-import LastUpdated from '@components/Footer/LastUpdated';
-import SocialMediaLinks from '@components/Footer/SocialMediaLinks';
+import LastUpdated from '@components/layout/Footer/LastUpdated';
+import SocialMediaLinks from '@components/layout/Footer/SocialMediaLinks';
 import { toNonBreakingSpaces } from '@utils';
 import HFLALogo from '@assets/hack_for_la_logo.png';
 

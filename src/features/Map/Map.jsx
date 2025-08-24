@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import withStyles from '@mui/styles/withStyles';
 import mapboxgl from 'mapbox-gl';
-import FilterMenu from '@components/main/Desktop/FilterMenu';
+import FilterMenu from '@components/layout/main/Desktop/FilterMenu';
 import { REQUEST_TYPES } from '@components/common/CONSTANTS';
 import { getNcByLngLat, clearPinInfo } from '@reducers/data';
 import {

@@ -8,8 +8,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import ContentBody from '@components/common/ContentBody';
-import TextHeadingFAQ from '@components/common/TextHeading/TextHeadingFAQ';
+import ContentBody from '@components/layout/ContentBody';
+import TextHeadingFAQ from '@components/layout/TextHeading/TextHeadingFAQ';
 import sharedLayout from '@theme/layout';
 import useContentful from '../../hooks/useContentful';
 

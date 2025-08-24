@@ -24,7 +24,9 @@ export default defineConfig(() => {
         '@utils': path.resolve(__dirname, 'src/utils'),
         '@settings': path.resolve(__dirname, 'src/settings'),
         '@db': path.resolve(__dirname, 'backend/'),
-        '@routes': path.resolve(__dirname, 'src/routes/')
+        '@routes': path.resolve(__dirname, 'src/routes/'),
+        '@features': path.resolve(__dirname, 'src/features'),
+        '@pages': path.resolve(__dirname, 'src/pages'),        
       },
     },
     test: {

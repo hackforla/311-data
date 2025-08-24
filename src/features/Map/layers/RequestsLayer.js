@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { INTERNAL_DATE_SPEC } from '../../common/CONSTANTS';
+import { INTERNAL_DATE_SPEC } from '../../../components/common/CONSTANTS';
 import moment from 'moment';
 
 // put layer underneath this layer (from original mapbox tiles)

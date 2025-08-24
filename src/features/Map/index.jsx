@@ -16,16 +16,16 @@ import {
 } from '@reducers/filters';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
-import { INTERNAL_DATE_SPEC } from '../common/CONSTANTS';
+import { INTERNAL_DATE_SPEC } from '../../components/common/CONSTANTS';
 import { getTypeIdFromTypeName } from '@utils';
-import LoadingModal from '../Loading/LoadingModal';
+import LoadingModal from '../../components/Loading/LoadingModal';
 import FunFactCard from '@components/Loading/FunFactCard';
-import CookieNotice from '../main/CookieNotice';
+import CookieNotice from '../../components/layout/Main/CookieNotice';
 import Map from './Map';
 import moment from 'moment';
 import ddbh from '@utils/duckDbHelpers.js';
 import DbContext from '@db/DbContext';
-import AcknowledgeModal from '../Loading/AcknowledgeModal';
+import AcknowledgeModal from '../../components/Loading/AcknowledgeModal';
 
 const styles = (theme) => ({
 	root: {

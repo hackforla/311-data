@@ -13,7 +13,7 @@ import CardContent from '@mui/material/CardContent';
 import { CardHeader } from '@mui/material';
 import fonts from '@theme/fonts';
 import colors from '@theme/colors';
-import accessibileIcon from '../assets/nav-accessibility-icon.png';
+import accessibileIcon from '../../assets/nav-accessibility-icon.png';
 
 // Header should make use of style overrides to look the same regardless of light/dark theme.
 const useStyles = makeStyles(theme => ({

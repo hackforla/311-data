@@ -8,7 +8,7 @@ import {
   makeGeoMask,
   boundingBox,
 } from '../geoUtils';
-import { DEFAULT_MIN_ZOOM } from '../../common/CONSTANTS';
+import { DEFAULT_MIN_ZOOM } from '../../../components/common/CONSTANTS';
 
 const BOUNDARY_WIDTH = 2;
 

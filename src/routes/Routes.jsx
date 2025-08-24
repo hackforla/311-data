@@ -7,12 +7,12 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import queryString from 'query-string';
 import theme, { darkTheme } from '@theme/theme';
-import Desktop from '@components/main/Desktop';
-import Faqs from '@components/main/Faqs';
-import About from '@components/main/About';
-import Contact from '@components/contact/Contact';
-import Privacy from '@components/main/Privacy';
-import ContentBottom from '@components/common/ContentBottom';
+import Desktop from '@pages/Home/index';
+import Faqs from '@pages/FAQ/Faqs';
+import About from '@pages/About/About';
+import Contact from '@pages/Contact/Contact';
+import Privacy from '@pages/Privacy/Privacy';
+import ContentBottom from '@components/layout/ContentBottom';
 
 export default function AppRoutes() {
   const { pathname, search } = useLocation();

@@ -5,8 +5,8 @@ import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
 import fonts from '@theme/fonts';
 import sharedLayout from '@theme/layout';
-import TextHeading from '@components/common/TextHeading';
-import ContentBody from '@components/common/ContentBody';
+import TextHeading from '@components/layout/TextHeading';
+import ContentBody from '@components/layout/ContentBody';
 
 // Images
 import empowerLaLogo from '@assets/empower_la_logo.png';

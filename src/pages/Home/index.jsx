@@ -2,8 +2,8 @@ import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 
 import PropTypes from 'prop-types';
-import MapContainer from '@components/Map';
-import PersistentDrawerLeft from '../shared/PersistentDrawerLeft';
+import MapContainer from '@features/Map';
+import PersistentDrawerLeft from '../../components/layout/Main/shared/PersistentDrawerLeft';
 
 const useStyles = makeStyles(theme => ({
   root: {

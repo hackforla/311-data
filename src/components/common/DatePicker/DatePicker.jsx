@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import CalendarIcon from '@mui/icons-material/CalendarToday';
 import IconButton from '@mui/material/IconButton';
 import makeStyles from '@mui/styles/makeStyles';
-import useOutsideClick from '@components/common/customHooks/useOutsideClick';
+import useOutsideClick from '@hooks/useOutsideClick';
 import ReactDayPicker from '@components/common/ReactDayPicker';
 import {
   updateEndDate as reduxUpdateEndDate,
