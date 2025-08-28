@@ -83,11 +83,20 @@ export function transformCounts(counts = {}) {
 }
 
 // lodash debounce wrapper called with our settings values
+// export const debounce = func => _debounce(
+//   func,
+//   settings.map.debounce.duration,
+//   settings.map.debounce.options,
+// );
+
 export const debounce = func => _debounce(
-  func,
+  (...args) => {
+    return func(...args);
+  },
   settings.map.debounce.duration,
-  settings.map.debounce.options,
+  settings.map.debounce.options
 );
+
 
 // utility to dispatch click event to toggle Bondaries SelectorBox
 export const toggleBoundaries = () => {
