@@ -166,7 +166,6 @@ class Map extends React.Component {
 
     map.on('load', () => {
       if (this.isSubscribed) {
-        console.log("Map loaded at:", new Date().toLocaleString());
         this.initLayers(true);
 
         map.addControl(
@@ -195,9 +194,6 @@ class Map extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-     console.log("Map component updated at:", new Date().toLocaleString());
-     console.log("Map component updated! Previous requests:", prevProps.requests, "New requests:", this.props.requests);
-    
     const entireMapLoadTime = () => {
       if (this.map.isSourceLoaded('requests')) {
         const { dbStartTime } = this.context;

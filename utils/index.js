@@ -91,7 +91,6 @@ export function transformCounts(counts = {}) {
 
 export const debounce = func => _debounce(
   (...args) => {
-    console.log("%cDebounced function triggered at:", "color: blue;", new Date().toLocaleString());
     return func(...args);
   },
   settings.map.debounce.duration,
