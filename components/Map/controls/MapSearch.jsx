@@ -3,20 +3,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@mui/styles/withStyles';
+import Typography from '@mui/material/Typography';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { GEO_FILTER_TYPES } from '../constants';
 import settings from '@settings'
+import { margin } from '@mui/system';
 
 const TABS = Object.values(GEO_FILTER_TYPES);
 
 const styles = theme => ({
   geocoder: {
-    width: 325,
+    width: 300,
     backgroundColor: theme.palette.primary.dark,
-    borderTopRightRadius: '10px',
-    borderTopLeftRadius: '10px',
-    padding: '10px 15px 10px 15px',
+    borderTopRightRadius: '5px',
+    borderTopLeftRadius: '5px',
+    borderBottomRightRadius: '5px',
+    borderBottomLeftRadius: '5px',
+    margin: '10px 5px 5px 0px',
+    padding: '2px',
     '& div.mapboxgl-ctrl': {
       width: '100%',
       borderRadius: 0,
@@ -55,6 +60,12 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.text.secondaryLight,
   },
+  header: {
+      fontSize: '12.47px',
+      fontWeight: theme.typography.fontWeightMedium,
+      marginBottom: '8px',
+      marginTop: '12px'
+  }
 });
 
 class MapSearch extends React.Component {
@@ -173,6 +184,7 @@ class MapSearch extends React.Component {
             </Button>
         ))}
         </div> */}
+         <Typography className={classes.header}>Search by Address</Typography>
         <div id="geocoder" className={classes.geocoder} />
       </div>
     );
