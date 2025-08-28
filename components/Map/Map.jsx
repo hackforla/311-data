@@ -836,15 +836,6 @@ class Map extends React.Component {
               <FilterMenu
                 resetMap={this.reset}
                 resetAddressSearch={this.resetAddressSearch}
-                // map={this.map}
-                // geoFilterType={geoFilterType}
-                // councils={councils}
-                // onGeocoderResult={this.onGeocoderResult}
-                // onChangeTab={this.onChangeSearchTab}
-                // onReset={this.reset}
-                // canReset={!!filterGeo && canReset}
-              >
-                 <MapSearch
                 map={this.map}
                 geoFilterType={geoFilterType}
                 councils={councils}
@@ -853,7 +844,6 @@ class Map extends React.Component {
                 onReset={this.reset}
                 canReset={!!filterGeo && canReset}
               />
-              </FilterMenu>
             </div>
           </>
         )}

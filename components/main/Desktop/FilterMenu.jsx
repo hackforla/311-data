@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // const FilterMenu = ({ toggleMenu }) => { //toggleMenu used with GearButton
-function FilterMenu({ resetMap, resetAddressSearch }) {
+function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils, onGeocoderResult, onChangeTab, onReset, canReset }) {
   const [expanded, setExpanded] = useState(true);
   const classes = useStyles();
   const sharedClasses = sharedStyles();
@@ -109,17 +109,17 @@ function FilterMenu({ resetMap, resetAddressSearch }) {
       <Collapse in={expanded}>
         <CardContent className={classes.content} style={{ borderTop: `1px solid #7A5B21`, paddingBottom: '8px' }}>
           <div className={classes.selectorWrapper}>
-            {/* <div className={classes.selectorWrapper}>
+            <div className={classes.selectorWrapper}>
                <MapSearch
                 map={map}
                 geoFilterType={geoFilterType}
                 councils={councils}
                 onGeocoderResult={onGeocoderResult}
-                onChangeTab={onChangeSearchTab}
-                onReset={reset}
+                onChangeTab={onChangeTab}
+                onReset={onReset}
                 canReset={canReset}
               />
-            </div> */}
+            </div>
             <div className={classes.selectorWrapper}>
               <CouncilSelector
                 resetMap={resetMap}
@@ -154,24 +154,24 @@ export default connect(null, mapDispatchToProps)(FilterMenu);
 FilterMenu.defaultProps = {
   resetMap: () => {},
   resetAddressSearch: () => {},
-  // map: null,
-  // geoFilterType: '',
-  // councils: [],
-  // onGeocoderResult: () => {},
-  // onChangeTab: () => {},
-  // onReset: () => {},
-  // canReset: false,
+  map: null,
+  geoFilterType: '',
+  councils: [],
+  onGeocoderResult: () => {},
+  onChangeTab: () => {},
+  onReset: () => {},
+  canReset: false
 };
 
 FilterMenu.propTypes = {
   resetMap: PropTypes.func,
   resetAddressSearch: PropTypes.func,
-  // toggleMenu: PropTypes.func.isRequired,
-  // map: PropTypes.shape({}),          
-  // geoFilterType: PropTypes.string,  
-  // councils: PropTypes.arrayOf(PropTypes.shape({})),      
-  // onGeocoderResult: PropTypes.func,
-  // onChangeTab: PropTypes.func,
-  // onReset: PropTypes.func,
-  // canReset: PropTypes.bool,
+  toggleMenu: PropTypes.func.isRequired,
+  map: PropTypes.shape({}),          
+  geoFilterType: PropTypes.string,  
+  councils: PropTypes.arrayOf(PropTypes.shape({})),      
+  onGeocoderResult: PropTypes.func,
+  onChangeTab: PropTypes.func,
+  onReset: PropTypes.func,
+  canReset: PropTypes.bool
 };
