@@ -35,6 +35,9 @@ const styles = (theme) => ({
   },
 });
 
+const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE;
+
+
 class MapContainer extends React.Component {
   // Note: 'this.context' is defined using the static contextType property
   // static contextType assignment allows MapContainer to access values provided by DbContext.Provider
@@ -90,7 +93,7 @@ class MapContainer extends React.Component {
   async componentDidMount(props) {
     this.isSubscribed = true;
     this.processSearchParams();
-    await this.createRequestsTable();
+    if (DATA_SOURCE !== 'SOCRATA') await this.createRequestsTable();
     await this.setData();
   }
 
@@ -311,40 +314,44 @@ class MapContainer extends React.Component {
     const endYear = moment(endDate).year();
 
     let selectSQL = '';
-
-    try {
-      if (startYear === endYear) {
-        // If the dates are within the same year, query that single year's table.
-        const tableName = `requests_${startYear}`;
-        selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
-      } else {
-        // If the dates span multiple years, create two queries and union them.
-        const tableNameStartYear = `requests_${startYear}`;
-        const endOfStartYear = moment(startDate).endOf('year').format('YYYY-MM-DD');
-        const tableNameEndYear = `requests_${endYear}`;
-        const startOfEndYear = moment(endDate).startOf('year').format('YYYY-MM-DD');
-
-        selectSQL = `
-          (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
-          UNION ALL
-          (SELECT * FROM ${tableNameEndYear} WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${endDate}')
-        `;
+    if (DATA_SOURCE === 'SOCRATA') {
+      // Insert DataService call here
+      console.log('Fetching data from Socrata API');
+    } else {
+      try {
+        if (startYear === endYear) {
+          // If the dates are within the same year, query that single year's table.
+          const tableName = `requests_${startYear}`;
+          selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
+        } else {
+          // If the dates span multiple years, create two queries and union them.
+          const tableNameStartYear = `requests_${startYear}`;
+          const endOfStartYear = moment(startDate).endOf('year').format('YYYY-MM-DD');
+          const tableNameEndYear = `requests_${endYear}`;
+          const startOfEndYear = moment(endDate).startOf('year').format('YYYY-MM-DD');
+  
+          selectSQL = `
+            (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
+            UNION ALL
+            (SELECT * FROM ${tableNameEndYear} WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${endDate}')
+          `;
+        }
+  
+        const dataLoadStartTime = performance.now();
+        const requestsAsArrowTable = await conn.query(selectSQL);
+        const dataLoadEndTime = performance.now();
+  
+        console.log(`Data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
+  
+        const requests = ddbh.getTableData(requestsAsArrowTable);
+        const mapLoadEndTime = performance.now();
+       
+        console.log(`Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`);
+  
+        return requests;
+      } catch (e) {
+        console.error("Error during database query execution:", e);
       }
-
-      const dataLoadStartTime = performance.now();
-      const requestsAsArrowTable = await conn.query(selectSQL);
-      const dataLoadEndTime = performance.now();
-
-      console.log(`Data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
-
-      const requests = ddbh.getTableData(requestsAsArrowTable);
-      const mapLoadEndTime = performance.now();
-
-      console.log(`Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`);
-
-      return requests;
-    } catch (e) {
-      console.error("Error during database query execution:", e);
     }
   }
 
