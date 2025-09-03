@@ -93,7 +93,7 @@ class MapSearch extends React.Component {
       flyTo: false,
       marker: false,
       minLength: 1,
-      placeholder: "Enter an address or location",
+      placeholder: "Search Address",
       localGeocoder: searchTerm => {
         const { geoFilterType } = this.props;
         const searchFilter = new RegExp(searchTerm, 'i');
