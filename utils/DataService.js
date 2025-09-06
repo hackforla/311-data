@@ -1,6 +1,6 @@
-import DataFrame from 'dataframe-js';
+import { DataFrame } from 'dataframe-js';
 import { object, string, number, date, array } from 'yup';
-
+import moment from 'moment';
 const dataResources = {
   2019: 'pvft-t768',
   2018: 'h65r-yf5i',
@@ -108,12 +108,14 @@ export function getBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadD
   const treemapData = { title: 'Broad 311 Calls Map', color: '#FFFFFF', children: [] };
   const start = Math.min(startMonth, endMonth);
   const end = Math.max(startMonth, endMonth);
-
-  DataFrame.fromJSON(`https://data.lacity.org/resource/${dataResources[year]}.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=date_extract_m(CreatedDate)+between+${start}+and+${end}&$group=NCName,RequestType&$order=CallVolume DESC`)
+    const sourceURL = `https://data.lacity.org/resource/${dataResources[year]}.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=date_extract_m(CreatedDate)+between+${start}+and+${end}&$group=NCName,RequestType&$order=CallVolume DESC`
+  console.log('source URL:', sourceURL);
+  DataFrame.fromJSON(sourceURL)
     .then(df => {
+      // const df = new DataFrame(json);
       df.show();
 
-      const totalCounts = df.groupBy('ncname').aggregate(group => group.stat.sum('callvolume')).rename('aggregation', 'callvolume');
+      const totalCounts = df.groupBy('NCName').aggregate(group => group.stat.sum('CallVolume')).rename('aggregation', 'callvolume');
       const biggestProblems = {};
       df.toCollection().forEach(row => {
         const rhs = parseInt(row.callvolume, 10);
@@ -150,8 +152,9 @@ export function getZoomedCallVolume(
   const treemapData = { title: 'Zoomed 311 Calls Map', color: '#FFFFFF', children: [] };
   const start = Math.min(startMonth, endMonth);
   const end = Math.max(startMonth, endMonth);
-
-  DataFrame.fromJSON(`https://data.lacity.org/resource/${dataResources[year]}.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=NCName+=+'${ncName}'+and+date_extract_m(CreatedDate)+between+${start}+and+${end}&$group=NCName,RequestType&$order=CallVolume DESC`).then(df => {
+  const sourceURL = `https://data.lacity.org/resource/${dataResources[year]}.json?$select=count(*)+AS+CallVolume,NCName,RequestType&$where=NCName+=+'${ncName}'+and+date_extract_m(CreatedDate)+between+${start}+and+${end}&$group=NCName,RequestType&$order=CallVolume DESC`
+  console.log('Zoomed source URL:', sourceURL);
+  DataFrame.fromJSON(sourceURL).then(df => {
     const colorMap = getColorMap(false);
     df.toCollection().forEach(row => {
       const dataPoint = {
@@ -164,3 +167,42 @@ export function getZoomedCallVolume(
     onZoomedDataReady(treemapData);
   });
 }
+
+export async function getServiceRequestsRange(startDate, endDate) {
+  const startYear = moment(startDate).year();
+  const endYear = moment(endDate).year();
+  const startMonth = moment(startDate).month();
+  const endMonth = moment(endDate).month();
+
+  const srPromises = [];
+
+  if (startYear === endYear) {
+    srPromises.push(
+      new Promise(resolve => {
+        getBroadCallVolume(startYear, startMonth, endMonth, data => {
+          resolve(data.children || []);
+        });
+      })
+    );
+  } else {
+    for (let year = startYear; year <= endYear; year++) {
+      let yearStartMonth = 0;
+      let yearEndMonth = 12;
+      if (year === startYear) yearStartMonth = startMonth;
+      if (year === endYear) yearEndMonth = endMonth;
+
+      srPromises.push(
+        new Promise(resolve => {
+          getBroadCallVolume(year, yearStartMonth, yearEndMonth, data => {
+            resolve(data.children || []);
+          });
+        })
+      );
+    }
+  }
+
+  const results = await Promise.all(srPromises);
+  return results.flat();
+}
+
+

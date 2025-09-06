@@ -28,6 +28,7 @@ import moment from 'moment';
 import ddbh from '@utils/duckDbHelpers.js';
 import DbContext from '@db/DbContext';
 import AcknowledgeModal from '../Loading/AcknowledgeModal';
+import { getServiceRequestsRange, getServiceRequests } from '../../utils/DataService';
 
 const styles = (theme) => ({
   root: {
@@ -315,8 +316,9 @@ class MapContainer extends React.Component {
 
     let selectSQL = '';
     if (DATA_SOURCE === 'SOCRATA') {
-      // Insert DataService call here
-      console.log('Fetching data from Socrata API');
+      await getServiceRequests();
+      // await getServiceRequestsRange(startDate, endDate);
+      
     } else {
       try {
         if (startYear === endYear) {
@@ -347,7 +349,7 @@ class MapContainer extends React.Component {
         const mapLoadEndTime = performance.now();
        
         console.log(`Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`);
-  
+        console.log('Requests:', requests);
         return requests;
       } catch (e) {
         console.error("Error during database query execution:", e);
