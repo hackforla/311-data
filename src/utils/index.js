@@ -1,11 +1,11 @@
-import _debounce from 'lodash.debounce';
-import settings from '@settings';
-import requestTypes from '@root/data/requestTypes';
+import _debounce from "lodash.debounce";
+import settings from "@settings";
+import requestTypes from "@root/data/requestTypes";
 
 export default {};
 
 function replaceSpaces(str, replacement) {
-  if (!!str === false || typeof str !== 'string') {
+  if (!!str === false || typeof str !== "string") {
     return null;
   }
 
@@ -13,20 +13,20 @@ function replaceSpaces(str, replacement) {
 }
 
 function removeSpaces(str) {
-  return replaceSpaces(str, '')
+  return replaceSpaces(str, "");
 }
 
 export function toNonBreakingSpaces(str) {
-  return replaceSpaces(str, '\u00a0');
+  return replaceSpaces(str, "\u00a0");
 }
 
-export function getTypeIdFromTypeName(typeNameParam = '') {
+export function getTypeIdFromTypeName(typeNameParam = "") {
   // early return null if we have invalid criteria
   if (
-    !!typeNameParam === false
-    || typeof typeNameParam !== 'string'
-    || !!requestTypes === false
-    || requestTypes.length === 0
+    !!typeNameParam === false ||
+    typeof typeNameParam !== "string" ||
+    !!requestTypes === false ||
+    requestTypes.length === 0
   ) {
     return null;
   }
@@ -40,7 +40,7 @@ export function getTypeIdFromTypeName(typeNameParam = '') {
   const fullStr = removeSpaces(typeNameParam.toLowerCase().trim());
 
   // search for subStr within fullStr
-  const requestObject = requestTypes.find(request => {
+  const requestObject = requestTypes.find((request) => {
     subStr = removeSpaces(request.typeName.toLowerCase().trim());
     return fullStr.indexOf(subStr) >= 0;
   });
@@ -69,7 +69,7 @@ export function transformCounts(counts = {}) {
 
   const total = Object.values(counts).reduce((p, c) => p + c, 0);
 
-  Object.keys(counts).forEach(key => {
+  Object.keys(counts).forEach((key) => {
     if (counts[key] / total >= MIN_PERCENTAGE / 100) {
       altCounts[key] = counts[key];
     } else {
@@ -83,11 +83,12 @@ export function transformCounts(counts = {}) {
 }
 
 // lodash debounce wrapper called with our settings values
-export const debounce = func => _debounce(
-  func,
-  settings.map.debounce.duration,
-  settings.map.debounce.options,
-);
+export const debounce = (func) =>
+  _debounce(
+    func,
+    settings.map.debounce.duration,
+    settings.map.debounce.options
+  );
 
 // utility to dispatch click event to toggle Bondaries SelectorBox
 export const toggleBoundaries = () => {
@@ -95,8 +96,8 @@ export const toggleBoundaries = () => {
     return;
   }
 
-  const button = document.getElementById('boundaries');
-  const event = new Event('click', { bubbles: true });
+  const button = document.getElementById("boundaries");
+  const event = new Event("click", { bubbles: true });
   button.dispatchEvent(event);
 };
 
@@ -112,12 +113,12 @@ export const toggleBoundaries = () => {
 export const createObjFromArrays = ({ keyArray = [], valArray = [] }) => {
   try {
     if (
-      !!keyArray === false
-      || !!valArray === false
-      || keyArray.length === 0
-      || valArray.length === 0
+      !!keyArray === false ||
+      !!valArray === false ||
+      keyArray.length === 0 ||
+      valArray.length === 0
     ) {
-      throw new Error('missing required parameters in function call');
+      throw new Error("missing required parameters in function call");
     }
 
     const obj = valArray.reduce((acc, curr, i) => {
@@ -127,7 +128,7 @@ export const createObjFromArrays = ({ keyArray = [], valArray = [] }) => {
 
     return obj;
   } catch (e) {
-    console.error('createObjFromArrays: Error occurred: ', e);
+    console.error("createObjFromArrays: Error occurred: ", e);
     return undefined;
   }
 };
@@ -138,7 +139,7 @@ export function isEmpty(value) {
   if (!!value === false) return true;
 
   // an object with no keys is considered empty
-  if (Object.prototype.toString.call(value) === '[object Object]') {
+  if (Object.prototype.toString.call(value) === "[object Object]") {
     return Object.keys(value).length === 0;
   }
 
@@ -159,15 +160,15 @@ export function truncateName(name, maxLen) {
   const frontChars = Math.ceil(charsToShow / 2);
   const backChars = Math.floor(charsToShow / 2);
   const truncatedName = `${name.slice(0, frontChars)}...${name.slice(
-    nameLen - backChars,
+    nameLen - backChars
   )}`;
   return truncatedName;
 }
 
 export function removeFromName(name, replaceStrings) {
   let cleanedName = name.toUpperCase();
-  replaceStrings.forEach(str => {
-    cleanedName = cleanedName.replace(str.toUpperCase(), '');
+  replaceStrings.forEach((str) => {
+    cleanedName = cleanedName.replace(str.toUpperCase(), "");
   });
   return cleanedName;
 }
@@ -178,7 +179,7 @@ export function seconds(milliseconds = 0) {
 
 export function shuffle(array) {
   return array
-    .map(a => ({ sort: Math.random(), value: a }))
+    .map((a) => ({ sort: Math.random(), value: a }))
     .sort((a, b) => a.sort - b.sort)
-    .map(a => a.value);
+    .map((a) => a.value);
 }
