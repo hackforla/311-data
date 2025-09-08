@@ -1,4 +1,5 @@
 import DataFrame from 'dataframe-js';
+import { object, string, number, date, array } from 'yup';
 
 const dataResources = {
   2019: 'pvft-t768',
@@ -10,6 +11,64 @@ const dataResources = {
 
 export function getDataResources() {
   return dataResources;
+}
+
+const serviceRequestSchema = object({
+  actiontaken: string(),
+  address: string().min(3).max(100).nullable(),
+  addressverified: string(),
+  anonymous: string(),
+  apc: string(),
+  approximateaddress: string(),
+  assignto: string(),
+  cd: string().nullable(),
+  cdmember: string(),
+  closeddate: date(),
+  createdbyuserorganization: string(),
+  createddate: date(),
+  direction: string().nullable(),
+  housenumber: string(),
+  latitude: number().nullable(),
+  location: object({ 
+    type: string().matches(/Point/),
+    coordinates: array().of(number()).length(2)
+  }),
+  longitude: number().nullable(),
+  mobileos: string().nullable(),
+  nc: string(),
+  ncname: string(),
+  owner: string(),
+  policeprecinct: string(),
+  requestsource: string(),
+  requesttype: string(),
+  servicedate: date(),
+  srnumber: string().length(12),
+  status: string(),
+  streetname: string().max(32).nullable(),
+  suffix: string(),
+  tbmcolumn: string().length(1),
+  tbmpage: number().integer().max(999).nullable(), 
+  tbmrow: string().nullable(),
+  updateddate: date(),
+  zipcode: string().nullable(),
+}) 
+
+const srArraySchema = array().of(
+    serviceRequestSchema
+  )
+
+export async function getServiceRequests() {
+  try {
+      // Get 2024 SR data through Socrata API
+    const response = await fetch("https://data.lacity.org/resource/b7dx-7gc3.json");
+    const unvalidatedSrs = await response.json();
+    console.log(unvalidatedSrs);
+    const validatedSrs = await srArraySchema.validate(unvalidatedSrs);
+    console.log(validatedSrs);
+    return validatedSrs;
+  } catch (error) {
+    console.error('Error fetching service requests:', error);
+  }
 }
 
 export function getColorMap(discrete) {

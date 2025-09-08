@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # set environment as 'dev' or 'prod'
-ENV = os.getenv('VITE_ENV').upper()
+ENV = os.getenv('VITE_ENV')
 
 if ENV == 'DEV':
     HF_USERNAME = '311-Data-Dev'
