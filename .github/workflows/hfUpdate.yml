@@ -2,7 +2,7 @@ name: Update Huggingface Dataset
 
 on:
   schedule: # once daily at 3:05 pm PST (23:05 UTC)
-    - cron: '5 23 * * *'
+    - cron: "5 23 * * *"
 
 jobs:
   run:
@@ -11,20 +11,20 @@ jobs:
       run:
         working-directory: scripts/
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python environment
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11.x'
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11.x"
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Setup environment
-      run: |
-        echo "HUGGINGFACE_LOGIN_TOKEN=${{ secrets.HUGGINGFACE_LOGIN_TOKEN }}" > .env
-
-    - name: Run script
-      run: python updateHfDataset.py
+      - name: Setup environment
+        run: |
+          echo "HUGGINGFACE_LOGIN_TOKEN=${{ secrets.HUGGINGFACE_LOGIN_TOKEN }}" > .env
+          echo "VITE_ENV=${{ secrets.VITE_ENV }}" >> .env
+      - name: Run script
+        run: python updateHfDataset.py
