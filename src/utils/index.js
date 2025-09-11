@@ -1,6 +1,6 @@
 import _debounce from "lodash.debounce";
 import settings from "@settings";
-import requestTypes from "@root/data/requestTypes";
+import requestTypes from "@data/requestTypes";
 
 export default {};
 
@@ -31,7 +31,7 @@ export function getTypeIdFromTypeName(typeNameParam = "") {
     return null;
   }
 
-  // requestTypes is an array of objects imported from @root/data/requestTypes.js
+  // requestTypes is an array of objects imported from @data/requestTypes.js
   // see if any of our known types are a substring of the input string
   // (because Socrata API can return something this: "Illegal Dumping Pickup"
   // which should match "Illegal Dumping")
