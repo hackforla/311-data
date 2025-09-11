@@ -10,26 +10,26 @@ import Worker from 'web-worker';
 import DbContext from '@db/DbContext';
 import moment from 'moment';
 
+const hf_account = import.meta.env.VITE_ENV === 'DEV' ? '311-Data-Dev' : '311-data';
+
 // List of remote dataset locations used by db.registerFileURL
 const datasets = {
   parquet: {
     // huggingface
-    //* Quick fix - update url when 2025 data available
     hfYtd2025:
-      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2025 year-to-date
+      `https://huggingface.co/datasets/${hf_account}/2025/resolve/main/2025.parquet`, // 2025 year-to-date
     hfYtd2024:
-      'https://huggingface.co/datasets/311-data/2024/resolve/main/2024.parquet', // 2024 year-to-date
+      `https://huggingface.co/datasets/${hf_account}/2024/resolve/main/2024.parquet`, // 2024 entire year
     hfYtd2023:
-      'https://huggingface.co/datasets/311-data/2023/resolve/main/2023.parquet', // 2023 entire year
+      `https://huggingface.co/datasets/${hf_account}/2023/resolve/main/2023.parquet`, // 2023 entire year
     hfYtd2022:
-      'https://huggingface.co/datasets/311-data/2022/resolve/main/2022.parquet', // 2022 entire year
+      `https://huggingface.co/datasets/${hf_account}/2022/resolve/main/2022.parquet`, // 2022 entire year
     hfYtd2021:
-      'https://huggingface.co/datasets/311-data/2021/resolve/main/2021.parquet', // 2021 entire year
+      `https://huggingface.co/datasets/${hf_account}/2021/resolve/main/2021.parquet`, // 2021 entire year
     hfYtd2020:
-      'https://huggingface.co/datasets/311-data/2020/resolve/main/2020.parquet', // 2020 entire year
+      `https://huggingface.co/datasets/${hf_account}/2020/resolve/main/2020.parquet`, // 2020 entire year
   },
 };
-
 function DbProvider({ children, startDate }) {
   const [db, setDb] = useState(null);
   const [conn, setConn] = useState(null);
@@ -69,7 +69,7 @@ function DbProvider({ children, startDate }) {
         await newDb.registerFileURL(
           'requests2025.parquet',
           //* Quick fix - change hfYtd2024 to hfYtd2025 when 2025 data available
-          datasets.parquet.hfYtd2024,
+          datasets.parquet.hfYtd2025,
           4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
         );
 
