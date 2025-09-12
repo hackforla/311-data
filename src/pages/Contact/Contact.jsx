@@ -2,8 +2,8 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import TextHeading from '@components/layout/TextHeading';
 import ContentBody from '@components/layout/ContentBody';
-import ContactIntro from '@components/Contact/ContactIntro';
-import ContactForm from '@components/Contact/ContactForm';
+import ContactIntro from '@components/contact/ContactIntro';
+import ContactForm from '@components/contact/ContactForm';
 
 import 'react-toastify/dist/ReactToastify.css';
 
