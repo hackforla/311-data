@@ -821,18 +821,16 @@ class Map extends React.Component {
         {this.state.mapReady && requestTypes && (
           <>
             <div className={classes.menuWrapper}>
-              <MapSearch
-                map={this.map}
+              <FilterMenu
+                resetMap={this.reset}
+                resetAddressSearch={this.resetAddressSearch}
+				map={this.map}
                 geoFilterType={geoFilterType}
                 councils={councils}
                 onGeocoderResult={this.onGeocoderResult}
                 onChangeTab={this.onChangeSearchTab}
                 onReset={this.reset}
                 canReset={!!filterGeo && canReset}
-              />
-              <FilterMenu
-                resetMap={this.reset}
-                resetAddressSearch={this.resetAddressSearch}
               />
             </div>
           </>
