@@ -10,8 +10,7 @@ import {
 } from '@reducers/filters';
 import { closeBoundaries } from '@reducers/ui';
 import { debounce } from '@utils';
-import not from '@utils/not';
-import BoundariesSection from '@components/layout/main/Desktop/BoundariesSection';
+import BoundariesSection from '@components/layout/Main/Desktop/BoundariesSection';
 import SelectedCouncils from './SelectedCouncils';
 import CouncilsList from './CouncilsList';
 
