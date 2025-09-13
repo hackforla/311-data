@@ -12,6 +12,18 @@ Building on feature branching, we treat the 'main' branch as the primary contrib
 
 In other words, whenever you are about to start on a new feature, checkout a new local branch based off of the main branch. Your command would look something like `git checkout -b 567-BACK-NewEndpoint`. See [this stackoverflow post](https://stackoverflow.com/questions/4470523/create-a-branch-in-git-from-another-branch) for more context.
 
+## Labels and Project Management
+
+We use GitHub labels to organize and track issues throughout their lifecycle. Key labels include:
+
+### Ready for Review Labels
+- `ready for peer review` - Issue/PR is ready for peer review from team members
+- `ready for product` - Issue needs product team review
+- `ready for dev lead` - Issue needs development lead review
+- `ready for design lead` - Issue needs design lead review
+
+These labels help ensure proper review processes are followed and maintain visibility in project board views.
+
 ## Branch Protection/Github Actions (to be implemented)
 We use [Github Actions](https://github.com/features/actions) to run our continuous integration (CI). These actions include status checks that run whenever you submit a pull request to main. When you submit a PR, Github will run a set of operations to build and test all or part of the codebase. If any of these steps fail, the pull request will not be allowed to be merged until they are fixed. From the pull request UI you can find the reason an operation may have failed in the status checks section towards the bottom.
 
