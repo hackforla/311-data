@@ -15,6 +15,7 @@ import DateSelector from '@components/DateSelector/DateSelector';
 import TypeSelector from '@components/layout/main/Desktop/TypeSelector';
 import StatusSelector from '@components/layout/main/Desktop/StatusSelector';
 import CouncilSelector from '@components/layout/main/Desktop/CouncilSelector';
+import MapSearch from '../../../../features/Map/controls/MapSearch';
 // import ShareableLinkCreator from '@components/main/Desktop/ShareableLinkCreator';
 import ExportButton from '@components/layout/main/Desktop/Export/ExportButton';
 
@@ -26,8 +27,8 @@ const useStyles = makeStyles(theme => ({
   card: {
     width: 325,
     backgroundColor: theme.palette.primary.main,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
+    borderTopLeftRadius: theme.borderRadius.md,
+    borderTopRightRadius: theme.borderRadius.md,
     borderBottomLeftRadius: theme.borderRadius.md,
     borderBottomRightRadius: theme.borderRadius.md,
   },
