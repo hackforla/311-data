@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import moment from 'moment';
+// import moment from 'moment';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
-import DbContext from '@db/DbContext';
-import ddbh from '@utils/duckDbHelpers.js';
+// import DbContext from '@db/DbContext';
+// import ddbh from '@utils/duckDbHelpers.js';
 import { isEmpty, toNonBreakingSpaces } from '@utils';
 
 const useStyles = makeStyles(theme => ({
@@ -17,22 +17,23 @@ const useStyles = makeStyles(theme => ({
 function LastUpdated() {
   const classes = useStyles();
   const [lastUpdated, setLastUpdated] = useState('');
-  const { conn } = useContext(DbContext);
+  // const { conn } = useContext(DbContext);
 
   useEffect(() => {
-    const getLastUpdated = async () => {
-      const getLastUpdatedSQL = 'select max(createddate) from requests_2025;';
+    // const getLastUpdated = async () => {
+    //   const getLastUpdatedSQL = 'select max(createddate) from requests_2025;';
 
-      const lastUpdatedAsArrowTable = await conn.query(getLastUpdatedSQL);
-      const results = ddbh.getTableData(lastUpdatedAsArrowTable);
+    //   const lastUpdatedAsArrowTable = await conn.query(getLastUpdatedSQL);
+    //   const results = ddbh.getTableData(lastUpdatedAsArrowTable);
 
-      if (!isEmpty(results)) {
-        const lastUpdatedValue = results[0];
-        setLastUpdated(lastUpdatedValue);
-      }
-    };
+    //   if (!isEmpty(results)) {
+    //     const lastUpdatedValue = results[0];
+    //     setLastUpdated(lastUpdatedValue);
+    //   }
+    // };
 
-    getLastUpdated();
+    // getLastUpdated(); // advice for Melissa: just fake this part
+    setLastUpdated(Date.new())  // we will come up with a fix for this later
   }, [conn]);
 
   return (

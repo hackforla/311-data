@@ -314,13 +314,32 @@ class MapContainer extends React.Component {
     const startYear = moment(startDate).year();
     const endYear = moment(endDate).year();
 
-    let selectSQL = '';
     if (DATA_SOURCE === 'SOCRATA') {
-      await getServiceRequests();
+      await getServiceRequests(); // todo- RETURN THIS!
       // await getServiceRequestsRange(startDate, endDate);
       
     } else {
+      /*
+      // Step 1, do this:
+      const theData = await getServiceRequestsHuggingFace(
+        startDate,
+        endDate, // do moment(date).year() inside method...
+        conn, // don't save this to DataService.js ... don't know why you'd that but don't
+      );
+
+      // Step 2 (once you have step 1 working), do this
+      // const useConnQuery = (sql) => conn.squery(sql); // be sure to define this ^^ up there... not on this line...
+      const theData = await getServiceRequestsHuggingFace(
+        startDate,
+        endDate, // do moment(date).year() inside method...
+        useConnQuery,
+      )
+      */
+
+      // Step 3: try making useConnQuery with `useCallback()`
+
       try {
+      let selectSQL; // this can get moved down into try-catch (or into new method)
         if (startYear === endYear) {
           // If the dates are within the same year, query that single year's table.
           const tableName = `requests_${startYear}`;
