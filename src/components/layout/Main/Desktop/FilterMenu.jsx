@@ -18,6 +18,7 @@ import TypeSelector from '@components/layout/Main/Desktop/TypeSelector';
 import StatusSelector from '@components/layout/Main/Desktop/StatusSelector';
 import CouncilSelector from '@components/layout/Main/Desktop/CouncilSelector';
 import ExportButton from '@components/layout/Main/Desktop/Export/ExportButton';
+import Button from '@mui/material/Button';
 
 // import clsx from 'clsx';
 
@@ -61,9 +62,21 @@ const useStyles = makeStyles(theme => ({
   selectorWrapper: {
     marginBottom: theme.gaps.md,
   },
+  displayButton: {
+     width: 300,
+     display: 'flex',
+     alignItems: 'center',
+     justifyContent: 'center',
+     marginTop: 30,
+     borderRadius: 5,
+     padding: 3,
+     backgroundColor: theme.palette.text.secondaryLight,
+     color: 'black',
+     text: 'black',
+  },
   export: {
-    display: 'grid',
-    justifyContent: 'flex-end',
+     display: 'flex',
+     alignItems: 'center',
   },
   content: {
     padding: '6px 14px',
@@ -136,8 +149,11 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
             <div className={classes.selectorWrapper}>
               <StatusSelector />
             </div>
-            <div className={`${classes.selectorWrapper} ${classes.export}`}>
-              <ExportButton />
+            <div className={classes.selectorWrapper}>
+               <Button variant="text" className={classes.displayButton} color="inherit">Display Data</Button>
+            </div>
+            <div className={classes.selectorWrapper}>
+              <ExportButton className={classes.export} />
             </div>
           </div>
         </CardContent>

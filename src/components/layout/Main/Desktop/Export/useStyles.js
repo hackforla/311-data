@@ -2,12 +2,18 @@ import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles(theme => ({
   exportButton: {
+    width: 300,
+    justifyContent: 'center',
     color: theme.palette.text.secondaryLight,
-    textDecoration: 'underline',
+    borderColor: theme.palette.text.secondaryLight,
+    borderRadius: 5,
+    backgroundColor: 'transparent',
+    text: 'black',
+    padding: 3,
     '&:hover': {
-      textDecoration: 'underline',
+      backgroundColor: theme.palette.text.secondaryLight,
+      color: 'black'
     },
-    padding: 0,
   },
   confirmationButton: {
     width: '229px',

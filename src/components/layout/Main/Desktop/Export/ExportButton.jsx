@@ -274,7 +274,7 @@ function ExportButton({ filters }) {
 
   return (
     <>
-      <Button variant="text" onClick={handleExport} className={classes.exportButton}>
+      <Button variant="outlined" onClick={handleExport} className={classes.exportButton}>
         Export
         <Icon sx={{ fontSize: 18, mb: '3px', ml: '1px' }}>
           <img src={ExportIcon} alt="export icon" className={classes.imageIcon} />
