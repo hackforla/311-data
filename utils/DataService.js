@@ -4,6 +4,7 @@ import moment from 'moment';
 import ddbh from '@utils/duckDbHelpers.js';
 
 const dataResources = {
+  2025: 'h73f-gn57',
   2024: 'b7dx-7gc3',
   2019: 'pvft-t768',
   2018: 'h65r-yf5i',

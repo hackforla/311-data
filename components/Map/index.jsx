@@ -319,7 +319,6 @@ class MapContainer extends React.Component {
     } else {
       dataRequest = await getServiceRequestHF(this.useConnQuery, startDate, endDate);
     }
-    console.log('dataRequest:', dataRequest);
     return dataRequest;
   }
 
