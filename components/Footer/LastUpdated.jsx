@@ -33,8 +33,8 @@ function LastUpdated() {
     // };
 
     // getLastUpdated(); // advice for Melissa: just fake this part
-    setLastUpdated(Date.new())  // we will come up with a fix for this later
-  }, [conn]);
+    setLastUpdated(Date.now())  // we will come up with a fix for this later
+  }, []);
 
   return (
     lastUpdated && (
