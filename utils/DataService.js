@@ -1,7 +1,10 @@
 import { DataFrame } from 'dataframe-js';
 import { object, string, number, date, array } from 'yup';
 import moment from 'moment';
+import ddbh from '@utils/duckDbHelpers.js';
+
 const dataResources = {
+  2024: 'b7dx-7gc3',
   2019: 'pvft-t768',
   2018: 'h65r-yf5i',
   2017: 'd4vt-q4t5',
@@ -9,11 +12,11 @@ const dataResources = {
   2015: 'ms7h-a45h',
 };
 
-export function getDataResources() {
+export function getSocrataDataResources() {
   return dataResources;
 }
 
-const serviceRequestSchema = object({
+const socrataServiceRequestSchema = object({
   actiontaken: string(),
   address: string().min(3).max(100).nullable(),
   addressverified: string(),
@@ -54,24 +57,22 @@ const serviceRequestSchema = object({
 }) 
 
 const srArraySchema = array().of(
-    serviceRequestSchema
+    socrataServiceRequestSchema
   )
 
-export async function getServiceRequests() {
+export async function getServiceRequestSocrata() {
   try {
       // Get 2024 SR data through Socrata API
     const response = await fetch("https://data.lacity.org/resource/b7dx-7gc3.json");
     const unvalidatedSrs = await response.json();
-    console.log(unvalidatedSrs);
     const validatedSrs = await srArraySchema.validate(unvalidatedSrs);
-    console.log(validatedSrs);
     return validatedSrs;
   } catch (error) {
     console.error('Error fetching service requests:', error);
   }
 }
 
-export function getColorMap(discrete) {
+export function getSocrataColorMap(discrete) {
   if (discrete) {
     return [
       { title: 'Dead Animal Removal', color: '#3b69a6' },
@@ -104,7 +105,7 @@ export function getColorMap(discrete) {
   };
 }
 
-export function getBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadDataReady) {
+export function getSocrataBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadDataReady) {
   const treemapData = { title: 'Broad 311 Calls Map', color: '#FFFFFF', children: [] };
   const start = Math.min(startMonth, endMonth);
   const end = Math.max(startMonth, endMonth);
@@ -142,7 +143,7 @@ export function getBroadCallVolume(year, startMonth = 0, endMonth = 13, onBroadD
     });
 }
 
-export function getZoomedCallVolume(
+export function getSocrataZoomedCallVolume(
   ncName,
   year,
   startMonth = 0,
@@ -168,41 +169,44 @@ export function getZoomedCallVolume(
   });
 }
 
-export async function getServiceRequestsRange(startDate, endDate) {
+export async function getServiceRequestHF(conn, startDate, endDate) {
   const startYear = moment(startDate).year();
   const endYear = moment(endDate).year();
-  const startMonth = moment(startDate).month();
-  const endMonth = moment(endDate).month();
 
-  const srPromises = [];
-
-  if (startYear === endYear) {
-    srPromises.push(
-      new Promise(resolve => {
-        getBroadCallVolume(startYear, startMonth, endMonth, data => {
-          resolve(data.children || []);
-        });
-      })
-    );
-  } else {
-    for (let year = startYear; year <= endYear; year++) {
-      let yearStartMonth = 0;
-      let yearEndMonth = 12;
-      if (year === startYear) yearStartMonth = startMonth;
-      if (year === endYear) yearEndMonth = endMonth;
-
-      srPromises.push(
-        new Promise(resolve => {
-          getBroadCallVolume(year, yearStartMonth, yearEndMonth, data => {
-            resolve(data.children || []);
-          });
-        })
-      );
-    }
-  }
-
-  const results = await Promise.all(srPromises);
-  return results.flat();
-}
-
-
+  try {
+       let selectSQL; // this can get moved down into try-catch (or into new method)
+         if (startYear === endYear) {
+           // If the dates are within the same year, query that single year's table.
+           const tableName = `requests_${startYear}`;
+           selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
+         } else {
+           // If the dates span multiple years, create two queries and union them.
+           const tableNameStartYear = `requests_${startYear}`;
+           const endOfStartYear = moment(startDate).endOf('year').format('YYYY-MM-DD');
+           const tableNameEndYear = `requests_${endYear}`;
+           const startOfEndYear = moment(endDate).startOf('year').format('YYYY-MM-DD');
+   
+           selectSQL = `
+             (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
+             UNION ALL
+             (SELECT * FROM ${tableNameEndYear} WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${endDate}')
+           `;
+         }
+   
+         const dataLoadStartTime = performance.now();
+         const requestsAsArrowTable = await conn(selectSQL);
+         const dataLoadEndTime = performance.now();
+   
+         console.log(`Data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
+   
+         const requests = ddbh.getTableData(requestsAsArrowTable);
+         const mapLoadEndTime = performance.now();
+        
+         console.log(`Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`);
+    
+         return requests;
+       } catch (e) {
+         console.error("Error during database query execution:", e);
+       }
+  
+} 

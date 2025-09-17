@@ -25,10 +25,9 @@ import FunFactCard from '@components/Loading/FunFactCard';
 import CookieNotice from '../main/CookieNotice';
 import Map from './Map';
 import moment from 'moment';
-import ddbh from '@utils/duckDbHelpers.js';
 import DbContext from '@db/DbContext';
 import AcknowledgeModal from '../Loading/AcknowledgeModal';
-import { getServiceRequestsRange, getServiceRequests } from '../../utils/DataService';
+import { getServiceRequestHF, getServiceRequestSocrata } from '../../utils/DataService';
 
 const styles = (theme) => ({
   root: {
@@ -43,6 +42,10 @@ class MapContainer extends React.Component {
   // Note: 'this.context' is defined using the static contextType property
   // static contextType assignment allows MapContainer to access values provided by DbContext.Provider
   static contextType = DbContext;
+  useConnQuery = async (sql) => {
+    const { conn } = this.context;
+    return await conn.query(sql);
+  };
 
   constructor(props) {
     super(props);
@@ -68,7 +71,7 @@ class MapContainer extends React.Component {
 
   createRequestsTable = async () => {
     this.setState({ isTableLoading: true });
-    const { conn, tableNameByYear, setDbStartTime } = this.context;
+    const {tableNameByYear, setDbStartTime } = this.context;
     const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
     const year = moment(startDate).year(); // extract the year
     const datasetFileName = `requests${year}.parquet`;
@@ -81,7 +84,7 @@ class MapContainer extends React.Component {
     setDbStartTime(startTime)
 
       try {
-        await conn.query(createSQL);
+        await this.useConnQuery(createSQL);
         const endTime = performance.now() // end the timer
         console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
       } catch (error) {
@@ -110,7 +113,7 @@ class MapContainer extends React.Component {
     const didDateRangeChange = (yearChanged || startDateChanged || endDateChanged) && endDate !== null;
 
     if (prevProps.activeMode !== activeMode || prevProps.councilId !== councilId || didDateRangeChange) {
-      await this.createRequestsTable();
+      if (DATA_SOURCE !== 'SOCRATA') await this.createRequestsTable();
       await this.setData();
     }
   }
@@ -310,70 +313,14 @@ class MapContainer extends React.Component {
   // if different years, we query both startDate year and endDate year, then union the result
 
   async getAllRequests(startDate, endDate) {
-    const { conn } = this.context;
-    const startYear = moment(startDate).year();
-    const endYear = moment(endDate).year();
-
+    let dataRequest;
     if (DATA_SOURCE === 'SOCRATA') {
-      await getServiceRequests(); // todo- RETURN THIS!
-      // await getServiceRequestsRange(startDate, endDate);
-      
+      dataRequest = await getServiceRequestSocrata();
     } else {
-      /*
-      // Step 1, do this:
-      const theData = await getServiceRequestsHuggingFace(
-        startDate,
-        endDate, // do moment(date).year() inside method...
-        conn, // don't save this to DataService.js ... don't know why you'd that but don't
-      );
-
-      // Step 2 (once you have step 1 working), do this
-      // const useConnQuery = (sql) => conn.squery(sql); // be sure to define this ^^ up there... not on this line...
-      const theData = await getServiceRequestsHuggingFace(
-        startDate,
-        endDate, // do moment(date).year() inside method...
-        useConnQuery,
-      )
-      */
-
-      // Step 3: try making useConnQuery with `useCallback()`
-
-      try {
-      let selectSQL; // this can get moved down into try-catch (or into new method)
-        if (startYear === endYear) {
-          // If the dates are within the same year, query that single year's table.
-          const tableName = `requests_${startYear}`;
-          selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
-        } else {
-          // If the dates span multiple years, create two queries and union them.
-          const tableNameStartYear = `requests_${startYear}`;
-          const endOfStartYear = moment(startDate).endOf('year').format('YYYY-MM-DD');
-          const tableNameEndYear = `requests_${endYear}`;
-          const startOfEndYear = moment(endDate).startOf('year').format('YYYY-MM-DD');
-  
-          selectSQL = `
-            (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
-            UNION ALL
-            (SELECT * FROM ${tableNameEndYear} WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${endDate}')
-          `;
-        }
-  
-        const dataLoadStartTime = performance.now();
-        const requestsAsArrowTable = await conn.query(selectSQL);
-        const dataLoadEndTime = performance.now();
-  
-        console.log(`Data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
-  
-        const requests = ddbh.getTableData(requestsAsArrowTable);
-        const mapLoadEndTime = performance.now();
-       
-        console.log(`Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`);
-        console.log('Requests:', requests);
-        return requests;
-      } catch (e) {
-        console.error("Error during database query execution:", e);
-      }
+      dataRequest = await getServiceRequestHF(this.useConnQuery, startDate, endDate);
     }
+    console.log('dataRequest:', dataRequest);
+    return dataRequest;
   }
 
 
@@ -394,10 +341,21 @@ class MapContainer extends React.Component {
         dispatchGetDbRequestSuccess,
         dispatchUpdateDateRanges,
       } = this.props;
-      const convertedRequests = this.convertRequests(this.rawRequests);
-      // load map features/requests upon successful map load
-      dispatchGetDataRequestSuccess(convertedRequests);
-      // set isDbLoading in redux state.data to false
+      let requests;
+      /*
+      Another area to revisit later to toggle between Socrata vs HF data
+      if (DATA_SOURCE !== 'SOCRATA') {
+        const convertedRequests = this.convertRequests(this.rawRequests);
+        // load map features/requests upon successful map load
+        requests = convertedRequests;
+        } else {
+          requests = this.rawRequests;
+      }
+      dispatchGetDataRequestSuccess(requests);
+      */
+     // set isDbLoading in redux state.data to false
+      requests = this.convertRequests(this.rawRequests);
+      dispatchGetDataRequestSuccess(requests);
       dispatchGetDbRequestSuccess();
       const newDateRangesWithRequests =
         this.resolveDateRanges(missingDateRanges);
@@ -448,6 +406,7 @@ class MapContainer extends React.Component {
       isDbLoading,
     } = this.props;
     const { ncCounts, ccCounts, selectedTypes, acknowledgeModalShown, isTableLoading } = this.state;
+
     return (
       <div className={classes.root}>
         <Map
@@ -490,7 +449,7 @@ const mapStateToProps = (state) => ({
   requests: state.data.requests,
   dateRangesWithRequests: state.data.dateRangesWithRequests,
   isMapLoading: state.data.isMapLoading,
-  isDbLoading: state.data.isDbLoading,
+  isDbLoading: state.data.isDbLoading, 
 	councilId: state.filters.councilId,
 });
 
