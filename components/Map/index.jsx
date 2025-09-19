@@ -332,7 +332,7 @@ class MapContainer extends React.Component {
     }
     dispatchGetDataRequest(); // set isMapLoading in redux stat.data to true
     dispatchGetDbRequest(); // set isDbLoading in redux state.data to true
-    this.rawRequests = await this.getAllRequests(startDate, endDate);
+    this.rawRequests = await this.getAllRequests(startDate, endDate) || [];
 
     if (this.isSubscribed) {
       const {
@@ -365,19 +365,25 @@ class MapContainer extends React.Component {
   convertRequests = (requests) =>
     requests.map((request) => {
       // Be careful, request properties are case-sensitive
+      const lon = request.Longitude ?? request.longitude;
+      const lat = request.Latitude ?? request.latitude;
+      const closedDate = Math.floor(moment(request.ClosedDate ?? request.closeddate).valueOf() / 1000);
+      const typeId = getTypeIdFromTypeName(request.RequestType ?? request.requesttype);
+      const requestId = request.SRNumber ?? request.srnumber
+      const createdDateMs = Math.floor(moment(request.CreatedDate ?? request.createddate).valueOf() / 1000);
       return {
         type: 'Feature',
         properties: {
-          requestId: request.SRNumber,
-          typeId: getTypeIdFromTypeName(request.RequestType),
-          closedDate: request.ClosedDate,
+          requestId,
+          typeId,
+          closedDate,
           // Store this in milliseconds so that it's easy to do date comparisons
           // using Mapbox GL JS filters.
-          createdDateMs: moment(request.CreatedDate).valueOf(),
+          createdDateMs
         },
         geometry: {
           type: 'Point',
-          coordinates: [request.Longitude, request.Latitude],
+          coordinates: [lon, lat],
         },
       };
     });
@@ -405,7 +411,7 @@ class MapContainer extends React.Component {
       isDbLoading,
     } = this.props;
     const { ncCounts, ccCounts, selectedTypes, acknowledgeModalShown, isTableLoading } = this.state;
-
+    
     return (
       <div className={classes.root}>
         <Map

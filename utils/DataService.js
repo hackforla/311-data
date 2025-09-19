@@ -19,7 +19,7 @@ export function getSocrataDataResources() {
 
 const socrataServiceRequestSchema = object({
   actiontaken: string(),
-  address: string().min(3).max(100).nullable(),
+  address: string().nullable(),
   addressverified: string(),
   anonymous: string(),
   apc: string(),
@@ -50,7 +50,7 @@ const socrataServiceRequestSchema = object({
   status: string(),
   streetname: string().max(32).nullable(),
   suffix: string(),
-  tbmcolumn: string().length(1),
+  tbmcolumn: string().nullable(),
   tbmpage: number().integer().max(999).nullable(), 
   tbmrow: string().nullable(),
   updateddate: date(),
@@ -62,16 +62,27 @@ const srArraySchema = array().of(
   )
 
 export async function getServiceRequestSocrata() {
+  const dataLoadStartTime = performance.now();
+
   try {
-      // Get 2024 SR data through Socrata API
-    const response = await fetch("https://data.lacity.org/resource/b7dx-7gc3.json");
+    // Fetch 2025 SR data through Socrata API
+    const response = await fetch("https://data.lacity.org/resource/h73f-gn57.json");
     const unvalidatedSrs = await response.json();
+
+    const dataLoadEndTime = performance.now();
+    console.log(`Socrata data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
+
+    const mapLoadStartTime = performance.now();
     const validatedSrs = await srArraySchema.validate(unvalidatedSrs);
+    const mapLoadEndTime = performance.now();
+    console.log(`Socrata map preparation time: ${Math.floor(mapLoadEndTime - mapLoadStartTime)} ms`);
+    
     return validatedSrs;
   } catch (error) {
     console.error('Error fetching service requests:', error);
   }
 }
+
 
 export function getSocrataColorMap(discrete) {
   if (discrete) {
