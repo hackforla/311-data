@@ -8,6 +8,11 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { updateRequestStatus } from '@reducers/filters';
 import ArrowToolTip from '@components/common/ArrowToolTip';
 
+import Box from '@mui/material/Box';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 const useStyles = makeStyles(() => ({
   header: {
     marginBottom: 5,
@@ -49,40 +54,57 @@ function StatusSelector({
           </p>
         </ArrowToolTip>
       </div>
-      <ToggleButtonGroup
-        value={selection}
-        onChange={handleSelection}
-        exclusive
-        className={classes.root}
+
+       <Box
+                display="flex"
+                flexDirection="row"
+                gap={2}
+                style={{
+                  margin: 'auto',
+                  backgroundColor: '#192730',
+                  borderRadius: '5px',
+                  padding: '10px',
+                  paddingTop: '3px',
+                  paddingBottom: '3px',
+                  alignItems: 'center',
+                }}
       >
-        <ToggleButton
-          className={classes.button}
-          selected={requestStatus.open && !requestStatus.closed}
-          onClick={() => updateStatusFilter('open')}
-          value="open"
-          disableRipple
-        >
-          Open
-        </ToggleButton>
-        <ToggleButton
-          className={classes.button}
-          selected={requestStatus.open && requestStatus.closed}
-          onClick={() => updateStatusFilter('all')}
-          value="all"
-          disableRipple
-        >
-          All
-        </ToggleButton>
-        <ToggleButton
-          className={classes.button}
-          selected={requestStatus.closed && !requestStatus.open}
-          onClick={() => updateStatusFilter('closed')}
-          value="closed"
-          disableRipple
-        >
-          Closed
-        </ToggleButton>
-      </ToggleButtonGroup>
+      <FormGroup row>
+            <FormControlLabel
+              key="open"
+              classes={classes.button}
+              control={(
+                <Checkbox
+              style={{
+                transform: 'scale(0.8)',
+                color: 'white',
+                padding: '0 0 0 9px',
+              }}
+              checked={requestStatus.open}
+              onChange={() => updateStatusFilter('open')}
+            />
+          )}
+          label="Open"
+        />
+           <FormControlLabel
+            key="closed"
+            classes={classes.button}
+            control={(
+              <Checkbox
+              style={{
+                transform: 'scale(0.8)',
+                color: 'white',
+                padding: '0 0 0 20px',
+                
+              }}
+              checked={requestStatus.closed}
+              onChange={() => updateStatusFilter('closed')}
+            />
+          )}
+          label="Closed"
+        />
+      </FormGroup>
+      </Box>
     </>
   );
 }
