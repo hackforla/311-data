@@ -37,8 +37,21 @@ function StatusSelector({
   const classes = useStyles();
   const [selection, setSelection] = useState('open');
 
-  const handleSelection = (event, newSelection) => {
-    setSelection(newSelection);
+  const handleSelection = (status, checked) => {
+    const newStatus = {
+      ...requestStatus,
+      [status]: checked,
+    };
+
+    if (newStatus.open && newStatus.closed) {
+      updateStatusFilter('all');
+    } else if (newStatus.open) {
+      updateStatusFilter('open');
+    } else if (newStatus.closed) {
+      updateStatusFilter('closed');
+    } else {
+      updateStatusFilter('none');
+    }
   };
 
   return (
@@ -55,55 +68,54 @@ function StatusSelector({
         </ArrowToolTip>
       </div>
 
-       <Box
-                display="flex"
-                flexDirection="row"
-                gap={2}
-                style={{
-                  margin: 'auto',
-                  backgroundColor: '#192730',
-                  borderRadius: '5px',
-                  padding: '10px',
-                  paddingTop: '3px',
-                  paddingBottom: '3px',
-                  alignItems: 'center',
-                }}
+      <Box
+        display="flex"
+        flexDirection="row"
+        gap={2}
+        style={{
+          margin: 'auto',
+          backgroundColor: '#192730',
+          borderRadius: '5px',
+          padding: '10px',
+          paddingTop: '3px',
+          paddingBottom: '3px',
+          alignItems: 'center',
+        }}
       >
-      <FormGroup row>
-            <FormControlLabel
-              key="open"
-              classes={classes.button}
-              control={(
-                <Checkbox
-              style={{
-                transform: 'scale(0.8)',
-                color: 'white',
-                padding: '0 0 0 9px',
-              }}
-              checked={requestStatus.open}
-              onChange={() => updateStatusFilter('open')}
-            />
-          )}
-          label="Open"
-        />
-           <FormControlLabel
+        <FormGroup row>
+          <FormControlLabel
+            key="open"
+            classes={classes.button}
+            control={(
+              <Checkbox
+                style={{
+                  transform: 'scale(0.8)',
+                  color: 'white',
+                  padding: '0 0 0 9px',
+                }}
+                checked={requestStatus.open}
+                onChange={e => handleSelection('open', e.target.checked)}
+              />
+            )}
+            label="Open"
+          />
+          <FormControlLabel
             key="closed"
             classes={classes.button}
             control={(
               <Checkbox
-              style={{
-                transform: 'scale(0.8)',
-                color: 'white',
-                padding: '0 0 0 20px',
-                
-              }}
-              checked={requestStatus.closed}
-              onChange={() => updateStatusFilter('closed')}
-            />
-          )}
-          label="Closed"
-        />
-      </FormGroup>
+                style={{
+                  transform: 'scale(0.8)',
+                  color: 'white',
+                  padding: '0 0 0 20px',
+                }}
+                checked={requestStatus.closed}
+                onChange={e => handleSelection('closed', e.target.checked)}
+              />
+            )}
+            label="Closed"
+          />
+        </FormGroup>
       </Box>
     </>
   );

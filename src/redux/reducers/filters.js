@@ -177,6 +177,19 @@ export default (state = initialState, action) => {
               closed: true,
             },
           };
+        case 'none':
+          newSearchParams.set('requestStatusOpen', false);
+          newSearchParams.set('requestStatusClosed', false);
+          url.search = newSearchParams.toString();
+          window.history.replaceState(null, 'Change URL', url);
+          return {
+            ...state,
+            requestStatus: {
+              ...state.requestStatus,
+              open: false,
+              closed: false,
+            },
+          };
 
         // default to non-exclusive v1 'open' and 'closed' toggle code
         // where 'open' and 'closed' can be selected/deselected at same time
