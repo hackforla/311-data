@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { triggerDisplayData } from '@reducers/data';
 import makeStyles from '@mui/styles/makeStyles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -98,6 +100,7 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
   const [formErrors, setFormErrors] = useState({});
   const [formValid, setFormValid] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const dispatch = useDispatch();
 
   const handleGeocoderResult = ( result ) => {
     console.log("Filter menu received address selected:", result.place_name);
@@ -142,6 +145,7 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
     if (validateForm()) {
       console.log("Valid form — proceeds to display data");
       // trigger data fetch 
+      dispatch(triggerDisplayData());
     } else {
       console.log("Invalid form", formErrors);
     }

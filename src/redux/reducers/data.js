@@ -25,6 +25,8 @@ export const types = {
 	SEND_GIT_REQUEST: 'SEND_GIT_REQUEST',
 	GIT_RESPONSE_SUCCESS: 'GIT_RESPONSE_SUCCESS',
 	GIT_RESPONSE_FAILURE: 'GIT_RESPONSE_FAILURE',
+	TRIGGER_DISPLAY_DATA: 'TRIGGER_DISPLAY_DATA',
+	RESET_DISPLAY_DATA: 'RESET_DISPLAY_DATA'
 };
 
 export const getDbRequest = () => ({
@@ -129,6 +131,14 @@ export const gitResponseFailure = error => ({
 	payload: error,
 });
 
+export const triggerDisplayData = () => ({ 
+	type: types.TRIGGER_DISPLAY_DATA 
+});
+
+export const resetDisplayData = () => ({ 
+	type: types.RESET_DISPLAY_DATA 
+});
+
 const initialState = {
 	isDbLoading: true,
 	isMapLoading: false,
@@ -139,6 +149,7 @@ const initialState = {
 	// Empty GeoJSON object.
 	requests: { type: 'FeatureCollection', features: [] },
 	dateRangesWithRequests: [],
+	shouldDisplayData: false,
 };
 
 export default (state = initialState, action) => {
@@ -260,6 +271,18 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				selectedNcId: action.payload,
+			};
+		}
+		case types.TRIGGER_DISPLAY_DATA: {
+			return { 
+				...state, 
+				shouldDisplayData: true 
+			};
+		}
+		case types.RESET_DISPLAY_DATA: {
+			return { 
+				...state, 
+				shouldDisplayData: false 
 			};
 		}
 		default:

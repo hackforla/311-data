@@ -16,6 +16,7 @@ import {
 } from '@reducers/filters';
 import { updateMapPosition } from '@reducers/ui';
 import { trackMapExport } from '@reducers/analytics';
+import { triggerDisplayData, resetDisplayData } from '@reducers/data';
 import { INTERNAL_DATE_SPEC } from '../../components/common/CONSTANTS';
 import { getTypeIdFromTypeName } from '@utils';
 import LoadingModal from '../../components/Loading/LoadingModal';
@@ -91,12 +92,13 @@ class MapContainer extends React.Component {
 	async componentDidMount(props) {
 		this.isSubscribed = true;
 		this.processSearchParams();
+		// Blank Map Implementation: createRequestTable and setData now called via Redux
 		await this.createRequestsTable();
 		await this.setData();
 	}
 
   async componentDidUpdate(prevProps) {
-    const { activeMode, startDate, endDate, councilId } = this.props;
+    const { activeMode, startDate, endDate, councilId, shouldDisplayData } = this.props;
     // create conditions to check if year or startDate or endDate changed
     const yearChanged = moment(prevProps.startDate).year() !== moment(startDate).year();
     const startDateChanged = prevProps.startDate !== startDate;
@@ -106,10 +108,18 @@ class MapContainer extends React.Component {
     // when both the startDate and endDate are selected.
     const didDateRangeChange = (yearChanged || startDateChanged || endDateChanged) && endDate !== null;
 
-    if (prevProps.activeMode !== activeMode || prevProps.councilId !== councilId || didDateRangeChange) {
-      await this.createRequestsTable();
-      await this.setData();
-    }
+    // if (prevProps.activeMode !== activeMode || prevProps.councilId !== councilId || didDateRangeChange) {
+	// 	await this.createRequestsTable();
+	// 	await this.setData();
+    // }
+
+	// Trigger for Display Data button
+  	if (shouldDisplayData && shouldDisplayData !== prevProps.shouldDisplayData) {
+		await this.createRequestsTable();
+		await this.setData();
+		// reset display data flag
+		this.props.dispatchResetDisplayData();
+  	}
   }
 
 	async componentWillUnmount() {
@@ -478,7 +488,8 @@ const mapStateToProps = (state) => ({
   dateRangesWithRequests: state.data.dateRangesWithRequests,
   isMapLoading: state.data.isMapLoading,
   isDbLoading: state.data.isDbLoading,
-	councilId: state.filters.councilId,
+  councilId: state.filters.councilId,
+  shouldDisplayData: state.data.shouldDisplayData,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -496,6 +507,8 @@ const mapDispatchToProps = (dispatch) => ({
 	dispatchUpdateEndDate: (endDate) => dispatch(updateEndDate(endDate)),
 	dispatchUpdateNcId: (id) => dispatch(updateNcId(id)),
 	dispatchUpdateTypesFilter: (type) => dispatch(updateRequestTypes(type)),
+	dispatchTriggerDisplayData: () => dispatch(triggerDisplayData()),
+	dispatchResetDisplayData: () => dispatch(resetDisplayData()),
 });
 
 MapContainer.propTypes = {};
