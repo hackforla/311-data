@@ -85,6 +85,7 @@ const useStyles = makeStyles(theme => ({
 
 // const FilterMenu = ({ toggleMenu }) => { //toggleMenu used with GearButton
 function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils, onGeocoderResult, onChangeTab, onReset, canReset,
+  // Redux connected components
   selectedCouncils, // Councils/Boundaries Form Values
   startDate, endDate, // Date Range Form Values
   selectedTypes, // Request Type Form Values
@@ -95,15 +96,23 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
   const sharedClasses = sharedStyles();
   // Blank map implementation: form validation
   const [formErrors, setFormErrors] = useState({});
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const handleGeocoderResult = ( result ) => {
+    console.log("Filter menu received address selected:", result.place_name);
+    setSelectedAddress(result.place_name);
+  };
 
   const validateForm = () => {
     let newErrors = {};
 
     // Address Validation or Council Validation
-    if (!selectedCouncils || selectedCouncils.length === 0) {
+    console.log('Selected Address: ' + selectedAddress);
+    if (!selectedAddress && (!selectedCouncils || selectedCouncils.length === 0)) {
+      newErrors.address = 'Please search by address or neighborhood';
       newErrors.councils = 'Please select a Neighborhood';
     }
-
+    
     // Date Range Validation
     if (!startDate || !endDate) {
       newErrors.dates = 'Please select both a start and end date';
@@ -133,7 +142,9 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
     } else {
       console.log("Invalid form", formErrors);
     }
+    setSelectedAddress(null);
   };
+  
 
   return (
     <Card className={classes.card}>
@@ -174,11 +185,13 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
                 map={map}
                 geoFilterType={geoFilterType}
                 councils={councils}
-                onGeocoderResult={onGeocoderResult}
+                onGeocoderResult={handleGeocoderResult}
                 onChangeTab={onChangeTab}
                 onReset={onReset}
                 canReset={canReset}
+                hasError={formErrors.address ? true : false}
               />
+              {formErrors.address && (<Typography style={{ color: '#DE2800' }} variant="body2">{formErrors.address}</Typography>)}
             </div>
             <div className={classes.selectorWrapper}>
               <CouncilSelector 

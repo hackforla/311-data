@@ -129,8 +129,13 @@ class MapSearch extends React.Component {
 
     // This event fires upon an Address Search submission
     this.geocoder.on('result', ({ result }) => {
-      this.props.onGeocoderResult({ result });
+      // this.props.onGeocoderResult({ result }); Temp: Do not trigger for blank map implementation
       
+      // Blank Map Implementation: pass result to FilterMenu
+      const selectedAddress = result.place_name;
+      console.log("Selected address:", selectedAddress);
+      this.props.onGeocoderResult(result);
+
       // This clears the address from the Address input field.
       // this.geocoder.clear(); 
     });
@@ -184,8 +189,8 @@ class MapSearch extends React.Component {
             </Button>
         ))}
         </div> */}
-         <Typography className={classes.header}>Search by Address</Typography>
-        <div id="geocoder" className={classes.geocoder} />
+         <Typography className={classes.header} style={{ color: this.props.hasError ? '#DE2800' : 'inherit' }}>Search by Address</Typography>
+        <div id="geocoder" className={classes.geocoder} style={{ border: this.props.hasError ? '1.3px solid #DE2800': undefined, borderRadius: '5px' }}/>
       </div>
     );
   }
@@ -198,6 +203,7 @@ MapSearch.propTypes = {
   onChangeTab: PropTypes.func,
   onReset: PropTypes.func,
   canReset: PropTypes.bool,
+  hasError: PropTypes.bool,
 };
 
 MapSearch.defaultProps = {
@@ -206,7 +212,8 @@ MapSearch.defaultProps = {
   onGeocoderResult: () => {},
   onChangeTab: () => {},
   onReset: () => {},
-  canReset: false
+  canReset: false,
+  hasError: false,
 };
 
 export default withStyles(styles)(MapSearch);
