@@ -34,6 +34,7 @@ function CouncilSelector({
   dispatchCloseBoundaries,
   resetMap,
   resetAddressSearch,
+  hasError = false // Form Validation for blank map
 }) {
   const classes = useStyles();
   const [searchTerm, setSearchTerm] = useState('');
@@ -65,10 +66,10 @@ function CouncilSelector({
       const newSelected = [newSelectedCouncil];
       dispatchUpdateSelectedCouncils(newSelected);
       dispatchUpdateUnselectedCouncils(councils);
-      dispatchUpdateNcId(selectedCouncilId);
+      // dispatchUpdateNcId(selectedCouncilId); // Triggers zoom
 
       // Collapse boundaries section
-      dispatchCloseBoundaries();
+      // dispatchCloseBoundaries();
     }
   };
 
@@ -78,9 +79,14 @@ function CouncilSelector({
 
   return (
     <>
-      <Typography className={classes.header}>Boundaries</Typography>
+      <Typography className={classes.header} 
+        style={{ color: hasError ? '#DE2800' : 'inherit' }}
+      >
+        Boundaries
+      </Typography>
+      <div style={{ border: hasError ? '1.3px solid #DE2800': undefined, borderRadius: '5px' }}>
       <BoundariesSection>
-        <BoundariesSection.Display>
+        <BoundariesSection.Display >
           <SelectedCouncils items={selected} onDelete={debouncedHandleDelete} />
         </BoundariesSection.Display>
         <BoundariesSection.Collapse>
@@ -89,6 +95,7 @@ function CouncilSelector({
           )}
         </BoundariesSection.Collapse>
       </BoundariesSection>
+      </div>
     </>
   );
 }
@@ -115,6 +122,7 @@ CouncilSelector.defaultProps = {
   resetMap: () => {},
   resetAddressSearch: () => {},
   dispatchCloseBoundaries: undefined,
+  hasError: false,
 };
 
 CouncilSelector.propTypes = {
@@ -127,4 +135,5 @@ CouncilSelector.propTypes = {
   resetMap: PropTypes.func,
   resetAddressSearch: PropTypes.func,
   dispatchCloseBoundaries: PropTypes.func,
+  hasError: PropTypes.bool,
 };

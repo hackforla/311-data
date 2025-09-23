@@ -84,10 +84,56 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // const FilterMenu = ({ toggleMenu }) => { //toggleMenu used with GearButton
-function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils, onGeocoderResult, onChangeTab, onReset, canReset }) {
+function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils, onGeocoderResult, onChangeTab, onReset, canReset,
+  selectedCouncils, // Councils/Boundaries Form Values
+  startDate, endDate, // Date Range Form Values
+  selectedTypes, // Request Type Form Values
+  requestStatus, // Request Status Form Values
+}) {
   const [expanded, setExpanded] = useState(true);
   const classes = useStyles();
   const sharedClasses = sharedStyles();
+  // Blank map implementation: form validation
+  const [formErrors, setFormErrors] = useState({});
+
+  const validateForm = () => {
+    let newErrors = {};
+
+    // Address Validation or Council Validation
+    if (!selectedCouncils || selectedCouncils.length === 0) {
+      newErrors.councils = 'Please select a Neighborhood';
+    }
+
+    // Date Range Validation
+    if (!startDate || !endDate) {
+      newErrors.dates = 'Please select both a start and end date';
+    }
+    console.log('startDate: ' + startDate);
+    console.log('endDate: ' + endDate);
+
+    // Request Type Validation
+    const anyTypeSelected = Object.values(selectedTypes).some(val => val);
+    if (!anyTypeSelected) {
+      newErrors.types = 'Please select at least one type of request';
+    }
+
+    // Request Status Validation
+    if (!requestStatus.open && !requestStatus.closed) {
+      newErrors.status = 'Please select at least one request status';
+    }
+
+    setFormErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleDisplayData = () => {
+    if (validateForm()) {
+      console.log("Valid form — proceeds to display data");
+      // trigger data fetch 
+    } else {
+      console.log("Invalid form", formErrors);
+    }
+  };
 
   return (
     <Card className={classes.card}>
@@ -135,22 +181,27 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
               />
             </div>
             <div className={classes.selectorWrapper}>
-              <CouncilSelector
+              <CouncilSelector 
                 resetMap={resetMap}
                 resetAddressSearch={resetAddressSearch}
+                hasError={formErrors.councils ? true : false}
               />
+               {formErrors.councils && (<Typography style={{ color: '#DE2800' }} variant="body2">{formErrors.councils}</Typography>)}
             </div>
             <div className={classes.selectorWrapper}>
-              <DateSelector range />
+              <DateSelector range hasError={formErrors.dates ? true : false}/>
+              {formErrors.dates && (<Typography style={{ color: '#DE2800' }} variant="body2">{formErrors.dates}</Typography>)}
             </div>
             <div className={classes.selectorWrapper}>
-              <TypeSelector />
+              <TypeSelector hasError={formErrors.types ? true : false}/>
+              {formErrors.types && (<Typography style={{ color: '#DE2800' }} variant="body2">{formErrors.types}</Typography>)}
             </div>
             <div className={classes.selectorWrapper}>
-              <StatusSelector />
+              <StatusSelector hasError={formErrors.status ? true : false}/> 
+              {formErrors.status && (<Typography style={{ color: '#DE2800' }} variant="body2"> {formErrors.status} </Typography>)}
             </div>
             <div className={classes.selectorWrapper}>
-               <Button variant="text" className={classes.displayButton} color="inherit">Display Data</Button>
+               <Button variant="text" className={classes.displayButton} onClick={handleDisplayData} color="inherit">Display Data</Button>
             </div>
             <div className={classes.selectorWrapper}>
               <ExportButton className={classes.export} />
@@ -162,11 +213,24 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
   );
 }
 
+// Child component props for form validation
+const mapStateToProps = state => ({
+  // Councils/Boundaries Form Values
+  selectedCouncils: state.filters.selected,
+  // Date Range Form Values
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate,
+  // Request Type Form Values
+  selectedTypes: state.filters.requestTypes,
+  // Request Status Form Values
+  requestStatus: state.filters.requestStatus
+});
+
 const mapDispatchToProps = dispatch => ({
   toggleMenu: () => dispatch(reduxToggleMenu()),
 });
 
-export default connect(null, mapDispatchToProps)(FilterMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(FilterMenu);
 
 FilterMenu.defaultProps = {
   resetMap: () => {},
@@ -177,7 +241,15 @@ FilterMenu.defaultProps = {
   onGeocoderResult: () => {},
   onChangeTab: () => {},
   onReset: () => {},
-  canReset: false
+  canReset: false,
+  // Councils/Boundaries Form Values
+  selectedCouncils: null,
+  // Date Range Form Values
+  startDate: null,
+  endDate: null,
+  // Request Type Form Values
+  selectedTypes: {},
+  // Request Status Form Values
 };
 
 FilterMenu.propTypes = {
@@ -190,5 +262,5 @@ FilterMenu.propTypes = {
   onGeocoderResult: PropTypes.func,
   onChangeTab: PropTypes.func,
   onReset: PropTypes.func,
-  canReset: PropTypes.bool
+  canReset: PropTypes.bool,
 };

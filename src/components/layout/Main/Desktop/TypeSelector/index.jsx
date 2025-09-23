@@ -40,6 +40,7 @@ function RequestTypeSelector({
   requestTypes,
   dispatchUpdateTypesFilter,
   selectedTypes,
+  hasError = false // Form Validation for blank map
 }) {
   const [leftCol, setLeftCol] = useState();
   const [rightCol, setRightCol] = useState();
@@ -80,7 +81,7 @@ function RequestTypeSelector({
   return (
     <Grid container direction="column">
       <Grid item>
-        <Typography variant="body2" className={classes.header}>
+        <Typography variant="body2" className={classes.header} style={{ color: hasError ? '#DE2800' : 'inherit' }}>
           Request&nbsp;Types&nbsp;
           <ArrowToolTip iconStyle={classes.iconStyle}>
             <p className={classes.tooltipParagraph}>
@@ -101,6 +102,7 @@ function RequestTypeSelector({
             padding: '5px',
             paddingTop: '3px',
             paddingBottom: '3px',
+            border: hasError ? '1.3px solid #DE2800': undefined
           }}
         >
           {/* Request Types - Left Column */}

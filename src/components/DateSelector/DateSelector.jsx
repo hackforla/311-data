@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -13,6 +13,7 @@ import ArrowToolTip from '@components/common/ArrowToolTip';
 import options from './options';
 import useStyles from './useStyles';
 import DateRanges from './DateRanges';
+import { updateEndDate, updateStartDate } from '../../redux/reducers/filters';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -20,6 +21,7 @@ function DateSelector({
   range,
   updateStartDate,
   updateEndDate,
+  hasError = false // Form Validation for blank map
 }) {
   const [expandedMenu, setExpandedMenu] = useState(false);
   const classes = useStyles();
@@ -44,7 +46,7 @@ function DateSelector({
 
   return (
     <>
-      <Typography className={classes.header}>
+      <Typography className={classes.header} style={{ color: hasError ? '#DE2800' : 'inherit' }}>
         Date Range&nbsp;
         <ArrowToolTip iconStyle={classes.iconStyle}>
           <div>
@@ -86,19 +88,26 @@ function DateSelector({
   );
 }
 
+const mapStateToProps = state => ({
+  updateStartDate: state.filters && state.filters.startDate,
+  updateEndDate: state.filters && state.filters.endDate
+});
+
 const mapDispatchToProps = dispatch => ({
   updateStartDate: date => dispatch(reduxUpdateStartDate(date)),
   updateEndDate: date => dispatch(reduxUpdateEndDate(date)),
 });
 
-export default connect(null, mapDispatchToProps)(DateSelector);
+export default connect(mapStateToProps, mapDispatchToProps)(DateSelector);
 
 DateSelector.propTypes = {
   range: PropTypes.bool,
   updateStartDate: PropTypes.func.isRequired,
   updateEndDate: PropTypes.func.isRequired,
+  hasError: PropTypes.bool,
 };
 
 DateSelector.defaultProps = {
   range: false,
+  hasError: false,
 };

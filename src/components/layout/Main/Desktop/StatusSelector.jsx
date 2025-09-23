@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { borderColor } from '@mui/system';
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -33,6 +34,7 @@ const useStyles = makeStyles(() => ({
 function StatusSelector({
   updateStatusFilter,
   requestStatus,
+  hasError = false // Form Validation for blank map
 }) {
   const classes = useStyles();
   const [selection, setSelection] = useState('open');
@@ -56,7 +58,7 @@ function StatusSelector({
 
   return (
     <>
-      <div className={classes.header}>
+      <div className={classes.header} style={{ color: hasError ? '#DE2800' : 'inherit' }}>
         Request Status&nbsp;
         <ArrowToolTip iconStyle={classes.iconStyle}>
           <p className={classes.tooltipParagraph}>
@@ -77,9 +79,10 @@ function StatusSelector({
           backgroundColor: '#192730',
           borderRadius: '5px',
           padding: '10px',
-          paddingTop: '3px',
-          paddingBottom: '3px',
+          paddingTop: '5px',
+          paddingBottom: '10px',
           alignItems: 'center',
+          border: hasError ? '1.3px solid #DE2800': undefined
         }}
       >
         <FormGroup row>
@@ -140,4 +143,5 @@ StatusSelector.propTypes = {
     open: PropTypes.bool.isRequired,
     closed: PropTypes.bool.isRequired,
   }).isRequired,
+   hasError: PropTypes.bool,
 };
