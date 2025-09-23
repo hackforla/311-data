@@ -96,6 +96,7 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
   const sharedClasses = sharedStyles();
   // Blank map implementation: form validation
   const [formErrors, setFormErrors] = useState({});
+  const [formValid, setFormValid] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
 
   const handleGeocoderResult = ( result ) => {
@@ -132,7 +133,9 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
     }
 
     setFormErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const isValid = Object.keys(newErrors).length === 0;
+    setFormValid(isValid);
+    return isValid;
   };
 
   const handleDisplayData = () => {
@@ -217,7 +220,7 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
                <Button variant="text" className={classes.displayButton} onClick={handleDisplayData} color="inherit">Display Data</Button>
             </div>
             <div className={classes.selectorWrapper}>
-              <ExportButton className={classes.export} />
+              <ExportButton className={classes.export} disabled={formValid === false}/>
             </div>
           </div>
         </CardContent>

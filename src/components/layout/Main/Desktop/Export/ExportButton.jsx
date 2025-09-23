@@ -19,7 +19,7 @@ import requestTypes from '@data/requestTypes';
 import useStyles from './useStyles';
 import ExportDialog from './ExportDialog';
 
-function ExportButton({ filters }) {
+function ExportButton({ filters, disabled = false }) {
   const { conn } = useContext(DbContext);
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
@@ -274,9 +274,9 @@ function ExportButton({ filters }) {
 
   return (
     <>
-      <Button variant="outlined" onClick={handleExport} className={classes.exportButton}>
+      <Button variant="outlined" onClick={handleExport} className={classes.exportButton} disabled={disabled}>
         Export
-        <Icon sx={{ fontSize: 18, mb: '3px', ml: '1px' }}>
+        <Icon sx={{ fontSize: 18, mb: '3px', ml: '1px', opacity: disabled ? 0.3 : 1  }}>
           <img src={ExportIcon} alt="export icon" className={classes.imageIcon} />
         </Icon>
       </Button>
@@ -317,4 +317,5 @@ ExportButton.propTypes = {
     }),
     requestTypes: PropTypes.objectOf(PropTypes.bool),
   }).isRequired,
+  disabled: PropTypes.bool,
 };
