@@ -26,6 +26,12 @@ import moment from "moment";
 import ddbh from "@utils/duckDbHelpers.js";
 import DbContext from "@db/DbContext";
 import AcknowledgeModal from "../../components/Loading/AcknowledgeModal";
+import {
+  getServiceRequestHF,
+  getServiceRequestSocrata,
+} from "../../utils/DataService";
+
+const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE;
 
 const styles = (theme) => ({
   root: {
@@ -94,7 +100,7 @@ class MapContainer extends React.Component {
   async componentDidMount(props) {
     this.isSubscribed = true;
     this.processSearchParams();
-    await this.createRequestsTable();
+    if (DATA_SOURCE !== "SOCRATA") await this.createRequestsTable();
     await this.setData();
   }
 
@@ -116,7 +122,7 @@ class MapContainer extends React.Component {
       prevProps.councilId !== councilId ||
       didDateRangeChange
     ) {
-      await this.createRequestsTable();
+      if (DATA_SOURCE !== "SOCRATA") await this.createRequestsTable();
       await this.setData();
     }
   }
@@ -316,56 +322,17 @@ class MapContainer extends React.Component {
   // if different years, we query both startDate year and endDate year, then union the result
 
   async getAllRequests(startDate, endDate) {
-    const { conn } = this.context;
-    const startYear = moment(startDate).year();
-    const endYear = moment(endDate).year();
-
-    let selectSQL = "";
-
-    try {
-      if (startYear === endYear) {
-        // If the dates are within the same year, query that single year's table.
-        const tableName = `requests_${startYear}`;
-        selectSQL = `SELECT * FROM ${tableName} WHERE CreatedDate BETWEEN '${startDate}' AND '${endDate}'`;
-      } else {
-        // If the dates span multiple years, create two queries and union them.
-        const tableNameStartYear = `requests_${startYear}`;
-        const endOfStartYear = moment(startDate)
-          .endOf("year")
-          .format("YYYY-MM-DD");
-        const tableNameEndYear = `requests_${endYear}`;
-        const startOfEndYear = moment(endDate)
-          .startOf("year")
-          .format("YYYY-MM-DD");
-
-        selectSQL = `
-          (SELECT * FROM ${tableNameStartYear} WHERE CreatedDate BETWEEN '${startDate}' AND '${endOfStartYear}')
-          UNION ALL
-          (SELECT * FROM ${tableNameEndYear} WHERE CreatedDate BETWEEN '${startOfEndYear}' AND '${endDate}')
-        `;
-      }
-
-      const dataLoadStartTime = performance.now();
-      const requestsAsArrowTable = await this.useConnQuery(selectSQL);
-      const dataLoadEndTime = performance.now();
-
-      console.log(
-        `Data loading time: ${Math.floor(
-          dataLoadEndTime - dataLoadStartTime
-        )} ms`
+    let requests;
+    if (DATA_SOURCE !== "SOCRATA") {
+      requests = await getServiceRequestHF(
+        this.useConnQuery,
+        startDate,
+        endDate
       );
-
-      const requests = ddbh.getTableData(requestsAsArrowTable);
-      const mapLoadEndTime = performance.now();
-
-      console.log(
-        `Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`
-      );
-
-      return requests;
-    } catch (e) {
-      console.error("Error during database query execution:", e);
+    } else {
+      requests = await getServiceRequestSocrata(startDate, endDate);
     }
+    return requests;
   }
 
   setData = async () => {
@@ -385,9 +352,10 @@ class MapContainer extends React.Component {
         dispatchGetDbRequestSuccess,
         dispatchUpdateDateRanges,
       } = this.props;
-      const convertedRequests = this.convertRequests(this.rawRequests);
+      let requests;
+      requests = this.convertRequests(this.rawRequests);
       // load map features/requests upon successful map load
-      dispatchGetDataRequestSuccess(convertedRequests);
+      dispatchGetDataRequestSuccess(requests);
       // set isDbLoading in redux state.data to false
       dispatchGetDbRequestSuccess();
       const newDateRangesWithRequests =
