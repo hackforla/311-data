@@ -322,12 +322,8 @@ class MapContainer extends React.Component {
 
   async getAllRequests(startDate, endDate) {
     let requests;
+    requests = await getServiceRequestHF(this.useConnQuery, startDate, endDate);
     if (DATA_SOURCE !== "SOCRATA") {
-      requests = await getServiceRequestHF(
-        this.useConnQuery,
-        startDate,
-        endDate
-      );
     } else {
       requests = await getServiceRequestSocrata();
     }
@@ -371,24 +367,23 @@ class MapContainer extends React.Component {
       // Be careful, request properties are case-sensitive
       const lon = request.Longitude ?? request.longitude;
       const lat = request.Latitude ?? request.latitude;
-      const closedDate =
-        request.ClosedDate ?? Math.floor(moment(request.closeddate).valueOf());
+      const requestId = request.SRNumber ?? request.srnumber;
       const typeId = getTypeIdFromTypeName(
         request.RequestType ?? request.requesttype
       );
-      const requestId = request.SRNumber ?? request.srnumber;
-      const createdDateMs =
-        request.CreatedDate ??
-        Math.floor(moment(request.createddate).valueOf());
+      const closedDate = request.ClosedDate ?? request.closeddate;
+      const createdDateMs = moment(
+        request.CreatedDate ?? request.createddate
+      ).valueOf();
       return {
         type: "Feature",
         properties: {
-          requestId: requestId,
-          typeId: typeId,
-          closedDate: closedDate,
+          requestId,
+          typeId,
+          closedDate,
           // Store this in milliseconds so that it's easy to do date comparisons
           // using Mapbox GL JS filters.
-          createdDateMs: createdDateMs,
+          createdDateMs,
         },
         geometry: {
           type: "Point",
