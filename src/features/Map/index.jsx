@@ -23,7 +23,6 @@ import FunFactCard from "@components/Loading/FunFactCard";
 import CookieNotice from "../../components/layout/Main/CookieNotice";
 import Map from "./Map";
 import moment from "moment";
-import ddbh from "@utils/duckDbHelpers.js";
 import DbContext from "@db/DbContext";
 import AcknowledgeModal from "../../components/Loading/AcknowledgeModal";
 import {
@@ -330,7 +329,7 @@ class MapContainer extends React.Component {
         endDate
       );
     } else {
-      requests = await getServiceRequestSocrata(startDate, endDate);
+      requests = await getServiceRequestSocrata();
     }
     return requests;
   }
@@ -353,7 +352,10 @@ class MapContainer extends React.Component {
         dispatchUpdateDateRanges,
       } = this.props;
       let requests;
+
       requests = this.convertRequests(this.rawRequests);
+
+      console.log("setData", requests);
       // load map features/requests upon successful map load
       dispatchGetDataRequestSuccess(requests);
       // set isDbLoading in redux state.data to false
@@ -367,19 +369,30 @@ class MapContainer extends React.Component {
   convertRequests = (requests) =>
     requests.map((request) => {
       // Be careful, request properties are case-sensitive
+      const lon = request.Longitude ?? request.longitude;
+      const lat = request.Latitude ?? request.latitude;
+      const closedDate =
+        request.ClosedDate ?? Math.floor(moment(request.closeddate).valueOf());
+      const typeId = getTypeIdFromTypeName(
+        request.RequestType ?? request.requesttype
+      );
+      const requestId = request.SRNumber ?? request.srnumber;
+      const createdDateMs =
+        request.CreatedDate ??
+        Math.floor(moment(request.createddate).valueOf());
       return {
         type: "Feature",
         properties: {
-          requestId: request.SRNumber,
-          typeId: getTypeIdFromTypeName(request.RequestType),
-          closedDate: request.ClosedDate,
+          requestId: requestId,
+          typeId: typeId,
+          closedDate: closedDate,
           // Store this in milliseconds so that it's easy to do date comparisons
           // using Mapbox GL JS filters.
-          createdDateMs: moment(request.CreatedDate).valueOf(),
+          createdDateMs: createdDateMs,
         },
         geometry: {
           type: "Point",
-          coordinates: [request.Longitude, request.Latitude],
+          coordinates: [lon, lat],
         },
       };
     });
