@@ -354,8 +354,7 @@ class MapContainer extends React.Component {
       let requests;
 
       requests = this.convertRequests(this.rawRequests);
-
-      console.log("setData", requests);
+      console.log("container", requests);
       // load map features/requests upon successful map load
       dispatchGetDataRequestSuccess(requests);
       // set isDbLoading in redux state.data to false
@@ -369,30 +368,19 @@ class MapContainer extends React.Component {
   convertRequests = (requests) =>
     requests.map((request) => {
       // Be careful, request properties are case-sensitive
-      const lon = request.Longitude ?? request.longitude;
-      const lat = request.Latitude ?? request.latitude;
-      const requestId = request.SRNumber ?? request.srnumber;
-      const typeId = getTypeIdFromTypeName(
-        request.RequestType ?? request.requesttype
-      );
-      const closedDate =
-        request.ClosedDate ?? moment(request.closeddate).valueOf();
-      const createdDateMs = moment(
-        request.CreatedDate ?? request.createddate
-      ).valueOf();
       return {
         type: "Feature",
         properties: {
-          requestId,
-          typeId,
-          closedDate,
+          requestId: request.SRNumber,
+          typeId: getTypeIdFromTypeName(request.RequestType),
+          closedDate: request.ClosedDate,
           // Store this in milliseconds so that it's easy to do date comparisons
           // using Mapbox GL JS filters.
-          createdDateMs,
+          createdDateMs: moment(request.CreatedDate).valueOf(),
         },
         geometry: {
           type: "Point",
-          coordinates: [lon, lat],
+          coordinates: [request.Longitude, request.Latitude],
         },
       };
     });
@@ -476,7 +464,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(updateMapPosition(position)),
   dispatchTrackMapExport: () => dispatch(trackMapExport()),
   dispatchGetDbRequest: () => dispatch(getDbRequest()),
-  dispatchGetDbRequestSuccess: (data) => dispatch(getDbRequestSuccess()),
+  dispatchGetDbRequestSuccess: (data) => dispatch(getDbRequestSuccess(data)),
   dispatchGetDataRequest: () => dispatch(getDataRequest()),
   dispatchGetDataRequestSuccess: (data) =>
     dispatch(getDataRequestSuccess(data)),
