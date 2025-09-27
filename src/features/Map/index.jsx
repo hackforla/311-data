@@ -322,8 +322,12 @@ class MapContainer extends React.Component {
 
   async getAllRequests(startDate, endDate) {
     let requests;
-    requests = await getServiceRequestHF(this.useConnQuery, startDate, endDate);
     if (DATA_SOURCE !== "SOCRATA") {
+      requests = await getServiceRequestHF(
+        this.useConnQuery,
+        startDate,
+        endDate
+      );
     } else {
       requests = await getServiceRequestSocrata();
     }
@@ -371,7 +375,8 @@ class MapContainer extends React.Component {
       const typeId = getTypeIdFromTypeName(
         request.RequestType ?? request.requesttype
       );
-      const closedDate = request.ClosedDate ?? request.closeddate;
+      const closedDate =
+        request.ClosedDate ?? moment(request.closeddate).valueOf();
       const createdDateMs = moment(
         request.CreatedDate ?? request.createddate
       ).valueOf();
