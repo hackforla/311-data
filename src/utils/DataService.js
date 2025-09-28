@@ -59,15 +59,36 @@ const socrataServiceRequestSchema = object({
 
 const srArraySchema = array().of(socrataServiceRequestSchema);
 
+// Format YYYY-MM-DD
+function formatDate(d) {
+  let year = d.getUTCFullYear();
+  let month = String(d.getUTCMonth() + 1).padStart(2, '0');
+  let day = String(d.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+
+
 export async function getServiceRequestSocrata() {
   const dataLoadStartTime = performance.now();
 
+  // Today's date at midnight UTC
+  let now = new Date();
+  let today = formatDate(now);
+
+  // 2 weeks ago
+  let twoWeeksAgoDate = new Date(now);
+  twoWeeksAgoDate.setUTCDate(twoWeeksAgoDate.getUTCDate() - 14);
+  let twoWeeksAgo = formatDate(twoWeeksAgoDate);
+
   try {
-    // Fetch 2025 SR data through Socrata API
+    // Fetch 2025 SR data through Socrata API, last two weeks
     const response = await fetch(
-      "https://data.lacity.org/resource/b7dx-7gc3.json?$limit=100"
+      // `https://data.lacity.org/resource/${dataResources['2025']}.json?$where=createddate >= '${twoWeeksAgo}T00:00:00' AND createddate <= '${today}T23:59:59' AND status='Open'`
+      `https://data.lacity.org/resource/${dataResources['2025']}.json?$limit=100`
     );
     const unvalidatedSrs = await response.json();
+    debugger;
 
     const dataLoadEndTime = performance.now();
     console.log(
