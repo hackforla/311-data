@@ -1,10 +1,16 @@
+/*
+  Component to show the date of the last data update in the footer which assumes data is available in conn from DbContext, 
+  which is no longer a valid assumption if using Socrata or in new codebase structure
+*/
 import React, { useContext, useEffect, useState } from 'react';
-// import moment from 'moment';
+import moment from 'moment';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
-// import DbContext from '@db/DbContext';
-// import ddbh from '@utils/duckDbHelpers.js';
+import DbContext from '@db/DbContext';
+import ddbh from '@utils/duckDbHelpers.js';
 import { isEmpty, toNonBreakingSpaces } from '@utils';
+
+const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE;
 
 const useStyles = makeStyles(theme => ({
   lastUpdated: {
@@ -17,33 +23,38 @@ const useStyles = makeStyles(theme => ({
 function LastUpdated() {
   const classes = useStyles();
   const [lastUpdated, setLastUpdated] = useState('');
-  // const { conn } = useContext(DbContext);
+  const { conn } = useContext(DbContext);
 
   useEffect(() => {
-    // const getLastUpdated = async () => {
-    //   const getLastUpdatedSQL = 'select max(createddate) from requests_2025;';
+    if (DATA_SOURCE === 'SOCRATA') {
+      setLastUpdated(Date.now()) 
+    }
+  },[DATA_SOURCE])
 
-    //   const lastUpdatedAsArrowTable = await conn.query(getLastUpdatedSQL);
-    //   const results = ddbh.getTableData(lastUpdatedAsArrowTable);
-
-    //   if (!isEmpty(results)) {
-    //     const lastUpdatedValue = results[0];
-    //     setLastUpdated(lastUpdatedValue);
-    //   }
-    // };
-
-    // getLastUpdated(); // advice for Melissa: just fake this part
-    setLastUpdated(Date.now())  // we will come up with a fix for this later
-  }, []);
+  useEffect(() => {
+    const getLastUpdated = async () => {
+      const getLastUpdatedSQL = 'select max(createddate) from requests_2025;';
+      
+      const lastUpdatedAsArrowTable = await conn.query(getLastUpdatedSQL);
+      const results = ddbh.getTableData(lastUpdatedAsArrowTable);
+      
+      if (!isEmpty(results)) {
+        const lastUpdatedValue = results[0];
+        setLastUpdated(lastUpdatedValue);
+      }
+    };
+    
+    if (DATA_SOURCE !== 'SOCRATA' && conn) {
+      getLastUpdated();
+    } 
+  }, [conn, DATA_SOURCE]);
 
   return (
     lastUpdated && (
       <div>
         <Typography variant="body2" className={classes.lastUpdated}>
           {toNonBreakingSpaces(
-            //* Quickfix - hard coded date last updated until 2025 data available
-            // `Data last updated ${moment(lastUpdated).format('MM/DD/YY')}`
-            `Data last updated 12/31/24`
+            `Data last updated ${moment(lastUpdated).format('MM/DD/YY')}`
           )}
         </Typography>
       </div>

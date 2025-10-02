@@ -65,7 +65,7 @@ export async function getServiceRequestSocrata() {
   try {
     // Fetch 2025 SR data through Socrata API
     const response = await fetch(
-      "https://data.lacity.org/resource/b7dx-7gc3.json?$limit=100"
+      "https://data.lacity.org/resource/h73f-gn57.json"
     );
     const unvalidatedSrs = await response.json();
 
