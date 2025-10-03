@@ -95,6 +95,7 @@ class MapContainer extends React.Component {
 		// Blank Map Implementation: createRequestTable and setData now called via Redux
 		await this.createRequestsTable();
 		await this.setData();
+		
 	}
 
   async componentDidUpdate(prevProps) {

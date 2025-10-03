@@ -88,7 +88,6 @@ function StatusSelector({
         <FormGroup row>
           <FormControlLabel
             key="open"
-            classes={classes.button}
             control={(
               <Checkbox
                 style={{
@@ -104,7 +103,6 @@ function StatusSelector({
           />
           <FormControlLabel
             key="closed"
-            classes={classes.button}
             control={(
               <Checkbox
                 style={{
