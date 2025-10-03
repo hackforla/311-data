@@ -140,7 +140,7 @@ export const resetDisplayData = () => ({
 });
 
 const initialState = {
-	isDbLoading: true,
+	isDbLoading: false,
 	isMapLoading: false,
 	error: null,
 	pins: [],

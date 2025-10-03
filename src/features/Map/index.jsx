@@ -93,8 +93,8 @@ class MapContainer extends React.Component {
 		this.isSubscribed = true;
 		this.processSearchParams();
 		// Blank Map Implementation: createRequestTable and setData now called via Redux
-		await this.createRequestsTable();
-		await this.setData();
+		// await this.createRequestsTable();
+		// await this.setData();
 		
 	}
 
