@@ -109,6 +109,12 @@ function DatePicker({
       // This should never happen. Log a warning.
       console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
     }
+
+    //Blank Map Implementation
+    if (startDate == null || endDate == null){
+       setShowCalendar(false);
+    }
+
     }, [startDate, endDate]);
   useOutsideClick(ref, closeCalendar);
 
@@ -139,8 +145,10 @@ function DatePicker({
 
   const toggleCalendar = () => {
     if (showCalendar) {
+      console.log("toggle calendar - close")
       closeCalendar();
     } else {
+       console.log("toggle calendar - open")
       openCalendar();
     }
     if (onTogglePresets) onTogglePresets();

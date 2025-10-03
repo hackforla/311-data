@@ -21,6 +21,8 @@ function DateSelector({
   range,
   updateStartDate,
   updateEndDate,
+  startDate,
+  endDate,
   hasError = false // Form Validation for blank map
 }) {
   const [expandedMenu, setExpandedMenu] = useState(false);
@@ -66,12 +68,19 @@ function DateSelector({
           </div>
         </ArrowToolTip>
       </Typography>
-      <SelectorBox onToggle={() => setExpandedMenu(!expandedMenu)} expanded={expandedMenu}>
+      <div style={{ 
+        outline: hasError ? '2px solid #DE2800' : 'none',
+        outlineOffset: '-2px', 
+        borderRadius: '5px',
+      }}>
+      <SelectorBox onToggle={() => setExpandedMenu(!expandedMenu)} expanded={expandedMenu} style={{border: hasError ? '1.3px solid #DE2800': undefined}}>
         <SelectorBox.Display>
           <div className={classes.selector}>
-            <DatePicker
+            <DatePicker 
               range={range}
               onTogglePresets={closeOptionsOnDateToggle}
+              startDate={startDate}       
+              endDate={endDate}           
             />
             <div className={classes.separator} />
           </div>
@@ -84,13 +93,14 @@ function DateSelector({
           />
         </SelectorBox.Collapse>
       </SelectorBox>
+      </div>
     </>
   );
 }
 
 const mapStateToProps = state => ({
-  updateStartDate: state.filters && state.filters.startDate,
-  updateEndDate: state.filters && state.filters.endDate
+  startDate: state.filters.startDate,
+  endDate: state.filters.endDate
 });
 
 const mapDispatchToProps = dispatch => ({

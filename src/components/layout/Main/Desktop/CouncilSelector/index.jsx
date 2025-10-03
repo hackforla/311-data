@@ -84,7 +84,7 @@ function CouncilSelector({
       >
         Boundaries
       </Typography>
-      <div style={{ border: hasError ? '1.3px solid #DE2800': undefined, borderRadius: '5px' }}>
+      <div style={{ border: hasError ? '2px solid #DE2800': undefined, borderRadius: '5px' }}>
       <BoundariesSection>
         <BoundariesSection.Display >
           <SelectedCouncils items={selected} onDelete={debouncedHandleDelete} />
