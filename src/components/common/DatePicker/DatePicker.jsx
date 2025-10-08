@@ -4,7 +4,7 @@ import React, {
 import { connect } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import CalendarIcon from '@mui/icons-material/CalendarToday';
+// import CalendarIcon from '@mui/icons-material/CalendarToday';
 import IconButton from '@mui/material/IconButton';
 import makeStyles from '@mui/styles/makeStyles';
 import useOutsideClick from '@hooks/useOutsideClick';
@@ -159,7 +159,10 @@ function DatePicker({
         disableRipple
         size="large"
       >
-        <CalendarIcon />
+        {/* <CalendarIcon /> */}
+        <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6667 3.16671H12V1.83337H10.6667V3.16671H5.33333V1.83337H4V3.16671H3.33333C2.59333 3.16671 2 3.76671 2 4.50004V13.8334C2 14.5667 2.59333 15.1667 3.33333 15.1667H12.6667C13.4 15.1667 14 14.5667 14 13.8334V4.50004C14 3.76671 13.4 3.16671 12.6667 3.16671ZM12.6667 13.8334H3.33333V6.50004H12.6667V13.8334ZM4.33333 9.16671C4.33333 8.24671 5.08 7.50004 6 7.50004C6.92 7.50004 7.66667 8.24671 7.66667 9.16671C7.66667 10.0867 6.92 10.8334 6 10.8334C5.08 10.8334 4.33333 10.0867 4.33333 9.16671Z" fill="#A8A8A8"/>
+        </svg>
       </IconButton>
       <div style={getCoordinates()} className={classes.selectorPopUp}>
         {showCalendar ? (
