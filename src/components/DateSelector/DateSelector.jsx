@@ -12,7 +12,8 @@ import Typography from '@mui/material/Typography';
 import ArrowToolTip from '@components/common/ArrowToolTip';
 import options from './options';
 import useStyles from './useStyles';
-import DateRanges from './DateRanges';
+import ReactDayPicker from '@components/common/ReactDayPicker';
+// import DateRanges from './DateRanges';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -71,14 +72,19 @@ function DateSelector({
               range={range}
               onTogglePresets={closeOptionsOnDateToggle}
             />
-            <div className={classes.separator} />
+            {/* <div className={classes.separator} /> */}
           </div>
         </SelectorBox.Display>
         <SelectorBox.Collapse>
-          <DateRanges
+          {/* <DateRanges
             classes={{ option, selected }}
             options={options}
             onSelect={handleOptionSelect}
+          /> */}
+          <ReactDayPicker
+            range={range}
+            updateStartDate={updateStartDate}
+            updateEndDate={updateEndDate}
           />
         </SelectorBox.Collapse>
       </SelectorBox>
