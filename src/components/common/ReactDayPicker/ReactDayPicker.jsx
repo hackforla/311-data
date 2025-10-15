@@ -157,6 +157,7 @@ function ReactDayPicker({
   // enteredTo represents the day that the user is currently hovering over.
   const [enteredTo, setEnteredTo] = useState(endDate);
 
+  // Sets start date
   const setFromDay = day => {
     updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
@@ -166,13 +167,15 @@ function ReactDayPicker({
   };
 
   const handleDayClick = day => {
-    if (!range) {
-      setFromDay(day);
-      return;
-    }
-    
-  // If both startDate and endDate were already selected. Start a new range selection.
-  if (startDate && endDate){
+  //Blank Map Implementation
+  console.warn('Date selected: ', day);
+  
+  // Initial state: null startDate and endDate, user first selects start date
+  if(!startDate){
+    console.warn('Start Date Selected: ', day);
+    setFromDay(day);
+  } // If both startDate and endDate were already selected. Start a new range selection.
+  else if (startDate && endDate){
     setFromDay(day);
     updateEndDate(null);
     setEnteredTo(null);
@@ -191,7 +194,7 @@ function ReactDayPicker({
       }
   } else {
       // This should never happen. Log a warning.
-      console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
+      console.warn('ReactDayPicker: Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
   } 
   };
 
