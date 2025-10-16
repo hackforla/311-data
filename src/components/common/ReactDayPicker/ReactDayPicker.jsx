@@ -168,12 +168,23 @@ function ReactDayPicker({
 
   const handleDayClick = day => {
   //Blank Map Implementation
-  console.warn('Date selected: ', day);
-  
+  console.warn('Current start date: ', startDate);
+  console.warn('Current end date: ', endDate);
+  var selectedDate = moment(day).format(INTERNAL_DATE_SPEC)
+  console.warn('Date selected: ', selectedDate);
+
   // Initial state: null startDate and endDate, user first selects start date
   if(!startDate){
     console.warn('Start Date Selected: ', day);
     setFromDay(day);
+    // Case: missing start date, user unselects start date
+  } else if(startDate && startDate == selectedDate) {
+    console.warn('Same start date selected, remove start date: ', selectedDate);
+    updateStartDate(null);
+     // Case: missing end date, user unselects end date
+  } else if(endDate && endDate == selectedDate) {
+    console.warn('Same end date selected, remove end date: ', selectedDate);
+    updateEndDate(null);
   } // If both startDate and endDate were already selected. Start a new range selection.
   else if (startDate && endDate){
     setFromDay(day);

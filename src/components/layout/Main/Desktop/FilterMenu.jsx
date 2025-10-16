@@ -118,8 +118,12 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
     }
     
     // Date Range Validation
-    if (!startDate || !endDate) {
-      newErrors.dates = 'Please select both a start and end date';
+    if (!startDate && !endDate) {
+      newErrors.dates = 'Please select a date range';
+    } else if (!startDate && endDate) {
+      newErrors.dates = 'Please select a start date';
+    } else if (startDate && !endDate) {
+      newErrors.dates = 'Please select an end date';
     }
     console.log('startDate: ' + startDate);
     console.log('endDate: ' + endDate);
