@@ -16,12 +16,6 @@ const useStyles = makeStyles(theme => ({
     boxShadow: 'none',
   },
   header: {
-    backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.text.primary,
-    padding: theme.gaps.xs,
-    paddingLeft: theme.gaps.sm,
-    marginBottom: 2,
-    borderRadius: theme.borderRadius.sm,
   },
   content: {
     borderRadius: theme.borderRadius.sm,
