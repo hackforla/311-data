@@ -33,16 +33,6 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     padding: '0 0 0 5px',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    '& svg': {
-      fontSize: 30,
-      paddingRight: 0,
-      '&  path': {
-        fill: theme.palette.primary.focus,
-      },
-    },
   },
 }));
 
