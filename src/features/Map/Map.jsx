@@ -170,6 +170,8 @@ class Map extends React.Component {
 				map.on('click', this.debouncedOnClick);
 				map.on('mouseenter', 'request-circles', this.onMouseEnter);
 				map.on('mouseleave', 'request-circles', this.onMouseLeave);
+				map.on('mouseenter', 'nc-fills', this.handleNcMouseEnter);
+				map.on('mouseleave', 'nc-fills', this.handleNcMouseLeave);
 
 				map.once('idle', (e) => {
 					this.setState({ mapReady: true });
@@ -761,6 +763,14 @@ class Map extends React.Component {
       this.popup.addClassName(this.props.classes.loadedModal);
     }
   };
+
+	handleNcMouseEnter = (e) => {
+		console.log("entered")
+	};
+	
+	handleNcMouseLeave = () => {
+		console.log('left')
+	};
 
   //// RENDER ////
 
