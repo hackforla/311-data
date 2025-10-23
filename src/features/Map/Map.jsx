@@ -765,10 +765,25 @@ class Map extends React.Component {
   };
 
 	handleNcMouseEnter = (e) => {
-		console.log("entered")
+		if (this.ncPopup) this.ncPopup.remove();
+		
+		const coordinates = e.lngLat;
+
+		this.ncPopup = new mapboxgl.Popup({
+			closeButton: false,
+			closeOnClick: false,
+		})
+			.setLngLat(coordinates)
+			.setHTML("<div>Neighborhood Council</div>")
+			.addTo(this.map);
+	
+
+		console.log('entered')
+
 	};
 	
 	handleNcMouseLeave = () => {
+		if (this.ncPopup) this.ncPopup.remove();
 		console.log('left')
 	};
 
