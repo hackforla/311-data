@@ -39,7 +39,7 @@ jobs:
           echo "SOCRATA_TOKEN=${{ secrets.SOCRATA_TOKEN }}" >> .env
           echo "VITE_CONTENTFUL_SPACE=${{ secrets.VITE_CONTENTFUL_SPACE }}" >> .env
           echo "VITE_CONTENTFUL_TOKEN=${{ secrets.VITE_CONTENTFUL_TOKEN }}" >> .env
-          echo "VITE_DATA_SOURCE=${{ variables.VITE_DATA_SOURCE }}" >> .env
+          echo "VITE_DATA_SOURCE=${{ env.VITE_DATA_SOURCE }}" >> .env
 
       # JamesIves
       - name: Build website
