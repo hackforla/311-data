@@ -171,6 +171,7 @@ class Map extends React.Component {
 				map.on('mouseenter', 'request-circles', this.onMouseEnter);
 				map.on('mouseleave', 'request-circles', this.onMouseLeave);
 				map.on('mouseenter', 'nc-fills', this.handleNcMouseEnter);
+				map.on('mousemove', 'nc-fills', this.handleNcMouseEnter);
 				map.on('mouseleave', 'nc-fills', this.handleNcMouseLeave);
 
 				map.once('idle', (e) => {
@@ -766,6 +767,12 @@ class Map extends React.Component {
 
 	handleNcMouseEnter = (e) => {
 		if (this.ncPopup) this.ncPopup.remove();
+		if (!e.features?.length) return;
+
+  	const feature = e.features[0];
+  	const ncName = feature.properties.NAME;
+
+		console.log(e.features)
 		
 		const coordinates = e.lngLat;
 
@@ -774,7 +781,7 @@ class Map extends React.Component {
 			closeOnClick: false,
 		})
 			.setLngLat(coordinates)
-			.setHTML("<div>Neighborhood Council</div>")
+			.setHTML(`<div>${ncName}</div>`)
 			.addTo(this.map);
 	
 
