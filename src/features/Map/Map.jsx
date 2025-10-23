@@ -771,11 +771,25 @@ class Map extends React.Component {
 
   	const feature = e.features[0];
   	const ncName = feature.properties.NAME;
-
-		console.log(e.features)
-		
+		const NC_ZOOM_LEVEL = 11;
 		const coordinates = e.lngLat;
 
+		const { selectedNc } = this.state;
+  	const zoom = this.map.getZoom();
+
+		const isZoomedIn = zoom >= NC_ZOOM_LEVEL; 
+		const isSameNc = selectedNc && ncName == selectedNc?.TOOLTIP;
+
+		//Removes popup when zoomed in on an NC
+		if (isZoomedIn && isSameNc) {
+			if (this.ncPopup) {
+				this.ncPopup.remove();
+				this.ncPopup = null;
+			}
+			this.currentNc = null;
+			return;
+		}
+		
 		this.ncPopup = new mapboxgl.Popup({
 			closeButton: false,
 			closeOnClick: false,
@@ -783,15 +797,10 @@ class Map extends React.Component {
 			.setLngLat(coordinates)
 			.setHTML(`<div>${ncName}</div>`)
 			.addTo(this.map);
-	
-
-		console.log('entered')
-
 	};
 	
 	handleNcMouseLeave = () => {
 		if (this.ncPopup) this.ncPopup.remove();
-		console.log('left')
 	};
 
   //// RENDER ////
