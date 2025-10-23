@@ -44,6 +44,8 @@ import {
 	DEFAULT_MIN_ZOOM,
 	DEFAULT_MAX_ZOOM,
 } from '@components/common/CONSTANTS';
+import centroid from "@turf/centroid";
+
 
 const styles = (theme) => ({
   root: {
@@ -772,7 +774,7 @@ class Map extends React.Component {
   	const feature = e.features[0];
   	const ncName = feature.properties.NAME;
 		const NC_ZOOM_LEVEL = 11;
-		const coordinates = e.lngLat;
+		const coordinates = centroid(feature).geometry.coordinates;
 
 		const { selectedNc } = this.state;
   	const zoom = this.map.getZoom();
@@ -780,7 +782,7 @@ class Map extends React.Component {
 		const isZoomedIn = zoom >= NC_ZOOM_LEVEL; 
 		const isSameNc = selectedNc && ncName == selectedNc?.TOOLTIP;
 
-		//Removes popup when zoomed in on an NC
+		//Removes popup when zoomed in on a selected NC
 		if (isZoomedIn && isSameNc) {
 			if (this.ncPopup) {
 				this.ncPopup.remove();
