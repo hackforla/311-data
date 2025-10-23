@@ -799,6 +799,14 @@ class Map extends React.Component {
 			.setLngLat(coordinates)
 			.setHTML(`<div>${ncName}</div>`)
 			.addTo(this.map);
+
+			// Not sure if needed in the future:
+			// A z-index below 0 will have the popup appear underneath the map and therefore be invisible
+			// This popup still currently appears on top of the DatePicker and RequestDetail modal
+			if (this.ncPopup.getElement()) {
+        this.ncPopup.getElement().style.zIndex = '0';
+    }
+	
 	};
 	
 	handleNcMouseLeave = () => {
