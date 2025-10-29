@@ -13,7 +13,6 @@ import ArrowToolTip from '@components/common/ArrowToolTip';
 import options from './options';
 import useStyles from './useStyles';
 import ReactDayPicker from '@components/common/ReactDayPicker';
-// import DateRanges from './DateRanges';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -65,22 +64,16 @@ function DateSelector({
           </div>
         </ArrowToolTip>
       </Typography>
-      <SelectorBox onToggle={() => setExpandedMenu(!expandedMenu)} expanded={expandedMenu}>
+      <SelectorBox onToggle={() => setExpandedMenu(!expandedMenu)} expanded={expandedMenu} arrowHidden>
         <SelectorBox.Display>
           <div className={classes.selector}>
             <DatePicker
               range={range}
               onTogglePresets={closeOptionsOnDateToggle}
             />
-            {/* <div className={classes.separator} /> */}
           </div>
         </SelectorBox.Display>
         <SelectorBox.Collapse>
-          {/* <DateRanges
-            classes={{ option, selected }}
-            options={options}
-            onSelect={handleOptionSelect}
-          /> */}
           <ReactDayPicker
             range={range}
             updateStartDate={updateStartDate}
