@@ -4,10 +4,7 @@ import React, {
 import { connect } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-// import CalendarIcon from '@mui/icons-material/CalendarToday';
-import IconButton from '@mui/material/IconButton';
 import makeStyles from '@mui/styles/makeStyles';
-import useOutsideClick from '@hooks/useOutsideClick';
 import ReactDayPicker from '@components/common/ReactDayPicker';
 import {
   updateEndDate as reduxUpdateEndDate,
@@ -25,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.dark,
     padding: 10,
     borderRadius: 5,
-    fontSize: '12px',
+    fontSize: '14px',
     color: theme.palette.text.secondaryLight,
     '& > div': {
       cursor: 'pointer',
@@ -38,6 +35,11 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     zIndex: 1,
   },
+  datePicker: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
+  },
   button: {
     padding: 0,
     color: theme.palette.text.dark,
@@ -46,132 +48,88 @@ const useStyles = makeStyles(theme => ({
     },
     '& svg': {
       fontSize: 20,
-      fill: theme.palette.text.secondaryLight,
+      fill: theme.palette.text.textSecondaryDark,
     },
   },
 }));
 
-const renderSelectedDays = (dates, classes, range) => {
+// Modify renderSelectedDays() to populate the startDate and endDate fields (divs with the ids of 'startDate' and 'endDate'), rather than populating the spans.
+/**
+ * renderSelectedDays
+ * - If fieldIndex is provided (0 = start, 1 = end) it returns a single element
+ *   suitable for populating an individual field (shows the date or a placeholder).
+ * - If fieldIndex is not provided it returns the combined display (same as before):
+ *   either "from - to", a single date, or the generic placeholder.
+ */
+const renderSelectedDays = (dates, classes, range, fieldIndex) => {
   const [from, to] = dates;
   const isFromSelected = Boolean(from);
   const isBothSelected = Boolean(from && to);
 
-  const selectedDaysElements = [];
+  // If caller asks for a specific field (start or end), return a single element
+  if (typeof fieldIndex === 'number') {
+    if (fieldIndex === 0) {
+      // Start field
+      if (isFromSelected) return <span>{moment(from).format('L')}</span>;
+      return <span className={classes.placeholder}>Start Date</span>;
+    }
+    if (fieldIndex === 1) {
+      // End field
+      if (to) return <span>{moment(to).format('L')}</span>;
+      return <span className={classes.placeholder}>End Date</span>;
+    }
+  }
 
+  // Backwards-compatible combined rendering
   if (isBothSelected) {
-    selectedDaysElements.push(
+    return [
       <span key="from">{moment(from).format('L')}</span>,
       <span key="delimiter"> - </span>,
       <span key="to">{moment(to).format('L')}</span>,
-    );
-    return selectedDaysElements;
+    ];
   }
   if (isFromSelected) {
-    selectedDaysElements.push(
-      <span key="from">
-        {' '}
-        {moment(from).format('L')}
-        {' '}
-      </span>,
-    );
-    return selectedDaysElements;
+    return [(
+      <span key="from">{moment(from).format('L')}</span>
+    )];
   }
-  selectedDaysElements.push(
+  return [(
     <span className={classes.placeholder} key="N/A">
       Select a date
       {' '}
       {range ? ' range' : ''}
-    </span>,
-  );
-  return selectedDaysElements;
+    </span>
+  )];
 };
 
 function DatePicker({
-  open, onTogglePresets, range, startDate, endDate, updateStartDate, updateEndDate,
+  // controlled by parent DateSelector
+  onOpenCollapse, onCloseCollapse, activeField,
+  range, startDate, endDate, updateStartDate, updateEndDate, displayRef,
 }) {
-  const [showCalendar, setShowCalendar] = useState(() => open);
-  const [initialStartDate, setInitialStartDate] = useState(startDate);
-  const [initialEndDate, setInitialEndDate] = useState();
   const classes = useStyles();
-  const ref = useRef(null);
+  const ref = displayRef || useRef(null);
 
-  const closeCalendar = useCallback(
-    () => {
-    if (startDate && endDate){
-      setShowCalendar(false);
-    } else if (startDate && !endDate){
-      // The calendar was closed with an incomplete date range selection so we need to restart
-      // startDate and endDate to their initial values
-      updateStartDate(initialStartDate);
-      updateEndDate(initialEndDate);
-      setShowCalendar(false);
-    } else {
-      // This should never happen. Log a warning.
-      console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
+  const handleFieldClick = (field) => {
+    // parent will open the SelectorBox collapse and tell ReactDayPicker which field is active
+    if (activeField === field) {
+      if (onCloseCollapse) onCloseCollapse();
+    } else if (onOpenCollapse) {
+      onOpenCollapse(field);
     }
-    }, [startDate, endDate]);
-  useOutsideClick(ref, closeCalendar);
-
-  const openCalendar = () => {
-    setInitialStartDate(startDate);
-    setInitialEndDate(endDate);
-    setShowCalendar(true);
-  }
-
-  useEffect(() => {
-    setShowCalendar(false);
-    setInitialStartDate(startDate)
-    setInitialEndDate(endDate)
-  }, [open]);
-
-  const getCoordinates = () => {
-    if (ref.current) {
-      const { left, top, height } =
-        ref.current.getClientRects()[0] ?? ref.current.getBoundingClientRect();
-      const offsetFromSelectorDisplay = 2;
-      return {
-        left,
-        top: top + height + offsetFromSelectorDisplay,
-      };
-    }
-    return {};
-  };
-
-  const toggleCalendar = () => {
-    if (showCalendar) {
-      closeCalendar();
-    } else {
-      openCalendar();
-    }
-    if (onTogglePresets) onTogglePresets();
   };
 
   return (
-    <div ref={ref} className={classes.selector}>
-      <div onClick={toggleCalendar}>
-        {renderSelectedDays([startDate, endDate], classes, range)}
-      </div>
-      <IconButton
-        className={classes.button}
-        aria-label="toggle calendar datepicker"
-        onClick={toggleCalendar}
-        disableFocusRipple
-        disableRipple
-        size="large"
-      >
-        {/* <CalendarIcon /> */}
+    <div ref={ref} className={classes.selector} style={{ paddingTop: 5, paddingBottom: 5 }}>
+      <div id="startDate" onClick={() => handleFieldClick('start')} className={classes.datePicker}>
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6667 3.16671H12V1.83337H10.6667V3.16671H5.33333V1.83337H4V3.16671H3.33333C2.59333 3.16671 2 3.76671 2 4.50004V13.8334C2 14.5667 2.59333 15.1667 3.33333 15.1667H12.6667C13.4 15.1667 14 14.5667 14 13.8334V4.50004C14 3.76671 13.4 3.16671 12.6667 3.16671ZM12.6667 13.8334H3.33333V6.50004H12.6667V13.8334ZM4.33333 9.16671C4.33333 8.24671 5.08 7.50004 6 7.50004C6.92 7.50004 7.66667 8.24671 7.66667 9.16671C7.66667 10.0867 6.92 10.8334 6 10.8334C5.08 10.8334 4.33333 10.0867 4.33333 9.16671Z" fill="#A8A8A8"/>
+          <path fillRule="evenodd" clipRule="evenodd" d="M12.6667 3.16671H12V1.83337H10.6667V3.16671H5.33333V1.83337H4V3.16671H3.33333C2.59333 3.16671 2 3.76671 2 4.50004V13.8334C2 14.5667 2.59333 15.1667 3.33333 15.1667H12.6667C13.4 15.1667 14 14.5667 14 13.8334V4.50004C14 3.76671 13.4 3.16671 12.6667 3.16671ZM12.6667 13.8334H3.33333V6.50004H12.6667V13.8334ZM4.33333 9.16671C4.33333 8.24671 5.08 7.50004 6 7.50004C6.92 7.50004 7.66667 8.24671 7.66667 9.16671C7.66667 10.0867 6.92 10.8334 6 10.8334C5.08 10.8334 4.33333 10.0867 4.33333 9.16671Z" fill="#A8A8A8"/>
         </svg>
-      </IconButton>
-      <div style={getCoordinates()} className={classes.selectorPopUp}>
-        {showCalendar ? (
-          <ReactDayPicker
-            range={range}
-            updateStartDate={updateStartDate}
-            updateEndDate={updateEndDate}
-          />
-        ) : null}
+        {renderSelectedDays([startDate, endDate], classes, range, 0)}
+      </div>
+
+      <div id="endDate" onClick={() => handleFieldClick('end')} style={{ cursor: 'pointer' }}>
+        {renderSelectedDays([startDate, endDate], classes, range, 1)}
       </div>
     </div>
   );
@@ -180,7 +138,10 @@ function DatePicker({
 DatePicker.propTypes = {
   range: PropTypes.bool,
   open: PropTypes.bool,
-  onTogglePresets: PropTypes.func,
+  onOpenCollapse: PropTypes.func,
+  onCloseCollapse: PropTypes.func,
+  activeField: PropTypes.string,
+  displayRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   startDate: PropTypes.string,
   endDate: PropTypes.string,
 };
@@ -188,7 +149,10 @@ DatePicker.propTypes = {
 DatePicker.defaultProps = {
   open: false,
   range: false,
-  onTogglePresets: null,
+  onOpenCollapse: null,
+  onCloseCollapse: null,
+  activeField: null,
+  displayRef: null,
   startDate: null,
   endDate: null,
 };

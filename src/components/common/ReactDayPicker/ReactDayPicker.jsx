@@ -150,7 +150,7 @@ const useStyles = makeStyles(theme => ({
 
 /** A wrapper around react-day-picker that selects a date range. */
 function ReactDayPicker({
-  range, updateStartDate, updateEndDate, startDate, endDate,
+  range, updateStartDate, updateEndDate, startDate, endDate, activeField, onSelectionComplete,
 }) {
   const classes = useStyles();
 
@@ -166,33 +166,59 @@ function ReactDayPicker({
   };
 
   const handleDayClick = day => {
+    const clicked = moment(day).format(INTERNAL_DATE_SPEC);
+
     if (!range) {
+      setFromDay(day);
+      if (onSelectionComplete) onSelectionComplete();
+      return;
+    }
+
+    // When editing the end field
+    if (activeField === 'end') {
+      if (startDate) {
+        if (clicked < startDate) {
+          // clicked date is before current start -> make it the new start
+          setFromDay(day);
+          updateEndDate(null);
+          setEnteredTo(null);
+          return; // keep picker open for user to choose end
+        }
+        // clicked >= startDate -> set as end and complete
+        setToDay(day);
+        if (onSelectionComplete) onSelectionComplete();
+        return;
+      }
+      // no startDate, treat clicked as start
       setFromDay(day);
       return;
     }
-    
-  // If both startDate and endDate were already selected. Start a new range selection.
-  if (startDate && endDate){
-    setFromDay(day);
-    updateEndDate(null);
-    setEnteredTo(null);
-    // If startDate is selected and endDate is unselected, complete the range selection.
-  } else if (startDate && !endDate){
+
+    // Editing start (or default behavior)
+    if (startDate && endDate) {
+      // start a new range selection
+      setFromDay(day);
+      updateEndDate(null);
+      setEnteredTo(null);
+      return;
+    }
+    if (startDate && !endDate) {
       // If the user selects the startDate then chooses an endDate that precedes it,
       // swap the values of startDate and endDate
-      if (moment(day).format(INTERNAL_DATE_SPEC) < startDate) {
+      if (clicked < startDate) {
         const tempDate = startDate;
         setToDay(moment(tempDate).toDate());
         setFromDay(day);
         updateEndDate(tempDate);
         setEnteredTo(moment(tempDate).toDate());
-      } else {
-        setToDay(day);
+        return;
       }
-  } else {
-      // This should never happen. Log a warning.
-      console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
-  } 
+      setToDay(day);
+      if (onSelectionComplete) onSelectionComplete();
+      return;
+    }
+    // no start selected
+    setFromDay(day);
   };
 
   const handleDayMouseEnter = day => {
@@ -209,6 +235,13 @@ function ReactDayPicker({
   const currentYear = today.getMonth();
   const lastThreeMonths = new Date(currentYear, currentMonth - 3, today.getDate());
 
+  // determine initial month to display based on which field the user is editing
+  const initialMonth = (activeField === 'start' && startDate)
+    ? moment(startDate).toDate()
+    : (activeField === 'end' && endDate)
+      ? moment(endDate).toDate()
+      : undefined;
+
   return (
     <>
       {/* <Styles range={range} /> */}
@@ -216,6 +249,7 @@ function ReactDayPicker({
         // className="Range"
         className={clsx(classes.root, range && classes.hasRange, !range && classes.noRange)}
         disabledDays={{ before: lastThreeMonths, after: today }}
+        month={initialMonth}
         numberOfMonths={1}
         selectedDays={[from, { from, to: enteredToDate }]}
         modifiers={{ start: from, end: enteredToDate }}
