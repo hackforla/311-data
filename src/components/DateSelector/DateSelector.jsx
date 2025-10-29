@@ -101,7 +101,7 @@ function DateSelector({
       </Typography>
       <SelectorBox onToggle={() => setExpandedMenu(!expandedMenu)} expanded={expandedMenu} arrowHidden>
         <SelectorBox.Display>
-          <div className={classes.selector} ref={displayRef}>
+          <div className={classes.selector} ref={displayRef} style={{ marginTop: -5, marginBottom: -5, marginRight: -5 }}>
             <DatePicker
               range={range}
               onOpenCollapse={(field) => {
