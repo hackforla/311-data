@@ -139,7 +139,7 @@ function DatePicker({
         {renderSelectedDays([startDate, endDate], classes, range, 0)}
       </div>
 
-  <div id="endDate" tabIndex={0} onClick={() => handleFieldClick('end')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleFieldClick('end'); } }} className={classes.datePicker}>
+      <div id="endDate" tabIndex={0} onClick={() => handleFieldClick('end')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleFieldClick('end'); } }} className={classes.datePicker}>
         {renderSelectedDays([startDate, endDate], classes, range, 1)}
       </div>
     </div>

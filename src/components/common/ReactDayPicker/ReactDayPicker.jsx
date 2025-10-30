@@ -10,7 +10,6 @@ import clsx from 'clsx';
 import fonts from '@theme/fonts';
 import colors from '@theme/colors';
 import { INTERNAL_DATE_SPEC } from '../CONSTANTS';
-// import Styles from './Styles';
 import WeekDay from './Weekday';
 
 const useStyles = makeStyles(theme => ({
@@ -37,27 +36,23 @@ const useStyles = makeStyles(theme => ({
     },
 
     /* Selected range without start and end dates */
-
     '& .DayPicker-Day--selected:not(.DayPicker-Day--outside)': {
-      backgroundColor: `${theme.palette.selected.primary} !important`,
+      backgroundColor: `${theme.palette.primary.light} !important`,
     },
 
     /* Disabled cell */
-
     '& .DayPicker-Day--disabled': {
       color: colors.textSecondaryDark,
       pointerEvents: 'none',
     },
 
     /* Day cell hover */
-
     '& .DayPicker:not(.DayPicker--interactionDisabled), .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover': {
       backgroundColor: `${theme.palette.selected.primary} !important`,
       borderRadius: '50% !important',
     },
 
     /* General day cell */
-
     '& .DayPicker-Day': {
       borderRadius: '0 !important',
       display: 'block', // causing dates to run down in a single vertical column
@@ -66,29 +61,49 @@ const useStyles = makeStyles(theme => ({
     },
 
     /* Today cell */
-
     '& .DayPicker-Day.DayPicker-Day--selected.DayPicker-Day--today, .DayPicker-Day--today': {
       color: theme.palette.primary.focus,
     },
 
     /* Selected start and end days  */
-
     '& .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected, .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected': {
       position: 'relative',
       zIndex: 1,
     },
 
+    /* Selected start day */
+    '& .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected': {
+      color: '#0F181F !important',
+      '&::before': {
+        backgroundColor: `#87C8BC !important`,
+        background: `#87C8BC !important`,
+        border: 'none !important',
+        height: 'calc(100% + 0px) !important',
+        width: 'calc(100% + 0px) !important',
+      }
+    },
+
+    /* Selected end day */
+    '& .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected': {
+      '&::before': {
+        border: '1px solid #87C8BC !important',
+        height: 'calc(100% + 0px) !important',
+        width: 'calc(100% + 0px) !important',
+      }
+    },
+
     /* next and prev arrows */
     '& .DayPicker-NavButton.DayPicker-NavButton': {
       top: 0,
+      filter: 'invert(44%) sepia(99%) saturate(1089%) hue-rotate(6deg) brightness(106%) contrast(96%)',
     },
 
     '& .DayPicker-NavButton.DayPicker-NavButton--prev': {
       left: '1.5rem',
+      filter: 'invert(44%) sepia(99%) saturate(1089%) hue-rotate(6deg) brightness(106%) contrast(96%)',
     },
 
     /* Rounded border with volume for selected start and end days of a range */
-
     '& .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected:not(.DayPicker-Day--outside):before, .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected:not(.DayPicker-Day--outside):before': {
       content: '""',
       position: 'absolute',
@@ -105,7 +120,6 @@ const useStyles = makeStyles(theme => ({
 
     /* Layout styling, Initial styling was table based. See docs:  */
     /* https://react-day-picker.js.org/examples/selected-range-enter  */
-
     '& .DayPicker-Caption, .DayPicker-Weekdays, .DayPicker-WeekdaysRow, .DayPicker-Body': {
       display: 'block',
       width: '100%',
@@ -244,9 +258,7 @@ function ReactDayPicker({
 
   return (
     <>
-      {/* <Styles range={range} /> */}
       <DayPicker
-        // className="Range"
         className={clsx(classes.root, range && classes.hasRange, !range && classes.noRange)}
         disabledDays={{ before: lastThreeMonths, after: today }}
         month={initialMonth}
