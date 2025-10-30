@@ -130,7 +130,7 @@ const renderSelectedDays = (dates, classes, range, fieldIndex) => {
 function DatePicker({
   // controlled by parent DateSelector
   onOpenCollapse, onCloseCollapse, activeField,
-  range, startDate, endDate, updateStartDate, updateEndDate, displayRef,
+  range, startDate, endDate, updateStartDate, updateEndDate, displayRef, endDateBtnRef,
 }) {
   const classes = useStyles();
   const ref = displayRef || useRef(null);
@@ -162,6 +162,7 @@ function DatePicker({
       </button>
 
       <button
+        ref={endDateBtnRef}
         id="endDate"
         type="button"
         onClick={() => handleFieldClick('end')}
@@ -185,6 +186,7 @@ DatePicker.propTypes = {
   displayRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   startDate: PropTypes.string,
   endDate: PropTypes.string,
+  endDateBtnRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 };
 
 DatePicker.defaultProps = {
@@ -196,6 +198,7 @@ DatePicker.defaultProps = {
   displayRef: null,
   startDate: null,
   endDate: null,
+  endDateBtnRef: null,
 };
 
 const mapStateToProps = state => ({

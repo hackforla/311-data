@@ -29,6 +29,7 @@ function DateSelector({
   const [initialEnd, setInitialEnd] = useState(null);
   const displayRef = useRef(null);
   const collapseRef = useRef(null);
+  const endDateBtnRef = useRef(null);
   const classes = useStyles();
 
   // Close on outside click and revert if the selection was not completed
@@ -117,6 +118,7 @@ function DateSelector({
               }}
               activeField={activeField}
               displayRef={displayRef}
+              endDateBtnRef={endDateBtnRef}
             />
           </div>
         </SelectorBox.Display>
@@ -140,7 +142,32 @@ function DateSelector({
                   setInitialEnd(selection.endDate);
                 }
 
-                // Defer closing so React/Redux can flush updates first.
+                // If the selection contains only a start date (user picked Start
+                // and still needs to pick an End), keep the collapse open and
+                // move focus to the End field so it's clear the user should pick
+                // an end date next.
+                if (selection && selection.startDate && (typeof selection.endDate === 'undefined' || selection.endDate === null)) {
+                  // ensure the store has the new startDate (done above) and
+                  // mark the active field as 'end'
+                  setActiveField('end');
+                  setExpandedMenu(true);
+
+                  const focusEndDate = () => {
+                    const endBtn = endDateBtnRef.current || displayRef.current?.querySelector?.('#endDate');
+                    if (endBtn) {
+                      endBtn.focus();
+                    }
+                  }
+
+                  // move focus to the End button using requestAnimationFrame for reliable DOM updates
+                  requestAnimationFrame(() => {
+                    requestAnimationFrame(focusEndDate);
+                  });
+                  return;
+                }
+
+                // Otherwise (selection includes end or is complete) close the
+                // collapse after letting React/Redux flush updates.
                 Promise.resolve().then(() => {
                   setExpandedMenu(false);
                   setActiveField(null);

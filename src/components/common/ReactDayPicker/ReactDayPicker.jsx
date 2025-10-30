@@ -207,12 +207,13 @@ function ReactDayPicker({
     updateEndDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
 
+
   const handleDayClick = day => {
     const clicked = moment(day).format(INTERNAL_DATE_SPEC);
 
     if (!range) {
       setFromDay(day);
-    if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete());
+      if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete());
       return;
     }
 
@@ -225,24 +226,33 @@ function ReactDayPicker({
           setFromDay(day);
           updateEndDate(null);
           setEnteredTo(null);
+          if (onSelectionComplete) {
+            Promise.resolve().then(() =>
+              onSelectionComplete({ startDate: clicked, endDate: null })
+            );
+          }
           return; // keep picker open for user to choose end
         }
-  // clicked >= startDate -> set as end and complete
 
-  // show immediately
-  setPendingSelection({ startDate: startDate, endDate: clicked });
-  setToDay(day);
-  if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete({ startDate, endDate: clicked }));
-        return;
+        // clicked >= startDate -> set as end and complete
+        // show immediately
+        setPendingSelection({ startDate: startDate, endDate: clicked });
+        setToDay(day);
+        if (onSelectionComplete) {
+          Promise.resolve().then(() => onSelectionComplete({ startDate, endDate: clicked }));
+        }
+        return; // CRITICAL: exit here
       }
-  // no startDate, treat clicked as start
 
-  // reflect immediately
-  const startStr = moment(day).format(INTERNAL_DATE_SPEC);
-  setPendingSelection({ startDate: startStr, endDate: null });
-  setFromDay(day);
-  if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete({ startDate: startStr, endDate: null }));
-  return;
+      // no startDate, treat clicked as start
+      // reflect immediately
+      const startStr = moment(day).format(INTERNAL_DATE_SPEC);
+      setPendingSelection({ startDate: startStr, endDate: null });
+      setFromDay(day);
+      if (onSelectionComplete) {
+        Promise.resolve().then(() => onSelectionComplete({ startDate: startStr, endDate: null }));
+      }
+      return; // CRITICAL: exit here
     }
 
     // Editing start (or default behavior)
@@ -252,13 +262,17 @@ function ReactDayPicker({
       setFromDay(day);
       updateEndDate(null);
       setEnteredTo(null);
-      return;
+      if (onSelectionComplete) {
+        Promise.resolve().then(() =>
+          onSelectionComplete({ startDate: moment(day).format(INTERNAL_DATE_SPEC), endDate: null })
+        );
+      }
+      return; // CRITICAL: exit here
     }
     if (startDate && !endDate) {
       // If the user selects the startDate then chooses an endDate that precedes it,
       // swap the values of startDate and endDate
       if (clicked < startDate) {
-
         const tempDate = startDate;
         // reflect swap immediately
         setPendingSelection({ startDate: clicked, endDate: tempDate });
@@ -266,17 +280,35 @@ function ReactDayPicker({
         setFromDay(day);
         updateEndDate(tempDate);
         setEnteredTo(moment(tempDate).toDate());
+        if (onSelectionComplete) {
+          Promise.resolve().then(() =>
+            onSelectionComplete({ startDate: clicked, endDate: tempDate })
+          );
+        }
         return;
       }
 
-  setPendingSelection({ startDate: startDate, endDate: clicked });
-  setToDay(day);
-  if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete({ startDate, endDate: clicked }));
+      setPendingSelection({ startDate: startDate, endDate: clicked });
+      setToDay(day);
+      if (onSelectionComplete) {
+        Promise.resolve().then(() => onSelectionComplete({ startDate, endDate: clicked }));
+      }
       return;
     }
+
     // no start selected
-    setPendingSelection({ startDate: moment(day).format(INTERNAL_DATE_SPEC), endDate: null });
+    const startStr = moment(day).format(INTERNAL_DATE_SPEC);
+    setPendingSelection({ startDate: startStr, endDate: null });
     setFromDay(day);
+    // callback to signal that a start date has been selected
+    if (onSelectionComplete) {
+      Promise.resolve().then(() =>
+        onSelectionComplete({
+          startDate: startStr,
+          endDate: null,
+        })
+      );
+    }
   };
 
   const handleDayMouseEnter = day => {
