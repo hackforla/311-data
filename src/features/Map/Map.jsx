@@ -422,12 +422,17 @@ class Map extends React.Component {
 		});
 	};
 
+	//Service Request Details Popup
   addPopup = (coordinates, requestId) => {
     this.setState({ selectedRequestId: requestId });
     this.popup = new mapboxgl.Popup({closeButton: false, anchor: 'left'})
       .setLngLat(coordinates)
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
+
+			if (this.popup.getElement()) {
+				this.popup.getElement().style.zIndex = '2';
+			}
   };
 
 	removePopup = () => {
@@ -792,6 +797,7 @@ class Map extends React.Component {
 			return;
 		}
 		
+		//NC Name Tooltip Popup
 		this.ncPopup = new mapboxgl.Popup({
 			closeButton: false,
 			closeOnClick: false,
@@ -800,11 +806,8 @@ class Map extends React.Component {
 			.setHTML(`<div>${ncName}</div>`)
 			.addTo(this.map);
 
-			// Not sure if needed in the future:
-			// A z-index below 0 will have the popup appear underneath the map and therefore be invisible
-			// This popup still currently appears on top of the DatePicker and RequestDetail modal
 			if (this.ncPopup.getElement()) {
-        this.ncPopup.getElement().style.zIndex = '0';
+        this.ncPopup.getElement().style.zIndex = '1';
     }
 	
 	};

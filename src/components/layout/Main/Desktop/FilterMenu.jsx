@@ -31,6 +31,8 @@ const useStyles = makeStyles(theme => ({
     borderTopRightRadius: theme.borderRadius.md,
     borderBottomLeftRadius: theme.borderRadius.md,
     borderBottomRightRadius: theme.borderRadius.md,
+    position: 'absolute',
+    zIndex: 2,
   },
   header: {
     // color: theme.palette.text.cyan,
