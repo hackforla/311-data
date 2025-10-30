@@ -1,6 +1,7 @@
 import React, {
   useRef, useState, useEffect, useCallback,
 } from 'react';
+import clsx from 'clsx';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -12,7 +13,15 @@ import {
 } from '@reducers/filters';
 // TODO: Apply gaps (margin, padding) from theme
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => {
+  // local style constants to avoid repeating magic numbers
+  const BORDER_RADIUS = 5;
+  const GAP = '5px';
+  const PADDING = '8px 10px';
+  const BORDER_WIDTH = 2;
+  const ICON_SIZE = 20;
+
+  return ({
   selector: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -22,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 5,
     fontSize: '14px',
     color: theme.palette.text.secondaryLight,
-    '& > div': {
+    '& > *': {
       cursor: 'pointer',
       flex: '1 1 0%',
     },
@@ -37,19 +46,24 @@ const useStyles = makeStyles(theme => ({
   datePicker: {
     display: 'flex',
     alignItems: 'center',
-    gap: '5px',
-    border: `2px solid ${theme.palette.primary.dark}`,
-    padding: '8px 10px',
+    gap: GAP,
+    backgroundColor: theme.palette.primary.dark,
+    border: `${BORDER_WIDTH}px solid ${theme.palette.primary.dark}`,
+    color: theme.palette.text.secondaryLight,
+    padding: PADDING,
     margin: 0,
     boxSizing: 'border-box',
     flex: '1 1 0%',
-    borderRadius: 5,
+    borderRadius: BORDER_RADIUS,
     transition: 'border-color 150ms ease, box-shadow 150ms ease',
 
     '&:focus, &:focus-visible': {
       borderColor: theme.palette.secondaryFocus || theme.palette.textFocus || '#87C8BC',
       outline: 'none',
     },
+  },
+  active: {
+    borderColor: theme.palette.secondaryFocus || theme.palette.textFocus || '#87C8BC',
   },
   button: {
     padding: 0,
@@ -58,13 +72,13 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: theme.palette.primary.dark,
     },
     '& svg': {
-      fontSize: 20,
+      fontSize: ICON_SIZE,
       fill: theme.palette.text.textSecondaryDark,
     },
   },
-}));
+  });
+});
 
-// Modify renderSelectedDays() to populate the startDate and endDate fields (divs with the ids of 'startDate' and 'endDate'), rather than populating the spans.
 /**
  * renderSelectedDays
  * - If fieldIndex is provided (0 = start, 1 = end) it returns a single element
@@ -132,16 +146,32 @@ function DatePicker({
 
   return (
     <div ref={ref} className={classes.selector}>
-      <div id="startDate" tabIndex={0} onClick={() => handleFieldClick('start')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleFieldClick('start'); } }} className={classes.datePicker}>
+      <button
+        id="startDate"
+        type="button"
+        onClick={() => handleFieldClick('start')}
+        className={clsx(classes.datePicker, activeField === 'start' && classes.active)}
+        aria-haspopup="dialog"
+        aria-expanded={activeField === 'start'}
+        aria-label="Start date"
+      >
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fillRule="evenodd" clipRule="evenodd" d="M12.6667 3.16671H12V1.83337H10.6667V3.16671H5.33333V1.83337H4V3.16671H3.33333C2.59333 3.16671 2 3.76671 2 4.50004V13.8334C2 14.5667 2.59333 15.1667 3.33333 15.1667H12.6667C13.4 15.1667 14 14.5667 14 13.8334V4.50004C14 3.76671 13.4 3.16671 12.6667 3.16671ZM12.6667 13.8334H3.33333V6.50004H12.6667V13.8334ZM4.33333 9.16671C4.33333 8.24671 5.08 7.50004 6 7.50004C6.92 7.50004 7.66667 8.24671 7.66667 9.16671C7.66667 10.0867 6.92 10.8334 6 10.8334C5.08 10.8334 4.33333 10.0867 4.33333 9.16671Z" fill={theme.palette.text.secondaryDark || '#A8A8A8'}/>
+          <path fillRule="evenodd" clipRule="evenodd" d="M12.6667 3.16671H12V1.83337H10.6667V3.16671H5.33333V1.83337H4V3.16671H3.33333C2.59333 3.16671 2 3.76671 2 4.50004V13.8334C2 14.5667 2.59333 15.1667 3.33333 15.1667H12.6667C13.4 15.1667 14 14.5667 14 13.8334V4.50004C14 3.76671 13.4 3.16671 12.6667 3.16671ZM12.6667 13.8334H3.33333V6.50004H12.6667V13.8334ZM4.33333 9.16671C4.33333 8.24671 5.08 7.50004 6 7.50004C6.92 7.50004 7.66667 8.24671 7.66667 9.16671C7.66667 10.0867 6.92 10.8334 6 10.8334C5.08 10.8334 4.33333 10.0867 4.33333 9.16671Z" fill="#A8A8A8"/>
         </svg>
         {renderSelectedDays([startDate, endDate], classes, range, 0)}
-      </div>
+      </button>
 
-      <div id="endDate" tabIndex={0} onClick={() => handleFieldClick('end')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleFieldClick('end'); } }} className={classes.datePicker}>
+      <button
+        id="endDate"
+        type="button"
+        onClick={() => handleFieldClick('end')}
+        className={clsx(classes.datePicker, activeField === 'end' && classes.active)}
+        aria-haspopup="dialog"
+        aria-expanded={activeField === 'end'}
+        aria-label="End date"
+      >
         {renderSelectedDays([startDate, endDate], classes, range, 1)}
-      </div>
+      </button>
     </div>
   );
 }

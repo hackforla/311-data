@@ -2,7 +2,7 @@ import 'react-day-picker/lib/style.css';
 
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DayPicker from 'react-day-picker';
 import { connect } from 'react-redux';
 import makeStyles from '@mui/styles/makeStyles';
@@ -12,20 +12,34 @@ import colors from '@theme/colors';
 import { INTERNAL_DATE_SPEC } from '../CONSTANTS';
 import WeekDay from './Weekday';
 
+// style constants used within this file to reduce magic numbers
+const STYLE = {
+  BORDER_RADIUS: '5px',
+  MIN_WIDTH: 277, // px
+  MONTH_MARGIN: '1em',
+  DAY_PADDING: '5px 8px',
+  DAY_MAX_WIDTH: 32, // px
+  NAV_LEFT: '1.5rem',
+  NAV_FILTER: 'invert(44%) sepia(99%) saturate(1089%) hue-rotate(6deg) brightness(106%) contrast(96%)',
+  SELECTED_BEFORE_EXTRA: '5px',
+  WEEK_MARGIN_BOTTOM: '8px',
+  WEEKDAY_FONT_SIZE: '12px',
+};
+
 const useStyles = makeStyles(theme => ({
   root: {
     fontFamily: fonts.family.roboto,
     background: theme.palette.primary.dark,
-    borderRadius: '5px',
-    minWidth: '297px',
+    borderRadius: STYLE.BORDER_RADIUS,
+    minWidth: `${STYLE.MIN_WIDTH}px`,
     '& .DayPicker-Months': {
       display: 'block',
-      width: '83%',
+      width: '100%',
       marginRight: 'auto',
       marginLeft: 'auto',
     },
-    '& DayPicker-Month': {
-      margin: '0 11px',
+    '& .DayPicker-Month': {
+      margin: `${STYLE.MONTH_MARGIN} auto !important`,
     },
     '& .DayPicker-Body': {
       fontSize: '0.9rem',
@@ -57,7 +71,7 @@ const useStyles = makeStyles(theme => ({
       borderRadius: '0 !important',
       display: 'block', // causing dates to run down in a single vertical column
       flexGrow: 1,
-      maxWidth: '32px',
+      maxWidth: `${STYLE.DAY_MAX_WIDTH}px`,
     },
 
     /* Today cell */
@@ -95,12 +109,12 @@ const useStyles = makeStyles(theme => ({
     /* next and prev arrows */
     '& .DayPicker-NavButton.DayPicker-NavButton': {
       top: 0,
-      filter: 'invert(44%) sepia(99%) saturate(1089%) hue-rotate(6deg) brightness(106%) contrast(96%)',
+      filter: STYLE.NAV_FILTER,
     },
 
     '& .DayPicker-NavButton.DayPicker-NavButton--prev': {
-      left: '1.5rem',
-      filter: 'invert(44%) sepia(99%) saturate(1089%) hue-rotate(6deg) brightness(106%) contrast(96%)',
+      left: STYLE.NAV_LEFT,
+      filter: STYLE.NAV_FILTER,
     },
 
     /* Rounded border with volume for selected start and end days of a range */
@@ -108,8 +122,8 @@ const useStyles = makeStyles(theme => ({
       content: '""',
       position: 'absolute',
       border: '2px solid white',
-      height: 'calc(100% + 5px)',
-      width: 'calc(100% + 5px)',
+      height: `calc(100% + ${STYLE.SELECTED_BEFORE_EXTRA})`,
+      width: `calc(100% + ${STYLE.SELECTED_BEFORE_EXTRA})`,
       borderRadius: '50%',
       top: '50%',
       left: '50%',
@@ -126,11 +140,11 @@ const useStyles = makeStyles(theme => ({
     },
 
     '& .DayPicker-Week .DayPicker-Day': {
-      padding: '5px 8px',
+      padding: STYLE.DAY_PADDING,
     },
 
     '& .DayPicker-Week': {
-      marginBottom: '8px',
+      marginBottom: STYLE.WEEK_MARGIN_BOTTOM,
     },
 
     '& .DayPicker-Week, .DayPicker-WeekdaysRow': {
@@ -141,7 +155,7 @@ const useStyles = makeStyles(theme => ({
 
     '& .DayPicker-Weekday': {
       display: 'block',
-      fontSize: '12px',
+      fontSize: STYLE.WEEKDAY_FONT_SIZE,
     },
   },
   hasRange: {
@@ -162,7 +176,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-/** A wrapper around react-day-picker that selects a date range. */
+/* A wrapper around react-day-picker that selects a date range. */
 function ReactDayPicker({
   range, updateStartDate, updateEndDate, startDate, endDate, activeField, onSelectionComplete,
 }) {
@@ -170,6 +184,20 @@ function ReactDayPicker({
 
   // enteredTo represents the day that the user is currently hovering over.
   const [enteredTo, setEnteredTo] = useState(endDate);
+  // pendingSelection holds a selection object { startDate, endDate } that
+  // reflects the user's most recent click before Redux-connected props update.
+  // This lets the calendar highlight the newly-selected day immediately.
+  const [pendingSelection, setPendingSelection] = useState(null);
+
+  // Clear pendingSelection when the connected props catch up to it.
+  useEffect(() => {
+    if (!pendingSelection) return;
+    const pendingStart = pendingSelection.startDate || null;
+    const pendingEnd = typeof pendingSelection.endDate !== 'undefined' ? pendingSelection.endDate : null;
+    if (pendingStart === startDate && pendingEnd === endDate) {
+      setPendingSelection(null);
+    }
+  }, [startDate, endDate, pendingSelection]);
 
   const setFromDay = day => {
     updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
@@ -184,7 +212,7 @@ function ReactDayPicker({
 
     if (!range) {
       setFromDay(day);
-      if (onSelectionComplete) onSelectionComplete();
+    if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete());
       return;
     }
 
@@ -192,25 +220,35 @@ function ReactDayPicker({
     if (activeField === 'end') {
       if (startDate) {
         if (clicked < startDate) {
-          // clicked date is before current start -> make it the new start
+          // reflect immediately in UI
+          setPendingSelection({ startDate: clicked, endDate: null });
           setFromDay(day);
           updateEndDate(null);
           setEnteredTo(null);
           return; // keep picker open for user to choose end
         }
-        // clicked >= startDate -> set as end and complete
-        setToDay(day);
-        if (onSelectionComplete) onSelectionComplete();
+  // clicked >= startDate -> set as end and complete
+
+  // show immediately
+  setPendingSelection({ startDate: startDate, endDate: clicked });
+  setToDay(day);
+  if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete({ startDate, endDate: clicked }));
         return;
       }
-      // no startDate, treat clicked as start
-      setFromDay(day);
-      return;
+  // no startDate, treat clicked as start
+
+  // reflect immediately
+  const startStr = moment(day).format(INTERNAL_DATE_SPEC);
+  setPendingSelection({ startDate: startStr, endDate: null });
+  setFromDay(day);
+  if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete({ startDate: startStr, endDate: null }));
+  return;
     }
 
     // Editing start (or default behavior)
     if (startDate && endDate) {
       // start a new range selection
+      setPendingSelection({ startDate: moment(day).format(INTERNAL_DATE_SPEC), endDate: null });
       setFromDay(day);
       updateEndDate(null);
       setEnteredTo(null);
@@ -220,18 +258,24 @@ function ReactDayPicker({
       // If the user selects the startDate then chooses an endDate that precedes it,
       // swap the values of startDate and endDate
       if (clicked < startDate) {
+
         const tempDate = startDate;
+        // reflect swap immediately
+        setPendingSelection({ startDate: clicked, endDate: tempDate });
         setToDay(moment(tempDate).toDate());
         setFromDay(day);
         updateEndDate(tempDate);
         setEnteredTo(moment(tempDate).toDate());
         return;
       }
-      setToDay(day);
-      if (onSelectionComplete) onSelectionComplete();
+
+  setPendingSelection({ startDate: startDate, endDate: clicked });
+  setToDay(day);
+  if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete({ startDate, endDate: clicked }));
       return;
     }
     // no start selected
+    setPendingSelection({ startDate: moment(day).format(INTERNAL_DATE_SPEC), endDate: null });
     setFromDay(day);
   };
 
@@ -242,8 +286,24 @@ function ReactDayPicker({
     }
   };
 
-  const from = moment(startDate).toDate();
-  const enteredToDate = moment(enteredTo).toDate();
+  // Use pendingSelection when present so the calendar highlights the user's
+  // choice immediately even before Redux props propagate.
+  const effectiveStart = pendingSelection && pendingSelection.startDate ? pendingSelection.startDate : startDate;
+  // For effectiveEnd, prefer (in order): pendingSelection.endDate, redux endDate prop,
+  // then the hovered enteredTo (used when user has selected a start but not an end).
+  let effectiveEnd;
+  if (pendingSelection && typeof pendingSelection.endDate !== 'undefined') {
+    effectiveEnd = pendingSelection.endDate;
+  } else if (endDate) {
+    effectiveEnd = endDate;
+  } else {
+    effectiveEnd = enteredTo;
+  }
+
+  const from = effectiveStart ? moment(effectiveStart).toDate() : undefined;
+  const enteredToDate = effectiveEnd ? moment(effectiveEnd).toDate() : undefined;
+  useEffect(() => {
+  }, [pendingSelection, effectiveStart, effectiveEnd, startDate, endDate, enteredTo]);
   const today = new Date();
   const currentMonth = today.getFullYear();
   const currentYear = today.getMonth();

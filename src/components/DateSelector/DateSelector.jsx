@@ -127,9 +127,24 @@ function DateSelector({
               updateStartDate={updateStartDate}
               updateEndDate={updateEndDate}
               activeField={activeField}
-              onSelectionComplete={() => {
-                setExpandedMenu(false);
-                setActiveField(null);
+              onSelectionComplete={(selection) => {
+                // If ReactDayPicker provided the selection object, immediately
+                // ensure the redux store and our captured initial values match
+                // the selection. This avoids a race where the collapse closes
+                // before connected props reflect the new dates, which caused
+                // stale highlights when reopening the calendar.
+                if (selection && typeof selection.startDate !== 'undefined') {
+                  if (selection.startDate !== startDate) updateStartDate(selection.startDate);
+                  if (typeof selection.endDate !== 'undefined' && selection.endDate !== endDate) updateEndDate(selection.endDate);
+                  setInitialStart(selection.startDate);
+                  setInitialEnd(selection.endDate);
+                }
+
+                // Defer closing so React/Redux can flush updates first.
+                Promise.resolve().then(() => {
+                  setExpandedMenu(false);
+                  setActiveField(null);
+                });
               }}
             />
           </div>
