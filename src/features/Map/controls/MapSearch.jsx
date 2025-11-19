@@ -133,7 +133,7 @@ class MapSearch extends React.Component {
       
       // Blank Map Implementation: pass result to FilterMenu
       const selectedAddress = result.place_name;
-      console.log("Selected address:", selectedAddress);
+      console.log("MapSearch - Selected address:", selectedAddress);
       this.props.onGeocoderResult(result);
 
       // This clears the address from the Address input field.
@@ -145,6 +145,13 @@ class MapSearch extends React.Component {
 
     // Add a custom event listener to clear the Address Search Input field
     this.addListener(geocoderElement, settings.map.eventName.reset, ()=>this.geocoder.clear() )
+ 
+    //Listens to event when search address bar is cleared
+    this.geocoder.on('clear', (result) => {
+      console.log("Clear event triggered");
+      //Updates props.onGeocoderResult with an empty string and handles empty string value in FilterMenu for Blank Map Form Validation
+      this.props.onGeocoderResult({place_name: ''});
+    });
     
     // this.setTab(GEO_FILTER_TYPES.address);
   }
@@ -157,7 +164,7 @@ class MapSearch extends React.Component {
 
   setTab = tab => {
     this.props.onChangeTab(tab);
-    this.geocoder.clear();
+    // this.geocoder.clear();
     this.geocoder.setPlaceholder(`Enter ${tab.toLowerCase()}`);
     switch(tab) {
       case GEO_FILTER_TYPES.address:

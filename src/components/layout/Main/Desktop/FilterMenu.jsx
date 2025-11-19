@@ -103,8 +103,12 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
   const dispatch = useDispatch();
 
   const handleGeocoderResult = ( result ) => {
-    console.log("Filter menu received address selected:", result.place_name);
-    setSelectedAddress(result.place_name);
+    console.log("Filter menu - received address selected from MapSearch:", result.place_name);
+    if(result.place_name == '') {
+      setSelectedAddress(null);
+    } else {
+      setSelectedAddress(result.place_name);
+    }
   };
 
   const validateForm = () => {
@@ -153,7 +157,7 @@ function FilterMenu({ resetMap, resetAddressSearch, map, geoFilterType, councils
     } else {
       console.log("Invalid form", formErrors);
     }
-    setSelectedAddress(null);
+    // setSelectedAddress(null);
   };
   
 
