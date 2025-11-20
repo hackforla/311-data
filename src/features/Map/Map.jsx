@@ -41,9 +41,10 @@ import { debounce, isEmpty } from "@utils";
 import settings from "@settings";
 import ZoomTooltip from "./zoomTooltip";
 import {
-  DEFAULT_MIN_ZOOM,
-  DEFAULT_MAX_ZOOM,
-} from "@components/common/CONSTANTS";
+	DEFAULT_MIN_ZOOM,
+	DEFAULT_MAX_ZOOM,
+} from '@components/common/CONSTANTS';
+import centroid from "@turf/centroid";
 
 const styles = (theme) => ({
   root: {
@@ -166,13 +167,16 @@ class Map extends React.Component {
           "bottom-right"
         );
 
-        map.on("click", this.debouncedOnClick);
-        map.on("mouseenter", "request-circles", this.onMouseEnter);
-        map.on("mouseleave", "request-circles", this.onMouseLeave);
+				map.on('click', this.debouncedOnClick);
+				map.on('mouseenter', 'request-circles', this.onMouseEnter);
+				map.on('mouseleave', 'request-circles', this.onMouseLeave);
+				map.on('mouseenter', 'nc-fills', this.handleNcMouseEnter);
+				map.on('mousemove', 'nc-fills', this.handleNcMouseEnter);
+				map.on('mouseleave', 'nc-fills', this.handleNcMouseLeave);
 
-        map.once("idle", (e) => {
-          this.setState({ mapReady: true });
-        });
+				map.once('idle', (e) => {
+					this.setState({ mapReady: true });
+				});
 
         // Check to see if councilId is present and updates the state
         const {
@@ -414,12 +418,17 @@ class Map extends React.Component {
     });
   };
 
+	//Service Request Details Popup
   addPopup = (coordinates, requestId) => {
     this.setState({ selectedRequestId: requestId });
     this.popup = new mapboxgl.Popup({ closeButton: false, anchor: "left" })
       .setLngLat(coordinates)
       .setDOMContent(this.requestDetail)
       .addTo(this.map);
+
+			if (this.popup.getElement()) {
+				this.popup.getElement().style.zIndex = '2';
+			}
   };
 
   removePopup = () => {
@@ -756,6 +765,50 @@ class Map extends React.Component {
       this.popup.addClassName(this.props.classes.loadedModal);
     }
   };
+
+	handleNcMouseEnter = (e) => {
+		if (this.ncPopup) this.ncPopup.remove();
+		if (!e.features?.length) return;
+
+  	const feature = e.features[0];
+  	const ncName = feature.properties.NAME;
+		const NC_ZOOM_LEVEL = 11;
+		const coordinates = centroid(feature).geometry.coordinates;
+
+		const { selectedNc } = this.state;
+  	const zoom = this.map.getZoom();
+
+		const isZoomedIn = zoom >= NC_ZOOM_LEVEL; 
+		const isSameNc = selectedNc && ncName == selectedNc?.TOOLTIP;
+
+		//Removes popup when zoomed in on a selected NC
+		if (isZoomedIn && isSameNc) {
+			if (this.ncPopup) {
+				this.ncPopup.remove();
+				this.ncPopup = null;
+			}
+			this.currentNc = null;
+			return;
+		}
+		
+		//NC Name Tooltip Popup
+		this.ncPopup = new mapboxgl.Popup({
+			closeButton: false,
+			closeOnClick: false,
+		})
+			.setLngLat(coordinates)
+			.setHTML(`<div>${ncName}</div>`)
+			.addTo(this.map);
+
+			if (this.ncPopup.getElement()) {
+        this.ncPopup.getElement().style.zIndex = '1';
+    }
+	
+	};
+	
+	handleNcMouseLeave = () => {
+		if (this.ncPopup) this.ncPopup.remove();
+	};
 
   //// RENDER ////
 
