@@ -5,7 +5,9 @@ import glob
 from tqdm import tqdm
 from huggingface_hub import HfApi, login
 from dotenv import load_dotenv
+from datetime import datetime
 load_dotenv()
+
 
 # set environment as 'dev' or 'prod'
 ENV = os.getenv('VITE_ENV')
@@ -19,12 +21,19 @@ else:
   print('Incorrect environment variable set for VITE_ENV.')
   exit(1)
 
+
+year_to_retrieve = datetime.now().year
+current_month = datetime.now().month  # this is the current month in integer form
+if current_month < 4:
+    # The data is not made available until 2nd quarter of the year. Retrieve the last year's worth of data instead.
+    year_to_retrieve -= 1
+
 def dlData():
     '''
     Download the current year's dataset from data.lacity.org
     '''
     url = "https://data.lacity.org/api/views/h73f-gn57/rows.csv?accessType=DOWNLOAD"
-    outfile = "2025.csv"
+    outfile = f'{year_to_retrieve}.csv'
 
     response = requests.get(url, stream=True)
 
@@ -38,9 +47,10 @@ def hfClean():
     '''
     Clean the dataset by removing problematic string combinations and update timestamp to ISO format
     '''
-    infile = "2025.csv"
-    fixed_filename = "2025-fixed.csv"
-    clean_filename = "2025-clean.parquet"
+
+    infile = f'{year_to_retrieve}.csv'
+    fixed_filename = f'{year_to_retrieve}-fixed.csv'
+    clean_filename = f'{year_to_retrieve}-clean.parquet'
 
     # List of problmenatic strings to be replaced with ""
     replace_strings = ["VE, 0"]
@@ -69,9 +79,9 @@ def hfUpload():
     '''
     Upload the clean dataset to huggingface.co
     '''
-    local_filename = '2025-clean.parquet'
-    dest_filename = '2025.parquet'
-    repo_name = '2025'
+    local_filename = f'{year_to_retrieve}-clean.parquet'
+    dest_filename = f'{year_to_retrieve}.parquet'
+    repo_name = f'{year_to_retrieve}'
     repo_type = 'dataset'
 
     repo_id = f"{HF_USERNAME}/{repo_name}"
