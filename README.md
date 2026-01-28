@@ -75,6 +75,8 @@ See [contributing.md](contributing.md#testing) for info on writing tests.
 
 ### (one time) Install the act tool
 
+See act [installation docs](https://nektosact.com/installation/index.html) for more information
+
 ```bash
 brew install act
 ```
