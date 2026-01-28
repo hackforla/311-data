@@ -8,28 +8,8 @@ import duckdb_wasm_next from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
 import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import Worker from 'web-worker';
 import DbContext from '@db/DbContext';
-import moment from 'moment';
 
 const hf_account = import.meta.env.VITE_ENV === 'DEV' ? '311-Data-Dev' : '311-data';
-
-// List of remote dataset locations used by db.registerFileURL
-const datasets = {
-  parquet: {
-    // huggingface
-    hfYtd2025:
-      `https://huggingface.co/datasets/${hf_account}/2025/resolve/main/2025.parquet`, // 2025 year-to-date
-    hfYtd2024:
-      `https://huggingface.co/datasets/${hf_account}/2024/resolve/main/2024.parquet`, // 2024 entire year
-    hfYtd2023:
-      `https://huggingface.co/datasets/${hf_account}/2023/resolve/main/2023.parquet`, // 2023 entire year
-    hfYtd2022:
-      `https://huggingface.co/datasets/${hf_account}/2022/resolve/main/2022.parquet`, // 2022 entire year
-    hfYtd2021:
-      `https://huggingface.co/datasets/${hf_account}/2021/resolve/main/2021.parquet`, // 2021 entire year
-    hfYtd2020:
-      `https://huggingface.co/datasets/${hf_account}/2020/resolve/main/2020.parquet`, // 2020 entire year
-  },
-};
 function DbProvider({ children, startDate }) {
   const [db, setDb] = useState(null);
   const [conn, setConn] = useState(null);
@@ -59,49 +39,23 @@ function DbProvider({ children, startDate }) {
         const newWorker = new Worker(DUCKDB_CONFIG.mainWorker);
 
         const newDb = new duckdb.AsyncDuckDB(logger, newWorker);
+        latestYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth() + 1;  // this is the current month in integer form, with January == 1
+        if (currentMonth < 4) {
+          // The data is not made available until 2nd quarter of the year. Retrieve the last year's worth of data instead.
+          latestYear -= 1;
+        }
 
-        await newDb.instantiate(
-          DUCKDB_CONFIG.mainModule,
-          DUCKDB_CONFIG.pthreadWorker,
-        );
-
-        // register parquet
-        await newDb.registerFileURL(
-          'requests2025.parquet',
-          //* Quick fix - change hfYtd2024 to hfYtd2025 when 2025 data available
-          datasets.parquet.hfYtd2025,
-          4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
-        );
-
-        await newDb.registerFileURL(
-          'requests2024.parquet',
-          datasets.parquet.hfYtd2024,
-          4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
-        );
-
-        await newDb.registerFileURL(
-          'requests2023.parquet',
-          datasets.parquet.hfYtd2023,
-          4,
-        );
-
-        await newDb.registerFileURL(
-          'requests2022.parquet',
-          datasets.parquet.hfYtd2022,
-          4,
-        );
-
-        await newDb.registerFileURL(
-          'requests2021.parquet',
-          datasets.parquet.hfYtd2021,
-          4,
-        );
-
-        await newDb.registerFileURL(
-          'requests2020.parquet',
-          datasets.parquet.hfYtd2020,
-          4,
-        );
+        // Request all years' parquet files since 2020
+        for (let year = 2020; year <= latestYear; year++) {
+          // register parquet
+          await newDb.registerFileURL(
+            requestedFileName = `https://huggingface.co/datasets/${hf_account}/${year}/resolve/main/${year}.parquet`
+            `requests${year}.parquet`,
+            requestedFileName,
+            4, // HTTP = 4. For more options: https://tinyurl.com/DuckDBDataProtocol
+          );
+      }
 
         // Create db connection
         const newConn = await newDb.connect();
@@ -148,7 +102,7 @@ function DbProvider({ children, startDate }) {
   // separated from the previous useEffect that handles db initialization and teardown
   useEffect(() => {
     if (startDate) {
-      const year = moment(startDate).year();
+      const year = new Date(startDate).getFullYear();
       setTableNameByYear(`requests_${year}`);
     }
   }, [startDate]); // Depend on startDate
