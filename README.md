@@ -21,7 +21,7 @@ Our application is open source, built and maintained by volunteers throughout ou
 1. An interactive map showing where different types of 311 requests are being submitted
 1. Dashboards that show what types of requests are being made, how quickly they're being resolved, how different councils compare, and more
 
-![screenshot](./assets/screenshot.PNG)
+![screenshot](./src/assets/screenshot.PNG)
 
 Our mission is to create a user-friendly platform for anyone interested in exploring 311 service requests so that they can immediately gain actionable insights. If you would like to contribute as a volunteer, please visit the [Open Roles Board](https://github.com/orgs/hackforla/projects/67/views/1?filterQuery=repo%3A%22hackforla%2F311-data%22+status%3A%22Currently+Recruiting%22).
 
@@ -70,6 +70,23 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 - Run `npm test`
 
 See [contributing.md](contributing.md#testing) for info on writing tests.
+
+## Run data update cron job locally on macOS
+
+### (one time) Install the act tool
+
+See act [installation docs](https://nektosact.com/installation/index.html) for more information
+
+```bash
+brew install act
+```
+
+### Run the job itself
+
+```bash
+act -j run --verbose
+
+Use the verbose flag, at least the first time, since the image downloads take so long
 
 ### Information About Technologies
 
