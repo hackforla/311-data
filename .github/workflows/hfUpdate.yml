@@ -3,6 +3,7 @@ name: Update Huggingface Dataset
 on:
   schedule: # once daily at 3:05 pm PST (23:05 UTC)
     - cron: "5 23 * * *"
+  workflow_dispatch:
 
 jobs:
   run:
@@ -28,7 +29,3 @@ jobs:
           echo "VITE_ENV=${{ secrets.VITE_ENV }}" >> .env
       - name: Run script
         run: python updateHfDataset.py
-
-# Notes on running this thing on macos:
-# brew install act
-# act -j run --verbose (verbose since the steps take so long the first time)
