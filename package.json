@@ -17,7 +17,7 @@
     "lint": "eslint \"./**/*.js*\"",
     "lint:fix": "eslint --fix \"./**/*.js*\"",
     "test": "vitest",
-    "check-env": "node ./utils/checkEnv"
+    "check-env": "node ./src/utils/checkEnv"
   },
   "husky": {
     "hooks": {
