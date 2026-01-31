@@ -7,7 +7,7 @@ This project supports the `main` branch only.
 If you discover a security vulnerability, please do **not** open a public issue.
 
 Instead, report it by emailing:
-[ADD PROJECT SECURITY EMAIL]
+311-data@hackforla.org
 
 Please include:
 - A description of the vulnerability
