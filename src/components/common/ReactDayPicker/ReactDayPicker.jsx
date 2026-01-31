@@ -2,7 +2,7 @@ import 'react-day-picker/lib/style.css';
 
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DayPicker from 'react-day-picker';
 import { connect } from 'react-redux';
 import makeStyles from '@mui/styles/makeStyles';
@@ -10,23 +10,36 @@ import clsx from 'clsx';
 import fonts from '@theme/fonts';
 import colors from '@theme/colors';
 import { INTERNAL_DATE_SPEC } from '../CONSTANTS';
-// import Styles from './Styles';
 import WeekDay from './Weekday';
+
+// style constants used within this file to reduce magic numbers
+const STYLE = {
+  BORDER_RADIUS: '5px',
+  MIN_WIDTH: 277, // px
+  MONTH_MARGIN: '1em',
+  DAY_PADDING: '5px 8px',
+  DAY_MAX_WIDTH: 32, // px
+  NAV_LEFT: '1.5rem',
+  NAV_FILTER: 'invert(44%) sepia(99%) saturate(1089%) hue-rotate(6deg) brightness(106%) contrast(96%)',
+  SELECTED_BEFORE_EXTRA: '5px',
+  WEEK_MARGIN_BOTTOM: '8px',
+  WEEKDAY_FONT_SIZE: '12px',
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
     fontFamily: fonts.family.roboto,
     background: theme.palette.primary.dark,
-    borderRadius: '5px',
-    minWidth: '297px',
+    borderRadius: STYLE.BORDER_RADIUS,
+    minWidth: `${STYLE.MIN_WIDTH}px`,
     '& .DayPicker-Months': {
       display: 'block',
-      width: '83%',
+      width: '100%',
       marginRight: 'auto',
       marginLeft: 'auto',
     },
-    '& DayPicker-Month': {
-      margin: '0 11px',
+    '& .DayPicker-Month': {
+      margin: `${STYLE.MONTH_MARGIN} auto !important`,
     },
     '& .DayPicker-Body': {
       fontSize: '0.9rem',
@@ -37,64 +50,80 @@ const useStyles = makeStyles(theme => ({
     },
 
     /* Selected range without start and end dates */
-
     '& .DayPicker-Day--selected:not(.DayPicker-Day--outside)': {
-      backgroundColor: `${theme.palette.selected.primary} !important`,
+      backgroundColor: `${theme.palette.primary.light} !important`,
     },
 
     /* Disabled cell */
-
     '& .DayPicker-Day--disabled': {
       color: colors.textSecondaryDark,
       pointerEvents: 'none',
     },
 
     /* Day cell hover */
-
     '& .DayPicker:not(.DayPicker--interactionDisabled), .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover': {
       backgroundColor: `${theme.palette.selected.primary} !important`,
       borderRadius: '50% !important',
     },
 
     /* General day cell */
-
     '& .DayPicker-Day': {
       borderRadius: '0 !important',
       display: 'block', // causing dates to run down in a single vertical column
       flexGrow: 1,
-      maxWidth: '32px',
+      maxWidth: `${STYLE.DAY_MAX_WIDTH}px`,
     },
 
     /* Today cell */
-
     '& .DayPicker-Day.DayPicker-Day--selected.DayPicker-Day--today, .DayPicker-Day--today': {
       color: theme.palette.primary.focus,
     },
 
     /* Selected start and end days  */
-
     '& .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected, .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected': {
       position: 'relative',
       zIndex: 1,
     },
 
+    /* Selected start day */
+    '& .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected': {
+      color: '#0F181F !important',
+      '&::before': {
+        backgroundColor: `#87C8BC !important`,
+        background: `#87C8BC !important`,
+        border: 'none !important',
+        height: 'calc(100% + 0px) !important',
+        width: 'calc(100% + 0px) !important',
+      }
+    },
+
+    /* Selected end day */
+    '& .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected': {
+      '&::before': {
+        border: '1px solid #87C8BC !important',
+        height: 'calc(100% + 0px) !important',
+        width: 'calc(100% + 0px) !important',
+      }
+    },
+
     /* next and prev arrows */
     '& .DayPicker-NavButton.DayPicker-NavButton': {
       top: 0,
+      filter: STYLE.NAV_FILTER,
     },
 
     '& .DayPicker-NavButton.DayPicker-NavButton--prev': {
-      left: '1.5rem',
+      left: STYLE.NAV_LEFT,
+      filter: STYLE.NAV_FILTER,
     },
 
     /* Rounded border with volume for selected start and end days of a range */
-
     '& .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected:not(.DayPicker-Day--outside):before, .DayPicker-Day.DayPicker-Day--end.DayPicker-Day--selected:not(.DayPicker-Day--outside):before': {
       content: '""',
       position: 'absolute',
       border: '2px solid white',
-      height: 'calc(100% + 5px)',
-      width: 'calc(100% + 5px)',
+      height: `calc(100% + ${STYLE.SELECTED_BEFORE_EXTRA})`,
+      width: `calc(100% + ${STYLE.SELECTED_BEFORE_EXTRA})`,
       borderRadius: '50%',
       top: '50%',
       left: '50%',
@@ -105,18 +134,17 @@ const useStyles = makeStyles(theme => ({
 
     /* Layout styling, Initial styling was table based. See docs:  */
     /* https://react-day-picker.js.org/examples/selected-range-enter  */
-
     '& .DayPicker-Caption, .DayPicker-Weekdays, .DayPicker-WeekdaysRow, .DayPicker-Body': {
       display: 'block',
       width: '100%',
     },
 
     '& .DayPicker-Week .DayPicker-Day': {
-      padding: '5px 8px',
+      padding: STYLE.DAY_PADDING,
     },
 
     '& .DayPicker-Week': {
-      marginBottom: '8px',
+      marginBottom: STYLE.WEEK_MARGIN_BOTTOM,
     },
 
     '& .DayPicker-Week, .DayPicker-WeekdaysRow': {
@@ -127,7 +155,7 @@ const useStyles = makeStyles(theme => ({
 
     '& .DayPicker-Weekday': {
       display: 'block',
-      fontSize: '12px',
+      fontSize: STYLE.WEEKDAY_FONT_SIZE,
     },
   },
   hasRange: {
@@ -148,14 +176,28 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-/** A wrapper around react-day-picker that selects a date range. */
+/* A wrapper around react-day-picker that selects a date range. */
 function ReactDayPicker({
-  range, updateStartDate, updateEndDate, startDate, endDate,
+  range, updateStartDate, updateEndDate, startDate, endDate, activeField, onSelectionComplete,
 }) {
   const classes = useStyles();
 
   // enteredTo represents the day that the user is currently hovering over.
   const [enteredTo, setEnteredTo] = useState(endDate);
+  // pendingSelection holds a selection object { startDate, endDate } that
+  // reflects the user's most recent click before Redux-connected props update.
+  // This lets the calendar highlight the newly-selected day immediately.
+  const [pendingSelection, setPendingSelection] = useState(null);
+
+  // Clear pendingSelection when the connected props catch up to it.
+  useEffect(() => {
+    if (!pendingSelection) return;
+    const pendingStart = pendingSelection.startDate || null;
+    const pendingEnd = typeof pendingSelection.endDate !== 'undefined' ? pendingSelection.endDate : null;
+    if (pendingStart === startDate && pendingEnd === endDate) {
+      setPendingSelection(null);
+    }
+  }, [startDate, endDate, pendingSelection]);
 
   const setFromDay = day => {
     updateStartDate(moment(day).format(INTERNAL_DATE_SPEC));
@@ -165,34 +207,108 @@ function ReactDayPicker({
     updateEndDate(moment(day).format(INTERNAL_DATE_SPEC));
   };
 
+
   const handleDayClick = day => {
+    const clicked = moment(day).format(INTERNAL_DATE_SPEC);
+
     if (!range) {
       setFromDay(day);
+      if (onSelectionComplete) Promise.resolve().then(() => onSelectionComplete());
       return;
     }
-    
-  // If both startDate and endDate were already selected. Start a new range selection.
-  if (startDate && endDate){
-    setFromDay(day);
-    updateEndDate(null);
-    setEnteredTo(null);
-    // If startDate is selected and endDate is unselected, complete the range selection.
-  } else if (startDate && !endDate){
+
+    // When editing the end field
+    if (activeField === 'end') {
+      if (startDate) {
+        if (clicked < startDate) {
+          // reflect immediately in UI
+          setPendingSelection({ startDate: clicked, endDate: null });
+          setFromDay(day);
+          updateEndDate(null);
+          setEnteredTo(null);
+          if (onSelectionComplete) {
+            Promise.resolve().then(() =>
+              onSelectionComplete({ startDate: clicked, endDate: null })
+            );
+          }
+          return; // keep picker open for user to choose end
+        }
+
+        // clicked >= startDate -> set as end and complete
+        // show immediately
+        setPendingSelection({ startDate: startDate, endDate: clicked });
+        setToDay(day);
+        if (onSelectionComplete) {
+          Promise.resolve().then(() => onSelectionComplete({ startDate, endDate: clicked }));
+        }
+        return; // CRITICAL: exit here
+      }
+
+      // no startDate, treat clicked as start
+      // reflect immediately
+      const startStr = moment(day).format(INTERNAL_DATE_SPEC);
+      setPendingSelection({ startDate: startStr, endDate: null });
+      setFromDay(day);
+      if (onSelectionComplete) {
+        Promise.resolve().then(() => onSelectionComplete({ startDate: startStr, endDate: null }));
+      }
+      return; // CRITICAL: exit here
+    }
+
+    // Editing start (or default behavior)
+    if (startDate && endDate) {
+      // start a new range selection
+      setPendingSelection({ startDate: moment(day).format(INTERNAL_DATE_SPEC), endDate: null });
+      setFromDay(day);
+      updateEndDate(null);
+      setEnteredTo(null);
+      if (onSelectionComplete) {
+        Promise.resolve().then(() =>
+          onSelectionComplete({ startDate: moment(day).format(INTERNAL_DATE_SPEC), endDate: null })
+        );
+      }
+      return; // CRITICAL: exit here
+    }
+    if (startDate && !endDate) {
       // If the user selects the startDate then chooses an endDate that precedes it,
       // swap the values of startDate and endDate
-      if (moment(day).format(INTERNAL_DATE_SPEC) < startDate) {
+      if (clicked < startDate) {
         const tempDate = startDate;
+        // reflect swap immediately
+        setPendingSelection({ startDate: clicked, endDate: tempDate });
         setToDay(moment(tempDate).toDate());
         setFromDay(day);
         updateEndDate(tempDate);
         setEnteredTo(moment(tempDate).toDate());
-      } else {
-        setToDay(day);
+        if (onSelectionComplete) {
+          Promise.resolve().then(() =>
+            onSelectionComplete({ startDate: clicked, endDate: tempDate })
+          );
+        }
+        return;
       }
-  } else {
-      // This should never happen. Log a warning.
-      console.warn('Try to set a new date selection. Dates were in an invalid state. StartDate: ', startDate, " endDate: ", endDate);
-  } 
+
+      setPendingSelection({ startDate: startDate, endDate: clicked });
+      setToDay(day);
+      if (onSelectionComplete) {
+        Promise.resolve().then(() => onSelectionComplete({ startDate, endDate: clicked }));
+      }
+      return;
+    }
+
+    // no start selected
+    const startStr = moment(day).format(INTERNAL_DATE_SPEC);
+    setPendingSelection({ startDate: startStr, endDate: null });
+    setFromDay(day);
+    // callback to signal that a start date has been selected
+    if (onSelectionComplete) {
+      Promise.resolve().then(() =>
+        onSelectionComplete({
+          startDate: startStr,
+          endDate: null,
+        })
+      );
+    }
   };
 
   const handleDayMouseEnter = day => {
@@ -202,20 +318,42 @@ function ReactDayPicker({
     }
   };
 
-  const from = moment(startDate).toDate();
-  const enteredToDate = moment(enteredTo).toDate();
+  // Use pendingSelection when present so the calendar highlights the user's
+  // choice immediately even before Redux props propagate.
+  const effectiveStart = pendingSelection && pendingSelection.startDate ? pendingSelection.startDate : startDate;
+  // For effectiveEnd, prefer (in order): pendingSelection.endDate, redux endDate prop,
+  // then the hovered enteredTo (used when user has selected a start but not an end).
+  let effectiveEnd;
+  if (pendingSelection && typeof pendingSelection.endDate !== 'undefined') {
+    effectiveEnd = pendingSelection.endDate;
+  } else if (endDate) {
+    effectiveEnd = endDate;
+  } else {
+    effectiveEnd = enteredTo;
+  }
+
+  const from = effectiveStart ? moment(effectiveStart).toDate() : undefined;
+  const enteredToDate = effectiveEnd ? moment(effectiveEnd).toDate() : undefined;
+  useEffect(() => {
+  }, [pendingSelection, effectiveStart, effectiveEnd, startDate, endDate, enteredTo]);
   const today = new Date();
   const currentMonth = today.getFullYear();
   const currentYear = today.getMonth();
   const lastThreeMonths = new Date(currentYear, currentMonth - 3, today.getDate());
 
+  // determine initial month to display based on which field the user is editing
+  const initialMonth = (activeField === 'start' && startDate)
+    ? moment(startDate).toDate()
+    : (activeField === 'end' && endDate)
+      ? moment(endDate).toDate()
+      : undefined;
+
   return (
     <>
-      {/* <Styles range={range} /> */}
       <DayPicker
-        // className="Range"
         className={clsx(classes.root, range && classes.hasRange, !range && classes.noRange)}
         disabledDays={{ before: lastThreeMonths, after: today }}
+        month={initialMonth}
         numberOfMonths={1}
         selectedDays={[from, { from, to: enteredToDate }]}
         modifiers={{ start: from, end: enteredToDate }}

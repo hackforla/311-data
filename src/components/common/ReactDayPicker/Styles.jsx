@@ -2,8 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/material';
 import PropTypes from 'prop-types';
 
-// This component is currently unused and has been ported to MUI makeStyles in ReactDayPicker.
-// Keeping around for reference only.
+// This component is used in `src/components/common/ReactDayPicker.jsx`
 
 function Styles({ range }) {
   const theme = useTheme();
@@ -41,14 +40,14 @@ function Styles({ range }) {
       text-decoration: underline;
     }
 
-    /* Selected range without start and end dates */ 
+    /* Selected range without start and end dates */
 
     .Range .DayPicker-Day--selected:not(.DayPicker-Day--outside) {
       background-color: ${theme.palette.selected.primary} !important;
     }
 
     /* Disabled cell */
-    
+
     .Range .DayPicker-Day--disabled {
       color: #a8a8a8;
     }
@@ -122,7 +121,7 @@ function Styles({ range }) {
       border-top-left-radius: 50% !important;
       border-bottom-left-radius: 50% !important;
     }
-    
+
     `
         : `
     .Range .DayPicker-Day.DayPicker-Day--start.DayPicker-Day--selected{
@@ -133,7 +132,7 @@ function Styles({ range }) {
 
 
     /* Layout styling, Initial styling was table based. See docs:  */
-    /* https://react-day-picker.js.org/examples/selected-range-enter  */ 
+    /* https://react-day-picker.js.org/examples/selected-range-enter  */
 
     .Range .DayPicker-Caption,
     .Range .DayPicker-Weekdays,
