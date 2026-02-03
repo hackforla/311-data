@@ -70,13 +70,14 @@ class MapContainer extends React.Component {
 
   createRequestsTable = async () => {
     this.setState({ isTableLoading: true });
-    const { tableNameByYear, setDbStartTime } = this.context;
-    const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
-    const year = moment(startDate).year(); // extract the year
-    const datasetFileName = `requests${year}.parquet`;
+    const { setDbStartTime } = this.context;
+    const { startDate, endDate, dispatchUpdateStartDate, dispatchUpdateEndDate } = this.props;
+    let year = moment(startDate).year(); // extract the year
+    const tableNameByYear = `requests_${year}`;
+    let datasetFileName = `requests${year}.parquet`;
 
     // Create the year data table if not exist already
-    const createSQL = `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM '${datasetFileName}'`; // query from parquet
+    let createSQL = `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM '${datasetFileName}'`; // query from parquet
 
     const startTime = performance.now(); // start the time tracker
     setDbStartTime(startTime);
@@ -90,7 +91,32 @@ class MapContainer extends React.Component {
         )} ms.`
       );
     } catch (error) {
-      console.error("Error in creating table or registering dataset:", error);
+      console.warn(`Failed to load dataset for year ${year}, falling back to prior year:`, error);
+
+      // Fall back to prior year
+      const priorYear = year - 1;
+      const priorTableName = `requests_${priorYear}`;
+      const priorDatasetFileName = `requests${priorYear}.parquet`;
+      const priorCreateSQL = `CREATE TABLE IF NOT EXISTS ${priorTableName} AS SELECT * FROM '${priorDatasetFileName}'`;
+
+      try {
+        await this.useConnQuery(priorCreateSQL);
+        console.log(`Successfully fell back to ${priorYear} dataset`);
+
+        // Update date filters to use prior year's date range
+        const newEndDate = moment(`${priorYear}-12-31`).format(INTERNAL_DATE_SPEC);
+        const newStartDate = moment(startDate).year(priorYear).format(INTERNAL_DATE_SPEC);
+
+        // Only update if the dates actually need to change
+        if (moment(endDate).year() > priorYear) {
+          dispatchUpdateEndDate(newEndDate);
+        }
+        if (moment(startDate).year() > priorYear) {
+          dispatchUpdateStartDate(newStartDate);
+        }
+      } catch (fallbackError) {
+        console.error("Error loading fallback dataset:", fallbackError);
+      }
     } finally {
       this.setState({ isTableLoading: false });
     }
