@@ -8,6 +8,12 @@ from dotenv import load_dotenv
 from datetime import datetime
 load_dotenv()
 
+# Lookup table for data URLs by year
+DATA_URLS = {
+    '2025': 'https://data.lacity.org/api/views/h73f-gn57/rows.csv?accessType=DOWNLOAD',
+    '2026': 'https://data.lacity.org/api/v3/views/2cy6-i7zn/query.csv',
+}
+
 def get_current_year():
     return str(datetime.now().year)
 
@@ -29,7 +35,9 @@ def dlData():
     Returns the year, so it can be passed to subsequent steps.
     '''
     year = get_current_year()
-    url = "https://data.lacity.org/api/views/h73f-gn57/rows.csv?accessType=DOWNLOAD"
+    if year not in DATA_URLS:
+        raise ValueError(f"No data URL configured for year {year}")
+    url = DATA_URLS[year]
     outfile = f"{year}.csv"
 
     response = requests.get(url, stream=True)
