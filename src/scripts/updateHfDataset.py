@@ -5,7 +5,17 @@ import glob
 from tqdm import tqdm
 from huggingface_hub import HfApi, login
 from dotenv import load_dotenv
+from datetime import datetime
 load_dotenv()
+
+# Lookup table for data URLs by year
+DATA_URLS = {
+    '2025': 'https://data.lacity.org/api/views/h73f-gn57/rows.csv?accessType=DOWNLOAD',
+    '2026': 'https://data.lacity.org/api/v3/views/2cy6-i7zn/query.csv',
+}
+
+def get_current_year():
+    return str(datetime.now().year)
 
 # set environment as 'dev' or 'prod'
 ENV = os.getenv('VITE_ENV')
@@ -21,26 +31,37 @@ else:
 
 def dlData():
     '''
-    Download the current year's dataset from data.lacity.org
+    Download the current year's dataset from data.lacity.org.
+    Returns the year, so it can be passed to subsequent steps.
     '''
-    url = "https://data.lacity.org/api/views/h73f-gn57/rows.csv?accessType=DOWNLOAD"
-    outfile = "2025.csv"
+    year = get_current_year()
+    if year not in DATA_URLS:
+        raise ValueError(f"No data URL configured for year {year}")
+    url = DATA_URLS[year]
+    outfile = f"{year}.csv"
 
     response = requests.get(url, stream=True)
+
+    # If we get a 4xx or 5xx HTTP status, raise an exception and stop processing altogether
+    response.raise_for_status()
 
     # Save downloaded file
     with open(outfile, "wb") as file:
         for data in tqdm(response.iter_content()):
             file.write(data)
 
+    return year
 
-def hfClean():
+
+def hfClean(year=None):
     '''
     Clean the dataset by removing problematic string combinations and update timestamp to ISO format
     '''
-    infile = "2025.csv"
-    fixed_filename = "2025-fixed.csv"
-    clean_filename = "2025-clean.parquet"
+    if year is None:
+        year = get_current_year()
+    infile = f"{year}.csv"
+    fixed_filename = f"{year}-fixed.csv"
+    clean_filename = f"{year}-clean.parquet"
 
     # List of problmenatic strings to be replaced with ""
     replace_strings = ["VE, 0"]
@@ -65,13 +86,15 @@ def hfClean():
         print(f"File {infile} not found.")
 
 
-def hfUpload():
+def hfUpload(year=None):
     '''
     Upload the clean dataset to huggingface.co
     '''
-    local_filename = '2025-clean.parquet'
-    dest_filename = '2025.parquet'
-    repo_name = '2025'
+    if year is None:
+        year = get_current_year()
+    local_filename = f'{year}-clean.parquet'
+    dest_filename = f'{year}.parquet'
+    repo_name = f'{year}'
     repo_type = 'dataset'
 
     repo_id = f"{HF_USERNAME}/{repo_name}"
@@ -95,9 +118,9 @@ def cleanUp():
 
 
 def main():
-    dlData()
-    hfClean()
-    hfUpload()
+    year = dlData()
+    hfClean(year)
+    hfUpload(year)
     cleanUp()
 
 

@@ -70,10 +70,11 @@ class MapContainer extends React.Component {
 
   createRequestsTable = async () => {
     this.setState({ isTableLoading: true });
-    const { tableNameByYear, setDbStartTime } = this.context;
-    const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
-    const year = moment(startDate).year(); // extract the year
-    const datasetFileName = `requests${year}.parquet`;
+    const { setDbStartTime } = this.context;
+    const { startDate } = this.props;
+    let year = moment(startDate).year(); // extract the year
+    const tableNameByYear = `requests_${year}`;
+    let datasetFileName = `requests${year}.parquet`;
 
     // Create the year data table if not exist already
     const createSQL = `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM '${datasetFileName}'`; // query from parquet
@@ -90,13 +91,11 @@ class MapContainer extends React.Component {
         )} ms.`
       );
     } catch (error) {
-      console.error("Error in creating table or registering dataset:", error);
-    } finally {
-      this.setState({ isTableLoading: false });
+      console.error(`Failed to load dataset for year ${year}:`, error);
     }
   };
 
-  async componentDidMount(props) {
+  async componentDidMount() {
     this.isSubscribed = true;
     this.processSearchParams();
     if (DATA_SOURCE !== "SOCRATA") await this.createRequestsTable();

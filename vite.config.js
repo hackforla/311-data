@@ -31,7 +31,7 @@ export default defineConfig(() => {
     },
     test: {
       environment: 'jsdom',
-      setupFiles: 'utils/test-setup.js'
+      setupFiles: 'src/utils/test-setup.js'
     }
   };
 });
