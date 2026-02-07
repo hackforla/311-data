@@ -11,7 +11,7 @@ load_dotenv()
 # Lookup table for data URLs by year
 DATA_URLS = {
     '2025': 'https://data.lacity.org/api/views/h73f-gn57/rows.csv?accessType=DOWNLOAD',
-    '2026': 'https://data.lacity.org/api/v3/views/2cy6-i7zn/query.csv',
+    '2026': 'https://data.lacity.org/resource/2cy6-i7zn.csv',
 }
 
 def get_current_year():
