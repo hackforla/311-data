@@ -85,8 +85,18 @@ brew install act
 
 ```bash
 act -j run --verbose
+```
 
 Use the verbose flag, at least the first time, since the image downloads take so long
+
+## Run the HuggingFace update script locally via Python
+
+```bash
+export HUGGINGFACE_LOGIN_TOKEN=<xxx>
+export VITE_ENV=DEV
+cd src/scripts
+python updateHfDataset.py
+```
 
 ### Information About Technologies
 
