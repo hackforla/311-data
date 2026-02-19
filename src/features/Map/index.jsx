@@ -90,6 +90,7 @@ class MapContainer extends React.Component {
           endTime - startTime
         )} ms.`
       );
+      this.setState({ isTableLoading: false });
     } catch (error) {
       console.error(`Failed to load dataset for year ${year}:`, error);
     }
