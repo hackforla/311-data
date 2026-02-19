@@ -65,6 +65,25 @@ Our mission is to create a user-friendly platform for anyone interested in explo
 - Run `npm start`
 - Visit http://localhost:5173
 
+### Debug locally using VSCode
+
+Your launch.json config should look something like this:
+
+```bash
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug in Chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "/@fs/*": "/*",
+        "/src/*": "${workspaceFolder}/src/*"
+      },
+```
+
+- Run `npm start` in a terminal
+- Press F5 to start "Debug in Chrome". VSCode will open a Chrome window it controls. You can set breakpoints etc in VSCode.
+
 ### Run tests
 
 - Run `npm test`
