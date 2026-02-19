@@ -4,6 +4,7 @@ import moment from "moment";
 import ddbh from "@utils/duckDbHelpers.js";
 
 const dataResources = {
+  2026: "2cy6-i7zn",
   2025: "h73f-gn57",
   2024: "b7dx-7gc3",
   2019: "pvft-t768",
@@ -63,9 +64,11 @@ export async function getServiceRequestSocrata() {
   const dataLoadStartTime = performance.now();
 
   try {
-    // Fetch 2025 SR data through Socrata API
+    // Fetch current year SR data through Socrata API
+    const currentYear = String(new Date().getFullYear());
+    const currentYearFilename = `https://data.lacity.org/resource/${dataResources[currentYear]}.json`
     const response = await fetch(
-      "https://data.lacity.org/resource/h73f-gn57.json"
+      currentYearFilename
     );
     const unvalidatedSrs = await response.json();
 
