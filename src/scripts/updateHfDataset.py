@@ -102,6 +102,17 @@ def hfUpload(year=None):
 
     login(TOKEN)
     api = HfApi()
+
+    # If the current year's repo doesn't exist, create it
+    # the exist_ok=True flag means we'll ignore any errors if it already exists
+    url = api.create_repo(
+        repo_id=repo_id,
+        token=TOKEN,
+        private=False,
+        repo_type="dataset",
+        exist_ok=True,
+    )
+
     api.upload_file(
         path_or_fileobj=local_filename,
         path_in_repo=dest_filename,
