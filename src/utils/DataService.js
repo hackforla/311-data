@@ -60,17 +60,30 @@ const socrataServiceRequestSchema = object({
 
 const srArraySchema = array().of(socrataServiceRequestSchema);
 
-export async function getServiceRequestSocrata() {
+export async function getServiceRequestSocrata(startDate, endDate) {
   const dataLoadStartTime = performance.now();
 
   try {
-    // Fetch current year SR data through Socrata API
-    const currentYear = String(new Date().getFullYear());
-    const currentYearFilename = `https://data.lacity.org/resource/${dataResources[currentYear]}.json`
-    const response = await fetch(
-      currentYearFilename
+    // Build list of years covered by the date range
+    const startYear = moment(startDate).year();
+    const endYear = moment(endDate).year();
+    const years = [];
+    for (let year = startYear; year <= endYear; year++) {
+      years.push(String(year));
+    }
+
+    // Fetch data for each year filtered by the requested date range.
+    // Without a $where clause, Socrata returns only 1000 records in internal-ID
+    // order (i.e. the oldest records first), which would all fail the client-side
+    // Mapbox date filter. We also raise $limit well above the default 1000 so that
+    // the full date range is covered.
+    const unvalidatedByYear = await Promise.all(
+      years.map((year) => {
+        const where = `createddate >= '${startDate}T00:00:00.000' AND createddate <= '${endDate}T23:59:59.999'`;
+        const url = `https://data.lacity.org/resource/${dataResources[year]}.json?$where=${encodeURIComponent(where)}&$limit=1000`;
+        return fetch(url).then((res) => res.json());
+      })
     );
-    const unvalidatedSrs = await response.json();
 
     const dataLoadEndTime = performance.now();
     console.log(
@@ -80,7 +93,12 @@ export async function getServiceRequestSocrata() {
     );
 
     const mapLoadStartTime = performance.now();
-    const validatedSrs = await srArraySchema.validate(unvalidatedSrs);
+    const validatedByYear = await Promise.all(
+      unvalidatedByYear.map((unvalidatedSrs) =>
+        srArraySchema.validate(unvalidatedSrs)
+      )
+    );
+    const validatedSrs = validatedByYear.flat();
     const mapLoadEndTime = performance.now();
     console.log(
       `Socrata map preparation time: ${Math.floor(

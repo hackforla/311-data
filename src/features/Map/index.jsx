@@ -329,7 +329,7 @@ class MapContainer extends React.Component {
         endDate
       );
     } else {
-      requests = await getServiceRequestSocrata();
+      requests = await getServiceRequestSocrata(startDate, endDate);
     }
     return requests;
   }
@@ -373,8 +373,12 @@ class MapContainer extends React.Component {
       const typeId = getTypeIdFromTypeName(
         request.RequestType ?? request.requesttype
       );
-      const closedDate =
-        request.ClosedDate ?? moment(request.closeddate).valueOf();
+
+      // request.ClosedDate is undefined for Socrata data source (Socrata uses lowercase, PascalCase field doesn't exist)
+      // For open requests: request.closeddate is also undefined (absent from JSON when no close date)
+      // For closed requests: request.closeddate is a Date object (yup coerced it), so closedDate = moment(Date).valueOf() — also not null
+      const rawClosedDate = request.ClosedDate ?? request.closeddate;
+      const closedDate = rawClosedDate != null ? moment(rawClosedDate).valueOf() : null;
       const createdDateMs = moment(
         request.CreatedDate ?? request.createddate
       ).valueOf();

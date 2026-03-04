@@ -64,6 +64,17 @@ function DbProvider({ children, startDate }) {
         // Create db connection
         const newConn = await newDb.connect();
 
+        // Create views so tables can be queried as requests_<year>
+        for (let year = 2020; year <= currentYear; year++) {
+          try {
+            await newConn.query(
+              `CREATE VIEW requests_${year} AS SELECT * FROM 'requests${year}.parquet'`,
+            );
+          } catch (err) {
+            console.warn(`Failed to create view for year ${year}:`, err);
+          }
+        }
+
         setDb(newDb);
         setConn(newConn);
         setWorker(newWorker);
